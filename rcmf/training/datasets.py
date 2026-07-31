@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import random
+import re
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -8,10 +9,17 @@ import torch
 from torch import Tensor
 from torch.utils.data import Dataset
 
-from rcmf.benchmarks.appworld.prompt import get_system_prompt
+from rcmf.benchmarks.appworld.prompt import get_initial_messages, get_system_prompt, uses_chat_history_prompt
 from rcmf.config import RCMFConfig
 from rcmf.schemas import DecisionExample, MemoryRecord
 from rcmf.utils.serialization import read_jsonl, write_jsonl
+
+
+STATE_STEP_RE = re.compile(
+    r"^Step (?P<index>\d+) - Response:\n(?P<response>.*?)\n"
+    r"Step (?P=index) - Observation:\n(?P<observation>.*?)(?=\nStep \d+ - Response:\n|\Z)",
+    flags=re.MULTILINE | re.DOTALL,
+)
 
 
 def load_memory_records(path: str | Path) -> list[MemoryRecord]:
@@ -110,7 +118,53 @@ def _split_embedded_system_prompt(state_text: str) -> tuple[str | None, str]:
     return system_prompt, user_text
 
 
+def _parse_appworld_state_text(state_text: str) -> tuple[str | None, str, list[tuple[int, str, str]]]:
+    embedded_system_prompt, remainder = _split_embedded_system_prompt(state_text)
+    text = remainder.strip()
+    query_marker = "[QUERY]"
+    trace_marker = "[TRACE SO FAR]"
+    if text.startswith(query_marker):
+        text = text[len(query_marker) :].strip()
+    trace_at = text.find(trace_marker)
+    if trace_at >= 0:
+        query = text[:trace_at].strip()
+        trace_text = text[trace_at + len(trace_marker) :].strip()
+    else:
+        query = text.strip()
+        trace_text = ""
+    steps = [
+        (
+            int(match.group("index")),
+            match.group("response").strip(),
+            match.group("observation").strip(),
+        )
+        for match in STATE_STEP_RE.finditer(trace_text)
+    ]
+    return embedded_system_prompt, query, steps
+
+
+def _observation_to_chat_content(observation: str) -> str:
+    stripped = observation.strip()
+    if stripped.startswith("Output:\n```"):
+        return stripped
+    return f"Output:\n```\n{stripped}\n```"
+
+
+def _render_appworld_chat_history_prompt(tokenizer: Any, example: DecisionExample, prompt_profile: str) -> str:
+    _, query, steps = _parse_appworld_state_text(example.state_text)
+    if example.target_type == "answer":
+        query += "\n\nRespond with the final answer only."
+    messages = [dict(message) for message in get_initial_messages(prompt_profile)]
+    messages.append({"role": "user", "content": query})
+    for _, response, observation in steps:
+        messages.append({"role": "assistant", "content": response})
+        messages.append({"role": "user", "content": _observation_to_chat_content(observation)})
+    return _apply_chat_template(tokenizer, messages)
+
+
 def _render_training_prompt(tokenizer: Any, example: DecisionExample, prompt_profile: str) -> str:
+    if example.benchmark == "appworld" and uses_chat_history_prompt(prompt_profile):
+        return _render_appworld_chat_history_prompt(tokenizer, example, prompt_profile)
     embedded_system_prompt, user_text = _split_embedded_system_prompt(example.state_text)
     system_prompt = str(example.metadata.get("system_prompt") or embedded_system_prompt or "")
     if not system_prompt:

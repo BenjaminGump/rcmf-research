@@ -6,7 +6,7 @@ from rcmf.config import load_config
 from rcmf.factory import build_backend, build_trainer
 from rcmf.model.backends.mock import MockBackend
 from rcmf.schemas import DecisionExample, MemoryRecord
-from rcmf.training.datasets import build_rcmf_training_batch
+from rcmf.training.datasets import _render_training_prompt, build_rcmf_training_batch
 
 
 class TinyTokenizer:
@@ -193,3 +193,30 @@ def test_build_rcmf_training_batch_raises_instead_of_truncating() -> None:
     )
     label_ids = [int(value) for value in batch["labels"][0].tolist() if int(value) != -100]
     assert label_ids == target_ids
+
+
+def test_full_demo_training_prompt_matches_chat_history_shape() -> None:
+    tokenizer = TinyTokenizer()
+    example = DecisionExample(
+        benchmark="appworld",
+        episode_id="appworld:trace:t1",
+        step_id=2,
+        state_text=(
+            "[SYSTEM PROMPT]\nignored old minimal prompt\n"
+            "[QUERY]\nNow here is the task:\nTask: Count playlists.\n"
+            "[TRACE SO FAR]\n"
+            "Step 1 - Response:\n```python\nprint('x')\n```\n"
+            "Step 1 - Observation:\n{'ok': true}\n"
+        ),
+        target_text="```python\napis.supervisor.complete_task(answer=1)\n```",
+        target_type="code",
+        candidate_memory_ids=None,
+    )
+
+    rendered = _render_training_prompt(tokenizer, example, "full_demo")
+
+    assert "user:I am your supervisor" in rendered
+    assert "user:Now here is the task:\nTask: Count playlists." in rendered
+    assert "assistant:```python\nprint('x')\n```" in rendered
+    assert "user:Output:\n```\n{'ok': true}\n```" in rendered
+    assert rendered.endswith("\nassistant:")

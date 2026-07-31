@@ -33,7 +33,7 @@ def supervisor_payload(supervisor: Any) -> dict[str, str]:
     }
 
 
-def load_task_query(task_id: str) -> str:
+def load_task_query(task_id: str, prompt_profile: str) -> str:
     from appworld.task import Task
 
     task = Task.load(
@@ -43,7 +43,11 @@ def load_task_query(task_id: str) -> str:
         include_api_response_schemas=False,
     )
     try:
-        return build_task_message(task.instruction, supervisor_payload(task.supervisor))
+        return build_task_message(
+            task.instruction,
+            supervisor_payload(task.supervisor),
+            profile=prompt_profile,
+        )
     finally:
         task.close()
 
@@ -84,7 +88,11 @@ def iter_task_dirs(experiment_output: Path, dataset_name: str | None) -> list[Pa
     return [task_dirs[task_id] for task_id in ordered_task_ids]
 
 
-def build_trace_from_task_dir(task_dir: Path, system_prompt: str) -> tuple[AppWorldTrace, dict[str, Any]]:
+def build_trace_from_task_dir(
+    task_dir: Path,
+    system_prompt: str,
+    prompt_profile: str,
+) -> tuple[AppWorldTrace, dict[str, Any]]:
     task_id = task_dir.name
     environment_io_path = task_dir / "logs" / "environment_io.md"
     report_path = task_dir / "evaluation" / "report.md"
@@ -100,7 +108,7 @@ def build_trace_from_task_dir(task_dir: Path, system_prompt: str) -> tuple[AppWo
     )
     trace = AppWorldTrace(
         task_id=task_id,
-        query=load_task_query(task_id),
+        query=load_task_query(task_id, prompt_profile=prompt_profile),
         steps=steps,
         is_correct=bool(stats["success"]),
         system_prompt=system_prompt,
@@ -162,7 +170,8 @@ def main() -> None:
 
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
-    system_prompt = get_system_prompt(cfg.benchmark.prompt_profile)
+    prompt_profile = cfg.benchmark.prompt_profile
+    system_prompt = get_system_prompt(prompt_profile)
 
     records = []
     examples = []
@@ -172,7 +181,11 @@ def main() -> None:
     used_step_counts = []
     for offset, task_dir in enumerate(task_dirs, start=args.start_index):
         try:
-            trace, metadata = build_trace_from_task_dir(task_dir, system_prompt=system_prompt)
+            trace, metadata = build_trace_from_task_dir(
+                task_dir,
+                system_prompt=system_prompt,
+                prompt_profile=prompt_profile,
+            )
         except Exception as exc:
             skipped.append({"task_id": task_dir.name, "index": offset, "reason": str(exc)})
             print(f"skip {task_dir.name}: {exc}", flush=True)
