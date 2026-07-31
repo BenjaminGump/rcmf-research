@@ -120,6 +120,12 @@ def test_split_role_prompt_matches_original_chat_transcript_shape() -> None:
     ]
 
 
+def test_split_role_prompt_preserves_final_message_trailing_newline() -> None:
+    messages = split_role_prompt("USER:\nhello\nASSISTANT:\nhi\n")
+
+    assert messages[-1]["content"] == "hi\n"
+
+
 def test_full_demo_prompt_profile_uses_original_appworld_templates() -> None:
     initial_messages = get_initial_messages("full_demo")
     query = build_task_message(

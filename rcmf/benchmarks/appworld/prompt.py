@@ -97,7 +97,7 @@ def split_role_prompt(prompt_text: str) -> list[dict[str, str]]:
         last_start = match.span()[1]
     if not messages:
         return [{"role": "system", "content": prompt_text}]
-    messages[-1]["content"] = prompt_text[last_start:].rstrip()
+    messages[-1]["content"] = prompt_text[last_start:]
     return messages
 
 
