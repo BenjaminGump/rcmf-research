@@ -2,10 +2,15 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 data/
+data_appworld_*_backup_*/
 runs/
+experiments/
+rcmf.egg-info/
 *.log
 *.tmp
 .env
 .env.*
 appworld_installation*.txt
+*.tar
 *.tar.gz
+*.bundle
