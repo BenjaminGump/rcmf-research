@@ -1,0 +1,2 @@
+"""MemoryAgentBench adapter namespace."""
+

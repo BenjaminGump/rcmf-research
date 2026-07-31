@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rcmf"
+version = "0.1.0"
+description = "Reversible Compiled Memory Field for agent experience memory."
+requires-python = ">=3.10"
+dependencies = [
+    "torch",
+    "transformers>=4.57,<5",
+    "huggingface_hub>=0.36,<1",
+    "pyyaml",
+    "safetensors",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
+server = [
+    "accelerate",
+    "sentencepiece",
+    "protobuf",
+    "jinja2",
+]
+deepspeed = [
+    "deepspeed",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.setuptools.packages.find]
+include = ["rcmf*"]
+exclude = [
+    "configs*",
+    "data*",
+    "docs*",
+    "runs*",
+    "scripts*",
+    "tests*",
+]
+
+[tool.ruff]
+line-length = 100

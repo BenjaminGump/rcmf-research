@@ -1,0 +1,7 @@
+# Keep this environment compatible with AppWorld 0.1.x / SQLModel.
+# Do not install DeepSpeed into the AppWorld environment; use a separate
+# training environment if DeepSpeed is needed.
+pydantic>=1.9,<2
+click==8.1.7
+huggingface_hub>=0.36,<1
+transformers>=4.57,<5

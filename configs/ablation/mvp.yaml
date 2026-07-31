@@ -1,0 +1,10 @@
+include:
+  - ../base.yaml
+
+sweep:
+  memory.normalization: [mass, none, sqrt_count]
+  address.mode: [topk_softmax, dense_softmax]
+  injector.type: [prefix, logit_bias, none]
+  memory.rank: [32, 64, 128]
+  memory.program_dim: [64, 128, 256]
+

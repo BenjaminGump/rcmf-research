@@ -1,0 +1,3 @@
+{"benchmark":"appworld","episode_id":"e1","experience_text":"[TASK]\nCount Spotify playlists.\n[STEPS]\nAction: login then paginate playlist library.","memory_id":"m1","metadata":{"apps":["spotify"],"tools":["show_playlist_library"]},"outcome":1.0,"raw_trajectory":{"steps":[]},"success":true,"task_id":"t1"}
+{"benchmark":"appworld","episode_id":"e2","experience_text":"[TASK]\nFind David Fincher movie notes.\n[STEPS]\nAction: read phone request and Simple Note movie recommendations.","memory_id":"m2","metadata":{"apps":["phone","simple_note"],"tools":["search_notes"]},"outcome":1.0,"raw_trajectory":{"steps":[]},"success":true,"task_id":"t2"}
+

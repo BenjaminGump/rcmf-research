@@ -1,0 +1,14 @@
+include:
+  - ../benchmark/appworld.yaml
+
+experiment:
+  name: qwen_appworld_full_prompt_baseline
+  output_dir: runs/experiments/qwen_appworld_full_prompt_baseline
+
+memory:
+  enabled: false
+
+benchmark:
+  prompt_profile: full_demo
+  max_steps: 50
+  max_context_turns: null

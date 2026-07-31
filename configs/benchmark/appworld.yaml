@@ -1,0 +1,18 @@
+include:
+  - ../base.yaml
+
+benchmark:
+  name: appworld
+  splits:
+    train: train
+    dev: dev
+    test: test_normal
+  max_steps: 50
+  max_context_turns: 40
+  task_limit: null
+  prompt_profile: minimal
+
+data:
+  output_dir: runs/appworld/prepared
+  allow_test_ground_truth: false
+

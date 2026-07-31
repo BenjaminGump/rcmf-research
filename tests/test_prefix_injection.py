@@ -1,0 +1,26 @@
+from __future__ import annotations
+
+import torch
+
+from rcmf.injection.prefix import PrefixMemoryInjector
+from rcmf.model.backends.mock import TinyCausalLM
+
+
+def test_prefix_train_inputs_shapes_and_ignore_labels() -> None:
+    model = TinyCausalLM(vocab_size=50, hidden_size=16)
+    injector = PrefixMemoryInjector(program_dim=8, model_dim=16, num_prefix_tokens=3)
+    input_ids = torch.randint(1, 50, (2, 5))
+    labels = input_ids.clone()
+    memory_z = torch.randn(2, 8)
+    prepared = injector.prepare_train_inputs(
+        model,
+        input_ids=input_ids,
+        attention_mask=torch.ones_like(input_ids),
+        labels=labels,
+        memory_z=memory_z,
+    )
+    assert prepared.inputs["inputs_embeds"].shape == (2, 8, 16)
+    assert prepared.inputs["attention_mask"].shape == (2, 8)
+    assert prepared.inputs["labels"].shape == (2, 8)
+    assert torch.all(prepared.inputs["labels"][:, :3] == -100)
+

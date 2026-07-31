@@ -1,0 +1,11 @@
+include:
+  - ../base.yaml
+
+baselines:
+  methods:
+    - no_memory
+    - full_context
+    - bm25
+    - fast_weight
+  shared_memory_corpus: runs/appworld/prepared/memory_records.jsonl
+

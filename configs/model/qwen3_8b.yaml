@@ -1,0 +1,8 @@
+model:
+  backend: hf_qwen
+  name: Qwen/Qwen3-8B
+  dtype: bfloat16
+  freeze_backbone: true
+  enable_thinking: false
+  device_map: null
+

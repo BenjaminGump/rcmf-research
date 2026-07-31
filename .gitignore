@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+data/
+runs/
+*.log
+*.tmp
+.env
+.env.*
+appworld_installation*.txt
+*.tar.gz

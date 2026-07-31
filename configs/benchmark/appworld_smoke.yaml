@@ -1,0 +1,13 @@
+include:
+  - appworld.yaml
+
+experiment:
+  name: rcmf_appworld_smoke
+  output_dir: runs/rcmf_appworld_smoke
+
+benchmark:
+  task_limit: 3
+
+data:
+  output_dir: runs/appworld/smoke_train
+

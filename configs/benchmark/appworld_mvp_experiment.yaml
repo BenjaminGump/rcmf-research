@@ -1,0 +1,23 @@
+include:
+  - appworld.yaml
+
+experiment:
+  name: rcmf_appworld_mvp_experiment
+  output_dir: runs/experiments/appworld_mvp_experiment
+
+loss:
+  rank: false
+  sparse: false
+  orthogonal: false
+  interference: false
+  teacher_distillation: false
+
+training:
+  lr_compiler: 1.0e-5
+  lr_injector: 1.0e-5
+  lr_encoder: 1.0e-5
+  weight_decay: 0.0
+  grad_clip: 0.5
+  precision: bf16
+  effective_batch_size: 1
+  support_size: 4

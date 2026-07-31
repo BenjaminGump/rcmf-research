@@ -1,0 +1,96 @@
+experiment:
+  name: rcmf_appworld_mvp
+  seed: 1
+  output_dir: runs/rcmf_appworld_mvp
+
+model:
+  backend: hf_qwen
+  name: Qwen/Qwen3-8B
+  dtype: bfloat16
+  freeze_backbone: true
+  enable_thinking: false
+  device_map: null
+
+memory:
+  enabled: true
+  rank: 64
+  program_dim: 128
+  normalization: mass
+  store_per_memory_delta: true
+  eps: 1.0e-6
+
+encoder:
+  type: light_transformer
+  hidden_size: 512
+  num_layers: 2
+  num_heads: 8
+  intermediate_size: 2048
+  dropout: 0.1
+  shared_state_experience_encoder: true
+  max_state_tokens: 512
+  max_experience_tokens: 1024
+  train_token_embedding: false
+
+address:
+  mode: topk_softmax
+  topk: 4
+  use_utility_loss: true
+
+compiler:
+  shared_encoder: true
+  use_write_strength: true
+  use_failed_trajectories: false
+  version: rcmf-v1
+
+injector:
+  type: prefix
+  num_prefix_tokens: 4
+  initial_scale: 0.1
+
+loss:
+  action: true
+  utility: true
+  rank: true
+  sparse: true
+  orthogonal: true
+  interference: true
+  teacher_distillation: false
+  lambda_utility: 1.0
+  lambda_rank: 0.2
+  lambda_sparse: 0.01
+  lambda_orthogonal: 0.01
+  lambda_interference: 0.1
+  lambda_distill: 0.0
+
+training:
+  optimizer: adamw
+  lr_compiler: 2.0e-4
+  lr_injector: 2.0e-4
+  lr_encoder: 1.0e-4
+  weight_decay: 0.01
+  warmup_ratio: 0.03
+  grad_clip: 1.0
+  precision: bf16
+  memory_master_dtype: fp32
+  effective_batch_size: 32
+  seeds: [1, 2, 3]
+  support_size: 8
+  hard_negative_rate: 0.25
+
+benchmark:
+  name: appworld
+  splits:
+    train: train
+    dev: dev
+    test: test_normal
+  max_steps: 50
+  max_context_turns: 40
+  task_limit: null
+  prompt_profile: minimal
+
+state:
+  include_task: true
+  include_latest_observation: true
+  history_steps: 4
+  include_system_prompt: false
+

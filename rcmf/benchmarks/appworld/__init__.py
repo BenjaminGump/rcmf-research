@@ -1,0 +1,2 @@
+"""AppWorld adapter namespace."""
+

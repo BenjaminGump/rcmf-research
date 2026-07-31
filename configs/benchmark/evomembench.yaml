@@ -1,0 +1,6 @@
+include:
+  - ../base.yaml
+
+benchmark:
+  name: evomembench
+
