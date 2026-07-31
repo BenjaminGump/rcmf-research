@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import json
 from pathlib import Path
 
@@ -60,6 +61,14 @@ def main() -> None:
     sorted_lengths = sorted(lengths)
     sorted_targets = sorted(target_lengths)
     model_max = getattr(tokenizer, "model_max_length", None)
+    count_thresholds = [8192, 32768, 65536, 131072, 262144, 1_000_000]
+    if isinstance(model_max, int) and model_max not in count_thresholds and model_max < 1_000_000_000:
+        count_thresholds.append(model_max)
+    count_thresholds = sorted(set(count_thresholds))
+    rows_over_model_max = []
+    if isinstance(model_max, int) and model_max < 1_000_000_000:
+        rows_over_model_max = [row for row in top_rows if int(row["total_tokens"]) > model_max]
+    over_episode_counts = Counter(str(row["episode_id"]) for row in rows_over_model_max)
     summary = {
         "config": args.config,
         "data": args.data,
@@ -80,6 +89,15 @@ def main() -> None:
             "p95": _percentile(sorted_targets, 95),
             "p99": _percentile(sorted_targets, 99),
             "max": max(target_lengths),
+        },
+        "counts_over_threshold": {
+            str(threshold): sum(1 for length in lengths if length > threshold)
+            for threshold in count_thresholds
+        },
+        "over_model_max": {
+            "count": len(rows_over_model_max),
+            "unique_episode_count": len(over_episode_counts),
+            "episode_counts": dict(over_episode_counts.most_common()),
         },
         "top": sorted(top_rows, key=lambda row: int(row["total_tokens"]), reverse=True)[: args.top_k],
     }
