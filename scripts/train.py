@@ -13,6 +13,9 @@ import torch
 from rcmf.config import load_config, save_resolved_config
 from rcmf.factory import build_backend, build_trainer
 from rcmf.training.datasets import (
+    _append_eos_token_id,
+    _render_training_prompt,
+    _target_suffix,
     build_rcmf_training_batch,
     load_decision_examples,
     load_memory_records,
@@ -66,6 +69,69 @@ def _support_indices_for_examples(
             )
         return chosen
     raise ValueError(f"Unknown support mode: {mode}")
+
+
+def _context_limit_for_backend(backend: object) -> int | None:
+    model = getattr(backend, "model", None)
+    model_config = getattr(model, "config", None)
+    model_limit = getattr(model_config, "max_position_embeddings", None)
+    if model_limit is not None:
+        return int(model_limit)
+    tokenizer = getattr(backend, "tokenizer", None)
+    tokenizer_limit = getattr(tokenizer, "model_max_length", None)
+    if tokenizer_limit is not None and int(tokenizer_limit) < 1_000_000_000:
+        return int(tokenizer_limit)
+    return None
+
+
+def _preflight_query_lengths(
+    tokenizer: object,
+    examples: list[DecisionExample],
+    prompt_profile: str,
+    context_limit: int | None,
+    output_dir: Path,
+) -> None:
+    if context_limit is None:
+        return
+    lengths: list[dict[str, object]] = []
+    over_limit: list[dict[str, object]] = []
+    for index, example in enumerate(examples):
+        prompt = _render_training_prompt(tokenizer, example, prompt_profile)
+        target = _target_suffix(example)
+        prompt_ids = tokenizer(prompt, add_special_tokens=False)["input_ids"]
+        target_ids = _append_eos_token_id(
+            tokenizer,
+            list(tokenizer(target, add_special_tokens=False)["input_ids"]),
+        )
+        row = {
+            "index": index,
+            "episode_id": example.episode_id,
+            "step_id": example.step_id,
+            "prompt_tokens": len(prompt_ids),
+            "target_tokens": len(target_ids),
+            "total_tokens": len(prompt_ids) + len(target_ids),
+        }
+        lengths.append(row)
+        if int(row["total_tokens"]) > context_limit:
+            over_limit.append(row)
+    sorted_lengths = sorted(lengths, key=lambda row: int(row["total_tokens"]), reverse=True)
+    atomic_write_json(
+        output_dir / "query_length_preflight.json",
+        {
+            "context_limit": context_limit,
+            "examples": len(examples),
+            "over_limit": len(over_limit),
+            "top": sorted_lengths[:20],
+        },
+    )
+    if over_limit:
+        worst = sorted_lengths[0]
+        raise ValueError(
+            f"{len(over_limit)} training prompt+target sample(s) exceed context_limit={context_limit}. "
+            f"Worst sample episode_id={worst['episode_id']} step_id={worst['step_id']} "
+            f"total_tokens={worst['total_tokens']}. "
+            f"Details: {output_dir / 'query_length_preflight.json'}"
+        )
 
 
 def _load_or_compute_representations(
@@ -177,6 +243,7 @@ def main() -> None:
     parser.add_argument("--support-size", type=int, default=None)
     parser.add_argument("--support-mode", choices=["sample", "all_except_current_task"], default="all_except_current_task")
     parser.add_argument("--max-query-tokens", type=int, default=None)
+    parser.add_argument("--skip-query-length-preflight", action="store_true")
     parser.add_argument("--representation-cache-dir", default=None)
     parser.add_argument("--representation-batch-size", type=int, default=1)
     parser.add_argument("--save-every", type=int, default=50)
@@ -209,6 +276,21 @@ def main() -> None:
         if not examples:
             raise ValueError(f"No decision examples found in {data_dir}")
         device = backend.device
+        if not args.skip_query_length_preflight:
+            context_limit = _context_limit_for_backend(backend)
+            if args.max_query_tokens is not None:
+                context_limit = (
+                    min(context_limit, args.max_query_tokens)
+                    if context_limit is not None
+                    else args.max_query_tokens
+                )
+            _preflight_query_lengths(
+                backend.tokenizer,
+                examples,
+                cfg.benchmark.prompt_profile,
+                context_limit,
+                output_dir,
+            )
         trainer.to(device)
         trainer.train()
         optimizer = trainer.build_optimizer()
