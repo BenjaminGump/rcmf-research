@@ -8,6 +8,7 @@ from rcmf.memory.compiler import (
     ExperienceCompiler,
     StateEncoder,
     build_lightweight_encoder,
+    build_representation_projector,
 )
 from rcmf.model.backends.api import APIBackend
 from rcmf.model.backends.hf_qwen import HFQwenBackend
@@ -55,21 +56,34 @@ def _backend_vocab_and_dims(backend: Any, config: RCMFConfig) -> tuple[int, int,
 
 def build_memory_modules(config: RCMFConfig, backend: Any):
     vocab_size, model_dim, token_embedding = _backend_vocab_and_dims(backend, config)
-    shared_encoder = build_lightweight_encoder(
-        vocab_size=vocab_size,
-        encoder_cfg=config.encoder,
-        token_embedding=token_embedding if config.encoder.type == "light_transformer" else None,
-    )
-    if config.encoder.shared_state_experience_encoder:
-        experience_encoder = shared_encoder
-        state_text_encoder = shared_encoder
+    if config.encoder.type == "qwen_hidden":
+        experience_encoder = build_representation_projector(
+            input_dim=model_dim,
+            encoder_cfg=config.encoder,
+        )
+        if config.encoder.shared_state_experience_encoder:
+            state_text_encoder = experience_encoder
+        else:
+            state_text_encoder = build_representation_projector(
+                input_dim=model_dim,
+                encoder_cfg=config.encoder,
+            )
     else:
-        experience_encoder = shared_encoder
-        state_text_encoder = build_lightweight_encoder(
+        shared_encoder = build_lightweight_encoder(
             vocab_size=vocab_size,
             encoder_cfg=config.encoder,
             token_embedding=token_embedding if config.encoder.type == "light_transformer" else None,
         )
+        if config.encoder.shared_state_experience_encoder:
+            experience_encoder = shared_encoder
+            state_text_encoder = shared_encoder
+        else:
+            experience_encoder = shared_encoder
+            state_text_encoder = build_lightweight_encoder(
+                vocab_size=vocab_size,
+                encoder_cfg=config.encoder,
+                token_embedding=token_embedding if config.encoder.type == "light_transformer" else None,
+            )
     compiler = ExperienceCompiler(
         encoder=experience_encoder,
         hidden_size=config.encoder.hidden_size,
@@ -97,4 +111,3 @@ def build_memory_modules(config: RCMFConfig, backend: Any):
 def build_trainer(config: RCMFConfig, backend: Any) -> RCMFTrainer:
     compiler, state_encoder, injector = build_memory_modules(config, backend)
     return RCMFTrainer(config, backend, compiler, state_encoder, injector)
-

@@ -25,12 +25,11 @@ class PrefixMemoryInjector(MemoryInjector):
         self.model_dim = model_dim
         self.num_prefix_tokens = num_prefix_tokens
         self.mlp = nn.Sequential(
-            nn.Linear(program_dim, 4 * program_dim),
+            nn.Linear(program_dim, 4 * program_dim, bias=False),
             nn.GELU(),
-            nn.Linear(4 * program_dim, num_prefix_tokens * model_dim),
+            nn.Linear(4 * program_dim, num_prefix_tokens * model_dim, bias=False),
         )
         nn.init.normal_(self.mlp[-1].weight, mean=0.0, std=1.0e-5)
-        nn.init.normal_(self.mlp[-1].bias, mean=0.0, std=1.0e-5)
         self.prefix_scale = nn.Parameter(torch.tensor(float(initial_scale)))
 
     def forward(self, memory_z: Tensor) -> Tensor:

@@ -20,15 +20,15 @@ memory:
   eps: 1.0e-6
 
 encoder:
-  type: light_transformer
+  type: qwen_hidden
   hidden_size: 512
   num_layers: 2
   num_heads: 8
   intermediate_size: 2048
   dropout: 0.1
-  shared_state_experience_encoder: true
-  max_state_tokens: 512
-  max_experience_tokens: 1024
+  shared_state_experience_encoder: false
+  max_state_tokens: null
+  max_experience_tokens: null
   train_token_embedding: false
 
 address:
@@ -93,4 +93,3 @@ state:
   include_latest_observation: true
   history_steps: 4
   include_system_prompt: false
-

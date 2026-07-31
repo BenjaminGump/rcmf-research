@@ -72,15 +72,15 @@ class MemorySection:
 
 @dataclass
 class EncoderSection:
-    type: str = "light_transformer"
+    type: str = "qwen_hidden"
     hidden_size: int = 512
     num_layers: int = 2
     num_heads: int = 8
     intermediate_size: int = 2048
     dropout: float = 0.1
-    shared_state_experience_encoder: bool = True
-    max_state_tokens: int = 512
-    max_experience_tokens: int = 1024
+    shared_state_experience_encoder: bool = False
+    max_state_tokens: int | None = None
+    max_experience_tokens: int | None = None
     train_token_embedding: bool = False
 
 
@@ -226,6 +226,8 @@ class RCMFConfig:
             "semantic_cosine",
         }:
             raise ValueError(f"Unknown address mode: {self.address.mode}")
+        if self.encoder.type not in {"qwen_hidden", "light_transformer"}:
+            raise ValueError(f"Unknown encoder type: {self.encoder.type}")
         if self.injector.type not in {"prefix", "logit_bias", "none"}:
             raise ValueError(f"Unknown injector type: {self.injector.type}")
 
@@ -267,4 +269,3 @@ def dataclass_to_plain(value: Any) -> Any:
     if isinstance(value, list):
         return [dataclass_to_plain(item) for item in value]
     return value
-

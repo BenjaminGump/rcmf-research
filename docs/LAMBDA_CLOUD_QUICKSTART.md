@@ -535,9 +535,19 @@ generation; if 512-token generation is slow, first inspect attention kernels and
 KV cache behavior.
 
 State/history strings can be very long because observations contain full API
-responses. `--max-query-tokens`, `encoder.max_state_tokens`, and
-`encoder.max_experience_tokens` all truncate text during training batch
-construction. Any formal experiment that truncates, filters, compresses,
+responses. The current default is `encoder.type=qwen_hidden`: memory records and
+current state text are encoded by the frozen Qwen3-8B transformer, using the last
+hidden representation before the LM head. The trainable RCMF modules operate on
+those representations. Qwen itself is locked, so memory record representations
+are cached offline under `train/representation_cache/`. If a memory record is
+longer than Qwen's context window, it is split at the token-id level into
+non-overlapping chunks. Every chunk is encoded by frozen Qwen and participates in
+the memory bank; state text uses the same chunk encoder followed by mean pooling.
+
+The current code does not silently truncate training text. If
+`--max-query-tokens`, `encoder.max_state_tokens`, or
+`encoder.max_experience_tokens` are explicitly set, they act as hard checks and
+raise on overflow. Any formal experiment that truncates, filters, compresses,
 samples, or summarizes trajectory data must be approved first. The 2026-07-30
 run with `--max-query-tokens 4096` should be treated as a truncated-context
 diagnostic run, not a full-trajectory training result.
@@ -554,15 +564,22 @@ Train:
 /home/ubuntu/venvs/rcmf-py311/bin/python scripts/train.py \
   --config configs/benchmark/appworld_mvp_experiment.yaml \
   --data runs/appworld/official_react_gpt4o_train_success_<STAMP> \
-  --output-dir runs/experiments/appworld_official_react_gpt4o_train_<TRAIN_STAMP> \
+  --output-dir runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP> \
   --epochs 1 \
   --batch-size 1 \
   --grad-accumulation-steps 1 \
-  --support-size 4 \
-  --max-query-tokens 4096 \
+  --support-mode all_except_current_task \
+  --representation-batch-size 1 \
   --save-every 100 \
   --log-every 10
 ```
+
+This uses every memory record except the current task as the memory bank. Long
+records may expand into multiple representation chunks. Do not pass
+`--support-size` for the formal run unless `--support-mode sample` is being used
+for a separate diagnostic. Targets get the tokenizer EOS token appended, and the
+training labels mask the prompt with `-100`, so only the current response/action
+target contributes to the language-model loss.
 
 For a persistent run, use `tmux list-sessions` rather than relying on `tmux ls`:
 
@@ -572,10 +589,11 @@ tmux new-session -d -s rcmf_official_train_<STAMP> \
   /home/ubuntu/venvs/rcmf-py311/bin/python scripts/train.py \
     --config configs/benchmark/appworld_mvp_experiment.yaml \
     --data runs/appworld/official_react_gpt4o_train_success_<STAMP> \
-    --output-dir runs/experiments/appworld_official_react_gpt4o_train_<TRAIN_STAMP> \
+    --output-dir runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP> \
     --epochs 1 --batch-size 1 --grad-accumulation-steps 1 \
-    --support-size 4 --max-query-tokens 4096 --save-every 100 --log-every 10 \
-    2>&1 | tee /lambda/nfs/rcmf-persist/runs/logs/rcmf_official_train_<TRAIN_STAMP>.log'"
+    --support-mode all_except_current_task --representation-batch-size 1 \
+    --save-every 100 --log-every 10 \
+    2>&1 | tee /lambda/nfs/rcmf-persist/runs/logs/rcmf_qwen_repr_official_train_<TRAIN_STAMP>.log'"
 ```
 
 Compile the trained memory snapshot before evaluation:
@@ -585,9 +603,10 @@ Compile the trained memory snapshot before evaluation:
   --config configs/benchmark/appworld_mvp_experiment.yaml \
   --records runs/appworld/official_react_gpt4o_train_success_<STAMP>/memory_records.jsonl \
   --compiler checkpoint \
-  --checkpoint runs/experiments/appworld_official_react_gpt4o_train_<TRAIN_STAMP>/train/checkpoint.pt \
-  --output runs/experiments/appworld_official_react_gpt4o_train_<TRAIN_STAMP>/memory.safetensors \
-  --ledger-dir runs/experiments/appworld_official_react_gpt4o_train_<TRAIN_STAMP>/memory_ledger
+  --checkpoint runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP>/train/checkpoint.pt \
+  --representation-cache runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP>/train/representation_cache/memory_record_representations.pt \
+  --output runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP>/memory.safetensors \
+  --ledger-dir runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP>/memory_ledger
 ```
 
 Evaluate with `max_steps=50`; use `--limit 10` for the first `test_normal` slice.
@@ -602,9 +621,9 @@ Evaluate with `max_steps=50`; use `--limit 10` for the first `test_normal` slice
   --max-new-tokens 512 \
   --temperature 0.0 \
   --top-p 1.0 \
-  --checkpoint runs/experiments/appworld_official_react_gpt4o_train_<TRAIN_STAMP>/train/checkpoint.pt \
-  --memory-snapshot runs/experiments/appworld_official_react_gpt4o_train_<TRAIN_STAMP>/memory.safetensors \
-  --output-dir runs/experiments/appworld_official_react_gpt4o_train_<TRAIN_STAMP> \
+  --checkpoint runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP>/train/checkpoint.pt \
+  --memory-snapshot runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP>/memory.safetensors \
+  --output-dir runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP> \
   --experiment-name rcmf_appworld_test10_<EVAL_STAMP>
 ```
 

@@ -101,11 +101,19 @@ target tokens: median=26, p95=91, p99=159, max=186
 
 因此评测时 `--max-new-tokens 512` 足够，不应通过缩短生成长度来回避慢生成问题。
 
-重要：state/history 由于包含完整 observation，可能非常长。当前代码里的
-`--max-query-tokens`、`encoder.max_state_tokens` 和
-`encoder.max_experience_tokens` 都会在训练 batch 构造时触发截断。任何正式实验如果
-需要截断、过滤、压缩、采样或 summary 化 trajectory，必须先确认实验设定；不要静默
-改变训练信息量。
+重要：state/history 由于包含完整 observation，可能非常长。当前版本默认使用
+`encoder.type=qwen_hidden`：memory record 和当前 state 都先经过冻结的 Qwen3-8B，
+取最后 hidden representation，再交给 RCMF 的 projector/compiler。Qwen 本体不训练，
+所以 memory record 的 representation 会离线缓存到训练输出目录下的
+`train/representation_cache/`。如果某条 memory record 超过 Qwen 上下文窗口，代码会在
+token-id 层把它切成多个不重叠 chunk；所有 chunk 都会经过冻结 Qwen，并作为同一条
+record 的 memory 组成部分参与训练和 snapshot 编译。state text 也会用同样的 chunk
+机制编码后做 mean pooling，避免静默截断。
+
+当前代码不再静默截断训练文本。`--max-query-tokens`、`encoder.max_state_tokens` 和
+`encoder.max_experience_tokens` 如果被显式设置，只作为长度检查；一旦文本超限会直接
+报错。任何正式实验如果需要截断、过滤、压缩、采样或 summary 化 trajectory，必须先
+确认实验设定；不要静默改变训练信息量。
 
 2026-07-30 的
 `appworld_official_react_gpt4o_train_20260730_170000` 使用了
@@ -118,15 +126,25 @@ trajectory 训练结果。
 /home/ubuntu/venvs/rcmf-py311/bin/python scripts/train.py \
   --config configs/benchmark/appworld_mvp_experiment.yaml \
   --data runs/appworld/official_react_gpt4o_train_success_<STAMP> \
-  --output-dir runs/experiments/appworld_official_react_gpt4o_train_<TRAIN_STAMP> \
+  --output-dir runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP> \
   --epochs 1 \
   --batch-size 1 \
   --grad-accumulation-steps 1 \
-  --support-size 4 \
-  --max-query-tokens 4096 \
+  --support-mode all_except_current_task \
+  --representation-batch-size 1 \
   --save-every 100 \
   --log-every 10
 ```
+
+这条命令的关键点：
+
+- `--support-mode all_except_current_task`：每个训练样本使用除当前 task 外的全部
+  `memory_records.jsonl` 作为 memory bank；长 record 会展开为多个 representation
+  chunk，不再随机采样 4 条 support。
+- 不传 `--max-query-tokens`：完整 prompt+target 参与训练；target 末尾会自动加入
+  tokenizer 的 EOS token。
+- `labels` 中 prompt token 全部是 `-100`，只有当前 step 的 response target
+  参与语言模型损失。
 
 当前实际运行中的命名：
 
@@ -134,11 +152,11 @@ trajectory 训练结果。
 data:
   runs/appworld/official_react_gpt4o_train_success_20260730_170000
 train output:
-  runs/experiments/appworld_official_react_gpt4o_train_20260730_170000
+  runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP>
 log:
-  /lambda/nfs/rcmf-persist/runs/logs/rcmf_official_train_20260730_170000.log
+  /lambda/nfs/rcmf-persist/runs/logs/rcmf_qwen_repr_official_train_<TRAIN_STAMP>.log
 tmux:
-  rcmf_official_train_20260730_170000
+  rcmf_qwen_repr_official_train_<TRAIN_STAMP>
 ```
 
 ## 4.1 生成速度修复
@@ -171,9 +189,10 @@ nvidia-smi
   --config configs/benchmark/appworld_mvp_experiment.yaml \
   --records runs/appworld/official_react_gpt4o_train_success_<STAMP>/memory_records.jsonl \
   --compiler checkpoint \
-  --checkpoint runs/experiments/appworld_official_react_gpt4o_train_<TRAIN_STAMP>/train/checkpoint.pt \
-  --output runs/experiments/appworld_official_react_gpt4o_train_<TRAIN_STAMP>/memory.safetensors \
-  --ledger-dir runs/experiments/appworld_official_react_gpt4o_train_<TRAIN_STAMP>/memory_ledger
+  --checkpoint runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP>/train/checkpoint.pt \
+  --representation-cache runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP>/train/representation_cache/memory_record_representations.pt \
+  --output runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP>/memory.safetensors \
+  --ledger-dir runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP>/memory_ledger
 ```
 
 ## 6. 测试前 10 题
@@ -188,9 +207,9 @@ nvidia-smi
   --max-new-tokens 512 \
   --temperature 0.0 \
   --top-p 1.0 \
-  --checkpoint runs/experiments/appworld_official_react_gpt4o_train_<TRAIN_STAMP>/train/checkpoint.pt \
-  --memory-snapshot runs/experiments/appworld_official_react_gpt4o_train_<TRAIN_STAMP>/memory.safetensors \
-  --output-dir runs/experiments/appworld_official_react_gpt4o_train_<TRAIN_STAMP> \
+  --checkpoint runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP>/train/checkpoint.pt \
+  --memory-snapshot runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP>/memory.safetensors \
+  --output-dir runs/experiments/appworld_qwen_repr_official_react_gpt4o_train_<TRAIN_STAMP> \
   --experiment-name rcmf_appworld_test10_<EVAL_STAMP>
 ```
 

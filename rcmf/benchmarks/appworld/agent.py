@@ -72,15 +72,21 @@ class RCMFAppWorldAgent:
     def _memory_z_for_turn(self, state_text: str) -> torch.Tensor | None:
         if self.memory_state is None or self.state_encoder is None:
             return None
-        tokenizer = getattr(self.backend, "tokenizer", None)
-        if tokenizer is None:
-            return None
-        tokenized = tokenizer(state_text, return_tensors="pt")
-        input_ids = tokenized["input_ids"]
-        attention_mask = tokenized.get("attention_mask", torch.ones_like(input_ids))
         device = next(self.state_encoder.parameters()).device
         with torch.no_grad():
-            b = self.state_encoder(input_ids.to(device), attention_mask.to(device))
+            if self.config.encoder.type == "qwen_hidden":
+                if not hasattr(self.backend, "encode_texts"):
+                    raise TypeError("Backend must implement encode_texts for qwen_hidden evaluation")
+                representation = self.backend.encode_texts([state_text], batch_size=1).to(device)
+                b = self.state_encoder(representation, None)
+            else:
+                tokenizer = getattr(self.backend, "tokenizer", None)
+                if tokenizer is None:
+                    return None
+                tokenized = tokenizer(state_text, return_tensors="pt")
+                input_ids = tokenized["input_ids"]
+                attention_mask = tokenized.get("attention_mask", torch.ones_like(input_ids))
+                b = self.state_encoder(input_ids.to(device), attention_mask.to(device))
             z = self.memory_state.read(
                 b.cpu(),
                 normalization=self.config.memory.normalization,

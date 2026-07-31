@@ -78,6 +78,37 @@ class LightweightTextEncoder(nn.Module):
         return encoded[torch.arange(encoded.shape[0], device=encoded.device), lengths]
 
 
+class RepresentationProjector(nn.Module):
+    """Project frozen backbone hidden states into the RCMF control space."""
+
+    def __init__(
+        self,
+        input_dim: int,
+        hidden_size: int = 512,
+        num_layers: int = 2,
+        dropout: float = 0.1,
+    ) -> None:
+        super().__init__()
+        if input_dim <= 0 or hidden_size <= 0 or num_layers <= 0:
+            raise ValueError("input_dim, hidden_size and num_layers must be positive")
+        layers: list[nn.Module] = []
+        current_dim = input_dim
+        for _ in range(num_layers):
+            layers.append(nn.Linear(current_dim, hidden_size))
+            layers.append(nn.GELU())
+            layers.append(nn.LayerNorm(hidden_size))
+            if dropout > 0:
+                layers.append(nn.Dropout(dropout))
+            current_dim = hidden_size
+        self.layers = nn.Sequential(*layers)
+
+    def forward(self, representations: Tensor, attention_mask: Tensor | None = None) -> Tensor:
+        del attention_mask
+        if representations.dim() != 2:
+            raise ValueError("representations must have shape [batch, hidden]")
+        return self.layers(representations.to(torch.float32))
+
+
 class ExperienceCompiler(nn.Module):
     def __init__(
         self,
@@ -203,4 +234,16 @@ def build_lightweight_encoder(
         dropout=encoder_cfg.dropout,
         token_embedding=token_embedding,
         train_token_embedding=encoder_cfg.train_token_embedding,
+    )
+
+
+def build_representation_projector(
+    input_dim: int,
+    encoder_cfg: EncoderSection,
+) -> RepresentationProjector:
+    return RepresentationProjector(
+        input_dim=input_dim,
+        hidden_size=encoder_cfg.hidden_size,
+        num_layers=encoder_cfg.num_layers,
+        dropout=encoder_cfg.dropout,
     )

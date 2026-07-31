@@ -169,11 +169,17 @@ class ForwardRecorder:
             return None, {"enabled": False}
         state_text = messages_to_state_text(messages)
         tokenized = self.backend.tokenizer(state_text, return_tensors="pt")
-        input_ids = tokenized["input_ids"]
-        attention_mask = tokenized.get("attention_mask", torch.ones_like(input_ids))
         device = next(self.state_encoder.parameters()).device
         with torch.no_grad():
-            address = self.state_encoder(input_ids.to(device), attention_mask.to(device))
+            if self.config.encoder.type == "qwen_hidden":
+                state_repr = self.backend.encode_texts([state_text], batch_size=1).to(device)
+                address = self.state_encoder(state_repr, None)
+                token_count = int(tokenized["input_ids"].shape[-1])
+            else:
+                input_ids = tokenized["input_ids"]
+                attention_mask = tokenized.get("attention_mask", torch.ones_like(input_ids))
+                address = self.state_encoder(input_ids.to(device), attention_mask.to(device))
+                token_count = int(input_ids.shape[-1])
             memory_z = self.memory_state.read(
                 address.cpu(),
                 normalization=self.config.memory.normalization,
@@ -183,7 +189,7 @@ class ForwardRecorder:
         return memory_z, {
             "enabled": True,
             "state_text_chars": len(state_text),
-            "state_text_tokens": int(input_ids.shape[-1]),
+            "state_text_tokens": token_count,
             "address_top_indices": top_indices.tolist(),
             "address_top_values": [float(value) for value in top_values.tolist()],
             "memory_z_norm": float(memory_z.norm().item()),

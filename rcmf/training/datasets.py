@@ -62,16 +62,20 @@ def _ensure_padding_token(tokenizer: Any) -> int:
     return int(tokenizer.pad_token_id)
 
 
-def _tokenize_texts(tokenizer: Any, texts: list[str], max_length: int) -> dict[str, Tensor]:
+def _tokenize_texts(tokenizer: Any, texts: list[str], max_length: int | None = None) -> dict[str, Tensor]:
     _ensure_padding_token(tokenizer)
     encoded = tokenizer(
         texts,
         padding=True,
-        truncation=True,
-        max_length=max_length,
+        truncation=False,
         return_tensors="pt",
         add_special_tokens=True,
     )
+    if max_length is not None and encoded["input_ids"].shape[-1] > max_length:
+        raise ValueError(
+            f"Tokenized text length {encoded['input_ids'].shape[-1]} exceeds max_length={max_length}. "
+            "No truncation is applied in the training pipeline."
+        )
     return {
         "input_ids": encoded["input_ids"].to(torch.long),
         "attention_mask": encoded.get("attention_mask", torch.ones_like(encoded["input_ids"])).to(torch.long),
@@ -120,13 +124,21 @@ def _render_training_prompt(tokenizer: Any, example: DecisionExample, prompt_pro
     return _apply_chat_template(tokenizer, messages)
 
 
-def _target_suffix(tokenizer: Any, example: DecisionExample) -> str:
+def _target_suffix(example: DecisionExample) -> str:
     target = example.target_text
-    eos = getattr(tokenizer, "eos_token", None) or ""
     if example.target_type == "code":
         if "```" not in target:
             target = f"```python\n{target.strip()}\n```"
-    return target + eos
+    return target
+
+
+def _append_eos_token_id(tokenizer: Any, token_ids: list[int]) -> list[int]:
+    eos_id = getattr(tokenizer, "eos_token_id", None)
+    if eos_id is None:
+        return token_ids
+    if not token_ids or int(token_ids[-1]) != int(eos_id):
+        return token_ids + [int(eos_id)]
+    return token_ids
 
 
 def _pad_sequences(
@@ -145,7 +157,7 @@ def _build_query_tensors(
     tokenizer: Any,
     examples: list[DecisionExample],
     prompt_profile: str,
-    max_length: int,
+    max_length: int | None,
 ) -> dict[str, Tensor]:
     pad_id = _ensure_padding_token(tokenizer)
     input_rows: list[list[int]] = []
@@ -153,20 +165,22 @@ def _build_query_tensors(
     mask_rows: list[list[int]] = []
     for example in examples:
         prompt = _render_training_prompt(tokenizer, example, prompt_profile)
-        target = _target_suffix(tokenizer, example)
+        target = _target_suffix(example)
         prompt_ids = tokenizer(prompt, add_special_tokens=False)["input_ids"]
-        target_ids = tokenizer(target, add_special_tokens=False)["input_ids"]
-        if len(target_ids) >= max_length:
-            full_ids = target_ids[:max_length]
-            labels = list(full_ids)
-        else:
-            max_prompt_len = max_length - len(target_ids)
-            if len(prompt_ids) > max_prompt_len:
-                prompt_ids = prompt_ids[-max_prompt_len:]
-            full_ids = prompt_ids + target_ids
-            labels = [-100] * len(prompt_ids) + list(target_ids)
+        target_ids = _append_eos_token_id(
+            tokenizer,
+            list(tokenizer(target, add_special_tokens=False)["input_ids"]),
+        )
+        full_ids = prompt_ids + target_ids
+        labels = [-100] * len(prompt_ids) + list(target_ids)
+        if max_length is not None and len(full_ids) > max_length:
+            raise ValueError(
+                f"Training prompt+target length {len(full_ids)} exceeds max_query_tokens={max_length}. "
+                "No prompt or target truncation is applied."
+            )
         if not full_ids:
             full_ids = [pad_id]
+            labels = [-100]
         if all(label == -100 for label in labels):
             labels[-1] = full_ids[-1]
         input_rows.append(full_ids)
@@ -198,28 +212,52 @@ def build_rcmf_training_batch(
     config: RCMFConfig,
     support_records: list[MemoryRecord],
     examples: list[DecisionExample],
-    max_query_tokens: int = 768,
+    max_query_tokens: int | None = None,
+    support_representations: Tensor | None = None,
+    state_representations: Tensor | None = None,
 ) -> dict[str, Tensor]:
-    support = _tokenize_texts(
-        tokenizer,
-        [record.experience_text for record in support_records],
-        max_length=config.encoder.max_experience_tokens,
-    )
-    state = _tokenize_texts(
-        tokenizer,
-        [example.state_text for example in examples],
-        max_length=config.encoder.max_state_tokens,
-    )
+    batch: dict[str, Tensor] = {}
+    if support_representations is None:
+        support = _tokenize_texts(
+            tokenizer,
+            [record.experience_text for record in support_records],
+            max_length=config.encoder.max_experience_tokens,
+        )
+        batch.update(
+            {
+                "support_input_ids": support["input_ids"],
+                "support_attention_mask": support["attention_mask"],
+            }
+        )
+    else:
+        if support_representations.dim() != 2:
+            raise ValueError("support_representations must have shape [support, hidden]")
+        if support_representations.shape[0] != len(support_records):
+            raise ValueError("support_representations row count must match support_records")
+        batch["support_representations"] = support_representations.to(torch.float32)
+    if state_representations is None:
+        state = _tokenize_texts(
+            tokenizer,
+            [example.state_text for example in examples],
+            max_length=config.encoder.max_state_tokens,
+        )
+        batch.update(
+            {
+                "state_input_ids": state["input_ids"],
+                "state_attention_mask": state["attention_mask"],
+            }
+        )
+    else:
+        if state_representations.dim() != 2:
+            raise ValueError("state_representations must have shape [batch, hidden]")
+        if state_representations.shape[0] != len(examples):
+            raise ValueError("state_representations row count must match examples")
+        batch["state_representations"] = state_representations.to(torch.float32)
     query = _build_query_tensors(
         tokenizer,
         examples,
         prompt_profile=config.benchmark.prompt_profile,
         max_length=max_query_tokens,
     )
-    return {
-        "support_input_ids": support["input_ids"],
-        "support_attention_mask": support["attention_mask"],
-        "state_input_ids": state["input_ids"],
-        "state_attention_mask": state["attention_mask"],
-        **query,
-    }
+    batch.update(query)
+    return batch

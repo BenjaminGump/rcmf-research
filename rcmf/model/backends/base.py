@@ -57,6 +57,30 @@ class ModelBackend(Protocol):
     ) -> TrainOutput:
         ...
 
+    def encode_input_ids(
+        self,
+        input_ids: Tensor,
+        attention_mask: Tensor | None = None,
+    ) -> Tensor:
+        ...
+
+    def encode_texts(
+        self,
+        texts: list[str],
+        batch_size: int = 1,
+        add_special_tokens: bool = True,
+    ) -> Tensor:
+        ...
+
+    def encode_text_chunks(
+        self,
+        texts: list[str],
+        batch_size: int = 1,
+        add_special_tokens: bool = True,
+        max_chunk_tokens: int | None = None,
+    ) -> tuple[Tensor, Tensor]:
+        ...
+
     def generate(
         self,
         messages: list[ChatMessage],
@@ -76,4 +100,3 @@ class ModelBackend(Protocol):
         memory_z: Tensor | None = None,
     ) -> list[float]:
         ...
-

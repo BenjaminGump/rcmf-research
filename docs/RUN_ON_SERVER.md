@@ -643,21 +643,29 @@ Do not use `api_calls` replay for formal training; those logs may contain stale
 access tokens. Do not use `prepare_appworld.py` final-answer fallback as formal
 training data.
 
-2. Train with enough query length to preserve the current response target:
+2. Train with the Qwen hidden-representation RCMF path:
 
 ```bash
 python scripts/train.py \
   --config configs/benchmark/appworld_mvp_experiment.yaml \
   --data runs/appworld/gt_train_compiled_<STAMP> \
-  --output-dir runs/experiments/appworld_gt_train_compiled_<TRAIN_STAMP> \
+  --output-dir runs/experiments/appworld_qwen_repr_gt_train_compiled_<TRAIN_STAMP> \
   --epochs 1 \
   --batch-size 1 \
   --grad-accumulation-steps 1 \
-  --support-size 4 \
-  --max-query-tokens 2048 \
+  --support-mode all_except_current_task \
+  --representation-batch-size 1 \
   --save-every 100 \
   --log-every 10
 ```
+
+The formal path uses `encoder.type=qwen_hidden`: memory records and state text
+are encoded by frozen Qwen, then RCMF operates on those hidden representations.
+Long memory records are split into non-overlapping token chunks, and every chunk
+is encoded by frozen Qwen and included in the memory bank. State text uses the
+same chunk encoder followed by mean pooling. Do not pass `--max-query-tokens`
+for full-trajectory training. If token limits are explicitly configured, they
+are hard checks and raise on overflow rather than truncating.
 
 3. Compile memory from the trained checkpoint before evaluation:
 
@@ -666,9 +674,10 @@ python scripts/compile_memory.py \
   --config configs/benchmark/appworld_mvp_experiment.yaml \
   --records runs/appworld/gt_train_compiled_<STAMP>/memory_records.jsonl \
   --compiler checkpoint \
-  --checkpoint runs/experiments/appworld_gt_train_compiled_<TRAIN_STAMP>/train/checkpoint.pt \
-  --output runs/experiments/appworld_gt_train_compiled_<TRAIN_STAMP>/memory.safetensors \
-  --ledger-dir runs/experiments/appworld_gt_train_compiled_<TRAIN_STAMP>/memory_ledger
+  --checkpoint runs/experiments/appworld_qwen_repr_gt_train_compiled_<TRAIN_STAMP>/train/checkpoint.pt \
+  --representation-cache runs/experiments/appworld_qwen_repr_gt_train_compiled_<TRAIN_STAMP>/train/representation_cache/memory_record_representations.pt \
+  --output runs/experiments/appworld_qwen_repr_gt_train_compiled_<TRAIN_STAMP>/memory.safetensors \
+  --ledger-dir runs/experiments/appworld_qwen_repr_gt_train_compiled_<TRAIN_STAMP>/memory_ledger
 ```
 
 4. Evaluate with `max_steps=50`. For first diagnostics, use `--limit 10`,
@@ -684,9 +693,9 @@ python scripts/evaluate.py \
   --max-new-tokens 512 \
   --temperature 0.0 \
   --top-p 1.0 \
-  --checkpoint runs/experiments/appworld_gt_train_compiled_<TRAIN_STAMP>/train/checkpoint.pt \
-  --memory-snapshot runs/experiments/appworld_gt_train_compiled_<TRAIN_STAMP>/memory.safetensors \
-  --output-dir runs/experiments/appworld_gt_train_compiled_<TRAIN_STAMP> \
+  --checkpoint runs/experiments/appworld_qwen_repr_gt_train_compiled_<TRAIN_STAMP>/train/checkpoint.pt \
+  --memory-snapshot runs/experiments/appworld_qwen_repr_gt_train_compiled_<TRAIN_STAMP>/memory.safetensors \
+  --output-dir runs/experiments/appworld_qwen_repr_gt_train_compiled_<TRAIN_STAMP> \
   --experiment-name rcmf_appworld_test10_<EVAL_STAMP>
 ```
 

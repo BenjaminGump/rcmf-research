@@ -15,6 +15,8 @@ from rcmf.model.backends.base import ChatMessage, GenerateOutput, TokenizedBatch
 class ByteTokenizer:
     eos_token_id = 0
     pad_token_id = 0
+    eos_token = "<eos>"
+    pad_token = "<pad>"
 
     def __init__(self, vocab_size: int = 259) -> None:
         self.vocab_size = vocab_size
@@ -72,7 +74,7 @@ class TinyCausalLM(nn.Module):
                 labels[..., 1:].contiguous().view(-1),
                 ignore_index=-100,
             )
-        return type("Output", (), {"logits": logits, "loss": loss})()
+        return type("Output", (), {"logits": logits, "loss": loss, "hidden_states": (x,)})()
 
     def generate(self, input_ids: Tensor | None = None, inputs_embeds: Tensor | None = None, **kwargs: Any) -> Tensor:
         if input_ids is None:
@@ -142,6 +144,78 @@ class MockBackend:
             logits = logits + logit_bias[:, None, :]
         return TrainOutput(loss=output.loss, logits=logits, extra={"memory": meta})
 
+    @torch.no_grad()
+    def encode_input_ids(
+        self,
+        input_ids: Tensor,
+        attention_mask: Tensor | None = None,
+    ) -> Tensor:
+        if attention_mask is None:
+            attention_mask = torch.ones_like(input_ids)
+        outputs = self.model(input_ids=input_ids, attention_mask=attention_mask, output_hidden_states=True)
+        hidden = outputs.hidden_states[-1]
+        lengths = attention_mask.to(torch.long).sum(dim=1).clamp_min(1) - 1
+        rows = torch.arange(hidden.shape[0], device=hidden.device)
+        return hidden[rows, lengths].detach().to(torch.float32)
+
+    @torch.no_grad()
+    def encode_texts(
+        self,
+        texts: list[str],
+        batch_size: int = 1,
+        add_special_tokens: bool = True,
+    ) -> Tensor:
+        chunk_representations, owner_indices = self.encode_text_chunks(
+            texts,
+            batch_size=batch_size,
+            add_special_tokens=add_special_tokens,
+        )
+        if not texts:
+            return torch.empty(0, self.model.config.hidden_size, dtype=torch.float32)
+        pooled = torch.zeros(len(texts), chunk_representations.shape[-1], dtype=torch.float32)
+        counts = torch.zeros(len(texts), 1, dtype=torch.float32)
+        pooled.index_add_(0, owner_indices, chunk_representations)
+        counts.index_add_(0, owner_indices, torch.ones(owner_indices.shape[0], 1, dtype=torch.float32))
+        return pooled / counts.clamp_min(1.0)
+
+    @torch.no_grad()
+    def encode_text_chunks(
+        self,
+        texts: list[str],
+        batch_size: int = 1,
+        add_special_tokens: bool = True,
+        max_chunk_tokens: int | None = None,
+    ) -> tuple[Tensor, Tensor]:
+        del add_special_tokens
+        if batch_size <= 0:
+            raise ValueError("batch_size must be positive")
+        chunk_limit = int(max_chunk_tokens or 32768)
+        if chunk_limit <= 0:
+            raise ValueError("max_chunk_tokens must be positive")
+        chunks: list[list[int]] = []
+        owners: list[int] = []
+        for owner_index, text in enumerate(texts):
+            token_ids = self.tokenizer(text)["input_ids"][0].tolist()
+            for start in range(0, len(token_ids), chunk_limit):
+                chunks.append(list(token_ids[start : start + chunk_limit]))
+                owners.append(owner_index)
+        if not chunks:
+            return (
+                torch.empty(0, self.model.config.hidden_size, dtype=torch.float32),
+                torch.empty(0, dtype=torch.long),
+            )
+        outputs: list[Tensor] = []
+        for start in range(0, len(chunks), batch_size):
+            batch_chunks = chunks[start : start + batch_size]
+            max_len = max(len(chunk) for chunk in batch_chunks)
+            input_ids = torch.full((len(batch_chunks), max_len), self.tokenizer.pad_token_id, dtype=torch.long)
+            attention_mask = torch.zeros_like(input_ids)
+            for row, chunk in enumerate(batch_chunks):
+                input_ids[row, : len(chunk)] = torch.tensor(chunk, dtype=torch.long)
+                attention_mask[row, : len(chunk)] = 1
+            outputs.append(self.encode_input_ids(input_ids, attention_mask))
+        return torch.cat(outputs, dim=0), torch.tensor(owners, dtype=torch.long)
+
     def generate(
         self,
         messages: list[ChatMessage],
@@ -191,4 +265,3 @@ class MockBackend:
             digest = hashlib.sha256((text + target).encode("utf-8")).digest()
             scores.append(int.from_bytes(digest[:4], "big") / 2**32)
         return scores
-

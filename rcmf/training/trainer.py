@@ -69,10 +69,6 @@ class RCMFTrainer:
 
     def training_step(self, batch: dict[str, Tensor]) -> TrainingStepOutput:
         required = {
-            "support_input_ids",
-            "support_attention_mask",
-            "state_input_ids",
-            "state_attention_mask",
             "query_input_ids",
             "query_attention_mask",
             "labels",
@@ -80,14 +76,34 @@ class RCMFTrainer:
         missing = required.difference(batch)
         if missing:
             raise ValueError(f"Training batch missing keys: {sorted(missing)}")
+        has_support_representations = "support_representations" in batch
+        has_state_representations = "state_representations" in batch
+        if self.config.encoder.type == "qwen_hidden":
+            if not has_support_representations or not has_state_representations:
+                raise ValueError("qwen_hidden training requires support_representations and state_representations")
+        elif not {
+            "support_input_ids",
+            "support_attention_mask",
+            "state_input_ids",
+            "state_attention_mask",
+        }.issubset(batch):
+            raise ValueError("Token-id training requires support/state input_ids and attention masks")
 
-        support = self.compiler(batch["support_input_ids"], batch["support_attention_mask"])
+        if has_support_representations:
+            support = self.compiler(batch["support_representations"], None)
+        else:
+            support = self.compiler(batch["support_input_ids"], batch["support_attention_mask"])
         v = support.delta_v.sum(dim=0)
         c = support.delta_c.sum(dim=0)
         assert v.shape == (self.config.memory.rank, self.config.memory.program_dim)
         assert c.shape == (self.config.memory.rank,)
 
-        state_address = self.state_encoder(batch["state_input_ids"], batch["state_attention_mask"])
+        if has_state_representations:
+            state_address = self.state_encoder(batch["state_representations"], None)
+            state_batch_size = batch["state_representations"].shape[0]
+        else:
+            state_address = self.state_encoder(batch["state_input_ids"], batch["state_attention_mask"])
+            state_batch_size = batch["state_input_ids"].shape[0]
         memory_z = read_memory_tensors(
             v=v,
             c=c,
@@ -96,7 +112,7 @@ class RCMFTrainer:
             eps=self.config.memory.eps,
         )
         assert memory_z.shape == (
-            batch["state_input_ids"].shape[0],
+            state_batch_size,
             self.config.memory.program_dim,
         )
 

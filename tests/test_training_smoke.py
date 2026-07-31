@@ -4,6 +4,7 @@ import torch
 
 from rcmf.config import load_config
 from rcmf.factory import build_backend, build_trainer
+from rcmf.model.backends.mock import MockBackend
 from rcmf.schemas import DecisionExample, MemoryRecord
 from rcmf.training.datasets import build_rcmf_training_batch
 
@@ -61,6 +62,7 @@ def test_training_step_with_mock_backend() -> None:
             "model": {"backend": "mock"},
             "memory": {"rank": 8, "program_dim": 6},
             "encoder": {
+                "type": "qwen_hidden",
                 "hidden_size": 16,
                 "num_heads": 4,
                 "intermediate_size": 32,
@@ -72,11 +74,10 @@ def test_training_step_with_mock_backend() -> None:
     backend = build_backend(cfg)
     trainer = build_trainer(cfg, backend)
     vocab = backend.tokenizer.vocab_size
+    repr_dim = backend.model.config.hidden_size
     batch = {
-        "support_input_ids": torch.randint(1, vocab, (3, 5)),
-        "support_attention_mask": torch.ones(3, 5, dtype=torch.long),
-        "state_input_ids": torch.randint(1, vocab, (2, 5)),
-        "state_attention_mask": torch.ones(2, 5, dtype=torch.long),
+        "support_representations": torch.randn(3, repr_dim),
+        "state_representations": torch.randn(2, repr_dim),
         "query_input_ids": torch.randint(1, vocab, (2, 5)),
         "query_attention_mask": torch.ones(2, 5, dtype=torch.long),
         "labels": torch.randint(1, vocab, (2, 5)),
@@ -88,10 +89,24 @@ def test_training_step_with_mock_backend() -> None:
     assert grads
 
 
+def test_mock_backend_chunks_long_texts_without_dropping_tokens() -> None:
+    backend = MockBackend(hidden_size=8)
+    chunk_representations, owner_indices = backend.encode_text_chunks(
+        ["abcdef", "xy"],
+        batch_size=2,
+        max_chunk_tokens=3,
+    )
+    assert owner_indices.tolist() == [0, 0, 0, 1]
+    assert chunk_representations.shape == (4, 8)
+
+    pooled = backend.encode_texts(["abcdef", "xy"], batch_size=2)
+    assert pooled.shape == (2, 8)
+
+
 def test_build_rcmf_training_batch_masks_prompt_tokens() -> None:
     cfg = load_config("configs/base.yaml")
     cfg.encoder.max_experience_tokens = 16
-    cfg.encoder.max_state_tokens = 16
+    cfg.encoder.max_state_tokens = None
     tokenizer = TinyTokenizer()
     record = MemoryRecord(
         memory_id="m1",
@@ -118,7 +133,7 @@ def test_build_rcmf_training_batch_masks_prompt_tokens() -> None:
         cfg,
         support_records=[record],
         examples=[example],
-        max_query_tokens=128,
+        max_query_tokens=None,
     )
 
     assert batch["support_input_ids"].shape[0] == 1
@@ -128,10 +143,10 @@ def test_build_rcmf_training_batch_masks_prompt_tokens() -> None:
     assert (batch["labels"] != -100).any()
 
 
-def test_build_rcmf_training_batch_left_truncates_prompt_and_keeps_target() -> None:
+def test_build_rcmf_training_batch_raises_instead_of_truncating() -> None:
     cfg = load_config("configs/base.yaml")
     cfg.encoder.max_experience_tokens = 16
-    cfg.encoder.max_state_tokens = 16
+    cfg.encoder.max_state_tokens = None
     tokenizer = TinyTokenizer()
     record = MemoryRecord(
         memory_id="m1",
@@ -155,14 +170,26 @@ def test_build_rcmf_training_batch_left_truncates_prompt_and_keeps_target() -> N
         metadata={"system_prompt": "S", "system_prompt_in_state": True},
     )
 
+    try:
+        build_rcmf_training_batch(
+            tokenizer,
+            cfg,
+            support_records=[record],
+            examples=[example],
+            max_query_tokens=12,
+        )
+    except ValueError as exc:
+        assert "No prompt or target truncation is applied" in str(exc)
+    else:
+        raise AssertionError("Expected overlong prompt to raise instead of truncating")
+
+    target_ids = tokenizer(target, add_special_tokens=False)["input_ids"] + [tokenizer.eos_token_id]
     batch = build_rcmf_training_batch(
         tokenizer,
         cfg,
         support_records=[record],
         examples=[example],
-        max_query_tokens=12,
+        max_query_tokens=None,
     )
-
-    target_ids = tokenizer(target + tokenizer.eos_token, add_special_tokens=False)["input_ids"]
     label_ids = [int(value) for value in batch["labels"][0].tolist() if int(value) != -100]
     assert label_ids == target_ids

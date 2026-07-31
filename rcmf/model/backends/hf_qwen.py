@@ -108,6 +108,124 @@ class HFQwenBackend:
             metadata={"text": text, "input_tokens": int(attention_mask.sum().item())},
         )
 
+    @torch.no_grad()
+    def encode_input_ids(
+        self,
+        input_ids: Tensor,
+        attention_mask: Tensor | None = None,
+    ) -> Tensor:
+        """Return the frozen Qwen final hidden state before the LM head."""
+        if self.model is None:
+            raise RuntimeError("HFQwenBackend.load() has not been called")
+        input_ids = input_ids.to(self.device)
+        if attention_mask is None:
+            attention_mask = torch.ones_like(input_ids)
+        attention_mask = attention_mask.to(self.device)
+        max_positions = getattr(getattr(self.model, "config", None), "max_position_embeddings", None)
+        if max_positions is not None and input_ids.shape[-1] > int(max_positions):
+            raise ValueError(
+                f"Input has {input_ids.shape[-1]} tokens, exceeding model max_position_embeddings={max_positions}. "
+                "No truncation is applied; adjust the data policy explicitly."
+            )
+        outputs = self.model(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            output_hidden_states=True,
+            use_cache=False,
+            return_dict=True,
+        )
+        hidden = outputs.hidden_states[-1]
+        lengths = attention_mask.to(torch.long).sum(dim=1).clamp_min(1) - 1
+        rows = torch.arange(hidden.shape[0], device=hidden.device)
+        return hidden[rows, lengths].detach().to(torch.float32).cpu()
+
+    @torch.no_grad()
+    def encode_texts(
+        self,
+        texts: list[str],
+        batch_size: int = 1,
+        add_special_tokens: bool = True,
+    ) -> Tensor:
+        chunk_representations, owner_indices = self.encode_text_chunks(
+            texts,
+            batch_size=batch_size,
+            add_special_tokens=add_special_tokens,
+        )
+        if not texts:
+            model_dim = getattr(getattr(self.model, "config", None), "hidden_size", 0)
+            return torch.empty(0, int(model_dim), dtype=torch.float32)
+        pooled = torch.zeros(len(texts), chunk_representations.shape[-1], dtype=torch.float32)
+        counts = torch.zeros(len(texts), 1, dtype=torch.float32)
+        pooled.index_add_(0, owner_indices, chunk_representations)
+        counts.index_add_(0, owner_indices, torch.ones(owner_indices.shape[0], 1, dtype=torch.float32))
+        return pooled / counts.clamp_min(1.0)
+
+    def _max_chunk_tokens(self, requested: int | None = None) -> int:
+        if requested is not None:
+            if requested <= 0:
+                raise ValueError("max_chunk_tokens must be positive")
+            return int(requested)
+        model_limit = getattr(getattr(self.model, "config", None), "max_position_embeddings", None)
+        if model_limit is not None:
+            return int(model_limit)
+        tokenizer_limit = getattr(self.tokenizer, "model_max_length", None)
+        if tokenizer_limit is not None and int(tokenizer_limit) < 1_000_000_000:
+            return int(tokenizer_limit)
+        return 32768
+
+    @torch.no_grad()
+    def encode_text_chunks(
+        self,
+        texts: list[str],
+        batch_size: int = 1,
+        add_special_tokens: bool = True,
+        max_chunk_tokens: int | None = None,
+    ) -> tuple[Tensor, Tensor]:
+        if self.tokenizer is None:
+            raise RuntimeError("HFQwenBackend.load() has not been called")
+        if self.model is None:
+            raise RuntimeError("HFQwenBackend.load() has not been called")
+        if batch_size <= 0:
+            raise ValueError("batch_size must be positive")
+        chunk_limit = self._max_chunk_tokens(max_chunk_tokens)
+        model_limit = getattr(getattr(self.model, "config", None), "max_position_embeddings", None)
+        if model_limit is not None and chunk_limit > int(model_limit):
+            raise ValueError(
+                f"max_chunk_tokens={chunk_limit} exceeds model max_position_embeddings={model_limit}"
+            )
+        chunks: list[list[int]] = []
+        owners: list[int] = []
+        for owner_index, text in enumerate(texts):
+            token_ids = self.tokenizer(
+                text,
+                truncation=False,
+                add_special_tokens=add_special_tokens,
+            )["input_ids"]
+            if not token_ids:
+                eos_id = getattr(self.tokenizer, "eos_token_id", None)
+                token_ids = [int(eos_id) if eos_id is not None else 0]
+            for start in range(0, len(token_ids), chunk_limit):
+                chunks.append(list(token_ids[start : start + chunk_limit]))
+                owners.append(owner_index)
+        if not chunks:
+            model_dim = getattr(getattr(self.model, "config", None), "hidden_size", 0)
+            return (
+                torch.empty(0, int(model_dim), dtype=torch.float32),
+                torch.empty(0, dtype=torch.long),
+            )
+        outputs: list[Tensor] = []
+        for start in range(0, len(chunks), batch_size):
+            batch_chunks = chunks[start : start + batch_size]
+            max_len = max(len(chunk) for chunk in batch_chunks)
+            pad_id = int(getattr(self.tokenizer, "pad_token_id", 0) or 0)
+            input_ids = torch.full((len(batch_chunks), max_len), pad_id, dtype=torch.long)
+            attention_mask = torch.zeros_like(input_ids)
+            for row, chunk in enumerate(batch_chunks):
+                input_ids[row, : len(chunk)] = torch.tensor(chunk, dtype=torch.long)
+                attention_mask[row, : len(chunk)] = 1
+            outputs.append(self.encode_input_ids(input_ids, attention_mask))
+        return torch.cat(outputs, dim=0), torch.tensor(owners, dtype=torch.long)
+
     def _loss_with_logits(self, logits: Tensor, labels: Tensor) -> Tensor:
         shift_logits = logits[..., :-1, :].contiguous()
         shift_labels = labels[..., 1:].contiguous()
@@ -194,6 +312,7 @@ class HFQwenBackend:
             "do_sample": temperature > 0,
             "use_cache": True,
             "pad_token_id": self.tokenizer.eos_token_id,
+            "eos_token_id": self.tokenizer.eos_token_id,
         }
         if temperature > 0:
             generate_kwargs["temperature"] = temperature

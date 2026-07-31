@@ -16,9 +16,9 @@ from rcmf.training.datasets import (
     build_rcmf_training_batch,
     load_decision_examples,
     load_memory_records,
-    sample_support_records,
 )
-from rcmf.utils.serialization import append_jsonl, atomic_write_json, maybe_git_commit
+from rcmf.schemas import DecisionExample, MemoryRecord
+from rcmf.utils.serialization import append_jsonl, atomic_write_json, maybe_git_commit, sha256_file
 
 
 def _move_batch(batch: dict[str, torch.Tensor], device: torch.device) -> dict[str, torch.Tensor]:
@@ -36,6 +36,134 @@ def _grads_are_finite(params: list[torch.nn.Parameter]) -> bool:
     return True
 
 
+def _example_task_id(example: DecisionExample) -> str:
+    task_id = example.metadata.get("task_id")
+    if task_id:
+        return str(task_id)
+    return example.episode_id.rsplit(":", 1)[-1]
+
+
+def _support_indices_for_examples(
+    records: list[MemoryRecord],
+    examples: list[DecisionExample],
+    mode: str,
+    support_size: int,
+    rng: random.Random,
+) -> list[int]:
+    if mode == "sample":
+        if len(records) >= support_size:
+            chosen = rng.sample(range(len(records)), support_size)
+        else:
+            chosen = [rng.randrange(len(records)) for _ in range(support_size)]
+        return chosen
+    if mode == "all_except_current_task":
+        current_task_ids = {_example_task_id(example) for example in examples}
+        chosen = [index for index, record in enumerate(records) if record.task_id not in current_task_ids]
+        if not chosen:
+            raise ValueError(
+                "all_except_current_task produced an empty support set. "
+                f"current_task_ids={sorted(current_task_ids)} records={len(records)}"
+            )
+        return chosen
+    raise ValueError(f"Unknown support mode: {mode}")
+
+
+def _load_or_compute_representations(
+    backend: object,
+    texts: list[str],
+    cache_path: Path,
+    source_path: Path,
+    model_name: str,
+    batch_size: int,
+) -> torch.Tensor:
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    source_hash = sha256_file(source_path)
+    if cache_path.exists():
+        payload = torch.load(cache_path, map_location="cpu")
+        if (
+            payload.get("format") == "pooled_qwen_hidden_v1"
+            and payload.get("source_sha256") == source_hash
+            and payload.get("model_name") == model_name
+            and int(payload.get("count", -1)) == len(texts)
+        ):
+            return payload["representations"].to(torch.float32)
+    if not hasattr(backend, "encode_texts"):
+        raise TypeError("Backend must implement encode_texts for qwen_hidden encoder")
+    representations = backend.encode_texts(texts, batch_size=batch_size).to(torch.float32)
+    torch.save(
+        {
+            "format": "pooled_qwen_hidden_v1",
+            "representations": representations.cpu(),
+            "source_sha256": source_hash,
+            "source_path": str(source_path),
+            "model_name": model_name,
+            "count": len(texts),
+            "created_at": time.time(),
+        },
+        cache_path,
+    )
+    return representations.cpu()
+
+
+def _load_or_compute_chunk_representations(
+    backend: object,
+    texts: list[str],
+    cache_path: Path,
+    source_path: Path,
+    model_name: str,
+    batch_size: int,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    source_hash = sha256_file(source_path)
+    if cache_path.exists():
+        payload = torch.load(cache_path, map_location="cpu")
+        if (
+            payload.get("format") == "chunked_qwen_hidden_v1"
+            and payload.get("source_sha256") == source_hash
+            and payload.get("model_name") == model_name
+            and int(payload.get("text_count", -1)) == len(texts)
+        ):
+            return (
+                payload["representations"].to(torch.float32),
+                payload["owner_indices"].to(torch.long),
+            )
+    if not hasattr(backend, "encode_text_chunks"):
+        raise TypeError("Backend must implement encode_text_chunks for qwen_hidden memory records")
+    representations, owner_indices = backend.encode_text_chunks(texts, batch_size=batch_size)
+    representations = representations.to(torch.float32).cpu()
+    owner_indices = owner_indices.to(torch.long).cpu()
+    torch.save(
+        {
+            "format": "chunked_qwen_hidden_v1",
+            "representations": representations,
+            "owner_indices": owner_indices,
+            "source_sha256": source_hash,
+            "source_path": str(source_path),
+            "model_name": model_name,
+            "text_count": len(texts),
+            "chunk_count": int(owner_indices.numel()),
+            "created_at": time.time(),
+        },
+        cache_path,
+    )
+    return representations, owner_indices
+
+
+def _segment_indices_for_record_indices(
+    owner_indices: torch.Tensor,
+    record_indices: list[int],
+) -> list[int]:
+    selected_records = set(int(index) for index in record_indices)
+    segment_indices = [
+        segment_index
+        for segment_index, owner_index in enumerate(owner_indices.tolist())
+        if int(owner_index) in selected_records
+    ]
+    if not segment_indices:
+        raise ValueError("Selected support records produced an empty chunked support set")
+    return segment_indices
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Train RCMF memory modules.")
     parser.add_argument("--config", default="configs/base.yaml")
@@ -47,7 +175,10 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--grad-accumulation-steps", type=int, default=1)
     parser.add_argument("--support-size", type=int, default=None)
-    parser.add_argument("--max-query-tokens", type=int, default=768)
+    parser.add_argument("--support-mode", choices=["sample", "all_except_current_task"], default="all_except_current_task")
+    parser.add_argument("--max-query-tokens", type=int, default=None)
+    parser.add_argument("--representation-cache-dir", default=None)
+    parser.add_argument("--representation-batch-size", type=int, default=1)
     parser.add_argument("--save-every", type=int, default=50)
     parser.add_argument("--log-every", type=int, default=1)
     args = parser.parse_args()
@@ -86,7 +217,28 @@ def main() -> None:
         steps_per_epoch = math.ceil(len(examples) / args.batch_size)
         max_steps = args.max_steps or max(1, steps_per_epoch * args.epochs)
         rng = random.Random(cfg.experiment.seed)
-        example_order = list(examples)
+        example_order = list(range(len(examples)))
+        record_representations = None
+        record_owner_indices = None
+        state_representations = None
+        if cfg.encoder.type == "qwen_hidden":
+            cache_dir = Path(args.representation_cache_dir or output_dir / "representation_cache")
+            record_representations, record_owner_indices = _load_or_compute_chunk_representations(
+                backend=backend,
+                texts=[record.experience_text for record in records],
+                cache_path=cache_dir / "memory_record_representations.pt",
+                source_path=data_dir / "memory_records.jsonl",
+                model_name=cfg.model.name,
+                batch_size=args.representation_batch_size,
+            )
+            state_representations = _load_or_compute_representations(
+                backend=backend,
+                texts=[example.state_text for example in examples],
+                cache_path=cache_dir / "decision_state_representations.pt",
+                source_path=data_dir / "decision_examples.jsonl",
+                model_name=cfg.model.name,
+                batch_size=args.representation_batch_size,
+            )
         optimizer.zero_grad(set_to_none=True)
         metrics_path = output_dir / "metrics.jsonl"
         start_time = time.perf_counter()
@@ -96,16 +248,36 @@ def main() -> None:
             if (step - 1) % steps_per_epoch == 0:
                 rng.shuffle(example_order)
             offset = ((step - 1) * args.batch_size) % len(example_order)
-            batch_examples = example_order[offset : offset + args.batch_size]
-            if len(batch_examples) < args.batch_size:
-                batch_examples += example_order[: args.batch_size - len(batch_examples)]
-            support_records = sample_support_records(records, support_size, rng)
+            batch_indices = example_order[offset : offset + args.batch_size]
+            if len(batch_indices) < args.batch_size:
+                batch_indices += example_order[: args.batch_size - len(batch_indices)]
+            batch_examples = [examples[index] for index in batch_indices]
+            support_indices = _support_indices_for_examples(
+                records,
+                batch_examples,
+                mode=args.support_mode,
+                support_size=support_size,
+                rng=rng,
+            )
+            if record_representations is not None and record_owner_indices is not None:
+                segment_indices = _segment_indices_for_record_indices(record_owner_indices, support_indices)
+                support_records = [records[int(record_owner_indices[index])] for index in segment_indices]
+                support_repr_batch = record_representations[segment_indices]
+            else:
+                segment_indices = []
+                support_records = [records[index] for index in support_indices]
+                support_repr_batch = None
+            state_repr_batch = (
+                state_representations[batch_indices] if state_representations is not None else None
+            )
             batch = build_rcmf_training_batch(
                 backend.tokenizer,
                 cfg,
                 support_records=support_records,
                 examples=batch_examples,
                 max_query_tokens=args.max_query_tokens,
+                support_representations=support_repr_batch,
+                state_representations=state_repr_batch,
             )
             batch = _move_batch(batch, device)
             with torch.autocast(device_type="cuda", dtype=torch.bfloat16, enabled=use_autocast):
@@ -140,6 +312,9 @@ def main() -> None:
                     "elapsed_s": elapsed,
                     "examples": len(examples),
                     "records": len(records),
+                    "support_mode": args.support_mode,
+                    "support_records": len(support_indices),
+                    "support_segments": len(support_records),
                     **output.metrics,
                 }
                 append_jsonl(metrics_path, row)
@@ -174,6 +349,13 @@ def main() -> None:
                 "grad_accumulation_steps": args.grad_accumulation_steps,
                 "optimizer_steps": optimizer_steps,
                 "support_size": support_size,
+                "support_mode": args.support_mode,
+                "memory_representation_segments": int(record_owner_indices.numel())
+                if record_owner_indices is not None
+                else None,
+                "representation_cache_dir": str(args.representation_cache_dir or output_dir / "representation_cache")
+                if cfg.encoder.type == "qwen_hidden"
+                else None,
                 "git_commit": maybe_git_commit(),
             },
         )
@@ -185,14 +367,27 @@ def main() -> None:
     seq = 12
     vocab = getattr(backend.tokenizer, "vocab_size", 259)
     batch = {
-        "support_input_ids": torch.randint(1, vocab, (support_size, seq)),
-        "support_attention_mask": torch.ones(support_size, seq, dtype=torch.long),
-        "state_input_ids": torch.randint(1, vocab, (batch_size, seq)),
-        "state_attention_mask": torch.ones(batch_size, seq, dtype=torch.long),
         "query_input_ids": torch.randint(1, vocab, (batch_size, seq)),
         "query_attention_mask": torch.ones(batch_size, seq, dtype=torch.long),
         "labels": torch.randint(1, vocab, (batch_size, seq)),
     }
+    if cfg.encoder.type == "qwen_hidden":
+        repr_dim = int(getattr(backend.model.config, "hidden_size", cfg.encoder.hidden_size))
+        batch.update(
+            {
+                "support_representations": torch.randn(support_size, repr_dim),
+                "state_representations": torch.randn(batch_size, repr_dim),
+            }
+        )
+    else:
+        batch.update(
+            {
+                "support_input_ids": torch.randint(1, vocab, (support_size, seq)),
+                "support_attention_mask": torch.ones(support_size, seq, dtype=torch.long),
+                "state_input_ids": torch.randint(1, vocab, (batch_size, seq)),
+                "state_attention_mask": torch.ones(batch_size, seq, dtype=torch.long),
+            }
+        )
     output = trainer.training_step(batch)
     output.loss.backward()
     torch.nn.utils.clip_grad_norm_(list(trainer.parameters()), cfg.training.grad_clip)
