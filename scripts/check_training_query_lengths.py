@@ -7,7 +7,7 @@ from pathlib import Path
 
 import _bootstrap  # noqa: F401
 
-from transformers import AutoTokenizer
+from transformers import AutoConfig, AutoTokenizer
 
 from rcmf.config import load_config
 from rcmf.training.datasets import (
@@ -32,6 +32,7 @@ def main() -> None:
     args = parser.parse_args()
 
     cfg = load_config(args.config)
+    model_config = AutoConfig.from_pretrained(cfg.model.name, trust_remote_code=True)
     tokenizer = AutoTokenizer.from_pretrained(cfg.model.name, trust_remote_code=True)
     examples = load_decision_examples(Path(args.data) / "decision_examples.jsonl")
     lengths: list[int] = []
@@ -61,13 +62,24 @@ def main() -> None:
     sorted_lengths = sorted(lengths)
     sorted_targets = sorted(target_lengths)
     model_max = getattr(tokenizer, "model_max_length", None)
+    model_config_max = getattr(model_config, "max_position_embeddings", None)
     count_thresholds = [8192, 32768, 65536, 131072, 262144, 1_000_000]
     if isinstance(model_max, int) and model_max not in count_thresholds and model_max < 1_000_000_000:
         count_thresholds.append(model_max)
+    if isinstance(model_config_max, int) and model_config_max not in count_thresholds:
+        count_thresholds.append(model_config_max)
     count_thresholds = sorted(set(count_thresholds))
-    rows_over_model_max = []
+    effective_context_limit = None
+    context_candidates = []
+    if isinstance(model_config_max, int):
+        context_candidates.append(model_config_max)
     if isinstance(model_max, int) and model_max < 1_000_000_000:
-        rows_over_model_max = [row for row in top_rows if int(row["total_tokens"]) > model_max]
+        context_candidates.append(model_max)
+    if context_candidates:
+        effective_context_limit = min(context_candidates)
+    rows_over_model_max = []
+    if effective_context_limit is not None:
+        rows_over_model_max = [row for row in top_rows if int(row["total_tokens"]) > effective_context_limit]
     over_episode_counts = Counter(str(row["episode_id"]) for row in rows_over_model_max)
     summary = {
         "config": args.config,
@@ -75,6 +87,8 @@ def main() -> None:
         "count": len(lengths),
         "model_name": cfg.model.name,
         "tokenizer_model_max_length": model_max,
+        "model_config_max_position_embeddings": model_config_max,
+        "effective_context_limit": effective_context_limit,
         "query_total": {
             "min": min(lengths),
             "median": _percentile(sorted_lengths, 50),
