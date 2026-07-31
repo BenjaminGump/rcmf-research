@@ -1,0 +1,9 @@
+include:
+  - appworld_qwen_full_prompt.yaml
+
+experiment:
+  name: qwen_appworld_full_prompt_context40_baseline
+  output_dir: runs/experiments/qwen_appworld_full_prompt_context40_baseline
+
+benchmark:
+  max_context_turns: 40
