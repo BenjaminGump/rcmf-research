@@ -144,3 +144,69 @@ benchmark:
 - RCMF: 加载 `--checkpoint` 与 `--memory-snapshot`
 
 不要再使用旧的 all-history `max_context_turns: null` full baseline 作为可靠对照。
+
+## Corrected Full Baseline 结果
+
+修复 prompt newline，并使用 `configs/baseline/appworld_qwen_full_prompt_context40.yaml` 后，重新跑完整 `test_normal`：
+
+```bash
+python scripts/evaluate.py \
+  --config configs/baseline/appworld_qwen_full_prompt_context40.yaml \
+  --benchmark appworld \
+  --split test \
+  --max-steps 50 \
+  --max-new-tokens 512 \
+  --temperature 0.0 \
+  --top-p 1.0 \
+  --no-memory \
+  --output-dir runs/experiments/qwen_appworld_full_prompt_context40_newline_full_20260731_235900 \
+  --experiment-name qwen_appworld_full_prompt_context40_newline_full_20260731_235900
+```
+
+结果：
+
+```text
+success_rate: 53/168 = 31.5476%
+average_score: 31.5476
+avg_steps: 22.4464
+avg_prompt_tokens: 279517.1726
+avg_generated_tokens: 2617.7679
+avg_wall_time_s: 71.0661
+```
+
+与旧 all-history baseline 对比：
+
+```text
+old successes: 51/168
+new successes: 53/168
+old steps=50 failures: 43
+new steps=50 failures: 41
+old avg_prompt_tokens: 341556.5357
+new avg_prompt_tokens: 279517.1726
+```
+
+旧 `steps=50` 但 corrected 后不再跑满 50 步的 task 共 24 个：
+
+```text
+042a9fc_2, 0a9d82a_3, 270f1ff_1, 29a7b7e_1, 2d9f728_1,
+2d9f728_2, 3aa1a22_3, 3b8fb7a_1, 552869a_1, 634f342_2,
+652485c_1, 6f4b9a5_2, 83a7951_1, 8ce6779_2, 90adc3f_1,
+9ef798c_1, 9ef798c_3, b9c5c9a_3, c77c005_2, d18139b_1,
+d18139b_3, d194965_1, f323bae_3, f3f60f0_1
+```
+
+旧失败但 corrected 后成功的 task：
+
+```text
+0a9d82a_1, 29a7b7e_1, 3b8fb7a_2, 7847649_2, 8749218_3,
+afc4005_1, cef9191_1, d194965_1, dac78d9_3, f3f60f0_1
+```
+
+旧成功但 corrected 后失败的 task：
+
+```text
+1150ed6_2, 270f1ff_3, 325d6ec_2, 425a494_1, 5a83b05_1,
+90adc3f_3, dac78d9_1, dac78d9_2
+```
+
+这些变化进一步说明旧 all-history result 不能作为正式 baseline；后续请使用 corrected context40/newline 结果作为裸 Qwen3 对照。
