@@ -1,0 +1,11 @@
+include:
+  - appworld_mvp_experiment.yaml
+
+experiment:
+  name: rcmf_appworld_full_prompt
+  output_dir: runs/experiments/rcmf_appworld_full_prompt
+
+benchmark:
+  prompt_profile: full_demo
+  max_steps: 50
+  max_context_turns: null
