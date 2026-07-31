@@ -4,7 +4,9 @@ set -Eeuo pipefail
 PERSIST="${RCMF_PERSIST:-/lambda/nfs/rcmf-persist}"
 PROJECT="${PROJECT:-$PERSIST/project}"
 PYTHON="${PYTHON:-/home/ubuntu/venvs/rcmf-py311/bin/python}"
-DATA_DIR="${DATA_DIR:-runs/appworld/official_react_gpt4o_train_success_20260730_170000}"
+DATA_DIR="${DATA_DIR:-runs/appworld/official_react_gpt4o_train_success_full_demo_a7be6f1}"
+BASELINE_CONFIG="${BASELINE_CONFIG:-configs/baseline/appworld_qwen_full_prompt_context40.yaml}"
+RCMF_CONFIG="${RCMF_CONFIG:-configs/benchmark/appworld_rcmf_full_prompt.yaml}"
 STAMP="${1:-$(date +%Y%m%d_%H%M%S)}"
 LOG_DIR="$PERSIST/runs/logs"
 mkdir -p "$LOG_DIR"
@@ -66,7 +68,7 @@ nvidia-smi --query-gpu=name,memory.total,memory.used --format=csv,noheader || tr
 
 log_step "baseline test10"
 "$PYTHON" scripts/evaluate.py \
-  --config configs/baseline/appworld_qwen_full_prompt.yaml \
+  --config "$BASELINE_CONFIG" \
   --benchmark appworld \
   --split test \
   --limit 10 \
@@ -80,14 +82,14 @@ log_step "baseline test10"
 
 log_step "query token length check"
 "$PYTHON" scripts/check_training_query_lengths.py \
-  --config configs/benchmark/appworld_rcmf_full_prompt.yaml \
+  --config "$RCMF_CONFIG" \
   --data "$DATA_DIR" \
   --output "$LENGTH_JSON"
 
 log_step "full no-truncation train attempt"
 set +e
 "$PYTHON" scripts/train.py \
-  --config configs/benchmark/appworld_rcmf_full_prompt.yaml \
+  --config "$RCMF_CONFIG" \
   --data "$DATA_DIR" \
   --output-dir "$TRAIN_OUT" \
   --epochs 1 \
@@ -104,7 +106,7 @@ echo "TRAIN_STATUS=$TRAIN_STATUS"
 if [[ "$TRAIN_STATUS" == "0" ]]; then
   log_step "compile memory"
   "$PYTHON" scripts/compile_memory.py \
-    --config configs/benchmark/appworld_rcmf_full_prompt.yaml \
+    --config "$RCMF_CONFIG" \
     --records "$DATA_DIR/memory_records.jsonl" \
     --compiler checkpoint \
     --checkpoint "$TRAIN_OUT/train/checkpoint.pt" \
@@ -114,7 +116,7 @@ if [[ "$TRAIN_STATUS" == "0" ]]; then
 
   log_step "rcmf test10 same prompt flow"
   "$PYTHON" scripts/evaluate.py \
-    --config configs/benchmark/appworld_rcmf_full_prompt.yaml \
+    --config "$RCMF_CONFIG" \
     --benchmark appworld \
     --split test \
     --limit 10 \
@@ -132,7 +134,7 @@ fi
 
 log_step "baseline full test_normal"
 "$PYTHON" scripts/evaluate.py \
-  --config configs/baseline/appworld_qwen_full_prompt.yaml \
+  --config "$BASELINE_CONFIG" \
   --benchmark appworld \
   --split test \
   --max-steps 50 \
