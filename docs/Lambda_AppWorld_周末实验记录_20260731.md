@@ -8,7 +8,7 @@
 - Weekend tmux session: `rcmf_weekend_20260731_094940`
 - Weekend log: `/lambda/nfs/rcmf-persist/runs/logs/rcmf_weekend_20260731_094940.log`
 - Runner script: `scripts/lambda_weekend_experiment.sh`
-- Current git commit after fixes: `767f688`
+- Code commit containing the prompt, preflight, and length-stat fixes: `34f2b82`
 
 ## 保留的裸 Qwen3 测试流程
 
@@ -101,7 +101,7 @@ python -m pytest -q
 python scripts/check_training_query_lengths.py \
   --config configs/benchmark/appworld_rcmf_full_prompt.yaml \
   --data runs/appworld/official_react_gpt4o_train_success_full_demo_a7be6f1 \
-  --output runs/experiments/weekend_20260731_full_demo_a7be6f1_query_token_lengths_v2.json \
+  --output runs/experiments/weekend_20260731_full_demo_a7be6f1_query_token_lengths_v3.json \
   --top-k 20
 ```
 
@@ -109,6 +109,8 @@ python scripts/check_training_query_lengths.py \
 
 - Examples: `710`
 - Qwen tokenizer model max length: `131072`
+- Qwen model config max position embeddings: `40960`
+- Effective context limit used by training preflight: `40960`
 - Prompt + target token count:
   - min: `7334`
   - median: `10662`
@@ -120,7 +122,7 @@ python scripts/check_training_query_lengths.py \
   - median: `27`
   - p95: `92`
   - max: `187`
-- 超过 Qwen 131,072 token 上限的样本数: `66`
+- 超过 Qwen 40,960 token 有效上下文上限的样本数: `66`
 - 超长样本全部来自同一个 episode: `appworld:trace:2a163ab_3`
 
 最长样本：
@@ -147,7 +149,22 @@ python scripts/inspect_appworld_training_example.py \
 
 ## 为什么没有继续正式 RCMF 训练
 
-当前 RCMF 的 memory/state 表示可以用冻结 Qwen 分块离线编码，但 action loss 仍需要让 Qwen 对完整 `prompt + target` 做前向。对于超过 `131072` token 的样本，Qwen3-8B 本身不支持完整注意力上下文；把 230 万 token 直接送入模型既不符合模型上下文限制，也不可计算。
+当前 RCMF 的 memory/state 表示可以用冻结 Qwen 分块离线编码，但 action loss 仍需要让 Qwen 对完整 `prompt + target` 做前向。对于超过 `40960` token 有效上下文上限的样本，Qwen3-8B 本身不支持完整注意力上下文；把 230 万 token 直接送入模型既不符合模型上下文限制，也不可计算。
+
+已在 `405c52e` 给 `scripts/train.py` 增加训练前 query length preflight。对当前 full-demo 数据运行：
+
+```bash
+python scripts/train.py \
+  --config configs/benchmark/appworld_rcmf_full_prompt.yaml \
+  --data runs/appworld/official_react_gpt4o_train_success_full_demo_a7be6f1 \
+  --output-dir runs/experiments/preflight_full_demo_a7be6f1_405c52e \
+  --max-steps 1
+```
+
+会在离线表示缓存和训练开始前失败，并写出：
+
+- `runs/experiments/preflight_full_demo_a7be6f1_405c52e/train/query_length_preflight.json`
+- Error: `66 training prompt+target sample(s) exceed context_limit=40960`
 
 可行的下一步都涉及训练数据策略或训练目标定义：
 
