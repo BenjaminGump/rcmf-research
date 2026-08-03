@@ -117,6 +117,16 @@ The training entrypoint also runs `query_length_preflight.json` before training 
 - The corrected Qwen3 baseline evaluation on `test_normal` is unaffected, because this filter changes only the training prepared dataset, not the test split or the baseline agent flow.
 - Any RCMF training runs before this filtered dataset either failed preflight or used a data version that contained the pathological `2a163ab_3` episode. Future RCMF AppWorld full-demo training should use the filtered dataset unless the user explicitly requests a different data version.
 
+## Current Lambda runner
+
+For the current filtered-data experiment, use:
+
+```bash
+bash scripts/lambda_train_eval_filtered_rcmf.sh <STAMP>
+```
+
+The runner performs the approved filter if the filtered dataset does not exist, runs the context-length check, refuses to train if any sample still exceeds the model context limit, trains RCMF for one full epoch by default, compiles the memory snapshot, then evaluates RCMF on `test_normal` first with `--limit 10` and then on the full split. It does not rerun the full Qwen baseline; the summary records the corrected baseline reference `53/168 = 31.5476%`.
+
 ## Paper-disclosure note
 
 For paper or appendix reporting: one official successful AppWorld train trajectory, `2a163ab_3`, was excluded from the RCMF training prepared dataset because its raw official trace contains repeated full social-feed dumps that expand a single episode to multi-million-token training contexts, far beyond Qwen3-8B's 40,960-token effective context window. The raw official trace was not altered. The exclusion removes 1 train memory record and 72 per-step train decision examples, including 66 over-context examples; 638 decision examples and 46 memory records remain.
