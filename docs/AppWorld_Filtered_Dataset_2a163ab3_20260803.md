@@ -249,6 +249,15 @@ Because `checkpoint_step100.pt` reached the first-10 baseline threshold, a remai
 
 This run should be combined with the first-10 result above if a full 168-task estimate is needed. It intentionally starts after the first 10 tasks to avoid repeating completed AppWorld work.
 
+The remaining-split run was stopped early after 27 completed tasks because the interim result was low enough that continuing the same checkpoint was not a good use of GPU time:
+
+- Remaining-split partial: `3/27 = 11.1%`
+- Combined with the completed first 10 tasks: `6/37 = 16.2%`
+- To match the corrected full baseline `53/168 = 31.5%`, the remaining 131 tasks would have needed about 36% success after this point.
+- The partial run's successes were `0d01c76_1`, `0d01c76_3`, and `ff58e36_3`.
+
+The next local version adds an optional semantic-retrieval auxiliary loss. It is motivated by the repeated observation that action-only training can reach first-10 baseline when the additive perturbation is very small, but the learned memory read remains almost state-independent.
+
 ## Paper-disclosure note
 
 For paper or appendix reporting: one official successful AppWorld train trajectory, `2a163ab_3`, was excluded from the RCMF training prepared dataset because its raw official trace contains repeated full social-feed dumps that expand a single episode to multi-million-token training contexts, far beyond Qwen3-8B's 40,960-token effective context window. The raw official trace was not altered. The exclusion removes 1 train memory record and 72 per-step train decision examples, including 66 over-context examples; 638 decision examples and 46 memory records remain.
