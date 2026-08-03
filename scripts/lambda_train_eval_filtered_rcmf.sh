@@ -114,18 +114,25 @@ TRAIN_ARGS=(
   --save-every "${SAVE_EVERY:-100}"
   --log-every "${LOG_EVERY:-10}"
 )
+if [[ -n "${REPRESENTATION_CACHE_DIR:-}" ]]; then
+  TRAIN_ARGS+=(--representation-cache-dir "$REPRESENTATION_CACHE_DIR")
+fi
 if [[ -n "${TRAIN_MAX_STEPS:-}" ]]; then
   TRAIN_ARGS+=(--max-steps "$TRAIN_MAX_STEPS")
 fi
 "$PYTHON" "${TRAIN_ARGS[@]}"
 
 log_step "compile memory"
+MEMORY_REPRESENTATION_CACHE="$TRAIN_OUT/train/representation_cache/memory_record_representations.pt"
+if [[ -n "${REPRESENTATION_CACHE_DIR:-}" ]]; then
+  MEMORY_REPRESENTATION_CACHE="$REPRESENTATION_CACHE_DIR/memory_record_representations.pt"
+fi
 "$PYTHON" scripts/compile_memory.py \
   --config "$RCMF_CONFIG" \
   --records "$DATA_DIR/memory_records.jsonl" \
   --compiler checkpoint \
   --checkpoint "$TRAIN_OUT/train/checkpoint.pt" \
-  --representation-cache "$TRAIN_OUT/train/representation_cache/memory_record_representations.pt" \
+  --representation-cache "$MEMORY_REPRESENTATION_CACHE" \
   --output "$TRAIN_OUT/memory.safetensors" \
   --ledger-dir "$TRAIN_OUT/memory_ledger"
 

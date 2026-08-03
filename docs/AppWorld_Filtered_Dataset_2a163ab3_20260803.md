@@ -146,6 +146,57 @@ The full-length dummy `input_ids` fix did not recover the zero-memory-bank contr
 
 The first additive-prefix implementation still used `inputs_embeds` during generation, and a zero-memory-bank control continued to fail. That suggests Qwen3 generation is also sensitive to the `inputs_embeds` generation path itself. The follow-up implementation keeps training on additive `inputs_embeds`, but generation now stays on the normal `input_ids` path and applies the additive memory delta through a one-shot embedding-layer forward hook. With a zero memory delta, generation should now use the exact same inputs as the no-memory baseline.
 
+## 2026-08-03 filtered-data training and evaluation results
+
+The first complete additive-prefix filtered-data run was:
+
+```text
+/lambda/nfs/rcmf-persist/project/runs/experiments/appworld_qwen_repr_full_prompt_filtered_no_2a163ab3_additive_20260803_121500
+```
+
+Training details:
+
+- Code version recorded by the run: `5cdc383a404...`
+- Data: `official_react_gpt4o_train_success_full_demo_filtered_no_2a163ab3_20260803`
+- Decision examples: 638
+- Memory records compiled: 46
+- Support mode during training: `all_except_current_task`, so each training example can attend to all memory records except the current task's record.
+- Qwen backbone: frozen; hidden representations cached offline for memory records and decision states.
+- AppWorld prompt/evaluation flow: same full original prompt and `max_steps=50` policy as the corrected Qwen3 baseline.
+- Full-run training completed in about 31.5 minutes on the Lambda H100 instance.
+
+Evaluation against the corrected first-10 baseline task set:
+
+- Corrected bare-Qwen baseline: `3/10 = 30%`, from `qwen_appworld_full_prompt_context40_newline_full_20260731_235900`.
+- Final additive-prefix checkpoint at scale 1.0: `1/10`; only `325d6ec_1` succeeded.
+- Step-100 additive-prefix checkpoint at scale 1.0: `2/10`; `325d6ec_2` and `325d6ec_3` succeeded, but baseline successes `325d6ec_1` and `29a7b7e_1` were lost.
+- Step-200 additive-prefix checkpoint at scale 1.0: `1/10`; only `325d6ec_3` succeeded.
+- Step-100 additive-prefix checkpoint at scale 0.25: `1/10`; only `325d6ec_3` succeeded.
+- Step-100 additive-prefix checkpoint at scale 0.05: `2/10`; `325d6ec_1` and `325d6ec_3` succeeded.
+- Step-100 additive-prefix checkpoint at scale 0.0: `3/10`, exactly matching the corrected bare-Qwen first-10 baseline success set (`325d6ec_1`, `325d6ec_3`, `29a7b7e_1`).
+
+The scale-0.0 control is important: it shows the current `agent.py`, full AppWorld prompt, max-step policy, generation hook, and baseline flow are aligned with the bare-Qwen baseline when the learned memory perturbation is disabled. The remaining degradation is therefore caused by the nonzero learned memory path, not by a missing prompt or a broken AppWorld execution loop.
+
+Trace inspection found two representative failure modes:
+
+- `325d6ec_3`: the bare baseline repeatedly used `spotify.next_song()` until finding a liked song; the RCMF checkpoint drifted into solving a different playlist-like task.
+- `29a7b7e_1`: the bare baseline moved files one by one and completed; the RCMF checkpoint repeatedly called `file_system.directory_exists("slides.ppt")`, received AppWorld 422 errors, and looped until `max_steps=50`.
+
+Memory-injection statistics for the step-100 checkpoint showed a likely structural problem:
+
+- Qwen input embedding row norm mean: about `1.3758`.
+- Additive prefix token norm at memory scale 1.0: mean about `0.4227`, about 31% of the average Qwen embedding row norm.
+- Even at memory scale 0.05, the perturbation changed trajectories and reduced test10 accuracy from 3/10 to 2/10.
+- The read memory vector `memory_z` was nearly constant across the 638 training states (`std` about `0.0078` at scale 1.0), suggesting the memory read is acting like a mostly global prompt perturbation rather than a strongly state-conditioned retrieval result.
+
+Version status:
+
+- The prepend-prefix generation failure is present through commit `d1d3d63` and eliminated by the additive-prefix/hook path.
+- The `inputs_embeds` generation sensitivity is present through the first additive-prefix implementation and eliminated by commit `7f50422`.
+- The target-only additive training input mismatch is fixed by commit `5cdc383`.
+- Optimizer parameter groups used only `training.lr_compiler` for all trainable modules through commit `7764cd4`. Commit `5a9a141` fixes this so compiler, state encoder, and injector use `lr_compiler`, `lr_encoder`, and `lr_injector` respectively. This does not change the completed `20260803_121500` run's effective learning rates because the active config set all three values to `1e-5`, but it matters for future low-injector or module-specific LR runs.
+- As of commit `5a9a141`, the best nonzero-memory test10 result is still `2/10`, below the corrected baseline `3/10`. Further training versions should focus on preventing state-independent/global memory perturbations before attempting a full 168-task evaluation.
+
 ## Paper-disclosure note
 
 For paper or appendix reporting: one official successful AppWorld train trajectory, `2a163ab_3`, was excluded from the RCMF training prepared dataset because its raw official trace contains repeated full social-feed dumps that expand a single episode to multi-million-token training contexts, far beyond Qwen3-8B's 40,960-token effective context window. The raw official trace was not altered. The exclusion removes 1 train memory record and 72 per-step train decision examples, including 66 over-context examples; 638 decision examples and 46 memory records remain.

@@ -1,0 +1,15 @@
+include:
+  - appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: rcmf_appworld_full_prompt_low_injector
+  output_dir: runs/experiments/rcmf_appworld_full_prompt_low_injector
+
+injector:
+  type: additive_prefix
+  initial_scale: 0.02
+
+training:
+  lr_compiler: 1.0e-5
+  lr_encoder: 1.0e-5
+  lr_injector: 1.0e-6
