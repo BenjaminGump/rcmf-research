@@ -49,6 +49,7 @@ log_step "evaluate checkpoint test10"
   --max-new-tokens 512 \
   --temperature 0.0 \
   --top-p 1.0 \
+  --memory-scale "${MEMORY_SCALE:-1.0}" \
   --checkpoint "$CHECKPOINT" \
   --memory-snapshot "$MEMORY_OUT" \
   --output-dir "$EVAL_OUT" \

@@ -29,6 +29,7 @@ def main() -> None:
     parser.add_argument("--max-new-tokens", type=int, default=512)
     parser.add_argument("--temperature", type=float, default=0.3)
     parser.add_argument("--top-p", type=float, default=0.95)
+    parser.add_argument("--memory-scale", type=float, default=1.0)
     parser.add_argument("--no-memory", action="store_true")
     args = parser.parse_args()
 
@@ -68,6 +69,7 @@ def main() -> None:
         max_new_tokens=args.max_new_tokens,
         temperature=args.temperature,
         top_p=args.top_p,
+        memory_scale=args.memory_scale,
     )
     output_dir = Path(args.output_dir or cfg.experiment.output_dir) / "evaluate" / args.split
     summary = EvaluationRunner(output_dir).run(adapter, policy, task_ids)

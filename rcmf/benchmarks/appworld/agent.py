@@ -38,6 +38,7 @@ class RCMFAppWorldAgent:
         max_new_tokens: int = 512,
         temperature: float = 0.3,
         top_p: float = 0.95,
+        memory_scale: float = 1.0,
     ) -> None:
         self.config = config
         self.backend = backend
@@ -49,6 +50,7 @@ class RCMFAppWorldAgent:
         self.max_new_tokens = max_new_tokens
         self.temperature = temperature
         self.top_p = top_p
+        self.memory_scale = float(memory_scale)
 
     def _accumulate_usage(self, left: dict[str, int], right: dict[str, int]) -> dict[str, int]:
         return {
@@ -92,6 +94,8 @@ class RCMFAppWorldAgent:
                 normalization=self.config.memory.normalization,
                 eps=self.config.memory.eps,
             )
+        if self.memory_scale != 1.0:
+            z = z * self.memory_scale
         return z
 
     def _evaluate_with_appworld(self, task_id: str) -> bool:
