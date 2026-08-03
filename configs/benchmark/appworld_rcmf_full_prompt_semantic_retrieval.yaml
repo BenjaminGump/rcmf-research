@@ -1,0 +1,12 @@
+include:
+  - appworld_rcmf_full_prompt_low_injector.yaml
+
+experiment:
+  name: rcmf_appworld_full_prompt_semantic_retrieval
+  output_dir: runs/experiments/rcmf_appworld_full_prompt_semantic_retrieval
+
+loss:
+  semantic_retrieval: true
+  lambda_semantic_retrieval: 0.05
+  semantic_teacher_temperature: 0.1
+  semantic_student_temperature: 0.1

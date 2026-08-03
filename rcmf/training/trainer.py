@@ -6,6 +6,7 @@ from typing import Any
 
 import torch
 from torch import Tensor, nn
+import torch.nn.functional as F
 
 from rcmf.config import RCMFConfig
 from rcmf.injection.base import MemoryInjector
@@ -153,6 +154,19 @@ class RCMFTrainer:
             )
             loss = loss + self.config.loss.lambda_rank * rank_loss
             metrics["loss_rank"] = float(rank_loss.detach().cpu())
+
+        if self.config.loss.semantic_retrieval and has_support_representations and has_state_representations:
+            state_teacher = F.normalize(batch["state_representations"].to(torch.float32), dim=-1)
+            support_teacher = F.normalize(batch["support_representations"].to(torch.float32), dim=-1)
+            teacher_logits = state_teacher @ support_teacher.T
+            teacher_temperature = max(float(self.config.loss.semantic_teacher_temperature), 1.0e-6)
+            student_temperature = max(float(self.config.loss.semantic_student_temperature), 1.0e-6)
+            teacher_probs = F.softmax(teacher_logits / teacher_temperature, dim=-1)
+            student_logits = state_address.to(torch.float32) @ support.alpha.to(torch.float32).T
+            student_log_probs = F.log_softmax(student_logits / student_temperature, dim=-1)
+            retrieval_loss = F.kl_div(student_log_probs, teacher_probs, reduction="batchmean")
+            loss = loss + self.config.loss.lambda_semantic_retrieval * retrieval_loss
+            metrics["loss_semantic_retrieval"] = float(retrieval_loss.detach().cpu())
 
         if self.config.loss.sparse:
             sparse = address_entropy(state_address).mean()

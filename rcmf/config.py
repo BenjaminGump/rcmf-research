@@ -115,12 +115,16 @@ class LossSection:
     orthogonal: bool = True
     interference: bool = True
     teacher_distillation: bool = False
+    semantic_retrieval: bool = False
     lambda_utility: float = 1.0
     lambda_rank: float = 0.2
     lambda_sparse: float = 0.01
     lambda_orthogonal: float = 0.01
     lambda_interference: float = 0.1
     lambda_distill: float = 0.0
+    lambda_semantic_retrieval: float = 0.05
+    semantic_teacher_temperature: float = 0.1
+    semantic_student_temperature: float = 0.1
 
 
 @dataclass

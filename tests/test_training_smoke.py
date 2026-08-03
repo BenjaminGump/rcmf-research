@@ -121,6 +121,48 @@ def test_trainer_optimizer_uses_module_specific_learning_rates() -> None:
     }
 
 
+def test_training_step_reports_semantic_retrieval_loss() -> None:
+    cfg = load_config(
+        "configs/base.yaml",
+        overrides={
+            "model": {"backend": "mock"},
+            "memory": {"rank": 8, "program_dim": 6},
+            "encoder": {
+                "type": "qwen_hidden",
+                "hidden_size": 16,
+                "num_heads": 4,
+                "intermediate_size": 32,
+                "num_layers": 1,
+            },
+            "injector": {"type": "additive_prefix", "num_prefix_tokens": 2},
+            "loss": {
+                "semantic_retrieval": True,
+                "lambda_semantic_retrieval": 0.1,
+                "rank": False,
+                "sparse": False,
+                "orthogonal": False,
+            },
+        },
+    )
+    backend = build_backend(cfg)
+    trainer = build_trainer(cfg, backend)
+    vocab = backend.tokenizer.vocab_size
+    repr_dim = backend.model.config.hidden_size
+    batch = {
+        "support_representations": torch.randn(4, repr_dim),
+        "state_representations": torch.randn(2, repr_dim),
+        "query_input_ids": torch.randint(1, vocab, (2, 5)),
+        "query_attention_mask": torch.ones(2, 5, dtype=torch.long),
+        "labels": torch.randint(1, vocab, (2, 5)),
+    }
+
+    output = trainer.training_step(batch)
+
+    assert torch.isfinite(output.loss)
+    assert output.metrics["loss_semantic_retrieval"] >= 0.0
+    output.loss.backward()
+
+
 def test_mock_backend_chunks_long_texts_without_dropping_tokens() -> None:
     backend = MockBackend(hidden_size=8)
     chunk_representations, owner_indices = backend.encode_text_chunks(
