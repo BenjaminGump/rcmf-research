@@ -18,6 +18,14 @@ from rcmf.training.datasets import (
 )
 
 
+def _task_id(example: object) -> str:
+    metadata = getattr(example, "metadata", {})
+    if isinstance(metadata, dict) and metadata.get("task_id"):
+        return str(metadata["task_id"])
+    episode_id = str(getattr(example, "episode_id", ""))
+    return episode_id.rsplit(":", 1)[-1]
+
+
 def _percentile(sorted_values: list[int], percentile: float) -> int:
     index = min(len(sorted_values) - 1, int(round((len(sorted_values) - 1) * percentile / 100.0)))
     return sorted_values[index]
@@ -55,8 +63,11 @@ def main() -> None:
                 "prompt_tokens": len(prompt_ids),
                 "target_tokens": len(target_ids),
                 "example_index": index,
+                "jsonl_line": index + 1,
                 "episode_id": example.episode_id,
+                "task_id": _task_id(example),
                 "step_id": example.step_id,
+                "source_path": example.metadata.get("source_path"),
             }
         )
     sorted_lengths = sorted(lengths)
@@ -81,6 +92,7 @@ def main() -> None:
     if effective_context_limit is not None:
         rows_over_model_max = [row for row in top_rows if int(row["total_tokens"]) > effective_context_limit]
     over_episode_counts = Counter(str(row["episode_id"]) for row in rows_over_model_max)
+    over_task_counts = Counter(str(row["task_id"]) for row in rows_over_model_max)
     summary = {
         "config": args.config,
         "data": args.data,
@@ -112,6 +124,13 @@ def main() -> None:
             "count": len(rows_over_model_max),
             "unique_episode_count": len(over_episode_counts),
             "episode_counts": dict(over_episode_counts.most_common()),
+            "unique_task_count": len(over_task_counts),
+            "task_counts": dict(over_task_counts.most_common()),
+            "rows": sorted(
+                rows_over_model_max,
+                key=lambda row: int(row["total_tokens"]),
+                reverse=True,
+            ),
         },
         "top": sorted(top_rows, key=lambda row: int(row["total_tokens"]), reverse=True)[: args.top_k],
     }

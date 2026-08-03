@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+
 import torch
 
 from rcmf.config import load_config
@@ -7,6 +9,7 @@ from rcmf.factory import build_backend, build_trainer
 from rcmf.model.backends.mock import MockBackend
 from rcmf.schemas import DecisionExample, MemoryRecord
 from rcmf.training.datasets import _render_training_prompt, build_rcmf_training_batch
+from scripts.train import _preflight_query_lengths
 
 
 class TinyTokenizer:
@@ -220,3 +223,37 @@ def test_full_demo_training_prompt_matches_chat_history_shape() -> None:
     assert "assistant:```python\nprint('x')\n```" in rendered
     assert "user:Output:\n```\n{'ok': true}\n```" in rendered
     assert rendered.endswith("\nassistant:")
+
+
+def test_query_length_preflight_reports_grouped_over_limit_rows(tmp_path) -> None:
+    tokenizer = TinyTokenizer()
+    example = DecisionExample(
+        benchmark="appworld",
+        episode_id="appworld:trace:long_1",
+        step_id=3,
+        state_text="[SYSTEM PROMPT]\nS\n[QUERY]\n" + ("q" * 200),
+        target_text="answer",
+        target_type="answer",
+        candidate_memory_ids=None,
+        metadata={"task_id": "long_1", "source_path": "/raw/long_1/logs/environment_io.md"},
+    )
+
+    try:
+        _preflight_query_lengths(
+            tokenizer=tokenizer,
+            examples=[example],
+            prompt_profile="minimal",
+            context_limit=32,
+            output_dir=tmp_path,
+        )
+    except ValueError as exc:
+        assert "No truncation or filtering is applied automatically" in str(exc)
+        assert "appworld:trace:long_1" in str(exc)
+    else:
+        raise AssertionError("Expected preflight to reject the over-limit training example")
+
+    report = json.loads((tmp_path / "query_length_preflight.json").read_text(encoding="utf-8"))
+    assert report["over_limit"] == 1
+    assert report["over_limit_by_episode"] == {"appworld:trace:long_1": 1}
+    assert report["over_limit_by_task"] == {"long_1": 1}
+    assert report["over_limit_rows"][0]["jsonl_line"] == 1

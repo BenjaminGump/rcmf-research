@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import math
 import random
 import time
@@ -84,6 +85,24 @@ def _context_limit_for_backend(backend: object) -> int | None:
     return None
 
 
+def _query_length_task_id(example: DecisionExample) -> str:
+    return _example_task_id(example)
+
+
+def _query_length_report_row(index: int, example: DecisionExample, prompt_tokens: int, target_tokens: int) -> dict[str, object]:
+    return {
+        "index": index,
+        "jsonl_line": index + 1,
+        "episode_id": example.episode_id,
+        "task_id": _query_length_task_id(example),
+        "step_id": example.step_id,
+        "prompt_tokens": prompt_tokens,
+        "target_tokens": target_tokens,
+        "total_tokens": prompt_tokens + target_tokens,
+        "source_path": example.metadata.get("source_path"),
+    }
+
+
 def _preflight_query_lengths(
     tokenizer: object,
     examples: list[DecisionExample],
@@ -103,33 +122,40 @@ def _preflight_query_lengths(
             tokenizer,
             list(tokenizer(target, add_special_tokens=False)["input_ids"]),
         )
-        row = {
-            "index": index,
-            "episode_id": example.episode_id,
-            "step_id": example.step_id,
-            "prompt_tokens": len(prompt_ids),
-            "target_tokens": len(target_ids),
-            "total_tokens": len(prompt_ids) + len(target_ids),
-        }
+        row = _query_length_report_row(index, example, len(prompt_ids), len(target_ids))
         lengths.append(row)
         if int(row["total_tokens"]) > context_limit:
             over_limit.append(row)
     sorted_lengths = sorted(lengths, key=lambda row: int(row["total_tokens"]), reverse=True)
+    over_episode_counts = Counter(str(row["episode_id"]) for row in over_limit)
+    over_task_counts = Counter(str(row["task_id"]) for row in over_limit)
     atomic_write_json(
         output_dir / "query_length_preflight.json",
         {
             "context_limit": context_limit,
             "examples": len(examples),
             "over_limit": len(over_limit),
+            "over_limit_by_episode": dict(over_episode_counts.most_common()),
+            "over_limit_by_task": dict(over_task_counts.most_common()),
+            "over_limit_rows": sorted(
+                over_limit,
+                key=lambda row: int(row["total_tokens"]),
+                reverse=True,
+            ),
             "top": sorted_lengths[:20],
         },
     )
     if over_limit:
         worst = sorted_lengths[0]
+        episodes = ", ".join(
+            f"{episode} ({count})" for episode, count in over_episode_counts.most_common(5)
+        )
         raise ValueError(
             f"{len(over_limit)} training prompt+target sample(s) exceed context_limit={context_limit}. "
             f"Worst sample episode_id={worst['episode_id']} step_id={worst['step_id']} "
-            f"total_tokens={worst['total_tokens']}. "
+            f"total_tokens={worst['total_tokens']}. Over-limit episodes: {episodes}. "
+            "No truncation or filtering is applied automatically; inspect the report and get approval "
+            "before creating a filtered prepared dataset. "
             f"Details: {output_dir / 'query_length_preflight.json'}"
         )
 
