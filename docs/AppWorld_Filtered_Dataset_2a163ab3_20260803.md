@@ -127,6 +127,17 @@ bash scripts/lambda_train_eval_filtered_rcmf.sh <STAMP>
 
 The runner performs the approved filter if the filtered dataset does not exist, runs the context-length check, refuses to train if any sample still exceeds the model context limit, trains RCMF for one full epoch by default, compiles the memory snapshot, then evaluates RCMF on `test_normal` first with `--limit 10` and then on the full split. It does not rerun the full Qwen baseline; the summary records the corrected baseline reference `53/168 = 31.5476%`.
 
+## 2026-08-03 training OOM and fix
+
+Run `rcmf_filtered_20260803_101000` generated the filtered dataset and completed both Qwen hidden representation caches:
+
+- `memory_record_representations.pt`
+- `decision_state_representations.pt`
+
+It then failed on the first actual training step with CUDA OOM. The cause was not an over-context sample and not generation length. The filtered dataset's longest prompt+target sample was 35,615 tokens, below the 40,960-token effective context limit. The OOM came from the training backend passing `labels` directly to `AutoModelForCausalLM`, which made transformers compute full vocabulary logits and default causal-LM cross entropy for every prompt position, even though prompt labels are `-100`. For a 35k-token sequence and Qwen's vocabulary, that full `[sequence, vocab]` logits tensor can exceed 80GB.
+
+This behavior is present through commit `e179956`. It is fixed after that version by changing `HFQwenBackend.forward_train()` to compute Qwen hidden states for the full untruncated sequence, then apply `lm_head` and cross entropy only at shifted target-token positions where `labels[..., 1:] != -100`. This preserves the full context and the target-only training objective, but avoids allocating prompt-position vocabulary logits.
+
 ## Paper-disclosure note
 
 For paper or appendix reporting: one official successful AppWorld train trajectory, `2a163ab_3`, was excluded from the RCMF training prepared dataset because its raw official trace contains repeated full social-feed dumps that expand a single episode to multi-million-token training contexts, far beyond Qwen3-8B's 40,960-token effective context window. The raw official trace was not altered. The exclusion removes 1 train memory record and 72 per-step train decision examples, including 66 over-context examples; 638 decision examples and 46 memory records remain.

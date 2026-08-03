@@ -235,6 +235,49 @@ class HFQwenBackend:
             ignore_index=-100,
         )
 
+    def _target_only_loss_from_hidden(
+        self,
+        model_inputs: dict[str, Any],
+        labels: Tensor,
+        logit_bias: Tensor | None,
+    ) -> tuple[Tensor, Tensor]:
+        base_model = getattr(self.model, "model", None)
+        lm_head = getattr(self.model, "lm_head", None)
+        if base_model is None or lm_head is None:
+            outputs = self.model(**{**model_inputs, "labels": labels})
+            logits = outputs.logits
+            return self._loss_with_logits(logits, labels), logits
+
+        base_inputs = dict(model_inputs)
+        base_inputs.pop("labels", None)
+        outputs = base_model(
+            **base_inputs,
+            use_cache=False,
+            return_dict=True,
+        )
+        hidden = getattr(outputs, "last_hidden_state", None)
+        if hidden is None:
+            hidden = outputs[0]
+
+        shift_labels = labels[..., 1:].contiguous()
+        target_mask = shift_labels.ne(-100)
+        if not bool(target_mask.any().item()):
+            raise ValueError("Target-only loss received no trainable labels")
+        target_hidden = hidden[..., :-1, :][target_mask]
+        target_labels = shift_labels[target_mask]
+        target_logits = lm_head(target_hidden)
+        if logit_bias is not None:
+            target_rows = target_mask.nonzero(as_tuple=True)[0]
+            target_logits = target_logits + logit_bias.to(
+                device=target_logits.device,
+                dtype=target_logits.dtype,
+            )[target_rows]
+        loss = F.cross_entropy(
+            target_logits.to(torch.float32),
+            target_labels.to(target_logits.device),
+        )
+        return loss, target_logits
+
     def forward_train(
         self,
         input_ids: Tensor,
@@ -263,13 +306,19 @@ class HFQwenBackend:
             model_inputs = dict(prepared.inputs)
             memory_metadata = prepared.memory_metadata
         logit_bias = model_inputs.pop("memory_logit_bias", None)
-        outputs = self.model(**model_inputs)
-        logits = outputs.logits
-        if logit_bias is not None:
-            logits = logits + logit_bias.to(device=logits.device, dtype=logits.dtype)[:, None, :]
-        loss = getattr(outputs, "loss", None)
-        if logit_bias is not None and "labels" in model_inputs:
-            loss = self._loss_with_logits(logits, model_inputs["labels"])
+        labels_for_loss = model_inputs.pop("labels", None)
+        if labels_for_loss is not None:
+            loss, logits = self._target_only_loss_from_hidden(
+                model_inputs=model_inputs,
+                labels=labels_for_loss,
+                logit_bias=logit_bias,
+            )
+        else:
+            outputs = self.model(**model_inputs)
+            logits = outputs.logits
+            if logit_bias is not None:
+                logits = logits + logit_bias.to(device=logits.device, dtype=logits.dtype)[:, None, :]
+            loss = getattr(outputs, "loss", None)
         return TrainOutput(loss=loss, logits=logits, extra={"memory": memory_metadata})
 
     @torch.no_grad()
