@@ -298,7 +298,35 @@ Because this version exceeded the first-10 baseline, the runner continued into a
 /lambda/nfs/rcmf-persist/project/runs/experiments/rcmf_appworld_full_prompt_filtered_no_2a163ab3_semretr_full_20260803_172000
 ```
 
-This full run was still in progress when this note was written.
+The full run was stopped early after 37 completed tasks because the interim result made it unlikely that this checkpoint would match the corrected full baseline:
+
+- Partial full result: `7/37 = 18.9%`.
+- Successes in the first 37 tasks: `325d6ec_1`, `325d6ec_2`, `325d6ec_3`, `29a7b7e_1`, `634f342_1`, `0d01c76_1`, `0d01c76_2`.
+- To match the corrected full baseline `53/168 = 31.5%`, the remaining 131 tasks would have needed 46 additional successes, about `35.1%`, after the observed `18.9%` opening.
+- This suggests the final semantic-retrieval checkpoint improves the fixed first-10 slice but is not yet reliably better on the broader AppWorld test distribution.
+
+Additional checkpoint check:
+
+- `checkpoint_step100.pt` was evaluated on the same first-10 set at memory scale 1.0.
+- Result: `3/10 = 30%`.
+- Successes: `325d6ec_1`, `325d6ec_3`, `29a7b7e_1`, exactly matching the corrected bare-Qwen first-10 success set.
+- Average score: `30.0`; average steps: `21.4`; average prompt tokens: `250,077.0`; average generated tokens: `2,054.1`; average wall time: `77.1s`.
+
+Memory-injection stats for the final semantic-retrieval checkpoint showed that the auxiliary loss did reduce the earlier near-total collapse, but did not fully solve the state-conditioned retrieval problem:
+
+- `memory_z` norm at memory scale 1.0: mean about `11.2523`, std about `0.0478`, min about `10.5836`, max about `11.2753`.
+- Additive prefix token norm at memory scale 1.0: mean about `0.05785`, compared with Qwen input embedding row norm mean about `1.3758`.
+- This is much less disruptive than the first additive-prefix run and more varied than the low-injector run, but the variation is still small relative to the mean vector norm.
+
+Version status:
+
+- The semantic-retrieval auxiliary loss exists from commit `8a6ba96`.
+- The first recorded semantic-retrieval run was executed at commit `75eb6c0`.
+- Commit `082068b` records the first-10 result; the present note extends that record with the stopped partial-full result and step-100 checkpoint check.
+
+## Future prepared-dataset rule
+
+Before any future training run on another AppWorld subset or newly prepared AppWorld dataset, run `scripts/check_training_query_lengths.py` against the prepared `decision_examples.jsonl` and the exact tokenizer/model context window. If any examples exceed the effective context limit, record the offending task ids, episode ids, JSONL line numbers, token counts, and source trace paths, then stop and ask the user whether to filter. Do not silently truncate, downsample, or filter over-context examples.
 
 ## Paper-disclosure note
 
