@@ -57,6 +57,13 @@ def build_injector(
             num_prefix_tokens=num_prefix_tokens,
             initial_scale=initial_scale,
         )
+    if injector_type == "additive_prefix":
+        return AdditivePrefixMemoryInjector(
+            program_dim=program_dim,
+            model_dim=model_dim,
+            num_prefix_tokens=num_prefix_tokens,
+            initial_scale=initial_scale,
+        )
     if injector_type == "logit_bias":
         if vocab_size is None:
             raise ValueError("vocab_size is required for logit_bias injector")
@@ -69,5 +76,4 @@ def build_injector(
 
 
 from rcmf.injection.logit_bias import LogitBiasMemoryInjector
-from rcmf.injection.prefix import PrefixMemoryInjector
-
+from rcmf.injection.prefix import AdditivePrefixMemoryInjector, PrefixMemoryInjector

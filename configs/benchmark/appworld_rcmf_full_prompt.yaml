@@ -9,3 +9,6 @@ benchmark:
   prompt_profile: full_demo
   max_steps: 50
   max_context_turns: 40
+
+injector:
+  type: additive_prefix

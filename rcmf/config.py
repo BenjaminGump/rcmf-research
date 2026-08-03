@@ -228,7 +228,7 @@ class RCMFConfig:
             raise ValueError(f"Unknown address mode: {self.address.mode}")
         if self.encoder.type not in {"qwen_hidden", "light_transformer"}:
             raise ValueError(f"Unknown encoder type: {self.encoder.type}")
-        if self.injector.type not in {"prefix", "logit_bias", "none"}:
+        if self.injector.type not in {"prefix", "additive_prefix", "logit_bias", "none"}:
             raise ValueError(f"Unknown injector type: {self.injector.type}")
 
     def to_dict(self) -> dict[str, Any]:

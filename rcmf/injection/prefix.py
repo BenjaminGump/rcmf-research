@@ -129,3 +129,63 @@ class PrefixMemoryInjector(MemoryInjector):
         )
         prepared.inputs["input_ids"] = torch.cat([prefix_ids, input_ids], dim=1)
         return prepared
+
+
+class AdditivePrefixMemoryInjector(PrefixMemoryInjector):
+    """Inject memory by adding learned deltas to existing prompt token embeddings."""
+
+    def _prepare_common(
+        self,
+        model: nn.Module,
+        input_ids: Tensor,
+        attention_mask: Tensor | None,
+        memory_z: Tensor,
+        labels: Tensor | None = None,
+    ) -> PreparedInputs:
+        if input_ids.dim() != 2:
+            raise ValueError("input_ids must have shape [batch, seq]")
+        if memory_z.shape[0] != input_ids.shape[0]:
+            raise ValueError("memory_z batch size must match input_ids")
+        token_embeds = model.get_input_embeddings()(input_ids)
+        prefix = self(memory_z).to(device=token_embeds.device, dtype=token_embeds.dtype)
+        inject_len = min(self.num_prefix_tokens, token_embeds.shape[1])
+        inputs_embeds = token_embeds.clone()
+        if inject_len > 0:
+            inputs_embeds[:, :inject_len, :] = inputs_embeds[:, :inject_len, :] + prefix[:, :inject_len, :]
+        if attention_mask is None:
+            attention_mask = torch.ones(
+                input_ids.shape[0],
+                input_ids.shape[1],
+                dtype=torch.long,
+                device=input_ids.device,
+            )
+        prepared: dict[str, Any] = {
+            "input_ids": input_ids,
+            "inputs_embeds": inputs_embeds,
+            "attention_mask": attention_mask.to(torch.long),
+            "position_ids": build_position_ids(attention_mask.to(torch.long)),
+        }
+        if labels is not None:
+            if labels.shape != input_ids.shape:
+                raise ValueError("labels shape must match input_ids")
+            prepared["labels"] = labels
+        return PreparedInputs(
+            inputs=prepared,
+            memory_metadata={
+                "injector": "additive_prefix",
+                "num_prefix_tokens": self.num_prefix_tokens,
+                "prefix_additive": True,
+            },
+        )
+
+    def prepare_generate_inputs(
+        self,
+        model: nn.Module,
+        input_ids: Tensor,
+        attention_mask: Tensor | None,
+        memory_z: Tensor | None,
+        **kwargs: Any,
+    ) -> PreparedInputs:
+        if memory_z is None:
+            raise ValueError("AdditivePrefixMemoryInjector requires memory_z")
+        return self._prepare_common(model, input_ids, attention_mask, memory_z, labels=None)
