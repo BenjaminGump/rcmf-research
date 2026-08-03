@@ -59,7 +59,8 @@ def test_additive_prefix_zero_memory_preserves_prompt_embeddings() -> None:
         memory_z=memory_z,
     )
 
-    assert prepared.inputs["inputs_embeds"].shape == token_embeds.shape
     assert prepared.inputs["input_ids"].shape == input_ids.shape
     assert prepared.inputs["attention_mask"].shape == input_ids.shape
-    assert torch.allclose(prepared.inputs["inputs_embeds"], token_embeds)
+    assert "inputs_embeds" not in prepared.inputs
+    assert prepared.inputs["memory_embedding_delta"].shape == token_embeds.shape
+    assert torch.allclose(prepared.inputs["memory_embedding_delta"], torch.zeros_like(token_embeds))

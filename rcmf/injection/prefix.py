@@ -188,4 +188,36 @@ class AdditivePrefixMemoryInjector(PrefixMemoryInjector):
     ) -> PreparedInputs:
         if memory_z is None:
             raise ValueError("AdditivePrefixMemoryInjector requires memory_z")
-        return self._prepare_common(model, input_ids, attention_mask, memory_z, labels=None)
+        if input_ids.dim() != 2:
+            raise ValueError("input_ids must have shape [batch, seq]")
+        prefix = self(memory_z)
+        inject_len = min(self.num_prefix_tokens, input_ids.shape[1])
+        embedding_delta = torch.zeros(
+            input_ids.shape[0],
+            input_ids.shape[1],
+            self.model_dim,
+            dtype=prefix.dtype,
+            device=input_ids.device,
+        )
+        if inject_len > 0:
+            embedding_delta[:, :inject_len, :] = prefix[:, :inject_len, :]
+        if attention_mask is None:
+            attention_mask = torch.ones(
+                input_ids.shape[0],
+                input_ids.shape[1],
+                dtype=torch.long,
+                device=input_ids.device,
+            )
+        return PreparedInputs(
+            inputs={
+                "input_ids": input_ids,
+                "attention_mask": attention_mask.to(torch.long),
+                "memory_embedding_delta": embedding_delta,
+            },
+            memory_metadata={
+                "injector": "additive_prefix",
+                "num_prefix_tokens": self.num_prefix_tokens,
+                "prefix_additive": True,
+                "generation_embedding_hook": True,
+            },
+        )

@@ -370,6 +370,7 @@ class HFQwenBackend:
         logit_bias = generation_inputs.pop("memory_logit_bias", None)
         if logit_bias is not None:
             raise NotImplementedError("logit_bias generation requires a custom logits processor")
+        embedding_delta = generation_inputs.pop("memory_embedding_delta", None)
         start = time.perf_counter()
         generate_kwargs: dict[str, Any] = {
             **generation_inputs,
@@ -382,6 +383,21 @@ class HFQwenBackend:
         if temperature > 0:
             generate_kwargs["temperature"] = temperature
             generate_kwargs["top_p"] = top_p
+        hook_handle = None
+        if embedding_delta is not None:
+            embedding_delta = embedding_delta.to(self.device)
+            embedding_module = self.model.get_input_embeddings()
+            hook_state = {"applied": False}
+
+            def add_embedding_delta(module: torch.nn.Module, inputs: tuple[Any, ...], output: Tensor) -> Tensor:
+                if hook_state["applied"]:
+                    return output
+                if output.shape[:2] != embedding_delta.shape[:2]:
+                    return output
+                hook_state["applied"] = True
+                return output + embedding_delta.to(device=output.device, dtype=output.dtype)
+
+            hook_handle = embedding_module.register_forward_hook(add_embedding_delta)
         attention_context = nullcontext()
         using_forced_flash = False
         if self.device.type == "cuda":
@@ -406,6 +422,9 @@ class HFQwenBackend:
                 raise
             with nullcontext():
                 output_ids = self.model.generate(**generate_kwargs)
+        finally:
+            if hook_handle is not None:
+                hook_handle.remove()
         elapsed_ms = (time.perf_counter() - start) * 1000.0
         prompt_length = int(generation_inputs.get("input_ids", tokenized.input_ids).shape[1])
         generated = output_ids[0, prompt_length:].tolist()
