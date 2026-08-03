@@ -50,9 +50,27 @@ class RCMFTrainer:
         return (param for param in self.modules.parameters() if param.requires_grad)
 
     def build_optimizer(self) -> torch.optim.Optimizer:
+        parameter_groups: list[dict[str, Any]] = []
+        seen: set[int] = set()
+
+        def add_group(name: str, module: nn.Module, lr: float) -> None:
+            params = []
+            for param in module.parameters():
+                if not param.requires_grad:
+                    continue
+                param_id = id(param)
+                if param_id in seen:
+                    continue
+                seen.add(param_id)
+                params.append(param)
+            if params:
+                parameter_groups.append({"params": params, "lr": lr, "name": name})
+
+        add_group("compiler", self.compiler, self.config.training.lr_compiler)
+        add_group("state_encoder", self.state_encoder, self.config.training.lr_encoder)
+        add_group("injector", self.injector, self.config.training.lr_injector)
         return torch.optim.AdamW(
-            self.parameters(),
-            lr=self.config.training.lr_compiler,
+            parameter_groups,
             weight_decay=self.config.training.weight_decay,
         )
 

@@ -92,6 +92,35 @@ def test_training_step_with_mock_backend() -> None:
     assert grads
 
 
+def test_trainer_optimizer_uses_module_specific_learning_rates() -> None:
+    cfg = load_config(
+        "configs/base.yaml",
+        overrides={
+            "model": {"backend": "mock"},
+            "memory": {"rank": 8, "program_dim": 6},
+            "encoder": {
+                "type": "qwen_hidden",
+                "hidden_size": 16,
+                "num_heads": 4,
+                "intermediate_size": 32,
+                "num_layers": 1,
+            },
+            "injector": {"type": "prefix", "num_prefix_tokens": 2},
+            "training": {"lr_compiler": 1.0e-4, "lr_encoder": 2.0e-5, "lr_injector": 3.0e-6},
+        },
+    )
+    trainer = build_trainer(cfg, build_backend(cfg))
+
+    optimizer = trainer.build_optimizer()
+
+    named_lrs = {group["name"]: group["lr"] for group in optimizer.param_groups}
+    assert named_lrs == {
+        "compiler": 1.0e-4,
+        "state_encoder": 2.0e-5,
+        "injector": 3.0e-6,
+    }
+
+
 def test_mock_backend_chunks_long_texts_without_dropping_tokens() -> None:
     backend = MockBackend(hidden_size=8)
     chunk_representations, owner_indices = backend.encode_text_chunks(
