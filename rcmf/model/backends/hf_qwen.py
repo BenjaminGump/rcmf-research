@@ -407,7 +407,8 @@ class HFQwenBackend:
             with nullcontext():
                 output_ids = self.model.generate(**generate_kwargs)
         elapsed_ms = (time.perf_counter() - start) * 1000.0
-        generated = output_ids[0, tokenized.input_ids.shape[1] :].tolist()
+        prompt_length = int(generation_inputs.get("input_ids", tokenized.input_ids).shape[1])
+        generated = output_ids[0, prompt_length:].tolist()
         text = self.tokenizer.decode(generated, skip_special_tokens=True)
         return GenerateOutput(
             text=text,

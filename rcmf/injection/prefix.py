@@ -119,5 +119,13 @@ class PrefixMemoryInjector(MemoryInjector):
         if memory_z is None:
             raise ValueError("PrefixMemoryInjector requires memory_z")
         prepared = self._prepare_common(model, input_ids, attention_mask, memory_z, labels=None)
-        prepared.inputs["input_ids"] = input_ids
+        batch_size = input_ids.shape[0]
+        pad_token_id = int(getattr(getattr(model, "config", None), "pad_token_id", 0) or 0)
+        prefix_ids = torch.full(
+            (batch_size, self.num_prefix_tokens),
+            pad_token_id,
+            dtype=input_ids.dtype,
+            device=input_ids.device,
+        )
+        prepared.inputs["input_ids"] = torch.cat([prefix_ids, input_ids], dim=1)
         return prepared
