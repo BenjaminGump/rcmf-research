@@ -39,7 +39,7 @@ def main() -> None:
     parser.add_argument("--checkpoint", required=True)
     parser.add_argument("--memory-snapshot", required=True)
     parser.add_argument("--state-representation-cache", required=True)
-    parser.add_argument("--scale", type=float, action="append", default=[1.0])
+    parser.add_argument("--scale", type=float, action="append", default=None)
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--max-rows", type=int)
     args = parser.parse_args()
@@ -73,12 +73,14 @@ def main() -> None:
     if prefix_scale is not None:
         output["injector_prefix_scale"] = float(prefix_scale.detach().cpu())
 
+    requested_scales = args.scale or [1.0]
+    scales_to_check = list(dict.fromkeys(float(scale) for scale in requested_scales))
     scales: dict[str, Any] = {}
     with torch.no_grad():
         addresses = []
-        z_by_scale = {scale: [] for scale in args.scale}
-        prefix_by_scale = {scale: [] for scale in args.scale}
-        max_abs_prefix_by_scale = {scale: [] for scale in args.scale}
+        z_by_scale = {scale: [] for scale in scales_to_check}
+        prefix_by_scale = {scale: [] for scale in scales_to_check}
+        max_abs_prefix_by_scale = {scale: [] for scale in scales_to_check}
         for start in range(0, representations.shape[0], args.batch_size):
             reps = representations[start : start + args.batch_size].to(backend.device)
             address = trainer.state_encoder(reps, None).detach().cpu()
@@ -88,14 +90,14 @@ def main() -> None:
                 normalization=cfg.memory.normalization,
                 eps=cfg.memory.eps,
             ).to(backend.device)
-            for scale in args.scale:
+            for scale in scales_to_check:
                 scaled_z = z * float(scale)
                 prefix = trainer.injector(scaled_z).detach().to(torch.float32).cpu()
                 z_by_scale[scale].append(scaled_z.detach().to(torch.float32).cpu())
                 prefix_by_scale[scale].append(prefix.norm(dim=-1))
                 max_abs_prefix_by_scale[scale].append(prefix.abs().amax(dim=(-1, -2)))
         output["address_row_norm"] = _row_norm_stats(torch.cat(addresses, dim=0))
-        for scale in args.scale:
+        for scale in scales_to_check:
             z_tensor = torch.cat(z_by_scale[scale], dim=0)
             prefix_token_norms = torch.cat(prefix_by_scale[scale], dim=0).flatten()
             prefix_max_abs = torch.cat(max_abs_prefix_by_scale[scale], dim=0)

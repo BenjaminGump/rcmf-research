@@ -197,6 +197,58 @@ Version status:
 - Optimizer parameter groups used only `training.lr_compiler` for all trainable modules through commit `7764cd4`. Commit `5a9a141` fixes this so compiler, state encoder, and injector use `lr_compiler`, `lr_encoder`, and `lr_injector` respectively. This does not change the completed `20260803_121500` run's effective learning rates because the active config set all three values to `1e-5`, but it matters for future low-injector or module-specific LR runs.
 - As of commit `5a9a141`, the best nonzero-memory test10 result is still `2/10`, below the corrected baseline `3/10`. Further training versions should focus on preventing state-independent/global memory perturbations before attempting a full 168-task evaluation.
 
+## 2026-08-03 low-injector follow-up
+
+Commit `de21bea` adds `configs/benchmark/appworld_rcmf_full_prompt_low_injector.yaml` and updates the Lambda runner so a full-size training run can reuse an existing Qwen hidden representation cache. This version keeps the RCMF structure intact:
+
+- Qwen hidden representations for memory records and decision states.
+- Additive-prefix injection.
+- Frozen Qwen backbone.
+- Target-only supervised loss with EOS in the target.
+- Full filtered prepared dataset, 638 decision examples and 46 memory records.
+- `support_mode=all_except_current_task`.
+- Same AppWorld full prompt, `max_steps=50`, and `max_new_tokens=512` as the corrected baseline flow.
+
+The only intended behavioral change is lower injector disturbance:
+
+- `injector.initial_scale: 0.02`
+- `training.lr_compiler: 1e-5`
+- `training.lr_encoder: 1e-5`
+- `training.lr_injector: 1e-6`
+
+Run:
+
+```text
+/lambda/nfs/rcmf-persist/project/runs/experiments/appworld_qwen_repr_full_prompt_filtered_no_2a163ab3_lowinj_20260803_152500
+```
+
+Final checkpoint result on the same first-10 test set:
+
+- `2/10 = 20%`
+- Successes: `fd1f8fa_2`, `325d6ec_1`
+- This is below the corrected first-10 baseline `3/10`.
+
+Checkpoint sweep:
+
+- `checkpoint_step100.pt` with memory scale 1.0 reached `3/10 = 30%`.
+- Step-100 successes: `fd1f8fa_2`, `325d6ec_1`, `325d6ec_3`.
+- Compared with the corrected bare-Qwen first-10 baseline (`325d6ec_1`, `325d6ec_3`, `29a7b7e_1`), this checkpoint preserved two baseline successes, lost `29a7b7e_1`, and gained `fd1f8fa_2`.
+- Step-100 average score: `30.0`; average steps: `27.1`; average prompt tokens: `352,115.8`; average generated tokens: `3,487.9`; average wall time: `117.1s`.
+
+Step-100 memory-injection stats:
+
+- `injector_prefix_scale`: about `0.02012`.
+- Additive prefix token norm at memory scale 1.0: mean about `0.01418`, approximately 1% of Qwen's average input embedding row norm (`1.3758`).
+- `memory_z` is still nearly constant across the 638 training states (`std` about `0.000106` at scale 1.0), so the state-conditioned retrieval/address issue is not solved yet.
+
+Because `checkpoint_step100.pt` reached the first-10 baseline threshold, a remaining-split evaluation was started from `test_normal` `start_index=10`:
+
+```text
+/lambda/nfs/rcmf-persist/project/runs/experiments/rcmf_appworld_filtered_lowinj_step100_full_from10_20260803_164500
+```
+
+This run should be combined with the first-10 result above if a full 168-task estimate is needed. It intentionally starts after the first 10 tasks to avoid repeating completed AppWorld work.
+
 ## Paper-disclosure note
 
 For paper or appendix reporting: one official successful AppWorld train trajectory, `2a163ab_3`, was excluded from the RCMF training prepared dataset because its raw official trace contains repeated full social-feed dumps that expand a single episode to multi-million-token training contexts, far beyond Qwen3-8B's 40,960-token effective context window. The raw official trace was not altered. The exclusion removes 1 train memory record and 72 per-step train decision examples, including 66 over-context examples; 638 decision examples and 46 memory records remain.
