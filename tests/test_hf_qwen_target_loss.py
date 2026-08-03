@@ -6,7 +6,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
-from rcmf.injection.prefix import PrefixMemoryInjector
+from rcmf.injection.prefix import AdditivePrefixMemoryInjector, PrefixMemoryInjector
 from rcmf.model.backends.hf_qwen import HFQwenBackend
 
 
@@ -17,6 +17,8 @@ class TinyBaseModel(nn.Module):
         self.proj = nn.Linear(hidden_size, hidden_size)
 
     def forward(self, input_ids=None, inputs_embeds=None, **kwargs):
+        if input_ids is not None and inputs_embeds is not None:
+            raise ValueError("You must specify exactly one of input_ids or inputs_embeds")
         hidden = inputs_embeds if inputs_embeds is not None else self.embed(input_ids)
         hidden = torch.tanh(self.proj(hidden))
         return SimpleNamespace(last_hidden_state=hidden)
@@ -66,6 +68,29 @@ def test_hf_qwen_target_only_loss_keeps_prefix_gradients() -> None:
     model = TinyCausalLMWrapper(vocab_size=40, hidden_size=10)
     backend = _backend_for_tiny_model(model)
     injector = PrefixMemoryInjector(program_dim=6, model_dim=10, num_prefix_tokens=3)
+    input_ids = torch.tensor([[3, 4, 5, 6]])
+    labels = torch.tensor([[-100, -100, 5, 6]])
+    memory_z = torch.randn(1, 6)
+
+    output = backend.forward_train(
+        input_ids=input_ids,
+        attention_mask=torch.ones_like(input_ids),
+        labels=labels,
+        injector=injector,
+        memory_z=memory_z,
+    )
+    output.loss.backward()
+
+    grads = [param.grad for param in injector.parameters() if param.requires_grad]
+    assert output.logits.shape == (2, 40)
+    assert any(grad is not None and torch.isfinite(grad).all() for grad in grads)
+
+
+def test_hf_qwen_target_only_loss_does_not_pass_input_ids_with_additive_embeds() -> None:
+    torch.manual_seed(9)
+    model = TinyCausalLMWrapper(vocab_size=40, hidden_size=10)
+    backend = _backend_for_tiny_model(model)
+    injector = AdditivePrefixMemoryInjector(program_dim=6, model_dim=10, num_prefix_tokens=3)
     input_ids = torch.tensor([[3, 4, 5, 6]])
     labels = torch.tensor([[-100, -100, 5, 6]])
     memory_z = torch.randn(1, 6)

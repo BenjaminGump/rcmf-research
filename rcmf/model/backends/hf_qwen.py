@@ -258,6 +258,8 @@ class HFQwenBackend:
 
         base_inputs = dict(model_inputs)
         base_inputs.pop("labels", None)
+        if base_inputs.get("inputs_embeds") is not None:
+            base_inputs.pop("input_ids", None)
         restore_training = bool(self.model.training)
         use_checkpointing_mode = self._gradient_checkpointing_enabled and torch.is_grad_enabled()
         if use_checkpointing_mode:
