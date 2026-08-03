@@ -41,6 +41,7 @@ class HFQwenBackend:
         self.enable_thinking = enable_thinking
         self.tokenizer = None
         self.model = None
+        self._gradient_checkpointing_enabled = False
         if load_model:
             self.load()
 
@@ -63,6 +64,13 @@ class HFQwenBackend:
         if self.freeze_backbone:
             for param in self.model.parameters():
                 param.requires_grad_(False)
+            enable_checkpointing = getattr(self.model, "gradient_checkpointing_enable", None)
+            if callable(enable_checkpointing):
+                try:
+                    enable_checkpointing(gradient_checkpointing_kwargs={"use_reentrant": False})
+                except TypeError:
+                    enable_checkpointing()
+                self._gradient_checkpointing_enabled = True
         self.model.eval()
 
     @property
@@ -250,11 +258,19 @@ class HFQwenBackend:
 
         base_inputs = dict(model_inputs)
         base_inputs.pop("labels", None)
-        outputs = base_model(
-            **base_inputs,
-            use_cache=False,
-            return_dict=True,
-        )
+        restore_training = bool(self.model.training)
+        use_checkpointing_mode = self._gradient_checkpointing_enabled and torch.is_grad_enabled()
+        if use_checkpointing_mode:
+            self.model.train()
+        try:
+            outputs = base_model(
+                **base_inputs,
+                use_cache=False,
+                return_dict=True,
+            )
+        finally:
+            if use_checkpointing_mode:
+                self.model.train(restore_training)
         hidden = getattr(outputs, "last_hidden_state", None)
         if hidden is None:
             hidden = outputs[0]

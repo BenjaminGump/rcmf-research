@@ -82,3 +82,21 @@ def test_hf_qwen_target_only_loss_keeps_prefix_gradients() -> None:
     grads = [param.grad for param in injector.parameters() if param.requires_grad]
     assert output.logits.shape == (2, 40)
     assert any(grad is not None and torch.isfinite(grad).all() for grad in grads)
+
+
+def test_hf_qwen_target_only_loss_restores_model_training_mode() -> None:
+    model = TinyCausalLMWrapper(vocab_size=40, hidden_size=10)
+    backend = _backend_for_tiny_model(model)
+    backend._gradient_checkpointing_enabled = True
+    model.eval()
+    input_ids = torch.tensor([[3, 4, 5]])
+    labels = torch.tensor([[-100, 4, 5]])
+
+    output = backend.forward_train(
+        input_ids=input_ids,
+        attention_mask=torch.ones_like(input_ids),
+        labels=labels,
+    )
+
+    assert torch.isfinite(output.loss)
+    assert model.training is False

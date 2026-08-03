@@ -138,6 +138,8 @@ It then failed on the first actual training step with CUDA OOM. The cause was no
 
 This behavior is present through commit `e179956`. It is fixed after that version by changing `HFQwenBackend.forward_train()` to compute Qwen hidden states for the full untruncated sequence, then apply `lm_head` and cross entropy only at shifted target-token positions where `labels[..., 1:] != -100`. This preserves the full context and the target-only training objective, but avoids allocating prompt-position vocabulary logits.
 
+A retry on the target-only-loss version reached `step=1/638` and then OOMed on a longer sample during Qwen base forward. That exposed a second memory issue: even with the vocabulary-logit allocation removed, frozen-backbone training still needs gradients through the full Qwen computation back to the prefix/memory vector, so long-context activations can exceed 80GB. The next fix enables gradient checkpointing for the frozen Qwen backbone and temporarily sets the model to training mode only for target-only training forwards so transformers actually uses checkpointing. This uses recomputation rather than token truncation.
+
 ## Paper-disclosure note
 
 For paper or appendix reporting: one official successful AppWorld train trajectory, `2a163ab_3`, was excluded from the RCMF training prepared dataset because its raw official trace contains repeated full social-feed dumps that expand a single episode to multi-million-token training contexts, far beyond Qwen3-8B's 40,960-token effective context window. The raw official trace was not altered. The exclusion removes 1 train memory record and 72 per-step train decision examples, including 66 over-context examples; 638 decision examples and 46 memory records remain.
