@@ -258,6 +258,48 @@ The remaining-split run was stopped early after 27 completed tasks because the i
 
 The next local version adds an optional semantic-retrieval auxiliary loss. It is motivated by the repeated observation that action-only training can reach first-10 baseline when the additive perturbation is very small, but the learned memory read remains almost state-independent.
 
+## 2026-08-03 semantic-retrieval follow-up
+
+Commit `8a6ba96` adds an optional semantic-retrieval auxiliary loss. The loss is off by default and is enabled by:
+
+```text
+configs/benchmark/appworld_rcmf_full_prompt_semantic_retrieval.yaml
+```
+
+The new loss uses frozen Qwen hidden representations as a teacher. For each training example, it compares the current state representation against all support memory representations with cosine similarity, then trains the RCMF state address and compiled memory addresses to produce a similar distribution. This is meant to reduce the state-independent memory-read collapse seen in the action-only low-injector runs.
+
+Run:
+
+```text
+/lambda/nfs/rcmf-persist/project/runs/experiments/appworld_qwen_repr_full_prompt_filtered_no_2a163ab3_semretr_20260803_172000
+```
+
+Training details:
+
+- Code version: `75eb6c0`
+- Data: `official_react_gpt4o_train_success_full_demo_filtered_no_2a163ab3_20260803`
+- Decision examples: 638
+- Memory records: 46
+- Support mode: `all_except_current_task`
+- Reused representation cache: `appworld_qwen_repr_full_prompt_filtered_no_2a163ab3_additive_20260803_121500/train/representation_cache`
+- `loss_semantic_retrieval` was present in `metrics.jsonl` throughout training, typically around `0.01-0.13` before applying `lambda_semantic_retrieval=0.05`.
+
+Final checkpoint first-10 result:
+
+- `4/10 = 40%`
+- Successes: `325d6ec_1`, `325d6ec_2`, `325d6ec_3`, `29a7b7e_1`
+- This exceeds the corrected bare-Qwen first-10 baseline `3/10`.
+- It keeps all three baseline first-10 successes except that it also adds `325d6ec_2`, which the corrected bare-Qwen first-10 baseline failed.
+- Average score: `40.0`; average steps: `18.3`; average prompt tokens: `201,445.7`; average generated tokens: `1,853`; average wall time: `68.6s`.
+
+Because this version exceeded the first-10 baseline, the runner continued into a full 168-task evaluation:
+
+```text
+/lambda/nfs/rcmf-persist/project/runs/experiments/rcmf_appworld_full_prompt_filtered_no_2a163ab3_semretr_full_20260803_172000
+```
+
+This full run was still in progress when this note was written.
+
 ## Paper-disclosure note
 
 For paper or appendix reporting: one official successful AppWorld train trajectory, `2a163ab_3`, was excluded from the RCMF training prepared dataset because its raw official trace contains repeated full social-feed dumps that expand a single episode to multi-million-token training contexts, far beyond Qwen3-8B's 40,960-token effective context window. The raw official trace was not altered. The exclusion removes 1 train memory record and 72 per-step train decision examples, including 66 over-context examples; 638 decision examples and 46 memory records remain.
