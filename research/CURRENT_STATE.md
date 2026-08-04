@@ -17,8 +17,13 @@ Last updated: 2026-08-04.
 - No real training/evaluation process was running during the 2026-08-04
   workflow audit.
 - GitHub CLI `gh` is not installed on the local Windows host.
-- GitHub SSH auth from the local Windows host fails with
-  `Permission denied (publickey)`.
+- GitHub SSH key file `C:\Users\Admin\.ssh\github_rcmf` exists.
+- GitHub SSH key fingerprint:
+  `SHA256:OWb0aCR7HIqa8luPJSQM/f9M9r4pWp7klDTBr79goiQ`.
+- The user verified interactive GitHub SSH authentication as `BenjaminGump`.
+- Codex non-interactive SSH still needs this key loaded into the active
+  ssh-agent, or an equivalent non-interactive signing path, before `git push`
+  can run from Codex.
 
 ## Baseline
 
@@ -53,12 +58,18 @@ Last updated: 2026-08-04.
   though semantic retrieval improves variation compared with the low-injector
   run.
 
+## GitHub Status
+
+- User-provided repository SSH URL:
+  `git@github.com:BenjaminGump/rcmf-research.git`.
+- Local `origin` remote has not been set yet.
+- No GitHub push has succeeded yet.
+
 ## UNVERIFIED
 
-- GitHub repository URL: not created yet.
 - GitHub visibility: not confirmed by the user yet.
-- GitHub push: blocked until GitHub authentication is configured or the user
-  supplies a writable repository URL.
+- Whether the repository exists and is private/public.
+- GitHub push from Codex: blocked until non-interactive SSH signing works.
 
 ## Immediate Workflow Status
 

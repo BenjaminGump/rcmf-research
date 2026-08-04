@@ -16,6 +16,24 @@ Decision:
 - Do not create a public repository until the user confirms repository
   visibility.
 
+## 2026-08-04 GitHub repository setup
+
+VERIFIED:
+
+- The intended GitHub repository is
+  `git@github.com:BenjaminGump/rcmf-research.git`.
+- The local machine has `C:\Users\Admin\.ssh\github_rcmf` with fingerprint
+  `SHA256:OWb0aCR7HIqa8luPJSQM/f9M9r4pWp7klDTBr79goiQ`.
+- The user verified interactive SSH authentication as `BenjaminGump`.
+
+Decision:
+
+- Use `git@github.com:BenjaminGump/rcmf-research.git` as `origin` once Codex
+  can complete non-interactive SSH signing.
+- Prefer a private GitHub repository unless the user explicitly chooses public
+  visibility, because the repository contains AppWorld synthetic credentials
+  and detailed research artifacts.
+
 ## Lambda environment naming
 
 VERIFIED:
