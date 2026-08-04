@@ -9,7 +9,8 @@
 - Starting branch: `master`
 - Starting commit: `11571b0`
 - Ending branch: `workflow/research-loop`
-- Ending commit: pending until this workflow commit is created
+- Ending commit: `b8c6479` for the scaffold commit; a small follow-up metadata
+  commit may update this handoff and validation record.
 
 ## 1. Requested Goal
 
@@ -61,12 +62,11 @@ loop is complete.
 
 ## 7. Validation
 
-Pending after workflow files are added:
-
-- Python compile checks for `tools/research_ops/`.
-- `tools/research_ops/validate_research_state.py`.
-- Existing project tests if code changes are made. This workflow setup should
-  not change training/runtime code.
+- Python compile checks for `tools/research_ops/`: passed.
+- `tools/research_ops/validate_research_state.py`: passed with warnings for
+  AppWorld/API field-name false positives and synthetic AppWorld credentials in
+  `docs/0a9d82a_1.json`.
+- Existing project tests: `37 passed`.
 
 ## 8. Results
 

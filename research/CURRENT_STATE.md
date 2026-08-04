@@ -63,5 +63,6 @@ Last updated: 2026-08-04.
 ## Immediate Workflow Status
 
 - Working branch for workflow setup: `workflow/research-loop`.
-- The new workflow docs and tooling should be pushed after GitHub auth and
-  repository visibility are confirmed.
+- Workflow scaffold commit: `b8c6479`.
+- The new workflow docs and tooling should be pushed to GitHub after GitHub auth
+  and repository visibility are confirmed.
