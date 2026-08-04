@@ -10,7 +10,8 @@
 - Starting branch: `workflow/research-loop`.
 - Starting commit: `2a2e4dc`.
 - Ending branch: `workflow/research-loop`.
-- Ending commit: pending final commit/push for this handoff.
+- Ending commit: pending final record commit; latest Lambda-validated code
+  commit is `9fb0817`.
 
 ## 1. Requested Goal
 
@@ -66,6 +67,9 @@ VERIFIED:
 - Added `scripts/compare_appworld_success_sets.py`.
 - Backfilled first-37 paired success-set report:
   `research/results/rcmf_semretr_vs_qwen_first37_paired_20260804.md`.
+- Synced the implementation to Lambda and validated commit `9fb0817`.
+- Generated Lambda diagnostics under
+  `/lambda/nfs/rcmf-persist/project/runs/diagnostics/next_iteration_20260804`.
 
 ## 5. Intended Method vs Actual Implementation
 
@@ -82,6 +86,9 @@ Deviation:
   It remains the next milestone and must use raw Qwen scoring over raw memory
   text, not compiled RCMF leave-one-out labels.
 - No new full-size GPU training or AppWorld evaluation was started.
+- Lambda could not pull GitHub directly because it has no GitHub private key.
+  Sync used a local git bundle uploaded through the existing Lambda SSH key and
+  fast-forwarded with `git merge --ff-only FETCH_HEAD`.
 
 Reason:
 
@@ -114,11 +121,13 @@ VERIFIED:
 - Targeted local tests: `19 passed`.
 - Full local tests: `43 passed`.
 
-UNVERIFIED:
+VERIFIED:
 
-- Lambda-side py_compile/pytest after syncing this commit.
-- Lambda-side memory chunk audit and memory-injection diagnostics on current
-  artifacts.
+- Lambda-side py_compile passed.
+- Lambda-side full pytest: `43 passed`.
+- Lambda-side memory chunk audit completed.
+- Lambda-side memory-injection diagnostics completed for the legacy
+  semantic-retrieval checkpoint.
 
 ## 8. Results
 
@@ -129,12 +138,21 @@ VERIFIED:
   both failed `25`.
 - Result report:
   `research/results/rcmf_semretr_vs_qwen_first37_paired_20260804.md`.
+- Memory chunk audit:
+  46 records, 46 chunks, 0 multi-chunk records, max 35,566 tokens under the
+  40,960-token model limit.
+- Legacy semantic-retrieval diagnostics:
+  memory_z pairwise cosine mean `0.999994`, memory_z mean direction norm
+  `0.999997`, address top1 max load fraction `0.448276`.
 
 ## 9. Failed Attempts
 
 - Initial direct SSH from the local sandbox failed with permission denied
   because key/network access needs escalation. The read-only Lambda artifact
   summary succeeded after approved SSH escalation.
+- Lambda `git pull origin workflow/research-loop` failed with
+  `Permission denied (publickey)`. The resolved path was the documented git
+  bundle fallback.
 
 ## 10. Engineering Workarounds
 
@@ -143,6 +161,7 @@ VERIFIED:
 - Kept deprecated `additive_prefix` as a compatibility alias.
 - Kept virtual-token `prefix` in factory/tests for historical reproducibility
   but removed it from active AppWorld configs.
+- Used git bundle sync rather than configuring GitHub credentials on Lambda.
 
 ## 11. Research-Relevant Observations
 
@@ -192,10 +211,14 @@ python -m pytest -q tests/test_training_smoke.py tests/test_prefix_injection.py 
   `/lambda/nfs/rcmf-persist/project/runs/experiments/rcmf_appworld_full_prompt_filtered_no_2a163ab3_semretr_full_20260803_172000/evaluate/test`.
 - Local report:
   `research/results/rcmf_semretr_vs_qwen_first37_paired_20260804.md`.
+- Chunk audit:
+  `/lambda/nfs/rcmf-persist/project/runs/diagnostics/next_iteration_20260804/memory_record_chunk_audit.json`.
+- Diagnostics:
+  `/lambda/nfs/rcmf-persist/project/runs/diagnostics/next_iteration_20260804/memory_injection_diagnostics_semretr_legacy_statecache.json`.
 
 ## 15. GitHub State
 
-- Commit pushed: pending.
+- Commit pushed: `9fb0817` and final record commit pending.
 - Remote: `git@github.com:BenjaminGump/rcmf-research.git`.
 - Branch: `workflow/research-loop`.
-- Working tree clean: pending.
+- Working tree clean: pending final record commit.

@@ -25,6 +25,8 @@ Last updated: 2026-08-04.
   authentication and pushed `workflow/research-loop`.
 - Next-iteration local tests passed on 2026-08-04:
   `python -m pytest -q` -> `43 passed`.
+- Lambda final-code validation passed at commit `9fb0817`:
+  `python -m pytest -q` -> `43 passed`.
 - Next-iteration active AppWorld configs use `injector.type=additive_token`,
   `position=first_k`, and `num_tokens=4`; old `additive_prefix` remains only as
   a compatibility alias.
@@ -59,6 +61,12 @@ Last updated: 2026-08-04.
   `7/37 = 18.9%`.
 - Paired first-37 comparison against the locked bare-Qwen run:
   baseline `10/37`, RCMF `7/37`, retained `5`, lost `5`, gained `2`.
+- Lambda tokenizer-only memory chunk audit for the filtered train memory bank:
+  46 records, 46 chunks, 0 multi-chunk records, max record length 35,566 tokens,
+  chunk limit 40,960.
+- Lambda diagnostics on the legacy semantic-retrieval checkpoint found strong
+  read collapse: memory_z pairwise cosine mean `0.999994`, memory_z mean
+  direction norm `0.999997`, address top1 max load fraction `0.448276`.
 
 ## INFERENCES
 
@@ -71,6 +79,8 @@ Last updated: 2026-08-04.
   run.
 - The semantic-retrieval candidate does not beat bare Qwen on the paired
   first-37 slice, so further full-size runs should wait for smoke diagnostics.
+- The diagnostics support the state-insensitive memory-read hypothesis for the
+  legacy semantic-retrieval checkpoint.
 
 ## GitHub Status
 
@@ -87,7 +97,6 @@ Last updated: 2026-08-04.
 ## UNVERIFIED
 
 - GitHub repository visibility: not confirmed by the user yet.
-- Whether the next-iteration code passes Lambda-side smoke tests after syncing.
 - Whether the primary raw-text memory teacher is practical at AppWorld scale.
 - Whether the new record-level full-bank training improves AppWorld
   performance; no new full training run has started for this iteration.
@@ -95,6 +104,7 @@ Last updated: 2026-08-04.
 ## Immediate Workflow Status
 
 - Working branch: `workflow/research-loop`.
-- Latest pushed commit before the next-iteration changes: `2a2e4dc`.
-- The next-iteration correctness/observability changes are being prepared for a
-  new commit, Lambda sync, and GitHub push.
+- Latest pushed and Lambda-synced code commit: `9fb0817`.
+- Lambda cannot currently pull GitHub directly because the instance has no
+  GitHub private key/deploy key; sync used a local git bundle after pushing to
+  GitHub.

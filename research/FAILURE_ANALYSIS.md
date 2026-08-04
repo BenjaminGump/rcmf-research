@@ -76,3 +76,19 @@ Needed diagnosis:
 - Trace-level comparison for retained, gained, and lost tasks.
 - Memory read/address diagnostics on failed broader-slice tasks.
 - Checkpoint and memory-scale sweeps before new architecture changes.
+
+2026-08-04 diagnostic evidence:
+
+- Diagnostic artifact:
+  `/lambda/nfs/rcmf-persist/project/runs/diagnostics/next_iteration_20260804/memory_injection_diagnostics_semretr_legacy_statecache.json`.
+- State rows inspected: `638`.
+- State representation pairwise cosine mean: `0.882234`.
+- Address top1 max load fraction: `0.448276` over `4` unique top1 slots.
+- Memory read `memory_z` pairwise cosine mean: `0.999994`.
+- Memory read `memory_z` mean direction norm: `0.999997`.
+
+Interpretation:
+
+- The legacy semantic-retrieval checkpoint's memory read is effectively
+  state-insensitive after reading from the compiled bank. This supports
+  prioritizing representation/teacher/address fixes before another full run.
