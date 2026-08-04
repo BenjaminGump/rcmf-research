@@ -22,16 +22,26 @@ training path for AppWorld.
 ## Memory
 
 The compiler maps support memory representations into memory bank tensors. The
-training sampler currently uses `support_mode=all_except_current_task` for the
-full AppWorld runs, so the current task's own train episode is excluded from its
-support memory.
+full-size AppWorld path now treats one `MemoryRecord` as one compiled write.
+If a record is too long for one Qwen forward, chunk representations are combined
+with a token-weighted mean before the compiler is called. Chunking therefore
+does not multiply write strength.
+
+The training sampler uses the full legal train memory bank for each decision
+example. The CLI-compatible mode name `all_except_current_task` now excludes
+records sharing the current task, episode, replay, or lineage keys. It is not a
+random support sample in the full AppWorld path.
 
 ## Injection
 
-The active AppWorld configs use `additive_prefix`, which adds a learned
-memory-derived delta to existing prompt embeddings without inserting new virtual
-tokens. This was chosen because prepending even zero-valued virtual tokens
-changed Qwen's effective sequence and broke AppWorld action generation.
+The active AppWorld configs use `additive_token`, which adds a learned
+memory-derived delta to selected existing prompt-token embeddings without
+inserting new virtual tokens. The default position is `first_k` with
+`num_tokens=4`; additional configs test `last_prompt_k` and `last_user_k`.
+
+The deprecated `additive_prefix` config alias is retained only for old
+checkpoints/config compatibility and maps to `additive_token` with
+`position=first_k`.
 
 ## Losses
 
@@ -41,6 +51,10 @@ trainable for target tokens. EOS is appended to targets.
 The current best first-10 config also enables an optional semantic-retrieval
 auxiliary loss. It trains the learned state address and compiled memory address
 space to better match a Qwen-hidden-representation cosine-similarity teacher.
+
+`loss.utility`, `loss.interference`, and teacher-distillation style objectives
+are not active AppWorld objectives unless a future implementation adds real loss
+terms for them.
 
 ## Evaluation
 

@@ -41,9 +41,35 @@ class ByteTokenizer:
             text += "\nASSISTANT:\n"
         return text
 
-    def __call__(self, text: str, return_tensors: str = "pt") -> dict[str, Tensor]:
-        ids = torch.tensor([[*self.encode_text(text), self.eos_token_id]], dtype=torch.long)
-        return {"input_ids": ids, "attention_mask": torch.ones_like(ids)}
+    def __call__(
+        self,
+        text: str | list[str],
+        padding: bool = False,
+        truncation: bool = False,
+        max_length: int | None = None,
+        return_tensors: str | None = None,
+        add_special_tokens: bool = True,
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        texts = [text] if isinstance(text, str) else list(text)
+        rows = [
+            self.encode_text(item) + ([self.eos_token_id] if add_special_tokens else [])
+            for item in texts
+        ]
+        if truncation and max_length is not None:
+            rows = [row[:max_length] for row in rows]
+        lengths = [len(row) for row in rows]
+        if padding:
+            max_len = max(len(row) for row in rows)
+            rows = [row + [self.pad_token_id] * (max_len - len(row)) for row in rows]
+        masks = [[1] * length + [0] * (len(row) - length) for row, length in zip(rows, lengths)]
+        if return_tensors == "pt":
+            ids = torch.tensor(rows, dtype=torch.long)
+            attention_mask = torch.tensor(masks, dtype=torch.long)
+            return {"input_ids": ids, "attention_mask": attention_mask}
+        if isinstance(text, str):
+            return {"input_ids": rows[0], "attention_mask": masks[0]}
+        return {"input_ids": rows, "attention_mask": masks}
 
 
 class TinyCausalLM(nn.Module):
@@ -104,13 +130,45 @@ class MockBackend:
         add_generation_prompt: bool = True,
         return_tensors: str = "pt",
     ) -> TokenizedBatch:
-        text = self.tokenizer.apply_chat_template(messages, add_generation_prompt=add_generation_prompt)
+        text = self.render_messages(messages, add_generation_prompt=add_generation_prompt)
         tokenized = self.tokenizer(text, return_tensors=return_tensors)
         return TokenizedBatch(
             input_ids=tokenized["input_ids"],
             attention_mask=tokenized["attention_mask"],
-            metadata={"text": text},
+            metadata={
+                "text": text,
+                "last_user_token_indices": self._last_user_token_indices(messages, text),
+            },
         )
+
+    def render_messages(
+        self,
+        messages: list[ChatMessage],
+        add_generation_prompt: bool = True,
+    ) -> str:
+        return self.tokenizer.apply_chat_template(
+            messages,
+            add_generation_prompt=add_generation_prompt,
+        )
+
+    def _last_user_token_indices(
+        self,
+        messages: list[ChatMessage],
+        rendered_text: str,
+    ) -> list[int]:
+        last_user_content = ""
+        for message in reversed(messages):
+            if message.get("role") == "user":
+                last_user_content = str(message.get("content", ""))
+                break
+        if not last_user_content:
+            return []
+        start = rendered_text.rfind(last_user_content)
+        if start < 0:
+            return []
+        prefix_len = len(self.tokenizer.encode_text(rendered_text[:start]))
+        span_len = len(self.tokenizer.encode_text(rendered_text[start : start + len(last_user_content)]))
+        return list(range(prefix_len, prefix_len + span_len))
 
     def forward_train(
         self,
@@ -119,6 +177,7 @@ class MockBackend:
         labels: Tensor | None = None,
         injector: MemoryInjector | None = None,
         memory_z: Tensor | None = None,
+        **kwargs: Any,
     ) -> TrainOutput:
         if injector is None:
             inputs: dict[str, Any] = {"input_ids": input_ids}
@@ -134,6 +193,7 @@ class MockBackend:
                 attention_mask,
                 labels,
                 memory_z,
+                injection_token_indices=kwargs.get("injection_token_indices"),
             )
             inputs = dict(prepared.inputs)
             meta = prepared.memory_metadata
@@ -179,6 +239,18 @@ class MockBackend:
         return pooled / counts.clamp_min(1.0)
 
     @torch.no_grad()
+    def encode_messages(
+        self,
+        messages: list[ChatMessage],
+        add_generation_prompt: bool = True,
+    ) -> Tensor:
+        tokenized = self.tokenize_messages(
+            messages,
+            add_generation_prompt=add_generation_prompt,
+        )
+        return self.encode_input_ids(tokenized.input_ids, tokenized.attention_mask)
+
+    @torch.no_grad()
     def encode_text_chunks(
         self,
         texts: list[str],
@@ -186,6 +258,22 @@ class MockBackend:
         add_special_tokens: bool = True,
         max_chunk_tokens: int | None = None,
     ) -> tuple[Tensor, Tensor]:
+        representations, owner_indices, _token_counts = self.encode_text_chunks_with_metadata(
+            texts=texts,
+            batch_size=batch_size,
+            add_special_tokens=add_special_tokens,
+            max_chunk_tokens=max_chunk_tokens,
+        )
+        return representations, owner_indices
+
+    @torch.no_grad()
+    def encode_text_chunks_with_metadata(
+        self,
+        texts: list[str],
+        batch_size: int = 1,
+        add_special_tokens: bool = True,
+        max_chunk_tokens: int | None = None,
+    ) -> tuple[Tensor, Tensor, Tensor]:
         del add_special_tokens
         if batch_size <= 0:
             raise ValueError("batch_size must be positive")
@@ -194,14 +282,18 @@ class MockBackend:
             raise ValueError("max_chunk_tokens must be positive")
         chunks: list[list[int]] = []
         owners: list[int] = []
+        token_counts: list[int] = []
         for owner_index, text in enumerate(texts):
-            token_ids = self.tokenizer(text)["input_ids"][0].tolist()
+            token_ids = self.tokenizer(text, return_tensors="pt")["input_ids"][0].tolist()
             for start in range(0, len(token_ids), chunk_limit):
-                chunks.append(list(token_ids[start : start + chunk_limit]))
+                chunk = list(token_ids[start : start + chunk_limit])
+                chunks.append(chunk)
                 owners.append(owner_index)
+                token_counts.append(len(chunk))
         if not chunks:
             return (
                 torch.empty(0, self.model.config.hidden_size, dtype=torch.float32),
+                torch.empty(0, dtype=torch.long),
                 torch.empty(0, dtype=torch.long),
             )
         outputs: list[Tensor] = []
@@ -214,7 +306,11 @@ class MockBackend:
                 input_ids[row, : len(chunk)] = torch.tensor(chunk, dtype=torch.long)
                 attention_mask[row, : len(chunk)] = 1
             outputs.append(self.encode_input_ids(input_ids, attention_mask))
-        return torch.cat(outputs, dim=0), torch.tensor(owners, dtype=torch.long)
+        return (
+            torch.cat(outputs, dim=0),
+            torch.tensor(owners, dtype=torch.long),
+            torch.tensor(token_counts, dtype=torch.long),
+        )
 
     def generate(
         self,
@@ -235,6 +331,7 @@ class MockBackend:
                 tokenized.input_ids,
                 tokenized.attention_mask,
                 memory_z,
+                token_metadata=tokenized.metadata,
             )
             inputs = dict(prepared.inputs)
             inputs.pop("memory_logit_bias", None)

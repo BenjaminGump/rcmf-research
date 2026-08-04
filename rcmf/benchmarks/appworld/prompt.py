@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import hashlib
 import re
 from typing import Any
+
+PROMPT_RENDERER_VERSION = "appworld_messages_v2"
 
 MINIMAL_SYSTEM_PROMPT = """You are an autonomous AppWorld assistant.
 
@@ -110,3 +113,66 @@ def get_initial_messages(profile: str = "minimal") -> list[dict[str, str]]:
 
 def uses_chat_history_prompt(profile: str = "minimal") -> bool:
     return profile == "full_demo"
+
+
+def observation_to_chat_content(observation: str) -> str:
+    stripped = observation.strip()
+    if stripped.startswith("Output:\n```"):
+        return stripped
+    return f"Output:\n```\n{stripped}\n```"
+
+
+def _step_response_observation(step: Any) -> tuple[str, str]:
+    if isinstance(step, dict):
+        return str(step.get("response", "")), str(step.get("observation", ""))
+    response = getattr(step, "response", "")
+    observation = getattr(step, "observation", "")
+    return str(response), str(observation)
+
+
+def build_appworld_messages(
+    task_message: str,
+    trajectory_so_far: list[Any] | None = None,
+    prompt_profile: str = "full_demo",
+    target_type: str = "code",
+    system_prompt: str | None = None,
+    max_context_turns: int | None = None,
+) -> list[dict[str, str]]:
+    """Build the canonical structured AppWorld messages for action and state encoding."""
+    trajectory_so_far = trajectory_so_far or []
+    task_content = task_message
+    if target_type == "answer":
+        task_content = f"{task_content}\n\nRespond with the final answer only."
+
+    if uses_chat_history_prompt(prompt_profile):
+        messages = [dict(message) for message in get_initial_messages(prompt_profile)]
+        conversation = [{"role": "user", "content": task_content}]
+    else:
+        messages = [
+            {
+                "role": "system",
+                "content": system_prompt or get_system_prompt(prompt_profile),
+            },
+        ]
+        conversation = [{"role": "user", "content": task_content}]
+    for step in trajectory_so_far:
+        response, observation = _step_response_observation(step)
+        conversation.append({"role": "assistant", "content": response})
+        conversation.append({"role": "user", "content": observation_to_chat_content(observation)})
+    if max_context_turns is not None and max_context_turns > 0 and len(conversation) > max_context_turns:
+        conversation = [conversation[0], *conversation[-(max_context_turns - 1) :]]
+    messages.extend(conversation)
+    return messages
+
+
+def appworld_renderer_metadata(prompt_profile: str, add_generation_prompt: bool = True) -> dict[str, Any]:
+    initial_messages = get_initial_messages(prompt_profile)
+    payload = "\n".join(f"{message['role']}:{message['content']}" for message in initial_messages)
+    return {
+        "renderer_version": PROMPT_RENDERER_VERSION,
+        "prompt_profile": prompt_profile,
+        "add_generation_prompt": bool(add_generation_prompt),
+        "initial_messages_sha256": hashlib.sha256(payload.encode("utf-8")).hexdigest(),
+        "initial_message_count": len(initial_messages),
+        "chat_history_prompt": uses_chat_history_prompt(prompt_profile),
+    }

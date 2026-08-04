@@ -5,11 +5,17 @@ import json
 import torch
 
 from rcmf.config import load_config
+from rcmf.benchmarks.appworld.prompt import build_appworld_messages
 from rcmf.factory import build_backend, build_trainer
 from rcmf.model.backends.mock import MockBackend
 from rcmf.schemas import DecisionExample, MemoryRecord
-from rcmf.training.datasets import _render_training_prompt, build_rcmf_training_batch
-from scripts.train import _preflight_query_lengths
+from rcmf.training.datasets import (
+    _render_prompt_with_metadata,
+    _render_training_prompt,
+    build_rcmf_training_batch,
+    render_state_representation_text,
+)
+from scripts.train import _aggregate_chunk_representations, _preflight_query_lengths
 
 
 class TinyTokenizer:
@@ -296,6 +302,50 @@ def test_full_demo_training_prompt_matches_chat_history_shape() -> None:
     assert rendered.endswith("\nassistant:")
 
 
+def test_full_demo_state_representation_matches_backend_message_rendering() -> None:
+    backend = MockBackend()
+    query = "Now here is the task:\nTask: Count playlists."
+    example = DecisionExample(
+        benchmark="appworld",
+        episode_id="appworld:trace:t1",
+        step_id=2,
+        state_text=(
+            "[SYSTEM PROMPT]\nignored old minimal prompt\n"
+            "[QUERY]\n"
+            f"{query}\n"
+            "[TRACE SO FAR]\n"
+            "Step 1 - Response:\n```python\nprint('x')\n```\n"
+            "Step 1 - Observation:\n{'ok': true}\n"
+        ),
+        target_text="```python\napis.supervisor.complete_task(answer=1)\n```",
+        target_type="code",
+        candidate_memory_ids=None,
+    )
+    messages = build_appworld_messages(
+        task_message=query,
+        trajectory_so_far=[{"response": "```python\nprint('x')\n```", "observation": "{'ok': true}"}],
+        prompt_profile="full_demo",
+        target_type="code",
+    )
+
+    rendered_for_train_cache = render_state_representation_text(
+        backend.tokenizer,
+        example,
+        "full_demo",
+    )
+    rendered_for_eval = backend.render_messages(messages, add_generation_prompt=True)
+    rendered_with_metadata, train_metadata = _render_prompt_with_metadata(
+        backend.tokenizer,
+        messages,
+        "full_demo",
+    )
+    tokenized = backend.tokenize_messages(messages, add_generation_prompt=True)
+
+    assert rendered_for_train_cache == rendered_for_eval
+    assert rendered_with_metadata == rendered_for_eval
+    assert train_metadata["last_user_token_indices"] == tokenized.metadata["last_user_token_indices"]
+
+
 def test_query_length_preflight_reports_grouped_over_limit_rows(tmp_path) -> None:
     tokenizer = TinyTokenizer()
     example = DecisionExample(
@@ -328,3 +378,30 @@ def test_query_length_preflight_reports_grouped_over_limit_rows(tmp_path) -> Non
     assert report["over_limit_by_episode"] == {"appworld:trace:long_1": 1}
     assert report["over_limit_by_task"] == {"long_1": 1}
     assert report["over_limit_rows"][0]["jsonl_line"] == 1
+
+
+def test_record_representation_aggregation_does_not_double_write_mass() -> None:
+    record = MemoryRecord(
+        memory_id="m1",
+        benchmark="appworld",
+        episode_id="e1",
+        task_id="t1",
+        raw_trajectory={},
+        experience_text="memory",
+        outcome=1.0,
+        success=True,
+    )
+    base = torch.arange(1, 5, dtype=torch.float32)
+    representations = torch.stack([base, base], dim=0)
+    aggregated, audit = _aggregate_chunk_representations(
+        representations=representations,
+        owner_indices=torch.tensor([0, 0]),
+        token_counts=torch.tensor([10, 10]),
+        records=[record],
+    )
+
+    assert torch.allclose(aggregated[0], base)
+    assert audit["total_records"] == 1
+    assert audit["total_chunks"] == 2
+    assert audit["multi_chunk_count"] == 1
+    assert audit["records"][0]["aggregation_mode"] == "token_weighted_mean"

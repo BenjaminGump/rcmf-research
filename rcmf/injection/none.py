@@ -46,6 +46,8 @@ def build_injector(
     model_dim: int,
     vocab_size: int | None = None,
     num_prefix_tokens: int = 8,
+    num_tokens: int | None = None,
+    position: str = "first_k",
     initial_scale: float = 0.1,
 ) -> MemoryInjector:
     if injector_type == "none":
@@ -58,10 +60,19 @@ def build_injector(
             initial_scale=initial_scale,
         )
     if injector_type == "additive_prefix":
-        return AdditivePrefixMemoryInjector(
+        return AdditiveTokenMemoryInjector(
             program_dim=program_dim,
             model_dim=model_dim,
-            num_prefix_tokens=num_prefix_tokens,
+            num_tokens=num_tokens or num_prefix_tokens,
+            position="first_k",
+            initial_scale=initial_scale,
+        )
+    if injector_type == "additive_token":
+        return AdditiveTokenMemoryInjector(
+            program_dim=program_dim,
+            model_dim=model_dim,
+            num_tokens=num_tokens or num_prefix_tokens,
+            position=position,
             initial_scale=initial_scale,
         )
     if injector_type == "logit_bias":
@@ -76,4 +87,8 @@ def build_injector(
 
 
 from rcmf.injection.logit_bias import LogitBiasMemoryInjector
-from rcmf.injection.prefix import AdditivePrefixMemoryInjector, PrefixMemoryInjector
+from rcmf.injection.prefix import (
+    AdditivePrefixMemoryInjector,
+    AdditiveTokenMemoryInjector,
+    PrefixMemoryInjector,
+)

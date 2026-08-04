@@ -103,6 +103,8 @@ def build_memory_modules(config: RCMFConfig, backend: Any):
         model_dim=model_dim,
         vocab_size=vocab_size,
         num_prefix_tokens=config.injector.num_prefix_tokens,
+        num_tokens=config.injector.num_tokens,
+        position=config.injector.position,
         initial_scale=config.injector.initial_scale,
     )
     return compiler, state_encoder, injector

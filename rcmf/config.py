@@ -103,6 +103,8 @@ class CompilerSection:
 class InjectorSection:
     type: str = "prefix"
     num_prefix_tokens: int = 8
+    num_tokens: int | None = None
+    position: str = "first_k"
     initial_scale: float = 0.1
 
 
@@ -232,8 +234,18 @@ class RCMFConfig:
             raise ValueError(f"Unknown address mode: {self.address.mode}")
         if self.encoder.type not in {"qwen_hidden", "light_transformer"}:
             raise ValueError(f"Unknown encoder type: {self.encoder.type}")
-        if self.injector.type not in {"prefix", "additive_prefix", "logit_bias", "none"}:
+        if self.injector.type not in {
+            "prefix",
+            "additive_prefix",
+            "additive_token",
+            "logit_bias",
+            "none",
+        }:
             raise ValueError(f"Unknown injector type: {self.injector.type}")
+        if self.injector.position not in {"first_k", "last_prompt_k", "last_user_k"}:
+            raise ValueError(f"Unknown injector position: {self.injector.position}")
+        if self.injector.num_tokens is not None and self.injector.num_tokens <= 0:
+            raise ValueError("injector.num_tokens must be positive when set")
 
     def to_dict(self) -> dict[str, Any]:
         output = asdict(self)

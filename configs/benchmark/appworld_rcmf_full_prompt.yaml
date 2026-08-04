@@ -11,4 +11,6 @@ benchmark:
   max_context_turns: 40
 
 injector:
-  type: additive_prefix
+  type: additive_token
+  position: first_k
+  num_tokens: 4

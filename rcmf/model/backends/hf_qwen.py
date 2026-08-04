@@ -100,21 +100,67 @@ class HFQwenBackend:
                 add_generation_prompt=add_generation_prompt,
             )
 
+    def render_messages(
+        self,
+        messages: list[ChatMessage],
+        add_generation_prompt: bool = True,
+    ) -> str:
+        return self._apply_chat_template(messages, add_generation_prompt=add_generation_prompt)
+
+    def _token_ids_for_text(self, text: str) -> list[int]:
+        return list(self.tokenizer(text, add_special_tokens=False)["input_ids"])
+
+    def _last_user_token_indices(
+        self,
+        messages: list[ChatMessage],
+        rendered_text: str,
+    ) -> list[int]:
+        last_user_content = ""
+        for message in reversed(messages):
+            if message.get("role") == "user":
+                last_user_content = str(message.get("content", ""))
+                break
+        if not last_user_content:
+            return []
+        start = rendered_text.rfind(last_user_content)
+        if start < 0:
+            return []
+        end = start + len(last_user_content)
+        prefix_len = len(self._token_ids_for_text(rendered_text[:start]))
+        span_len = len(self._token_ids_for_text(rendered_text[start:end]))
+        return list(range(prefix_len, prefix_len + span_len))
+
     def tokenize_messages(
         self,
         messages: list[ChatMessage],
         add_generation_prompt: bool = True,
         return_tensors: str = "pt",
     ) -> TokenizedBatch:
-        text = self._apply_chat_template(messages, add_generation_prompt=add_generation_prompt)
+        text = self.render_messages(messages, add_generation_prompt=add_generation_prompt)
         tokenized = self.tokenizer(text, return_tensors=return_tensors)
         input_ids = tokenized["input_ids"].to(self.device)
         attention_mask = tokenized.get("attention_mask", torch.ones_like(input_ids)).to(self.device)
         return TokenizedBatch(
             input_ids=input_ids,
             attention_mask=attention_mask,
-            metadata={"text": text, "input_tokens": int(attention_mask.sum().item())},
+            metadata={
+                "text": text,
+                "input_tokens": int(attention_mask.sum().item()),
+                "last_user_token_indices": self._last_user_token_indices(messages, text),
+            },
         )
+
+    @torch.no_grad()
+    def encode_messages(
+        self,
+        messages: list[ChatMessage],
+        add_generation_prompt: bool = True,
+    ) -> Tensor:
+        tokenized = self.tokenize_messages(
+            messages,
+            add_generation_prompt=add_generation_prompt,
+        )
+        return self.encode_input_ids(tokenized.input_ids, tokenized.attention_mask)
 
     @torch.no_grad()
     def encode_input_ids(
@@ -189,6 +235,22 @@ class HFQwenBackend:
         add_special_tokens: bool = True,
         max_chunk_tokens: int | None = None,
     ) -> tuple[Tensor, Tensor]:
+        representations, owner_indices, _token_counts = self.encode_text_chunks_with_metadata(
+            texts=texts,
+            batch_size=batch_size,
+            add_special_tokens=add_special_tokens,
+            max_chunk_tokens=max_chunk_tokens,
+        )
+        return representations, owner_indices
+
+    @torch.no_grad()
+    def encode_text_chunks_with_metadata(
+        self,
+        texts: list[str],
+        batch_size: int = 1,
+        add_special_tokens: bool = True,
+        max_chunk_tokens: int | None = None,
+    ) -> tuple[Tensor, Tensor, Tensor]:
         if self.tokenizer is None:
             raise RuntimeError("HFQwenBackend.load() has not been called")
         if self.model is None:
@@ -203,6 +265,7 @@ class HFQwenBackend:
             )
         chunks: list[list[int]] = []
         owners: list[int] = []
+        token_counts: list[int] = []
         for owner_index, text in enumerate(texts):
             token_ids = self.tokenizer(
                 text,
@@ -213,12 +276,15 @@ class HFQwenBackend:
                 eos_id = getattr(self.tokenizer, "eos_token_id", None)
                 token_ids = [int(eos_id) if eos_id is not None else 0]
             for start in range(0, len(token_ids), chunk_limit):
-                chunks.append(list(token_ids[start : start + chunk_limit]))
+                chunk = list(token_ids[start : start + chunk_limit])
+                chunks.append(chunk)
                 owners.append(owner_index)
+                token_counts.append(len(chunk))
         if not chunks:
             model_dim = getattr(getattr(self.model, "config", None), "hidden_size", 0)
             return (
                 torch.empty(0, int(model_dim), dtype=torch.float32),
+                torch.empty(0, dtype=torch.long),
                 torch.empty(0, dtype=torch.long),
             )
         outputs: list[Tensor] = []
@@ -232,7 +298,11 @@ class HFQwenBackend:
                 input_ids[row, : len(chunk)] = torch.tensor(chunk, dtype=torch.long)
                 attention_mask[row, : len(chunk)] = 1
             outputs.append(self.encode_input_ids(input_ids, attention_mask))
-        return torch.cat(outputs, dim=0), torch.tensor(owners, dtype=torch.long)
+        return (
+            torch.cat(outputs, dim=0),
+            torch.tensor(owners, dtype=torch.long),
+            torch.tensor(token_counts, dtype=torch.long),
+        )
 
     def _loss_with_logits(self, logits: Tensor, labels: Tensor) -> Tensor:
         shift_logits = logits[..., :-1, :].contiguous()
@@ -303,6 +373,7 @@ class HFQwenBackend:
         labels: Tensor | None = None,
         injector: MemoryInjector | None = None,
         memory_z: Tensor | None = None,
+        **kwargs: Any,
     ) -> TrainOutput:
         if self.model is None:
             raise RuntimeError("HFQwenBackend.load() has not been called")
@@ -320,6 +391,7 @@ class HFQwenBackend:
                 attention_mask.to(self.device) if attention_mask is not None else None,
                 labels.to(self.device) if labels is not None else None,
                 memory_z.to(self.device) if memory_z is not None else None,
+                injection_token_indices=kwargs.get("injection_token_indices"),
             )
             model_inputs = dict(prepared.inputs)
             memory_metadata = prepared.memory_metadata
@@ -366,6 +438,7 @@ class HFQwenBackend:
                 tokenized.input_ids,
                 tokenized.attention_mask,
                 memory_z.to(self.device) if memory_z is not None else None,
+                token_metadata=tokenized.metadata,
             )
             generation_inputs = dict(prepared.inputs)
             memory_metadata = prepared.memory_metadata

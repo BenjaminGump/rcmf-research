@@ -141,6 +141,7 @@ class RCMFTrainer:
             labels=batch["labels"],
             injector=self.injector,
             memory_z=memory_z,
+            injection_token_indices=batch.get("last_user_token_indices"),
         )
         if model_output.loss is None:
             raise RuntimeError("Model backend did not produce action loss")

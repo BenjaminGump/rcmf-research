@@ -20,6 +20,7 @@ from rcmf.training.datasets import (
     build_rcmf_training_batch,
     load_decision_examples,
     load_memory_records,
+    render_state_representation_texts,
 )
 from rcmf.schemas import DecisionExample, MemoryRecord
 from rcmf.utils.serialization import append_jsonl, atomic_write_json, maybe_git_commit, sha256_file
@@ -47,6 +48,89 @@ def _example_task_id(example: DecisionExample) -> str:
     return example.episode_id.rsplit(":", 1)[-1]
 
 
+LEAKAGE_METADATA_FIELDS = {
+    "task": ("task_id", "source_task_id", "original_task_id", "parent_task_id"),
+    "episode": (
+        "episode_id",
+        "source_episode_id",
+        "original_episode_id",
+        "parent_episode_id",
+        "derived_from_episode_id",
+    ),
+    "replay": (
+        "replay_id",
+        "source_replay_id",
+        "original_replay_id",
+        "parent_replay_id",
+        "derived_from_replay_id",
+    ),
+    "lineage": (
+        "lineage_id",
+        "source_lineage_id",
+        "original_lineage_id",
+        "parent_lineage_id",
+        "derived_from",
+        "derived_from_id",
+        "trace_id",
+    ),
+}
+
+
+def _iter_leakage_values(metadata: dict[str, object], fields: tuple[str, ...]) -> list[str]:
+    values: list[str] = []
+
+    def append_value(value: object) -> None:
+        if value is None:
+            return
+        if isinstance(value, (list, tuple, set)):
+            for item in value:
+                append_value(item)
+            return
+        if isinstance(value, dict):
+            for key in (
+                "id",
+                "task_id",
+                "episode_id",
+                "replay_id",
+                "lineage_id",
+                "source_episode_id",
+            ):
+                if key in value:
+                    append_value(value[key])
+            return
+        text = str(value).strip()
+        if text:
+            values.append(text)
+
+    for field in fields:
+        append_value(metadata.get(field))
+    return values
+
+
+def _leakage_keys_for_example(example: DecisionExample) -> set[str]:
+    metadata = dict(example.metadata)
+    keys = {
+        f"task:{_example_task_id(example)}",
+        f"episode:{example.episode_id}",
+    }
+    for category, fields in LEAKAGE_METADATA_FIELDS.items():
+        for value in _iter_leakage_values(metadata, fields):
+            keys.add(f"{category}:{value}")
+    return keys
+
+
+def _leakage_keys_for_record(record: MemoryRecord) -> set[str]:
+    metadata = dict(record.metadata)
+    keys = {
+        f"task:{record.task_id}",
+        f"episode:{record.episode_id}",
+    }
+    for category, fields in LEAKAGE_METADATA_FIELDS.items():
+        for value in _iter_leakage_values(metadata, fields):
+            keys.add(f"{category}:{value}")
+    return keys
+
+
 def _support_indices_for_examples(
     records: list[MemoryRecord],
     examples: list[DecisionExample],
@@ -60,13 +144,19 @@ def _support_indices_for_examples(
         else:
             chosen = [rng.randrange(len(records)) for _ in range(support_size)]
         return chosen
-    if mode == "all_except_current_task":
-        current_task_ids = {_example_task_id(example) for example in examples}
-        chosen = [index for index, record in enumerate(records) if record.task_id not in current_task_ids]
+    if mode in {"all_except_current_task", "all_except_current_lineage"}:
+        blocked_keys: set[str] = set()
+        for example in examples:
+            blocked_keys.update(_leakage_keys_for_example(example))
+        chosen = [
+            index
+            for index, record in enumerate(records)
+            if _leakage_keys_for_record(record).isdisjoint(blocked_keys)
+        ]
         if not chosen:
             raise ValueError(
-                "all_except_current_task produced an empty support set. "
-                f"current_task_ids={sorted(current_task_ids)} records={len(records)}"
+                f"{mode} produced an empty support set. "
+                f"blocked_keys={sorted(blocked_keys)} records={len(records)}"
             )
         return chosen
     raise ValueError(f"Unknown support mode: {mode}")
@@ -167,16 +257,19 @@ def _load_or_compute_representations(
     source_path: Path,
     model_name: str,
     batch_size: int,
+    cache_metadata: dict[str, object] | None = None,
 ) -> torch.Tensor:
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     source_hash = sha256_file(source_path)
+    cache_metadata = cache_metadata or {}
     if cache_path.exists():
         payload = torch.load(cache_path, map_location="cpu")
         if (
-            payload.get("format") == "pooled_qwen_hidden_v1"
+            payload.get("format") == "pooled_qwen_hidden_v2"
             and payload.get("source_sha256") == source_hash
             and payload.get("model_name") == model_name
             and int(payload.get("count", -1)) == len(texts)
+            and payload.get("cache_metadata") == cache_metadata
         ):
             return payload["representations"].to(torch.float32)
     if not hasattr(backend, "encode_texts"):
@@ -184,12 +277,13 @@ def _load_or_compute_representations(
     representations = backend.encode_texts(texts, batch_size=batch_size).to(torch.float32)
     torch.save(
         {
-            "format": "pooled_qwen_hidden_v1",
+            "format": "pooled_qwen_hidden_v2",
             "representations": representations.cpu(),
             "source_sha256": source_hash,
             "source_path": str(source_path),
             "model_name": model_name,
             "count": len(texts),
+            "cache_metadata": cache_metadata,
             "created_at": time.time(),
         },
         cache_path,
@@ -197,63 +291,118 @@ def _load_or_compute_representations(
     return representations.cpu()
 
 
-def _load_or_compute_chunk_representations(
+def _aggregate_chunk_representations(
+    representations: torch.Tensor,
+    owner_indices: torch.Tensor,
+    token_counts: torch.Tensor,
+    records: list[MemoryRecord],
+) -> tuple[torch.Tensor, dict[str, object]]:
+    if representations.shape[0] != owner_indices.numel() or owner_indices.numel() != token_counts.numel():
+        raise ValueError("Chunk representations, owner indices and token counts must have matching rows")
+    record_count = len(records)
+    weights = token_counts.to(torch.float32).clamp_min(1.0).unsqueeze(-1)
+    aggregated = torch.zeros(record_count, representations.shape[-1], dtype=torch.float32)
+    denom = torch.zeros(record_count, 1, dtype=torch.float32)
+    aggregated.index_add_(0, owner_indices, representations.to(torch.float32) * weights)
+    denom.index_add_(0, owner_indices, weights)
+    if bool((denom.squeeze(-1) <= 0).any().item()):
+        missing = (denom.squeeze(-1) <= 0).nonzero(as_tuple=False).flatten().tolist()
+        raise ValueError(f"Missing representation chunks for record indices: {missing}")
+    aggregated = aggregated / denom.clamp_min(1.0)
+    chunk_counts = torch.bincount(owner_indices, minlength=record_count).to(torch.long)
+    rows = []
+    for index, record in enumerate(records):
+        rows.append(
+            {
+                "index": index,
+                "memory_id": record.memory_id,
+                "task_id": record.task_id,
+                "episode_id": record.episode_id,
+                "raw_token_count": int(token_counts[owner_indices == index].sum().item()),
+                "chunk_count": int(chunk_counts[index].item()),
+                "aggregation_mode": "token_weighted_mean",
+                "pre_aggregation_chunk_norm_mean": float(
+                    representations[owner_indices == index].to(torch.float32).norm(dim=-1).mean().item()
+                ),
+                "post_aggregation_norm": float(aggregated[index].norm().item()),
+            }
+        )
+    histogram = Counter(int(value) for value in chunk_counts.tolist())
+    summary = {
+        "aggregation_mode": "token_weighted_mean",
+        "total_records": record_count,
+        "total_chunks": int(owner_indices.numel()),
+        "single_chunk_count": int((chunk_counts == 1).sum().item()),
+        "multi_chunk_count": int((chunk_counts > 1).sum().item()),
+        "maximum_chunks": int(chunk_counts.max().item()) if record_count else 0,
+        "chunk_count_histogram": {str(key): value for key, value in sorted(histogram.items())},
+        "multi_chunk_memory_ids": [
+            records[index].memory_id for index, count in enumerate(chunk_counts.tolist()) if int(count) > 1
+        ],
+        "records": rows,
+    }
+    return aggregated, summary
+
+
+def _load_or_compute_record_representations(
     backend: object,
-    texts: list[str],
+    records: list[MemoryRecord],
     cache_path: Path,
     source_path: Path,
     model_name: str,
     batch_size: int,
-) -> tuple[torch.Tensor, torch.Tensor]:
+    audit_path: Path,
+) -> tuple[torch.Tensor, dict[str, object]]:
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     source_hash = sha256_file(source_path)
     if cache_path.exists():
         payload = torch.load(cache_path, map_location="cpu")
         if (
-            payload.get("format") == "chunked_qwen_hidden_v1"
+            payload.get("format") == "record_qwen_hidden_v2"
             and payload.get("source_sha256") == source_hash
             and payload.get("model_name") == model_name
-            and int(payload.get("text_count", -1)) == len(texts)
+            and int(payload.get("record_count", -1)) == len(records)
+            and payload.get("aggregation_mode") == "token_weighted_mean"
         ):
-            return (
-                payload["representations"].to(torch.float32),
-                payload["owner_indices"].to(torch.long),
-            )
-    if not hasattr(backend, "encode_text_chunks"):
+            audit = payload.get("chunk_audit") or {}
+            if audit:
+                atomic_write_json(audit_path, audit)
+            return payload["representations"].to(torch.float32), audit
+    if not hasattr(backend, "encode_text_chunks_with_metadata"):
         raise TypeError("Backend must implement encode_text_chunks for qwen_hidden memory records")
-    representations, owner_indices = backend.encode_text_chunks(texts, batch_size=batch_size)
-    representations = representations.to(torch.float32).cpu()
+    chunk_representations, owner_indices, token_counts = backend.encode_text_chunks_with_metadata(
+        [record.experience_text for record in records],
+        batch_size=batch_size,
+    )
+    chunk_representations = chunk_representations.to(torch.float32).cpu()
     owner_indices = owner_indices.to(torch.long).cpu()
+    token_counts = token_counts.to(torch.long).cpu()
+    representations, audit = _aggregate_chunk_representations(
+        chunk_representations,
+        owner_indices,
+        token_counts,
+        records,
+    )
+    atomic_write_json(audit_path, audit)
     torch.save(
         {
-            "format": "chunked_qwen_hidden_v1",
+            "format": "record_qwen_hidden_v2",
             "representations": representations,
+            "chunk_representations": chunk_representations,
             "owner_indices": owner_indices,
+            "chunk_token_counts": token_counts,
             "source_sha256": source_hash,
             "source_path": str(source_path),
             "model_name": model_name,
-            "text_count": len(texts),
+            "record_count": len(records),
             "chunk_count": int(owner_indices.numel()),
+            "aggregation_mode": "token_weighted_mean",
+            "chunk_audit": audit,
             "created_at": time.time(),
         },
         cache_path,
     )
-    return representations, owner_indices
-
-
-def _segment_indices_for_record_indices(
-    owner_indices: torch.Tensor,
-    record_indices: list[int],
-) -> list[int]:
-    selected_records = set(int(index) for index in record_indices)
-    segment_indices = [
-        segment_index
-        for segment_index, owner_index in enumerate(owner_indices.tolist())
-        if int(owner_index) in selected_records
-    ]
-    if not segment_indices:
-        raise ValueError("Selected support records produced an empty chunked support set")
-    return segment_indices
+    return representations, audit
 
 
 def main() -> None:
@@ -267,7 +416,11 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--grad-accumulation-steps", type=int, default=1)
     parser.add_argument("--support-size", type=int, default=None)
-    parser.add_argument("--support-mode", choices=["sample", "all_except_current_task"], default="all_except_current_task")
+    parser.add_argument(
+        "--support-mode",
+        choices=["sample", "all_except_current_task", "all_except_current_lineage"],
+        default="all_except_current_task",
+    )
     parser.add_argument("--max-query-tokens", type=int, default=None)
     parser.add_argument("--skip-query-length-preflight", action="store_true")
     parser.add_argument("--representation-cache-dir", default=None)
@@ -327,25 +480,36 @@ def main() -> None:
         rng = random.Random(cfg.experiment.seed)
         example_order = list(range(len(examples)))
         record_representations = None
-        record_owner_indices = None
+        record_chunk_audit = None
         state_representations = None
         if cfg.encoder.type == "qwen_hidden":
             cache_dir = Path(args.representation_cache_dir or output_dir / "representation_cache")
-            record_representations, record_owner_indices = _load_or_compute_chunk_representations(
+            record_representations, record_chunk_audit = _load_or_compute_record_representations(
                 backend=backend,
-                texts=[record.experience_text for record in records],
+                records=records,
                 cache_path=cache_dir / "memory_record_representations.pt",
                 source_path=data_dir / "memory_records.jsonl",
                 model_name=cfg.model.name,
                 batch_size=args.representation_batch_size,
+                audit_path=output_dir / "memory_record_chunk_audit.json",
+            )
+            state_texts = render_state_representation_texts(
+                backend.tokenizer,
+                examples,
+                cfg.benchmark.prompt_profile,
             )
             state_representations = _load_or_compute_representations(
                 backend=backend,
-                texts=[example.state_text for example in examples],
+                texts=state_texts,
                 cache_path=cache_dir / "decision_state_representations.pt",
                 source_path=data_dir / "decision_examples.jsonl",
                 model_name=cfg.model.name,
                 batch_size=args.representation_batch_size,
+                cache_metadata={
+                    "state_representation": "appworld_rendered_messages",
+                    "prompt_profile": cfg.benchmark.prompt_profile,
+                    "add_generation_prompt": True,
+                },
             )
         optimizer.zero_grad(set_to_none=True)
         metrics_path = output_dir / "metrics.jsonl"
@@ -367,12 +531,10 @@ def main() -> None:
                 support_size=support_size,
                 rng=rng,
             )
-            if record_representations is not None and record_owner_indices is not None:
-                segment_indices = _segment_indices_for_record_indices(record_owner_indices, support_indices)
-                support_records = [records[int(record_owner_indices[index])] for index in segment_indices]
-                support_repr_batch = record_representations[segment_indices]
+            if record_representations is not None:
+                support_records = [records[index] for index in support_indices]
+                support_repr_batch = record_representations[support_indices]
             else:
-                segment_indices = []
                 support_records = [records[index] for index in support_indices]
                 support_repr_batch = None
             state_repr_batch = (
@@ -422,7 +584,8 @@ def main() -> None:
                     "records": len(records),
                     "support_mode": args.support_mode,
                     "support_records": len(support_indices),
-                    "support_segments": len(support_records),
+                    "support_representation_rows": len(support_records),
+                    "support_representation_level": "record",
                     **output.metrics,
                 }
                 append_jsonl(metrics_path, row)
@@ -458,8 +621,11 @@ def main() -> None:
                 "optimizer_steps": optimizer_steps,
                 "support_size": support_size,
                 "support_mode": args.support_mode,
-                "memory_representation_segments": int(record_owner_indices.numel())
-                if record_owner_indices is not None
+                "memory_representation_records": len(records)
+                if record_representations is not None
+                else None,
+                "memory_representation_chunks": record_chunk_audit.get("chunk_count_histogram")
+                if isinstance(record_chunk_audit, dict)
                 else None,
                 "representation_cache_dir": str(args.representation_cache_dir or output_dir / "representation_cache")
                 if cfg.encoder.type == "qwen_hidden"

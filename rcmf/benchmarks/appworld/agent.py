@@ -10,8 +10,8 @@ import torch
 
 from rcmf.benchmarks.appworld.data import extract_code_and_fix_content
 from rcmf.benchmarks.appworld.prompt import (
+    build_appworld_messages,
     build_task_message,
-    get_initial_messages,
     get_system_prompt,
     uses_chat_history_prompt,
 )
@@ -71,20 +71,29 @@ class RCMFAppWorldAgent:
             lines.extend([f"[{message['role'].upper()}]", message["content"].strip()])
         return "\n".join(lines).strip() + "\n"
 
-    def _memory_z_for_turn(self, state_text: str) -> torch.Tensor | None:
+    def _memory_z_for_turn(self, state: str | list[dict[str, str]]) -> torch.Tensor | None:
         if self.memory_state is None or self.state_encoder is None:
             return None
         device = next(self.state_encoder.parameters()).device
         with torch.no_grad():
             if self.config.encoder.type == "qwen_hidden":
-                if not hasattr(self.backend, "encode_texts"):
-                    raise TypeError("Backend must implement encode_texts for qwen_hidden evaluation")
-                representation = self.backend.encode_texts([state_text], batch_size=1).to(device)
+                if isinstance(state, list):
+                    if not hasattr(self.backend, "encode_messages"):
+                        raise TypeError("Backend must implement encode_messages for qwen_hidden evaluation")
+                    representation = self.backend.encode_messages(
+                        state,
+                        add_generation_prompt=True,
+                    ).to(device)
+                else:
+                    if not hasattr(self.backend, "encode_texts"):
+                        raise TypeError("Backend must implement encode_texts for qwen_hidden evaluation")
+                    representation = self.backend.encode_texts([state], batch_size=1).to(device)
                 b = self.state_encoder(representation, None)
             else:
                 tokenizer = getattr(self.backend, "tokenizer", None)
                 if tokenizer is None:
                     return None
+                state_text = self._messages_to_state_text(state) if isinstance(state, list) else state
                 tokenized = tokenizer(state_text, return_tensors="pt")
                 input_ids = tokenized["input_ids"]
                 attention_mask = tokenized.get("attention_mask", torch.ones_like(input_ids))
@@ -140,7 +149,6 @@ class RCMFAppWorldAgent:
             }
             prompt_profile = self.config.benchmark.prompt_profile
             system_prompt = get_system_prompt(prompt_profile)
-            initial_messages = get_initial_messages(prompt_profile)
             use_chat_history_prompt = uses_chat_history_prompt(prompt_profile)
             task_message = build_task_message(
                 world.task.instruction,
@@ -156,9 +164,12 @@ class RCMFAppWorldAgent:
             for step in range(self.config.benchmark.max_steps):
                 steps = step + 1
                 if use_chat_history_prompt:
-                    messages = [dict(message) for message in initial_messages]
-                    messages.extend(dict(message) for message in self._recent_history(conversation_history))
-                    state_text = self._messages_to_state_text(messages)
+                    messages = build_appworld_messages(
+                        task_message=task_message,
+                        trajectory_so_far=trace_steps,
+                        prompt_profile=prompt_profile,
+                        max_context_turns=self.config.benchmark.max_context_turns,
+                    )
                 else:
                     user_state = render_state_for_step(task_message, trace_steps)
                     messages = [
@@ -173,7 +184,8 @@ class RCMFAppWorldAgent:
                         trace_steps,
                         system_prompt=system_prompt,
                     )
-                memory_z = self._memory_z_for_turn(state_text)
+                memory_state = messages if use_chat_history_prompt else state_text
+                memory_z = self._memory_z_for_turn(memory_state)
                 output = self.backend.generate(
                     messages=messages,
                     max_new_tokens=self.max_new_tokens,

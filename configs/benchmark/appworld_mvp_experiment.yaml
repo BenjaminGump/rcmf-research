@@ -6,6 +6,7 @@ experiment:
   output_dir: runs/experiments/appworld_mvp_experiment
 
 loss:
+  utility: false
   rank: false
   sparse: false
   orthogonal: false

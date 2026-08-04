@@ -43,8 +43,10 @@ AppWorld returned `No code available to execute`.
 
 Resolution:
 
-- AppWorld full-prompt configs use `additive_prefix` instead of prepending
+- AppWorld full-prompt configs now use `additive_token` instead of prepending
   virtual tokens.
+- The deprecated `additive_prefix` alias maps to the same first-k additive-token
+  behavior for old checkpoints/configs.
 - Memory scale 0.0 reproduces the bare first-10 baseline, supporting pipeline
   equivalence.
 
@@ -52,6 +54,16 @@ Resolution:
 
 The semantic-retrieval final checkpoint reaches `4/10` on the fixed first-10
 slice, but its partial full evaluation was stopped at `7/37 = 18.9%`.
+
+Paired first-37 comparison against the locked bare-Qwen run:
+
+- Baseline on the same 37 tasks: `10/37`.
+- RCMF semantic-retrieval candidate: `7/37`.
+- Retained baseline successes: `5`.
+- Lost baseline successes: `5`.
+- Gained over baseline: `2`.
+- Result file:
+  `research/results/rcmf_semretr_vs_qwen_first37_paired_20260804.md`.
 
 Working hypothesis:
 

@@ -1,0 +1,11 @@
+include:
+  - appworld_rcmf_full_prompt_low_injector.yaml
+
+experiment:
+  name: rcmf_appworld_full_prompt_last_user_k
+  output_dir: runs/experiments/rcmf_appworld_full_prompt_last_user_k
+
+injector:
+  type: additive_token
+  position: last_user_k
+  num_tokens: 4

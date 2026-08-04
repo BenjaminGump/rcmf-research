@@ -9,7 +9,13 @@ import torch
 from torch import Tensor
 from torch.utils.data import Dataset
 
-from rcmf.benchmarks.appworld.prompt import get_initial_messages, get_system_prompt, uses_chat_history_prompt
+from rcmf.benchmarks.appworld.prompt import (
+    appworld_renderer_metadata,
+    build_appworld_messages,
+    get_system_prompt,
+    observation_to_chat_content,
+    uses_chat_history_prompt,
+)
 from rcmf.config import RCMFConfig
 from rcmf.schemas import DecisionExample, MemoryRecord
 from rcmf.utils.serialization import read_jsonl, write_jsonl
@@ -94,9 +100,17 @@ def _apply_chat_template(tokenizer: Any, messages: list[dict[str, str]]) -> str:
     apply_template = getattr(tokenizer, "apply_chat_template", None)
     if callable(apply_template):
         try:
-            return apply_template(messages, tokenize=False, add_generation_prompt=True)
+            return apply_template(
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
+                enable_thinking=False,
+            )
         except TypeError:
-            return apply_template(messages, tokenize=False)
+            try:
+                return apply_template(messages, tokenize=False, add_generation_prompt=True)
+            except TypeError:
+                return apply_template(messages, tokenize=False)
     lines = []
     for message in messages:
         lines.append(f"{message['role'].upper()}:\n{message['content']}")
@@ -143,22 +157,67 @@ def _parse_appworld_state_text(state_text: str) -> tuple[str | None, str, list[t
     return embedded_system_prompt, query, steps
 
 
-def _observation_to_chat_content(observation: str) -> str:
-    stripped = observation.strip()
-    if stripped.startswith("Output:\n```"):
-        return stripped
-    return f"Output:\n```\n{stripped}\n```"
-
-
-def _render_appworld_chat_history_prompt(tokenizer: Any, example: DecisionExample, prompt_profile: str) -> str:
+def _appworld_messages_from_example(
+    example: DecisionExample,
+    prompt_profile: str,
+) -> list[dict[str, str]]:
     _, query, steps = _parse_appworld_state_text(example.state_text)
-    if example.target_type == "answer":
-        query += "\n\nRespond with the final answer only."
-    messages = [dict(message) for message in get_initial_messages(prompt_profile)]
-    messages.append({"role": "user", "content": query})
-    for _, response, observation in steps:
-        messages.append({"role": "assistant", "content": response})
-        messages.append({"role": "user", "content": _observation_to_chat_content(observation)})
+    return build_appworld_messages(
+        task_message=query,
+        trajectory_so_far=[
+            {"response": response, "observation": observation}
+            for _, response, observation in steps
+        ],
+        prompt_profile=prompt_profile,
+        target_type=example.target_type,
+        system_prompt=str(example.metadata.get("system_prompt", "") or ""),
+    )
+
+
+def _last_user_token_indices_from_rendered(
+    tokenizer: Any,
+    rendered_prompt: str,
+    messages: list[dict[str, str]],
+) -> list[int]:
+    last_user_content = ""
+    for message in reversed(messages):
+        if message.get("role") == "user":
+            last_user_content = str(message.get("content", ""))
+            break
+    if not last_user_content:
+        return []
+    start = rendered_prompt.rfind(last_user_content)
+    if start < 0:
+        return []
+    end = start + len(last_user_content)
+    prefix_ids = tokenizer(rendered_prompt[:start], add_special_tokens=False)["input_ids"]
+    span_ids = tokenizer(rendered_prompt[start:end], add_special_tokens=False)["input_ids"]
+    return list(range(len(prefix_ids), len(prefix_ids) + len(span_ids)))
+
+
+def _render_prompt_with_metadata(
+    tokenizer: Any,
+    messages: list[dict[str, str]],
+    prompt_profile: str,
+) -> tuple[str, dict[str, Any]]:
+    rendered = _apply_chat_template(tokenizer, messages)
+    metadata = {
+        **appworld_renderer_metadata(prompt_profile, add_generation_prompt=True),
+        "last_user_token_indices": _last_user_token_indices_from_rendered(
+            tokenizer,
+            rendered,
+            messages,
+        ),
+    }
+    return rendered, metadata
+
+
+def _render_appworld_chat_history_prompt(
+    tokenizer: Any,
+    example: DecisionExample,
+    prompt_profile: str,
+) -> str:
+    messages = _appworld_messages_from_example(example, prompt_profile)
     return _apply_chat_template(tokenizer, messages)
 
 
@@ -176,6 +235,23 @@ def _render_training_prompt(tokenizer: Any, example: DecisionExample, prompt_pro
         {"role": "user", "content": user_text},
     ]
     return _apply_chat_template(tokenizer, messages)
+
+
+def render_state_representation_text(
+    tokenizer: Any,
+    example: DecisionExample,
+    prompt_profile: str,
+) -> str:
+    """Render the text used by qwen_hidden StateEncoder caches."""
+    return _render_training_prompt(tokenizer, example, prompt_profile)
+
+
+def render_state_representation_texts(
+    tokenizer: Any,
+    examples: list[DecisionExample],
+    prompt_profile: str,
+) -> list[str]:
+    return [render_state_representation_text(tokenizer, example, prompt_profile) for example in examples]
 
 
 def _target_suffix(example: DecisionExample) -> str:
@@ -217,8 +293,14 @@ def _build_query_tensors(
     input_rows: list[list[int]] = []
     label_rows: list[list[int]] = []
     mask_rows: list[list[int]] = []
+    last_user_index_rows: list[list[int]] = []
     for example in examples:
-        prompt = _render_training_prompt(tokenizer, example, prompt_profile)
+        if example.benchmark == "appworld" and uses_chat_history_prompt(prompt_profile):
+            messages = _appworld_messages_from_example(example, prompt_profile)
+            prompt, prompt_metadata = _render_prompt_with_metadata(tokenizer, messages, prompt_profile)
+        else:
+            prompt = _render_training_prompt(tokenizer, example, prompt_profile)
+            prompt_metadata = {"last_user_token_indices": []}
         target = _target_suffix(example)
         prompt_ids = tokenizer(prompt, add_special_tokens=False)["input_ids"]
         target_ids = _append_eos_token_id(
@@ -240,10 +322,18 @@ def _build_query_tensors(
         input_rows.append(full_ids)
         label_rows.append(labels)
         mask_rows.append([1] * len(full_ids))
+        last_user_index_rows.append(
+            [
+                int(index)
+                for index in prompt_metadata.get("last_user_token_indices", [])
+                if 0 <= int(index) < len(prompt_ids)
+            ]
+        )
     return {
         "query_input_ids": _pad_sequences(input_rows, pad_id),
         "query_attention_mask": _pad_sequences(mask_rows, 0),
         "labels": _pad_sequences(label_rows, -100),
+        "last_user_token_indices": _pad_sequences(last_user_index_rows or [[]], -1),
     }
 
 

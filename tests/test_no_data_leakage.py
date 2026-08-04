@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+import random
+
 import pytest
 
 from rcmf.schemas import DecisionExample, MemoryRecord
 from rcmf.training.episodic_sampler import EpisodicBatch, EpisodicSampler
+from scripts.train import _support_indices_for_examples
 
 
-def _record(memory_id: str, episode_id: str) -> MemoryRecord:
+def _record(memory_id: str, episode_id: str, metadata: dict | None = None) -> MemoryRecord:
     return MemoryRecord(
         memory_id=memory_id,
         benchmark="b",
@@ -16,10 +19,11 @@ def _record(memory_id: str, episode_id: str) -> MemoryRecord:
         experience_text="x",
         outcome=1.0,
         success=True,
+        metadata=metadata or {},
     )
 
 
-def _example(episode_id: str) -> DecisionExample:
+def _example(episode_id: str, metadata: dict | None = None) -> DecisionExample:
     return DecisionExample(
         benchmark="b",
         episode_id=episode_id,
@@ -28,6 +32,7 @@ def _example(episode_id: str) -> DecisionExample:
         target_text="a",
         target_type="code",
         candidate_memory_ids=None,
+        metadata=metadata or {},
     )
 
 
@@ -43,3 +48,27 @@ def test_sampler_produces_disjoint_batches() -> None:
     batch.assert_no_leakage()
     assert batch.support_episode_ids.isdisjoint(batch.query_episode_ids)
 
+
+def test_train_support_indices_exclude_task_episode_and_lineage() -> None:
+    records = [
+        _record("same-task", "other-episode", {"task_id": "task-a"}),
+        _record("same-episode", "episode-a", {"task_id": "task-b"}),
+        _record("same-lineage", "episode-b", {"lineage_id": "lineage-a"}),
+        _record("legal", "episode-c", {"task_id": "task-c", "lineage_id": "lineage-c"}),
+    ]
+    examples = [
+        _example(
+            "episode-a",
+            {"task_id": "task-a", "lineage_id": "lineage-a"},
+        )
+    ]
+
+    chosen = _support_indices_for_examples(
+        records,
+        examples,
+        mode="all_except_current_task",
+        support_size=4,
+        rng=random.Random(1),
+    )
+
+    assert chosen == [3]

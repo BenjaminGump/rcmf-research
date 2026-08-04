@@ -1,18 +1,63 @@
 # Next Experiments
 
-The current priority is diagnosing why semantic retrieval improves first-10 but
-does not yet match the full baseline.
+The current priority is correctness and observability before any expensive full
+GPU run. The next iteration should first prove that representation rendering,
+full legal memory-bank construction, record-level memory writes, and
+additive-token injection behave as intended.
 
-## EXP-001 Trace-Level First-37 Diagnosis
+## EXP-001 Correctness Smoke Before Full Training
+
+Goal:
+
+- Run the next-iteration RCMF pipeline on a tiny smoke configuration after
+  syncing to Lambda.
+- Verify that state representations use the same full-demo message renderer and
+  Qwen chat template as evaluation.
+- Verify that each MemoryRecord compiles into one write after any token-weighted
+  chunk aggregation.
+- Verify additive-token injection audits selected prompt tokens and never
+  injects target tokens during training.
+
+Measure:
+
+- local and Lambda tests;
+- `memory_record_chunk_audit.json`;
+- `memory_injection_diagnostics_v2` JSON/Markdown;
+- a one-step or few-step smoke train run without automatic truncation or
+  downsampling.
+
+Stop condition:
+
+- Do not start a full-size training run until smoke and diagnostics complete
+  without correctness failures.
+
+## EXP-002 Primary Text-Memory Teacher Pilot
+
+Goal:
+
+- Build a teacher that uses raw Qwen scoring over raw memory text, not compiled
+  leave-one-out RCMF memory, as the initial teacher signal.
+
+Measure:
+
+- top-k raw memory labels for a small decision-example sample;
+- teacher label stability;
+- cost estimate before scaling.
+
+Stop condition:
+
+- If the teacher is too expensive or unstable, stop and record the exact
+  limitation rather than substituting compiled-memory labels.
+
+## EXP-003 Trace-Level First-37 Diagnosis
 
 Goal:
 
 - Compare bare Qwen, semantic-retrieval final checkpoint, and memory-scale-zero
-  behavior on first-37 tasks.
+  behavior on the retained/gained/lost first-37 task groups.
 
 Measure:
 
-- retained/gained/lost/both-failed;
 - exact model input, model output, and AppWorld observation for representative
   retained, gained, and lost tasks;
 - tool-error loops, no-code failures, premature complete_task, and wrong-app
@@ -22,23 +67,7 @@ Stop condition:
 
 - Produce a failure taxonomy and at least two falsifiable next hypotheses.
 
-## EXP-002 Semantic-Retrieval Checkpoint Sweep
-
-Goal:
-
-- Determine whether the final checkpoint is actually best beyond first-10.
-
-Candidates:
-
-- `checkpoint_step100.pt`;
-- `checkpoint_step200.pt`;
-- `checkpoint_step300.pt`;
-- final checkpoint.
-
-Use the fixed first-10 set first. Only run broader slices for candidates that
-match or exceed first-10 baseline.
-
-## EXP-003 Memory Scale Sweep
+## EXP-004 Memory Scale Sweep
 
 Goal:
 
@@ -54,7 +83,7 @@ Candidates:
 
 Report success-set deltas, not only aggregate score.
 
-## EXP-004 Retrieval Collapse Diagnostics
+## EXP-005 Retrieval Collapse Diagnostics
 
 Goal:
 

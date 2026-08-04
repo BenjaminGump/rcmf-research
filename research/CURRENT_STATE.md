@@ -23,6 +23,17 @@ Last updated: 2026-08-04.
 - The user verified interactive GitHub SSH authentication as `BenjaminGump`.
 - After the key was loaded into Windows ssh-agent, Codex verified GitHub SSH
   authentication and pushed `workflow/research-loop`.
+- Next-iteration local tests passed on 2026-08-04:
+  `python -m pytest -q` -> `43 passed`.
+- Next-iteration active AppWorld configs use `injector.type=additive_token`,
+  `position=first_k`, and `num_tokens=4`; old `additive_prefix` remains only as
+  a compatibility alias.
+- The full-size AppWorld training path now uses record-level Qwen-hidden memory
+  representations: multi-chunk records are token-weighted into one
+  representation and compiled once.
+- The full-bank support path excludes current task, episode, replay, and
+  lineage keys. The CLI-compatible mode name `all_except_current_task` now has
+  this stricter behavior.
 
 ## Baseline
 
@@ -46,6 +57,8 @@ Last updated: 2026-08-04.
   `325d6ec_1`, `325d6ec_2`, `325d6ec_3`, `29a7b7e_1`.
 - Semantic-retrieval partial full result was stopped early:
   `7/37 = 18.9%`.
+- Paired first-37 comparison against the locked bare-Qwen run:
+  baseline `10/37`, RCMF `7/37`, retained `5`, lost `5`, gained `2`.
 
 ## INFERENCES
 
@@ -56,6 +69,8 @@ Last updated: 2026-08-04.
 - The learned memory read still appears too global/state-insensitive, even
   though semantic retrieval improves variation compared with the low-injector
   run.
+- The semantic-retrieval candidate does not beat bare Qwen on the paired
+  first-37 slice, so further full-size runs should wait for smoke diagnostics.
 
 ## GitHub Status
 
@@ -71,12 +86,15 @@ Last updated: 2026-08-04.
 
 ## UNVERIFIED
 
-- GitHub visibility: not confirmed by the user yet.
-- Whether the repository exists and is private/public.
+- GitHub repository visibility: not confirmed by the user yet.
+- Whether the next-iteration code passes Lambda-side smoke tests after syncing.
+- Whether the primary raw-text memory teacher is practical at AppWorld scale.
+- Whether the new record-level full-bank training improves AppWorld
+  performance; no new full training run has started for this iteration.
 
 ## Immediate Workflow Status
 
-- Working branch for workflow setup: `workflow/research-loop`.
-- Workflow scaffold commit: `b8c6479`.
-- The new workflow docs and tooling should be pushed to GitHub after GitHub auth
-  and repository visibility are confirmed.
+- Working branch: `workflow/research-loop`.
+- Latest pushed commit before the next-iteration changes: `2a2e4dc`.
+- The next-iteration correctness/observability changes are being prepared for a
+  new commit, Lambda sync, and GitHub push.

@@ -47,6 +47,20 @@ class ModelBackend(Protocol):
     ) -> TokenizedBatch:
         ...
 
+    def render_messages(
+        self,
+        messages: list[ChatMessage],
+        add_generation_prompt: bool = True,
+    ) -> str:
+        ...
+
+    def encode_messages(
+        self,
+        messages: list[ChatMessage],
+        add_generation_prompt: bool = True,
+    ) -> Tensor:
+        ...
+
     def forward_train(
         self,
         input_ids: Tensor,
@@ -54,6 +68,7 @@ class ModelBackend(Protocol):
         labels: Tensor | None = None,
         injector: MemoryInjector | None = None,
         memory_z: Tensor | None = None,
+        **kwargs: Any,
     ) -> TrainOutput:
         ...
 
@@ -79,6 +94,15 @@ class ModelBackend(Protocol):
         add_special_tokens: bool = True,
         max_chunk_tokens: int | None = None,
     ) -> tuple[Tensor, Tensor]:
+        ...
+
+    def encode_text_chunks_with_metadata(
+        self,
+        texts: list[str],
+        batch_size: int = 1,
+        add_special_tokens: bool = True,
+        max_chunk_tokens: int | None = None,
+    ) -> tuple[Tensor, Tensor, Tensor]:
         ...
 
     def generate(

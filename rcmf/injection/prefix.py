@@ -131,8 +131,132 @@ class PrefixMemoryInjector(MemoryInjector):
         return prepared
 
 
-class AdditivePrefixMemoryInjector(PrefixMemoryInjector):
-    """Inject memory by adding learned deltas to existing prompt token embeddings."""
+class AdditiveTokenMemoryInjector(PrefixMemoryInjector):
+    """Inject memory by adding learned deltas to selected existing prompt tokens."""
+
+    def __init__(
+        self,
+        program_dim: int,
+        model_dim: int,
+        num_tokens: int = 8,
+        position: str = "first_k",
+        initial_scale: float = 0.1,
+    ) -> None:
+        if position not in {"first_k", "last_prompt_k", "last_user_k"}:
+            raise ValueError(f"Unknown additive-token position: {position}")
+        super().__init__(
+            program_dim=program_dim,
+            model_dim=model_dim,
+            num_prefix_tokens=num_tokens,
+            initial_scale=initial_scale,
+        )
+        self.num_tokens = int(num_tokens)
+        self.position = position
+
+    def _prompt_mask(
+        self,
+        input_ids: Tensor,
+        attention_mask: Tensor | None,
+        labels: Tensor | None,
+    ) -> Tensor:
+        if attention_mask is None:
+            mask = torch.ones(input_ids.shape, dtype=torch.bool, device=input_ids.device)
+        else:
+            mask = attention_mask.to(device=input_ids.device, dtype=torch.bool)
+        if labels is not None:
+            if labels.shape != input_ids.shape:
+                raise ValueError("labels shape must match input_ids")
+            mask = mask & labels.to(device=input_ids.device).eq(-100)
+        return mask
+
+    def _take_first_or_last(self, mask: Tensor, take_last: bool) -> Tensor:
+        rows: list[Tensor] = []
+        for row in mask:
+            indices = row.nonzero(as_tuple=False).flatten()
+            if take_last:
+                indices = indices[-self.num_tokens :]
+            else:
+                indices = indices[: self.num_tokens]
+            padded = torch.full(
+                (self.num_tokens,),
+                -1,
+                dtype=torch.long,
+                device=mask.device,
+            )
+            if indices.numel() > 0:
+                padded[: indices.numel()] = indices
+            rows.append(padded)
+        return torch.stack(rows, dim=0)
+
+    def _select_indices(
+        self,
+        input_ids: Tensor,
+        attention_mask: Tensor | None,
+        labels: Tensor | None,
+        injection_token_indices: Tensor | None = None,
+    ) -> tuple[Tensor, dict[str, Any]]:
+        prompt_mask = self._prompt_mask(input_ids, attention_mask, labels)
+        used_fallback = False
+        if self.position == "first_k":
+            selected = self._take_first_or_last(prompt_mask, take_last=False)
+        elif self.position == "last_prompt_k":
+            selected = self._take_first_or_last(prompt_mask, take_last=True)
+        else:
+            selected_rows: list[Tensor] = []
+            if injection_token_indices is not None:
+                injection_token_indices = injection_token_indices.to(device=input_ids.device, dtype=torch.long)
+            for row_index, row_mask in enumerate(prompt_mask):
+                if injection_token_indices is None or injection_token_indices.shape[-1] == 0:
+                    candidates = row_mask.nonzero(as_tuple=False).flatten()
+                    used_fallback = True
+                else:
+                    row_candidates = injection_token_indices[row_index]
+                    row_candidates = row_candidates[
+                        (row_candidates >= 0) & (row_candidates < input_ids.shape[1])
+                    ]
+                    candidates = row_candidates[row_mask[row_candidates]] if row_candidates.numel() else row_candidates
+                    if candidates.numel() == 0:
+                        candidates = row_mask.nonzero(as_tuple=False).flatten()
+                        used_fallback = True
+                candidates = candidates[-self.num_tokens :]
+                padded = torch.full(
+                    (self.num_tokens,),
+                    -1,
+                    dtype=torch.long,
+                    device=input_ids.device,
+                )
+                if candidates.numel() > 0:
+                    padded[: candidates.numel()] = candidates
+                selected_rows.append(padded)
+            selected = torch.stack(selected_rows, dim=0)
+        return selected, {
+            "position": self.position,
+            "num_tokens": self.num_tokens,
+            "last_user_fallback_to_last_prompt": used_fallback,
+            "selected_token_indices": selected.detach().cpu().tolist(),
+        }
+
+    def _embedding_delta(
+        self,
+        input_ids: Tensor,
+        memory_z: Tensor,
+        selected_indices: Tensor,
+        dtype: torch.dtype,
+    ) -> Tensor:
+        token_delta = self(memory_z).to(device=input_ids.device, dtype=dtype)
+        embedding_delta = torch.zeros(
+            input_ids.shape[0],
+            input_ids.shape[1],
+            self.model_dim,
+            dtype=dtype,
+            device=input_ids.device,
+        )
+        for row_index in range(input_ids.shape[0]):
+            for token_slot, token_index in enumerate(selected_indices[row_index].tolist()):
+                if token_index < 0:
+                    continue
+                embedding_delta[row_index, int(token_index), :] += token_delta[row_index, token_slot, :]
+        return embedding_delta
 
     def _prepare_common(
         self,
@@ -141,17 +265,13 @@ class AdditivePrefixMemoryInjector(PrefixMemoryInjector):
         attention_mask: Tensor | None,
         memory_z: Tensor,
         labels: Tensor | None = None,
+        injection_token_indices: Tensor | None = None,
     ) -> PreparedInputs:
         if input_ids.dim() != 2:
             raise ValueError("input_ids must have shape [batch, seq]")
         if memory_z.shape[0] != input_ids.shape[0]:
             raise ValueError("memory_z batch size must match input_ids")
         token_embeds = model.get_input_embeddings()(input_ids)
-        prefix = self(memory_z).to(device=token_embeds.device, dtype=token_embeds.dtype)
-        inject_len = min(self.num_prefix_tokens, token_embeds.shape[1])
-        inputs_embeds = token_embeds.clone()
-        if inject_len > 0:
-            inputs_embeds[:, :inject_len, :] = inputs_embeds[:, :inject_len, :] + prefix[:, :inject_len, :]
         if attention_mask is None:
             attention_mask = torch.ones(
                 input_ids.shape[0],
@@ -159,6 +279,19 @@ class AdditivePrefixMemoryInjector(PrefixMemoryInjector):
                 dtype=torch.long,
                 device=input_ids.device,
             )
+        selected_indices, selection_metadata = self._select_indices(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            labels=labels,
+            injection_token_indices=injection_token_indices,
+        )
+        embedding_delta = self._embedding_delta(
+            input_ids=input_ids,
+            memory_z=memory_z,
+            selected_indices=selected_indices,
+            dtype=token_embeds.dtype,
+        )
+        inputs_embeds = token_embeds + embedding_delta
         prepared: dict[str, Any] = {
             "input_ids": input_ids,
             "inputs_embeds": inputs_embeds,
@@ -172,10 +305,31 @@ class AdditivePrefixMemoryInjector(PrefixMemoryInjector):
         return PreparedInputs(
             inputs=prepared,
             memory_metadata={
-                "injector": "additive_prefix",
-                "num_prefix_tokens": self.num_prefix_tokens,
-                "prefix_additive": True,
+                "injector": "additive_token",
+                "deprecated_alias": "additive_prefix",
+                "additive_token": True,
+                **selection_metadata,
             },
+        )
+
+    def prepare_train_inputs(
+        self,
+        model: nn.Module,
+        input_ids: Tensor,
+        attention_mask: Tensor | None,
+        labels: Tensor | None,
+        memory_z: Tensor | None,
+        **kwargs: Any,
+    ) -> PreparedInputs:
+        if memory_z is None:
+            raise ValueError("AdditiveTokenMemoryInjector requires memory_z")
+        return self._prepare_common(
+            model,
+            input_ids,
+            attention_mask,
+            memory_z,
+            labels=labels,
+            injection_token_indices=kwargs.get("injection_token_indices"),
         )
 
     def prepare_generate_inputs(
@@ -187,20 +341,10 @@ class AdditivePrefixMemoryInjector(PrefixMemoryInjector):
         **kwargs: Any,
     ) -> PreparedInputs:
         if memory_z is None:
-            raise ValueError("AdditivePrefixMemoryInjector requires memory_z")
+            raise ValueError("AdditiveTokenMemoryInjector requires memory_z")
+        injection_token_indices = kwargs.get("injection_token_indices")
         if input_ids.dim() != 2:
             raise ValueError("input_ids must have shape [batch, seq]")
-        prefix = self(memory_z)
-        inject_len = min(self.num_prefix_tokens, input_ids.shape[1])
-        embedding_delta = torch.zeros(
-            input_ids.shape[0],
-            input_ids.shape[1],
-            self.model_dim,
-            dtype=prefix.dtype,
-            device=input_ids.device,
-        )
-        if inject_len > 0:
-            embedding_delta[:, :inject_len, :] = prefix[:, :inject_len, :]
         if attention_mask is None:
             attention_mask = torch.ones(
                 input_ids.shape[0],
@@ -208,6 +352,26 @@ class AdditivePrefixMemoryInjector(PrefixMemoryInjector):
                 dtype=torch.long,
                 device=input_ids.device,
             )
+        token_metadata = kwargs.get("token_metadata") or {}
+        if injection_token_indices is None and self.position == "last_user_k":
+            values = token_metadata.get("last_user_token_indices") or []
+            injection_token_indices = torch.tensor(
+                [values],
+                dtype=torch.long,
+                device=input_ids.device,
+            ).expand(input_ids.shape[0], -1)
+        selected_indices, selection_metadata = self._select_indices(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            labels=None,
+            injection_token_indices=injection_token_indices,
+        )
+        embedding_delta = self._embedding_delta(
+            input_ids=input_ids,
+            memory_z=memory_z,
+            selected_indices=selected_indices,
+            dtype=torch.float32,
+        )
         return PreparedInputs(
             inputs={
                 "input_ids": input_ids,
@@ -215,9 +379,29 @@ class AdditivePrefixMemoryInjector(PrefixMemoryInjector):
                 "memory_embedding_delta": embedding_delta,
             },
             memory_metadata={
-                "injector": "additive_prefix",
-                "num_prefix_tokens": self.num_prefix_tokens,
-                "prefix_additive": True,
+                "injector": "additive_token",
+                "deprecated_alias": "additive_prefix",
+                "additive_token": True,
                 "generation_embedding_hook": True,
+                **selection_metadata,
             },
+        )
+
+
+class AdditivePrefixMemoryInjector(AdditiveTokenMemoryInjector):
+    """Deprecated compatibility alias for older additive_prefix configs/checkpoints."""
+
+    def __init__(
+        self,
+        program_dim: int,
+        model_dim: int,
+        num_prefix_tokens: int = 8,
+        initial_scale: float = 0.1,
+    ) -> None:
+        super().__init__(
+            program_dim=program_dim,
+            model_dim=model_dim,
+            num_tokens=num_prefix_tokens,
+            position="first_k",
+            initial_scale=initial_scale,
         )

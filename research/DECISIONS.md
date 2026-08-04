@@ -97,3 +97,42 @@ Decision:
 
 - Use the filtered prepared dataset for full-demo RCMF AppWorld training.
 - For future datasets, run context-length preflight and ask before filtering.
+
+## 2026-08-04 next-iteration correctness pass
+
+VERIFIED:
+
+- User-provided `docs/RCMF_Next_Iteration_Codex_Task.md` requires no expensive
+  full run until correctness and diagnostics pass.
+- Local next-iteration tests pass: `python -m pytest -q` -> `43 passed`.
+- The previous semantic-retrieval partial full run is worse than bare Qwen on
+  the paired first-37 slice: RCMF `7/37`, baseline `10/37`.
+
+Decisions:
+
+- Do not start a new full-size GPU training run in this pass. Sync, validate,
+  and run smoke/diagnostics first.
+- Replace active AppWorld additive-memory config with `additive_token`.
+- Retain deprecated `additive_prefix` only as a first-k additive-token alias for
+  old checkpoints/configs.
+- Retain the older virtual-token `prefix` injector in factory/test code for
+  historical reproducibility, but keep it out of active AppWorld configs.
+- Treat one `MemoryRecord` as one compiled write. If Qwen tokenization requires
+  chunking, aggregate chunk hidden states with a token-weighted mean and call
+  the compiler once.
+- Keep the CLI mode name `all_except_current_task` for compatibility, but make
+  its AppWorld behavior exclude task, episode, replay, and lineage keys.
+- Set AppWorld `loss.utility: false` because no utility-loss term is currently
+  implemented in `RCMFTrainer.training_step`.
+
+Deviation from requested next-iteration ambition:
+
+- The primary raw-text memory teacher is not implemented or run in this pass.
+  It remains the next milestone and must use raw Qwen scoring over raw memory
+  text, not compiled RCMF leave-one-out labels.
+
+Follow-up:
+
+- Run Lambda-side py_compile/pytest after sync.
+- Run tokenizer-only memory chunk audit and memory-injection diagnostics on
+  Lambda before any new full training.
