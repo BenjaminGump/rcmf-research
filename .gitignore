@@ -5,6 +5,12 @@ data/
 data_appworld_*_backup_*/
 runs/
 experiments/
+artifacts/
+datasets/
+models/
+checkpoints/
+tensorboard/
+wandb/
 rcmf.egg-info/
 *.log
 *.tmp
@@ -14,3 +20,8 @@ appworld_installation*.txt
 *.tar
 *.tar.gz
 *.bundle
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt

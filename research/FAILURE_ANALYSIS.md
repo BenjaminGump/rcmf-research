@@ -1,0 +1,66 @@
+# Failure Analysis
+
+## Data Issue: `2a163ab_3`
+
+The official AppWorld successful train trajectory `2a163ab_3` contains repeated
+large social-feed dumps in the raw trace. When converted into per-step
+trajectory training examples, it produced 66 examples over Qwen3-8B's effective
+40,960-token context limit and a worst sample over two million tokens.
+
+Resolution:
+
+- The raw official file was not modified.
+- The prepared training dataset excludes task `2a163ab_3`.
+- The filtered prepared dataset has 638 decision examples and 46 memory records.
+- The post-filter maximum sample length is 35,615 tokens.
+
+## Training OOM: Full-Vocab Loss
+
+Earlier training passed labels directly into `AutoModelForCausalLM`, causing
+full vocabulary logits to be allocated for prompt positions even though prompt
+labels were `-100`. Long contexts made this exceed H100 80GB memory.
+
+Resolution:
+
+- `HFQwenBackend.forward_train()` computes loss only for shifted target
+  positions where labels are not `-100`.
+
+## Training OOM: Frozen Backbone Activations
+
+Even with target-only logits, gradients must pass through the frozen Qwen
+forward to the memory/prefix delta. Long-context activations can exceed memory.
+
+Resolution:
+
+- Enable gradient checkpointing for Qwen during training forwards.
+- This avoids truncation by trading compute for memory.
+
+## Generation Failure: Prepend Prefix
+
+Prepending virtual prefix embeddings changed Qwen's effective prompt length and
+positions. Even a zero-memory control produced repetitive non-code outputs and
+AppWorld returned `No code available to execute`.
+
+Resolution:
+
+- AppWorld full-prompt configs use `additive_prefix` instead of prepending
+  virtual tokens.
+- Memory scale 0.0 reproduces the bare first-10 baseline, supporting pipeline
+  equivalence.
+
+## Current Research Failure: First-10 Gain Does Not Generalize
+
+The semantic-retrieval final checkpoint reaches `4/10` on the fixed first-10
+slice, but its partial full evaluation was stopped at `7/37 = 18.9%`.
+
+Working hypothesis:
+
+- The learned memory read is still too global or state-insensitive.
+- The first-10 improvement may come from a useful perturbation for nearby tasks
+  rather than a robust memory mechanism.
+
+Needed diagnosis:
+
+- Trace-level comparison for retained, gained, and lost tasks.
+- Memory read/address diagnostics on failed broader-slice tasks.
+- Checkpoint and memory-scale sweeps before new architecture changes.

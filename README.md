@@ -3,6 +3,9 @@
 This repository implements a single-bank Reversible Compiled Memory Field
 (RCMF) around the existing AppWorld agent and Qwen3-8B example code.
 
+For the current ChatGPT + Codex + GitHub + Lambda research loop, start with
+[research/CHATGPT_ENTRYPOINT.md](research/CHATGPT_ENTRYPOINT.md).
+
 The new implementation lives under `rcmf/`. The original root-level
 `agent.py`, `main.py`, `model.py`, `prompt.py`, and `test_qwen3_8b.py` are
 kept as legacy references.
