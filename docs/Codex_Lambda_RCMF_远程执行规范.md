@@ -832,12 +832,65 @@ tmux list-sessions
 
 更完整的命令记录见 `docs/AppWorld_官方Trajectory训练说明.md`。
 
-### 21.1 数据完整性与生成速度注意事项
+### 21.1 2026-08-04 更新：GitHub Pull Fallback
+
+当前已验证状态：
+
+- Windows 本地在加载 `github_rcmf` 到 `ssh-agent` 后可以 push GitHub。
+- Windows 本地可以用 `lambda_rcmf` 访问 Lambda。
+- Lambda 当前没有配置 GitHub deploy key/private key。因此即使已经通过
+  `StrictHostKeyChecking=accept-new` 初始化 GitHub host key，Lambda 上的
+  `git pull origin workflow/research-loop` 仍可能因为
+  `Permission denied (publickey)` 失败。
+
+推荐同步顺序：
+
+1. 本地 commit。
+2. 本地 push 到 GitHub。
+3. 在 Lambda 检查工作树干净：
+
+```bash
+cd /lambda/nfs/rcmf-persist/project
+git status --short --branch
+git rev-parse --short HEAD
+```
+
+4. 只有在 Lambda 已配置 GitHub auth 时，才直接 pull：
+
+```bash
+GIT_SSH_COMMAND='ssh -o StrictHostKeyChecking=accept-new' \
+  git pull --ff-only origin workflow/research-loop
+```
+
+如果 Lambda 没有 GitHub key，使用安全 fallback：本地为已经 push 的分支
+创建 git bundle 并上传：
+
+```powershell
+git bundle create .tmp_next_iteration.bundle workflow/research-loop
+scp -i "$env:USERPROFILE\.ssh\lambda_rcmf" `
+  .tmp_next_iteration.bundle `
+  ubuntu@<REMOTE_HOST>:/tmp/rcmf_next_iteration.bundle
+```
+
+然后在 Lambda 只做 fast-forward：
+
+```bash
+cd /lambda/nfs/rcmf-persist/project
+git fetch /tmp/rcmf_next_iteration.bundle workflow/research-loop
+git merge --ff-only FETCH_HEAD
+git rev-parse --short HEAD
+git status --short --branch
+```
+
+不要在这个 fallback 中使用 `git reset --hard`、`git clean -fdx` 或
+force-push。如果不能 fast-forward，先停下来检查远端工作树，不要覆盖。
+
+### 21.2 数据完整性与生成速度注意事项
 
 - 不要未经确认就截断、过滤、压缩、采样或 summary 化 trajectory 训练数据。
 - 当前默认 `encoder.type=qwen_hidden`：memory record 和当前 state 都经过冻结 Qwen3-8B，取最后 hidden representation 后再进入 RCMF；memory record representations 离线缓存在训练输出的 `train/representation_cache/`。
-- 如果 memory record 超过 Qwen 上下文窗口，代码会在 token-id 层分成多个不重叠 chunk；每个 chunk 都过冻结 Qwen 并参与 memory bank。state text 使用同样的 chunk 编码后 mean pooling。
-- 正式训练默认 `--support-mode all_except_current_task`，即使用除当前 task 外的全部 `memory_records.jsonl` 作为 memory bank；长 record 会展开为多个 representation chunk；`--support-size 4` 只可用于单独的采样诊断实验。
+- 如果 memory record 超过 Qwen 上下文窗口，代码会在 token-id 层分成多个不重叠 chunk；每个 chunk 都过冻结 Qwen，然后按 token 数做加权 mean，聚合成该 MemoryRecord 的唯一 representation。Compiler 对每条 MemoryRecord 只调用一次，chunk 不会放大写入强度。
+- 正式训练默认 `--support-mode all_except_current_task`，该兼容名称现在实际排除当前 task、episode、replay、lineage 后使用全部合法 `memory_records.jsonl` 作为 memory bank；`--support-size 4` 只可用于 `--support-mode sample` 这类单独采样诊断实验。
 - `--max-query-tokens`、`encoder.max_state_tokens`、`encoder.max_experience_tokens` 不再静默截断文本；如果显式设置且超限，代码会直接报错。
 - target 会追加 tokenizer EOS，训练 labels 会把 prompt token 置为 `-100`，只有当前 step 的 response/action target 参与 loss。
 - 不要通过降低 `max_new_tokens` 来回避生成慢。AppWorld 测试应保留足够生成长度，例如当前诊断使用 `max_new_tokens=512`、`max_steps=50`。

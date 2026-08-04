@@ -136,3 +136,22 @@ Follow-up:
 - Run Lambda-side py_compile/pytest after sync.
 - Run tokenizer-only memory chunk audit and memory-injection diagnostics on
   Lambda before any new full training.
+
+## 2026-08-04 Lambda GitHub sync fallback
+
+VERIFIED:
+
+- Lambda accepted GitHub's host key with
+  `GIT_SSH_COMMAND='ssh -o StrictHostKeyChecking=accept-new'`.
+- Lambda then failed `git pull origin workflow/research-loop` with
+  `Permission denied (publickey)` because no GitHub private key/deploy key is
+  configured on the instance.
+
+Decision:
+
+- Do not add GitHub credentials to Lambda during this pass.
+- Use an already-pushed local Git branch as source of truth, create a git
+  bundle locally, upload it with the existing Lambda SSH key, and fast-forward
+  Lambda from the bundle.
+- Record this fallback in
+  `docs/Codex_Lambda_RCMF_远程执行规范.md`.

@@ -13,21 +13,32 @@ from rcmf.training.datasets import load_memory_records
 from rcmf.utils.serialization import atomic_write_json, sha256_file
 
 
-def _load_tokenizer(model_name: str) -> Any:
+def _load_tokenizer_and_model_limit(model_name: str) -> tuple[Any, int | None]:
     try:
-        from transformers import AutoTokenizer
+        from transformers import AutoConfig, AutoTokenizer
     except ImportError as exc:
         raise RuntimeError(
             "transformers is required for tokenizer-only memory chunk audits"
         ) from exc
-    return AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+    model_limit = None
+    try:
+        model_config = AutoConfig.from_pretrained(model_name, trust_remote_code=True)
+        max_positions = getattr(model_config, "max_position_embeddings", None)
+        if max_positions is not None:
+            model_limit = int(max_positions)
+    except Exception:
+        model_limit = None
+    return tokenizer, model_limit
 
 
-def _default_chunk_limit(tokenizer: Any, requested: int | None) -> int:
+def _default_chunk_limit(tokenizer: Any, model_limit: int | None, requested: int | None) -> int:
     if requested is not None:
         if requested <= 0:
             raise ValueError("--max-chunk-tokens must be positive")
         return int(requested)
+    if model_limit is not None:
+        return int(model_limit)
     tokenizer_limit = getattr(tokenizer, "model_max_length", None)
     if tokenizer_limit is not None and int(tokenizer_limit) < 1_000_000_000:
         return int(tokenizer_limit)
@@ -81,8 +92,8 @@ def main() -> None:
     cfg = load_config(args.config)
     records_path = Path(args.records)
     records = load_memory_records(records_path)
-    tokenizer = _load_tokenizer(cfg.model.name)
-    chunk_limit = _default_chunk_limit(tokenizer, args.max_chunk_tokens)
+    tokenizer, model_limit = _load_tokenizer_and_model_limit(cfg.model.name)
+    chunk_limit = _default_chunk_limit(tokenizer, model_limit, args.max_chunk_tokens)
 
     rows: list[dict[str, Any]] = []
     chunk_counts: list[int] = []
@@ -110,6 +121,7 @@ def main() -> None:
         "records_path": str(records_path),
         "records_sha256": sha256_file(records_path),
         "model_name": cfg.model.name,
+        "model_max_position_embeddings": model_limit,
         "chunk_limit": chunk_limit,
         "records": len(records),
         "total_chunks": int(sum(chunk_counts)),
