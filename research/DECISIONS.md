@@ -34,6 +34,13 @@ Decision:
   visibility, because the repository contains AppWorld synthetic credentials
   and detailed research artifacts.
 
+Follow-up:
+
+- `origin` was configured locally as
+  `git@github.com:BenjaminGump/rcmf-research.git`.
+- Push still requires `C:\Users\Admin\.ssh\github_rcmf` to be loaded into
+  Windows ssh-agent for Codex's non-interactive process.
+
 ## Lambda environment naming
 
 VERIFIED:

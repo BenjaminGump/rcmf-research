@@ -86,6 +86,11 @@ The workflow structure is built locally first. GitHub repository creation and
 push are deferred until the user confirms repository visibility and configures a
 writable GitHub auth path.
 
+After repository creation, `origin` was configured for
+`git@github.com:BenjaminGump/rcmf-research.git`. Push from Codex is still
+blocked until the `github_rcmf` key is loaded into ssh-agent for non-interactive
+signing.
+
 ## 11. Research-Relevant Observations
 
 The most important current research fact remains: semantic retrieval reaches
@@ -108,8 +113,7 @@ Large artifacts remain on Lambda and are referenced in `research/results/`.
 ## 15. GitHub State
 
 - Commit pushed: no
-- Remote: none; user-provided candidate URL is
-  `git@github.com:BenjaminGump/rcmf-research.git`
+- Remote: `git@github.com:BenjaminGump/rcmf-research.git`
 - Branch: `workflow/research-loop`
 - Working tree clean: yes before recording this follow-up; this file now has a
   local follow-up edit until committed.

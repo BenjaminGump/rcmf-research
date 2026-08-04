@@ -62,14 +62,19 @@ Last updated: 2026-08-04.
 
 - User-provided repository SSH URL:
   `git@github.com:BenjaminGump/rcmf-research.git`.
-- Local `origin` remote has not been set yet.
+- Local `origin` remote is configured as
+  `git@github.com:BenjaminGump/rcmf-research.git`.
 - No GitHub push has succeeded yet.
+- Push from Codex is blocked because the non-elevated sandbox cannot read
+  `C:\Users\Admin\.ssh\github_rcmf`, while the elevated non-interactive SSH
+  process cannot unlock the key unless it is already loaded into ssh-agent.
 
 ## UNVERIFIED
 
 - GitHub visibility: not confirmed by the user yet.
 - Whether the repository exists and is private/public.
-- GitHub push from Codex: blocked until non-interactive SSH signing works.
+- GitHub push from Codex: blocked until `github_rcmf` is available through
+  ssh-agent or another non-interactive signing path.
 
 ## Immediate Workflow Status
 
