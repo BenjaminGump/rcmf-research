@@ -77,8 +77,9 @@ No new RCMF experiment was run in this workflow setup step.
 - `gh` could not be used because the command is not installed.
 - GitHub SSH auth failed with `Permission denied (publickey)`.
 - The user later verified interactive GitHub SSH authentication as
-  `BenjaminGump`; Codex still needs a non-interactive signing path for `git
-  push`.
+  `BenjaminGump`.
+- The first `git push` still failed until Git was forced to use
+  `C:/Windows/System32/OpenSSH/ssh.exe`, matching the successful `ssh` command.
 
 ## 10. Engineering Workarounds
 
@@ -87,9 +88,9 @@ push are deferred until the user confirms repository visibility and configures a
 writable GitHub auth path.
 
 After repository creation, `origin` was configured for
-`git@github.com:BenjaminGump/rcmf-research.git`. Push from Codex is still
-blocked until the `github_rcmf` key is loaded into ssh-agent for non-interactive
-signing.
+`git@github.com:BenjaminGump/rcmf-research.git`. Push from Codex succeeds when
+`github_rcmf` is loaded into Windows ssh-agent and Git is run with
+`GIT_SSH_COMMAND='C:/Windows/System32/OpenSSH/ssh.exe -o BatchMode=yes'`.
 
 ## 11. Research-Relevant Observations
 
@@ -112,8 +113,8 @@ Large artifacts remain on Lambda and are referenced in `research/results/`.
 
 ## 15. GitHub State
 
-- Commit pushed: no
+- Commit pushed: yes
 - Remote: `git@github.com:BenjaminGump/rcmf-research.git`
 - Branch: `workflow/research-loop`
 - Working tree clean: yes before recording this follow-up; this file now has a
-  local follow-up edit until committed.
+  local follow-up edit until committed and pushed.

@@ -21,9 +21,8 @@ Last updated: 2026-08-04.
 - GitHub SSH key fingerprint:
   `SHA256:OWb0aCR7HIqa8luPJSQM/f9M9r4pWp7klDTBr79goiQ`.
 - The user verified interactive GitHub SSH authentication as `BenjaminGump`.
-- Codex non-interactive SSH still needs this key loaded into the active
-  ssh-agent, or an equivalent non-interactive signing path, before `git push`
-  can run from Codex.
+- After the key was loaded into Windows ssh-agent, Codex verified GitHub SSH
+  authentication and pushed `workflow/research-loop`.
 
 ## Baseline
 
@@ -64,17 +63,16 @@ Last updated: 2026-08-04.
   `git@github.com:BenjaminGump/rcmf-research.git`.
 - Local `origin` remote is configured as
   `git@github.com:BenjaminGump/rcmf-research.git`.
-- No GitHub push has succeeded yet.
-- Push from Codex is blocked because the non-elevated sandbox cannot read
-  `C:\Users\Admin\.ssh\github_rcmf`, while the elevated non-interactive SSH
-  process cannot unlock the key unless it is already loaded into ssh-agent.
+- GitHub branch `workflow/research-loop` has been pushed and configured as the
+  upstream branch.
+- Codex push workaround: run Git with
+  `GIT_SSH_COMMAND='C:/Windows/System32/OpenSSH/ssh.exe -o BatchMode=yes'` so
+  Git uses the same Windows OpenSSH agent path as the successful `ssh` command.
 
 ## UNVERIFIED
 
 - GitHub visibility: not confirmed by the user yet.
 - Whether the repository exists and is private/public.
-- GitHub push from Codex: blocked until `github_rcmf` is available through
-  ssh-agent or another non-interactive signing path.
 
 ## Immediate Workflow Status
 

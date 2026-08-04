@@ -6,7 +6,8 @@ VERIFIED:
 
 - The ChatGPT-generated workflow document assumes GitHub CLI can be used, but
   `gh` is not installed on the local Windows host.
-- Local GitHub SSH auth currently fails with `Permission denied (publickey)`.
+- At initial audit time, local GitHub SSH auth failed with
+  `Permission denied (publickey)`.
 - Therefore Codex cannot create or push the GitHub repository until the user
   configures GitHub auth or provides another writable repository mechanism.
 
@@ -28,8 +29,7 @@ VERIFIED:
 
 Decision:
 
-- Use `git@github.com:BenjaminGump/rcmf-research.git` as `origin` once Codex
-  can complete non-interactive SSH signing.
+- Use `git@github.com:BenjaminGump/rcmf-research.git` as `origin`.
 - Prefer a private GitHub repository unless the user explicitly chooses public
   visibility, because the repository contains AppWorld synthetic credentials
   and detailed research artifacts.
@@ -38,8 +38,10 @@ Follow-up:
 
 - `origin` was configured locally as
   `git@github.com:BenjaminGump/rcmf-research.git`.
-- Push still requires `C:\Users\Admin\.ssh\github_rcmf` to be loaded into
-  Windows ssh-agent for Codex's non-interactive process.
+- Push succeeded after the user loaded `github_rcmf` into Windows ssh-agent.
+- Git push from Codex must use
+  `GIT_SSH_COMMAND='C:/Windows/System32/OpenSSH/ssh.exe -o BatchMode=yes'`;
+  otherwise Git may invoke an SSH client that does not use the same agent path.
 
 ## Lambda environment naming
 
