@@ -12,5 +12,5 @@ benchmark:
 
 injector:
   type: additive_token
-  position: first_k
+  position: last_user_k
   num_tokens: 4
