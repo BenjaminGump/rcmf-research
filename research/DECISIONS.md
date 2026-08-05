@@ -169,6 +169,46 @@ Follow-up:
 - Review candidate proposal quality with ChatGPT and the user before any full
   teacher cache or full RCMF training run.
 
+## 2026-08-05 expanded all-legal teacher audit3B
+
+VERIFIED:
+
+- Milestone 3B reused the existing 24 pilot states and cached rows, then scored
+  every legal memory for those states.
+- The formal leakage definition was preserved: exclude same task, episode,
+  replay, and lineage memories.
+- Across the 24 states there were 1,080 legal pairs, 1,052 scoreable pairs, and
+  28 over-context pairs.
+- The full 638-state preflight found 28,710 exact legal pairs, 27,054
+  scoreable pairs, and 1,656 over-context pairs.
+- The deterministic reproducibility check for fixed positive, neutral, and
+  negative pairs passed exactly.
+- Representative prompt inspection found no obvious leakage, delimiter,
+  section-order, target-hash, or memory-hash errors.
+
+Decision:
+
+- Continue to record and mask over-context state-memory pairs. Do not truncate
+  prompts, raw memories, or targets.
+- Set `configs/benchmark/appworld_rcmf_full_prompt.yaml` to provisional
+  student-training default `injector.position=last_user_k` with K=4.
+- Keep `first_k` and `last_prompt_k` configs available for later ablation, but
+  do not launch three full training runs.
+- Recommend option A, complete all-legal teacher-cache generation, after user
+  and ChatGPT review. This recommendation is based on reproducibility,
+  prompt-inspection health, positive/negative utility signal, context
+  feasibility, and estimated cost; it is not based only on candidate recall.
+
+Deviation or workaround:
+
+- None from the Milestone 3B scope. No full teacher-cache generation, full
+  student training, or full AppWorld evaluation was launched.
+
+Follow-up:
+
+- Wait for user and ChatGPT review before running the complete all-legal cache
+  or any student training.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:

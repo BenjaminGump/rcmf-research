@@ -30,9 +30,13 @@ Last updated: 2026-08-05.
 - Raw-text teacher pilot source validation passed at commit `e295a2b`:
   local `python -m pytest -q` -> `47 passed`; Lambda
   `python -m pytest -q` -> `47 passed`.
+- Raw-text teacher audit3B source validation passed at commit `9640634`:
+  local `python -m pytest -q` -> `48 passed`; Lambda
+  `python -m pytest -q` -> `48 passed`.
 - Next-iteration active AppWorld configs use `injector.type=additive_token`,
-  `position=first_k`, and `num_tokens=4`; old `additive_prefix` remains only as
-  a compatibility alias.
+  provisional default `position=last_user_k`, and `num_tokens=4`; `first_k`
+  and `last_prompt_k` remain available for later ablation, and old
+  `additive_prefix` remains only as a compatibility alias.
 - The full-size AppWorld training path now uses record-level Qwen-hidden memory
   representations: multi-chunk records are token-weighted into one
   representation and compiled once.
@@ -116,6 +120,57 @@ VERIFIED:
   `last_prompt_k`, and `last_user_k` with K=4. All three had zero embedding
   delta under zero memory and identical target loss to the no-memory base loss.
 
+## Milestone 3B Expanded All-Legal Teacher Audit
+
+VERIFIED:
+
+- Milestone 3B was completed without launching full student training, full
+  AppWorld evaluation, or full 638-state teacher-cache generation.
+- Audit artifact directory:
+  `/lambda/nfs/rcmf-persist/project/runs/teacher/raw_text_audit3b_20260805_001`.
+- Source commit used by the audit:
+  `964063416a2fc3c48bf04bb11db7354fac96028c`.
+- Audit cache version: `raw_text_memory_teacher_audit3b_v1`.
+- Existing pilot selection was reused exactly: 24 states from
+  `raw_text_pilot_20260805_001/pilot_states.json`.
+- Legal pair count across the 24 states: 1,080.
+- Scored rows: 1,052. Over-context rows recorded and masked: 28. No
+  truncation was performed.
+- Cached rows reused from Milestone 3: 260. Newly scored rows: 802.
+- Utility counts: positive 364, neutral 122, negative 566.
+- Utility distribution: mean `0.047545`, std `0.350456`, min `-1.243614`,
+  p05 `-0.358663`, p25 `-0.119575`, median `-0.018214`,
+  p75 `0.088473`, p95 `0.847706`, max `1.620315`.
+- Utility correlations: vs raw memory tokens `0.086112`; vs combined context
+  tokens `0.006909`.
+- Existing proposal recall@1/2/4/8 was `1/24 = 0.041667` for all four K
+  values.
+- Proposal regret: mean `0.275401`, median `0.104668`, max `1.108213`.
+- Proposal positive utility mass coverage: `0.107657`.
+- Restricted to states with best legal utility at least `0.05`, `0.10`, and
+  `0.25`, recall@4 was respectively `1/17`, `1/16`, and `1/13`; mean regret
+  was respectively `0.363960`, `0.381725`, and `0.441131`.
+- Candidate-source ablations: cosine_top2 and same_app each hit the best legal
+  memory in `1/24` states with positive-mass coverage `0.069089`; random
+  low-similarity hit `0/24` with positive-mass coverage `0.038568`.
+- Deterministic reproducibility check passed for fixed positive, neutral, and
+  negative pairs: repeated L0, Lj_text, and utility differences were all `0.0`
+  under tolerance `1e-5`.
+- Representative prompt inspection checked 3 high-positive and 3 high-negative
+  rows. Obvious leakage, delimiter, section-order, target-hash, and
+  memory-hash issue count: 0.
+- Full 638-state all-legal token preflight completed: exact legal pairs
+  28,710; scoreable pairs 27,054; over-context pairs 1,656
+  (`5.768%`); preflight runtime `1,077.62` seconds.
+- H100 scoring estimate for a complete all-legal teacher cache, using the
+  audit3B measured scoring speed, is `40,731.11` seconds or `11.31` H100
+  hours.
+- Recommendation recorded by the audit: option A, generate the complete
+  all-legal teacher cache after user and ChatGPT review. This recommendation is
+  based on reproducibility, prompt-inspection health, utility signal, cost, and
+  the fact that all-legal scoring removes the candidate-recall bottleneck; it
+  is not based only on candidate recall.
+
 ## INFERENCES
 
 - The semantic-retrieval auxiliary loss improves the fixed first-10 slice but
@@ -129,6 +184,9 @@ VERIFIED:
   first-37 slice, so further full-size runs should wait for smoke diagnostics.
 - The diagnostics support the state-insensitive memory-read hypothesis for the
   legacy semantic-retrieval checkpoint.
+- Expanded audit3B supports keeping the local-Qwen raw-text teacher path alive,
+  but the existing candidate proposal should not be used as the sole memory
+  selector for labels.
 
 ## GitHub Status
 
@@ -145,21 +203,19 @@ VERIFIED:
 ## UNVERIFIED
 
 - GitHub repository visibility: not confirmed by the user yet.
-- Whether the primary raw-text memory teacher labels are good enough for
-  student training; the first pilot found useful positive labels but poor
-  candidate recall on the all-memory audit subset.
+- Whether a complete all-legal raw-text teacher cache improves a student model;
+  no student training has been launched with these labels.
 - Whether the new record-level full-bank training improves AppWorld
   performance; no new full training run has started for this iteration.
 
 ## Immediate Workflow Status
 
 - Working branch: `workflow/research-loop`.
-- Latest pushed and Lambda-synced source commit: `e295a2b`.
+- Latest pushed and Lambda-synced source commit: `9640634`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
-- Lambda post-pilot status: no tmux server running and GPU memory/utilization
+- Lambda post-audit status: no tmux server running and GPU memory/utilization
   reported `0 MiB / 0%`.
-- Do not launch full RCMF training until the user and ChatGPT review teacher
-  label quality, context feasibility, compute cost, and additive-token smoke
-  results.
+- Do not launch full teacher-cache generation or full RCMF training until the
+  user and ChatGPT review the expanded audit.

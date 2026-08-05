@@ -58,9 +58,11 @@ Stop condition:
 
 Goal:
 
-- Improve candidate proposal before scaling the teacher labels. The first
-  all-memory audit found that the proposed candidate union did not recall the
-  highest-utility memory for any of 4 audited states.
+- Status after Milestone 3B: the candidate proposal remains weak, but the
+  audit recommendation is not to repair retrieval before every other step. The
+  expanded audit scanned all legal memories for all 24 pilot states and found
+  exact proposal recall@1/2/4/8 of `1/24`, mean regret `0.275401`, and positive
+  mass coverage `0.107657`.
 
 Candidates:
 
@@ -73,9 +75,35 @@ Candidates:
 
 Stop condition:
 
-- Do not start full RCMF student training until ChatGPT and the user review
-  teacher-label quality, context feasibility, compute cost, and injection
-  position smoke results.
+- Treat this as an alternative if the user and ChatGPT reject all-legal cache
+  generation due to cost or label quality. Do not start full RCMF student
+  training until after review.
+
+## EXP-007 Review-Gated All-Legal Teacher Cache
+
+Goal:
+
+- After user and ChatGPT review, generate the complete all-legal raw-text
+  teacher cache only if the Milestone 3B recommendation is accepted.
+
+Current evidence:
+
+- Expanded audit version: `raw_text_memory_teacher_audit3b_v1`.
+- Artifact:
+  `/lambda/nfs/rcmf-persist/project/runs/teacher/raw_text_audit3b_20260805_001`.
+- The 24-state all-legal audit was reproducible on fixed positive, neutral,
+  and negative pairs, with repeated L0/Lj/utility diffs all `0.0`.
+- Representative prompt inspection found 0 obvious leakage or delimiter issues
+  across 6 high-positive/high-negative rows.
+- Full 638-state preflight exact counts: 28,710 legal pairs, 27,054 scoreable
+  pairs, and 1,656 over-context masked pairs.
+- Estimated complete all-legal teacher-cache cost: about `11.31` H100 hours.
+
+Stop condition:
+
+- Stop until the user and ChatGPT explicitly approve full-cache generation.
+- If approved, generate the full all-legal teacher cache first; still do not
+  launch student training until that cache is reviewed.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 
