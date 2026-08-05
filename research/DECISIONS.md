@@ -209,6 +209,49 @@ Follow-up:
 - Wait for user and ChatGPT review before running the complete all-legal cache
   or any student training.
 
+## 2026-08-05 complete all-legal raw-text teacher cache
+
+VERIFIED:
+
+- Milestone 3C generated the complete all-legal raw-text teacher cache for all
+  638 filtered training decision states.
+- The teacher definition was not modified from the approved raw-text frozen
+  Qwen target-scoring definition.
+- The formal leakage definition was preserved: exclude same task, episode,
+  replay, and lineage.
+- No prompt, target, or raw memory text was truncated.
+- Over-context pairs were recorded and masked with null utility and
+  `valid_for_loss=false`.
+- Exact final counts matched the preflight contract: 28,710 legal pairs,
+  27,054 scoreable pairs, and 1,656 over-context pairs.
+- Validation passed, reproducibility passed, and representative inspection
+  found 0 obvious issues.
+
+Decision:
+
+- Treat `raw_text_memory_teacher_full_cache_v1` as the current primary
+  teacher-label artifact for review.
+- Do not start RCMF student training or full AppWorld evaluation until the user
+  and ChatGPT review complete-cache label quality, missingness, and overlap
+  diagnostics.
+- Use the Milestone 3C task-grouped split manifest as the provisional future
+  student split, but do not train on it yet.
+
+Deviation or workaround:
+
+- None from the Milestone 3C teacher/scoring scope.
+- Lambda still cannot pull GitHub directly; the existing documented git bundle
+  sync fallback remains in use.
+- The progress ETA during the long tmux run was not the final cost estimate,
+  because cached rows were completed immediately. The final runtime
+  `10.26` H100 hours is the source of truth.
+
+Follow-up:
+
+- Design a review-gated student-label compiler that handles over-context rows,
+  all-missing states, positive/negative coverage, thresholds, and loss weights
+  explicitly before any student training.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:

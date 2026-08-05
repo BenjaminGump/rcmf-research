@@ -79,31 +79,64 @@ Stop condition:
   generation due to cost or label quality. Do not start full RCMF student
   training until after review.
 
-## EXP-007 Review-Gated All-Legal Teacher Cache
+## EXP-007 Complete All-Legal Teacher Cache
 
 Goal:
 
-- After user and ChatGPT review, generate the complete all-legal raw-text
-  teacher cache only if the Milestone 3B recommendation is accepted.
+- Completed on 2026-08-05 as
+  `/lambda/nfs/rcmf-persist/project/runs/teacher/raw_text_full_cache_20260805_001`.
+- The cache scored every scoreable legal state-memory pair for all 638
+  decision states, reusing compatible pilot/audit3B rows and masking
+  over-context pairs without truncation.
 
 Current evidence:
 
-- Expanded audit version: `raw_text_memory_teacher_audit3b_v1`.
+- Cache version: `raw_text_memory_teacher_full_cache_v1`.
 - Artifact:
-  `/lambda/nfs/rcmf-persist/project/runs/teacher/raw_text_audit3b_20260805_001`.
-- The 24-state all-legal audit was reproducible on fixed positive, neutral,
-  and negative pairs, with repeated L0/Lj/utility diffs all `0.0`.
-- Representative prompt inspection found 0 obvious leakage or delimiter issues
-  across 6 high-positive/high-negative rows.
-- Full 638-state preflight exact counts: 28,710 legal pairs, 27,054 scoreable
-  pairs, and 1,656 over-context masked pairs.
-- Estimated complete all-legal teacher-cache cost: about `11.31` H100 hours.
+  `/lambda/nfs/rcmf-persist/project/runs/teacher/raw_text_full_cache_20260805_001`.
+- Exact final counts: 638 states, 46 memory records, 28,710 legal pairs,
+  27,054 scoreable pairs, and 1,656 over-context masked pairs.
+- Reused compatible cached pairs: 1,080. Newly scored pairs: 26,002.
+- Validation passed and reproducibility repeats for positive, neutral, and
+  negative pairs had all L0/Lj/utility diffs equal to `0.0`.
+- Representative inspection selected 30 rows and found 0 obvious issues.
+- Runtime: `10.26` actual H100 hours.
+- Utility counts positive/neutral/negative: 13,426 / 4,861 / 8,767.
+- The 24-state audit was not fully representative of the complete cache:
+  full positive/neutral/negative proportions were
+  `0.496267/0.179678/0.324056` versus audit3B
+  `0.346008/0.115970/0.538023`.
 
 Stop condition:
 
-- Stop until the user and ChatGPT explicitly approve full-cache generation.
-- If approved, generate the full all-legal teacher cache first; still do not
-  launch student training until that cache is reviewed.
+- Met. Stop before student training or full AppWorld evaluation. The next
+  action is review of teacher-label quality, missingness, overlap diagnostics,
+  and student-label construction policy.
+
+## EXP-008 Review-Gated Student Label Compiler
+
+Goal:
+
+- After user and ChatGPT review, transform the complete raw-text teacher cache
+  into a student-training label dataset.
+- Use the task-grouped future split manifest from Milestone 3C.
+- Decide explicitly how to handle over-context rows, states with no valid
+  positive or negative memories, and the fully masked long memory
+  `076f5673-6565-5f20-aada-6f16a0f8d4b0`.
+- Preserve the full-bank/leakage semantics and do not truncate prompts,
+  targets, or raw memories silently.
+
+Measure:
+
+- label counts by split, task, state, and memory;
+- target utility distribution after any thresholding or weighting;
+- coverage of positive and negative candidates per state;
+- checks that no task crosses train/validation split.
+
+Stop condition:
+
+- Do not start RCMF student training until the label compiler output and policy
+  are reviewed.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 

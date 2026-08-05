@@ -171,6 +171,74 @@ VERIFIED:
   the fact that all-legal scoring removes the candidate-recall bottleneck; it
   is not based only on candidate recall.
 
+## Milestone 3C Complete All-Legal Raw-Text Teacher Cache
+
+VERIFIED:
+
+- Milestone 3C was completed without launching RCMF student training or a full
+  AppWorld evaluation.
+- Source implementation commit used on Lambda:
+  `80bebb05d97ec7d156b87850a7f1fd2811874d8a`.
+- Lambda artifact directory:
+  `/lambda/nfs/rcmf-persist/project/runs/teacher/raw_text_full_cache_20260805_001`.
+- Cache version: `raw_text_memory_teacher_full_cache_v1`.
+- Scoring definition:
+  `frozen_qwen_full_demo_raw_memory_mean_target_nll_v1`.
+- Source rows were reused only after validating model identity, renderer
+  version, target hash, memory hash, and scoring definition. Reuse sources:
+  `raw_text_pilot_20260805_001` and `raw_text_audit3b_20260805_001`.
+- Cache reuse validation saw 1,340 candidate cached rows, 1,080 unique
+  compatible pairs, 260 duplicate compatible rows, 0 duplicate inconsistent
+  rows, and 0 rejected rows.
+- Exact final counts matched the Milestone 3C preflight contract: 638 states,
+  46 memory records, 28,710 legal pairs, 27,054 scoreable pairs, and 1,656
+  over-context pairs.
+- New scoring work: 26,002 newly scored pairs and 1,628 newly generated
+  over-context rows. Failed pairs: 0. Retried pairs: 0.
+- Over-context rows were recorded with null utility and
+  `valid_for_loss=false`; no prompts, raw memories, or targets were truncated.
+- Validation passed: no duplicate state-memory keys, no missing or unexpected
+  legal keys, no illegal leakage pairs, finite losses for all scored rows, and
+  correct null/masked fields for over-context rows.
+- Deterministic reproducibility check passed for fixed positive, neutral, and
+  negative rows: repeated L0, Lj_text, and utility differences were all `0.0`
+  under tolerance `1e-5`.
+- Representative inspection selected 30 rows across highest-positive,
+  highest-negative, high-overlap-low-or-negative, and anomalous groups. Obvious
+  issue count: 0.
+- Runtime: `36,949.37` seconds, or `10.26` actual H100 hours on one Lambda
+  H100.
+- Utility counts on scoreable rows: positive 13,426, neutral 4,861, negative
+  8,767. Proportions: positive `0.496267`, neutral `0.179678`, negative
+  `0.324056`.
+- Utility distribution: mean `0.085425`, std `0.335507`, min `-1.996295`,
+  p05 `-0.352794`, p25 `-0.056140`, median `0.009323`, p75 `0.179088`,
+  p95 `0.750906`, max `2.333721`.
+- Missingness: 113 states had no positive valid memory and 94 states had no
+  negative valid memory. State valid-memory counts had min/median/max
+  `0/44/45`; state over-context memory counts had min/median/max `0/1/45`.
+- Missingness was concentrated in long memories: long-memory rows had 1,178
+  over-context pairs, medium 311, and short 167. One memory
+  `076f5673-6565-5f20-aada-6f16a0f8d4b0` was over-context for all 602 legal
+  states and valid for 0 states.
+- Top over-context states were late `afc0fce_1` steps with 45 over-context
+  memories and 0 valid memories.
+- Overlap diagnostics: utility correlations were `0.133437` with shared API
+  count, `0.158156` with shared code-token count, `0.138547` with code-token
+  Jaccard, and `0.074342` with exact normalized target substring in memory.
+- Exact normalized target substring present in raw memory had higher mean
+  utility (`0.125319`) than absent (`0.069831`), but both strata contained
+  negative rows.
+- Full cache utility distribution differed from the 24-state audit:
+  positive/neutral/negative proportions were `0.496267/0.179678/0.324056`
+  versus audit3B `0.346008/0.115970/0.538023`; mean utility was higher by
+  `0.037879`. The 24-state audit was not fully representative by the recorded
+  thresholds.
+- A deterministic future student split manifest was created with seed `13`,
+  task-grouped split, 46 tasks total, 37 train tasks, 9 validation tasks, 499
+  train states, and 139 validation states. No student training was launched.
+- Lambda post-run status: no tmux server running and GPU reported `0 MiB / 0%`.
+
 ## INFERENCES
 
 - The semantic-retrieval auxiliary loss improves the fixed first-10 slice but
@@ -187,6 +255,14 @@ VERIFIED:
 - Expanded audit3B supports keeping the local-Qwen raw-text teacher path alive,
   but the existing candidate proposal should not be used as the sole memory
   selector for labels.
+- Milestone 3C strengthens the case that local-Qwen raw-text labels are a real
+  signal source, because the complete distribution has nearly half positive
+  rows and representative inspection found no obvious prompt/leakage defects.
+- The 24-state audit was directionally useful for feasibility and debugging,
+  but not representative enough for final label-distribution conclusions.
+- Over-context missingness may matter for student-label construction because
+  some late states and one very long memory are entirely unavailable under the
+  no-truncation teacher contract.
 
 ## GitHub Status
 
@@ -203,19 +279,20 @@ VERIFIED:
 ## UNVERIFIED
 
 - GitHub repository visibility: not confirmed by the user yet.
-- Whether a complete all-legal raw-text teacher cache improves a student model;
-  no student training has been launched with these labels.
+- Whether the complete all-legal raw-text teacher cache improves a student
+  model; no student training has been launched with these labels.
 - Whether the new record-level full-bank training improves AppWorld
   performance; no new full training run has started for this iteration.
 
 ## Immediate Workflow Status
 
 - Working branch: `workflow/research-loop`.
-- Latest pushed and Lambda-synced source commit: `9640634`.
+- Latest pushed and Lambda-synced source commit before final records:
+  `80bebb0`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
-- Lambda post-audit status: no tmux server running and GPU memory/utilization
+- Lambda post-cache status: no tmux server running and GPU memory/utilization
   reported `0 MiB / 0%`.
-- Do not launch full teacher-cache generation or full RCMF training until the
-  user and ChatGPT review the expanded audit.
+- Do not launch RCMF student training or a full AppWorld evaluation until the
+  user and ChatGPT review the complete teacher cache.
