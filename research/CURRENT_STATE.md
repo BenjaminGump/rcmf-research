@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-08-04.
+Last updated: 2026-08-05.
 
 ## VERIFIED
 
@@ -25,8 +25,11 @@ Last updated: 2026-08-04.
   authentication and pushed `workflow/research-loop`.
 - Next-iteration local tests passed on 2026-08-04:
   `python -m pytest -q` -> `43 passed`.
-- Lambda final-code validation passed at commit `9fb0817`:
+- Lambda next-iteration validation passed at commit `9fb0817`:
   `python -m pytest -q` -> `43 passed`.
+- Raw-text teacher pilot source validation passed at commit `e295a2b`:
+  local `python -m pytest -q` -> `47 passed`; Lambda
+  `python -m pytest -q` -> `47 passed`.
 - Next-iteration active AppWorld configs use `injector.type=additive_token`,
   `position=first_k`, and `num_tokens=4`; old `additive_prefix` remains only as
   a compatibility alias.
@@ -68,6 +71,51 @@ Last updated: 2026-08-04.
   read collapse: memory_z pairwise cosine mean `0.999994`, memory_z mean
   direction norm `0.999997`, address top1 max load fraction `0.448276`.
 
+## Primary Raw-Text Teacher Pilot
+
+VERIFIED:
+
+- Milestone 3 was completed without launching full student training or a full
+  AppWorld evaluation.
+- Pilot artifact directory:
+  `/lambda/nfs/rcmf-persist/project/runs/teacher/raw_text_pilot_20260805_001`.
+- Source commit used by the teacher cache:
+  `e295a2bd449f38f87e4ad8d945e73aa55d0e5ef7`.
+- Teacher cache version: `raw_text_memory_teacher_labels_v1`.
+- Teacher memory renderer version:
+  `teacher_only_raw_memory_section_v1`.
+- Teacher model/checkpoint identity:
+  `frozen_hf_pretrained:Qwen/Qwen3-8B`.
+- The teacher used deterministic target scoring only: L0 is the mean
+  target-token NLL under the unchanged full-demo prompt, and Lj_text is the
+  same target loss after inserting one legal cross-task raw MemoryRecord into a
+  teacher-only memory section.
+- The teacher did not use compiled RCMF memory, external APIs, action
+  generation, or student training.
+- Formal leakage exclusion was preserved: for every decision state, normal
+  teacher candidates exclude same task, episode, replay, and lineage memory
+  records.
+- Deterministic pilot size: 24 selected decision states stratified over
+  task/app diversity, early/middle/later steps, and short/medium/long prompts.
+- Proposed candidate pairs: 96. Unique scored or preflighted pairs including
+  audit rows: 260.
+- Scored rows: 250. Over-context rows skipped after preflight: 10.
+- No prompt or raw memory text was truncated.
+- Utility counts: positive 71, neutral 11, negative 168.
+- Utility distribution: mean `-0.008413`, std `0.313950`, min `-1.060414`,
+  p05 `-0.339788`, p25 `-0.152369`, median `-0.047554`,
+  p75 `0.016794`, p95 `0.660061`, max `1.452909`.
+- Utility correlations: vs raw memory tokens `0.075251`; vs combined context
+  tokens `0.081745`.
+- All-memory audit subset: 4 states, candidate recall of the
+  highest-utility legal memory was `0/4 = 0.0`.
+- Runtime: `498.29` seconds on one Lambda H100. Estimated full-dataset scoring
+  cost at this measured rate: candidate proposal path about `1.77` GPU hours;
+  all-legal-memory scan about `16.25` GPU hours.
+- Minimal no-training additive-token smoke passed for `first_k`,
+  `last_prompt_k`, and `last_user_k` with K=4. All three had zero embedding
+  delta under zero memory and identical target loss to the no-memory base loss.
+
 ## INFERENCES
 
 - The semantic-retrieval auxiliary loss improves the fixed first-10 slice but
@@ -97,14 +145,21 @@ Last updated: 2026-08-04.
 ## UNVERIFIED
 
 - GitHub repository visibility: not confirmed by the user yet.
-- Whether the primary raw-text memory teacher is practical at AppWorld scale.
+- Whether the primary raw-text memory teacher labels are good enough for
+  student training; the first pilot found useful positive labels but poor
+  candidate recall on the all-memory audit subset.
 - Whether the new record-level full-bank training improves AppWorld
   performance; no new full training run has started for this iteration.
 
 ## Immediate Workflow Status
 
 - Working branch: `workflow/research-loop`.
-- Latest pushed and Lambda-synced code commit: `9fb0817`.
+- Latest pushed and Lambda-synced source commit: `e295a2b`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
+- Lambda post-pilot status: no tmux server running and GPU memory/utilization
+  reported `0 MiB / 0%`.
+- Do not launch full RCMF training until the user and ChatGPT review teacher
+  label quality, context feasibility, compute cost, and additive-token smoke
+  results.

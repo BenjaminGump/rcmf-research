@@ -137,6 +137,38 @@ Follow-up:
 - Run tokenizer-only memory chunk audit and memory-injection diagnostics on
   Lambda before any new full training.
 
+## 2026-08-05 primary raw-text teacher pilot
+
+VERIFIED:
+
+- Milestone 3 was scoped to a Primary Raw-Text Memory Teacher Pilot only.
+- The implemented teacher cache used frozen `Qwen/Qwen3-8B` target scoring and
+  did not use compiled RCMF memory, external APIs, action generation, full
+  student training, or full AppWorld evaluation.
+- The pilot preserved full-bank leakage semantics: same task, episode, replay,
+  and lineage memories are excluded from normal teacher candidates.
+- Before scoring, every state-memory pair was token-length preflighted.
+- Ten pairs exceeded the 40,960-token context limit after raw memory insertion.
+
+Decision:
+
+- Skip over-context state-memory pairs in the pilot after reporting their IDs
+  and token counts.
+- Do not truncate full-demo prompts, raw memory text, or targets.
+- Treat the 0/4 all-memory audit recall as a blocker for scaling teacher labels
+  directly into student training.
+
+Deviation or workaround:
+
+- None from the Milestone 3 scope. The over-context rows were not simplified or
+  filtered silently; they were recorded in the teacher preflight artifact and
+  summary.
+
+Follow-up:
+
+- Review candidate proposal quality with ChatGPT and the user before any full
+  teacher cache or full RCMF training run.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:

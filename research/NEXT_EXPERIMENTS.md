@@ -35,19 +35,47 @@ Stop condition:
 
 Goal:
 
-- Build a teacher that uses raw Qwen scoring over raw memory text, not compiled
-  leave-one-out RCMF memory, as the initial teacher signal.
+- Completed on 2026-08-05 as
+  `/lambda/nfs/rcmf-persist/project/runs/teacher/raw_text_pilot_20260805_001`.
+- The pilot built a raw-text teacher that uses frozen Qwen3-8B scoring over raw
+  memory text, not compiled leave-one-out RCMF memory.
 
 Measure:
 
-- top-k raw memory labels for a small decision-example sample;
-- teacher label stability;
-- cost estimate before scaling.
+- 24 selected states, 250 scored rows, 10 over-context rows skipped after
+  preflight, no truncation.
+- Positive/neutral/negative utility counts: 71/11/168.
+- Candidate recall on the 4-state all-memory audit subset: 0/4.
+- Projected full-dataset cost: about 1.77 GPU hours for candidate scoring and
+  16.25 GPU hours for all-legal-memory scoring at the measured pilot rate.
 
 Stop condition:
 
-- If the teacher is too expensive or unstable, stop and record the exact
-  limitation rather than substituting compiled-memory labels.
+- Met. Stop before full student training. The next action is review, not a
+  training launch.
+
+## EXP-006 Teacher Candidate Recall Fix
+
+Goal:
+
+- Improve candidate proposal before scaling the teacher labels. The first
+  all-memory audit found that the proposed candidate union did not recall the
+  highest-utility memory for any of 4 audited states.
+
+Candidates:
+
+- Add a cheaper first-pass target-aware scorer that still uses frozen Qwen
+  representations and never uses target loss as a selector for non-audit
+  training labels.
+- Increase candidate count and compare marginal recall/cost.
+- Add app/entity/tool-call overlap features extracted from raw MemoryRecord
+  text.
+
+Stop condition:
+
+- Do not start full RCMF student training until ChatGPT and the user review
+  teacher-label quality, context feasibility, compute cost, and injection
+  position smoke results.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 
