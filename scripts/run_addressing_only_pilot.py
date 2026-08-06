@@ -284,6 +284,8 @@ def _train_one_seed(
                 if bad_evals >= patience:
                     break
     _save_checkpoint(final_path, model, optimizer, epoch, {"best_epoch": best_epoch})
+    best_payload = torch.load(best_path, map_location=device)
+    model.load_state_dict(best_payload["model"])
     validation_metrics, payload = _evaluate_model(
         model,
         state_representations,
