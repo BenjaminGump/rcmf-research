@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import defaultdict
 import copy
 from pathlib import Path
 import time
@@ -826,4 +827,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
