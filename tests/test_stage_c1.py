@@ -13,6 +13,15 @@ from rcmf.training.stage_c1 import (
     sparse_teacher_kl_from_logits,
     validate_program_field_algebra,
 )
+from scripts.run_stage_c1_signed_program import _compute_z
+
+
+class _EchoQueryField(torch.nn.Module):
+    program_dim = 2
+
+    def read(self, q_bar, k_bar, programs, gate, include_mask=None):
+        del k_bar, programs, gate, include_mask
+        return q_bar[:, :2], {"scores": torch.zeros(q_bar.shape[0], 1), "denominator": torch.ones(q_bar.shape[0])}
 
 
 def test_select_teacher_conditions_uses_best_valid_memory_and_baseline_for_no_positive() -> None:
@@ -183,3 +192,33 @@ def test_sparse_teacher_kl_keeps_other_bucket_finite_when_union_mass_is_near_one
 
     assert meta["positions"] == 1
     assert torch.isfinite(kl)
+
+
+def test_compute_z_uses_full_eval_state_override_for_single_row_shuffle() -> None:
+    selector_payload = {
+        "q_bar": torch.tensor([[1.0, 0.0, 1.0], [0.0, 1.0, 1.0], [2.0, 3.0, 1.0]]),
+        "gate": torch.ones(3),
+        "k_bar": torch.ones(1, 3),
+    }
+    rows = [
+        {
+            "state_index": 0,
+            "_state_index_override": 2,
+            "split": "validation",
+            "ordered_effective_memory_ids": ["m0"],
+            "legal_effective_mask": [True],
+        }
+    ]
+
+    z, _ = _compute_z(
+        field=_EchoQueryField(),
+        selector_payload=selector_payload,
+        rows=rows,
+        memory_representations=torch.zeros(1, 4),
+        control="shuffled_state",
+        seed=5,
+        device=torch.device("cpu"),
+        trained_programs=torch.zeros(1, 2),
+    )
+
+    assert torch.allclose(z, torch.tensor([[2.0, 3.0]]))

@@ -251,20 +251,24 @@ def _compute_z(
     device: torch.device,
     trained_programs: Tensor | None = None,
 ) -> tuple[Tensor, dict[str, Any]]:
-    indices = torch.tensor([int(row["state_index"]) for row in rows], dtype=torch.long, device=device)
+    if control == "shuffled_state" and any("_state_index_override" not in row for row in rows):
+        raise ValueError("shuffled_state control requires precomputed full-evaluation state-index overrides")
+    indices = torch.tensor(
+        [int(row.get("_state_index_override", row["state_index"])) for row in rows],
+        dtype=torch.long,
+        device=device,
+    )
     q_bar_all = selector_payload["q_bar"].to(device)
     gate_all = selector_payload["gate"].to(device)
     q_bar = q_bar_all.index_select(0, indices)
     gate = gate_all.index_select(0, indices)
-    if control == "shuffled_state":
-        generator = torch.Generator(device="cpu")
-        generator.manual_seed(seed + 11000)
-        order = torch.randperm(q_bar.shape[0], generator=generator).to(device)
-        q_bar = q_bar.index_select(0, order)
-        gate = gate.index_select(0, order)
-    elif control == "mean_state":
-        q_bar = q_bar.mean(dim=0, keepdim=True).expand_as(q_bar)
-        gate = gate.mean().expand_as(gate)
+    if control == "mean_state":
+        if "control_mean_q_bar" in selector_payload and "control_mean_gate" in selector_payload:
+            q_bar = selector_payload["control_mean_q_bar"].to(device).view(1, -1).expand_as(q_bar)
+            gate = selector_payload["control_mean_gate"].to(device).view(1).expand_as(gate)
+        else:
+            q_bar = q_bar_all.mean(dim=0, keepdim=True).expand_as(q_bar)
+            gate = gate_all.mean().expand_as(gate)
     elif control == "zero_state":
         q_bar = torch.zeros_like(q_bar)
         q_bar[:, -1] = 1.0
@@ -289,6 +293,38 @@ def _compute_z(
     z, meta = field.read(q_bar, k_bar, programs, gate, include_mask=include_mask)
     meta["programs"] = programs.detach()
     return z, {key: value.detach() if isinstance(value, Tensor) else value for key, value in meta.items()}
+
+
+def _prepare_state_control_rows(
+    *,
+    rows: Sequence[dict[str, Any]],
+    selector_payload: dict[str, Tensor],
+    control: str,
+    seed: int,
+) -> tuple[list[dict[str, Any]], dict[str, Tensor]]:
+    eval_rows = [dict(row) for row in rows]
+    payload = selector_payload
+    if control == "shuffled_state":
+        source_indices = [int(row["state_index"]) for row in eval_rows]
+        if len(source_indices) > 1:
+            generator = torch.Generator(device="cpu")
+            generator.manual_seed(seed + 11000)
+            order = torch.randperm(len(source_indices), generator=generator).tolist()
+            shuffled = [source_indices[int(index)] for index in order]
+            if shuffled == source_indices:
+                shuffled = source_indices[1:] + source_indices[:1]
+        else:
+            shuffled = source_indices
+        for row, override in zip(eval_rows, shuffled):
+            row["_state_index_override"] = int(override)
+    elif control == "mean_state":
+        indices = torch.tensor([int(row["state_index"]) for row in eval_rows], dtype=torch.long)
+        q_bar_all = selector_payload["q_bar"].detach().cpu()
+        gate_all = selector_payload["gate"].detach().cpu()
+        payload = dict(selector_payload)
+        payload["control_mean_q_bar"] = q_bar_all.index_select(0, indices).mean(dim=0)
+        payload["control_mean_gate"] = gate_all.index_select(0, indices).mean()
+    return eval_rows, payload
 
 
 def _forward_student(
@@ -475,18 +511,24 @@ def evaluate_student(
 ) -> dict[str, Any]:
     field.eval()
     injector.eval()
+    eval_rows, eval_selector_payload = _prepare_state_control_rows(
+        rows=rows,
+        selector_payload=selector_payload,
+        control=control,
+        seed=seed,
+    )
     out_rows = []
     z_rows = []
     delta_norms = []
     delta_ratios = []
     selected_token_report = None
     with torch.no_grad():
-        for start in range(0, len(rows), batch_size):
-            batch_rows = list(rows[start : start + batch_size])
+        for start in range(0, len(eval_rows), batch_size):
+            batch_rows = list(eval_rows[start : start + batch_size])
             batch = _collate(batch_rows, device=device)
             z, read_meta = _compute_z(
                 field=field,
-                selector_payload=selector_payload,
+                selector_payload=eval_selector_payload,
                 rows=batch_rows,
                 memory_representations=memory_representations,
                 control=control,
@@ -935,6 +977,159 @@ def _train_full_run(
     }
 
 
+def _load_json_file(path: Path) -> dict[str, Any]:
+    with path.open("r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def _content_field_and_injector_from_checkpoint(
+    *,
+    checkpoint_path: Path,
+    memory_dim: int,
+    model_dim: int,
+    device: torch.device,
+) -> tuple[StageC1ProgramField, AdditiveTokenMemoryInjector, dict[str, Any]]:
+    checkpoint = torch.load(checkpoint_path, map_location=device)
+    if checkpoint.get("program_kind") != "content":
+        raise ValueError(f"Expected content checkpoint at {checkpoint_path}, found {checkpoint.get('program_kind')}")
+    field = StageC1ProgramField(memory_dim=memory_dim, rank=128, program_dim=128).to(device)
+    field.load_state_dict(checkpoint["field_state_dict"])
+    injector = _initialize_injector(program_dim=128, model_dim=model_dim, num_tokens=4, position="last_user_k", seed=int(checkpoint["seed"])).to(device)
+    injector.load_state_dict(checkpoint["injector_state_dict"])
+    return field, injector, checkpoint
+
+
+def _recompute_existing_summary(
+    *,
+    backend: Any,
+    metadata: dict[str, Any],
+    response_validation: dict[str, Any],
+    output_dir: Path,
+    selector_dir: Path,
+    state_reps: Tensor,
+    memory_reps: Tensor,
+    mu: Tensor,
+    validation_rows: list[dict[str, Any]],
+    model_dim: int,
+    device: torch.device,
+    seeds: Sequence[int],
+    eval_batch_size: int,
+    controls_to_recompute: Sequence[str],
+    started: float,
+) -> dict[str, Any]:
+    previous_summary_path = output_dir / "summary.json"
+    if not previous_summary_path.exists():
+        raise FileNotFoundError(f"Cannot eval-only recompute without existing summary: {previous_summary_path}")
+    previous_summary = _load_json_file(previous_summary_path)
+    field_algebra = _load_json_file(output_dir / "field_algebra_validation.json")
+    zero_delta = _load_json_file(output_dir / "zero_delta_equivalence.json")
+    tiny = _load_json_file(output_dir / "tiny_overfit.json")
+    smoke = _load_json_file(output_dir / "short_smoke.json")
+    leave_one_out = _load_json_file(output_dir / "leave_one_out_audit.json")
+    selector_preservation = []
+    runs = []
+    for seed in seeds:
+        print(f"eval-only recomputing Stage-C1 controls seed={seed}: {list(controls_to_recompute)}", flush=True)
+        run_path = output_dir / f"seed_{seed}_run.json"
+        run = _load_json_file(run_path)
+        selector, selector_payload, selector_path = _selector_payload_for_seed(
+            selector_dir=selector_dir,
+            seed=int(seed),
+            state_reps=state_reps,
+            memory_reps=memory_reps.detach().cpu(),
+            mu=mu,
+            device=device,
+        )
+        del selector
+        field, injector, checkpoint = _content_field_and_injector_from_checkpoint(
+            checkpoint_path=output_dir / "checkpoints" / f"content_seed_{seed}.pt",
+            memory_dim=int(memory_reps.shape[1]),
+            model_dim=model_dim,
+            device=device,
+        )
+        with torch.no_grad():
+            programs = field.programs(memory_reps.to(device=device, dtype=torch.float32)).detach().cpu()
+        trained_programs = programs.to(device)
+        controls = dict(run.get("validation", {}).get("controls", {}))
+        for control in controls_to_recompute:
+            controls[control] = evaluate_student(
+                backend=backend,
+                field=field,
+                injector=injector,
+                selector_payload=selector_payload,
+                rows=validation_rows,
+                memory_representations=memory_reps,
+                device=device,
+                seed=int(seed),
+                batch_size=eval_batch_size,
+                control=str(control),
+                trained_programs=trained_programs,
+            )
+            atomic_write_json(output_dir / f"seed_{seed}_{control}_eval_only.json", controls[control])
+        validation_eval = run["validation"]["correct"]
+        ci_inputs = {"correct": validation_eval["rows"], **{key: value["rows"] for key, value in controls.items() if "rows" in value}}
+        validation_eval["bootstrap_ci"] = paired_ci(
+            ci_inputs,
+            baseline_name="correct",
+            metrics=("student_target_nll", "sparse_teacher_kl"),
+            seed=int(seed),
+        )
+        validation_eval["control_deltas"] = _control_deltas(validation_eval, controls)
+        run["validation"]["correct"] = validation_eval
+        run["validation"]["controls"] = controls
+        run["validation"]["control_deltas"] = validation_eval["control_deltas"]
+        run["program_geometry"] = program_geometry(programs)
+        run["selector_checkpoint"] = selector_path
+        run["eval_only_recomputed_from_checkpoints"] = True
+        run["eval_only_recomputed_controls"] = list(controls_to_recompute)
+        run["eval_only_source_commit"] = maybe_git_commit()
+        run["content_checkpoint_metadata"] = {
+            "checkpoint": str(output_dir / "checkpoints" / f"content_seed_{seed}.pt"),
+            "training_source_commit": checkpoint.get("source_commit"),
+            "best_epoch": checkpoint.get("best_epoch"),
+        }
+        preservation = run.get("selector_payload_preservation")
+        if preservation is None:
+            prior = previous_summary.get("selector_preservation", [])
+            preservation = prior[len(selector_preservation)] if len(prior) > len(selector_preservation) else {"passed": False, "reason": "missing_selector_preservation"}
+        selector_preservation.append(preservation)
+        atomic_write_json(run_path, run)
+        runs.append(run)
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+    aggregate = summarize_runs(runs)
+    decision = stage_c1_decision(
+        runs=runs,
+        selector_preservation=selector_preservation,
+        cache_validation_passed=bool(response_validation["passed"]),
+        tiny_overfit_passed=bool(tiny["passed"]),
+        leave_one_out=leave_one_out,
+    )
+    summary = {
+        **metadata,
+        "runtime_s": previous_summary.get("runtime_s"),
+        "eval_only_runtime_s": time.perf_counter() - started,
+        "eval_only_recomputed_from_checkpoints": True,
+        "eval_only_recomputed_controls": list(controls_to_recompute),
+        "training_source_commit": previous_summary.get("source_commit"),
+        "evaluation_source_commit": maybe_git_commit(),
+        "response_cache_validation": response_validation,
+        "field_algebra": field_algebra,
+        "zero_delta_equivalence": zero_delta,
+        "tiny_overfit": tiny,
+        "short_smoke": smoke,
+        "runs": runs,
+        "aggregate": aggregate,
+        "selector_preservation": selector_preservation,
+        "leave_one_out": leave_one_out,
+        "decision_gate": decision,
+        "checkpoint_dir": str(output_dir / "checkpoints"),
+    }
+    atomic_write_json(output_dir / "summary.json", summary)
+    atomic_write_text(output_dir / "report.md", _write_report(summary))
+    return summary
+
+
 def _control_deltas(correct: dict[str, Any], controls: dict[str, Any]) -> dict[str, Any]:
     correct_rows = {row["state_example_id"]: row for row in correct["rows"]}
     output = {}
@@ -1156,6 +1351,8 @@ def main() -> None:
     parser.add_argument("--smoke-steps", type=int, default=16)
     parser.add_argument("--smoke-states", type=int, default=32)
     parser.add_argument("--skip-free-id-control", action="store_true")
+    parser.add_argument("--eval-only-existing", action="store_true")
+    parser.add_argument("--recompute-controls", nargs="+", default=["shuffled_state", "mean_state"])
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     args = parser.parse_args()
 
@@ -1257,6 +1454,27 @@ def main() -> None:
     }
     atomic_write_json(output_dir / "run_metadata.json", metadata)
     save_resolved_config(cfg, output_dir / "resolved_config.yaml")
+
+    if args.eval_only_existing:
+        summary = _recompute_existing_summary(
+            backend=backend,
+            metadata=metadata,
+            response_validation=response_validation,
+            output_dir=output_dir,
+            selector_dir=selector_dir,
+            state_reps=state_reps,
+            memory_reps=memory_reps,
+            mu=mu,
+            validation_rows=validation_token_rows,
+            model_dim=model_dim,
+            device=device,
+            seeds=args.seeds,
+            eval_batch_size=args.eval_batch_size,
+            controls_to_recompute=args.recompute_controls,
+            started=started,
+        )
+        print(f"Recomputed Stage-C1 evaluation artifacts to {output_dir}; decision={summary['decision_gate']}", flush=True)
+        return
 
     field_algebra = validate_program_field_algebra(rank=128, program_dim=128, count=len(memory_bank), seed=13)
     atomic_write_json(output_dir / "field_algebra_validation.json", field_algebra)
