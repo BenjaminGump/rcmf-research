@@ -156,7 +156,7 @@ def sparse_bucket_kl(
     student_other_log_prob: Tensor,
     teacher_log_probs: Tensor,
     teacher_other_prob: Tensor,
-    eps: float = 1.0e-12,
+    eps: float = 1.0e-8,
 ) -> Tensor:
     teacher_probs = teacher_log_probs.exp()
     union_kl = teacher_probs * (teacher_log_probs - student_log_probs)
@@ -502,20 +502,20 @@ def sparse_teacher_kl_from_logits(
         if int(target_len) != len(positions):
             raise ValueError("target length does not match response-cache positions")
         for pos, item in enumerate(positions):
-            row_logits = logits[cursor + pos].to(torch.float32)
+            row_logits = logits[cursor + pos].to(torch.float64)
             union_ids = torch.tensor(item["union_token_ids"], dtype=torch.long, device=row_logits.device)
             logsumexp = torch.logsumexp(row_logits, dim=-1)
             student_log_probs = row_logits[union_ids] - logsumexp
-            union_prob = student_log_probs.exp().sum().clamp(max=1.0 - 1.0e-12)
+            union_prob = student_log_probs.exp().sum().clamp(min=0.0, max=1.0 - 1.0e-8)
             student_other_log_prob = torch.log1p(-union_prob)
             teacher_log_probs = torch.tensor(
                 item[f"{target}_union_logprobs"],
-                dtype=torch.float32,
+                dtype=torch.float64,
                 device=row_logits.device,
             )
             teacher_other_prob = torch.tensor(
                 float(item[f"{target}_other_probability"]),
-                dtype=torch.float32,
+                dtype=torch.float64,
                 device=row_logits.device,
             )
             losses.append(
@@ -617,7 +617,14 @@ def summarize_state_nll_rows(rows: Sequence[dict[str, Any]], *, baseline_key: st
 
 def program_geometry(programs: Tensor) -> dict[str, Any]:
     p = programs.detach().to(torch.float32).cpu()
+    finite = torch.isfinite(p).all(dim=1)
+    nonfinite_rows = int((~finite).sum().item())
+    if nonfinite_rows:
+        p = p[finite]
+    if p.numel() == 0:
+        return {"count": 0, "nonfinite_rows": nonfinite_rows}
     return {
+        "nonfinite_rows": nonfinite_rows,
         "norm": distribution(p.norm(dim=1).tolist()),
         "pairwise_cosine": pairwise_cosine_summary(p),
         "centered_spectrum": singular_summary(p - p.mean(dim=0, keepdim=True)),
@@ -627,7 +634,14 @@ def program_geometry(programs: Tensor) -> dict[str, Any]:
 
 def z_geometry(z: Tensor, *, reference: Tensor | None = None) -> dict[str, Any]:
     zc = z.detach().to(torch.float32).cpu()
+    finite = torch.isfinite(zc).all(dim=1)
+    nonfinite_rows = int((~finite).sum().item())
+    if nonfinite_rows:
+        zc = zc[finite]
+    if zc.numel() == 0:
+        return {"count": 0, "nonfinite_rows": nonfinite_rows}
     output = {
+        "nonfinite_rows": nonfinite_rows,
         "norm": distribution(zc.norm(dim=1).tolist()),
         "pairwise_cosine": pairwise_cosine_summary(zc),
         "centered_spectrum": singular_summary(zc - zc.mean(dim=0, keepdim=True)),
@@ -635,6 +649,8 @@ def z_geometry(z: Tensor, *, reference: Tensor | None = None) -> dict[str, Any]:
     }
     if reference is not None:
         ref = reference.detach().to(torch.float32).cpu()
+        if nonfinite_rows:
+            ref = ref[finite]
         output["mean_abs_delta_vs_reference"] = float((zc - ref).abs().mean().item())
         output["mean_norm_delta_vs_reference"] = float((zc - ref).norm(dim=1).mean().item())
     return output

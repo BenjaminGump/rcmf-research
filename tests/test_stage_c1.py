@@ -10,6 +10,7 @@ from rcmf.training.stage_c1 import (
     explicit_field_read,
     select_teacher_conditions,
     sparse_bucket_kl,
+    sparse_teacher_kl_from_logits,
     validate_program_field_algebra,
 )
 
@@ -163,3 +164,22 @@ def test_sparse_bucket_kl_is_zero_for_identical_distribution() -> None:
     kl = sparse_bucket_kl(student_log_probs, torch.log(other), teacher_log_probs, other)
 
     assert torch.allclose(kl, torch.zeros_like(kl), atol=1.0e-7)
+
+
+def test_sparse_teacher_kl_keeps_other_bucket_finite_when_union_mass_is_near_one() -> None:
+    logits = torch.tensor([[100.0, 99.0, 98.0, -100.0]], dtype=torch.float32)
+    log_probs = torch.log_softmax(logits.to(torch.float64), dim=-1)
+    row = {
+        "target_positions": [
+            {
+                "union_token_ids": [0, 1, 2],
+                "teacher_union_logprobs": [float(log_probs[0, index]) for index in [0, 1, 2]],
+                "teacher_other_probability": 1.0e-12,
+            }
+        ]
+    }
+
+    kl, meta = sparse_teacher_kl_from_logits(logits, [row], target_lengths=[1])
+
+    assert meta["positions"] == 1
+    assert torch.isfinite(kl)
