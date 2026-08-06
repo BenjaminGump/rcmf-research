@@ -1012,8 +1012,11 @@ def evaluate_current_stage_b_model(
         "metrics": evaluate_scores(payload["q"], labels),
         "per_state": per_state_metric_values(payload["q"], labels),
         "shuffled": evaluate_scores(shuffled["q"], labels),
+        "per_state_shuffled": per_state_metric_values(shuffled["q"], labels),
         "zero_state": evaluate_scores(zeroed["q"], labels),
+        "per_state_zero_state": per_state_metric_values(zeroed["q"], labels),
         "mean_state": evaluate_scores(mean_state["q"], labels),
+        "per_state_mean_state": per_state_metric_values(mean_state["q"], labels),
         "geometry": address_geometry(payload["state_address"], payload["alpha"], payload["rho"], topk=4),
         "contribution": {
             "rho_distribution": distribution(payload["rho"].detach().cpu().tolist()),
@@ -1056,4 +1059,3 @@ def summarize_model_runs(runs: list[dict[str, Any]], *, primary_key: str = "full
                 values.append(float(item["mean"]))
         output[metric] = mean_std(values)
     return output
-

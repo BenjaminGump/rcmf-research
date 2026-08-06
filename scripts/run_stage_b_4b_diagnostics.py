@@ -246,27 +246,49 @@ def _forensic_conclusion(snapshots: list[dict[str, Any]], dead_zone: dict[str, A
         if snap.get("geometry")
     ]
     raw_zero = [snap["raw_dot_zero_fraction"] for snap in best]
+    trapped_seeds = [
+        int(snap["seed"])
+        for snap in best
+        if snap["geometry"]["support_overlap"]["zero_support_overlap_fraction"] >= 0.999
+        and snap["raw_dot_zero_fraction"] >= 0.999
+    ]
+    one_overlap_seeds = [
+        int(snap["seed"])
+        for snap in best
+        if (
+            snap["geometry"]["support_overlap"]["support_intersection_histogram"].get(1, 0)
+            + snap["geometry"]["support_overlap"]["support_intersection_histogram"].get("1", 0)
+        )
+        == snap["geometry"]["support_overlap"]["support_intersection_size"]["count"]
+    ]
+    dead_zone_verified = bool(
+        dead_zone["state_grad_norm"] == 0.0
+        and dead_zone["memory_grad_norm"] == 0.0
+        and dead_zone["support_intersection_size"] == 0
+    )
+    shared_basis_collapse = bool(
+        state_load
+        and alpha_load
+        and sum(state_load) / len(state_load) > 0.9
+        and sum(alpha_load) / len(alpha_load) > 0.9
+    )
     return {
-        "A_disjoint_support_zero_gradient_trapping": bool(
-            dead_zone["state_grad_norm"] == 0.0
-            and dead_zone["memory_grad_norm"] == 0.0
-            and zero_overlap
-            and sum(zero_overlap) / len(zero_overlap) > 0.8
-        ),
-        "B_shared_basis_collapse": bool(
-            state_load
-            and alpha_load
-            and sum(state_load) / len(state_load) > 0.9
-            and sum(alpha_load) / len(alpha_load) > 0.9
-        ),
+        "A_disjoint_support_zero_gradient_trapping": bool(dead_zone_verified and trapped_seeds),
+        "B_shared_basis_collapse": shared_basis_collapse,
         "C_rho_global_prior_domination": bool(raw_zero and sum(raw_zero) / len(raw_zero) > 0.8),
+        "hard_topk_dead_zone_verified": dead_zone_verified,
+        "best_checkpoint_trapped_seed_count": len(trapped_seeds),
+        "best_checkpoint_trapped_seeds": trapped_seeds,
+        "best_checkpoint_one_overlap_seeds": one_overlap_seeds,
         "mean_best_zero_support_overlap_fraction": sum(zero_overlap) / len(zero_overlap) if zero_overlap else None,
         "mean_best_state_top1_load": sum(state_load) / len(state_load) if state_load else None,
         "mean_best_alpha_top1_load": sum(alpha_load) / len(alpha_load) if alpha_load else None,
         "mean_best_raw_dot_zero_fraction": sum(raw_zero) / len(raw_zero) if raw_zero else None,
         "verified_cause": (
-            "hard-top-k disjoint-support zero-gradient trapping plus shared-basis collapse"
-            if dead_zone["state_grad_norm"] == 0.0 and zero_overlap and sum(zero_overlap) / len(zero_overlap) > 0.8
+            "hard-top-k disjoint-support zero-gradient trapping affected a subset of seeds; all best checkpoints show shared-basis collapse"
+            if dead_zone_verified and trapped_seeds and shared_basis_collapse
+            else "shared-basis collapse without full disjoint-support trapping"
+            if shared_basis_collapse
             else "requires scorer ablations"
         ),
     }
@@ -560,18 +582,15 @@ def _bootstrap_for_model(name: str, runs: list[dict[str, Any]], global_prior: di
     for index, run in enumerate(runs):
         if name == "current_hard_topk_control":
             correct_rows = run["per_state"]["rows"]
-            shuffled_rows = per_state_metric_values(
-                torch.zeros(1, 1),
+            shuffled_rows = run["per_state_shuffled"]["rows"]
+            global_rows = global_prior["per_state_full_score"]["rows"]
+            output[f"seed_{index}"] = bootstrap_metric_ci(
                 {
-                    "utility": torch.zeros(1, 1),
-                    "valid_mask": torch.zeros(1, 1, dtype=torch.bool),
-                    "positive_gain": torch.zeros(1, 1),
-                    "no_positive_state": torch.zeros(1, dtype=torch.bool),
-                    "all_missing_state": torch.zeros(1, dtype=torch.bool),
-                },
-            )["rows"]
-            del shuffled_rows
-            # Hard-control per-state shuffled rows are not stored in compact form.
+                    "correct": correct_rows,
+                    "shuffled": shuffled_rows,
+                    "global": global_rows,
+                }
+            )
             continue
         correct_rows = run["per_state_full_score"]["rows"]
         shuffled_rows = run["controls"]["shuffled_state"]["per_state_full_score"]["rows"]
