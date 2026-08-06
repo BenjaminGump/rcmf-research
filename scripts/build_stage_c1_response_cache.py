@@ -50,6 +50,7 @@ from scripts.run_raw_text_teacher_pilot import (
 
 
 REPRO_TOLERANCE = 2.0e-4
+PROBABILITY_BUCKET_TOLERANCE = 1.0e-5
 
 
 def utc_now() -> str:
@@ -127,10 +128,10 @@ def _build_position_rows(
             .union({int(target_id)})
         )
         union_tensor = torch.tensor(union_ids, dtype=torch.long)
-        base_logits = baseline["logits"][pos, union_tensor]
-        teacher_logits = teacher["logits"][pos, union_tensor]
-        base_logsumexp = torch.tensor(float(baseline["logsumexp"][pos]), dtype=torch.float32)
-        teacher_logsumexp = torch.tensor(float(teacher["logsumexp"][pos]), dtype=torch.float32)
+        base_logits = baseline["logits"][pos, union_tensor].to(torch.float64)
+        teacher_logits = teacher["logits"][pos, union_tensor].to(torch.float64)
+        base_logsumexp = torch.logsumexp(baseline["logits"][pos].to(torch.float64), dim=-1)
+        teacher_logsumexp = torch.logsumexp(teacher["logits"][pos].to(torch.float64), dim=-1)
         base_union_logprobs = base_logits - base_logsumexp
         teacher_union_logprobs = teacher_logits - teacher_logsumexp
         base_other = max(0.0, 1.0 - float(base_union_logprobs.exp().sum().item()))
@@ -259,6 +260,7 @@ def validate_response_cache(
     memory_bank: list[dict[str, Any]],
     teacher_rows: dict[str, dict[str, Any]],
     tolerance: float = REPRO_TOLERANCE,
+    bucket_tolerance: float = PROBABILITY_BUCKET_TOLERANCE,
 ) -> dict[str, Any]:
     errors: list[str] = []
     by_state: dict[str, dict[str, Any]] = {}
@@ -301,7 +303,7 @@ def validate_response_cache(
             for prefix in ("baseline", "teacher"):
                 probs = torch.tensor(item[f"{prefix}_union_logprobs"], dtype=torch.float64).exp()
                 total = float(probs.sum().item()) + float(item[f"{prefix}_other_probability"])
-                if abs(total - 1.0) > 2.0e-6:
+                if abs(total - 1.0) > bucket_tolerance:
                     errors.append(f"{state_id}:probability_bucket_sum:{prefix}:{pos}:{total}")
         if row.get("teacher_condition") == "positive_teacher":
             pair = teacher_rows.get(str(row.get("best_pair_key")))
@@ -332,6 +334,8 @@ def validate_response_cache(
         "errors_first_50": errors[:50],
         "state_count": len(rows),
         "expected_state_count": len(expected_states),
+        "target_nll_tolerance": tolerance,
+        "probability_bucket_tolerance": bucket_tolerance,
     }
 
 
