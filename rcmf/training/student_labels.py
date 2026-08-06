@@ -282,6 +282,16 @@ def compile_stage_b_student_labels(
         raise ValueError("Train and validation task splits overlap")
 
     teacher_rows, teacher_load_summary = _load_teacher_rows(teacher_cache_jsonl)
+    teacher_cache_identity = {
+        "cache_version": FULL_TEACHER_CACHE_VERSION,
+        "scoring_definition": FULL_TEACHER_SCORING_DEFINITION,
+        "source_commit": teacher_summary.get("source_commit"),
+        "summary_sha256": sha256_file(teacher_summary_json),
+        "cache_jsonl_sha256": sha256_file(teacher_cache_jsonl),
+        "split_manifest_sha256": sha256_file(split_manifest_json),
+        "decision_examples_sha256": sha256_file(data_dir / "decision_examples.jsonl"),
+        "memory_records_sha256": sha256_file(data_dir / "memory_records.jsonl"),
+    }
 
     # Count valid labels for train states over train-task memories before special-memory masking.
     valid_stage_b_train_label_counts: Counter[str] = Counter()
@@ -339,7 +349,8 @@ def compile_stage_b_student_labels(
             key = pair_key(example_index, memory_index)
             teacher_row = teacher_rows.get(key)
             if teacher_row is None:
-                missing_teacher_pair_count += 1
+                if legal:
+                    missing_teacher_pair_count += 1
                 utilities.append(None)
                 valid_mask.append(False)
                 legal_effective_mask.append(False)
@@ -397,16 +408,7 @@ def compile_stage_b_student_labels(
                     "strong_positive": thresholds.strong_positive,
                     "strong_negative": thresholds.strong_negative,
                 },
-                "teacher_cache_identity": {
-                    "cache_version": FULL_TEACHER_CACHE_VERSION,
-                    "scoring_definition": FULL_TEACHER_SCORING_DEFINITION,
-                    "source_commit": teacher_summary.get("source_commit"),
-                    "summary_sha256": sha256_file(teacher_summary_json),
-                    "cache_jsonl_sha256": sha256_file(teacher_cache_jsonl),
-                    "split_manifest_sha256": sha256_file(split_manifest_json),
-                    "decision_examples_sha256": sha256_file(data_dir / "decision_examples.jsonl"),
-                    "memory_records_sha256": sha256_file(data_dir / "memory_records.jsonl"),
-                },
+                "teacher_cache_identity": teacher_cache_identity,
             }
         )
 
