@@ -214,9 +214,42 @@ Required evidence:
 
 Stop condition:
 
-- Only if the redesigned Stage-B address model passes should the next
-  milestone discuss program-head or injector distillation. Otherwise continue
-  diagnosis at Stage B.
+- Completed by Milestone 4C artifact
+  `/lambda/nfs/rcmf-persist/project/runs/stage_b/signed_field_4c_20260806_002`.
+- The redesigned signed Stage-B address model passed both continuity and
+  five-fold task-grouped CV gates.
+- Next milestone may discuss program-head distillation, but the additive
+  injector and Qwen action loss should remain disabled until signed-program
+  behavior is diagnosed.
+
+## EXP-011 Signed-Program Distillation Pilot
+
+Goal:
+
+- Add program-vector learning on top of the Milestone 4C signed residual
+  selector without changing the successful signed selection mechanism.
+- Preserve the frozen train-derived `mu_i` prior, signed q/k residual
+  interaction, and separate activation gate.
+- Distill teacher utility or teacher-conditioned program targets into memory
+  program vectors while keeping Qwen frozen and without running AppWorld agent
+  evaluation.
+
+Required evidence:
+
+- Program vectors can be added, removed, and replaced using the signed field
+  algebra without breaking the selection metrics established in 4C.
+- Program-head learning does not collapse the signed interaction variance or
+  remove correct-minus-shuffled degradation.
+- A no-program control and shuffled-state control remain clearly worse than
+  the signed-program model on held-out tasks.
+- Any learned program target is train-only and respects the same task/episode/
+  replay/lineage leakage exclusions.
+
+Stop condition:
+
+- Stop after a small Stage-C diagnostic pilot and review program geometry,
+  reversibility, and held-out-task selection metrics. Do not construct or train
+  the additive-token injector until this pilot passes.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 

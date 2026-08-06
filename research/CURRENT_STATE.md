@@ -382,6 +382,80 @@ VERIFIED:
 - Lambda post-4B status: no active 4B process, no tmux server, and GPU reported
   `0 MiB / 0%`.
 
+## Milestone 4C Signed Residual Associative Field
+
+VERIFIED:
+
+- Milestone 4C completed without launching Stage C, program-head training,
+  additive-token injector construction/training, Qwen action loss, full RCMF
+  end-to-end training, or AppWorld agent evaluation.
+- Final source commit used for the corrected 4C run:
+  `2fc95e2d41da933810df53e78a0eed62c972ee70`.
+- Corrected 4C artifact directory:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_b/signed_field_4c_20260806_002`.
+- Superseded artifact:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_b/signed_field_4c_20260806_001`.
+  It had the same model metrics but an invalid field-algebra pass flag due to
+  float32 accumulation/tolerance and a negative AUPRC bug. Both were fixed in
+  source commit `2fc95e2`, and `_002` is the formal run.
+- Runtime for the corrected 4C run was `907.20` seconds. Local and Lambda
+  tests passed with `69 passed`.
+- Implemented the signed residual field:
+  `q_s = state_query_network(h_s)`, `k_i = memory_key_network(h_i)`,
+  and `residual(s,i)=temperature*dot(q_s,k_i)/sqrt(rank)`, with frozen
+  train-derived `mu_i` as the explicit global prior.
+- The signed residual interaction uses no softmax, top-k, sparsemax, sigmoid,
+  ReLU, clamp, or rho multiplication. The activation gate is separate and does
+  not multiply ranking scores in this milestone.
+- Reference signed two-tower and refactored core signed field reproduced
+  exactly under copied weights: residual, gate, q, and k max absolute errors
+  were all `0.0`.
+- Continuity split, three-seed mean/std:
+  global memory prior NDCG@4 `0.453376/0.304515`, positive mass@4
+  `0.141993/0.128717`;
+  frozen-Qwen cosine NDCG@4 `0.366233/0.268877`, positive mass@4
+  `0.129411/0.151647`;
+  state-only residual upper bound NDCG@4 `0.590775/0.016531`, positive mass@4
+  `0.216996/0.004691`, correct-minus-shuffled NDCG@4
+  `0.197830/0.019606`.
+- Exact signed two-tower reference and signed core field rank128 matched:
+  NDCG@4 `0.555174/0.018107`, positive mass@4 `0.202908/0.008782`,
+  MRR `0.234205/0.011910`, Spearman `0.246267/0.019878`,
+  correct-minus-shuffled NDCG@4 `0.162368/0.025262`, and
+  correct-minus-shuffled positive mass@4 `0.076659/0.005683`.
+- Core rank128 residual diagnostics:
+  residual MSE `0.313298`, residual Huber `0.035495`, residual correlation
+  `0.279242`, and interaction variance `0.291447`.
+- Rank64 remained positive but weaker:
+  NDCG@4 `0.537045/0.013213`, positive mass@4 `0.202676/0.007095`,
+  correct-minus-shuffled NDCG@4 `0.117082/0.019127`.
+- RMS-normalized rank128 variant:
+  NDCG@4 `0.570537/0.015114`, positive mass@4 `0.201243/0.002476`,
+  correct-minus-shuffled NDCG@4 `0.194207/0.019699`.
+- Learned-prior deployability ablation did not fail:
+  NDCG@4 `0.573485/0.018479`, positive mass@4 `0.205699/0.011101`.
+  Prior-head train MSEs were `0.00420031`, `0.00462545`, `0.00598329`; train
+  correlations were `0.439933`, `0.490678`, `0.544720`.
+- Core rank128 gate metrics:
+  AUROC `0.851812/0.004888`, AUPRC `0.964167/0.001949`, balanced accuracy
+  `0.711715/0.021149`, false activation `0.472222/0.051967`, positive-state
+  gate mean `0.908799/0.018320`, and no-positive-state gate mean
+  `0.488292/0.043613`.
+- Five-fold task-grouped CV over the 37 training tasks passed:
+  mean NDCG@4 improvement over fold-specific global prior
+  `0.085079/0.065855`, mean correct-minus-shuffled NDCG@4
+  `0.102811/0.070323`, positive improvement in `4/5` folds.
+- Field algebra and reversibility validation passed at rank `128`, program dim
+  `32`, and bank count `36` using float64:
+  V identity max error `8.53e-14`, G identity error `0.0`, add/remove norms
+  `0.0/0.0`, replace errors `0.0/0.0`, arbitrary add/remove final norms
+  `1.05e-13/2.27e-13`.
+- Milestone 4C decision branch:
+  `signed_core_field_passed_recommend_stage_c_pilot`.
+  Stage C is still not launched until user and ChatGPT review.
+- Lambda post-4C status: no active 4C process, no tmux server, and GPU reported
+  `0 MiB / 0%`.
+
 ## INFERENCES
 
 - The semantic-retrieval auxiliary loss improves the fixed first-10 slice but
@@ -416,9 +490,13 @@ VERIFIED:
   residual labels contain held-out-task state-conditioned signal, because both
   state-only and signed two-tower diagnostic residual scorers beat the global
   prior and degrade under state shuffling.
-- The immediate bottleneck is not the raw teacher cache or validation split; it
-  is the current RCMF addressing parameterization and its tendency toward
-  dead/discrete or effectively constant dense interactions.
+- Milestone 4C indicates the immediate Stage-B bottleneck was the old
+  nonnegative/top-k/dense-softmax address parameterization rather than the
+  absence of trainable state-memory signal.
+- The signed continuous residual field is now the best-supported Stage-B
+  addressing design for the next milestone, with rank128 retained as the
+  conservative default despite rank64 also passing the simple improvement
+  check.
 
 ## GitHub Status
 
@@ -442,19 +520,21 @@ VERIFIED:
 - Whether anti-collapse regularization, a different addressing parameterization,
   or a stronger state-memory contrastive objective can make Stage-B
   state-conditioned ranking beat global/rho-only baselines.
-- Whether an RCMF-compatible signed residual-address design can preserve the
-  successful two-tower signal while retaining a memory-bank interpretation.
+- Whether signed-program distillation can preserve the Milestone 4C selection
+  signal while introducing real program vectors.
+- Whether an additive-token injector can use a signed-program memory field
+  without degrading Qwen action generation.
 
 ## Immediate Workflow Status
 
 - Working branch: `workflow/research-loop`.
 - Latest pushed and Lambda-synced source commit before final records:
-  `e61981f`.
+  `2fc95e2`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
 - Lambda post-cache status: no tmux server running and GPU memory/utilization
   reported `0 MiB / 0%`.
-- Do not launch program-head training, additive-token injector training,
-  full-bank end-to-end RCMF training, or AppWorld agent evaluation until the
-  user and ChatGPT review the Milestone 4B bottleneck diagnosis.
+- Do not launch Stage C, program-head training, additive-token injector
+  training, full-bank end-to-end RCMF training, or AppWorld agent evaluation
+  until the user and ChatGPT review the Milestone 4C signed-field gate.

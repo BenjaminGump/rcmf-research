@@ -359,6 +359,51 @@ Follow-up:
   the state-conditioned validation gate; consider sparsity annealing only after
   dense warm-up succeeds.
 
+## 2026-08-06 Milestone 4C signed residual field
+
+VERIFIED:
+
+- Milestone 4C implemented and ran a signed continuous residual address model
+  that preserves the successful Milestone 4B signed two-tower interaction while
+  retaining a memory-bank algebra.
+- Corrected artifact:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_b/signed_field_4c_20260806_002`.
+- Source commit:
+  `2fc95e2d41da933810df53e78a0eed62c972ee70`.
+- Exact signed reference and core signed field matched under copied weights
+  with max absolute errors `0.0`.
+- Core signed field rank128 passed continuity and 5-fold task-grouped CV gates.
+- Field algebra and add/remove/replace reversibility passed at rank128.
+
+Decision:
+
+- Replace the failed nonnegative softmax/top-k Stage-B interaction with the
+  signed residual field as the provisional Stage-B address mechanism.
+- Keep empirical train-derived `mu_i` as the default global prior for the next
+  milestone. The learned-prior ablation did not fail, but it should remain a
+  secondary deployability track until Stage C is diagnosed.
+- Retain rank128 as the conservative default for the next milestone. Rank64
+  passed the simple improvement criterion but was weaker on NDCG@4.
+- Record the Stage-B signed-address scientific gate as passed, but do not start
+  Stage C until user and ChatGPT review.
+
+Deviation or workaround:
+
+- The initial `_001` run is superseded. Its model metrics were valid, but it
+  used float32 field-algebra validation with too strict an absolute tolerance
+  and showed `passed=false`; it also exposed an AUPRC integration bug that
+  produced negative AUPRC.
+- Commit `2fc95e2` fixed both issues by validating the algebra proof in
+  float64 and integrating AUPRC from recall 0. The corrected formal run is
+  `_002`.
+
+Follow-up:
+
+- Design a Stage-C signed-program distillation pilot that introduces program
+  vectors while preserving the signed residual selector and separate gate.
+- Continue to avoid hard top-k, sparsemax, or sparsity annealing until the
+  continuous signed field is integrated with program learning and diagnosed.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:
