@@ -314,6 +314,74 @@ VERIFIED:
 - Lambda post-pilot status: no active Stage-B tmux/process and GPU reported
   `0 MiB / 0%`.
 
+## Milestone 4B State-Conditioned Addressing Diagnosis
+
+VERIFIED:
+
+- Milestone 4B completed without launching Stage C, program-head training,
+  additive-token injector construction/training, Qwen action loss, full RCMF
+  end-to-end training, or AppWorld agent evaluation.
+- Final source commit used for the corrected 4B run:
+  `e61981fdd10514ba3250f32176f45ea21c2d0661`.
+- Corrected 4B artifact directory:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_b/addressing_4b_20260806_002`.
+- Inputs were the existing Stage-B labels
+  `/lambda/nfs/rcmf-persist/project/runs/stage_b/student_labels_20260806_002`,
+  existing cached Qwen state/memory representations, and existing Stage-B
+  checkpoints from `addressing_only_pilot_20260806_003`.
+- Runtime for the corrected 4B run was `122.98` seconds. Lambda tests passed
+  with `60 passed`.
+- Hard-top-k disjoint-support dead zone was directly verified: constructed
+  state support `[0,1,2,3]` and memory support `[60,61,62,63]` produced
+  `q=0.0`, state gradient norm `0.0`, and memory gradient norm `0.0`.
+- The overlapping-support control produced `q=0.596093`, state gradient norm
+  `0.127603`, and memory gradient norm `0.128555`.
+- Existing best Stage-B checkpoints:
+  seed 1 and seed 3 had zero support overlap for all `5,004` validation
+  state-memory pairs, raw dot products all `0.0`, and gradient norms `0.0`
+  for state projector, state address head, memory projector, alpha head, and
+  rho head on the representative batch.
+- Existing best Stage-B checkpoint seed 2 had one active support overlap for
+  all `5,004` validation state-memory pairs, raw dot mean `0.005924`, and
+  nonzero representative-batch gradient norms, but still had state top-1 load
+  `1.0` and alpha top-1 load `1.0`.
+- Forensics conclusion: hard-top-k disjoint-support zero-gradient trapping
+  affected a subset of seeds, and all best checkpoints showed shared-basis
+  collapse. Rho/global-prior domination was not the verified primary cause.
+- Teacher utility decomposition over train labels:
+  memory main-effect variance explained `0.017852`, train residual variance
+  `0.109839`, train memory-mean variance `0.002016`, train state-mean variance
+  `0.057149`, residual effective rank `26.145799`, and utility effective rank
+  `26.145799`.
+- Train residual distribution had mean approximately `0.0`, std `0.331419`,
+  min `-1.765584`, max `2.245731`. Validation residual distribution had mean
+  `-0.029875`, std `0.324027`, min `-1.863085`, max `1.523608`.
+- Diagnostic scorer ladder, validation three-seed mean/std:
+  global prior NDCG@4 `0.453376/0.304515`, positive mass@4
+  `0.141993/0.128717`;
+  state-only residual head NDCG@4 `0.571722/0.015435`, positive mass@4
+  `0.214541/0.006305`, correct-minus-shuffled NDCG@4
+  `0.189911/0.024032`;
+  signed two-tower residual scorer NDCG@4 `0.547162/0.026890`, positive
+  mass@4 `0.204190/0.003365`, correct-minus-shuffled NDCG@4
+  `0.144968/0.042046`.
+- Current hard-top-k control reproduced the failed Stage-B result:
+  NDCG@4 `0.386161/0.042185`, positive mass@4 `0.147272/0.010647`, and
+  correct-minus-shuffled NDCG@4 `0.0`.
+- Dense separate-head and dense shared-head address variants both collapsed to
+  the frozen global prior: NDCG@4 `0.453376`, positive mass@4 `0.141993`, and
+  correct-minus-shuffled NDCG@4 `0.0`.
+- Dense address interaction contribution was effectively zero:
+  state-interaction variance was about `3.47e-11` for dense separate-head seed
+  1 and `1.37e-10` for dense shared-head seed 1; all dense best epochs were
+  epoch 1.
+- Decision-tree branch reached:
+  `dense_rcmf_address_failed`. Because the state-only and signed two-tower
+  diagnostics succeeded while dense RCMF-compatible addressing failed, the
+  current address parameterization is the bottleneck. Stage C remains blocked.
+- Lambda post-4B status: no active 4B process, no tmux server, and GPU reported
+  `0 MiB / 0%`.
+
 ## INFERENCES
 
 - The semantic-retrieval auxiliary loss improves the fixed first-10 slice but
@@ -344,6 +412,13 @@ VERIFIED:
 - The tiny overfit result means the implementation has a live gradient path,
   so the pilot failure is more likely an objective/architecture/generalization
   issue than a completely disconnected training graph.
+- Milestone 4B shows that the frozen Qwen state representations and teacher
+  residual labels contain held-out-task state-conditioned signal, because both
+  state-only and signed two-tower diagnostic residual scorers beat the global
+  prior and degrade under state shuffling.
+- The immediate bottleneck is not the raw teacher cache or validation split; it
+  is the current RCMF addressing parameterization and its tendency toward
+  dead/discrete or effectively constant dense interactions.
 
 ## GitHub Status
 
@@ -367,12 +442,14 @@ VERIFIED:
 - Whether anti-collapse regularization, a different addressing parameterization,
   or a stronger state-memory contrastive objective can make Stage-B
   state-conditioned ranking beat global/rho-only baselines.
+- Whether an RCMF-compatible signed residual-address design can preserve the
+  successful two-tower signal while retaining a memory-bank interpretation.
 
 ## Immediate Workflow Status
 
 - Working branch: `workflow/research-loop`.
 - Latest pushed and Lambda-synced source commit before final records:
-  `9f84b77`.
+  `e61981f`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
@@ -380,4 +457,4 @@ VERIFIED:
   reported `0 MiB / 0%`.
 - Do not launch program-head training, additive-token injector training,
   full-bank end-to-end RCMF training, or AppWorld agent evaluation until the
-  user and ChatGPT review the Stage-B addressing-only failure.
+  user and ChatGPT review the Milestone 4B bottleneck diagnosis.

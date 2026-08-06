@@ -142,7 +142,9 @@ Stop condition:
 
 Goal:
 
-- Diagnose why the first addressing-only pilot failed the scientific gate even
+- Completed on 2026-08-06 as
+  `/lambda/nfs/rcmf-persist/project/runs/stage_b/addressing_4b_20260806_002`.
+- Diagnosed why the first addressing-only pilot failed the scientific gate even
   though the tiny overfit test had a live gradient path.
 - Do not move to program-head or injector training until this failure is
   understood and a reviewed Stage-B repair passes the gate.
@@ -159,23 +161,62 @@ Current evidence:
 - Alpha pairwise cosine mean: `0.997041`.
 - Alpha top-1 basis load fraction: `1.0`.
 - Scientific gate: failed.
+- Milestone 4B forensic result:
+  hard-top-k disjoint-support zero-gradient trapping affected seeds 1 and 3;
+  seed 2 escaped full disjoint support but still collapsed to shared basis.
+- State-only residual head succeeded:
+  NDCG@4 `0.571722`, positive mass@4 `0.214541`,
+  correct-minus-shuffled NDCG@4 `0.189911`.
+- Signed two-tower residual scorer succeeded:
+  NDCG@4 `0.547162`, positive mass@4 `0.204190`,
+  correct-minus-shuffled NDCG@4 `0.144968`.
+- Dense separate-head and dense shared-head RCMF address variants failed:
+  both matched the global prior NDCG@4 `0.453376` with correct-minus-shuffled
+  NDCG@4 `0.0`.
+- Decision-tree branch: `dense_rcmf_address_failed`.
 
 Candidate repairs:
 
-- Test a direct supervised state-memory scorer over frozen Qwen hidden vectors
-  as a non-RCMF upper-bound sanity check.
-- Revisit address normalization and top-k/dense behavior under the Stage-B
-  losses.
-- Add an explicitly justified anti-collapse or contrastive term only after
-  confirming the direct scorer can learn held-out-task signal.
-- Rebalance no-positive/off and positive activation losses, because two seeds
-  collapsed to zero read mass and undefined Spearman.
+- Design an RCMF-compatible signed residual-address model:
+  frozen global prior `mu_i`, signed state-memory residual interaction, and a
+  separate activation gate.
+- Keep hard top-k disabled until a continuous dense/signed design passes the
+  validation gate. Consider dense warm-up followed by sparsity annealing as a
+  later ablation, not the next default.
+- Preserve the signed two-tower residual scorer as the diagnostic target to
+  match before adding memory program or injector training.
 
 Stop condition:
 
-- A repaired Stage-B model must beat global and rho-only baselines on
-  held-out-task ranking/positive-mass metrics and degrade under shuffled-state
-  evaluation before any Stage C program/injector work begins.
+- Met for the diagnostic milestone. Stage C remains blocked.
+
+## EXP-010 RCMF-Compatible Signed Residual Address Redesign
+
+Goal:
+
+- Convert the successful signed two-tower diagnostic signal into an
+  RCMF-compatible addressing mechanism without hard top-k.
+- Keep the frozen train-derived global prior `mu_i` explicit, and train only a
+  signed residual interaction plus a separate activation gate.
+- Do not train program head or injector until this redesigned Stage-B gate
+  passes.
+
+Required evidence:
+
+- Beat global prior and dense failed controls on held-out-task NDCG@4,
+  positive mass@4, MRR, pairwise accuracy, and Spearman.
+- Show correct-minus-shuffled NDCG@4 and positive mass@4 remain materially
+  positive.
+- Show interaction contribution variance is nontrivial instead of collapsing
+  to near-zero as in `addressing_4b_20260806_002`.
+- Preserve a memory-bank interpretation and report address geometry, support
+  usage entropy, and gate behavior on no-positive states.
+
+Stop condition:
+
+- Only if the redesigned Stage-B address model passes should the next
+  milestone discuss program-head or injector distillation. Otherwise continue
+  diagnosis at Stage B.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 

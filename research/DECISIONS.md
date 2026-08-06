@@ -303,6 +303,62 @@ Follow-up:
   a simpler supervised scorer that directly consumes frozen state/memory
   representations.
 
+## 2026-08-06 Milestone 4B addressing diagnosis
+
+VERIFIED:
+
+- Milestone 4B implemented and ran forensic checkpoint diagnostics, teacher
+  utility decomposition, residual scorer ablations, and dense-address RCMF
+  ablations.
+- The corrected artifact is
+  `/lambda/nfs/rcmf-persist/project/runs/stage_b/addressing_4b_20260806_002`.
+- Source commit for the corrected 4B run:
+  `e61981fdd10514ba3250f32176f45ea21c2d0661`.
+- No Stage C, program-head training, injector construction/training, Qwen
+  action loss, full end-to-end RCMF training, or AppWorld evaluation was run.
+- Hard-top-k disjoint-support zero-gradient trapping is real: disjoint
+  supports produced `q=0.0` and zero gradients into both state and memory
+  logits; an overlapping-support control had nonzero gradients.
+- The existing hard-top-k best checkpoints for seeds 1 and 3 were fully
+  trapped: all validation state-memory pairs had zero support overlap and zero
+  raw dot product.
+- Seed 2 escaped the fully disjoint trap but still collapsed to a shared
+  one-overlap basis with state top-1 load `1.0` and alpha top-1 load `1.0`.
+- State-only residual head and signed two-tower residual scorer both beat the
+  global memory prior and were materially degraded by shuffled validation
+  states.
+- Dense separate-head and dense shared-head address variants both collapsed to
+  the global prior, with zero correct-minus-shuffled improvement.
+
+Decision:
+
+- Treat the current RCMF address parameterization as the Milestone 4B
+  bottleneck.
+- Do not proceed to Stage C. The diagnostic decision-tree branch is
+  `dense_rcmf_address_failed`.
+- Preserve the dense-address run as a negative result: simply replacing
+  hard-top-k with dense softmax did not recover the signed residual interaction
+  signal.
+- Prioritize a redesigned residual-address mechanism that can express signed
+  state-memory interactions before reintroducing program or injector training.
+
+Deviation or workaround:
+
+- A smoke run caught a missing `defaultdict` import before the formal 4B run.
+  The corrected formal artifact is `_002`; `_001` should be treated as
+  superseded by `_002` because `_002` also records hard-control paired
+  bootstrap rows and clearer forensic conclusions.
+- The final run was foreground rather than tmux because it completed in about
+  two minutes and wrote complete JSON/Markdown artifacts. No process remains.
+
+Follow-up:
+
+- Test an RCMF-compatible signed residual interaction that uses the global
+  memory prior as a frozen baseline and learns only residual selection.
+- Avoid restoring hard top-k until a dense or continuous address design passes
+  the state-conditioned validation gate; consider sparsity annealing only after
+  dense warm-up succeeds.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:
