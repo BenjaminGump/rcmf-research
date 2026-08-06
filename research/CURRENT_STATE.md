@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-08-05.
+Last updated: 2026-08-06.
 
 ## VERIFIED
 
@@ -456,6 +456,108 @@ VERIFIED:
 - Lambda post-4C status: no active 4C process, no tmux server, and GPU reported
   `0 MiB / 0%`.
 
+## Milestone 5 / Stage C1 Signed Program Distillation
+
+VERIFIED:
+
+- Milestone 5 / Stage C1 completed without AppWorld environment interaction,
+  generated ReAct trajectories, full `test_normal` evaluation, joint selector
+  fine-tuning, Qwen fine-tuning, or end-to-end RCMF training.
+- Formal Stage-C1 response cache:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c1/response_cache_20260806_001`.
+- Response cache version: `stage_c1_best_raw_memory_response_cache_v1`.
+- Response scoring definition:
+  `best_raw_memory_or_bare_qwen_target_top64_v1`.
+- Response cache model/checkpoint identity:
+  `frozen_hf_pretrained:Qwen/Qwen3-8B`.
+- Response cache validation passed after the probability-bucket numeric
+  tolerance fix: 638 states, error count 0, target NLL tolerance `2e-4`, and
+  probability-bucket tolerance `1e-5`.
+- Response cache condition counts: 523 positive-teacher states, 107
+  baseline-teacher/no-positive states, and 8 all-missing states. By split:
+  train 408 positive, 83 baseline, 8 all-missing, 491 valid Stage-C states;
+  validation 115 positive, 24 baseline, 0 all-missing, 139 valid Stage-C
+  states.
+- Response cache size: 115,276,788 bytes. The first scoring pass reached the
+  final progress marker at about `0.37` hours and failed only on overly strict
+  float probability-bucket validation; the final validation rerun reused the
+  638 cached rows and took `11.27` seconds.
+- Teacher improvement distribution over valid states: count 630, mean
+  `0.405222`, std `0.437226`, median `0.249824`, p75 `0.634917`, p95
+  `1.318174`, max `2.333721`.
+- Formal Stage-C1 signed-program artifact:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c1/signed_program_c1_20260806_002`.
+- Stage-C1 training source commit:
+  `e17002258ddb52bce3fa86117a33ed872df2fa5c`.
+- Stage-C1 corrected evaluation source commit:
+  `9f16010e7dddbcb99ccf5b404347cadacc44a6c8`.
+- Stage-C1 run used the existing 36-memory effective train bank, 491
+  train Stage-C rows, and 139 validation Stage-C rows.
+- Frozen modules in the primary Stage-C1 run: Qwen3-8B, the Milestone-4C
+  signed state query, memory key, signed temperature, empirical train-derived
+  `mu_i`, and the activation gate. Trainable modules: the content-derived
+  program head and the additive-token injector only.
+- The signed program field compiled prior-augmented keys
+  `k_bar=[temperature*k/sqrt(rank), mu_i]`, program vectors
+  `p_i=rms_normalize(tanh(program_head(h_i)))`, and read
+  `z=gate*q_bar^T V/sqrt(q_bar^T G q_bar + eps)` with K=4
+  `last_user_k` additive tokens.
+- Field algebra and reversibility validation passed:
+  full-read max error `0.0`, leave-one-out max error `0.0`,
+  V/G read max error `1.11e-15`, add/remove norms `0.0/0.0`,
+  replace errors `0.0/0.0`, arbitrary add/remove final norms
+  about `2.00e-13/2.17e-13`.
+- Zero-delta equivalence passed with max absolute NLL delta `0.0`,
+  delta norm `0.0`, and selected token IDs/text
+  `[40537, 8017, 6733, 13]` / `[" Spotify", " album", " library", "."]`.
+- Tiny overfit passed on 8 positive and 8 no-positive states:
+  sparse teacher KL fell from `0.181650` to `0.170965`, target NLL fell from
+  `0.414490` to `0.402536`, and gradients reached both the program head and
+  injector.
+- Full Stage-C1 training runtime: `21,652.25` seconds, about `6.01` H100
+  hours. Corrected eval-only control recomputation runtime: `486.21` seconds.
+- Three-seed validation mean/std for the correct content-derived field:
+  target NLL `0.196607/0.012709`, sparse teacher KL
+  `0.125854/0.011371`, `L0 - student` `0.335801/0.012709`,
+  improved fraction `0.817746/0.006783`.
+- Mandatory control deltas are reported as correct minus control. Negative
+  target-NLL deltas mean the correct content-derived field has lower NLL than
+  the control. Three-seed mean/std:
+  bare/zero field `-0.335801/0.012709`,
+  fixed random program `-0.310052/0.014674`,
+  shuffled program `-0.092314/0.029326`,
+  shuffled state `-0.053176/0.022210`,
+  mean program `-0.103837/0.051612`,
+  global-prior-only `-0.021917/0.022167`,
+  and free-ID program `+0.007893/0.012818`.
+- The content-derived program did not beat the free-ID program; the positive
+  sign for correct-minus-free-ID means free-ID had lower validation NLL on
+  average.
+- No-positive validation states were not preserved tightly enough:
+  mean degradation relative to bare Qwen was `0.028565`, above the Stage-C1
+  threshold `0.02`.
+- Program geometry across seeds: centered effective rank mean/std
+  `10.774106/1.763191`; program norm mean about `11.3137`; pairwise cosine
+  means ranged from `0.556960` to `0.744982`.
+- Read vector geometry across seeds: centered effective rank mean/std
+  `3.572149/0.234162`; z norm means ranged from `18.620029` to `20.447519`;
+  z pairwise cosine means ranged from `0.397926` to `0.621175`.
+- Injector deltas were large in the trained runs: mean delta norm ranged from
+  `24.831388` to `27.442460`, and mean delta ratio ranged from `7.344189` to
+  `8.140082`.
+- Stage-4C selector preservation passed exactly for all three seeds: max
+  absolute errors for q, k, q_bar, k_bar, scores, gate, and temperature were
+  all `0.0`.
+- Leave-one-out audit did not support memory-specific behavior: across 16
+  positive validation states, removing the teacher-best memory had mean NLL
+  delta `0.0`, teacher-best-hurts-more fraction `0.0`, and undefined utility
+  versus leave-one-out correlation.
+- Stage-C1 decision branch:
+  `signed_program_channel_not_behaviorally_useful_or_content_not_distinct`.
+  Stage-C1 did not pass, and Stage C2 is not allowed.
+- Lambda post-Stage-C1 status: no active tmux server, no matching Python
+  process, and GPU reported `0 MiB / 0%`.
+
 ## INFERENCES
 
 - The semantic-retrieval auxiliary loss improves the fixed first-10 slice but
@@ -497,6 +599,13 @@ VERIFIED:
   addressing design for the next milestone, with rank128 retained as the
   conservative default despite rank64 also passing the simple improvement
   check.
+- Stage C1 shows that a teacher-forced additive-token/program path can learn
+  to reduce validation target NLL relative to bare Qwen, but the behavior is
+  not yet credible as memory-content compilation: it fails the free-ID
+  comparison, no-positive preservation, and behavioral leave-one-out checks.
+- The zero leave-one-out effects suggest the current normalized aggregate
+  read/injector path may be dominated by broad state/control behavior rather
+  than the specific teacher-best memory program.
 
 ## GitHub Status
 
@@ -520,21 +629,22 @@ VERIFIED:
 - Whether anti-collapse regularization, a different addressing parameterization,
   or a stronger state-memory contrastive objective can make Stage-B
   state-conditioned ranking beat global/rho-only baselines.
-- Whether signed-program distillation can preserve the Milestone 4C selection
-  signal while introducing real program vectors.
+- Whether a redesigned Stage-C program objective can make memory-specific
+  leave-one-out effects track teacher utility.
 - Whether an additive-token injector can use a signed-program memory field
-  without degrading Qwen action generation.
+  without degrading Qwen generated AppWorld action trajectories; Stage C1 used
+  teacher-forced scoring only and no AppWorld generation/evaluation.
 
 ## Immediate Workflow Status
 
 - Working branch: `workflow/research-loop`.
-- Latest pushed and Lambda-synced source commit before final records:
-  `2fc95e2`.
+- Latest Lambda-synced Stage-C1 evaluation source commit before final records:
+  `9f16010`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
-- Lambda post-cache status: no tmux server running and GPU memory/utilization
+- Lambda post-Stage-C1 status: no tmux server running and GPU memory/utilization
   reported `0 MiB / 0%`.
-- Do not launch Stage C, program-head training, additive-token injector
-  training, full-bank end-to-end RCMF training, or AppWorld agent evaluation
-  until the user and ChatGPT review the Milestone 4C signed-field gate.
+- Do not launch Stage C2, joint selector/program/injector training, Qwen action
+  loss, full-bank end-to-end RCMF training, or AppWorld agent evaluation until
+  the user and ChatGPT review the Stage-C1 failure evidence.

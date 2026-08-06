@@ -226,30 +226,70 @@ Stop condition:
 
 Goal:
 
-- Add program-vector learning on top of the Milestone 4C signed residual
-  selector without changing the successful signed selection mechanism.
-- Preserve the frozen train-derived `mu_i` prior, signed q/k residual
-  interaction, and separate activation gate.
-- Distill teacher utility or teacher-conditioned program targets into memory
-  program vectors while keeping Qwen frozen and without running AppWorld agent
-  evaluation.
+- Completed on 2026-08-06 as
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c1/signed_program_c1_20260806_002`.
+- Stage C1 added content-derived program-vector learning and a minimal
+  K=4 `last_user_k` additive-token behavioral decoder on top of the frozen
+  Milestone-4C signed residual selector.
+- Qwen3-8B and the signed selector stayed frozen; no AppWorld generation or
+  full evaluation was run.
 
-Required evidence:
+Evidence:
 
-- Program vectors can be added, removed, and replaced using the signed field
-  algebra without breaking the selection metrics established in 4C.
-- Program-head learning does not collapse the signed interaction variance or
-  remove correct-minus-shuffled degradation.
-- A no-program control and shuffled-state control remain clearly worse than
-  the signed-program model on held-out tasks.
-- Any learned program target is train-only and respects the same task/episode/
-  replay/lineage leakage exclusions.
+- Response cache:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c1/response_cache_20260806_001`.
+- Response cache validation passed: 638 states, 523 positive-teacher, 107
+  baseline-teacher, 8 all-missing.
+- Field algebra/reversibility, zero-delta equivalence, and tiny overfit passed.
+- Three-seed validation target NLL was `0.196607/0.012709`; sparse teacher KL
+  was `0.125854/0.011371`; `L0 - student` was `0.335801/0.012709`.
+- Correct-minus-control target-NLL deltas: zero/bare field `-0.335801`,
+  fixed-random program `-0.310052`, shuffled program `-0.092314`,
+  shuffled state `-0.053176`, global-prior-only `-0.021917`, free-ID program
+  `+0.007893`.
+- Program centered effective rank was `10.774106/1.763191`; z centered
+  effective rank was `3.572149/0.234162`.
+- No-positive validation degradation was `0.028565`, above the allowed `0.02`.
+- Leave-one-out audit showed teacher-best removal delta `0.0` for all 16
+  audited positive states.
 
 Stop condition:
 
-- Stop after a small Stage-C diagnostic pilot and review program geometry,
-  reversibility, and held-out-task selection metrics. Do not construct or train
-  the additive-token injector until this pilot passes.
+- Met. Stage C1 stopped after the diagnostic gate.
+- Scientific gate failed with branch
+  `signed_program_channel_not_behaviorally_useful_or_content_not_distinct`.
+- Do not launch Stage C2, AppWorld generation/evaluation, Qwen action loss, or
+  joint selector/program/injector training until the failure is reviewed.
+
+## EXP-012 Stage-C Program-Channel Failure Diagnosis
+
+Goal:
+
+- Explain why Stage C1 lowers teacher-forced target NLL while failing
+  memory-content compilation controls.
+- Determine whether the issue is the normalized aggregate field read, the
+  additive-token injector, insufficient per-memory behavioral supervision, or
+  a state-control shortcut.
+
+Candidates:
+
+- Quantify per-memory score contributions and z changes before/after removing
+  teacher-best, neutral, and negative memories.
+- Compare content-derived and free-ID programs at equal capacity on per-state
+  residuals, not only aggregate NLL.
+- Add an explicitly supervised leave-one-out or teacher-delta objective before
+  retrying any full behavioral distillation.
+- Reduce injector dominance and check whether no-positive preservation improves
+  without losing positive-state gains.
+- Audit whether the large trained delta ratio, roughly `7.34` to `8.14`,
+  overwhelms memory-specific differences.
+
+Stop condition:
+
+- Produce a diagnosis and a reviewed repair proposal. Do not start AppWorld
+  agent evaluation or Stage C2 until a repaired Stage-C pilot passes
+  no-positive preservation, memory-specific leave-one-out, and content-derived
+  versus free-ID/random/shuffled controls.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 

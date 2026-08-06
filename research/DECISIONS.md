@@ -404,6 +404,75 @@ Follow-up:
 - Continue to avoid hard top-k, sparsemax, or sparsity annealing until the
   continuous signed field is integrated with program learning and diagnosed.
 
+## 2026-08-06 Milestone 5 / Stage C1 signed program distillation
+
+VERIFIED:
+
+- Stage C1 introduced content-derived program vectors and a K=4
+  `last_user_k` additive-token injector while keeping Qwen3-8B and the
+  Milestone-4C signed selector frozen.
+- The teacher-response cache selected the best legal effective-bank raw memory
+  per state when utility was greater than `0.01`; otherwise it used the bare
+  full-demo Qwen prompt. The student prompt did not contain raw memory text.
+- The response cache validated with 638 states, 523 positive-teacher states,
+  107 baseline-teacher states, and 8 all-missing states.
+- Program field algebra, add/remove/replace reversibility, zero-delta
+  equivalence, and tiny overfit all passed.
+- The full teacher-forced pilot trained three seeds and completed in about
+  `6.01` H100 hours. No AppWorld generation/evaluation was run.
+- Correct content-derived programs improved validation target NLL relative to
+  bare/zero field and random/shuffled-program controls, but did not beat the
+  free-ID program control on average.
+- No-positive validation states degraded by `0.028565` target NLL relative to
+  bare Qwen, exceeding the `0.02` gate threshold.
+- The behavioral leave-one-out audit found zero NLL effect from removing the
+  teacher-best memory in all 16 audited positive states.
+
+Decision:
+
+- Stop after Stage C1 as requested. Do not proceed to Stage C2, program
+  distillation beyond this diagnostic, selector/program/injector joint
+  fine-tuning, Qwen action loss, or AppWorld agent evaluation.
+- Treat the current signed program/additive-token channel as not yet
+  scientifically validated for memory-content compilation.
+- Preserve the Stage-4C signed selector as the best-supported addressing
+  component, but do not infer that adding program vectors has succeeded.
+- Label the reached branch as
+  `signed_program_channel_not_behaviorally_useful_or_content_not_distinct`.
+
+Deviation or workaround:
+
+- The first response-cache validation failed after all 638 rows were generated
+  because top-K-plus-other probability buckets occasionally summed to about
+  `1.0000037`, above the initial overly strict tolerance. This was a numeric
+  validation issue, not a teacher-definition change. Commit `77173e2` switched
+  future bucket computation to float64 and set the validation tolerance to
+  `1e-5`; the existing rows were revalidated successfully without rescoring.
+- The first signed-program attempt `_001` exposed a sparse teacher-KL numeric
+  instability when the union bucket probability was effectively one. Commit
+  `e170022` clamped the student other-bucket probability below one and made
+  geometry diagnostics ignore nonfinite rows instead of crashing.
+- The initial `_002` summary had invalid `shuffled_state` and `mean_state`
+  controls when `eval_batch_size=1`: the script built those controls inside
+  each batch, so a one-row batch used its own state as the shuffled/mean state.
+  Commit `9f16010` fixed this by creating full-evaluation state-index
+  overrides and full-evaluation mean q/gate controls before batching. The
+  final `_002` summary was recomputed from the existing checkpoints without
+  retraining.
+- None of these fixes changed the teacher definition, leakage rules, raw-memory
+  insertion, target scoring, trainable/frozen module boundary, or no-truncation
+  contract.
+
+Follow-up:
+
+- Diagnose why the trained injector/program path gives zero memory-specific
+  leave-one-out effect despite improving target NLL over bare Qwen.
+- Compare content-derived programs against free-ID programs more directly:
+  matched capacity, per-memory contribution, program permutation sensitivity,
+  and whether the injector can exploit state-level shortcuts.
+- Consider a Stage-C repair that explicitly supervises per-memory behavioral
+  differences or leave-one-out effects before any AppWorld generation run.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:
