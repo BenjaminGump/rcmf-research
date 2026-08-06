@@ -1,0 +1,61 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c1_signed_program_field
+  version: stage_c1_signed_program_field_v1
+  scope:
+    - best_raw_memory_teacher_response_distillation
+    - signed_selector_frozen
+    - qwen_frozen
+    - teacher_forced_target_scoring_only
+    - no_appworld_agent_generation_or_evaluation
+    - no_joint_selector_finetuning
+    - no_stage_c2
+
+memory:
+  rank: 128
+  program_dim: 128
+
+injector:
+  type: additive_token
+  position: last_user_k
+  num_tokens: 4
+  initial_scale: 0.0
+
+stage_c1:
+  teacher_cache_dir: runs/teacher/raw_text_full_cache_20260805_001
+  labels_dir: runs/stage_b/student_labels_20260806_002
+  signed_field_dir: runs/stage_b/signed_field_4c_20260806_002
+  representation_cache_dir: runs/experiments/appworld_qwen_repr_full_prompt_filtered_no_2a163ab3_20260803_101000/train/representation_cache
+  response_cache_version: stage_c1_best_raw_memory_response_cache_v1
+  response_scoring_definition: best_raw_memory_or_bare_qwen_target_top64_v1
+  positive_teacher_eps: 0.01
+  program_head:
+    type: content_derived_mlp
+    hidden_dim: 256
+    program_dim: 128
+    activation: tanh_then_rms_normalize
+  field:
+    q_bar: concat_signed_query_and_one
+    k_bar: concat_temperature_scaled_key_and_train_mu
+    read_normalization: sqrt_sum_score_squared
+  training:
+    trainable:
+      - program_head
+      - additive_token_injector
+    frozen:
+      - qwen3_8b
+      - signed_state_query_network
+      - signed_memory_key_network
+      - empirical_train_mu
+      - selector_temperature
+      - selector_gate
+    losses:
+      sparse_teacher_kl: 1.0
+      ground_truth_ce: 0.2
+      no_positive_preservation_kl: 1.0
+      delta_l2: 0.0001
+      z_l2: 0.0001
+    seeds: [1, 2, 3]
+    default_epochs: 3
+    default_batch_size: 1
