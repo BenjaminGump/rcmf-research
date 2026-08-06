@@ -396,23 +396,79 @@ def _aggregate_seed_summaries(seed_summaries: list[dict[str, Any]]) -> dict[str,
                 values.append(float(mean))
         return values
 
-    metric_paths = {
-        "learned_ndcg@4": ("validation_metrics", "ndcg@4"),
-        "learned_positive_mass@4": ("validation_metrics", "positive_mass_coverage@4"),
-        "learned_mrr": ("validation_metrics", "mrr"),
-        "shuffled_ndcg@4": ("shuffled_state_metrics", "ndcg@4"),
-        "shuffled_positive_mass@4": ("shuffled_state_metrics", "positive_mass_coverage@4"),
-        "global_ndcg@4": ("baseline_metrics", "global_mean_train_utility", "ndcg@4"),
-        "global_positive_mass@4": (
-            "baseline_metrics",
-            "global_mean_train_utility",
-            "positive_mass_coverage@4",
-        ),
-        "rho_ndcg@4": ("baseline_metrics", "rho_only", "ndcg@4"),
-        "rho_positive_mass@4": ("baseline_metrics", "rho_only", "positive_mass_coverage@4"),
-        "cosine_ndcg@4": ("baseline_metrics", "frozen_qwen_hidden_cosine", "ndcg@4"),
-        "random_ndcg@4": ("baseline_metrics", "deterministic_random", "ndcg@4"),
+    required_metric_names = [
+        "ndcg@1",
+        "ndcg@4",
+        "ndcg@8",
+        "best_recall@1",
+        "best_recall@4",
+        "best_recall@8",
+        "positive_mass_coverage@1",
+        "positive_mass_coverage@4",
+        "positive_mass_coverage@8",
+        "mrr",
+        "positive_vs_negative_pairwise_accuracy",
+        "spearman",
+        "read_mass_positive",
+        "read_mass_no_positive",
+        "false_activation_no_positive",
+    ]
+    sources: dict[str, tuple[str, ...]] = {
+        "learned": ("validation_metrics",),
+        "shuffled": ("shuffled_state_metrics",),
+        "global": ("baseline_metrics", "global_mean_train_utility"),
+        "rho": ("baseline_metrics", "rho_only"),
+        "cosine": ("baseline_metrics", "frozen_qwen_hidden_cosine"),
+        "random": ("baseline_metrics", "deterministic_random"),
     }
+    metric_paths: dict[str, tuple[str, ...]] = {}
+    for source, prefix in sources.items():
+        available = seed_summaries[0]
+        for key in prefix:
+            available = available[key]
+        for metric_name in required_metric_names:
+            if metric_name in available:
+                metric_paths[f"{source}_{metric_name}"] = (*prefix, metric_name)
+    metric_paths.update(
+        {
+            "geometry_state_pairwise_cosine_mean": (
+                "geometry",
+                "state_address",
+                "pairwise_cosine",
+                "mean",
+            ),
+            "geometry_state_centered_effective_rank": (
+                "geometry",
+                "state_address",
+                "centered_effective_rank",
+            ),
+            "geometry_state_top1_load": (
+                "geometry",
+                "state_address",
+                "top1_max_basis_load_fraction",
+            ),
+            "geometry_alpha_pairwise_cosine_mean": (
+                "geometry",
+                "alpha",
+                "pairwise_cosine",
+                "mean",
+            ),
+            "geometry_alpha_centered_effective_rank": (
+                "geometry",
+                "alpha",
+                "centered_effective_rank",
+            ),
+            "geometry_alpha_top1_load": (
+                "geometry",
+                "alpha",
+                "top1_max_basis_load_fraction",
+            ),
+            "geometry_rho_mean": ("geometry", "rho", "mean"),
+            "correct_vs_shuffled_score_abs_delta_mean": (
+                "correct_vs_shuffled_score_abs_delta_mean",
+            ),
+        }
+    )
     aggregate: dict[str, Any] = {}
     for name, path in metric_paths.items():
         values = collect(path)
@@ -422,17 +478,17 @@ def _aggregate_seed_summaries(seed_summaries: list[dict[str, Any]]) -> dict[str,
             "std": statistics.pstdev(values) if len(values) > 1 else 0.0 if values else None,
         }
     learned_ndcg = aggregate["learned_ndcg@4"]["mean"] or 0.0
-    learned_mass = aggregate["learned_positive_mass@4"]["mean"] or 0.0
+    learned_mass = aggregate["learned_positive_mass_coverage@4"]["mean"] or 0.0
     strongest_baseline_ndcg = max(
         aggregate["global_ndcg@4"]["mean"] or 0.0,
         aggregate["rho_ndcg@4"]["mean"] or 0.0,
     )
     strongest_baseline_mass = max(
-        aggregate["global_positive_mass@4"]["mean"] or 0.0,
-        aggregate["rho_positive_mass@4"]["mean"] or 0.0,
+        aggregate["global_positive_mass_coverage@4"]["mean"] or 0.0,
+        aggregate["rho_positive_mass_coverage@4"]["mean"] or 0.0,
     )
     shuffled_ndcg = aggregate["shuffled_ndcg@4"]["mean"] or 0.0
-    shuffled_mass = aggregate["shuffled_positive_mass@4"]["mean"] or 0.0
+    shuffled_mass = aggregate["shuffled_positive_mass_coverage@4"]["mean"] or 0.0
     aggregate["scientific_gate"] = {
         "passed": bool(
             learned_ndcg > strongest_baseline_ndcg + 0.01
