@@ -111,6 +111,63 @@ Baseline means on the same validation rows/bank:
 | deterministic random | 0.366264 | 0.116719 | 0.117391 |
 | shuffled validation states | 0.386161 | 0.147272 | 0.165514 |
 
+Full validation metric matrix, reported as mean/std:
+
+- learned:
+  NDCG@1/4/8 `0.371993/0.386161/0.413739` with std
+  `0.015983/0.042185/0.046103`; best recall@1/4/8
+  `0.074341/0.175060/0.256595` with std
+  `0.003391/0.013566/0.057654`; positive mass@1/4/8
+  `0.050589/0.147272/0.244730` with std
+  `0.007686/0.010647/0.025002`; MRR `0.165514/0.013510`;
+  pairwise accuracy `0.184593/0.261054`; Spearman `0.088391/0.000000`;
+  read mass positive/no-positive `0.013335/0.010802` with std
+  `0.018858/0.015277`; false activation `0.000000/0.000000`.
+- global train utility:
+  NDCG@1/4/8 `0.437061/0.453376/0.490111`; best recall@1/4/8
+  `0.064748/0.158273/0.359712`; positive mass@1/4/8
+  `0.042724/0.141993/0.288748`; MRR `0.170227`; pairwise accuracy
+  `0.609083`; Spearman `0.150585`; read mass positive/no-positive
+  `3.104686/2.950177`; false activation `1.000000`. Std is `0.000000`
+  for deterministic global metrics in the three-seed aggregate.
+- rho-only:
+  NDCG@1/4/8 `0.359594/0.370048/0.412244` with std
+  `0.015831/0.035851/0.029064`; best recall@1/4/8
+  `0.035971/0.105516/0.232614` with std
+  `0.021179/0.044864/0.003391`; positive mass@1/4/8
+  `0.035957/0.115186/0.241521` with std
+  `0.016638/0.028919/0.030643`; MRR `0.125411/0.027648`;
+  pairwise accuracy `0.534563/0.012351`; Spearman `0.055297/0.020262`;
+  read mass positive/no-positive `9.940121/9.553279` with std
+  `9.476980/9.112818`; false activation `1.000000/0.000000`.
+- frozen-Qwen hidden cosine:
+  NDCG@1/4/8 `0.360270/0.366233/0.412382`; best recall@1/4/8
+  `0.000000/0.129496/0.309353`; positive mass@1/4/8
+  `0.028158/0.129411/0.265001`; MRR `0.114033`; pairwise accuracy
+  `0.517451`; Spearman `0.027727`; read mass positive/no-positive
+  `26.474417/24.867887`; false activation `1.000000`. Std is
+  `0.000000` for deterministic cosine metrics in the three-seed aggregate.
+- deterministic random:
+  NDCG@1/4/8 `0.342557/0.366264/0.391250` with std
+  `0.040258/0.014602/0.010569`; best recall@1/4/8
+  `0.028777/0.112710/0.227818` with std
+  `0.011748/0.003391/0.023740`; positive mass@1/4/8
+  `0.028848/0.116719/0.215694` with std
+  `0.005266/0.002651/0.003539`; MRR `0.117391/0.010586`;
+  pairwise accuracy `0.490190/0.009779`; Spearman `0.005010/0.011534`;
+  read mass positive/no-positive `17.877288/16.106011` with std
+  `0.033706/0.306673`; false activation `1.000000/0.000000`.
+- shuffled validation states:
+  NDCG@1/4/8 `0.371993/0.386161/0.413739` with std
+  `0.015983/0.042185/0.046103`; best recall@1/4/8
+  `0.074341/0.175060/0.256595` with std
+  `0.003391/0.013566/0.057654`; positive mass@1/4/8
+  `0.050589/0.147272/0.244730` with std
+  `0.007686/0.010647/0.025002`; MRR `0.165514/0.013510`;
+  pairwise accuracy `0.184593/0.261054`; Spearman `0.088391/0.000000`;
+  read mass positive/no-positive `0.013086/0.011691` with std
+  `0.018506/0.016533`; false activation `0.000000/0.000000`.
+
 ## Geometry
 
 Three-seed geometry means:
