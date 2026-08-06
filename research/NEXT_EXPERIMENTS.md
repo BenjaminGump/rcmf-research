@@ -117,26 +117,65 @@ Stop condition:
 
 Goal:
 
-- After user and ChatGPT review, transform the complete raw-text teacher cache
-  into a student-training label dataset.
-- Use the task-grouped future split manifest from Milestone 3C.
-- Decide explicitly how to handle over-context rows, states with no valid
-  positive or negative memories, and the fully masked long memory
-  `076f5673-6565-5f20-aada-6f16a0f8d4b0`.
-- Preserve the full-bank/leakage semantics and do not truncate prompts,
-  targets, or raw memories silently.
+- Completed on 2026-08-06 as
+  `/lambda/nfs/rcmf-persist/project/runs/stage_b/student_labels_20260806_002`.
+- The compiler transformed the complete raw-text teacher cache into a
+  Stage-B addressing-label dataset using the task-grouped split manifest.
+- Over-context rows remained missing/masked. The special memory
+  `076f5673-6565-5f20-aada-6f16a0f8d4b0` was kept in the ledger but excluded
+  from Stage B because it had zero valid train labels.
 
 Measure:
 
-- label counts by split, task, state, and memory;
-- target utility distribution after any thresholding or weighting;
-- coverage of positive and negative candidates per state;
-- checks that no task crosses train/validation split.
+- Effective memory bank size: 36.
+- Train labels: 499 states, 16,786 valid rows, 8 all-missing states, 83
+  no-positive states.
+- Validation labels: 139 states, 4,930 valid rows, 0 all-missing states, 24
+  no-positive states.
+- Validation passed with error count 0.
 
 Stop condition:
 
-- Do not start RCMF student training until the label compiler output and policy
-  are reviewed.
+- Met.
+
+## EXP-009 Stage-B Addressing-Only Failure Analysis
+
+Goal:
+
+- Diagnose why the first addressing-only pilot failed the scientific gate even
+  though the tiny overfit test had a live gradient path.
+- Do not move to program-head or injector training until this failure is
+  understood and a reviewed Stage-B repair passes the gate.
+
+Current evidence:
+
+- Artifact:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_b/addressing_only_pilot_20260806_003`.
+- Learned three-seed mean NDCG@4: `0.386161`.
+- Global train-utility baseline NDCG@4: `0.453376`.
+- Shuffled-state NDCG@4: `0.386161`.
+- State-address pairwise cosine mean: `0.996045`.
+- State top-1 basis load fraction: `1.0`.
+- Alpha pairwise cosine mean: `0.997041`.
+- Alpha top-1 basis load fraction: `1.0`.
+- Scientific gate: failed.
+
+Candidate repairs:
+
+- Test a direct supervised state-memory scorer over frozen Qwen hidden vectors
+  as a non-RCMF upper-bound sanity check.
+- Revisit address normalization and top-k/dense behavior under the Stage-B
+  losses.
+- Add an explicitly justified anti-collapse or contrastive term only after
+  confirming the direct scorer can learn held-out-task signal.
+- Rebalance no-positive/off and positive activation losses, because two seeds
+  collapsed to zero read mass and undefined Spearman.
+
+Stop condition:
+
+- A repaired Stage-B model must beat global and rho-only baselines on
+  held-out-task ranking/positive-mass metrics and degrade under shuffled-state
+  evaluation before any Stage C program/injector work begins.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 

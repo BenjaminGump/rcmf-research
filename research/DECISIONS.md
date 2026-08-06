@@ -252,6 +252,57 @@ Follow-up:
   all-missing states, positive/negative coverage, thresholds, and loss weights
   explicitly before any student training.
 
+## 2026-08-06 Stage-B addressing-only pilot
+
+VERIFIED:
+
+- Milestone 4 implemented the Stage-B student-label compiler and
+  addressing-only trainer/evaluator.
+- The trainer computes model applicability with gradients as
+  `q(s, i) = rho_i * dot(b(s), alpha_i)`.
+- The trainer does not use precomputed `utility_scores` as model scores.
+- Program head was frozen and verified unchanged with max absolute delta `0.0`
+  in every pilot seed.
+- The additive-token injector was not constructed.
+- Qwen action loss and AppWorld agent evaluation were not run.
+- The strict inductive memory split excluded all validation-task memories and
+  removed special memory `076f5673-6565-5f20-aada-6f16a0f8d4b0` from the
+  effective Stage-B bank because it had zero valid train labels.
+- The scientific gate failed: learned mean NDCG@4 was `0.386161`, below the
+  global train-utility baseline `0.453376`; shuffled-state NDCG@4 was also
+  `0.386161`.
+
+Decision:
+
+- Stop at Stage B as requested. Do not proceed to program-head, injector, or
+  full RCMF training.
+- Treat the current Stage-B addressing formulation as not yet scientifically
+  validated for held-out-task memory selection.
+- Keep the compiled labels and pilot checkpoints for diagnosis, but do not use
+  them as a green light for Stage C.
+
+Deviation or workaround:
+
+- The first label compiler run completed but exposed avoidable repeated hashing
+  of the 121MB teacher cache. This was fixed by caching source hashes once, and
+  labels were regenerated as `student_labels_20260806_002`.
+- The first pilot summary evaluated the final model rather than the best
+  early-stopped checkpoint. This was fixed and the pilot was regenerated as
+  `addressing_only_pilot_20260806_003`.
+- tmux command wrapping for the final regenerated pilot did not carry the
+  internal command reliably, so the final `_003` run was executed in the
+  foreground with a long timeout and tee'd log. The run completed in about
+  79 seconds. No long-running process remains.
+
+Follow-up:
+
+- Before any Stage C work, analyze why state addresses and alpha collapse
+  naturally under the current losses.
+- Candidate next steps include revisiting the address normalization, adding an
+  explicitly justified anti-collapse or contrastive term, and comparing against
+  a simpler supervised scorer that directly consumes frozen state/memory
+  representations.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:

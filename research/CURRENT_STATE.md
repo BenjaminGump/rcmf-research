@@ -239,6 +239,81 @@ VERIFIED:
   train states, and 139 validation states. No student training was launched.
 - Lambda post-run status: no tmux server running and GPU reported `0 MiB / 0%`.
 
+## Milestone 4 Stage-B Student Labels and Addressing-Only Pilot
+
+VERIFIED:
+
+- Milestone 4 was completed without launching full-bank end-to-end RCMF
+  training, program-head training, additive-token injector training, Qwen action
+  loss, or AppWorld agent evaluation.
+- Final source commit used for the pilot:
+  `9f84b77dfb2e42ef3ec32a51567f376379ee352a`.
+- Stage-B label artifact directory:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_b/student_labels_20260806_002`.
+- Addressing-only pilot artifact directory:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_b/addressing_only_pilot_20260806_003`.
+- Teacher cache source:
+  `/lambda/nfs/rcmf-persist/project/runs/teacher/raw_text_full_cache_20260805_001`,
+  version `raw_text_memory_teacher_full_cache_v1`.
+- The existing task-grouped split manifest was used: seed 13, 37 train tasks
+  with 499 train states, and 9 validation tasks with 139 validation states.
+- Strict inductive memory split was enforced. The Stage-B memory bank contains
+  train-task memories only. Validation-task memories were excluded and never
+  used in training or validation scoring.
+- Special memory `076f5673-6565-5f20-aada-6f16a0f8d4b0` belongs to train task
+  `afc0fce_1`, had zero valid Stage-B train labels, was kept in the ledger
+  with `eligible_for_stage_b=false`, and was removed from the effective
+  addressing bank.
+- Effective Stage-B memory bank size: 36.
+- Excluded memories: 10 total, consisting of 9 validation-task memories and the
+  special zero-valid train memory.
+- Stage-B labels used only `valid_for_loss=true` teacher rows. Over-context
+  rows remained missing/masked and were not converted to zero, neutral, or
+  negative labels.
+- Stage-B label validation passed with error count 0. Missing legal teacher
+  pair count after the own-task masking fix: 0.
+- Label counts:
+  train states 499, valid rows 16,786, positive/neutral/negative
+  8,230/3,067/5,489, strong positive 6,599, strong negative 4,386,
+  no-positive states 83, all-missing states 8.
+- Validation label counts:
+  states 139, valid rows 4,930, positive/neutral/negative
+  2,412/850/1,668, strong positive 1,882, strong negative 1,307,
+  no-positive states 24, all-missing states 0.
+- The 8 all-missing Stage-B training states are late `afc0fce_1` steps 29-36:
+  lines 85-92 in the filtered decision-example JSONL.
+- Threshold coverage was reported for 0.01, 0.05, and 0.10 without selecting
+  thresholds from validation labels.
+- Tiny overfit test on 8 train states improved best validation-as-overfit
+  NDCG@4 to `0.616348`, confirming that gradients can move the addressing
+  path on a tiny subset.
+- Final three-seed addressing-only pilot used real multi-state batches,
+  task-balanced batching, frozen program head, no injector, and no Qwen action
+  loss.
+- Best-checkpoint validation aggregate over seeds 1/2/3:
+  learned NDCG@1/4/8 `0.371993/0.386161/0.413739`;
+  best-memory recall@1/4/8 `0.074341/0.175060/0.256595`;
+  positive mass coverage@1/4/8 `0.050589/0.147272/0.244730`;
+  MRR `0.165514`; positive-vs-negative pairwise accuracy `0.184593`.
+- Baselines on the same validation rows/bank:
+  global train-utility NDCG@4 `0.453376`, rho-only NDCG@4 `0.370048`,
+  frozen-Qwen cosine NDCG@4 `0.366233`, deterministic random NDCG@4
+  `0.366264`.
+- Shuffled validation-state representations matched learned performance:
+  shuffled NDCG@4 `0.386161` and positive mass coverage@4 `0.147272`.
+- Geometry diagnostics show severe natural collapse:
+  state-address pairwise cosine mean `0.996045`, state centered effective rank
+  `2.269852`, state top-1 basis load fraction `1.0`; alpha pairwise cosine
+  mean `0.997041`, alpha centered effective rank `2.427664`, alpha top-1 load
+  fraction `1.0`; mean correct-vs-shuffled score absolute delta `0.000113`.
+- Program head stayed frozen: program-head max absolute delta was `0.0` for all
+  three seeds.
+- Scientific gate failed. The state-conditioned model did not beat the global
+  train-utility baseline on NDCG@4, and shuffled-state performance was not
+  materially worse than correct-state performance.
+- Lambda post-pilot status: no active Stage-B tmux/process and GPU reported
+  `0 MiB / 0%`.
+
 ## INFERENCES
 
 - The semantic-retrieval auxiliary loss improves the fixed first-10 slice but
@@ -263,6 +338,12 @@ VERIFIED:
 - Over-context missingness may matter for student-label construction because
   some late states and one very long memory are entirely unavailable under the
   no-truncation teacher contract.
+- Milestone 4 suggests the current addressing-only objective/model still learns
+  mostly state-insensitive memory ordering. The global utility baseline remains
+  stronger than the learned state-conditioned model on held-out tasks.
+- The tiny overfit result means the implementation has a live gradient path,
+  so the pilot failure is more likely an objective/architecture/generalization
+  issue than a completely disconnected training graph.
 
 ## GitHub Status
 
@@ -283,16 +364,20 @@ VERIFIED:
   model; no student training has been launched with these labels.
 - Whether the new record-level full-bank training improves AppWorld
   performance; no new full training run has started for this iteration.
+- Whether anti-collapse regularization, a different addressing parameterization,
+  or a stronger state-memory contrastive objective can make Stage-B
+  state-conditioned ranking beat global/rho-only baselines.
 
 ## Immediate Workflow Status
 
 - Working branch: `workflow/research-loop`.
 - Latest pushed and Lambda-synced source commit before final records:
-  `80bebb0`.
+  `9f84b77`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
 - Lambda post-cache status: no tmux server running and GPU memory/utilization
   reported `0 MiB / 0%`.
-- Do not launch RCMF student training or a full AppWorld evaluation until the
-  user and ChatGPT review the complete teacher cache.
+- Do not launch program-head training, additive-token injector training,
+  full-bank end-to-end RCMF training, or AppWorld agent evaluation until the
+  user and ChatGPT review the Stage-B addressing-only failure.
