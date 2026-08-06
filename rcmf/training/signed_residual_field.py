@@ -393,7 +393,7 @@ def _precision_recall_curve(scores: list[float], labels: list[float]) -> list[tu
         return []
     tp = 0
     fp = 0
-    points = [(1.0, 0.0)]
+    points = []
     for _, label in pairs:
         if label > 0.5:
             tp += 1
@@ -409,10 +409,10 @@ def _auprc(points: list[tuple[float, float]]) -> float | None:
     if not points:
         return None
     area = 0.0
-    prev_recall, prev_precision = points[0]
-    for recall, precision in points[1:]:
+    prev_recall = 0.0
+    for recall, precision in points:
         area += (recall - prev_recall) * precision
-        prev_recall, prev_precision = recall, precision
+        prev_recall = recall
     return area
 
 
@@ -874,19 +874,27 @@ def summarize_geometry(runs: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 class SignedAssociativeField:
-    def __init__(self, rank: int, program_dim: int, *, device: torch.device | str = "cpu") -> None:
+    def __init__(
+        self,
+        rank: int,
+        program_dim: int,
+        *,
+        device: torch.device | str = "cpu",
+        dtype: torch.dtype = torch.float32,
+    ) -> None:
         self.rank = rank
         self.program_dim = program_dim
         self.device = torch.device(device)
-        self.V = torch.zeros(rank, program_dim, dtype=torch.float32, device=self.device)
-        self.G = torch.zeros(rank, rank, dtype=torch.float32, device=self.device)
+        self.dtype = dtype
+        self.V = torch.zeros(rank, program_dim, dtype=dtype, device=self.device)
+        self.G = torch.zeros(rank, rank, dtype=dtype, device=self.device)
         self.records: dict[str, tuple[Tensor, Tensor]] = {}
 
     def add(self, memory_id: str, key: Tensor, program: Tensor) -> None:
         if memory_id in self.records:
             raise ValueError(f"memory already exists: {memory_id}")
-        key = key.to(device=self.device, dtype=torch.float32)
-        program = program.to(device=self.device, dtype=torch.float32)
+        key = key.to(device=self.device, dtype=self.dtype)
+        program = program.to(device=self.device, dtype=self.dtype)
         self._validate(key, program)
         self.records[memory_id] = (key.clone(), program.clone())
         self.V += torch.outer(key, program)
@@ -912,23 +920,24 @@ class SignedAssociativeField:
 def field_algebra_validation(*, rank: int = 16, program_dim: int = 7, count: int = 9, seed: int = 13) -> dict[str, Any]:
     generator = torch.Generator(device="cpu")
     generator.manual_seed(seed)
-    keys = torch.randn(count, rank, generator=generator)
-    programs = torch.randn(count, program_dim, generator=generator)
-    q = torch.randn(rank, generator=generator)
-    field = SignedAssociativeField(rank, program_dim)
+    dtype = torch.float64
+    keys = torch.randn(count, rank, generator=generator, dtype=dtype)
+    programs = torch.randn(count, program_dim, generator=generator, dtype=dtype)
+    q = torch.randn(rank, generator=generator, dtype=dtype)
+    field = SignedAssociativeField(rank, program_dim, dtype=dtype)
     for index in range(count):
         field.add(f"m{index}", keys[index], programs[index])
     lhs_v = q @ field.V
     rhs_v = ((keys @ q).unsqueeze(1) * programs).sum(dim=0)
     lhs_g = q @ field.G @ q
     rhs_g = (keys @ q).pow(2).sum()
-    one = SignedAssociativeField(rank, program_dim)
+    one = SignedAssociativeField(rank, program_dim, dtype=dtype)
     one.add("x", keys[0], programs[0])
     one.remove("x")
-    replace = SignedAssociativeField(rank, program_dim)
+    replace = SignedAssociativeField(rank, program_dim, dtype=dtype)
     replace.add("x", keys[0], programs[0])
     replace.replace("x", keys[1], programs[1])
-    order = SignedAssociativeField(rank, program_dim)
+    order = SignedAssociativeField(rank, program_dim, dtype=dtype)
     order_ids = list(range(count))
     random.Random(seed).shuffle(order_ids)
     for index in order_ids:
@@ -936,11 +945,16 @@ def field_algebra_validation(*, rank: int = 16, program_dim: int = 7, count: int
     random.Random(seed + 1).shuffle(order_ids)
     for index in order_ids:
         order.remove(f"m{index}")
+    identity_atol = 1.0e-9
+    reversible_atol = 1.0e-10
     return {
         "format": "signed_associative_field_validation_v1",
         "rank": rank,
         "program_dim": program_dim,
         "count": count,
+        "dtype": str(dtype).replace("torch.", ""),
+        "identity_atol": identity_atol,
+        "reversible_atol": reversible_atol,
         "v_identity_max_abs_error": float((lhs_v - rhs_v).abs().max().item()),
         "g_identity_abs_error": float((lhs_g - rhs_g).abs().item()),
         "add_remove_v_norm": float(one.V.norm().item()),
@@ -950,13 +964,13 @@ def field_algebra_validation(*, rank: int = 16, program_dim: int = 7, count: int
         "arbitrary_order_v_norm": float(order.V.norm().item()),
         "arbitrary_order_g_norm": float(order.G.norm().item()),
         "passed": bool(
-            torch.allclose(lhs_v, rhs_v, atol=1.0e-5)
-            and torch.allclose(lhs_g, rhs_g, atol=1.0e-5)
-            and torch.allclose(one.V, torch.zeros_like(one.V), atol=1.0e-6)
-            and torch.allclose(one.G, torch.zeros_like(one.G), atol=1.0e-6)
-            and torch.allclose(replace.V, torch.outer(keys[1], programs[1]), atol=1.0e-6)
-            and torch.allclose(replace.G, torch.outer(keys[1], keys[1]), atol=1.0e-6)
-            and torch.allclose(order.V, torch.zeros_like(order.V), atol=1.0e-5)
-            and torch.allclose(order.G, torch.zeros_like(order.G), atol=1.0e-5)
+            torch.allclose(lhs_v, rhs_v, atol=identity_atol)
+            and torch.allclose(lhs_g, rhs_g, atol=identity_atol)
+            and torch.allclose(one.V, torch.zeros_like(one.V), atol=reversible_atol)
+            and torch.allclose(one.G, torch.zeros_like(one.G), atol=reversible_atol)
+            and torch.allclose(replace.V, torch.outer(keys[1], programs[1]), atol=reversible_atol)
+            and torch.allclose(replace.G, torch.outer(keys[1], keys[1]), atol=reversible_atol)
+            and torch.allclose(order.V, torch.zeros_like(order.V), atol=reversible_atol)
+            and torch.allclose(order.G, torch.zeros_like(order.G), atol=reversible_atol)
         ),
     }
