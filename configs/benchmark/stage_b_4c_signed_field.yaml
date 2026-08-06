@@ -1,0 +1,57 @@
+experiment:
+  name: stage_b_signed_residual_field_4c
+  version: stage_b_signed_residual_field_4c_v1
+  scope:
+    - addressing_residual_utility_only
+    - no_program_head_training
+    - no_injector
+    - no_qwen_action_loss
+    - no_appworld_agent_evaluation
+  source_inputs:
+    teacher_cache_dir: runs/teacher/raw_text_full_cache_20260805_001
+    labels_dir: runs/stage_b/student_labels_20260806_002
+    representation_cache_dir: runs/experiments/appworld_qwen_repr_full_prompt_filtered_no_2a163ab3_20260803_101000/train/representation_cache
+    previous_4b_dir: runs/stage_b/addressing_4b_20260806_002
+  split:
+    continuity_train_tasks: 37
+    continuity_validation_tasks: 9
+    cross_validation_folds: 5
+    fold_seed: 23
+  model:
+    state_tower: Linear_GELU_LayerNorm_Dropout_Linear
+    memory_tower: Linear_GELU_LayerNorm_Dropout_Linear
+    hidden_dim: 256
+    rank_default: 128
+    rank_ablation: 64
+    dropout: 0.05
+    residual: temperature_dot_qk_over_sqrt_rank
+    forbidden_interaction_ops:
+      - softmax
+      - top_k
+      - sparsemax
+      - sigmoid
+      - relu
+      - clamp_min
+      - rho_multiplication
+  training:
+    seeds: [1, 2, 3]
+    epochs: 80
+    cv_epochs: 80
+    batch_size: 64
+    lr: 0.001
+    weight_decay: 0.0001
+    patience: 12
+    prior_epochs: 400
+    losses:
+      huber: 1.0
+      listwise: 0.5
+      pairwise: 0.2
+      gate_bce: 0.2
+      margin: 0.05
+      huber_delta: 0.1
+      hard_negatives: 8
+  gate:
+    target_positive: positive_gain_sum_gt_0
+    target_negative: valid_no_positive_state
+    mask: all_missing_state
+    threshold_selection: train_balanced_accuracy
