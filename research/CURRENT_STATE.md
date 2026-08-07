@@ -548,15 +548,104 @@ VERIFIED:
 - Stage-4C selector preservation passed exactly for all three seeds: max
   absolute errors for q, k, q_bar, k_bar, scores, gate, and temperature were
   all `0.0`.
-- Leave-one-out audit did not support memory-specific behavior: across 16
-  positive validation states, removing the teacher-best memory had mean NLL
-  delta `0.0`, teacher-best-hurts-more fraction `0.0`, and undefined utility
-  versus leave-one-out correlation.
+- Original Stage-C1 leave-one-out audit is superseded and invalid for that
+  metric. It changed `legal_effective_mask`, but `_compute_z()` built
+  validation masks with `validation_full_bank=True`, so the requested memory
+  was never removed. The original zero-effect leave-one-out numbers should not
+  be used.
 - Stage-C1 decision branch:
   `signed_program_channel_not_behaviorally_useful_or_content_not_distinct`.
   Stage-C1 did not pass, and Stage C2 is not allowed.
 - Lambda post-Stage-C1 status: no active tmux server, no matching Python
   process, and GPU reported `0 MiB / 0%`.
+
+## Milestone 5B Corrected Leave-One-Out Diagnostics
+
+VERIFIED:
+
+- Milestone 5B completed with eval/diagnostic work on existing Stage-C1
+  checkpoints only. It did not retrain Stage C1, start Stage C2, fine-tune the
+  selector/program head/injector/Qwen, run AppWorld generation/evaluation, or
+  regenerate the teacher response cache.
+- Source commit:
+  `f998a45e2889802d0ba06dd00757461b1ebf16c5`.
+- Lambda artifact:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c1/stage_c1_5b_diagnostics_20260807_001`.
+- Response cache validation passed again: 638 states, error count 0.
+- Runtime: `5,757.08` seconds, about `1.60` H100 hours.
+- Unit-test coverage for the mask bug passed locally and on Lambda. Local full
+  test suite: `80 passed`. Lambda Stage-C1 tests: `11 passed`.
+- The evaluation API now uses normal validation full-bank semantics by default,
+  but respects an explicit `include_mask_override` for counterfactual audits.
+  Train rows still use their `legal_effective_mask`, preserving own-task
+  exclusion.
+- Corrected three-seed leave-one-out covered all 115 positive-teacher
+  validation states for every seed, 345 state-seed rows total.
+- Corrected teacher-best removal effect: mean `0.002334`, std `0.019899`,
+  median `0.000359`, p95 `0.017029`, max `0.211404`; bootstrap 95% CI for
+  the mean `[0.000444, 0.004588]`.
+- Other corrected removal effects:
+  neutral mean `0.001784` with CI `[0.000353, 0.003362]`;
+  most-negative mean `0.001118` with CI `[-0.000598, 0.002874]`;
+  random-valid mean `0.001864` with CI `[0.000115, 0.003814]`;
+  selector-top mean `0.006578` with CI `[0.002255, 0.012133]`;
+  largest-contribution mean `0.002892` with CI `[-0.002419, 0.008387]`.
+- Teacher-best minus selector-top effect was negative on average:
+  mean `-0.004244`, CI `[-0.008464, -0.000886]`, so the selector-top memory
+  had a larger compiled behavioral effect than the raw-teacher-best memory.
+- Teacher-best selector alignment under the frozen Stage-4C signed selector:
+  Recall@1 `0.113043`, Recall@4 `0.313043`, Recall@8 `0.466667`; rank
+  mean `12.521739`, median `10`, p75 `20`, p95 `32`.
+- Fraction of teacher-best memories receiving a negative signed score:
+  `0.243478`.
+- Raw teacher utility versus signed selector score correlation:
+  Pearson `0.168978`, Spearman `0.271534`.
+- Teacher-best contribution decomposition:
+  fraction of summed contribution norm mean `0.035032`, median `0.032790`;
+  fraction of numerator norm mean `0.043474`, median `0.027019`;
+  contribution-rank mean `15.521739`, median `13`.
+- Across 14,790 valid teacher rows, teacher utility was essentially
+  uncorrelated with analytic `||delta_z_i||`: Pearson `0.002932`, Spearman
+  `0.024077`. Signed score versus `||delta_z_i||` was also weak:
+  Pearson `-0.049890`, Spearman `0.042973`.
+- The 32-positive-state all-memory compiled LOO subset produced 3,456
+  state-seed-memory rows. Compiled effect distribution had mean `0.000672`,
+  std `0.012188`, median `0.000095`, p95 `0.012659`, max `0.198074`.
+- In the all-memory subset, compiled effect did not correlate with raw teacher
+  utility: Pearson `-0.006813`, Spearman `-0.010966`. It also did not
+  correlate meaningfully with signed score or analytic delta-z norm.
+- All-memory subset top-k overlaps were weak: effect top-1 matched raw-teacher
+  utility top-1 in `0.041667` of state-seed cases; top-4 overlap with raw
+  utility top-4 was `0.135417`; top-8 overlap was `0.225260`.
+- Paired content-vs-free-ID statistics over all validation state-seed rows:
+  content minus free-ID target NLL mean `0.007893`, bootstrap 95% CI
+  `[0.000152, 0.015463]`; positive-teacher-only mean `0.009981`, CI
+  `[0.001650, 0.018212]`; baseline/no-positive mean `-0.002111`, CI
+  `[-0.021579, 0.018152]`.
+- Content minus free-ID sparse teacher KL CI included zero overall:
+  mean `0.002110`, CI `[-0.004788, 0.008445]`.
+- Injector scale sweep without retraining:
+  scale `0.0` reproduced bare behavior with no-positive degradation about
+  `0.0` and teacher-best LOO `0.0`;
+  scale `0.25` had target NLL `0.306223`, positive target NLL `0.366575`,
+  no-positive degradation `0.001138`, and teacher-best LOO `0.003694`;
+  scale `0.5` had target NLL `0.226846`, no-positive degradation `0.043378`;
+  scale `1.0` had target NLL `0.196607`, no-positive degradation `0.028565`,
+  and teacher-best LOO `0.002334`.
+- Scale `0.25` was the only diagnostic scale satisfying the script's
+  candidate rule of no-positive degradation <= `0.02` and teacher-best LOO
+  larger than the scale-1.0 mean. It does not preserve most positive-state
+  gain relative to scale 1.0, so it is only a clue, not an approved repair.
+- Aggregate-read diagnosis on a 16-positive-state subset found that the
+  current normalized read had lower target NLL than fixed-denominator,
+  unnormalized matched-scale, top-absolute-contribution-only, and
+  raw-teacher-best-only diagnostics for all three seeds.
+- Milestone 5B decision branch:
+  `selector_teacher_alignment_issue`.
+- Recommendation: repair selector-teacher alignment before another
+  program-channel run. Stage C2 remains disallowed.
+- Lambda post-5B status: no tmux server running and GPU reported
+  `0 MiB / 0%`.
 
 ## INFERENCES
 
@@ -603,9 +692,13 @@ VERIFIED:
   to reduce validation target NLL relative to bare Qwen, but the behavior is
   not yet credible as memory-content compilation: it fails the free-ID
   comparison, no-positive preservation, and behavioral leave-one-out checks.
-- The zero leave-one-out effects suggest the current normalized aggregate
-  read/injector path may be dominated by broad state/control behavior rather
-  than the specific teacher-best memory program.
+- Corrected Stage-C1 leave-one-out effects are nonzero but very small. The
+  stronger issue is now selector-teacher mismatch: the raw-teacher-best memory
+  often receives low signed-selector rank, and the selector-top memory has
+  larger compiled behavioral effect than the raw-teacher-best memory.
+- The Stage-C1 program/injector path still does not demonstrate memory-content
+  causality, because compiled all-memory effects barely correlate with raw
+  teacher utility.
 
 ## GitHub Status
 
@@ -629,8 +722,8 @@ VERIFIED:
 - Whether anti-collapse regularization, a different addressing parameterization,
   or a stronger state-memory contrastive objective can make Stage-B
   state-conditioned ranking beat global/rho-only baselines.
-- Whether a redesigned Stage-C program objective can make memory-specific
-  leave-one-out effects track teacher utility.
+- Whether a selector repaired against raw-teacher-best utility can make
+  memory-specific leave-one-out effects track teacher utility.
 - Whether an additive-token injector can use a signed-program memory field
   without degrading Qwen generated AppWorld action trajectories; Stage C1 used
   teacher-forced scoring only and no AppWorld generation/evaluation.
@@ -638,13 +731,13 @@ VERIFIED:
 ## Immediate Workflow Status
 
 - Working branch: `workflow/research-loop`.
-- Latest Lambda-synced Stage-C1 evaluation source commit before final records:
-  `9f16010`.
+- Latest Lambda-synced Stage-C1 5B diagnostic source commit before final
+  records: `f998a45`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
-- Lambda post-Stage-C1 status: no tmux server running and GPU memory/utilization
+- Lambda post-5B status: no tmux server running and GPU memory/utilization
   reported `0 MiB / 0%`.
 - Do not launch Stage C2, joint selector/program/injector training, Qwen action
   loss, full-bank end-to-end RCMF training, or AppWorld agent evaluation until
-  the user and ChatGPT review the Stage-C1 failure evidence.
+  the user and ChatGPT review the Stage-C1 5B selector-alignment diagnosis.

@@ -250,8 +250,9 @@ Evidence:
 - Program centered effective rank was `10.774106/1.763191`; z centered
   effective rank was `3.572149/0.234162`.
 - No-positive validation degradation was `0.028565`, above the allowed `0.02`.
-- Leave-one-out audit showed teacher-best removal delta `0.0` for all 16
-  audited positive states.
+- The original leave-one-out audit is invalid for that metric and has been
+  superseded by EXP-012. It failed to remove the audited validation memory
+  because `validation_full_bank=True` rebuilt an all-true include mask.
 
 Stop condition:
 
@@ -265,31 +266,65 @@ Stop condition:
 
 Goal:
 
-- Explain why Stage C1 lowers teacher-forced target NLL while failing
-  memory-content compilation controls.
-- Determine whether the issue is the normalized aggregate field read, the
-  additive-token injector, insufficient per-memory behavioral supervision, or
-  a state-control shortcut.
+- Completed on 2026-08-07 as
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c1/stage_c1_5b_diagnostics_20260807_001`.
+- Correct the Stage-C1 leave-one-out mask bug and diagnose memory-specific
+  causality using existing Stage-C1 checkpoints only.
 
-Candidates:
+Evidence:
 
-- Quantify per-memory score contributions and z changes before/after removing
-  teacher-best, neutral, and negative memories.
-- Compare content-derived and free-ID programs at equal capacity on per-state
-  residuals, not only aggregate NLL.
-- Add an explicitly supervised leave-one-out or teacher-delta objective before
-  retrying any full behavioral distillation.
-- Reduce injector dominance and check whether no-positive preservation improves
-  without losing positive-state gains.
-- Audit whether the large trained delta ratio, roughly `7.34` to `8.14`,
-  overwhelms memory-specific differences.
+- Source commit: `f998a45`.
+- Response cache revalidation passed: 638 states, 0 errors.
+- Runtime: `5,757.08` seconds, about `1.60` H100 hours.
+- The old Stage-C1 leave-one-out metric is invalid because validation full-bank
+  mask construction ignored the mutated `legal_effective_mask`.
+- Corrected teacher-best LOO effect over 115 positive validation states and
+  three seeds: mean `0.002334`, CI `[0.000444, 0.004588]`.
+- Selector alignment for raw-teacher-best memories was weak:
+  Recall@1/4/8 `0.113043/0.313043/0.466667`, median rank `10`, p75 rank `20`,
+  and negative signed-score fraction `0.243478`.
+- Teacher-best contribution was small: mean `3.50%` of summed contribution
+  norm, median contribution rank `13`.
+- In the 32-state all-memory compiled LOO subset, compiled effect versus raw
+  teacher utility had Pearson `-0.006813` and Spearman `-0.010966`.
+- Content minus free-ID target NLL was statistically positive overall:
+  CI `[0.000152, 0.015463]`, meaning free-ID was lower NLL on average; the
+  sparse-KL CI included zero.
+- Injector scale `0.25` fixed no-positive degradation but gave much worse
+  target NLL than scale `1.0`; it is not enough by itself.
 
 Stop condition:
 
-- Produce a diagnosis and a reviewed repair proposal. Do not start AppWorld
-  agent evaluation or Stage C2 until a repaired Stage-C pilot passes
-  no-positive preservation, memory-specific leave-one-out, and content-derived
-  versus free-ID/random/shuffled controls.
+- Met. Decision branch: `selector_teacher_alignment_issue`.
+- Do not start AppWorld agent evaluation or Stage C2.
+
+## EXP-013 Selector-Teacher Alignment Repair
+
+Goal:
+
+- Repair the mismatch between the Stage-4C signed selector and the raw-text
+  teacher-best utility labels before another program-channel run.
+- Make the selected/high-score memory set more likely to contain the
+  raw-teacher-best memory or high-utility memories under the strict inductive
+  memory split.
+
+Candidates:
+
+- Add a teacher-best or top-utility contrastive/ranking term to Stage-B signed
+  selector training.
+- Train the signed selector on the full utility vector but evaluate explicit
+  teacher-best Recall@1/4/8 and utility mass coverage, not only NDCG.
+- Penalize negative signed scores for strong positive raw-teacher memories.
+- Re-run the Milestone 5B selector-alignment and corrected LOO diagnostics
+  before any new Stage-C1 training.
+- Keep the injector-scale observation as secondary: scale `0.25` may guide a
+  future restrained-injector pilot only after selector alignment improves.
+
+Stop condition:
+
+- Do not proceed to Stage C2 until a repaired selector improves teacher-best
+  Recall@8 materially over `0.466667`, improves utility/effect correlations,
+  and preserves Stage-4C held-out ranking gains.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 

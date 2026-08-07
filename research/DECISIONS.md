@@ -473,6 +473,75 @@ Follow-up:
 - Consider a Stage-C repair that explicitly supervises per-memory behavioral
   differences or leave-one-out effects before any AppWorld generation run.
 
+## 2026-08-07 Milestone 5B corrected Stage-C1 leave-one-out diagnostics
+
+VERIFIED:
+
+- The old Stage-C1 leave-one-out audit was invalid. `_leave_one_out_audit()`
+  changed `legal_effective_mask[remove_index] = False`, but `_compute_z()`
+  called `build_include_mask(..., validation_full_bank=True)`, which replaced
+  every validation-row mask with all true.
+- Therefore the old audited memory was never actually removed, and the old
+  zero-effect leave-one-out result is superseded.
+- Commit `f998a45` added explicit `include_mask_override` support. Normal
+  validation still uses the full 36-memory effective train bank; counterfactual
+  validation must now supply an explicit override; train rows still honor their
+  legal mask.
+- Unit tests prove that validation defaults to all effective memories, explicit
+  counterfactual masks zero the removed memory score, z matches an explicit
+  field recomputation, removing/restoring a nonzero memory changes/restores z,
+  and train-time exclusion semantics are unchanged.
+- Milestone 5B reran diagnostics from existing checkpoints only. It did not
+  retrain Stage C1, start Stage C2, fine-tune any module, run AppWorld
+  generation/evaluation, or regenerate the teacher response cache.
+- Corrected teacher-best leave-one-out effect was nonzero but small: mean
+  `0.002334`, CI `[0.000444, 0.004588]` over 345 state-seed rows.
+- Teacher-best was poorly aligned with the Stage-4C selector: Recall@1/4/8 was
+  `0.113043/0.313043/0.466667`, median rank was `10`, and `24.35%` of
+  teacher-best memories received negative signed score.
+- Teacher-best contribution was small: mean `3.50%` of summed contribution
+  norm, contribution-rank median `13`.
+- Compiled all-memory leave-one-out effects on the 32-state subset did not
+  correlate with raw teacher utility: Pearson `-0.006813`, Spearman
+  `-0.010966`.
+- Content-derived programs were statistically worse than free-ID programs on
+  target NLL overall and on positive-teacher states: all-state content-freeID
+  CI `[0.000152, 0.015463]`; positive-state CI `[0.001650, 0.018212]`.
+- Free-ID was not clearly better on no-positive states, whose content-freeID CI
+  included zero.
+- Injector scale `0.25` reduced no-positive degradation below `0.02` and had a
+  slightly larger teacher-best LOO effect than scale `1.0`, but target NLL was
+  much worse than scale `1.0`; this is diagnostic only.
+
+Decision:
+
+- Retract only the specific Stage-C1 claim that corrected teacher-best LOO was
+  exactly zero. The corrected effect is nonzero but too small to establish
+  memory-content causality.
+- Keep the broader Stage-C1 scientific gate as failed.
+- Use decision branch `selector_teacher_alignment_issue`.
+- Do not start Stage C2 or another full-bank program-channel run before
+  repairing selector-teacher alignment.
+- Treat a restrained-injector rerun as a secondary hypothesis, because scale
+  `0.25` improves no-positive preservation but loses much of the positive-state
+  gain and does not solve teacher-utility correlation.
+
+Deviation or workaround:
+
+- None from the Milestone 5B hard scope. The teacher response cache was only
+  revalidated, not regenerated. All diagnostics used existing checkpoints.
+
+Follow-up:
+
+- Repair Stage-B/selector supervision so the selected memory set better matches
+  raw-teacher-best utility, or add a teacher-best-aware selection objective.
+- After selector-teacher alignment improves, rerun a small Stage-C1 diagnostic
+  with explicit pair-level or single-memory behavioral distillation and a
+  restrained injector.
+- Continue to block AppWorld generation/evaluation until a repaired Stage-C
+  pilot shows memory-specific leave-one-out effects that correlate with teacher
+  utility.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:
