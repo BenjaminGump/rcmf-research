@@ -8,6 +8,7 @@ from rcmf.training.stage_c1 import (
     StageC1ProgramField,
     augmented_queries_keys,
     explicit_field_read,
+    resolve_include_mask,
     select_teacher_conditions,
     sparse_bucket_kl,
     sparse_teacher_kl_from_logits,
@@ -222,3 +223,90 @@ def test_compute_z_uses_full_eval_state_override_for_single_row_shuffle() -> Non
     )
 
     assert torch.allclose(z, torch.tensor([[2.0, 3.0]]))
+
+
+def test_counterfactual_include_mask_overrides_validation_full_bank() -> None:
+    row = {
+        "state_index": 0,
+        "split": "validation",
+        "ordered_effective_memory_ids": ["m0", "m1", "m2"],
+        "legal_effective_mask": [True, False, True],
+    }
+    selector_payload = {
+        "q_bar": torch.tensor([[1.0, 0.5, 1.0]], dtype=torch.float32),
+        "gate": torch.ones(1),
+        "k_bar": torch.tensor(
+            [
+                [1.0, 0.0, 0.0],
+                [0.0, 2.0, 0.0],
+                [1.0, 1.0, 0.0],
+            ],
+            dtype=torch.float32,
+        ),
+    }
+    programs = torch.tensor([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]], dtype=torch.float32)
+    field = StageC1ProgramField(memory_dim=4, rank=2, program_dim=2)
+
+    full_mask = resolve_include_mask([row], validation_full_bank=True)
+    assert full_mask.tolist() == [[True, True, True]]
+    full_z, full_meta = _compute_z(
+        field=field,
+        selector_payload=selector_payload,
+        rows=[row],
+        memory_representations=torch.zeros(3, 4),
+        control="correct",
+        seed=1,
+        device=torch.device("cpu"),
+        trained_programs=programs,
+    )
+
+    removed_mask = torch.tensor([[True, False, True]])
+    removed_z, removed_meta = _compute_z(
+        field=field,
+        selector_payload=selector_payload,
+        rows=[row],
+        memory_representations=torch.zeros(3, 4),
+        control="correct",
+        seed=1,
+        device=torch.device("cpu"),
+        trained_programs=programs,
+        include_mask_override=removed_mask,
+    )
+    explicit_removed = explicit_field_read(
+        selector_payload["q_bar"],
+        selector_payload["k_bar"],
+        programs,
+        selector_payload["gate"],
+        include_mask=removed_mask,
+    )
+
+    assert float(removed_meta["scores"][0, 1]) == 0.0
+    assert torch.allclose(removed_z, explicit_removed)
+    assert not torch.allclose(full_z, removed_z)
+    assert float(full_meta["scores"][0, 1]) != 0.0
+
+    restored_z, _ = _compute_z(
+        field=field,
+        selector_payload=selector_payload,
+        rows=[row],
+        memory_representations=torch.zeros(3, 4),
+        control="correct",
+        seed=1,
+        device=torch.device("cpu"),
+        trained_programs=programs,
+        include_mask_override=full_mask,
+    )
+    assert torch.allclose(restored_z, full_z)
+
+
+def test_train_rows_keep_own_task_exclusion_under_default_include_mask() -> None:
+    row = {
+        "state_index": 0,
+        "split": "train",
+        "ordered_effective_memory_ids": ["m0", "m1", "m2"],
+        "legal_effective_mask": [True, False, True],
+    }
+
+    mask = resolve_include_mask([row], validation_full_bank=True)
+
+    assert mask.tolist() == [[True, False, True]]

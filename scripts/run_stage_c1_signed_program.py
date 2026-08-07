@@ -45,6 +45,7 @@ from rcmf.training.stage_c1 import (
     select_teacher_conditions,
     sparse_teacher_kl_from_logits,
     split_rows,
+    resolve_include_mask,
     stage_c1_decision,
     summarize_runs,
     summarize_state_nll_rows,
@@ -250,6 +251,7 @@ def _compute_z(
     seed: int,
     device: torch.device,
     trained_programs: Tensor | None = None,
+    include_mask_override: Tensor | Sequence[Sequence[bool]] | None = None,
 ) -> tuple[Tensor, dict[str, Any]]:
     if control == "shuffled_state" and any("_state_index_override" not in row for row in rows):
         raise ValueError("shuffled_state control requires precomputed full-evaluation state-index overrides")
@@ -282,7 +284,11 @@ def _compute_z(
         seed=seed,
         trained_programs=trained_programs,
     )
-    include_mask = build_include_mask(rows, validation_full_bank=True).to(device)
+    include_mask = resolve_include_mask(
+        rows,
+        validation_full_bank=True,
+        include_mask_override=include_mask_override,
+    ).to(device)
     if control == "global_prior_only":
         mu = k_bar[:, -1].view(1, -1).expand(len(rows), -1)
         scores = mu * include_mask.to(torch.float32)
@@ -333,6 +339,7 @@ def _forward_student(
     injector: AdditiveTokenMemoryInjector,
     batch: dict[str, Any],
     memory_z: Tensor,
+    delta_multiplier: float = 1.0,
 ) -> dict[str, Any]:
     model = backend.model
     input_ids = batch["input_ids"]
@@ -348,7 +355,12 @@ def _forward_student(
     )
     token_embeds = model.get_input_embeddings()(input_ids)
     delta = prepared.inputs["inputs_embeds"] - token_embeds
-    model_inputs = dict(prepared.inputs)
+    if float(delta_multiplier) != 1.0:
+        model_inputs = dict(prepared.inputs)
+        model_inputs["inputs_embeds"] = token_embeds + delta.to(dtype=token_embeds.dtype) * float(delta_multiplier)
+        delta = model_inputs["inputs_embeds"] - token_embeds
+    else:
+        model_inputs = dict(prepared.inputs)
     labels_for_loss = model_inputs.pop("labels")
     loss, target_logits = backend._target_only_loss_from_hidden(  # noqa: SLF001
         model_inputs=model_inputs,
@@ -508,6 +520,8 @@ def evaluate_student(
     batch_size: int,
     control: str = "correct",
     trained_programs: Tensor | None = None,
+    include_mask_override: Tensor | Sequence[Sequence[bool]] | None = None,
+    delta_multiplier: float = 1.0,
 ) -> dict[str, Any]:
     field.eval()
     injector.eval()
@@ -522,9 +536,17 @@ def evaluate_student(
     delta_norms = []
     delta_ratios = []
     selected_token_report = None
+    override_tensor = None
+    if include_mask_override is not None:
+        override_tensor = resolve_include_mask(
+            eval_rows,
+            validation_full_bank=True,
+            include_mask_override=include_mask_override,
+        )
     with torch.no_grad():
         for start in range(0, len(eval_rows), batch_size):
             batch_rows = list(eval_rows[start : start + batch_size])
+            batch_override = override_tensor[start : start + len(batch_rows)] if override_tensor is not None else None
             batch = _collate(batch_rows, device=device)
             z, read_meta = _compute_z(
                 field=field,
@@ -535,8 +557,15 @@ def evaluate_student(
                 seed=seed,
                 device=device,
                 trained_programs=trained_programs,
+                include_mask_override=batch_override,
             )
-            student = _forward_student(backend=backend, injector=injector, batch=batch, memory_z=z)
+            student = _forward_student(
+                backend=backend,
+                injector=injector,
+                batch=batch,
+                memory_z=z,
+                delta_multiplier=delta_multiplier,
+            )
             teacher_kl, _ = sparse_teacher_kl_from_logits(
                 student["target_logits"],
                 batch["response_rows"],
@@ -1203,21 +1232,20 @@ def _leave_one_out_audit(
             "removals": {},
         }
         for name, remove_index in removals.items():
-            altered = copy.deepcopy(row)
-            legal = list(altered["legal_effective_mask"])
-            legal[remove_index] = False
-            altered["legal_effective_mask"] = legal
+            include_mask = resolve_include_mask([row], validation_full_bank=True)
+            include_mask[0, int(remove_index)] = False
             payload = evaluate_student(
                 backend=backend,
                 field=field,
                 injector=injector,
                 selector_payload=selector_payload,
-                rows=[altered],
+                rows=[row],
                 memory_representations=memory_representations,
                 device=device,
                 seed=seed,
                 batch_size=1,
                 trained_programs=programs,
+                include_mask_override=include_mask,
             )
             nll = payload["rows"][0]["student_target_nll"]
             delta = float(nll) - float(row_effect["full_nll"])

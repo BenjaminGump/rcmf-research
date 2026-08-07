@@ -442,6 +442,21 @@ def build_include_mask(rows: Sequence[dict[str, Any]], *, validation_full_bank: 
     return torch.tensor(masks, dtype=torch.bool)
 
 
+def resolve_include_mask(
+    rows: Sequence[dict[str, Any]],
+    *,
+    validation_full_bank: bool = True,
+    include_mask_override: Tensor | Sequence[Sequence[bool]] | None = None,
+) -> Tensor:
+    if include_mask_override is None:
+        return build_include_mask(rows, validation_full_bank=validation_full_bank)
+    mask = torch.as_tensor(include_mask_override, dtype=torch.bool)
+    expected_shape = (len(rows), len(rows[0]["ordered_effective_memory_ids"]) if rows else 0)
+    if tuple(mask.shape) != expected_shape:
+        raise ValueError(f"include_mask_override shape {tuple(mask.shape)} != expected {expected_shape}")
+    return mask
+
+
 def prepare_selector_payload(
     *,
     selector: SignedResidualField,
