@@ -302,29 +302,76 @@ Stop condition:
 
 Goal:
 
-- Repair the mismatch between the Stage-4C signed selector and the raw-text
+- Completed on 2026-08-07 as
+  `/lambda/nfs/rcmf-persist/project/runs/stage_b/selector_repair_5c_20260807_001`.
+- Repair the mismatch between the Stage-4C signed selector and raw-text
   teacher-best utility labels before another program-channel run.
-- Make the selected/high-score memory set more likely to contain the
-  raw-teacher-best memory or high-utility memories under the strict inductive
-  memory split.
 
-Candidates:
+Evidence:
 
-- Add a teacher-best or top-utility contrastive/ranking term to Stage-B signed
-  selector training.
-- Train the signed selector on the full utility vector but evaluate explicit
-  teacher-best Recall@1/4/8 and utility mass coverage, not only NDCG.
-- Penalize negative signed scores for strong positive raw-teacher memories.
-- Re-run the Milestone 5B selector-alignment and corrected LOO diagnostics
-  before any new Stage-C1 training.
-- Keep the injector-scale observation as secondary: scale `0.25` may guide a
-  future restrained-injector pilot only after selector alignment improves.
+- Source commit: `5e5c74c`.
+- The ablation set included reproduced Stage-4C original loss, all-pair gap
+  ranking, top-listwise utility distillation, sign calibration, and near-best
+  multi-positive variants.
+- CV selected `C_top_listwise_temp0p03`.
+- 5-fold CV selected-config metrics:
+  Recall@4 `0.387077`, Recall@8 `0.616991`, NDCG@4 improvement over global
+  prior `0.083399`, correct-minus-shuffled NDCG@4 `0.131188`,
+  utility-score Spearman `0.119677`, teacher-best negative-score fraction
+  `0.203096`.
+- Continuity-set metrics:
+  Recall@1/2/4/8 `0.179710/0.266667/0.359420/0.582609`, median rank `7`,
+  negative-score fraction `0.176812`, Spearman `0.174524`, NDCG@4 `0.581587`,
+  correct-minus-shuffled NDCG@4 `0.206391`.
+- Geometry did not collapse: interaction variance `1.506124`, q effective rank
+  `36.530959`, k effective rank `17.653024`.
+- Eval-only old Stage-C1 projection:
+  teacher-best LOO effect mean `0.010726`, selector-top LOO effect mean
+  `0.027432`, raw utility versus analytic delta-z Spearman `0.047117`.
 
 Stop condition:
 
-- Do not proceed to Stage C2 until a repaired selector improves teacher-best
-  Recall@8 materially over `0.466667`, improves utility/effect correlations,
-  and preserves Stage-4C held-out ranking gains.
+- Met. The selector was not repaired enough to unlock Stage C.
+- Decision branch: `selector_capacity_or_representation_tradeoff`.
+- Do not proceed to Stage C2 or a repeated full-bank Stage-C1 run.
+
+## EXP-014 Pair-Level / Single-Memory Behavioral Grounding
+
+Goal:
+
+- Before another full-bank Stage-C1 run, directly supervise the behavioral
+  effect of individual memories so the program/injector path learns
+  memory-specific causality rather than a distributed state-control shortcut.
+
+Candidates:
+
+- Build a pair-level response-distillation cache for selected `(state, memory)`
+  pairs rather than only state-level best-memory targets.
+- Train or diagnose a single-memory program read where `z` is produced from
+  one selected memory at a time, then measure whether removing that same memory
+  predictably changes target NLL.
+- Compare raw-teacher-best memory, selector-top memory, and matched
+  neutral/negative controls with teacher-forced target scoring.
+- Use a restrained injector scale or explicit delta-norm regularization only
+  after the pair-level memory-specific effect is visible.
+- Keep the signed selector frozen or use a separately reviewed selector repair;
+  do not combine selector retraining with program/injector training in the
+  first repair.
+
+Required evidence:
+
+- Correct memory removal should hurt more than matched controls on a majority
+  of positive states.
+- Compiled leave-one-out effects should correlate with raw teacher utility or
+  pair-level teacher improvement.
+- No-positive states should remain within `0.02` target NLL of bare Qwen.
+- Content-derived programs should beat shuffled/random/free-ID controls on
+  paired target NLL or sparse teacher KL, not only beat zero program.
+
+Stop condition:
+
+- Stop before Stage C2 unless pair-level/single-memory grounding shows
+  memory-specific behavioral effects that survive held-out-task validation.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 

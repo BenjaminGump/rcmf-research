@@ -647,6 +647,76 @@ VERIFIED:
 - Lambda post-5B status: no tmux server running and GPU reported
   `0 MiB / 0%`.
 
+## Milestone 5C / EXP-013 raw-teacher top-utility selector repair
+
+VERIFIED:
+
+- Milestone 5C completed on Lambda as selector-only Stage-B retraining plus
+  eval-only old Stage-C1 projection. It did not train Stage-C program heads,
+  train the additive-token injector, use Stage-C1 behavioral checkpoints as
+  training targets, fine-tune Qwen, run Qwen forward passes during selector
+  training, run AppWorld generation/evaluation, start Stage C2, or start
+  end-to-end RCMF training.
+- Source commit:
+  `5e5c74c43b43dff9a8c2f3d5a054917849b33e29`.
+- Lambda artifact:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_b/selector_repair_5c_20260807_001`.
+- Runtime: `3,687.92` seconds, about `1.02` H100 hours.
+- Tests passed before the run: local full suite `84 passed`; Lambda targeted
+  tests `15 passed`.
+- The fixed ablation set was:
+  `A_stage4c_original`, `B_gap_all_pairs_gap0p02`,
+  `B_gap_all_pairs_gap0p05`, `B_gap_all_pairs_gap0p10`,
+  `C_top_listwise_temp0p03`, `C_top_listwise_temp0p05`,
+  `C_top_listwise_temp0p10`, `D_gap_top_sign`, and
+  `E_gap_top_sign_nearbest`.
+- The 5-fold CV selected `C_top_listwise_temp0p03`, but the CV scientific gate
+  did not pass.
+- CV selected-config metrics:
+  Recall@4 `0.387077`, Recall@8 `0.616991`, NDCG@4 `0.523613`,
+  NDCG@4 improvement over fold global prior `0.083399`,
+  correct-minus-shuffled NDCG@4 `0.131188`, utility-score Spearman
+  `0.119677`, teacher-best negative-score fraction `0.203096`, and
+  interaction variance `1.526715`.
+- The selected config improved Recall@8 materially over the reproduced
+  Stage-4C original-loss baseline in CV, but failed the CV gate because
+  Recall@4 was below `0.40`, utility-score Spearman did not improve over the
+  Stage-4C original baseline, and the teacher-best negative-score fraction
+  remained high.
+- Continuity-set metrics on the original 9 validation tasks:
+  Recall@1/2/4/8 `0.179710/0.266667/0.359420/0.582609`;
+  median/p75/p95 teacher-best rank `7/14/30`;
+  teacher-best negative-score fraction `0.176812`;
+  strong-positive negative-score fraction `0.407899`;
+  utility-score Spearman `0.174524`;
+  NDCG@4 `0.581587`;
+  correct-minus-shuffled NDCG@4 `0.206391`.
+- The continuity scientific gate did not pass. It missed the required
+  Recall@8 `0.62`, Recall@4 `0.43`, median rank `<= 6`,
+  negative-score fraction `<= 0.12`, and Spearman `>= 0.35`, while satisfying
+  the NDCG@4 and state-dependence thresholds.
+- Geometry did not collapse: interaction variance `1.506124`,
+  q centered effective rank `36.530959`, k centered effective rank
+  `17.653024`, and correct-vs-shuffled valid interaction delta `1.276319`.
+- Eval-only Stage-C1 projection used the old content program/injector
+  checkpoints with only the selector payload replaced. It covered all 115
+  positive-teacher validation states for seeds 1, 2, and 3, 345 rows total.
+- Projection results:
+  teacher-best signed-score rank median `7`, mean `10.069565`;
+  teacher-best contribution rank median `10`, mean `12.576812`;
+  teacher-best LOO effect mean `0.010726`, CI `[0.003277, 0.019094]`;
+  selector-top LOO effect mean `0.027432`, CI `[0.017361, 0.039065]`;
+  teacher-best minus selector-top LOO mean `-0.016706`.
+- Projection raw utility versus analytic delta-z norm remained weak:
+  Pearson `0.062450`, Spearman `0.047117`.
+- Milestone 5C decision branch:
+  `selector_capacity_or_representation_tradeoff`.
+- Stage C remains unrepaired. The next program milestone must use explicit
+  pair-level or single-memory behavioral grounding rather than immediately
+  repeating the original full-field Stage-C1 training.
+- Lambda post-5C status: no tmux server running and GPU reported
+  `0 MiB / 0%`.
+
 ## INFERENCES
 
 - The semantic-retrieval auxiliary loss improves the fixed first-10 slice but
@@ -699,6 +769,10 @@ VERIFIED:
 - The Stage-C1 program/injector path still does not demonstrate memory-content
   causality, because compiled all-memory effects barely correlate with raw
   teacher utility.
+- Milestone 5C shows that top-utility listwise selector repair can improve
+  teacher-best Recall@8 and preserve state-dependent NDCG, but this alone does
+  not solve raw-utility alignment: Recall@4, signed-score calibration,
+  utility-score Spearman, and projection causality remain insufficient.
 
 ## GitHub Status
 
@@ -723,7 +797,8 @@ VERIFIED:
   or a stronger state-memory contrastive objective can make Stage-B
   state-conditioned ranking beat global/rho-only baselines.
 - Whether a selector repaired against raw-teacher-best utility can make
-  memory-specific leave-one-out effects track teacher utility.
+  memory-specific leave-one-out effects track teacher utility; Milestone 5C
+  improved LOO magnitude but still showed weak utility/effect correlation.
 - Whether an additive-token injector can use a signed-program memory field
   without degrading Qwen generated AppWorld action trajectories; Stage C1 used
   teacher-forced scoring only and no AppWorld generation/evaluation.
@@ -731,13 +806,14 @@ VERIFIED:
 ## Immediate Workflow Status
 
 - Working branch: `workflow/research-loop`.
-- Latest Lambda-synced Stage-C1 5B diagnostic source commit before final
-  records: `f998a45`.
+- Latest Lambda-synced Stage-B 5C selector-repair source commit before final
+  records: `5e5c74c`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
-- Lambda post-5B status: no tmux server running and GPU memory/utilization
+- Lambda post-5C status: no tmux server running and GPU memory/utilization
   reported `0 MiB / 0%`.
 - Do not launch Stage C2, joint selector/program/injector training, Qwen action
   loss, full-bank end-to-end RCMF training, or AppWorld agent evaluation until
-  the user and ChatGPT review the Stage-C1 5B selector-alignment diagnosis.
+  the user and ChatGPT review the Stage-B 5C selector-repair failure and choose
+  the next repair.

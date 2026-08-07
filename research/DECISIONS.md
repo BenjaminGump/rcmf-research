@@ -542,6 +542,78 @@ Follow-up:
   pilot shows memory-specific leave-one-out effects that correlate with teacher
   utility.
 
+## 2026-08-07 Milestone 5C raw-teacher top-utility selector repair
+
+VERIFIED:
+
+- Milestone 5C retrained and diagnosed only the signed Stage-B selector.
+  Qwen forward passes were not used during selector training. Stage-C program
+  heads and the additive-token injector were not trained. AppWorld
+  generation/evaluation, Stage C2, and end-to-end RCMF training were not run.
+- The fixed CV ablation set contained the reproduced Stage-4C original loss,
+  three all-pair gap thresholds, three top-listwise temperatures, a
+  gap+top+sign-calibration variant, and a gap+top+sign+near-best variant.
+- Hyperparameter/model selection used deterministic 5-fold task-grouped CV
+  over the 37 training tasks only. The original 9-task validation split was
+  used only after selecting the configuration.
+- The selected configuration was `C_top_listwise_temp0p03`.
+- CV selected-config metrics were Recall@4 `0.387077`, Recall@8 `0.616991`,
+  NDCG@4 improvement over fold global prior `0.083399`,
+  correct-minus-shuffled NDCG@4 `0.131188`, utility-score Spearman
+  `0.119677`, and teacher-best negative-score fraction `0.203096`.
+- The selected config did not pass the CV gate. It improved top-8 alignment
+  and retained state-dependent NDCG, but it did not satisfy Recall@4 or
+  utility-score Spearman requirements.
+- On the original 9-task continuity split, the selected config had
+  Recall@1/2/4/8 `0.179710/0.266667/0.359420/0.582609`, median teacher-best
+  rank `7`, negative-score fraction `0.176812`, utility-score Spearman
+  `0.174524`, NDCG@4 `0.581587`, and correct-minus-shuffled NDCG@4
+  `0.206391`.
+- The continuity gate did not pass. NDCG and state-dependence improved, but
+  top-utility alignment and signed-score calibration remained insufficient.
+- Geometry did not collapse: interaction variance `1.506124`, q effective rank
+  `36.530959`, and k effective rank `17.653024`.
+- Eval-only Stage-C1 projection replaced only the selector payload while using
+  existing Stage-C1 content program/injector checkpoints. It did not retrain
+  Stage C.
+- Projection found teacher-best LOO mean `0.010726` with CI
+  `[0.003277, 0.019094]`, but selector-top LOO remained larger at mean
+  `0.027432` with CI `[0.017361, 0.039065]`.
+- Raw utility versus analytic delta-z norm in the projection remained weak:
+  Spearman `0.047117`.
+
+Decision:
+
+- Use decision branch `selector_capacity_or_representation_tradeoff`.
+- Do not claim `selector_teacher_alignment_repaired`.
+- Do not start Stage C2 or another full-field Stage-C1 retraining run from
+  this selector.
+- Retain the empirical result that top-listwise supervision is useful for
+  Recall@8 and NDCG, but insufficient for calibrated raw-teacher-best
+  alignment.
+- The next program milestone must use explicit pair-level or single-memory
+  behavioral grounding before any repeated full-bank Stage-C1 training.
+
+Deviation or workaround:
+
+- The tmux log ended with `EXIT:True` because the local PowerShell command
+  expanded `$?` before SSH in the logging wrapper. The run itself completed
+  normally and wrote a valid `summary.json`; no traceback or Python exception
+  appeared in the log.
+- The eval-only Stage-C1 projection is allowed only as the explicit Milestone
+  5C diagnostic projection. It is not treated as Stage-C training or a repaired
+  Stage-C result.
+
+Follow-up:
+
+- Diagnose why top-listwise improves Recall@8 but not Spearman or negative
+  signed-score calibration. Candidate directions include calibrated score
+  margins, listwise temperature/scale normalization, and training directly on
+  teacher-best/near-best set probability without sacrificing NDCG.
+- Design the next Stage-C repair around pair-level or single-memory behavioral
+  distillation so memory-specific effects are supervised before full-bank
+  aggregation.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:
