@@ -614,6 +614,68 @@ Follow-up:
   distillation so memory-specific effects are supervised before full-bank
   aggregation.
 
+## 2026-08-08 Milestone 5D pair-level / single-memory grounding
+
+VERIFIED:
+
+- Milestone 5D built and validated a pair-level response cache and trained
+  single-memory program/injector diagnostics only.
+- The primary model bypassed the signed selector on purpose:
+  `z(s,i)=p_i`, with no selector score, no selector gate, no empirical `mu_i`,
+  and no full-bank aggregation. This was causal isolation of the program
+  channel, not a proposed replacement for the signed Stage-B field.
+- Qwen3-8B was frozen. The signed selector was not trained. Stage-C1
+  full-bank training was not repeated. Stage C2, end-to-end RCMF, AppWorld
+  generation/evaluation, and Qwen action loss were not run.
+- Pair cache validation passed for `1,728` selected legal pairs, including
+  `1,152` train and `576` state-held-out validation pairs. It reused `88`
+  compatible Stage-C1 rows and newly scored `1,640` rows.
+- Pair category coverage was complete: train positive/neutral/negative/random
+  `288/288/288/288`; validation `144/144/144/144`.
+- Train-only perturbation smoke selected ratio target `1.0`, and the previous
+  unrestrained `7-8x` injector regime did not reappear.
+- Zero-program equivalence and tiny overfit both passed, so the graph is not
+  trivially disconnected.
+- State-held-out content results were weak: target NLL `0.665915`, sparse KL
+  `0.318875`, behavioral-delta Huber `2.207829`, raw utility versus compiled
+  utility Spearman `-0.293472`, sign agreement `0.403382`.
+- Content did not meaningfully beat memory-identity controls:
+  content-minus-shuffled-program target NLL `-0.000166`,
+  content-minus-memory-swap target NLL `-0.000081`, and
+  content-minus-random-program sparse KL `+0.010575`.
+- Memory-held-out content compiler CV failed: mean Spearman `-0.189175`, and
+  `0/5` folds had positive Spearman.
+- Content program vectors were highly aligned, with pairwise cosine mean
+  `0.998634` and centered effective rank `12.712268`.
+
+Decision:
+
+- Use decision branch `program_injector_behavioral_channel_insufficient`.
+- Do not record `pair_level_memory_grounding_passed`.
+- Do not start Stage C2, full-bank Stage-C1 retraining, joint
+  selector/program training, Qwen action loss, or AppWorld agent evaluation
+  from this result.
+- Treat the current content-derived memory-program path as not yet
+  memory-specific enough for full-bank aggregation.
+
+Deviation or workaround:
+
+- No hard-scope deviation. The tmux log ended with `EXIT:True` because the
+  local PowerShell SSH wrapper expanded `$?` before the remote shell wrote the
+  log footer. The Python run completed normally and wrote a validated
+  `summary.json` and `report.md`.
+
+Follow-up:
+
+- Before another memory-content compiler or full-bank Stage-C run, test the
+  additive-token/injector channel with an even simpler oracle behavioral
+  capacity diagnostic, such as trainable free per-pair `z` vectors or explicit
+  per-token logit-delta reconstruction.
+- If an oracle per-pair latent cannot reproduce teacher deltas, redesign the
+  injector or target-distribution loss. If it can, revisit the program
+  compiler and memory representation choices before restoring selector-weighted
+  aggregation.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:

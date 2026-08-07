@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-08-06.
+Last updated: 2026-08-08.
 
 ## VERIFIED
 
@@ -717,6 +717,54 @@ VERIFIED:
 - Lambda post-5C status: no tmux server running and GPU reported
   `0 MiB / 0%`.
 
+## Milestone 5D Pair-Level / Single-Memory Grounding
+
+VERIFIED:
+
+- Milestone 5D ran as
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/pair_grounding_5d_20260807_001`
+  from source commit `f8cc37547ec6c3e404f84c726efa01e4c8ccb9f9`.
+- The primary model deliberately bypassed the signed selector:
+  `z(s,i)=p_i`, with no selector score, no selector gate, no empirical `mu_i`,
+  and no full-bank aggregation. This was a causal-isolation diagnostic for the
+  program/injector channel, not a replacement Stage-B field.
+- Hard scope was respected: Qwen3-8B was frozen; selector was not trained;
+  Stage-C1 full-bank training was not repeated; AppWorld
+  generation/evaluation, Stage C2, and end-to-end RCMF training were not run.
+- Pair-response cache validation passed. It selected `1,728` legal
+  `(state, memory)` pairs from the effective 36 train-memory bank:
+  `1,152` train and `576` state-held-out validation pairs. Category coverage
+  was balanced at train `288/288/288/288` and validation
+  `144/144/144/144` for positive/neutral/negative/random. Missing category
+  slot count was `0`.
+- The pair cache reused `88` compatible Stage-C1 rows and newly scored `1,640`
+  rows. Cache validation reproduced L0/Lj/text utility, checked hashes and
+  pair identity, preserved no-truncation and no-leakage rules, and verified
+  top-K-plus-other probability normalization.
+- Perturbation target `1.0` was selected from train-only smoke. The old
+  unrestrained `7-8x` embedding-delta regime did not reappear; content mean
+  delta ratio on validation was `1.054877`.
+- Zero-program equivalence and tiny overfit both passed.
+- State-held-out content metrics: target NLL `0.665915`, sparse teacher KL
+  `0.318875`, behavioral-delta Huber `2.207829`, raw utility versus compiled
+  utility Spearman `-0.293472`, positive/negative sign agreement `0.403382`,
+  and improved fraction `0.447917`.
+- Content controls showed no meaningful memory-specific advantage:
+  content-minus-shuffled-program target NLL `-0.000166`,
+  content-minus-memory-swap target NLL `-0.000081`, and
+  content-minus-random-program sparse KL `+0.010575`.
+- Memory-held-out 5-fold CV failed to show compiler generalization. Content
+  u_text/u_program Spearman mean/std was `-0.189175/0.052868`, and `0/5`
+  folds had positive Spearman.
+- Content program geometry was highly collapsed across memories:
+  centered effective rank `12.712268`, pairwise cosine mean `0.998634`, and
+  norm mean `11.313701`.
+- Decision branch:
+  `program_injector_behavioral_channel_insufficient`.
+- Pair-level memory grounding did not pass, and Stage C2 remains blocked.
+- Lambda post-5D status: no active `stage5d_exp014` tmux session remained, GPU
+  reported `0 MiB / 0%`, and the process is safe to terminate.
+
 ## INFERENCES
 
 - The semantic-retrieval auxiliary loss improves the fixed first-10 slice but
@@ -802,18 +850,23 @@ VERIFIED:
 - Whether an additive-token injector can use a signed-program memory field
   without degrading Qwen generated AppWorld action trajectories; Stage C1 used
   teacher-forced scoring only and no AppWorld generation/evaluation.
+- Whether an oracle per-pair latent vector can reproduce the raw-memory
+  teacher's target-position behavioral deltas. Milestone 5D indicates the
+  current memory-program path is insufficient, but does not yet isolate whether
+  the bottleneck is injector capacity, program compiler capacity, or the sparse
+  top-K delta objective.
 
 ## Immediate Workflow Status
 
 - Working branch: `workflow/research-loop`.
-- Latest Lambda-synced Stage-B 5C selector-repair source commit before final
-  records: `5e5c74c`.
+- Latest Lambda-synced Stage-5D source commit before final records:
+  `f8cc37547ec6c3e404f84c726efa01e4c8ccb9f9`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
-- Lambda post-5C status: no tmux server running and GPU memory/utilization
+- Lambda post-5D status: no tmux server running and GPU memory/utilization
   reported `0 MiB / 0%`.
 - Do not launch Stage C2, joint selector/program/injector training, Qwen action
   loss, full-bank end-to-end RCMF training, or AppWorld agent evaluation until
-  the user and ChatGPT review the Stage-B 5C selector-repair failure and choose
-  the next repair.
+  the user and ChatGPT review the Stage-5D pair-level grounding failure and
+  choose the next repair.

@@ -339,39 +339,73 @@ Stop condition:
 
 Goal:
 
-- Before another full-bank Stage-C1 run, directly supervise the behavioral
-  effect of individual memories so the program/injector path learns
-  memory-specific causality rather than a distributed state-control shortcut.
+- Completed on 2026-08-08 as
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/pair_grounding_5d_20260807_001`.
+- Directly supervise the behavioral effect of individual memories before
+  another full-bank Stage-C1 run.
 
-Candidates:
+Evidence:
 
-- Build a pair-level response-distillation cache for selected `(state, memory)`
-  pairs rather than only state-level best-memory targets.
-- Train or diagnose a single-memory program read where `z` is produced from
-  one selected memory at a time, then measure whether removing that same memory
-  predictably changes target NLL.
-- Compare raw-teacher-best memory, selector-top memory, and matched
-  neutral/negative controls with teacher-forced target scoring.
-- Use a restrained injector scale or explicit delta-norm regularization only
-  after the pair-level memory-specific effect is visible.
-- Keep the signed selector frozen or use a separately reviewed selector repair;
-  do not combine selector retraining with program/injector training in the
-  first repair.
-
-Required evidence:
-
-- Correct memory removal should hurt more than matched controls on a majority
-  of positive states.
-- Compiled leave-one-out effects should correlate with raw teacher utility or
-  pair-level teacher improvement.
-- No-positive states should remain within `0.02` target NLL of bare Qwen.
-- Content-derived programs should beat shuffled/random/free-ID controls on
-  paired target NLL or sparse teacher KL, not only beat zero program.
+- Source commit: `f8cc37547ec6c3e404f84c726efa01e4c8ccb9f9`.
+- Pair cache validation passed: `1,728` selected legal pairs, `1,152` train,
+  `576` state-held-out validation, with complete positive/neutral/negative/
+  random category coverage and no missing category slots.
+- The primary model bypassed the selector intentionally:
+  `z(s,i)=p_i`; no selector score, no gate, no empirical `mu_i`, no full-bank
+  aggregation.
+- Train-only perturbation smoke selected ratio target `1.0`; validation
+  content delta-ratio mean was `1.054877`.
+- Zero-program equivalence and tiny overfit passed.
+- State-held-out content metrics: target NLL `0.665915`, sparse KL
+  `0.318875`, behavioral-delta Huber `2.207829`, u_text/u_program Spearman
+  `-0.293472`, sign agreement `0.403382`.
+- Content did not show meaningful memory-specific advantage:
+  content-minus-shuffled-program target NLL `-0.000166` and
+  content-minus-memory-swap target NLL `-0.000081`.
+- Memory-held-out 5-fold CV failed: content Spearman mean `-0.189175`, with
+  `0/5` positive-Spearman folds.
+- Content program geometry was highly aligned: pairwise cosine mean `0.998634`.
 
 Stop condition:
 
-- Stop before Stage C2 unless pair-level/single-memory grounding shows
-  memory-specific behavioral effects that survive held-out-task validation.
+- Met. Decision branch: `program_injector_behavioral_channel_insufficient`.
+- Pair-level memory grounding did not pass.
+- Do not start Stage C2, full-bank Stage-C1 retraining, joint selector/program
+  training, Qwen action loss, or AppWorld agent evaluation from this result.
+
+## EXP-015 Oracle Pair-Latent Injector Capacity Diagnostic
+
+Goal:
+
+- Isolate whether the Stage-5D failure is caused by the additive-token/injector
+  behavioral channel itself or by the memory-content program compiler.
+
+Candidates:
+
+- Train a free per-pair latent vector `z_{s,i}` or oracle per-pair small table
+  against the same pair-response cache and behavioral-delta target.
+- Keep Qwen frozen and continue teacher-forced target scoring only.
+- Do not use selector scores, gates, empirical `mu_i`, or full-bank
+  aggregation.
+- Compare oracle per-pair `z`, free per-memory `z`, content-derived program,
+  random, mean, and zero controls under the same perturbation-ratio budget.
+- Measure whether the injector can reconstruct target-position
+  raw-memory-teacher deltas when representation/compiler generalization is
+  removed from the problem.
+
+Required evidence:
+
+- Oracle per-pair `z` should significantly beat zero/random/mean controls on
+  behavioral-delta Huber and sparse teacher KL.
+- If oracle per-pair `z` fails, redesign the injector or target-distribution
+  loss before any further program-compiler work.
+- If oracle per-pair `z` succeeds but free per-memory/content programs fail,
+  focus the next repair on memory representation and program compiler capacity.
+
+Stop condition:
+
+- Stop after teacher-forced diagnostic metrics. Do not start Stage C2,
+  full-bank aggregation, or AppWorld generation/evaluation.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 
