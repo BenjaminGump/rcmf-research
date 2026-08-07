@@ -1,0 +1,66 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_b_selector_repair_5c
+  version: stage_b_selector_repair_5c_v1
+  scope:
+    - signed_selector_retraining_only
+    - top_utility_alignment_repair
+    - no_stage_c_program_training
+    - no_additive_token_injector_training
+    - no_qwen_forward_during_selector_training
+    - no_appworld_generation_or_evaluation
+    - eval_only_existing_stage_c1_projection_after_selector_selection
+
+stage_b_5c:
+  teacher_cache_dir: runs/teacher/raw_text_full_cache_20260805_001
+  labels_dir: runs/stage_b/student_labels_20260806_002
+  representation_cache_dir: runs/experiments/appworld_qwen_repr_full_prompt_filtered_no_2a163ab3_20260803_101000/train/representation_cache
+  response_cache_dir: runs/stage_c1/response_cache_20260806_001
+  stage_c1_dir: runs/stage_c1/signed_program_c1_20260806_002
+  selector:
+    architecture: signed_residual_field
+    rank: 128
+    hidden_dim: 256
+    dropout: 0.05
+    prior: empirical_train_mu
+    forbidden_ops:
+      - softmax_addresses
+      - hard_top_k
+      - sparsemax
+      - nonnegative_qk
+      - rho_multiplication
+      - score_clamping
+  split:
+    cv_source: 37_train_tasks_only
+    cv_folds: 5
+    fold_seed: 23
+    continuity_validation_tasks: 9
+    validation_labels_not_used_for_config_selection: true
+  losses:
+    ablations:
+      - A_stage4c_original
+      - B_gap_all_pairs_gap0p02
+      - B_gap_all_pairs_gap0p05
+      - B_gap_all_pairs_gap0p10
+      - C_top_listwise_temp0p03
+      - C_top_listwise_temp0p05
+      - C_top_listwise_temp0p10
+      - D_gap_top_sign
+      - E_gap_top_sign_nearbest
+    residual_huber: true
+    all_pair_gap_ranking: true
+    includes_positive_positive_pairs: true
+    top_utility_listwise: true
+    near_best_multi_positive: true
+    signed_strong_positive_negative_calibration: true
+    separate_gate_bce: true
+  training:
+    seeds: [1, 2, 3]
+    cv_epochs: 80
+    batch_size: 64
+    lr: 0.001
+    weight_decay: 0.0001
+    patience: 12
+    continuity_epoch_count: selected_from_cv_best_epoch_not_9task_validation
+
