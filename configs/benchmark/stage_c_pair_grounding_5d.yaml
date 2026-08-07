@@ -1,0 +1,81 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_pair_grounding_5d
+  version: stage_c_pair_grounding_5d_v1
+  scope:
+    - pair_level_single_memory_behavioral_grounding
+    - selector_bypassed_by_design
+    - no_signed_selector_training
+    - no_selector_scores_or_gates
+    - no_empirical_mu
+    - no_full_bank_aggregation
+    - qwen_frozen
+    - teacher_forced_target_scoring_only
+    - no_appworld_generation_or_evaluation
+    - no_stage_c2
+    - no_end_to_end_rcmf_training
+
+memory:
+  program_dim: 128
+
+injector:
+  type: additive_token
+  position: last_user_k
+  num_tokens: 4
+  initial_scale: 0.0
+
+stage_c_5d:
+  teacher_cache_dir: runs/teacher/raw_text_full_cache_20260805_001
+  labels_dir: runs/stage_b/student_labels_20260806_002
+  representation_cache_dir: runs/experiments/appworld_qwen_repr_full_prompt_filtered_no_2a163ab3_20260803_101000/train/representation_cache
+  stage_c1_response_cache_dir: runs/stage_c1/response_cache_20260806_001
+  pair_cache_version: stage_c_pair_response_cache_5d_v1
+  pair_response_scoring_definition: single_raw_memory_pair_target_top64_delta_v1
+  selection:
+    effective_train_memory_records: 36
+    train_per_memory:
+      strongest_positive: 8
+      weak_or_near_neutral: 8
+      strongest_negative: 8
+      deterministic_random_remaining: 8
+    validation_per_memory:
+      positive: 4
+      neutral: 4
+      negative: 4
+      deterministic_random_remaining: 4
+    neutral_epsilon: 0.01
+    seed: 20260807
+  primary_read:
+    definition: z(s,i)=p_i
+    forbidden_inputs:
+      - signed_selector_score
+      - selector_gate
+      - empirical_mu
+      - raw_text_memory_in_student_prompt
+      - full_bank_normalization
+      - raw_teacher_utility_coefficient
+  program_head:
+    type: content_derived_mlp
+    hidden_dim: 256
+    program_dim: 128
+    activation: tanh_then_rms_normalize
+  training:
+    trainable:
+      - program_head
+      - additive_token_injector
+    frozen:
+      - qwen3_8b
+      - signed_selector
+      - empirical_mu
+    losses:
+      behavioral_delta_huber: 1.0
+      sparse_teacher_kl: 0.2
+      positive_pair_ground_truth_ce: 0.05
+      neutral_preservation: 0.5
+      delta_ratio_penalty: 0.2
+    perturbation_ratio_targets_train_only_smoke: [0.5, 1.0, 2.0]
+    default_seed: 1
+    default_epochs: 2
+    memory_cv_epochs: 1
+    default_batch_size: 1
