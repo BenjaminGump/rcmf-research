@@ -214,6 +214,11 @@ def _portable_evaluation(evaluation: dict[str, Any], rows_path: Path) -> dict[st
     }
 
 
+def _annotate_evaluation_updates(evaluation: dict[str, Any], updates_per_pair: int) -> None:
+    for row in evaluation["rows"]:
+        row["updates_per_pair"] = int(updates_per_pair)
+
+
 def _train_direct_convergence(
     *,
     backend: Any,
@@ -358,6 +363,7 @@ def _train_direct_convergence(
             huber_delta=objective.huber_delta,
             control=f"direct_delta_u{update_round}",
         )
+        _annotate_evaluation_updates(evaluation, update_round)
         checkpoint_entry = {
             "updates_per_pair": update_round,
             "pair_ids": pair_ids,
@@ -412,7 +418,7 @@ def _train_direct_convergence(
         previous_snapshot = current_snapshot
         final_evaluation = evaluation
 
-        if update_round >= minimum_updates and convergence.get("plateau"):
+        if update_round == minimum_updates and convergence.get("plateau"):
             break
 
     if final_evaluation is None or checkpoint_path is None:
@@ -436,6 +442,8 @@ def _train_direct_convergence(
         huber_delta=objective.huber_delta,
         control="matched_norm_random_delta",
     )
+    _annotate_evaluation_updates(final_evaluation, min(update_counts))
+    _annotate_evaluation_updates(random_evaluation, min(update_counts))
     gate = utility_capacity_gate(
         summary=final_evaluation["summary"],
         zero_summary=zero_evaluation["summary"],
@@ -697,6 +705,7 @@ def _train_pair_z_convergence(
             huber_delta=objective.huber_delta,
             control=f"pair_z_u{update_round}",
         )
+        _annotate_evaluation_updates(evaluation, update_round)
         entry = {
             "updates_per_pair": update_round,
             "pair_ids": pair_ids,
@@ -777,6 +786,9 @@ def _train_pair_z_convergence(
         huber_delta=objective.huber_delta,
         control="matched_norm_random_pair_z",
     )
+    _annotate_evaluation_updates(final_evaluation, min(update_counts))
+    _annotate_evaluation_updates(zero_evaluation, 0)
+    _annotate_evaluation_updates(random_evaluation, min(update_counts))
     gate = _pair_latent_gate(
         final_evaluation["summary"],
         zero_evaluation["summary"],
@@ -854,6 +866,7 @@ def _evaluate_underoptimized_stage5e(
         huber_delta=huber_delta,
         control="underoptimized_two_update_result",
     )
+    _annotate_evaluation_updates(evaluation, 2)
     result = {
         "interpretation": "underoptimized_two_update_result",
         "supersedes_capacity_interpretation_only": True,
@@ -1122,6 +1135,7 @@ def main() -> None:
         huber_delta=0.1,
         control="zero_direct_delta",
     )
+    _annotate_evaluation_updates(zero_pilot, 0)
     write_jsonl(args.output_dir / "pilot_zero_rows.jsonl", zero_pilot["rows"])
     zero_pilot["rows_path"] = str(args.output_dir / "pilot_zero_rows.jsonl")
     zero_full = _evaluate_direct_tensor(
@@ -1135,6 +1149,7 @@ def main() -> None:
         huber_delta=0.1,
         control="zero_direct_delta",
     )
+    _annotate_evaluation_updates(zero_full, 0)
     write_jsonl(args.output_dir / "confirmation_zero_rows.jsonl", zero_full["rows"])
     zero_full["rows_path"] = str(args.output_dir / "confirmation_zero_rows.jsonl")
     zero_equivalence = {

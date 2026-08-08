@@ -161,6 +161,13 @@ def test_checkpoint_resume_preserves_table_optimizer_and_update_counts(tmp_path)
         assert torch.equal(restored_table.state_dict()[key], value)
     assert restored_optimizer.state_dict()["state"]
 
+    _step(table, optimizer, counts, 0, -0.5)
+    restored_counts = restored["update_counts"]
+    _step(restored_table, restored_optimizer, restored_counts, 0, -0.5)
+    assert counts == restored_counts == [2, 0]
+    for key, value in table.state_dict().items():
+        assert torch.equal(restored_table.state_dict()[key], value)
+
 
 def test_convergence_subset_is_balanced_deterministic_and_covers_memories() -> None:
     first, first_report = select_convergence_subset(_rows(), target_total=64, seed=13)
