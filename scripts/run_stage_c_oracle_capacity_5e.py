@@ -565,7 +565,11 @@ def _train_direct_delta_oracle(
                 },
             }
         )
+        with torch.no_grad():
+            project_delta_slots_to_ratio_(delta_table, base_norms, max_ratio=ratio_budget)
         atomic_write_json(output_dir / f"direct_delta_{objective.name}_ratio{ratio_budget}_k{k}_history.json", history)
+    with torch.no_grad():
+        project_delta_slots_to_ratio_(delta_table, base_norms, max_ratio=ratio_budget)
     trained_eval = _evaluate_direct_delta(
         backend=backend,
         rows=rows,
