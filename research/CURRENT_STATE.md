@@ -765,6 +765,59 @@ VERIFIED:
 - Lambda post-5D status: no active `stage5d_exp014` tmux session remained, GPU
   reported `0 MiB / 0%`, and the process is safe to terminate.
 
+## 2026-08-08 Milestone 5E oracle pair-latent injector capacity
+
+VERIFIED:
+
+- Source commit:
+  `c786a9735add6de640869f497013014a937b4c0a`.
+- Artifact root:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/oracle_capacity_5e_20260808_001`.
+- Milestone 5E diagnosed the additive-token injection channel only. Qwen3-8B
+  was frozen; no signed selector, selector score/gate, empirical `mu_i`,
+  full-bank aggregation, AppWorld generation/evaluation, Stage C2, or
+  end-to-end RCMF training was used.
+- Stage-5D pair cache validation remained valid for `1,728 / 1,728` pairs.
+  Target-token teacher utility identity passed with maximum absolute error
+  `1.001358e-06`.
+- The direct-oracle validation subset had `192` pairs, balanced as
+  positive/neutral/negative/random `48/48/48/48`, and covered all `36`
+  effective train memories.
+- Best K=4 direct DeltaE run:
+  `target_delta_plus_sparse_kl_ratio_0.5`, with u_text/u_direct Spearman
+  `0.641904`, sign agreement `0.776978`, target-token delta correlation
+  `0.369083`, target-token delta Huber `0.573381`, target NLL `0.748773`,
+  sparse KL `0.261206`, and mean perturbation ratio `0.488439`.
+- The direct DeltaE gate failed: thresholds were Spearman `>=0.70`, sign
+  agreement `>=0.80`, and target-token delta correlation `>=0.80` under
+  ratio `<=2.0`.
+- Optional K=8 direct DeltaE at ratio `2.0` also failed and did not improve
+  the direct channel: Spearman `0.608854`, sign agreement `0.784173`, and
+  target-token delta correlation `0.219402`.
+- Objective ablation verified that target-token delta supervision is much
+  better aligned with raw teacher utility than the old sparse behavioral-delta
+  Huber objective: old sparse objective Spearman `-0.092488` versus
+  target-token delta Huber Spearman `0.636335`.
+- Frozen-injector validation pair-z inversion failed: Spearman `-0.069538`,
+  sign agreement `0.467626`, target-token delta Huber `0.614797`, and mean
+  perturbation ratio `0.015999`.
+- Joint validation pair-z upper bound improved target-delta Huber to
+  `0.493115`, but only with mean perturbation ratio `2.370567` and still
+  failed the pair-latent gate.
+- Free per-memory z produced weak positive Spearman `0.194337` and sign
+  agreement `0.570048`, but it badly worsened target NLL `1.548202`, sparse
+  KL `1.351795`, and target-token delta Huber `1.460607` versus the zero
+  control. It is not a viable Stage-C repair.
+- Decision branch: `direct_delta_fails`.
+- Identified bottleneck:
+  `additive_token_injection_location_bandwidth_or_behavioral_target`.
+- Stage C2 remains blocked. The next step should diagnose/redesign injection
+  location, decoder mechanics, and utility-aligned target-token objectives
+  before returning to memory-content compiler training.
+- Lambda post-5E status: the `stage5e_exp015` tmux session ended, no tmux
+  server remains, GPU reported `0 MiB / 0%`, and the instance is safe to
+  terminate.
+
 ## INFERENCES
 
 - The semantic-retrieval auxiliary loss improves the fixed first-10 slice but
@@ -850,23 +903,22 @@ VERIFIED:
 - Whether an additive-token injector can use a signed-program memory field
   without degrading Qwen generated AppWorld action trajectories; Stage C1 used
   teacher-forced scoring only and no AppWorld generation/evaluation.
-- Whether an oracle per-pair latent vector can reproduce the raw-memory
-  teacher's target-position behavioral deltas. Milestone 5D indicates the
-  current memory-program path is insufficient, but does not yet isolate whether
-  the bottleneck is injector capacity, program compiler capacity, or the sparse
-  top-K delta objective.
+- Whether a later-layer residual injection site, stronger decoder, or
+  full-vocabulary/target-token hybrid objective can reproduce the raw-memory
+  teacher's target-position behavioral deltas after the current last-user
+  additive-token channel failed in Milestone 5E.
 
 ## Immediate Workflow Status
 
 - Working branch: `workflow/research-loop`.
-- Latest Lambda-synced Stage-5D source commit before final records:
-  `f8cc37547ec6c3e404f84c726efa01e4c8ccb9f9`.
+- Latest Lambda-synced Stage-5E source commit before final records:
+  `c786a9735add6de640869f497013014a937b4c0a`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
-- Lambda post-5D status: no tmux server running and GPU memory/utilization
+- Lambda post-5E status: no tmux server running and GPU memory/utilization
   reported `0 MiB / 0%`.
 - Do not launch Stage C2, joint selector/program/injector training, Qwen action
   loss, full-bank end-to-end RCMF training, or AppWorld agent evaluation until
-  the user and ChatGPT review the Stage-5D pair-level grounding failure and
-  choose the next repair.
+  the user and ChatGPT review the Stage-5E oracle-capacity failure and choose
+  an injection/objective repair.

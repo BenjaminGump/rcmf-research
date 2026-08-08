@@ -404,8 +404,61 @@ Required evidence:
 
 Stop condition:
 
-- Stop after teacher-forced diagnostic metrics. Do not start Stage C2,
-  full-bank aggregation, or AppWorld generation/evaluation.
+- Met. The milestone stopped after teacher-forced diagnostic metrics. Stage C2,
+  full-bank aggregation, and AppWorld generation/evaluation were not started.
+
+Result:
+
+- Decision branch: `direct_delta_fails`.
+- Best K=4 direct DeltaE oracle failed the capacity gate despite weak positive
+  utility correlation: Spearman `0.641904`, sign agreement `0.776978`,
+  target-token delta correlation `0.369083`, mean perturbation ratio
+  `0.488439`.
+- Optional K=8 direct DeltaE did not repair the failure.
+- Frozen-injector pair-z inversion failed.
+- Free per-memory z was not scientifically successful despite weak positive
+  rank/sign values, because it badly worsened target NLL, sparse KL, and
+  target-delta error versus zero control.
+- Target-token delta supervision is much better aligned with raw utility than
+  the old sparse behavioral-delta Huber objective, but it is not sufficient by
+  itself to make the current last-user additive-token channel pass.
+
+## EXP-016 Injection-Site And Objective Capacity Repair
+
+Goal:
+
+- Determine whether the Stage-5E failure is caused by the last-user embedding
+  injection site, the additive-token decoder, or an incomplete teacher-forced
+  objective.
+
+Candidates:
+
+- Keep Qwen frozen and continue teacher-forced scoring only.
+- Use the Stage-5D pair-response cache and the Stage-5E target-token delta
+  identity.
+- Compare the current last-user embedding DeltaE oracle with later-layer
+  residual-insertion or direct hidden/logit-oracle diagnostics under matched
+  perturbation accounting.
+- Retain target-token delta reconstruction as the primary utility-aligned
+  objective; use sparse KL only as a secondary metric or auxiliary loss.
+- Do not use selector scores, selector gates, empirical `mu_i`, full-bank
+  aggregation, or memory-content compiler training.
+
+Required evidence:
+
+- A stronger injection site or decoder should beat the current direct DeltaE
+  result on u_text/u_student Spearman, sign agreement, and target-token delta
+  correlation under a controlled perturbation budget.
+- If later-layer/direct hidden or logit oracles pass while last-user embedding
+  injection fails, redesign the production injector around that site.
+- If all frozen-Qwen perturbation sites fail, revisit the behavioral target or
+  conclude that this teacher effect is not reachable through small additive
+  perturbations.
+
+Stop condition:
+
+- Stop after capacity diagnostics. Do not start Stage C2, full-bank program
+  training, AppWorld generation/evaluation, or Qwen fine-tuning.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 

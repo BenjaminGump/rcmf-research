@@ -676,6 +676,59 @@ Follow-up:
   compiler and memory representation choices before restoring selector-weighted
   aggregation.
 
+## 2026-08-08 Milestone 5E oracle pair-latent injector capacity
+
+VERIFIED:
+
+- Milestone 5E reused the Stage-5D pair-response cache and diagnosed only the
+  additive-token injection channel.
+- Qwen3-8B was frozen. The signed selector, selector scores/gate, empirical
+  `mu_i`, and full-bank aggregation were not used.
+- AppWorld generation/evaluation, Stage C2, end-to-end RCMF training, and
+  memory-content compiler retraining were not run.
+- Pair cache validation passed for `1,728` pairs. Target-token teacher utility
+  identity passed with maximum absolute error `1.001358e-06`.
+- Best K=4 direct DeltaE oracle reached u_text/u_direct Spearman `0.641904`,
+  sign agreement `0.776978`, target-token delta correlation `0.369083`, and
+  mean perturbation ratio `0.488439`; this failed the direct-channel gate.
+- Optional K=8 direct DeltaE did not repair the failure.
+- Target-token delta Huber was much better aligned with raw utility than the
+  old sparse behavioral-delta Huber objective: Spearman `0.636335` versus
+  `-0.092488`.
+- Frozen-injector pair-z inversion failed and did not beat zero/random controls
+  on the primary utility-aligned metrics.
+- Free per-memory z showed weak positive Spearman/sign values but badly
+  worsened NLL/KL/delta-Huber relative to zero, so it is not a successful
+  fixed-memory latent result.
+
+Decision:
+
+- Use decision branch `direct_delta_fails`.
+- Treat the primary bottleneck as
+  `additive_token_injection_location_bandwidth_or_behavioral_target`.
+- Record the old Stage-5D sparse union-top64 behavioral-delta objective as a
+  verified contributing bottleneck.
+- Do not proceed to Stage C2 and do not return immediately to memory-content
+  compiler design.
+- The next repair should isolate injection site/decoder/objective issues. Since
+  K=8 did not fix direct DeltaE, prioritize later-layer residual or logit/hidden
+  oracle diagnostics under the target-token-delta metric.
+
+Deviation or workaround:
+
+- The Stage-5E script's `fixed_memory_latent_gate_passed` helper is too
+  permissive because it only checks weak positive correlation/sign criteria.
+  The research interpretation overrides it: free memory-z did not pass once
+  NLL, sparse KL, target-delta error, and zero-control comparisons are included.
+  Future gate helpers should include these control-relative requirements.
+
+Follow-up:
+
+- Design EXP-016 as an injection-site/objective diagnostic rather than another
+  memory compiler run.
+- Keep target-token delta reconstruction as the primary utility-aligned
+  objective in the next capacity test.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:
