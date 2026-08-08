@@ -1260,6 +1260,8 @@ def main() -> None:
     parser.add_argument("--stage5d-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--direct-subset-count", type=int, default=192)
+    parser.add_argument("--debug-train-pair-count", type=int, default=None)
+    parser.add_argument("--debug-validation-pair-count", type=int, default=None)
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument("--k", type=int, default=4)
     parser.add_argument("--direct-epochs", type=int, default=2)
@@ -1324,6 +1326,10 @@ def main() -> None:
     train_rows = _select_by_pair_ids(tokenized_all, {str(row["pair_id"]) for row in train_rows_raw})
     validation_rows = _select_by_pair_ids(tokenized_all, {str(row["pair_id"]) for row in validation_rows_raw})
     subset_rows = _select_by_pair_ids(tokenized_all, {str(row["pair_id"]) for row in subset_rows_raw})
+    if args.debug_train_pair_count is not None:
+        train_rows = train_rows[: int(args.debug_train_pair_count)]
+    if args.debug_validation_pair_count is not None:
+        validation_rows = validation_rows[: int(args.debug_validation_pair_count)]
 
     objective_primary = OBJECTIVES["target_delta_plus_sparse_kl"]
     direct_dir = args.output_dir / "direct_delta"
