@@ -1,0 +1,69 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_oracle_capacity_5e
+  version: stage_c_oracle_capacity_5e_v1
+  scope:
+    - oracle_pair_latent_injector_capacity
+    - reuse_validated_stage5d_pair_cache
+    - qwen_frozen
+    - selector_not_trained
+    - selector_not_used
+    - no_selector_scores
+    - no_selector_gate
+    - no_empirical_mu
+    - no_full_bank_aggregation
+    - no_content_program_primary_training
+    - teacher_forced_target_scoring_only
+    - no_appworld_generation_or_evaluation
+    - no_stage_c2
+    - no_end_to_end_rcmf_training
+
+injector:
+  type: additive_token
+  position: last_user_k
+  num_tokens: 4
+  initial_scale: 0.0
+
+stage_c_5e:
+  pair_cache_dir: runs/stage_c/pair_grounding_5d_20260807_001/pair_response_cache
+  stage5d_dir: runs/stage_c/pair_grounding_5d_20260807_001
+  pair_cache_version: stage_c_pair_response_cache_5d_v1
+  target_token_identity:
+    definition: mean_t_logP_teacher_y_minus_logP_baseline_y_equals_L0_minus_Lj_text
+    tolerance: 0.00005
+  diagnostic_subset:
+    validation_pairs: 192
+    balanced_categories:
+      - positive
+      - neutral
+      - negative
+      - random
+    spread_across_effective_memories: true
+    seed: 20260808
+  objectives:
+    A: sparse_delta_huber
+    B: target_delta_huber
+    C: target_delta_plus_sparse_kl
+    primary: target_delta_plus_sparse_kl
+  direct_delta_oracle:
+    k: 4
+    position: last_user_k
+    ratio_budgets: [0.5, 1.0, 2.0]
+    optional_k8_if_k4_fails: true
+    old_unrestricted_ratio_regime_allowed: false
+  pair_latent:
+    latent_dim: 128
+    modes:
+      - joint_validation_pair_z
+      - frozen_injector_validation_pair_z
+  memory_latent:
+    latent_dim: 128
+    one_latent_per_effective_memory: true
+  forbidden_inputs:
+    - signed_selector_payload
+    - selector_scores
+    - selector_gate
+    - empirical_mu
+    - raw_memory_text_in_student_prompt
+    - full_bank_aggregation
