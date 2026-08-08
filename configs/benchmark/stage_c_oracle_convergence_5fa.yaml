@@ -1,0 +1,83 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_oracle_convergence_5fa
+  version: stage_c_direct_delta_convergence_5fa_v1
+  scope:
+    - convergence_corrected_direct_delta_capacity
+    - explicit_per_pair_update_accounting
+    - sequence_level_utility_objective
+    - reuse_validated_stage5d_pair_cache
+    - preserve_stage5e_artifacts
+    - qwen_frozen
+    - teacher_forced_target_scoring_only
+    - input_embedding_only
+    - last_user_k
+    - k_4
+    - no_new_injection_site
+    - no_memory_compiler
+    - no_signed_selector
+    - no_full_bank_model
+    - no_appworld_generation_or_evaluation
+    - no_stage_c2
+    - no_end_to_end_rcmf_training
+
+injector:
+  type: additive_token
+  position: last_user_k
+  num_tokens: 4
+  initial_scale: 0.0
+
+stage_c_5fa:
+  source_pair_cache: runs/stage_c/pair_grounding_5d_20260807_001/pair_response_cache
+  source_stage5e: runs/stage_c/oracle_capacity_5e_20260808_001
+  original_stage5e_interpretation: underoptimized_two_update_result
+  original_artifacts_rewritten: false
+  diagnostic_subset:
+    source_validation_pairs: 192
+    convergence_pairs: 64
+    per_selection_category: 16
+    cover_all_36_effective_memories_where_possible: true
+    seed: 20260811
+  direct_delta:
+    injection_site: input_embedding
+    position: last_user_k
+    k: 4
+    pilot_ratio_budget: 0.5
+    confirmation_ratio_budgets: [0.5, 1.0]
+    learning_rate: 0.05
+    batch_size: 1
+  objectives:
+    implemented:
+      - target_delta_huber
+      - target_delta_plus_sparse_kl
+      - sequence_utility_huber
+      - sequence_utility_plus_sparse_kl
+    convergence_pilot:
+      - target_delta_huber
+      - sequence_utility_huber
+      - sequence_utility_plus_sparse_kl
+    sparse_kl_auxiliary_weight: 0.05
+    huber_delta: 0.1
+  convergence:
+    pilot_evaluation_updates: [2, 8, 16, 32, 48, 64, 80, 96, 112, 128]
+    required_report_updates: [2, 8, 16, 32, 64, 128]
+    minimum_updates_before_plateau: 32
+    plateau_lag_updates: 16
+    relative_sequence_utility_loss_improvement_lt: 0.01
+    absolute_spearman_improvement_lt: 0.01
+    confirmation_updates: 64
+  optional_pair_z:
+    run_only_if_direct_gate_passes: true
+    pair_count: 32
+    updates: [32, 48, 64]
+    latent_dim: 128
+    frozen_stage5e_injector_first: true
+    joint_oracle_only_if_frozen_fails: true
+  forbidden_inputs:
+    - raw_memory_text_in_student_prompt
+    - signed_selector_payload
+    - selector_scores
+    - selector_gate
+    - empirical_mu
+    - full_bank_aggregation
