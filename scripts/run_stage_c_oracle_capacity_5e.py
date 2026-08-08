@@ -1313,7 +1313,7 @@ def main() -> None:
     train_rows_raw = [row for row in pair_rows if str(row.get("split")) == "train"]
     validation_rows_raw = [row for row in pair_rows if str(row.get("split")) == "validation"]
     examples = load_decision_examples(args.data / "decision_examples.jsonl")
-    prompt_profile = str(cfg.get("benchmark", {}).get("prompt_profile", "full_demo"))
+    prompt_profile = cfg.benchmark.prompt_profile
     needed_ids = {str(row["pair_id"]) for row in train_rows_raw + validation_rows_raw}
     tokenized_all = _build_tokenized_pair_rows(
         backend=backend,
