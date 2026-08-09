@@ -1,0 +1,73 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_oracle_convergence_5fb
+  version: stage_c_direct_delta_convergence_5fb_v1
+  scope:
+    - resume_stage5fa_ratio_1_u64_without_reinitialization
+    - exact_pair_and_optimizer_state_preservation
+    - fixed_sequence_utility_plus_sparse_kl_objective
+    - input_embedding_only
+    - last_user_k
+    - k_4
+    - qwen_frozen
+    - teacher_forced_target_scoring_only
+    - no_pair_z_or_injector_decoder_training
+    - no_memory_compiler
+    - no_signed_selector
+    - no_full_bank_model
+    - no_appworld_generation_or_evaluation
+    - no_stage_c2
+    - no_end_to_end_rcmf_training
+
+injector:
+  type: additive_token
+  position: last_user_k
+  num_tokens: 4
+  initial_scale: 0.0
+
+stage_c_5fb:
+  source_stage5fa: runs/stage_c/oracle_convergence_5fa_20260808_001
+  source_checkpoint: confirmation/ratio_1.0/checkpoints/direct_sequence_utility_plus_sparse_kl_ratio1.0_u064.pt
+  source_checkpoint_sha256: 26993056d9ac06d6fb43316fdd8ce4cc2557497d994a62500dbc6d16193ea840
+  source_delta_tensor_sha256: 897db72059a5cb5e8a38beb28b618bc3a7906ce6b973e8d601bd685ce8150424
+  source_code_commit: 451b7a763dd3ca0a08ff7cf430d2d2e5b16396c8
+  source_updates_per_pair: 64
+  pair_count: 192
+  training_seed: 1001
+  direct_delta:
+    injection_site: input_embedding
+    position: last_user_k
+    k: 4
+    ratio_budget: 1.0
+    learning_rate: 0.05
+    batch_size: 1
+  objective:
+    name: sequence_utility_plus_sparse_kl
+    target_delta_weight: 0.0
+    sequence_utility_weight: 1.0
+    sparse_teacher_kl_weight: 0.05
+    huber_delta: 0.1
+  convergence:
+    checkpoint_interval_updates_per_pair: 16
+    required_checkpoints: [80, 96, 112, 128]
+    minimum_terminal_updates_per_pair: 128
+    relative_sequence_utility_huber_improvement_lt: 0.01
+    absolute_spearman_improvement_lt: 0.01
+    hard_cap_updates_per_pair: 256
+    learning_rate_changes_allowed: false
+    stop_on_nan_or_inf: true
+    stop_after_two_consecutive_huber_worsenings_gt_fraction: 0.25
+  controls:
+    - zero_delta
+    - matched_norm_random_delta
+    - stage5e_underoptimized_two_update_delta
+    - stage5fa_u64_delta
+    - final_converged_delta
+  forbidden_inputs:
+    - raw_memory_text_in_student_prompt
+    - signed_selector_payload
+    - selector_scores
+    - selector_gate
+    - empirical_mu
+    - full_bank_aggregation
