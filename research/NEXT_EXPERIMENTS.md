@@ -423,42 +423,73 @@ Result:
   the old sparse behavioral-delta Huber objective, but it is not sufficient by
   itself to make the current last-user additive-token channel pass.
 
-## EXP-016 Injection-Site And Objective Capacity Repair
+## EXP-016A Convergence-Corrected Direct Oracle - Completed
 
 Goal:
 
-- Determine whether the Stage-5E failure is caused by the last-user embedding
-  injection site, the additive-token decoder, or an incomplete teacher-forced
+- Reassess the K=4 `last_user_k` direct input-embedding oracle after correcting
+  Stage 5E's two-update underoptimization and adding a sequence-level utility
   objective.
 
-Candidates:
+Result:
 
-- Keep Qwen frozen and continue teacher-forced scoring only.
-- Use the Stage-5D pair-response cache and the Stage-5E target-token delta
-  identity.
-- Compare the current last-user embedding DeltaE oracle with later-layer
-  residual-insertion or direct hidden/logit-oracle diagnostics under matched
-  perturbation accounting.
-- Retain target-token delta reconstruction as the primary utility-aligned
-  objective; use sparse KL only as a secondary metric or auxiliary loss.
-- Do not use selector scores, selector gates, empirical `mu_i`, full-bank
-  aggregation, or memory-content compiler training.
+- Completed at
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/oracle_convergence_5fa_20260808_001`.
+- The 192-pair ratio-1.0 oracle reached Spearman `0.976238`, sign agreement
+  `1.0`, sequence Huber `0.054151`, target-delta correlation `0.820359`, and
+  mean perturbation ratio `0.973289` after exactly 64 updates per pair.
+- It reduced sequence Huber by `89.4905%` versus zero and beat matched random
+  DeltaE decisively.
+- It did not reach the documented plateau: Huber improved another `22.5965%`
+  from u48 to u64.
+- Decision branch: `oracle_not_converged_extend_updates`.
+- The previous Stage-5E direct-capacity failure is superseded. The Stage-5E
+  sparse-objective mismatch remains verified.
+
+## EXP-016B Direct-Oracle Convergence Extension
+
+Goal:
+
+- Establish a documented plateau for the selected K=4 input-embedding direct
+  oracle before changing injection sites or testing a 128D decoder.
+
+Inputs:
+
+- Resume the ratio-1.0 checkpoint:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/oracle_convergence_5fa_20260808_001/confirmation/ratio_1.0/checkpoints/direct_sequence_utility_plus_sparse_kl_ratio1.0_u064.pt`.
+- Reuse the same fixed 192 pair IDs and the same validated Stage-5D cache.
+- Keep `sequence_utility_plus_sparse_kl`, K=4, `last_user_k`, ratio 1.0, and
+  frozen Qwen unchanged.
 
 Required evidence:
 
-- A stronger injection site or decoder should beat the current direct DeltaE
-  result on u_text/u_student Spearman, sign agreement, and target-token delta
-  correlation under a controlled perturbation budget.
-- If later-layer/direct hidden or logit oracles pass while last-user embedding
-  injection fails, redesign the production injector around that site.
-- If all frozen-Qwen perturbation sites fail, revisit the behavioral target or
-  conclude that this teacher effect is not reachable through small additive
-  perturbations.
+- Preserve exact per-pair counters and optimizer-state resume.
+- Evaluate u80/u96/u112/u128 and continue in fixed 16-update increments if the
+  two-part plateau condition is not met.
+- Pre-register a train-only learning-rate stabilization rule before the run;
+  do not select it from the final 192-pair metrics after the fact.
+- Continue reporting Spearman, Pearson, sign agreement, sequence utility
+  MAE/MSE/Huber, category means, target NLL, perturbation ratio, target-token
+  delta correlation, sparse KL, gradient norm, boundary fraction, zero, and
+  matched-random controls.
+- Confirm that the ratio-1.0 utility gate still passes after convergence.
+
+Decision:
+
+- If the plateau gate passes, record
+  `input_embedding_channel_capacity_passed_after_convergence` and stop for
+  user/ChatGPT review before a new 128D injector/decoder capacity milestone.
+- If metrics are still improving, extend updates again. Do not redesign the
+  injection site.
+- Only if a clear plateau fails the utility gate should a later-layer residual
+  site comparison become eligible.
 
 Stop condition:
 
-- Stop after capacity diagnostics. Do not start Stage C2, full-bank program
-  training, AppWorld generation/evaluation, or Qwen fine-tuning.
+- Stop after direct-oracle convergence and gate evaluation. Do not start
+  pair-z/injector training, a new injection site, memory compiler work,
+  Stage C2, full-bank training, AppWorld generation/evaluation, or Qwen
+  fine-tuning in EXP-016B.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 

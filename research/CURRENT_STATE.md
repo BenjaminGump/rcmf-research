@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-08-08.
+Last updated: 2026-08-09.
 
 ## VERIFIED
 
@@ -818,6 +818,51 @@ VERIFIED:
   server remains, GPU reported `0 MiB / 0%`, and the instance is safe to
   terminate.
 
+## 2026-08-09 Milestone 5F-A convergence-corrected direct oracle
+
+VERIFIED:
+
+- Source commit:
+  `451b7a763dd3ca0a08ff7cf430d2d2e5b16396c8`.
+- Artifact root:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/oracle_convergence_5fa_20260808_001`.
+- The Stage-5D cache revalidated for `1,728 / 1,728` pairs. The target-token
+  teacher utility identity passed with maximum absolute error
+  `1.001358e-06`.
+- Zero DeltaE reproduced bare Qwen with maximum absolute utility error
+  `1.192093e-07`.
+- The 64-pair pilot was balanced positive/neutral/negative/random
+  `16/16/16/16` and covered all `36` effective memories. It compared target
+  delta Huber, sequence utility Huber, and sequence utility plus sparse KL.
+- The train-only predetermined selection rule chose
+  `sequence_utility_plus_sparse_kl` at 64 updates per pair because it reached
+  the documented pilot plateau. The 192-pair confirmation did not change the
+  selected objective.
+- Ratio-0.5 confirmation at exactly 64 updates per pair reached Spearman
+  `0.955679`, sign agreement `0.992806`, sequence Huber `0.103908`,
+  target-delta correlation `0.818925`, and mean perturbation ratio `0.495321`.
+- Ratio-1.0 confirmation at exactly 64 updates per pair reached Spearman
+  `0.976238`, Pearson `0.975828`, sign agreement `1.0`, sequence Huber
+  `0.054151`, target-delta correlation `0.820359`, sparse KL `0.166327`, and
+  mean perturbation ratio `0.973289`.
+- Ratio 1.0 reduced sequence Huber by `89.4905%` versus zero. Positive and
+  negative utility-category sign rates were both `1.0`; neutral mean absolute
+  student utility was `0.000131`.
+- Matched-random ratio-1.0 DeltaE had Spearman `-0.001699`, sign agreement
+  `0.532374`, and sequence Huber `0.516598`.
+- Both ratio confirmations were still improving at u64. Ratio 1.0 improved
+  Huber another `22.5965%` from u48 to u64, so it failed only the documented
+  plateau check; all seven other direct utility-capacity checks passed.
+- Decision branch: `oracle_not_converged_extend_updates`.
+- Stage 5E's original direct result is preserved and now recorded as
+  `underoptimized_two_update_result`. The Stage-5E direct capacity failure is
+  superseded, while its sparse-objective mismatch evidence remains valid.
+- Pair-z was not run because the direct gate requires a documented plateau.
+- Formal runtime was `83,929.064 s`, approximately `23.3136 H100 hours`.
+- Relevant tests passed locally and on Lambda: `35 passed` in each environment.
+- Post-run status: no tmux server or active Stage-5F-A process, GPU
+  `0 MiB / 0%`, safe to terminate.
+
 ## INFERENCES
 
 - The semantic-retrieval auxiliary loss improves the fixed first-10 slice but
@@ -874,6 +919,14 @@ VERIFIED:
   teacher-best Recall@8 and preserve state-dependent NDCG, but this alone does
   not solve raw-utility alignment: Recall@4, signed-score calibration,
   utility-score Spearman, and projection causality remain insufficient.
+- Milestone 5F-A provides strong evidence that K=4 `last_user_k` input
+  embedding perturbations can reproduce sequence-level raw-teacher utility
+  under a ratio-1.0 budget. The remaining direct-oracle issue is convergence,
+  not a verified lack of channel capacity or a disproven injection location.
+- The average target NLL is not the direct-capacity criterion on this balanced
+  diagnostic because negative-teacher pairs intentionally supervise harmful
+  utility. Sign, sequence-utility error, and matched controls are the relevant
+  oracle evidence.
 
 ## GitHub Status
 
@@ -903,22 +956,26 @@ VERIFIED:
 - Whether an additive-token injector can use a signed-program memory field
   without degrading Qwen generated AppWorld action trajectories; Stage C1 used
   teacher-forced scoring only and no AppWorld generation/evaluation.
-- Whether a later-layer residual injection site, stronger decoder, or
-  full-vocabulary/target-token hybrid objective can reproduce the raw-memory
-  teacher's target-position behavioral deltas after the current last-user
-  additive-token channel failed in Milestone 5E.
+- Whether the ratio-1.0 K=4 direct oracle reaches a documented plateau after
+  more than 64 updates per pair; it was still improving materially at the
+  Milestone-5F-A stop point.
+- Whether a properly optimized 128D latent/injector decoder can preserve the
+  converged direct DeltaE utility signal. The conditional pair-z sanity check
+  did not run in Milestone 5F-A because the direct plateau gate was not met.
+- Whether a later-layer residual injection site is needed. Milestone 5F-A
+  provides no basis to redesign the site before completing convergence.
 
 ## Immediate Workflow Status
 
 - Working branch: `workflow/research-loop`.
-- Latest Lambda-synced Stage-5E source commit before final records:
-  `c786a9735add6de640869f497013014a937b4c0a`.
+- Latest Lambda-synced Stage-5F-A source commit before final records:
+  `451b7a763dd3ca0a08ff7cf430d2d2e5b16396c8`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
-- Lambda post-5E status: no tmux server running and GPU memory/utilization
+- Lambda post-5F-A status: no tmux server running and GPU memory/utilization
   reported `0 MiB / 0%`.
 - Do not launch Stage C2, joint selector/program/injector training, Qwen action
-  loss, full-bank end-to-end RCMF training, or AppWorld agent evaluation until
-  the user and ChatGPT review the Stage-5E oracle-capacity failure and choose
-  an injection/objective repair.
+  loss, full-bank end-to-end RCMF training, AppWorld agent evaluation, or an
+  injection-site redesign. First extend the selected ratio-1.0 direct oracle
+  to a documented plateau and review that result.

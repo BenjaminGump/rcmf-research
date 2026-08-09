@@ -729,6 +729,63 @@ Follow-up:
 - Keep target-token delta reconstruction as the primary utility-aligned
   objective in the next capacity test.
 
+## 2026-08-09 Milestone 5F-A convergence-corrected direct oracle
+
+VERIFIED:
+
+- The formal Stage-5E command gave every pair-specific direct DeltaE only two
+  gradient-bearing visits. The original artifact is preserved and is now
+  labeled `underoptimized_two_update_result` for capacity interpretation.
+- The old dense table used one shared tensor with Adam. A row with stale Adam
+  state could move on a later optimizer step even when that row was not in the
+  current batch. The corrected implementation uses independent parameters so
+  unselected rows receive no gradient and no optimizer update.
+- The corrected artifacts store exact per-pair update counters and optimizer
+  state. All formal checkpoints had equal minimum, maximum, and mean updates
+  per pair.
+- Sequence-level utility supervision on the balanced 192-pair set reached
+  Spearman `0.976238`, sign agreement `1.0`, and sequence Huber `0.054151` at
+  ratio 1.0 and 64 updates per pair.
+- Ratio 1.0 passed every direct utility-capacity check except plateau. Its
+  sequence Huber improved another `22.5965%` from u48 to u64.
+- The run stayed within the K=4 input-embedding, `last_user_k` scope. No new
+  injection site, selector, compiler, full-bank model, Stage C2, or AppWorld
+  evaluation was run.
+
+Decision:
+
+- Replace the old Stage-5E `direct_delta_fails` capacity interpretation with
+  `oracle_not_converged_extend_updates`.
+- Keep the Stage-5E objective-mismatch result: the old sparse behavioral-delta
+  objective remains poor evidence for utility alignment.
+- Do not claim that K=4 input-embedding capacity has formally passed until the
+  documented plateau criterion is met.
+- Do not redesign the injection site while the direct oracle is still
+  improving materially.
+- Do not run the conditional pair-z inversion, memory compiler training,
+  Stage C2, or AppWorld evaluation yet.
+
+Deviation or workaround:
+
+- No hard-scope deviation occurred.
+- The pilot records u48/u80/u96/u112 in addition to the required
+  u2/u8/u16/u32/u64/u128 points. These intermediate checkpoints are required
+  to evaluate the fixed 16-update plateau window and do not change the subset
+  or objective selection protocol.
+- Objective selection used the predetermined lexicographic rule. It selected
+  sequence utility plus sparse KL because that pilot reached a documented
+  plateau, even though pure sequence utility had lower u128 Huber but was
+  still improving. The 192-pair result was not used to revise this choice.
+
+Follow-up:
+
+- Run EXP-016B as a resumable ratio-1.0 convergence extension from u64 to at
+  least u128, with fixed 16-update checkpoints and a predetermined train-only
+  learning-rate stabilization rule if needed.
+- If the direct oracle reaches a plateau and still satisfies the other gate
+  checks, stop for review before a separately approved 128D injector/decoder
+  capacity milestone.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:
