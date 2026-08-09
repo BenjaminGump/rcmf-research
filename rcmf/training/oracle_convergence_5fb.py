@@ -33,17 +33,14 @@ EXPECTED_STAGE5FA_SOURCE_COMMIT = "451b7a763dd3ca0a08ff7cf430d2d2e5b16396c8"
 
 
 def tensor_state_sha256(state_dict: Mapping[str, Tensor]) -> str:
-    """Hash tensor keys, metadata, and raw bytes without depending on torch.save."""
+    """Match the immutable Stage-5F-A audit's normalized state-tensor hash."""
     digest = hashlib.sha256()
     for name in sorted(state_dict):
         tensor = state_dict[name].detach().cpu().contiguous()
-        metadata = {
-            "name": name,
-            "dtype": str(tensor.dtype),
-            "shape": list(tensor.shape),
-        }
-        digest.update(json.dumps(metadata, sort_keys=True, separators=(",", ":")).encode("utf-8"))
-        digest.update(tensor.view(torch.uint8).numpy().tobytes(order="C"))
+        digest.update(name.encode("utf-8"))
+        digest.update(str(tensor.dtype).encode("ascii"))
+        digest.update(json.dumps(list(tensor.shape)).encode("ascii"))
+        digest.update(tensor.numpy().tobytes(order="C"))
     return digest.hexdigest()
 
 

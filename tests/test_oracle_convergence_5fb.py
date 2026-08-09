@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import copy
+import hashlib
+import json
 from itertools import pairwise
 
 import pytest
@@ -130,7 +132,16 @@ def test_tensor_hash_is_stable_and_detects_a_changed_delta() -> None:
     state = {"rows.0": torch.tensor([[1.0, -2.0]]), "rows.1": torch.tensor([[3.0, 4.0]])}
     copied = copy.deepcopy(state)
 
+    legacy_audit_digest = hashlib.sha256()
+    for key, value in sorted(state.items()):
+        tensor = value.detach().cpu().contiguous()
+        legacy_audit_digest.update(key.encode("utf-8"))
+        legacy_audit_digest.update(str(tensor.dtype).encode("ascii"))
+        legacy_audit_digest.update(json.dumps(list(tensor.shape)).encode("ascii"))
+        legacy_audit_digest.update(tensor.numpy().tobytes(order="C"))
+
     assert tensor_state_sha256(state) == tensor_state_sha256(copied)
+    assert tensor_state_sha256(state) == legacy_audit_digest.hexdigest()
     copied["rows.1"][0, 0] += 1.0
     assert tensor_state_sha256(state) != tensor_state_sha256(copied)
 
