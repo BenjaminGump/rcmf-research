@@ -3,6 +3,8 @@ from __future__ import annotations
 import pytest
 import torch
 
+from scripts.run_stage_c_oracle_decoder_5fc import _train_tensor_decoder
+
 from rcmf.training.oracle_convergence_5fa import (
     IndependentPairTensorTable,
     assess_plateau,
@@ -174,6 +176,38 @@ def test_three_fold_manifest_is_deterministic_state_grouped_and_leak_free() -> N
     assert [len(fold["heldout_pair_ids"]) for fold in first["folds"]] == [12, 12, 12]
     assert all(fold["train_covers_all_memories"] for fold in first["folds"])
     assert first["assignment_search"]["missing_train_memory_count"] == 0
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="requires CUDA device split")
+def test_linear_tensor_decoder_accepts_cpu_target_and_cuda_basis(tmp_path) -> None:
+    generator = torch.Generator().manual_seed(41)
+    target = torch.randn(4, 64, generator=generator)
+    basis = torch.randn(128, 64, generator=generator).cuda()
+    settings = {
+        "decoder_hidden_dim": 512,
+        "tensor_training": {
+            "batch_size": 4,
+            "checkpoint_interval_epochs": 1,
+            "minimum_epochs": 1,
+            "maximum_epochs": 1,
+            "linear_learning_rate": 0.001,
+            "mlp_learning_rate": 0.0003,
+            "latent_initial_std": 0.02,
+        },
+    }
+
+    _, summary = _train_tensor_decoder(
+        architecture="linear",
+        train_pair_ids=["a", "b", "c", "d"],
+        train_target=target,
+        basis=basis,
+        settings=settings,
+        device=torch.device("cuda"),
+        seed=13,
+        output_dir=tmp_path,
+    )
+
+    assert summary["epochs"] == 1
 
 
 @pytest.mark.parametrize("decoder_type", ["linear", "mlp"])

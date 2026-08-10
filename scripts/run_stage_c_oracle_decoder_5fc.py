@@ -460,7 +460,7 @@ def _train_tensor_decoder(
     if architecture == "linear":
         decoder: nn.Module = LinearDeltaDecoder(LATENT_DIM, output_dim)
         decoder.initialize_from_basis(basis)
-        initial_z = train_target @ basis.T
+        initial_z = train_target.to(basis.device) @ basis.T
         lr = float(tensor_cfg["linear_learning_rate"])
     elif architecture == "mlp":
         torch.manual_seed(seed)
