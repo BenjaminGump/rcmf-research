@@ -863,6 +863,73 @@ VERIFIED:
 - Post-run status: no tmux server or active Stage-5F-A process, GPU
   `0 MiB / 0%`, safe to terminate.
 
+## 2026-08-09 Milestone 5F-B direct-oracle convergence extension
+
+VERIFIED:
+
+- Final source commit used by Lambda:
+  `02f13ec2bba7600441b565cd97884fc23f9fdbc9`.
+- Artifact root:
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/oracle_convergence_5fb_20260809_001`.
+- The immutable Stage-5F-A ratio-1.0 checkpoint resumed with the exact ordered
+  192-pair manifest, DeltaE parameters, 192 nonempty Adam states, learning rate
+  `0.05`, and min/max/mean update counts `64/64/64.0`.
+- Source checkpoint SHA256 was
+  `26993056d9ac06d6fb43316fdd8ce4cc2557497d994a62500dbc6d16193ea840`;
+  normalized source DeltaE SHA256 was
+  `897db72059a5cb5e8a38beb28b618bc3a7906ce6b973e8d601bd685ce8150424`;
+  ordered pair-manifest SHA256 was
+  `b4868b7b384c099ed929dc1c8cb4d9db608843bdeab70717aaccfb57848f7c4d`.
+- The loaded u64 evaluation reproduced the Stage-5F-A recorded metrics with
+  maximum absolute difference `0.0` before any new update.
+- A first pre-update launch at commit
+  `b0037568a3decb8661c58630f73ad14c1fd539c6` aborted before model loading or
+  u65 because two tensor-hash routines framed identical bytes differently.
+  Commit `02f13ec...` made runtime hashing reproduce the immutable source-audit
+  algorithm and added a regression test. No checkpoint or training state was
+  modified by the aborted attempt.
+- The formal continuation saved checkpoints at exactly u80, u96, u112, and
+  u128. Every checkpoint had identical min/max/mean updates per pair equal to
+  its checkpoint number.
+- Sequence Huber / Spearman were: u64 `0.054151 / 0.976238`, u80
+  `0.065346 / 0.957625`, u96 `0.034719 / 0.982333`, u112
+  `0.029525 / 0.984810`, and u128 `0.034512 / 0.979465`.
+- At u128, the pre-registered u112-u128 plateau inputs were relative Huber
+  improvement `-0.1689106903` and Spearman improvement `-0.0053458074`.
+  Both are `<0.01`, so the supplied formal plateau rule passed at the first
+  eligible checkpoint. This rule also treats deterioration as less than 1%
+  improvement: u128 Huber was `16.8911%` worse than the numerically best u112.
+  The formal stop is compliant but is not evidence of monotonic convergence.
+- Final u128 metrics were utility Spearman/Pearson
+  `0.979465 / 0.982839`, sign agreement `0.992806`, sequence
+  MAE/MSE/Huber `0.048244 / 0.019760 / 0.034512`, positive mean student
+  utility `+0.667495`, negative mean `-0.753849`, and neutral mean absolute
+  utility `0.000135`.
+- Final target-token delta correlation/Huber were
+  `0.875870 / 0.257348`; sparse teacher KL was `0.096836`; aggregate target
+  NLL was `0.753194`. These are secondary fidelity metrics, not gate blockers.
+- Mean/max perturbation ratio was `0.975180 / 1.0000001`; the tiny excess is
+  within the documented numerical tolerance.
+- Zero and matched-random sequence Hubers were `0.515256` and `0.515793`.
+  Final Huber was `93.3019%` below zero. Final-minus-zero and
+  final-minus-random paired-bootstrap Huber CIs were respectively
+  `[-0.546267, -0.414451]` and `[-0.551062, -0.414347]`.
+- Final-minus-u64 Huber CI was `[-0.046206, +0.005487]`; the numerical u128
+  improvement over u64 is not statistically established by this bootstrap.
+- All eight formal utility-capacity checks passed. Decision branch:
+  `input_embedding_channel_capacity_passed_after_convergence`.
+- Stage-5E's direct-channel failure remains superseded as an underoptimized
+  two-update result. Stage-5E's sparse-objective mismatch remains valid.
+- The final checkpoint has exactly 128 updates for every pair and is at
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/oracle_convergence_5fb_20260809_001/checkpoints/direct_sequence_utility_plus_sparse_kl_ratio1.0_u128.pt`.
+- Tests passed locally and on Lambda: `36 passed` in each environment.
+  Independent post-run validation found `0` errors.
+- Formal runtime was `23,495.135 s`, approximately `6.5264 H100 hours`.
+- No pair-z, injector-decoder, compiler, selector, Stage C2, AppWorld
+  generation/evaluation, or end-to-end training was run.
+- Post-run status: no tmux server or active EXP-016B process, GPU
+  `0 MiB / 0%`, safe to terminate.
+
 ## INFERENCES
 
 - The semantic-retrieval auxiliary loss improves the fixed first-10 slice but
@@ -919,10 +986,14 @@ VERIFIED:
   teacher-best Recall@8 and preserve state-dependent NDCG, but this alone does
   not solve raw-utility alignment: Recall@4, signed-score calibration,
   utility-score Spearman, and projection causality remain insufficient.
-- Milestone 5F-A provides strong evidence that K=4 `last_user_k` input
-  embedding perturbations can reproduce sequence-level raw-teacher utility
-  under a ratio-1.0 budget. The remaining direct-oracle issue is convergence,
-  not a verified lack of channel capacity or a disproven injection location.
+- Milestone 5F-B formally establishes that K=4 `last_user_k` input-embedding
+  perturbations have sufficient direct-oracle sequence-utility capacity under
+  a ratio-1.0 budget. The direct-channel failure observed in Stage 5E was due
+  to underoptimization and objective mismatch, so current evidence does not
+  justify changing the injection site.
+- The u112-to-u128 behavior shows that the registered plateau predicate is a
+  stopping-rule result, not proof of a monotonic optimum. u112 is numerically
+  better on sequence utility, while u128 is the pre-registered gate checkpoint.
 - The average target NLL is not the direct-capacity criterion on this balanced
   diagnostic because negative-teacher pairs intentionally supervise harmful
   utility. Sign, sequence-utility error, and matched controls are the relevant
@@ -956,26 +1027,25 @@ VERIFIED:
 - Whether an additive-token injector can use a signed-program memory field
   without degrading Qwen generated AppWorld action trajectories; Stage C1 used
   teacher-forced scoring only and no AppWorld generation/evaluation.
-- Whether the ratio-1.0 K=4 direct oracle reaches a documented plateau after
-  more than 64 updates per pair; it was still improving materially at the
-  Milestone-5F-A stop point.
 - Whether a properly optimized 128D latent/injector decoder can preserve the
-  converged direct DeltaE utility signal. The conditional pair-z sanity check
-  did not run in Milestone 5F-A because the direct plateau gate was not met.
-- Whether a later-layer residual injection site is needed. Milestone 5F-A
-  provides no basis to redesign the site before completing convergence.
+  direct DeltaE utility signal. Pair-z was deliberately not run in Milestone
+  5F-B even though the direct capacity gate passed.
+- Whether a later-layer residual injection site would improve deployable
+  performance remains untested, but EXP-016B gives no scientific reason to
+  redesign the current input-embedding site before testing the decoder.
 
 ## Immediate Workflow Status
 
 - Working branch: `workflow/research-loop`.
-- Latest Lambda-synced Stage-5F-A source commit before final records:
-  `451b7a763dd3ca0a08ff7cf430d2d2e5b16396c8`.
+- Latest Lambda-synced EXP-016B source commit before final records:
+  `02f13ec2bba7600441b565cd97884fc23f9fdbc9`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
-- Lambda post-5F-A status: no tmux server running and GPU memory/utilization
+- Lambda post-5F-B status: no tmux server running and GPU memory/utilization
   reported `0 MiB / 0%`.
 - Do not launch Stage C2, joint selector/program/injector training, Qwen action
   loss, full-bank end-to-end RCMF training, AppWorld agent evaluation, or an
-  injection-site redesign. First extend the selected ratio-1.0 direct oracle
-  to a documented plateau and review that result.
+  injection-site redesign. The next separately reviewed experiment should test
+  a properly optimized 128D pair-latent/shared-injector decoder while keeping
+  the now-validated K=4 `last_user_k` injection site fixed.

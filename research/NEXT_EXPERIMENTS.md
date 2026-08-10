@@ -410,6 +410,9 @@ Stop condition:
 Result:
 
 - Decision branch: `direct_delta_fails`.
+- This direct-channel capacity interpretation is superseded by EXP-016A/B:
+  the Stage-5E result used only two updates per pair. Its sparse-objective
+  mismatch finding remains valid.
 - Best K=4 direct DeltaE oracle failed the capacity gate despite weak positive
   utility correlation: Spearman `0.641904`, sign agreement `0.776978`,
   target-token delta correlation `0.369083`, mean perturbation ratio
@@ -446,7 +449,7 @@ Result:
 - The previous Stage-5E direct-capacity failure is superseded. The Stage-5E
   sparse-objective mismatch remains verified.
 
-## EXP-016B Direct-Oracle Convergence Extension
+## EXP-016B Direct-Oracle Convergence Extension - Completed
 
 Goal:
 
@@ -490,6 +493,56 @@ Stop condition:
   pair-z/injector training, a new injection site, memory compiler work,
   Stage C2, full-bank training, AppWorld generation/evaluation, or Qwen
   fine-tuning in EXP-016B.
+
+Result:
+
+- Completed at
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/oracle_convergence_5fb_20260809_001`.
+- Resume integrity passed for the exact 192 ordered pairs, 192 Adam states,
+  and min/max/mean source counters `64/64/64.0`; u64 metric reproduction had
+  maximum absolute difference `0.0`.
+- The fixed continuation reached u80/u96/u112/u128 with exact equal updates
+  per pair. At u128, utility Spearman was `0.979465`, sign agreement
+  `0.992806`, sequence Huber `0.034512`, and mean/max perturbation ratio was
+  `0.975180/1.0000001`.
+- u128 sequence Huber was `93.3019%` below zero. All eight utility-capacity
+  checks passed.
+- The registered plateau predicate passed at u128, but the curve was
+  nonmonotonic: u128 Huber was `16.8911%` worse than the numerically best u112.
+  The exact supplied predicate treats negative improvement as `<1%`; this
+  caveat must remain attached to the formal result.
+- Decision branch:
+  `input_embedding_channel_capacity_passed_after_convergence`.
+- No pair-z, injector-decoder, compiler, selector, Stage C2, AppWorld, or
+  end-to-end work was started.
+
+## EXP-016C 128D Pair-Latent / Shared-Injector Capacity - Pending Review
+
+Goal:
+
+- Determine whether a properly optimized 128D pair-specific latent and shared
+  additive-token injector can realize the direct DeltaE utility signal that
+  EXP-016B established is available at K=4 `last_user_k`.
+
+Required constraints:
+
+- Do not start until the user and ChatGPT review and approve a detailed
+  milestone contract.
+- Keep Qwen frozen and preserve teacher-forced scoring, the validated 192-pair
+  manifest, K=4, `last_user_k`, and controlled perturbation ratio.
+- Use explicit equal updates per pair and convergence checkpoints; do not
+  repeat the two-update underoptimization from Stage 5E.
+- Isolate pair-latent/shared-decoder capacity before returning to a memory
+  representation compiler, selector, full-bank field, Stage C2, or AppWorld
+  generation.
+
+Decision evidence:
+
+- If frozen/shared-injector pair-latent inversion approaches the converged
+  direct DeltaE utility metrics and beats zero/random controls, decoder
+  capacity is supported and a later compiler milestone may be designed.
+- If it reaches a documented plateau and remains materially below direct
+  DeltaE, identify the 128D latent/shared decoder as the next bottleneck.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 

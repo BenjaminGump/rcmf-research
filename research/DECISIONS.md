@@ -786,6 +786,72 @@ Follow-up:
   checks, stop for review before a separately approved 128D injector/decoder
   capacity milestone.
 
+## 2026-08-09 Milestone 5F-B direct-oracle convergence extension
+
+VERIFIED:
+
+- The Stage-5F-A ratio-1.0 checkpoint resumed with all 192 ordered pair IDs,
+  DeltaE rows, Adam states, update counters, objective settings, and learning
+  rate intact. The u64 metric reproduction maximum absolute difference was
+  `0.0` before any new update.
+- The formal run continued every pair through u80/u96/u112/u128 without
+  reinitialization. All per-pair counters exactly matched each checkpoint.
+- u128 met the supplied plateau predicate: relative sequence-Huber improvement
+  from u112 was `-0.1689106903` and Spearman improvement was
+  `-0.0053458074`; both are `<0.01`.
+- The curve was nonmonotonic. u112 sequence Huber `0.029525` was better than
+  u128 `0.034512`; the latter was `16.8911%` worse. The predicate counts
+  deterioration as less than 1% improvement, so this is a rule-compliant stop,
+  not evidence of a monotonic asymptote.
+- At u128, utility Spearman was `0.979465`, sign agreement `0.992806`, sequence
+  Huber `0.034512`, positive/negative mean student utility
+  `+0.667495/-0.753849`, neutral mean absolute utility `0.000135`, and max
+  perturbation ratio `1.0000001` within tolerance.
+- Final sequence Huber was `93.3019%` below zero and decisively below matched
+  random. All eight registered utility-capacity checks passed.
+- Qwen remained frozen. No pair-z, shared-injector decoder training, memory
+  compiler, selector, Stage C2, AppWorld generation/evaluation, or end-to-end
+  training was run.
+
+Decision:
+
+- Record branch
+  `input_embedding_channel_capacity_passed_after_convergence`.
+- Treat K=4 `last_user_k` input-embedding injection as having sufficient
+  direct-oracle sequence-utility capacity under ratio 1.0.
+- Keep Stage-5E's direct-channel failure superseded as an underoptimized
+  two-update result; retain its sparse-objective mismatch finding.
+- Do not redesign the injection site based on Stage 5E. The next separately
+  approved milestone should isolate whether a properly optimized 128D
+  pair-latent/shared-injector decoder can realize the validated direct signal.
+- Do not infer that the deployable memory compiler or full program field has
+  passed; EXP-016B is an oracle capacity result only.
+
+Deviation or workaround:
+
+- The immutable Stage-5F-A checkpoint predates embedded DeltaE/config/model/
+  cache hashes. It was not rewritten. EXP-016B validates an external immutable
+  source-integrity sidecar containing the independently audited checkpoint,
+  normalized DeltaE, pair-manifest, model, tokenizer, cache, and config
+  identities.
+- The first launch at source commit
+  `b0037568a3decb8661c58630f73ad14c1fd539c6` aborted before model loading or
+  u65 because the new tensor hash and old audit hash framed identical bytes
+  differently. Commit `02f13ec2bba7600441b565cd97884fc23f9fdbc9`
+  restored exact compatibility and added a regression test. The source
+  checkpoint and training state were unchanged.
+- No scientific-scope deviation occurred. Learning rate remained `0.05`, and
+  the run stopped at the first eligible checkpoint under the exact supplied
+  plateau rule.
+
+Follow-up:
+
+- Review EXP-016B before approving a 128D pair-latent/shared-injector capacity
+  milestone. That experiment must preserve adequate updates-per-pair and must
+  not silently expand into compiler, selector, Stage C2, or AppWorld work.
+- For future convergence protocols, consider specifying a non-deterioration
+  guard in addition to the current "less than 1% improvement" predicate.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:
