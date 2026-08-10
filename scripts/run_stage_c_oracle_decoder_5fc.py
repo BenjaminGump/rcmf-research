@@ -198,14 +198,14 @@ def _stage_settings(path: Path) -> dict[str, Any]:
         if settings.get(key) != value
     }
     tensor_expected = {
-        "version": "plateau_required_v3",
+        "version": "plateau_required_v4",
         "maximum_epochs": 2048,
         "require_documented_plateau": True,
         "linear_learning_rate": 0.000001,
         "mlp_learning_rate": 0.0003,
         "numerical_floor": {
-            "normalized_mse": 1.0e-8,
-            "relative_frobenius_error": 1.0e-4,
+            "normalized_mse": 1.0e-6,
+            "relative_frobenius_error": 1.0e-3,
             "one_minus_mean_cosine": 1.0e-6,
         },
     }

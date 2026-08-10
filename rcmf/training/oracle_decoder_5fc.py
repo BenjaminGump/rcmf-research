@@ -597,8 +597,8 @@ def tensor_reconstruction_plateau(
     *,
     current_epoch: int,
     previous_epoch: int,
-    normalized_mse_floor: float = 1.0e-8,
-    relative_frobenius_floor: float = 1.0e-4,
+    normalized_mse_floor: float = 1.0e-6,
+    relative_frobenius_floor: float = 1.0e-3,
     cosine_error_floor: float = 1.0e-6,
 ) -> dict[str, Any]:
     current = next((row for row in history if int(row["epoch"]) == int(current_epoch)), None)

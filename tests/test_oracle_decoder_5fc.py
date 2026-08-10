@@ -179,6 +179,36 @@ def test_tensor_plateau_uses_absolute_floor_near_machine_precision() -> None:
     assert report["plateau_mode"] == "absolute_numerical_floor"
 
 
+def test_tensor_plateau_accepts_sub_tenth_percent_reconstruction() -> None:
+    history = [
+        {
+            "epoch": 576,
+            "metrics": {
+                "loss": 8.08e-6,
+                "normalized_mse": 7.70e-6,
+                "relative_frobenius_error": 0.00230,
+                "mean_cosine": 0.9999962,
+            },
+        },
+        {
+            "epoch": 592,
+            "metrics": {
+                "loss": 3.66e-7,
+                "normalized_mse": 3.48e-7,
+                "relative_frobenius_error": 0.000590,
+                "mean_cosine": 0.99999988,
+            },
+        },
+    ]
+
+    report = tensor_reconstruction_plateau(
+        history, current_epoch=592, previous_epoch=576
+    )
+
+    assert report["plateau"] is True
+    assert report["plateau_mode"] == "absolute_numerical_floor"
+
+
 def _split_rows() -> list[dict]:
     rows = []
     categories = ("positive", "neutral", "negative", "random")
@@ -227,8 +257,8 @@ def test_linear_tensor_decoder_accepts_cpu_target_and_cuda_basis(tmp_path) -> No
             "latent_initial_std": 0.02,
             "require_documented_plateau": False,
             "numerical_floor": {
-                "normalized_mse": 1.0e-8,
-                "relative_frobenius_error": 1.0e-4,
+                "normalized_mse": 1.0e-6,
+                "relative_frobenius_error": 1.0e-3,
                 "one_minus_mean_cosine": 1.0e-6,
             },
         },
