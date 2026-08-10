@@ -17,6 +17,7 @@ from rcmf.training.oracle_decoder_5fc import (
     assert_pair_only_input_contract,
     decoder_decision,
     flatten_delta,
+    minimally_project_delta_to_ratio,
     module_state_sha256,
     project_independent_latents_to_ratio_,
     state_grouped_three_fold_manifest,
@@ -133,6 +134,18 @@ def test_float64_rank_192_factorization_removes_float32_reconstruction_drift() -
     )["flat"]
 
     assert torch.equal(rank192, flatten_delta(delta))
+
+
+def test_minimal_ratio_projection_preserves_in_tolerance_rows_exactly() -> None:
+    delta = torch.tensor([[[1.0000001, 0.0]], [[1.01, 0.0]]], dtype=torch.float32)
+
+    projected, report = minimally_project_delta_to_ratio(
+        delta, base_norms=torch.ones(2), max_ratio=1.0, tolerance=1.0e-6
+    )
+
+    assert torch.equal(projected[0], delta[0])
+    assert float(projected[1].norm()) == pytest.approx(1.0, abs=1.0e-6)
+    assert report["projected_row_count"] == 1
 
 
 def _split_rows() -> list[dict]:

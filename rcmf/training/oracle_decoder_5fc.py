@@ -215,10 +215,11 @@ def minimally_project_delta_to_ratio(
         raise ValueError("base norm count differs from DeltaE rows")
     pre_ratios = norms.cpu() / bases
     needs_projection = pre_ratios > float(max_ratio) + float(tolerance)
-    scales = torch.minimum(
-        torch.ones_like(norms),
-        (bases.to(norms.device) * float(max_ratio)) / norms.clamp_min(1.0e-8),
-    )
+    projection_mask = needs_projection.to(norms.device)
+    scales = torch.ones_like(norms)
+    scales[projection_mask] = (
+        bases.to(norms.device)[projection_mask] * float(max_ratio)
+    ) / norms[projection_mask].clamp_min(1.0e-8)
     projected.mul_(scales.view(-1, 1, 1))
     post_ratios = projected.flatten(start_dim=1).norm(dim=1).cpu() / bases
     return projected, {
