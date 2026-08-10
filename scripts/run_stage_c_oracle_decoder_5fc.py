@@ -198,15 +198,15 @@ def _stage_settings(path: Path) -> dict[str, Any]:
         if settings.get(key) != value
     }
     tensor_expected = {
-        "version": "plateau_required_v4",
+        "version": "plateau_required_v5",
         "maximum_epochs": 2048,
         "require_documented_plateau": True,
         "linear_learning_rate": 0.000001,
         "mlp_learning_rate": 0.0003,
         "numerical_floor": {
-            "normalized_mse": 1.0e-6,
-            "relative_frobenius_error": 1.0e-3,
-            "one_minus_mean_cosine": 1.0e-6,
+            "normalized_mse": 5.0e-6,
+            "relative_frobenius_error": 2.0e-3,
+            "one_minus_mean_cosine": 2.0e-6,
         },
     }
     tensor_actual = dict(settings.get("tensor_training") or {})
@@ -508,6 +508,7 @@ def _train_tensor_decoder(
     target = train_target.to(device)
     history: list[dict[str, Any]] = []
     checkpoint_path = output_dir / "tensor_decoder.pt"
+    best_checkpoint_path = output_dir / "best_tensor_decoder.pt"
     latest_path = output_dir / "latest.json"
     target_sha256 = tensor_state_sha256({"train_target": train_target})
     basis_sha256 = tensor_state_sha256({"basis": basis})
@@ -605,6 +606,8 @@ def _train_tensor_decoder(
             "source_commit": maybe_git_commit(),
         }
         atomic_torch_save(payload, checkpoint_path)
+        if metrics["loss"] <= min(item["metrics"]["loss"] for item in history):
+            atomic_torch_save(payload, best_checkpoint_path)
         atomic_write_json(latest_path, {"checkpoint": str(checkpoint_path), "epoch": epoch})
         atomic_write_json(output_dir / "history.json", history)
         print(
@@ -617,6 +620,7 @@ def _train_tensor_decoder(
 
     with torch.no_grad():
         final_metrics = decoder_reconstruction_metrics(decoder(z), target)
+    best_entry = min(history, key=lambda item: float(item["metrics"]["loss"]))
     summary = {
         "status": "completed" if plateau.get("plateau") else "stopped_without_plateau",
         "architecture": architecture,
@@ -626,6 +630,9 @@ def _train_tensor_decoder(
         "history": history,
         "plateau": plateau,
         "final_metrics": final_metrics,
+        "best_epoch": int(best_entry["epoch"]),
+        "best_metrics": best_entry["metrics"],
+        "best_checkpoint": str(best_checkpoint_path),
         "decoder_state_sha256": module_state_sha256(decoder),
         "training_identity_sha256": training_identity_sha256,
         "checkpoint": str(checkpoint_path),

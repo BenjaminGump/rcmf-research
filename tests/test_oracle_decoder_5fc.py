@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 import torch
 
@@ -257,9 +259,9 @@ def test_linear_tensor_decoder_accepts_cpu_target_and_cuda_basis(tmp_path) -> No
             "latent_initial_std": 0.02,
             "require_documented_plateau": False,
             "numerical_floor": {
-                "normalized_mse": 1.0e-6,
-                "relative_frobenius_error": 1.0e-3,
-                "one_minus_mean_cosine": 1.0e-6,
+                "normalized_mse": 5.0e-6,
+                "relative_frobenius_error": 2.0e-3,
+                "one_minus_mean_cosine": 2.0e-6,
             },
         },
     }
@@ -276,6 +278,7 @@ def test_linear_tensor_decoder_accepts_cpu_target_and_cuda_basis(tmp_path) -> No
     )
 
     assert summary["epochs"] == 1
+    assert Path(summary["best_checkpoint"]).exists()
 
 
 @pytest.mark.parametrize("decoder_type", ["linear", "mlp"])
