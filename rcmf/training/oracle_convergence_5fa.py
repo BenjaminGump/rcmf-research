@@ -437,14 +437,27 @@ def summarize_convergence_rows(rows: Sequence[dict[str, Any]]) -> dict[str, Any]
     }
 
 
-def assess_plateau(
+def _plateau_points(
+    checkpoints: Sequence[dict[str, Any]],
+    *,
+    current_updates: int,
+    lag: int = 16,
+) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+    current = next((item for item in checkpoints if int(item["updates_per_pair"]) == int(current_updates)), None)
+    previous = next((item for item in checkpoints if int(item["updates_per_pair"]) == int(current_updates) - int(lag)), None)
+    return current, previous
+
+
+def assess_plateau_legacy_5fb(
     checkpoints: Sequence[dict[str, Any]],
     *,
     current_updates: int,
     lag: int = 16,
 ) -> dict[str, Any]:
-    current = next((item for item in checkpoints if int(item["updates_per_pair"]) == int(current_updates)), None)
-    previous = next((item for item in checkpoints if int(item["updates_per_pair"]) == int(current_updates) - int(lag)), None)
+    """Preserve the exact Stage-5F-A/B rule for immutable artifact audits."""
+    current, previous = _plateau_points(
+        checkpoints, current_updates=current_updates, lag=lag
+    )
     if current is None or previous is None or current_updates < 32:
         return {
             "assessable": False,
@@ -476,6 +489,75 @@ def assess_plateau(
         "criteria": {
             "relative_loss_improvement_lt": 0.01,
             "absolute_spearman_improvement_lt": 0.01,
+            "minimum_updates": 32,
+        },
+    }
+
+
+def assess_plateau(
+    checkpoints: Sequence[dict[str, Any]],
+    *,
+    current_updates: int,
+    lag: int = 16,
+) -> dict[str, Any]:
+    """Prospective convergence rule that cannot label a large regression flat."""
+    current, previous = _plateau_points(
+        checkpoints, current_updates=current_updates, lag=lag
+    )
+    if current is None or previous is None or current_updates < 32:
+        return {
+            "rule_version": "prospective_absolute_change_best_guard_v1",
+            "assessable": False,
+            "plateau": False,
+            "current_updates": int(current_updates),
+            "previous_updates": int(current_updates) - int(lag),
+        }
+    current_pair_ids = current.get("pair_ids")
+    previous_pair_ids = previous.get("pair_ids")
+    if current_pair_ids is not None or previous_pair_ids is not None:
+        if list(current_pair_ids or []) != list(previous_pair_ids or []):
+            raise ValueError("convergence checkpoints were evaluated on different pair subsets")
+
+    eligible = [
+        item for item in checkpoints if int(item["updates_per_pair"]) <= int(current_updates)
+    ]
+    current_summary = current["evaluation_summary"]
+    previous_summary = previous["evaluation_summary"]
+    current_loss = float(current_summary["sequence_utility_huber"]["mean"])
+    previous_loss = float(previous_summary["sequence_utility_huber"]["mean"])
+    best_loss = min(
+        float(item["evaluation_summary"]["sequence_utility_huber"]["mean"])
+        for item in eligible
+    )
+    relative_loss_change = abs(current_loss - previous_loss) / max(
+        abs(previous_loss), 1.0e-12
+    )
+    current_spearman = float(current_summary.get("u_text_vs_u_student_spearman") or 0.0)
+    previous_spearman = float(previous_summary.get("u_text_vs_u_student_spearman") or 0.0)
+    absolute_spearman_change = abs(current_spearman - previous_spearman)
+    within_best_guard = current_loss <= 1.02 * best_loss
+    checks = {
+        "absolute_relative_loss_change_lt_0_01": relative_loss_change < 0.01,
+        "absolute_spearman_change_lt_0_01": absolute_spearman_change < 0.01,
+        "current_loss_lte_1_02_best_so_far": within_best_guard,
+    }
+    return {
+        "rule_version": "prospective_absolute_change_best_guard_v1",
+        "assessable": True,
+        "plateau": all(checks.values()),
+        "current_updates": int(current_updates),
+        "previous_updates": int(current_updates) - int(lag),
+        "current_sequence_utility_huber": current_loss,
+        "previous_sequence_utility_huber": previous_loss,
+        "best_so_far_sequence_utility_huber": best_loss,
+        "absolute_relative_sequence_utility_huber_change": relative_loss_change,
+        "absolute_spearman_change": absolute_spearman_change,
+        "current_to_best_ratio": current_loss / max(best_loss, 1.0e-12),
+        "checks": checks,
+        "criteria": {
+            "absolute_relative_loss_change_lt": 0.01,
+            "absolute_spearman_change_lt": 0.01,
+            "current_loss_lte_best_multiplier": 1.02,
             "minimum_updates": 32,
         },
     }

@@ -14,7 +14,7 @@ from torch import Tensor
 
 from rcmf.training.oracle_convergence_5fa import (
     ORACLE_CONVERGENCE_VERSION,
-    assess_plateau,
+    assess_plateau_legacy_5fb,
     summarize_convergence_rows,
     update_count_summary,
 )
@@ -378,7 +378,9 @@ def final_control_bootstrap(
 
 
 def eligible_plateau(history: Sequence[dict[str, Any]], *, current_updates: int) -> dict[str, Any]:
-    report = assess_plateau(history, current_updates=current_updates, lag=CHECKPOINT_INTERVAL)
+    report = assess_plateau_legacy_5fb(
+        history, current_updates=current_updates, lag=CHECKPOINT_INTERVAL
+    )
     report["minimum_terminal_updates"] = MINIMUM_TERMINAL_UPDATES
     report["eligible_to_stop"] = bool(
         int(current_updates) >= MINIMUM_TERMINAL_UPDATES and report.get("plateau")

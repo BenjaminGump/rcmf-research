@@ -1,0 +1,90 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_oracle_decoder_5fc
+  version: stage_c_shared_decoder_capacity_5fc_v1
+  scope:
+    - reuse_stage5fb_u112_and_u128_direct_delta
+    - uncentered_low_rank_delta_geometry
+    - state_grouped_three_fold_decoder_split
+    - shared_linear_and_current_mlp_decoder
+    - frozen_decoder_heldout_pair_inversion
+    - joint_mlp_heldout_oracle_control
+    - input_embedding_only
+    - last_user_k
+    - k_4
+    - qwen_frozen
+    - teacher_forced_target_scoring_only
+    - no_memory_compiler
+    - no_signed_selector
+    - no_full_bank_model
+    - no_appworld_generation_or_evaluation
+    - no_stage_c2
+    - no_end_to_end_rcmf_training
+
+injector:
+  type: additive_token
+  position: last_user_k
+  num_tokens: 4
+  initial_scale: 0.0
+
+stage_c_5fc:
+  source_stage5fb: runs/stage_c/oracle_convergence_5fb_20260809_001
+  primary_checkpoint_updates: 112
+  robustness_checkpoint_updates: 128
+  pair_count: 192
+  latent_dim: 128
+  decoder_hidden_dim: 512
+  low_ranks: [16, 32, 64, 128, 192]
+  split_seed: 20260810
+  folds: 3
+  direct_delta:
+    injection_site: input_embedding
+    position: last_user_k
+    k: 4
+    ratio_budget: 1.0
+  objective:
+    name: sequence_utility_plus_sparse_kl
+    target_delta_weight: 0.0
+    sequence_utility_weight: 1.0
+    sparse_teacher_kl_weight: 0.05
+    huber_delta: 0.1
+  prospective_plateau:
+    absolute_relative_sequence_huber_change_lt: 0.01
+    absolute_spearman_change_lt: 0.01
+    current_huber_lte_best_multiplier: 1.02
+  tensor_training:
+    loss: normalized_mse_plus_0.1_one_minus_cosine
+    batch_size: 32
+    checkpoint_interval_epochs: 16
+    minimum_epochs: 64
+    maximum_epochs: 256
+    linear_learning_rate: 0.001
+    mlp_learning_rate: 0.0003
+    latent_initial_std: 0.02
+  heldout_inversion:
+    batch_size: 1
+    checkpoints_updates_per_pair: [2, 8, 16, 32, 64]
+    optional_final_updates_per_pair: 128
+    latent_learning_rate: 0.05
+    joint_decoder_learning_rate: 0.000001
+    max_gradient_norm: 1.0
+  bootstrap_samples: 5000
+  reproduction_tolerance: 0.00005
+  controls:
+    - full_direct_delta
+    - heldout_rank128_svd_projection
+    - frozen_linear_decoder_optimized_z
+    - frozen_mlp_decoder_optimized_z
+    - joint_mlp_decoder_z_oracle
+    - zero_delta
+    - matched_norm_random_delta
+    - random_z_linear_decoder
+    - random_z_mlp_decoder
+  forbidden_inputs:
+    - raw_memory_text_in_student_prompt
+    - signed_selector_payload
+    - selector_scores
+    - selector_gate
+    - empirical_mu
+    - full_bank_aggregation
