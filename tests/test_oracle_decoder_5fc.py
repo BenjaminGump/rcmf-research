@@ -16,6 +16,7 @@ from rcmf.training.oracle_decoder_5fc import (
     apply_latent_inversion_step,
     assert_pair_only_input_contract,
     decoder_decision,
+    flatten_delta,
     module_state_sha256,
     project_independent_latents_to_ratio_,
     state_grouped_three_fold_manifest,
@@ -118,6 +119,20 @@ def test_uncentered_rank_192_reconstructs_exactly_and_lower_rank_has_expected_ra
 
     assert torch.linalg.matrix_rank(rank128, tol=1.0e-4) <= 128
     assert torch.allclose(rank192, delta.flatten(start_dim=1), atol=2.0e-5, rtol=2.0e-5)
+
+
+def test_float64_rank_192_factorization_removes_float32_reconstruction_drift() -> None:
+    generator = torch.Generator().manual_seed(29)
+    delta = torch.randn(192, 4, 48, generator=generator)
+    factorization = torch.linalg.svd(
+        flatten_delta(delta).to(torch.float64), full_matrices=False
+    )
+
+    rank192 = uncentered_svd_reconstruction(
+        delta, 192, factorization=factorization
+    )["flat"]
+
+    assert torch.equal(rank192, flatten_delta(delta))
 
 
 def _split_rows() -> list[dict]:

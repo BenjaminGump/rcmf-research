@@ -130,8 +130,9 @@ def uncentered_svd_reconstruction(
     if requested <= 0 or requested > min(matrix.shape):
         raise ValueError(f"rank {requested} is outside [1, {min(matrix.shape)}]")
     basis = vh[:requested]
-    coordinates = matrix @ basis.T
-    reconstruction = coordinates @ basis
+    work_matrix = matrix.to(basis.dtype)
+    coordinates = work_matrix @ basis.T
+    reconstruction = (coordinates @ basis).to(matrix.dtype)
     return {
         "basis": basis,
         "coordinates": coordinates,
@@ -162,8 +163,9 @@ def direct_delta_geometry(
     rows: Sequence[Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
     matrix = flatten_delta(delta)
-    singular = torch.linalg.svdvals(matrix)
-    centered = matrix - matrix.mean(dim=0, keepdim=True)
+    geometry_matrix = matrix.to(torch.float64)
+    singular = torch.linalg.svdvals(geometry_matrix)
+    centered = geometry_matrix - geometry_matrix.mean(dim=0, keepdim=True)
     centered_singular = torch.linalg.svdvals(centered)
     slot_norms = delta.detach().to(torch.float32).norm(dim=-1)
     category_geometry = {}

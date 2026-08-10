@@ -187,6 +187,7 @@ def _stage_settings(path: Path) -> dict[str, Any]:
         "latent_dim": LATENT_DIM,
         "decoder_hidden_dim": 512,
         "low_ranks": list(LOW_RANKS),
+        "svd_factorization_dtype": "float64",
         "folds": 3,
     }
     differences = {
@@ -337,6 +338,8 @@ def _low_rank_analysis(
             == target_delta_sha256,
             "ordered_pair_ids": completed.get("ordered_pair_ids_sha256")
             == ordered_pair_ids_sha256,
+            "svd_factorization_dtype": completed.get("svd_factorization_dtype")
+            == "torch.float64",
         }
         if not all(resume_checks.values()):
             raise ValueError(f"cached low-rank target identity differs for {target_name}")
@@ -346,7 +349,9 @@ def _low_rank_analysis(
     device_delta = delta.to(device)
     geometry = direct_delta_geometry(device_delta, rows=rows)
     atomic_write_json(target_dir / "direct_delta_geometry.json", geometry)
-    factorization = torch.linalg.svd(flatten_delta(device_delta), full_matrices=False)
+    factorization = torch.linalg.svd(
+        flatten_delta(device_delta).to(torch.float64), full_matrices=False
+    )
 
     zero_evaluation = _evaluate_tensor(
         backend=backend,
@@ -425,6 +430,7 @@ def _low_rank_analysis(
         "target_updates": target["updates"],
         "target_delta_tensor_sha256": target_delta_sha256,
         "ordered_pair_ids_sha256": ordered_pair_ids_sha256,
+        "svd_factorization_dtype": "torch.float64",
         "geometry_path": str(target_dir / "direct_delta_geometry.json"),
         "rank_results": rank_results,
         "zero_evaluation": zero_portable,
