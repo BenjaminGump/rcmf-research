@@ -55,12 +55,14 @@ stage_c_5fc:
     absolute_spearman_change_lt: 0.01
     current_huber_lte_best_multiplier: 1.02
   tensor_training:
+    version: plateau_required_v2
     loss: normalized_mse_plus_0.1_one_minus_cosine
     batch_size: 32
     checkpoint_interval_epochs: 16
     minimum_epochs: 64
-    maximum_epochs: 256
-    linear_learning_rate: 0.001
+    maximum_epochs: 2048
+    require_documented_plateau: true
+    linear_learning_rate: 0.000001
     mlp_learning_rate: 0.0003
     latent_initial_std: 0.02
   heldout_inversion:

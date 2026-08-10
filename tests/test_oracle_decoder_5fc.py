@@ -186,6 +186,7 @@ def test_linear_tensor_decoder_accepts_cpu_target_and_cuda_basis(tmp_path) -> No
     settings = {
         "decoder_hidden_dim": 512,
         "tensor_training": {
+            "version": "cuda_test",
             "batch_size": 4,
             "checkpoint_interval_epochs": 1,
             "minimum_epochs": 1,
@@ -193,6 +194,7 @@ def test_linear_tensor_decoder_accepts_cpu_target_and_cuda_basis(tmp_path) -> No
             "linear_learning_rate": 0.001,
             "mlp_learning_rate": 0.0003,
             "latent_initial_std": 0.02,
+            "require_documented_plateau": False,
         },
     }
 

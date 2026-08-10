@@ -197,6 +197,24 @@ def _stage_settings(path: Path) -> dict[str, Any]:
         for key, value in expected.items()
         if settings.get(key) != value
     }
+    tensor_expected = {
+        "version": "plateau_required_v2",
+        "maximum_epochs": 2048,
+        "require_documented_plateau": True,
+        "linear_learning_rate": 0.000001,
+        "mlp_learning_rate": 0.0003,
+    }
+    tensor_actual = dict(settings.get("tensor_training") or {})
+    differences.update(
+        {
+            f"tensor_training.{key}": {
+                "actual": tensor_actual.get(key),
+                "expected": value,
+            }
+            for key, value in tensor_expected.items()
+            if tensor_actual.get(key) != value
+        }
+    )
     if differences:
         raise ValueError(f"formal EXP-016C config differs: {differences}")
     return settings
@@ -573,6 +591,7 @@ def _train_tensor_decoder(
     with torch.no_grad():
         final_metrics = decoder_reconstruction_metrics(decoder(z), target)
     summary = {
+        "status": "completed" if plateau.get("plateau") else "stopped_without_plateau",
         "architecture": architecture,
         "train_pair_count": len(train_pair_ids),
         "train_pair_ids_sha256": json_sha256(list(train_pair_ids)),
@@ -585,6 +604,12 @@ def _train_tensor_decoder(
         "checkpoint": str(checkpoint_path),
     }
     atomic_write_json(output_dir / "summary.json", summary)
+    if bool(tensor_cfg.get("require_documented_plateau", True)) and not plateau.get(
+        "plateau"
+    ):
+        raise RuntimeError(
+            f"tensor {architecture} did not reach the documented plateau by epoch {maximum}"
+        )
     return decoder, summary
 
 
@@ -944,6 +969,7 @@ def _run_decoder_target(
     pair_to_index = {str(pair_id): index for index, pair_id in enumerate(all_pair_ids)}
     row_by_id = {str(row["pair_id"]): row for row in all_rows}
     target_flat = flatten_delta(target["tensor"])
+    tensor_version = str(settings["tensor_training"]["version"])
     fold_results = []
     pooled_rows: dict[str, list[dict[str, Any]]] = defaultdict(list)
 
@@ -981,7 +1007,7 @@ def _run_decoder_target(
             settings=settings,
             device=device,
             seed=int(settings["split_seed"]) + fold * 101,
-            output_dir=fold_dir / "tensor_linear",
+            output_dir=fold_dir / f"tensor_linear_{tensor_version}",
         )
         mlp_decoder, mlp_tensor = _train_tensor_decoder(
             architecture="mlp",
@@ -991,7 +1017,7 @@ def _run_decoder_target(
             settings=settings,
             device=device,
             seed=int(settings["split_seed"]) + fold * 101 + 17,
-            output_dir=fold_dir / "tensor_mlp",
+            output_dir=fold_dir / f"tensor_mlp_{tensor_version}",
         )
 
         control_tensors = {
