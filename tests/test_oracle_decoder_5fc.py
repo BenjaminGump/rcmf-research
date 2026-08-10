@@ -226,6 +226,11 @@ def test_linear_tensor_decoder_accepts_cpu_target_and_cuda_basis(tmp_path) -> No
             "mlp_learning_rate": 0.0003,
             "latent_initial_std": 0.02,
             "require_documented_plateau": False,
+            "numerical_floor": {
+                "normalized_mse": 1.0e-8,
+                "relative_frobenius_error": 1.0e-4,
+                "one_minus_mean_cosine": 1.0e-6,
+            },
         },
     }
 
