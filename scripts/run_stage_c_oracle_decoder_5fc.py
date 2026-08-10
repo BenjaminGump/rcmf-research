@@ -5,9 +5,9 @@ import copy
 import datetime as dt
 import hashlib
 import json
-import math
 import random
 import time
+from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
@@ -57,7 +57,6 @@ from rcmf.training.oracle_decoder_5fc import (
     low_rank_capacity_gate,
     minimally_project_delta_to_ratio,
     module_state_sha256,
-    project_independent_latents_to_ratio_,
     project_latents_to_output_ratio_,
     reconstruction_summary,
     state_grouped_three_fold_manifest,
@@ -83,6 +82,9 @@ from scripts.run_stage_c_oracle_convergence_5fa import (
     _training_loss,
 )
 from scripts.run_stage_c_pair_grounding_5d import _build_tokenized_pair_rows
+
+
+del _bootstrap
 
 
 REPRODUCTION_PATHS = (
