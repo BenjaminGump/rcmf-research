@@ -198,11 +198,16 @@ def _stage_settings(path: Path) -> dict[str, Any]:
         if settings.get(key) != value
     }
     tensor_expected = {
-        "version": "plateau_required_v2",
+        "version": "plateau_required_v3",
         "maximum_epochs": 2048,
         "require_documented_plateau": True,
         "linear_learning_rate": 0.000001,
         "mlp_learning_rate": 0.0003,
+        "numerical_floor": {
+            "normalized_mse": 1.0e-8,
+            "relative_frobenius_error": 1.0e-4,
+            "one_minus_mean_cosine": 1.0e-6,
+        },
     }
     tensor_actual = dict(settings.get("tensor_training") or {})
     differences.update(
@@ -517,6 +522,7 @@ def _train_tensor_decoder(
     training_identity_sha256 = json_sha256(training_identity)
     start_epoch = 0
     plateau = {"assessable": False, "plateau": False}
+    numerical_floor = dict(tensor_cfg["numerical_floor"])
     if latest_path.exists() and checkpoint_path.exists():
         payload = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
         resume_checks = {
@@ -535,6 +541,20 @@ def _train_tensor_decoder(
         history = list(payload["history"])
         start_epoch = int(payload["epoch"])
         plateau = dict(payload.get("plateau") or plateau)
+        if history:
+            current_epoch = int(history[-1]["epoch"])
+            plateau = tensor_reconstruction_plateau(
+                history,
+                current_epoch=current_epoch,
+                previous_epoch=current_epoch - interval,
+                normalized_mse_floor=float(numerical_floor["normalized_mse"]),
+                relative_frobenius_floor=float(
+                    numerical_floor["relative_frobenius_error"]
+                ),
+                cosine_error_floor=float(
+                    numerical_floor["one_minus_mean_cosine"]
+                ),
+            )
 
     loop_maximum = (
         start_epoch if start_epoch >= minimum and plateau.get("plateau") else maximum
@@ -556,7 +576,14 @@ def _train_tensor_decoder(
             metrics = decoder_reconstruction_metrics(decoder(z), target)
         history.append({"epoch": epoch, "metrics": metrics})
         plateau = tensor_reconstruction_plateau(
-            history, current_epoch=epoch, previous_epoch=epoch - interval
+            history,
+            current_epoch=epoch,
+            previous_epoch=epoch - interval,
+            normalized_mse_floor=float(numerical_floor["normalized_mse"]),
+            relative_frobenius_floor=float(
+                numerical_floor["relative_frobenius_error"]
+            ),
+            cosine_error_floor=float(numerical_floor["one_minus_mean_cosine"]),
         )
         payload = {
             "format": ORACLE_DECODER_VERSION,

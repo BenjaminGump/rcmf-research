@@ -21,6 +21,7 @@ from rcmf.training.oracle_decoder_5fc import (
     module_state_sha256,
     project_independent_latents_to_ratio_,
     state_grouped_three_fold_manifest,
+    tensor_reconstruction_plateau,
     uncentered_svd_reconstruction,
     validate_decoder_split_manifest,
     validate_direct_checkpoint,
@@ -146,6 +147,36 @@ def test_minimal_ratio_projection_preserves_in_tolerance_rows_exactly() -> None:
     assert torch.equal(projected[0], delta[0])
     assert float(projected[1].norm()) == pytest.approx(1.0, abs=1.0e-6)
     assert report["projected_row_count"] == 1
+
+
+def test_tensor_plateau_uses_absolute_floor_near_machine_precision() -> None:
+    history = [
+        {
+            "epoch": 16,
+            "metrics": {
+                "loss": 1.0e-9,
+                "normalized_mse": 1.0e-10,
+                "relative_frobenius_error": 1.0e-5,
+                "mean_cosine": 1.0,
+            },
+        },
+        {
+            "epoch": 32,
+            "metrics": {
+                "loss": 1.6e-9,
+                "normalized_mse": 1.1e-10,
+                "relative_frobenius_error": 1.1e-5,
+                "mean_cosine": 1.0,
+            },
+        },
+    ]
+
+    report = tensor_reconstruction_plateau(
+        history, current_epoch=32, previous_epoch=16
+    )
+
+    assert report["plateau"] is True
+    assert report["plateau_mode"] == "absolute_numerical_floor"
 
 
 def _split_rows() -> list[dict]:

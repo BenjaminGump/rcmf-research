@@ -23,6 +23,7 @@ from rcmf.training.oracle_convergence_5fa import IndependentPairTensorTable
 ORACLE_DECODER_VERSION = "stage_c_shared_decoder_capacity_5fc_v1"
 DECODER_SPLIT_VERSION = "stage_c_pair_grouped_decoder_split_5fc_v1"
 PLATEAU_RULE_VERSION = "prospective_absolute_change_best_guard_v1"
+TENSOR_PLATEAU_RULE_VERSION = "tensor_reconstruction_plateau_with_absolute_floor_v2"
 PRIMARY_TARGET_UPDATES = 112
 ROBUSTNESS_TARGET_UPDATES = 128
 LATENT_DIM = 128
@@ -592,12 +593,22 @@ def decoder_reconstruction_metrics(prediction: Tensor, target: Tensor) -> dict[s
 
 
 def tensor_reconstruction_plateau(
-    history: Sequence[Mapping[str, Any]], *, current_epoch: int, previous_epoch: int
+    history: Sequence[Mapping[str, Any]],
+    *,
+    current_epoch: int,
+    previous_epoch: int,
+    normalized_mse_floor: float = 1.0e-8,
+    relative_frobenius_floor: float = 1.0e-4,
+    cosine_error_floor: float = 1.0e-6,
 ) -> dict[str, Any]:
     current = next((row for row in history if int(row["epoch"]) == int(current_epoch)), None)
     previous = next((row for row in history if int(row["epoch"]) == int(previous_epoch)), None)
     if current is None or previous is None:
-        return {"rule_version": PLATEAU_RULE_VERSION, "assessable": False, "plateau": False}
+        return {
+            "rule_version": TENSOR_PLATEAU_RULE_VERSION,
+            "assessable": False,
+            "plateau": False,
+        }
     current_loss = float(current["metrics"]["loss"])
     previous_loss = float(previous["metrics"]["loss"])
     best_loss = min(float(row["metrics"]["loss"]) for row in history if int(row["epoch"]) <= current_epoch)
@@ -610,16 +621,41 @@ def tensor_reconstruction_plateau(
         "absolute_cosine_change_lt_0_01": cosine_change < 0.01,
         "current_loss_lte_1_02_best_so_far": current_loss <= 1.02 * best_loss,
     }
+    numerical_floor_checks = {
+        "normalized_mse_lte_floor": float(current["metrics"]["normalized_mse"])
+        <= float(normalized_mse_floor),
+        "relative_frobenius_error_lte_floor": float(
+            current["metrics"]["relative_frobenius_error"]
+        )
+        <= float(relative_frobenius_floor),
+        "one_minus_mean_cosine_lte_floor": 1.0 - current_cosine
+        <= float(cosine_error_floor),
+    }
+    relative_plateau = all(checks.values())
+    numerical_floor_plateau = all(numerical_floor_checks.values())
     return {
-        "rule_version": PLATEAU_RULE_VERSION,
+        "rule_version": TENSOR_PLATEAU_RULE_VERSION,
         "assessable": True,
-        "plateau": all(checks.values()),
+        "plateau": relative_plateau or numerical_floor_plateau,
+        "plateau_mode": (
+            "relative_change_best_guard"
+            if relative_plateau
+            else "absolute_numerical_floor"
+            if numerical_floor_plateau
+            else None
+        ),
         "current_epoch": int(current_epoch),
         "previous_epoch": int(previous_epoch),
         "absolute_relative_loss_change": loss_change,
         "absolute_cosine_change": cosine_change,
         "best_so_far_loss": best_loss,
         "checks": checks,
+        "numerical_floor_checks": numerical_floor_checks,
+        "numerical_floor_thresholds": {
+            "normalized_mse": float(normalized_mse_floor),
+            "relative_frobenius_error": float(relative_frobenius_floor),
+            "one_minus_mean_cosine": float(cosine_error_floor),
+        },
     }
 
 
