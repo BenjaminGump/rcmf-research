@@ -40,12 +40,14 @@ from rcmf.training.oracle_decoder_5fc import (
     K_TOKENS,
     LATENT_DIM,
     LOW_RANKS,
+    INVERSION_CONTINUATION_RULE_VERSION,
     MLPDeltaDecoder,
     ORACLE_DECODER_VERSION,
     PRIMARY_TARGET_UPDATES,
     ROBUSTNESS_TARGET_UPDATES,
     LinearDeltaDecoder,
     apply_latent_inversion_step,
+    assess_u64_inversion_continuation,
     assert_pair_only_input_contract,
     decoder_decision,
     decoder_reconstruction_metrics,
@@ -744,11 +746,24 @@ def _run_inversion(
     base_norms_device = base_norms.to(device)
     interval_reports: list[dict[str, float]] = []
     final_plateau = history[-1].get("plateau", {}) if history else {}
+    prospective_cfg = settings["prospective_plateau"]
+    continuation_kwargs = {
+        "minimum_relative_huber_improvement": float(
+            prospective_cfg["absolute_relative_sequence_huber_change_lt"]
+        ),
+        "minimum_spearman_improvement": float(
+            prospective_cfg["absolute_spearman_change_lt"]
+        ),
+        "best_huber_multiplier": float(
+            prospective_cfg["current_huber_lte_best_multiplier"]
+        ),
+    }
+    u64_continuation = assess_u64_inversion_continuation(
+        history, **continuation_kwargs
+    )
     should_continue_to_128 = True
     if completed >= 64 and history:
-        at64 = next((item for item in history if int(item["updates_per_pair"]) == 64), None)
-        if at64 is not None and at64.get("plateau", {}).get("plateau"):
-            should_continue_to_128 = False
+        should_continue_to_128 = bool(u64_continuation["continue_to_128"])
     loop_max = maximum if should_continue_to_128 else completed
     for update_round in range(completed + 1, loop_max + 1):
         order = list(range(len(rows)))
@@ -828,6 +843,11 @@ def _run_inversion(
         entry["plateau"] = assess_plateau(
             provisional, current_updates=update_round, lag=lag
         )
+        if update_round == 64:
+            entry["u64_continuation"] = assess_u64_inversion_continuation(
+                provisional, **continuation_kwargs
+            )
+            u64_continuation = entry["u64_continuation"]
         final_plateau = entry["plateau"]
         history.append(entry)
         rows_path = output_dir / f"evaluation_u{update_round:03d}.jsonl"
@@ -869,7 +889,7 @@ def _run_inversion(
             flush=True,
         )
         interval_reports = []
-        if update_round == 64 and entry["plateau"].get("plateau"):
+        if update_round == 64 and not u64_continuation["continue_to_128"]:
             break
 
     final_updates = int(history[-1]["updates_per_pair"])
@@ -897,6 +917,7 @@ def _run_inversion(
         "final_update_accounting": update_count_summary(pair_ids, counts),
         "history": history,
         "final_plateau": final_plateau,
+        "u64_continuation": u64_continuation,
         "initial_decoder_state_sha256": initial_decoder_hash,
         "final_decoder_state_sha256": final_decoder_hash,
         "inversion_identity_sha256": inversion_identity_sha256,
@@ -1513,6 +1534,20 @@ def main() -> None:
             "u112_best_observed": True,
             "u128_formal_stage5fb_stop": True,
             "stage5fb_artifacts_preserved": True,
+        },
+        "u64_inversion_continuation_rule": {
+            "version": INVERSION_CONTINUATION_RULE_VERSION,
+            "criteria": {
+                "minimum_relative_huber_improvement": settings[
+                    "prospective_plateau"
+                ]["absolute_relative_sequence_huber_change_lt"],
+                "minimum_spearman_improvement": settings["prospective_plateau"][
+                    "absolute_spearman_change_lt"
+                ],
+                "best_huber_multiplier": settings["prospective_plateau"][
+                    "current_huber_lte_best_multiplier"
+                ],
+            },
         },
         "low_rank": {
             name: {

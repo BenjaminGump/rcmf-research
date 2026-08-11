@@ -16,6 +16,7 @@ from rcmf.training.oracle_decoder_5fc import (
     LinearDeltaDecoder,
     MLPDeltaDecoder,
     apply_latent_inversion_step,
+    assess_u64_inversion_continuation,
     assert_pair_only_input_contract,
     decoder_decision,
     flatten_delta,
@@ -76,6 +77,42 @@ def test_legacy_stage5fb_rule_is_preserved_but_large_deterioration_is_not_future
     assert corrected["plateau"] is False
     assert corrected["checks"]["absolute_relative_loss_change_lt_0_01"] is False
     assert corrected["checks"]["current_loss_lte_1_02_best_so_far"] is False
+
+
+@pytest.mark.parametrize(
+    ("u32_huber", "u32_spearman", "u64_huber", "u64_spearman", "expected", "reason"),
+    [
+        (0.10, 0.80, 0.08, 0.805, True, "material_improvement_at_u64"),
+        (0.10, 0.80, 0.0995, 0.82, True, "material_improvement_at_u64"),
+        (0.10, 0.80, 0.1005, 0.805, False, "no_material_improvement_at_u64"),
+        (
+            0.057549,
+            0.980861,
+            0.082850,
+            0.904121,
+            False,
+            "u64_huber_deteriorated_beyond_best_guard",
+        ),
+    ],
+)
+def test_u64_continuation_requires_material_improvement_without_deterioration(
+    u32_huber: float,
+    u32_spearman: float,
+    u64_huber: float,
+    u64_spearman: float,
+    expected: bool,
+    reason: str,
+) -> None:
+    history = [
+        _point(32, u32_huber, u32_spearman),
+        _point(64, u64_huber, u64_spearman),
+    ]
+
+    report = assess_u64_inversion_continuation(history)
+
+    assert report["assessable"] is True
+    assert report["continue_to_128"] is expected
+    assert report["reason"] == reason
 
 
 def _checkpoint_payload(pair_ids: list[str], updates: int, model_dim: int = 8) -> dict:

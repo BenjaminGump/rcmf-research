@@ -24,6 +24,7 @@ ORACLE_DECODER_VERSION = "stage_c_shared_decoder_capacity_5fc_v1"
 DECODER_SPLIT_VERSION = "stage_c_pair_grouped_decoder_split_5fc_v1"
 PLATEAU_RULE_VERSION = "prospective_absolute_change_best_guard_v1"
 TENSOR_PLATEAU_RULE_VERSION = "tensor_reconstruction_plateau_with_absolute_floor_v2"
+INVERSION_CONTINUATION_RULE_VERSION = "u64_material_improvement_best_guard_v1"
 PRIMARY_TARGET_UPDATES = 112
 ROBUSTNESS_TARGET_UPDATES = 128
 LATENT_DIM = 128
@@ -35,6 +36,89 @@ SELECTION_CATEGORIES = ("positive", "neutral", "negative", "random")
 def json_sha256(value: Any) -> str:
     payload = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def assess_u64_inversion_continuation(
+    history: Sequence[Mapping[str, Any]],
+    *,
+    minimum_relative_huber_improvement: float = 0.01,
+    minimum_spearman_improvement: float = 0.01,
+    best_huber_multiplier: float = 1.02,
+) -> dict[str, Any]:
+    current = next(
+        (item for item in history if int(item.get("updates_per_pair", -1)) == 64),
+        None,
+    )
+    previous = next(
+        (item for item in history if int(item.get("updates_per_pair", -1)) == 32),
+        None,
+    )
+    if current is None or previous is None:
+        return {
+            "rule_version": INVERSION_CONTINUATION_RULE_VERSION,
+            "assessable": False,
+            "continue_to_128": False,
+            "reason": "missing_u32_or_u64_checkpoint",
+        }
+
+    def _metrics(item: Mapping[str, Any]) -> tuple[float, float]:
+        summary = item["evaluation_summary"]
+        return (
+            float(summary["sequence_utility_huber"]["mean"]),
+            float(summary["u_text_vs_u_student_spearman"]),
+        )
+
+    previous_huber, previous_spearman = _metrics(previous)
+    current_huber, current_spearman = _metrics(current)
+    observed_hubers = [
+        _metrics(item)[0]
+        for item in history
+        if int(item.get("updates_per_pair", -1)) <= 64
+    ]
+    best_huber = min(observed_hubers)
+    relative_huber_improvement = (
+        previous_huber - current_huber
+    ) / max(abs(previous_huber), 1.0e-12)
+    spearman_improvement = current_spearman - previous_spearman
+    checks = {
+        "current_huber_lte_best_multiplier": current_huber
+        <= best_huber_multiplier * best_huber,
+        "material_huber_improvement": relative_huber_improvement
+        >= minimum_relative_huber_improvement,
+        "material_spearman_improvement": spearman_improvement
+        >= minimum_spearman_improvement,
+    }
+    continue_to_128 = checks["current_huber_lte_best_multiplier"] and (
+        checks["material_huber_improvement"]
+        or checks["material_spearman_improvement"]
+    )
+    if continue_to_128:
+        reason = "material_improvement_at_u64"
+    elif not checks["current_huber_lte_best_multiplier"]:
+        reason = "u64_huber_deteriorated_beyond_best_guard"
+    else:
+        reason = "no_material_improvement_at_u64"
+    return {
+        "rule_version": INVERSION_CONTINUATION_RULE_VERSION,
+        "assessable": True,
+        "continue_to_128": continue_to_128,
+        "reason": reason,
+        "previous_updates": 32,
+        "current_updates": 64,
+        "previous_sequence_utility_huber": previous_huber,
+        "current_sequence_utility_huber": current_huber,
+        "best_sequence_utility_huber_through_u64": best_huber,
+        "relative_sequence_utility_huber_improvement": relative_huber_improvement,
+        "previous_spearman": previous_spearman,
+        "current_spearman": current_spearman,
+        "spearman_improvement": spearman_improvement,
+        "criteria": {
+            "minimum_relative_huber_improvement": minimum_relative_huber_improvement,
+            "minimum_spearman_improvement": minimum_spearman_improvement,
+            "best_huber_multiplier": best_huber_multiplier,
+        },
+        "checks": checks,
+    }
 
 
 def stack_independent_table_state(
