@@ -852,6 +852,70 @@ Follow-up:
 - For future convergence protocols, consider specifying a non-deterioration
   guard in addition to the current "less than 1% improvement" predicate.
 
+## 2026-08-13 Milestone 5F-C shared-decoder capacity audit
+
+VERIFIED:
+
+- u112 and u128 direct DeltaE checkpoints were loaded read-only with exact
+  ordered pair IDs, tensor shape `[192,4,4096]`, hashes, update counts, ratio
+  budget, Qwen/tokenizer/cache identity, and metric reproduction delta `0`.
+- Global uncentered rank 128 passed the behavioral low-rank gate for both
+  targets. Rank 192 exactly reproduced the original DeltaE and Qwen behavior.
+- The immutable three-fold manifest has 192 pairs grouped into 57 states, no
+  decoder train/held-out state leakage, and all 36 memories in every training
+  fold.
+- Both shared decoders fit train-fold DeltaE. Linear relative Frobenius error
+  was at most `1.57e-5`; MLP error was at most `1.88e-3`.
+- Pooled frozen-linear inversion achieved u112/u128 utility Spearman
+  `0.988537 / 0.994685`, sign agreement `0.992806 / 1.000000`, and sequence
+  Huber `0.027538 / 0.015615`.
+- Every numerical frozen-linear gate check passed on both targets and results
+  were positive in all three folds. Frozen decoder hashes remained unchanged.
+- No decoder path reached the corrected plateau in all three folds. The
+  formal shared-decoder gate therefore did not pass.
+
+Decision:
+
+- Record branch `shared_decoder_optimization_or_generalization_failure` for
+  both the primary u112 and robustness u128 targets.
+- Do not label rank 128 as insufficient: the global rank-128 gate passed and
+  frozen-linear held-out inversion shows strong utility capacity.
+- Do not label tensor reconstruction as the active failure: every train-fold
+  decoder reached its tensor plateau with near-exact reconstruction.
+- Treat held-out Qwen inversion convergence/generalization as the unresolved
+  formal bottleneck. Strong nonplateaued results are evidence, not a gate pass.
+- Do not claim `current_injector_mlp_decoder_is_bottleneck` yet because the
+  frozen-linear path also failed the required plateau check, although the
+  linear decoder is the empirically preferred path.
+- The next separately reviewed milestone should resume only the existing
+  frozen-linear held-out z checkpoints to a corrected plateau. It must not
+  start memory-content compilation, selector training, Stage C2, AppWorld, or
+  end-to-end RCMF work.
+
+Deviation or workaround:
+
+- `_001` was preserved after float32 SVD failed the rank-192 exactness check.
+- `_002` was preserved after tolerance handling scaled tiny over-ratio rows
+  and changed the rank-192 behavioral result.
+- `_003` was resumed atomically after implementation fixes for a missing
+  import, tensor target device alignment, numerical-floor plateau logic, best
+  tensor checkpoint restoration, and the u64 continuation rule. Regression
+  tests cover each corrected behavior.
+- The u64 continuation repair was required by the milestone contract. Fold-2
+  frozen MLP stopped at u64 for both targets because Huber deteriorated beyond
+  the 1.02 best-value guard; completed checkpoints were not overwritten.
+- A restart command with an incorrect working directory exited before model or
+  checkpoint loading. The corrected command resumed `_003`; no duplicate run
+  was created.
+- No scientific-scope deviation occurred. K, injection site, objective, folds,
+  targets, ratio, update schedule, and frozen-Qwen contract were unchanged.
+
+Prospective rule:
+
+- Future plateau checks require absolute relative Huber change `<1%`, absolute
+  Spearman change `<0.01`, and current Huber no worse than `1.02` times the
+  best observed Huber. Large deterioration cannot count as convergence.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:

@@ -516,33 +516,54 @@ Result:
 - No pair-z, injector-decoder, compiler, selector, Stage C2, AppWorld, or
   end-to-end work was started.
 
-## EXP-016C 128D Pair-Latent / Shared-Injector Capacity - Pending Review
+## EXP-016C 128D Shared-Decoder Capacity - Completed
+
+Result:
+
+- Global rank-128 DeltaE projection passed on both u112 and u128; rank 192
+  exactly reproduced the source behavior.
+- Linear and MLP decoders fit all train-fold DeltaE tensors nearly exactly.
+- Frozen-linear held-out inversion was strong in every fold and pooled to
+  u112/u128 Spearman `0.988537 / 0.994685` with sequence Huber
+  `0.027538 / 0.015615`.
+- Every numerical frozen-linear gate check passed, but no path reached the
+  corrected plateau in all three folds. Formal branch:
+  `shared_decoder_optimization_or_generalization_failure`.
+- No compiler, selector, Stage C2, AppWorld, or end-to-end work was started.
+
+## EXP-016D Frozen-Linear Inversion Convergence Extension - Pending Review
 
 Goal:
 
-- Determine whether a properly optimized 128D pair-specific latent and shared
-  additive-token injector can realize the direct DeltaE utility signal that
-  EXP-016B established is available at K=4 `last_user_k`.
+- Determine whether the existing frozen-linear held-out pair-latent paths
+  reach the corrected plateau when resumed beyond u128, without changing the
+  decoder manifold or scientific target.
 
 Required constraints:
 
-- Do not start until the user and ChatGPT review and approve a detailed
-  milestone contract.
-- Keep Qwen frozen and preserve teacher-forced scoring, the validated 192-pair
-  manifest, K=4, `last_user_k`, and controlled perturbation ratio.
-- Use explicit equal updates per pair and convergence checkpoints; do not
-  repeat the two-update underoptimization from Stage 5E.
-- Isolate pair-latent/shared-decoder capacity before returning to a memory
-  representation compiler, selector, full-bank field, Stage C2, or AppWorld
-  generation.
+- Do not start until the user and ChatGPT approve a detailed milestone
+  contract.
+- Resume the exact EXP-016C frozen-linear per-fold checkpoints; preserve pair
+  IDs/order, decoder hashes, z values, optimizer state, objective, ratio 1.0,
+  K=4, and `last_user_k`.
+- Keep Qwen frozen and use teacher-forced scoring only.
+- Use fixed update intervals and the corrected plateau rule: absolute Huber
+  change `<1%`, absolute Spearman change `<0.01`, and current Huber no worse
+  than `1.02` times best-so-far.
+- Do not resume frozen MLP or joint MLP in the primary extension unless a
+  separately specified diagnostic requires it.
+- Do not train a memory compiler, selector, full-bank model, Stage C2 model,
+  or AppWorld agent.
 
 Decision evidence:
 
-- If frozen/shared-injector pair-latent inversion approaches the converged
-  direct DeltaE utility metrics and beats zero/random controls, decoder
-  capacity is supported and a later compiler milestone may be designed.
-- If it reaches a documented plateau and remains materially below direct
-  DeltaE, identify the 128D latent/shared decoder as the next bottleneck.
+- If frozen linear reaches plateau and retains the existing utility thresholds
+  in all three folds, record the shared-128D linear decoder capacity gate as
+  passed and stop for review before compiler design.
+- If it plateaus below the gate, record a genuine held-out decoder
+  generalization failure.
+- If it remains materially improving at a preregistered hard cap, stop for
+  review rather than redesigning the decoder or injection site automatically.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 

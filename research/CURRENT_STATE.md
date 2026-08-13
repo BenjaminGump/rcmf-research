@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-08-09.
+Last updated: 2026-08-13.
 
 ## VERIFIED
 
@@ -930,6 +930,51 @@ VERIFIED:
 - Post-run status: no tmux server or active EXP-016B process, GPU
   `0 MiB / 0%`, safe to terminate.
 
+### EXP-016C shared-decoder capacity audit
+
+- EXP-016C completed at source commit
+  `95be149e26598546327c33e8207c1c4f833130aa` in the existing artifact
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/oracle_decoder_5fc_20260810_003`.
+- The primary u112 and robustness u128 DeltaE sources both contain exactly 192
+  ordered tensors of shape `[4,4096]`; their metric-reproduction maximum
+  delta was `0`.
+- The deterministic state-grouped manifest contains 57 states and 36 memories.
+  Each of three folds has 128 train and 64 held-out pairs, no state leakage,
+  complete 36-memory train coverage, and every pair held out exactly once.
+- Uncentered effective rank was `179.6761` for u112 and `179.8787` for u128.
+  Rank 128 retained `84.5709% / 84.4404%` of squared norm and passed the global
+  low-rank behavioral gate on both targets. Rank 192 exactly reproduced both
+  source tensors and Qwen behavior.
+- Every linear and MLP train-fold tensor reconstruction completed. Linear
+  relative Frobenius error ranged from `8.30e-6` to `1.57e-5`; MLP error ranged
+  from `5.90e-4` to `1.88e-3`.
+- Pooled u112 frozen-linear held-out inversion reached utility Spearman
+  `0.988537`, sign agreement `0.992806`, and sequence Huber `0.027538`.
+  Pooled u128 reached `0.994685 / 1.000000 / 0.015615`.
+- Frozen MLP reached u112/u128 sequence Huber `0.065315 / 0.097231`; joint MLP
+  reached `0.034243 / 0.051242`. All trainable paths decisively beat zero and
+  matched-random controls.
+- Frozen linear was positive in all three folds and passed every numerical
+  capacity threshold on both targets. Its u128 Huber was `96.9694%` below
+  zero, and its frozen decoder hashes were unchanged during held-out z
+  inversion.
+- No frozen or joint path reached the corrected documented plateau in all
+  three folds. Therefore the formal gate did not pass despite the strong
+  numerical capacity evidence. Decision branch:
+  `shared_decoder_optimization_or_generalization_failure`.
+- Tensor reconstruction is effectively solved. The unresolved gate is
+  held-out Qwen inversion convergence/generalization; current evidence does
+  not identify global rank 128 as insufficient.
+- The fold-2 frozen-MLP paths stopped normally at u64 under the preregistered
+  continuation rule because Huber deteriorated beyond the best-value guard.
+  Every other path continued to u128, with exact per-pair update counts.
+- Related tests passed locally (`54 passed, 1 skipped`) and on Lambda CUDA
+  (`55 passed`). Independent post-run audit passed with `0` errors.
+- Qwen remained frozen. No compiler, selector, full-bank model, Stage C2,
+  AppWorld generation/evaluation, or end-to-end RCMF training was run.
+- Final status: no tmux server or EXP-016C Python process; GPU `0 MiB / 0%`;
+  safe to terminate.
+
 ## INFERENCES
 
 - The semantic-retrieval auxiliary loss improves the fixed first-10 slice but
@@ -994,6 +1039,16 @@ VERIFIED:
 - The u112-to-u128 behavior shows that the registered plateau predicate is a
   stopping-rule result, not proof of a monotonic optimum. u112 is numerically
   better on sequence utility, while u128 is the pre-registered gate checkpoint.
+- EXP-016C indicates that a shared 128D linear decoder can express the direct
+  utility signal after pair-specific held-out inversion: it beats zero/random
+  controls in every fold and matches or exceeds direct-oracle utility metrics
+  when pooled. Because inversion had not plateaued, this remains capacity
+  evidence rather than a completed shared-decoder scientific gate.
+- The current no-bias MLP can fit train-fold DeltaE tensors nearly exactly but
+  is weaker and less stable than the SVD-initialized linear decoder during
+  held-out Qwen inversion. This points to optimization/generalization through
+  the decoder manifold, not train-tensor reconstruction, as the immediate
+  bottleneck.
 - The average target NLL is not the direct-capacity criterion on this balanced
   diagnostic because negative-teacher pairs intentionally supervise harmful
   utility. Sign, sequence-utility error, and matched controls are the relevant
@@ -1027,9 +1082,12 @@ VERIFIED:
 - Whether an additive-token injector can use a signed-program memory field
   without degrading Qwen generated AppWorld action trajectories; Stage C1 used
   teacher-forced scoring only and no AppWorld generation/evaluation.
-- Whether a properly optimized 128D latent/injector decoder can preserve the
-  direct DeltaE utility signal. Pair-z was deliberately not run in Milestone
-  5F-B even though the direct capacity gate passed.
+- Whether frozen-linear held-out z inversion reaches the corrected plateau if
+  resumed beyond u128. EXP-016C shows strong 128D shared-decoder capacity but
+  did not formally pass because no path reached plateau in all three folds.
+- Whether a shared 128D decoder can be mapped from memory content remains
+  untested. EXP-016C uses free held-out pair latents and does not train a
+  memory compiler.
 - Whether a later-layer residual injection site would improve deployable
   performance remains untested, but EXP-016B gives no scientific reason to
   redesign the current input-embedding site before testing the decoder.
@@ -1037,15 +1095,16 @@ VERIFIED:
 ## Immediate Workflow Status
 
 - Working branch: `workflow/research-loop`.
-- Latest Lambda-synced EXP-016B source commit before final records:
-  `02f13ec2bba7600441b565cd97884fc23f9fdbc9`.
+- Latest Lambda-synced EXP-016C source commit before final records:
+  `95be149e26598546327c33e8207c1c4f833130aa`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
-- Lambda post-5F-B status: no tmux server running and GPU memory/utilization
+- Lambda post-5F-C status: no tmux server running and GPU memory/utilization
   reported `0 MiB / 0%`.
-- Do not launch Stage C2, joint selector/program/injector training, Qwen action
-  loss, full-bank end-to-end RCMF training, AppWorld agent evaluation, or an
-  injection-site redesign. The next separately reviewed experiment should test
-  a properly optimized 128D pair-latent/shared-injector decoder while keeping
-  the now-validated K=4 `last_user_k` injection site fixed.
+- Do not launch Stage C2, compiler training, selector work, Qwen action loss,
+  full-bank end-to-end RCMF training, AppWorld agent evaluation, or an
+  injection-site redesign. The next separately reviewed experiment should
+  convergence-extend the existing frozen-linear held-out z checkpoints under
+  the corrected plateau rule while preserving K=4 `last_user_k`, ratio 1.0,
+  decoder hashes, pair IDs, and optimizer state.
