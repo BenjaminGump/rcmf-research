@@ -270,6 +270,8 @@ or ratio budget changed.
 
 - local related test suite: `54 passed, 1 skipped`;
 - Lambda CUDA related test suite: `55 passed`;
+- final local full suite: `143 passed, 1 skipped`;
+- final Lambda full suite from the project working directory: `144 passed`;
 - independent post-run audit: passed, `0` errors;
 - source target shape and ordered pair IDs: passed;
 - pair/state split and 36-memory train coverage: passed;
@@ -279,6 +281,13 @@ or ratio budget changed.
 - ratio bound within numerical tolerance: passed;
 - pooled row counts: 192 for every method and target;
 - prompt/pair-only/no-raw-memory/no-selector hard-scope contracts: passed.
+
+One initial final Lambda full-suite command ran from `/home/ubuntu` and
+reported eight relative-config-path failures because those tests resolve
+`configs/base.yaml` from the current working directory. Re-running the same
+suite with `env -C /lambda/nfs/rcmf-persist/project` passed all 144 tests. The
+first result was a monitoring-command cwd error and changed no code or
+artifact state.
 
 ## Runtime And Final Status
 

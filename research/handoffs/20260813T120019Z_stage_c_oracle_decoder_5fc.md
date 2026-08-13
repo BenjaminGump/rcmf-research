@@ -133,6 +133,8 @@ branch until linear inversion reaches a documented plateau.
 
 - local related tests: `54 passed, 1 skipped`;
 - Lambda CUDA related tests: `55 passed`;
+- final local full suite: `143 passed, 1 skipped`;
+- final Lambda full suite from the project cwd: `144 passed`;
 - independent audit: passed, `0` errors;
 - final resumed process runtime: `146552.206 s = 40.7089 h`;
 - `_003` artifact wall span: about `80.23 h`, including interruptions and
@@ -140,6 +142,11 @@ branch until linear inversion reaches a documented plateau.
 - final controls/report/validation after the last inversion checkpoint:
   about `2.31 h`;
 - no tmux or active process; GPU `0 MiB / 0%`; safe to terminate.
+
+The first final Lambda full-suite command was invoked from `/home/ubuntu` and
+produced eight relative-config-path failures. The corrected command used
+`env -C /lambda/nfs/rcmf-persist/project` and passed all 144 tests; this was a
+command cwd error, not a code or artifact failure.
 
 ## Next Reviewed Milestone
 

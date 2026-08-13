@@ -968,8 +968,10 @@ VERIFIED:
 - The fold-2 frozen-MLP paths stopped normally at u64 under the preregistered
   continuation rule because Huber deteriorated beyond the best-value guard.
   Every other path continued to u128, with exact per-pair update counts.
-- Related tests passed locally (`54 passed, 1 skipped`) and on Lambda CUDA
-  (`55 passed`). Independent post-run audit passed with `0` errors.
+- Related EXP-016C tests passed locally (`54 passed, 1 skipped`) and on Lambda
+  CUDA (`55 passed`). Final full suites passed locally (`143 passed, 1
+  skipped`) and on Lambda (`144 passed`). Independent post-run audit passed
+  with `0` errors.
 - Qwen remained frozen. No compiler, selector, full-bank model, Stage C2,
   AppWorld generation/evaluation, or end-to-end RCMF training was run.
 - Final status: no tmux server or EXP-016C Python process; GPU `0 MiB / 0%`;
