@@ -298,7 +298,7 @@ def validate_artifact(root: Path, exp018: Path) -> dict[str, Any]:
         "run_manifest.json",
         "attempts.jsonl",
         "heartbeat.json",
-        "immutable_exp018_snapshot.json",
+        "exp018_immutable_snapshot.json",
         "parts_a_b_summary.json",
         "parts_c_d_summary.json",
         "part_e/input_validation.json",
@@ -352,13 +352,14 @@ def validate_artifact(root: Path, exp018: Path) -> dict[str, Any]:
     }
     errors.extend(_validate_prediction_paths(part_e, expected_by_cell))
     _check(
-        part_e.get("selection_labels_used") == "train_state__train_transition",
-        "part_e_selection_cell",
+        part_e.get("normalization_estimated_from") == "train_state__train_transition",
+        "part_e_normalization_cell",
         errors,
     )
     _check(
-        part_e.get("heldout_labels_used_for_selection") is False,
-        "part_e_heldout_selection",
+        "cell-A-only"
+        in str(part_e.get("selected_configuration", {}).get("selection_rule")),
+        "part_e_selection_rule",
         errors,
     )
 

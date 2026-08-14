@@ -102,3 +102,15 @@ def test_learning_manifest_rejects_missing_parent_coverage() -> None:
     }
     errors = validate_learning_manifest(manifest, rows)
     assert any("learning_parent_coverage" in value for value in errors)
+
+
+def test_postrun_validator_uses_actual_exp019_summary_fields() -> None:
+    from pathlib import Path
+
+    source = (
+        Path(__file__).resolve().parents[1]
+        / "scripts/validate_interaction_representation_6c.py"
+    ).read_text(encoding="utf-8")
+    assert '"exp018_immutable_snapshot.json"' in source
+    assert 'part_e.get("normalization_estimated_from")' in source
+    assert 'part_e.get("selection_labels_used")' not in source
