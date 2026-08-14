@@ -1,0 +1,145 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_interaction_representation_6c
+  version: interaction_residual_multiview_representation_6c_v1
+  scope:
+    - immutable_exp018_two_axis_manifest
+    - cell_a_only_selection
+    - main_effect_residual_decomposition
+    - within_state_ranking_metrics
+    - current_representation_objective_repair
+    - conditional_multiview_frozen_qwen_representations
+    - conditional_prompt_only_cross_encoder_upper_bound
+    - qwen_frozen
+    - no_behavioral_program_training
+    - no_additive_token_injector_training
+    - no_selector_training
+    - no_production_transition_field
+    - no_qwen_behavioral_backpropagation
+    - no_appworld_generation_or_evaluation
+    - no_stage_c2
+    - no_end_to_end_rcmf
+    - no_v4_tag
+
+stage_c_6c:
+  run_uuid: state_transition_representation_6c_20260814_001
+  seed: 19019
+  exp018_artifact: runs/stage_c/state_conditioned_transition_6b_20260814_001
+  exp017_artifact: runs/stage_c/transition_memory_6a_20260814_001
+  source_data: runs/appworld/official_react_gpt4o_train_success_full_demo_filtered_no_2a163ab3_20260803
+  expected:
+    scoreable_rows: 4579
+    cells:
+      train_state__train_transition: 2667
+      heldout_state__train_transition: 904
+      train_state__heldout_transition: 752
+      heldout_state__heldout_transition: 256
+    states: 32
+    transitions: 148
+    train_state_tasks: 12
+    heldout_state_tasks: 4
+    train_transition_parents: 29
+    heldout_transition_parents: 8
+
+  runtime:
+    heartbeat_interval_seconds: 240
+    review_threshold_h100_hours: 12.0
+
+  decomposition:
+    alternating_least_squares_iterations: 1000
+    tolerance: 1.0e-10
+    main_hidden_dim: 256
+    main_dropout: 0.05
+    main_epochs: 200
+    main_learning_rate: 0.0003
+    main_weight_decay: 0.0001
+    huber_delta: 0.1
+
+  metrics:
+    neutral_epsilon: 0.01
+    ranking_ks: [1, 4, 8]
+    bootstrap_samples: 1000
+    bootstrap_seed: 19020
+    best_tie_tolerance: 1.0e-8
+
+  current_representation:
+    folds: 5
+    seed: 19021
+    hidden_dim: 256
+    interaction_dim: 128
+    dropout: 0.05
+    learning_rate: 0.0003
+    weight_decay: 0.0001
+    epoch_candidates: [30, 60, 120]
+    residual_huber_delta: 0.1
+    utility_huber_delta: 0.1
+    teacher_temperature: 0.10
+    student_temperature: 0.10
+    pair_gap_threshold: 0.05
+    pair_gap_clip: 5.0
+    losses:
+      residual_huber: 1.0
+      state_listwise: 0.20
+      gap_pairwise: 0.20
+      raw_utility_auxiliary: 0.10
+    model_kinds:
+      - decomposed_additive
+      - decomposed_signed_bilinear
+      - decomposed_concat_interaction
+
+  interaction_gate:
+    pooled_raw_spearman: 0.20
+    mean_per_state_spearman: 0.20
+    interaction_residual_spearman: 0.20
+    ndcg4_single_axis_gain: 0.05
+    ndcg4_transition_shuffle_drop: 0.08
+    ndcg4_state_shuffle_drop: 0.08
+    minimum_positive_heldout_tasks: 3
+    cross_encoder_gain_retention: 0.70
+
+  multiview:
+    renderer_version: state_transition_multiview_spans_6c_v1
+    layer_candidates:
+      - final_layer
+      - mean_final_four_layers
+    pooling_rules:
+      - token_mean
+      - final_token
+    state_views:
+      - full_prompt_global
+      - current_task_goal
+      - current_task_history
+      - latest_user_output
+      - generation_boundary
+    transition_views:
+      - source_task_goal
+      - pre_action_state
+      - complete_action
+      - post_action_observation
+      - full_transition_global
+    batch_size: 1
+    projection_dim: 64
+    interaction_rank: 32
+    hidden_dim: 256
+    dropout: 0.05
+    learning_rate: 0.0003
+    weight_decay: 0.0001
+    epoch_candidates: [30, 60, 120]
+
+  cross_encoder:
+    renderer_version: prompt_transition_cross_encoder_6c_v1
+    views:
+      - generation_boundary
+      - transition_section_mean
+      - current_task_span_mean
+    batch_size: 1
+    scalar_head_hidden_dim: 256
+    epoch_candidates: [30, 60, 120]
+    observed_exp017_seconds_per_pair: 1.788982
+    artifact_bytes_per_pair_projection: 65536
+
+  learning_curves:
+    available_query_task_counts: [4, 8, 12]
+    folds: 5
+    seed: 19022
