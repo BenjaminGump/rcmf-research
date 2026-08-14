@@ -1,7 +1,12 @@
 from __future__ import annotations
 
+import hashlib
+from pathlib import Path
+
+from rcmf.training.state_conditioned_transition_6b import canonical_json_sha256
 from scripts.validate_interaction_representation_6c import (
     validate_attempt_events,
+    validate_immutable_snapshot,
     validate_learning_manifest,
 )
 
@@ -55,8 +60,6 @@ def test_learning_manifest_validates_nested_tasks_and_parent_coverage() -> None:
     levels = []
     for count, tasks in ((1, ["t1"]), (2, ["t1", "t2"]), (4, ["t1", "t2", "t3", "t4"])):
         selected = [row for row in rows if row["state_task_id"] in tasks]
-        import hashlib
-
         levels.append(
             {
                 "task_count": count,
@@ -73,6 +76,7 @@ def test_learning_manifest_validates_nested_tasks_and_parent_coverage() -> None:
         "task_counts": [4, 8, 12],
         "folds": [{"fold": fold, "levels": levels} for fold in range(5)],
     }
+    manifest["manifest_sha256"] = canonical_json_sha256(manifest)
     # The validator requires the production counts in the manifest header, while
     # the synthetic levels exercise the nesting/hash/parent invariants.
     assert validate_learning_manifest(manifest, rows) == []
@@ -105,8 +109,6 @@ def test_learning_manifest_rejects_missing_parent_coverage() -> None:
 
 
 def test_postrun_validator_uses_actual_exp019_summary_fields() -> None:
-    from pathlib import Path
-
     source = (
         Path(__file__).resolve().parents[1]
         / "scripts/validate_interaction_representation_6c.py"
@@ -114,3 +116,24 @@ def test_postrun_validator_uses_actual_exp019_summary_fields() -> None:
     assert '"exp018_immutable_snapshot.json"' in source
     assert 'part_e.get("normalization_estimated_from")' in source
     assert 'part_e.get("selection_labels_used")' not in source
+
+
+def test_immutable_snapshot_validation_checks_every_file_hash(tmp_path: Path) -> None:
+    first = tmp_path / "first.json"
+    second = tmp_path / "nested/second.txt"
+    second.parent.mkdir()
+    first.write_text("one", encoding="utf-8")
+    second.write_text("two", encoding="utf-8")
+    snapshot = {
+        "source_commit": "0fa7e8dd6ac3a49d4895e624a72f9e9de2da547c",
+        "final_record_commit": "82cce2f99470a074591372bb2b9aaed8af0cf688",
+        "hashes": {
+            "first.json": hashlib.sha256(b"one").hexdigest(),
+            "nested/second.txt": hashlib.sha256(b"two").hexdigest(),
+        },
+    }
+    assert validate_immutable_snapshot(tmp_path, snapshot)["passed"]
+    second.write_text("changed", encoding="utf-8")
+    report = validate_immutable_snapshot(tmp_path, snapshot)
+    assert not report["passed"]
+    assert "immutable_exp018_hash:nested/second.txt" in report["errors"]

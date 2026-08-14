@@ -11,7 +11,11 @@ import _bootstrap  # noqa: F401
 import torch
 
 from rcmf.training.cross_encoder_6c import cross_encoder_tensor_hash
-from rcmf.training.state_conditioned_transition_6b import CELL_NAMES
+from rcmf.training.oracle_convergence_5fb import tensor_state_sha256
+from rcmf.training.state_conditioned_transition_6b import (
+    CELL_NAMES,
+    canonical_json_sha256,
+)
 from rcmf.utils.serialization import (
     atomic_write_json,
     atomic_write_text,
@@ -112,6 +116,14 @@ def validate_learning_manifest(
     manifest: Mapping[str, Any], rows_a: Sequence[Mapping[str, Any]]
 ) -> list[str]:
     errors: list[str] = []
+    unsigned_manifest = dict(manifest)
+    stored_manifest_hash = unsigned_manifest.pop("manifest_sha256", None)
+    if stored_manifest_hash is not None:
+        _check(
+            canonical_json_sha256(unsigned_manifest) == str(stored_manifest_hash),
+            "learning_manifest_hash",
+            errors,
+        )
     _check(int(manifest.get("fold_count", -1)) == 5, "learning_fold_count", errors)
     _check(
         [int(value) for value in manifest.get("task_counts", [])] == [4, 8, 12],
@@ -163,6 +175,76 @@ def validate_learning_manifest(
             )
             previous = tasks
     return errors
+
+
+def validate_immutable_snapshot(
+    exp018: Path, snapshot: Mapping[str, Any]
+) -> dict[str, Any]:
+    errors: list[str] = []
+    checked = 0
+    for relative_path, expected_hash in snapshot.get("hashes", {}).items():
+        path = exp018 / str(relative_path)
+        _check(path.exists(), f"immutable_exp018_missing:{relative_path}", errors)
+        if path.exists():
+            checked += 1
+            _check(
+                sha256_file(path) == str(expected_hash),
+                f"immutable_exp018_hash:{relative_path}",
+                errors,
+            )
+    _check(checked > 0, "immutable_exp018_no_hashes", errors)
+    _check(
+        str(snapshot.get("source_commit"))
+        == "0fa7e8dd6ac3a49d4895e624a72f9e9de2da547c",
+        "immutable_exp018_source_commit",
+        errors,
+    )
+    _check(
+        str(snapshot.get("final_record_commit"))
+        == "82cce2f99470a074591372bb2b9aaed8af0cf688",
+        "immutable_exp018_final_record_commit",
+        errors,
+    )
+    return {"passed": not errors, "errors": errors, "checked_file_count": checked}
+
+
+def _validate_multiview_cache(root: Path) -> dict[str, Any]:
+    errors: list[str] = []
+    expected = {
+        "state": (32, 10, EXPECTED_HIDDEN_DIM),
+        "transition": (148, 10, EXPECTED_HIDDEN_DIM),
+    }
+    paths = {
+        "state": root / "parts_c_d/multiview_cache/state_multiview.pt",
+        "transition": root
+        / "parts_c_d/multiview_cache/transition_multiview.pt",
+    }
+    shapes: dict[str, dict[str, list[int]]] = {}
+    for kind, path in paths.items():
+        payload = torch.load(path, map_location="cpu", weights_only=False)
+        shapes[kind] = {}
+        for layer in ("final_layer", "mean_final_four_layers"):
+            values = payload.get("representations", {}).get(layer)
+            _check(
+                isinstance(values, torch.Tensor)
+                and tuple(values.shape) == expected[kind],
+                f"multiview_shape:{kind}:{layer}",
+                errors,
+            )
+            if isinstance(values, torch.Tensor):
+                shapes[kind][layer] = list(values.shape)
+                _check(
+                    tensor_state_sha256({"representations": values})
+                    == str(payload.get("tensor_sha256", {}).get(layer)),
+                    f"multiview_tensor_hash:{kind}:{layer}",
+                    errors,
+                )
+        _check(
+            all(not bool(row.get("truncated")) for row in payload.get("rows", [])),
+            f"multiview_truncation:{kind}",
+            errors,
+        )
+    return {"passed": not errors, "errors": errors, "shapes": shapes}
 
 
 def _validate_cross_encoder_cache(
@@ -280,6 +362,11 @@ def _validate_prediction_paths(
                 errors.append(f"prediction_path_missing:{cell}:{control}")
                 continue
             rows = _load_rows(Path(str(path_value)))
+            _check(
+                sha256_file(Path(str(path_value))) == str(payload.get("rows_sha256")),
+                f"prediction_file_hash:{cell}:{control}",
+                errors,
+            )
             pair_ids = [str(row["pair_id"]) for row in rows]
             _check(
                 len(pair_ids) == len(set(pair_ids)),
@@ -324,6 +411,12 @@ def validate_artifact(root: Path, exp018: Path) -> dict[str, Any]:
     attempts = _load_rows(root / "attempts.jsonl")
     ledger = validate_attempt_events(attempts, expected_run_uuid=run_uuid)
     errors.extend(ledger["errors"])
+    immutable = validate_immutable_snapshot(
+        exp018, _load_json(root / "exp018_immutable_snapshot.json")
+    )
+    errors.extend(immutable["errors"])
+    multiview = _validate_multiview_cache(root)
+    errors.extend(multiview["errors"])
 
     pair_rows = _load_rows(exp018 / "two_axis_pair_rows.jsonl")
     pair_ids = [str(row["pair_id"]) for row in pair_rows]
@@ -355,6 +448,18 @@ def validate_artifact(root: Path, exp018: Path) -> dict[str, Any]:
         for cell in EXPECTED_CELLS
     }
     errors.extend(_validate_prediction_paths(part_e, expected_by_cell))
+    for path_key, hash_key in (
+        ("checkpoint", "checkpoint_sha256"),
+        ("main_effect_checkpoint", "main_effect_checkpoint_sha256"),
+    ):
+        checkpoint = Path(str(part_e[path_key]))
+        _check(checkpoint.exists(), f"part_e_checkpoint_missing:{path_key}", errors)
+        if checkpoint.exists():
+            _check(
+                sha256_file(checkpoint) == str(part_e[hash_key]),
+                f"part_e_checkpoint_hash:{path_key}",
+                errors,
+            )
     _check(
         part_e.get("normalization_estimated_from") == "train_state__train_transition",
         "part_e_normalization_cell",
@@ -373,6 +478,32 @@ def validate_artifact(root: Path, exp018: Path) -> dict[str, Any]:
     manifest = _load_json(root / "part_f/learning_curve_manifest.json")
     errors.extend(validate_learning_manifest(manifest, rows_a))
     part_f = _load_json(root / "part_f_summary.json")
+    progress = _load_json(root / "part_f/learning_curve_progress.json")
+    _check(int(progress.get("completed_levels", -1)) == 15, "learning_progress", errors)
+    _check(int(progress.get("total_levels", -1)) == 15, "learning_total_levels", errors)
+    _check(
+        str(progress.get("manifest_sha256")) == str(manifest.get("manifest_sha256")),
+        "learning_progress_manifest_hash",
+        errors,
+    )
+    representation_paths = {
+        "current_state": exp018
+        / "representation_cache/query_state_representations.pt",
+        "current_transition": exp018
+        / "representation_cache/transition_representations.pt",
+        "state_multiview": root
+        / "parts_c_d/multiview_cache/state_multiview.pt",
+        "transition_multiview": root
+        / "parts_c_d/multiview_cache/transition_multiview.pt",
+        "cross_encoder": root
+        / "part_e/cross_encoder_cache/cross_encoder_representations.pt",
+    }
+    for name, path in representation_paths.items():
+        _check(
+            sha256_file(path) == str(part_f.get("representation_hashes", {}).get(name)),
+            f"part_f_representation_hash:{name}",
+            errors,
+        )
     raw_rows = part_f.get("raw_rows", [])
     expected_keys = {
         (model, fold, tasks)
@@ -386,6 +517,7 @@ def validate_artifact(root: Path, exp018: Path) -> dict[str, Any]:
     }
     _check(len(raw_rows) == 105, f"learning_result_count:{len(raw_rows)}", errors)
     _check(actual_keys == expected_keys, "learning_result_keys", errors)
+    _check(len(progress.get("rows", [])) == 105, "learning_progress_row_count", errors)
     for row in raw_rows:
         checkpoint = Path(str(row["checkpoint"]))
         _check(checkpoint.exists(), f"learning_checkpoint_missing:{checkpoint}", errors)
@@ -441,6 +573,30 @@ def validate_artifact(root: Path, exp018: Path) -> dict[str, Any]:
         "part_f_qwen_forward",
         errors,
     )
+    part_c_d = _load_json(root / "parts_c_d_summary.json")
+    _check(
+        part_c_d.get("representation_report", {})
+        .get("model_identity", {})
+        .get("qwen_frozen")
+        is True,
+        "multiview_qwen_not_frozen",
+        errors,
+    )
+    part_e_scope = part_e.get("hard_scope") or {}
+    for key in (
+        "qwen_frozen",
+        "no_truncation",
+        "no_behavioral_program_or_injector",
+        "no_selector_or_field",
+        "no_appworld_generation",
+    ):
+        _check(part_e_scope.get(key) is True, f"part_e_hard_scope:{key}", errors)
+    _check(part_e_scope.get("qwen_gradients") is False, "part_e_qwen_gradients", errors)
+    _check(
+        part_e_scope.get("target_action_encoded") is False,
+        "part_e_target_action_encoded",
+        errors,
+    )
     _check(
         heartbeat.get("status") == "completed",
         f"heartbeat:{heartbeat.get('status')}",
@@ -454,6 +610,8 @@ def validate_artifact(root: Path, exp018: Path) -> dict[str, Any]:
         "errors_first_100": errors[:100],
         "run_uuid": run_uuid,
         "attempt_ledger": ledger,
+        "immutable_exp018": immutable,
+        "multiview_cache": multiview,
         "pair_count": len(pair_rows),
         "cell_counts": dict(cell_counts),
         "cross_encoder_cache": cross_cache,
