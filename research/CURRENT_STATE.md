@@ -1097,18 +1097,18 @@ VERIFIED:
 ## Immediate Workflow Status
 
 - Working branch: `research/v4-decision-transition-memory`.
-- Latest Lambda-synced EXP-017 source commit before final records:
-  `88f9da7be7bcf6380d9df8ba1ce75b78bc14f9b6`.
+- EXP-018 experiment source commit before final records:
+  `0fa7e8dd6ac3a49d4895e624a72f9e9de2da547c`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
-- Lambda post-EXP-017 status: no tmux server running and GPU
+- Lambda post-EXP-018 status: no tmux server running and GPU
   memory/utilization reported `0 MiB / 0%`.
 - Do not launch Stage C2, compiler training, selector work, Qwen action loss,
   full-bank end-to-end RCMF training, AppWorld agent evaluation, or an
   injection-site redesign. The next separately reviewed experiment should
-  test an explicitly state-conditioned transition program while preserving
-  the validated K=4 `last_user_k`, ratio-1.0, frozen-linear decoder path.
+  diagnose and repair the frozen state/transition representation interaction
+  before any behavioral `p(s,m_transition)` training.
 
 ### EXP-017 decision-transition memory pilot
 
@@ -1148,3 +1148,44 @@ VERIFIED:
 - EXP-016D was not launched. No selector, content compiler, full-bank model,
   Stage C2, AppWorld generation/evaluation, Qwen fine-tuning, or end-to-end
   RCMF training occurred in EXP-017.
+
+### EXP-018 state-conditioned transition representation gate
+
+- EXP-018 source commit is
+  `0fa7e8dd6ac3a49d4895e624a72f9e9de2da547c`; artifact root is
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/state_conditioned_transition_6b_20260814_001`.
+- Immutable EXP-017 reuse validation passed: 499 transitions, 148 panel
+  transitions, 32 queries, 4,640 legal rows, 4,579 scoreable rows, and 61
+  over-context masked rows. There was no leakage, truncation, duplicate key,
+  target-utility mismatch, or L0 inconsistency.
+- Frozen query and transition representation tensors have shapes `[32,4096]`
+  and `[148,4096]`; all query targets were excluded and all validation parent
+  trajectories remained excluded.
+- The deterministic two-axis split contains 29 train and 8 held-out transition
+  parents. Pair counts are A/B/C/D = 2,667/904/752/256 for train/train,
+  held-out-state/train-transition, train-state/held-out-transition, and double
+  held-out.
+- Cell-A-only grouped CV selected all predictor schedules. No B/C/D label was
+  used for hyperparameter selection.
+- On double-held-out D, the concat-MLP upper bound reached Spearman 0.059482,
+  sign agreement 0.758170, and Huber 0.126287. State-only was better on
+  Spearman (0.205547) and Huber (0.052382); transition-only Huber was 0.026967.
+- Transition shuffling barely affected concat-MLP behavior on D: Spearman
+  0.059482 to 0.043260 and Huber 0.126287 to 0.126444. The upper bound failed
+  the registered Spearman, baseline, and transition-shuffle checks.
+- Signed bilinear D metrics were Spearman 0.111083, sign agreement 0.575163,
+  and Huber 0.062106, so the field-compatible interaction also failed.
+- Final branch: `state_transition_representations_insufficient`. Per the
+  preregistered decision tree, Parts E-G and the optional trajectory control
+  were not run. This is a failed representation precondition, not a measured
+  behavioral failure of the untrained factorized program.
+- Future-compatible V0/T compiled-field equivalence, transition add/remove,
+  replacement, parent removal/restoration, arbitrary order, and fixed runtime
+  shape tests all passed. No production field or q/k model was trained.
+- The append-only ledger contains one normal attempt, `attempt-001`; the
+  network/Codex disconnect caused no duplicate or resume. Runtime was 238.5433
+  seconds and the 2.159-GiB artifact passed independent validation with zero
+  errors.
+- Tests passed locally (`169 passed, 1 skipped`) and on Lambda (`170 passed`).
+  No selector, program/injector, Qwen behavioral backpropagation, full bank,
+  Stage C2, AppWorld evaluation, end-to-end run, or V4 tag occurred.

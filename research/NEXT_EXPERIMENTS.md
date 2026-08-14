@@ -571,53 +571,59 @@ Decision evidence:
 - If it remains materially improving at a preregistered hard cap, stop for
   review rather than redesigning the decoder or injection site automatically.
 
-## EXP-018 State-Conditioned Transition Program Pilot - Pending Review
+## EXP-018 State-Conditioned Transition Program Pilot - Stopped At Gate
 
-Scientific basis:
+Outcome:
 
-- EXP-017 validated the raw-transition teacher and frozen-decoder pair oracle,
-  but one fixed 128D latent per transition failed held-out query states.
-- The pair oracle reached utility Spearman `0.957418`, while the static
-  transition latent reached only `0.123261` and was significantly worse than
-  zero/random on sequence Huber.
-- The immediate bottleneck is therefore the state-independent program
-  assumption, not transition serialization, K=4 `last_user_k`, or reachability
-  through the frozen linear decoder.
+- Parts A-D completed at source commit
+  `0fa7e8dd6ac3a49d4895e624a72f9e9de2da547c`.
+- The immutable EXP-017 cache and a deterministic 29/8 parent-grouped
+  transition split were validated. The A/B/C/D scoreable pair counts are
+  2,667/904/752/256.
+- The concat-MLP upper bound failed on double-held-out D: Spearman 0.059482,
+  sign agreement 0.758170, and Huber 0.126287. It was worse than state-only
+  and barely changed under transition shuffling.
+- Signed bilinear also failed on D: Spearman 0.111083, sign agreement 0.575163,
+  and Huber 0.062106.
+- Branch: `state_transition_representations_insufficient`.
+- Per the preregistered decision tree, no Qwen behavioral program training,
+  trajectory control, selector, injector, full bank, Stage C2, AppWorld run,
+  or V4 tag was started.
+
+## Proposed EXP-019 Representation Interaction Repair - Review Required
 
 Goal:
 
-- Test whether an explicitly state-conditioned transition program
-  `p(s,m_transition)` can reconstruct transition teacher utility across
-  held-out states and held-out transitions without using a full bank.
+- Determine why the current frozen state/transition representations fail to
+  preserve transition-specific interaction on the double-held-out cell before
+  spending Qwen-backprop compute on `p(s,m_transition)`.
 
-Required design review:
+Required constraints:
 
-- Start with a diagnostic factorized or interaction model over frozen state
-  and transition representations; keep Qwen and the validated rank-128 linear
-  decoder frozen.
-- Preserve the EXP-017 task-grouped query split, leakage exclusions, missing
-  masks, transition IDs, teacher cache, sequence-utility objective, ratio 1.0,
-  K=4, and `last_user_k`.
-- Include state-shuffle, transition-shuffle, zero, random, mean, static
-  transition, and pair-oracle controls.
-- Add a deterministic transition-held-out split so success cannot come from
-  memorizing the 24 selected transition identities.
-- Separate interaction capacity from content compilation. Do not begin with a
-  large content encoder or a production full-bank field.
-- Use train-only continuation/model selection. Held-out query and transition
-  labels are evaluation only.
+- Reuse the immutable EXP-018 two-axis manifest, all leakage/missingness masks,
+  and train-only selection protocol. Do not change the split after observing D.
+- Keep Qwen frozen initially and do not run the EXP-018 behavioral Parts E-G
+  until a replacement representation passes a separately preregistered D gate.
+- Diagnose pooling loss explicitly: compare the current final hidden vector
+  with richer frozen-Qwen token summaries or a small train-only cross-token
+  interaction that cannot inspect held-out labels.
+- Preserve state-shuffle, transition-shuffle, both-shuffle, state-only,
+  transition-only, and global controls. A candidate must depend materially on
+  both axes, not only improve aggregate sign agreement.
+- Audit whether complete observations dominate the transition pooled vector
+  and whether query representations preserve app/API/action-relevant content.
+- Keep EXP-017 and EXP-018 artifacts immutable; use a new run UUID with the
+  same append-only attempt and heartbeat guarantees.
 
-Decision gates to define before launch:
+Decision evidence:
 
-- State-conditioned behavior must materially beat the static transition,
-  shuffled-state, shuffled-transition, random, and zero controls.
-- Utility correlation and sign agreement must remain positive on both
-  held-out query tasks and held-out transition identities.
-- Correct state-transition pairing must matter; a generic state-control
-  shortcut is not sufficient.
-- Stop for user/ChatGPT review after this causal pilot. Do not automatically
-  train a content-derived compiler, selector, full bank, Stage C2 model, or
-  AppWorld agent.
+- If no richer upper bound passes the double-held-out gate, stop and reconsider
+  the representation source or supervision before any program/injector work.
+- If an unconstrained upper bound passes but a field-compatible interaction
+  still fails, record an interaction-factorization bottleneck.
+- Only a field-compatible, transition-shuffle-sensitive pass may return to the
+  behavioral `p(s,m_transition)` experiment. Do not automatically start that
+  run from the representation diagnostic.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 

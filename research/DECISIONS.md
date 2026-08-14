@@ -1032,6 +1032,65 @@ Implementation deviations and recovery:
   the existing pair-oracle checkpoint in the same `_001` artifact.
 - No scientific parameter or artifact identity changed during either repair.
 
+## 2026-08-14 EXP-018 state-transition representation gate
+
+VERIFIED:
+
+- EXP-017 reuse validation passed over 499 transitions, 148 panel transitions,
+  32 queries, 4,640 legal rows, 4,579 scoreable rows, and 61 masked
+  over-context rows without rewriting the source artifact.
+- A deterministic parent-grouped transition split contains 29 train and 8
+  held-out parent trajectories. The four scoreable cells contain
+  2,667/904/752/256 rows for A/B/C/D.
+- Five-fold task/parent-grouped model selection used only cell A. B/C/D labels
+  did not affect hyperparameters or checkpoint selection.
+- On double-held-out D, the concat-MLP upper bound reached Spearman 0.059482,
+  sign agreement 0.758170, and Huber 0.126287. It did not beat state-only or
+  transition-only and did not materially degrade under transition shuffling.
+- The signed bilinear model reached Spearman 0.111083, sign agreement 0.575163,
+  and Huber 0.062106 on D and also failed its gate.
+- Future fixed-cost V0/T tensor contraction and transition/parent
+  add-remove-replace-order reversibility checks passed.
+- Independent validation reported zero errors. The append-only ledger contains
+  one normal attempt and no resume or duplicate run.
+
+Decision:
+
+- Record branch `state_transition_representations_insufficient`.
+- Stop before Qwen behavioral training, as required by Part D. Do not train or
+  report the factorized `p(s,m_transition)` behavioral model, latent PairMLP,
+  optional trajectory control, selector, program head, injector, or full bank
+  from EXP-018.
+- Do not interpret this as evidence that the factorized behavioral equation,
+  frozen decoder, or K=4 input-injection channel failed. Those components were
+  intentionally not exercised after the representation gate failed.
+- Keep the exact two-axis split and teacher rows immutable for a later
+  representation-focused diagnostic. Require genuine double-held-out
+  transition-shuffle sensitivity before reconsidering Qwen behavioral
+  training.
+- Keep V4 as a candidate and do not create or move an RCMF V4 tag.
+
+Operational definitions fixed before the run:
+
+- Parent split: SHA256-deterministic ordering with 29 train and 8 held-out
+  parent trajectories.
+- A representation model materially beats a baseline at a Spearman gain of at
+  least 0.05 and materially degrades under a shuffle at a Spearman drop of at
+  least 0.05. These thresholds operationalize the milestone's word
+  "materially" and were not selected from B/C/D labels.
+- The concat upper-bound gate additionally requires D Spearman at least 0.20
+  and sign agreement at least 0.60.
+- Complete transition texts are represented by token-weighted means over
+  complete chunks when needed; no truncation is allowed. In this run all 148
+  transition texts fit one chunk.
+
+Implementation deviations and recovery:
+
+- None. One attempt ran from start to normal completion at source commit
+  `0fa7e8dd6ac3a49d4895e624a72f9e9de2da547c`; no scientific parameter
+  changed, no checkpoint resume was required, and the network/Codex disconnect
+  did not trigger a duplicate run.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:
