@@ -488,13 +488,23 @@ def _prediction_rows(
     seed: int,
     device: torch.device,
 ) -> list[dict[str, Any]]:
-    sources = cross_encoder_control_sources(rows, seed=seed)
-    features = controlled_feature_matrix(
-        rows=rows,
-        feature_by_pair=feature_by_pair,
-        control_sources=sources,
-        control=control,
-    )
+    if control == "correct":
+        source_ids: list[str | None] = [str(row["pair_id"]) for row in rows]
+        features = torch.stack(
+            [feature_by_pair[str(row["pair_id"])] for row in rows]
+        )
+    elif control == "zero_interaction":
+        source_ids = [None] * len(rows)
+        features = None
+    else:
+        sources = cross_encoder_control_sources(rows, seed=seed)
+        source_ids = list(sources[control])
+        features = controlled_feature_matrix(
+            rows=rows,
+            feature_by_pair=feature_by_pair,
+            control_sources=sources,
+            control=control,
+        )
     if features is None:
         interactions = torch.zeros(len(rows), dtype=torch.float32)
     else:
@@ -521,7 +531,7 @@ def _prediction_rows(
                 "residual_target": float(row["text_utility"]) - base,
                 "residual_predicted": interaction,
                 "control": control,
-                "control_source_pair_id": sources[control][index],
+                "control_source_pair_id": source_ids[index],
                 "main_effect_score_held_fixed": base,
             }
         )

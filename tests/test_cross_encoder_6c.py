@@ -17,6 +17,7 @@ from rcmf.training.cross_encoder_6c import (
 from rcmf.training.multiview_representations_6c import (
     tokenize_and_validate_char_spans,
 )
+from scripts.run_cross_encoder_interaction_6c import _prediction_rows
 
 
 class CharacterTokenizer:
@@ -184,3 +185,28 @@ def test_cross_encoder_runner_stays_inside_representation_scope() -> None:
     assert "AdditiveTokenMemoryInjector" not in source
     assert "signed_selector" not in source
     assert "target_text" not in source
+
+
+def test_correct_prediction_does_not_require_unused_shuffle_candidates() -> None:
+    row = {
+        "pair_id": "only-pair",
+        "state_example_id": "only-state",
+        "state_task_id": "task",
+        "transition_id": "only-transition",
+        "transition_parent_id": "parent",
+        "cell": "validation",
+        "utility_category": "neutral",
+        "text_utility": 0.0,
+    }
+    model = CrossEncoderResidualHead(6, hidden_dim=8, dropout=0.0).eval()
+    predictions = _prediction_rows(
+        model=model,
+        rows=[row],
+        feature_by_pair={"only-pair": torch.zeros(6)},
+        normalization={"mean": torch.zeros(6), "std": torch.ones(6)},
+        base_scores={"only-pair": 0.0},
+        control="correct",
+        seed=1,
+        device=torch.device("cpu"),
+    )
+    assert predictions[0]["control_source_pair_id"] == "only-pair"
