@@ -1,0 +1,82 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_transition_memory_6a
+  version: decision_transition_memory_feasibility_6a_v1
+  scope:
+    - canonical_decision_transition_extraction
+    - fixed_transition_panel
+    - raw_transition_teacher_scoring
+    - reversible_transition_field_algebra
+    - frozen_exp016c_u112_rank128_linear_decoder
+    - pair_specific_transition_latent_oracle
+    - static_per_transition_latent
+    - comparable_whole_trajectory_static_latent
+    - qwen_frozen
+    - teacher_forced_target_scoring_only
+    - input_embedding_only
+    - last_user_k
+    - k_4
+    - no_selector_training
+    - no_content_compiler
+    - no_full_bank_field_training
+    - no_appworld_generation_or_evaluation
+    - no_stage_c2
+    - no_end_to_end_rcmf_training
+
+injector:
+  type: additive_token
+  position: last_user_k
+  num_tokens: 4
+  initial_scale: 0.0
+
+stage_c_6a:
+  seed: 20260817
+  query_seed: 17017
+  pair_oracle_seed: 17018
+  static_selection_seed: 17019
+  context_limit: 40960
+  transition_panel:
+    expected_min: 120
+    expected_max: 148
+    hard_stop_max: 160
+  queries:
+    train_tasks: 12
+    states_per_train_task: 2
+    validation_tasks: 4
+    states_per_validation_task: 2
+    exclude_exp016c_states: true
+  teacher:
+    utility_neutral_epsilon: 0.01
+    top_k: 64
+    no_truncation: true
+  decoder:
+    source_target: u112
+    source_updates_per_pair: 112
+    latent_dim: 128
+    output_tokens: 4
+    bias: false
+    ratio_budget: 1.0
+    source_checkpoint: runs/stage_c/oracle_convergence_5fb_20260809_001/checkpoints/direct_sequence_utility_plus_sparse_kl_ratio1.0_u112.pt
+  objective:
+    name: sequence_utility_plus_sparse_kl
+    sequence_utility_weight: 1.0
+    sparse_teacher_kl_weight: 0.05
+    huber_delta: 0.1
+  optimization:
+    latent_learning_rate: 0.05
+    max_gradient_norm: 1.0
+    checkpoints_updates_per_identity: [16, 32, 64]
+    optional_final_updates_per_identity: 128
+  pair_oracle:
+    pairs_per_category: 16
+    categories: [positive, neutral, negative, random]
+  static_transition:
+    transition_count: 24
+    minimum_parent_count: 12
+  runtime_projection:
+    historical_teacher_runtime_s: 36949.37
+    historical_teacher_scoreable_pairs: 27054
+    historical_gradient_update_s: 1.82
+    inference_safety_multiplier: 1.20
+    hard_stop_expected_h100_hours: 12.0
