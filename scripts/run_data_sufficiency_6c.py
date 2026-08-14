@@ -52,6 +52,7 @@ from rcmf.utils.serialization import (
 from scripts.run_cross_encoder_interaction_6c import (
     _base_score_maps as cross_base_score_maps,
     _prediction_rows as cross_prediction_rows,
+    cross_encoder_aggregate_path,
     multiview_artifact_paths,
 )
 from scripts.run_interaction_representation_6c import (
@@ -138,6 +139,7 @@ def _summary_row(
 
 def _load_representations(exp018: Path, artifact_dir: Path) -> dict[str, Any]:
     multiview_paths = multiview_artifact_paths(artifact_dir)
+    cross_path = cross_encoder_aggregate_path(artifact_dir)
     current_state = torch.load(
         exp018 / "representation_cache/query_state_representations.pt",
         map_location="cpu",
@@ -159,7 +161,7 @@ def _load_representations(exp018: Path, artifact_dir: Path) -> dict[str, Any]:
         weights_only=False,
     )
     cross = torch.load(
-        artifact_dir / "part_e/cross_encoder_representations.pt",
+        cross_path,
         map_location="cpu",
         weights_only=False,
     )
@@ -191,9 +193,7 @@ def _load_representations(exp018: Path, artifact_dir: Path) -> dict[str, Any]:
             ),
             "state_multiview": sha256_file(multiview_paths["state_cache"]),
             "transition_multiview": sha256_file(multiview_paths["transition_cache"]),
-            "cross_encoder": sha256_file(
-                artifact_dir / "part_e/cross_encoder_representations.pt"
-            ),
+            "cross_encoder": sha256_file(cross_path),
         },
     }
 

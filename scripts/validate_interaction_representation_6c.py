@@ -217,7 +217,9 @@ def _validate_cross_encoder_cache(
         if len(errors) >= 100:
             break
 
-    aggregate_path = root / "part_e/cross_encoder_representations.pt"
+    aggregate_path = (
+        root / "part_e/cross_encoder_cache/cross_encoder_representations.pt"
+    )
     aggregate = torch.load(aggregate_path, map_location="cpu", weights_only=False)
     matrix = aggregate.get("representations")
     _check(
@@ -306,7 +308,7 @@ def validate_artifact(root: Path, exp018: Path) -> dict[str, Any]:
         "part_e/input_validation.json",
         "part_e/cross_encoder_token_preflight.json",
         "part_e/cross_encoder_cache_report.json",
-        "part_e/cross_encoder_representations.pt",
+        "part_e/cross_encoder_cache/cross_encoder_representations.pt",
         "part_e_summary.json",
         "part_f/learning_curve_manifest.json",
         "part_f/learning_curve_progress.json",

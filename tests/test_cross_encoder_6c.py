@@ -19,6 +19,7 @@ from rcmf.training.multiview_representations_6c import (
 )
 from scripts.run_cross_encoder_interaction_6c import (
     _prediction_rows,
+    cross_encoder_aggregate_path,
     multiview_artifact_paths,
 )
 
@@ -227,3 +228,15 @@ def test_multiview_artifact_paths_match_parts_c_d_cache_layout(tmp_path: Path) -
     ).read_text(encoding="utf-8")
     assert "multiview_artifact_paths(artifact_dir)" in source
     assert "parts_c_d/state_multiview.pt" not in source
+
+
+def test_cross_encoder_aggregate_path_matches_cache_layout(tmp_path: Path) -> None:
+    expected = (
+        tmp_path / "part_e/cross_encoder_cache/cross_encoder_representations.pt"
+    )
+    assert cross_encoder_aggregate_path(tmp_path) == expected
+    source = (
+        Path(__file__).resolve().parents[1] / "scripts/run_data_sufficiency_6c.py"
+    ).read_text(encoding="utf-8")
+    assert "cross_encoder_aggregate_path(artifact_dir)" in source
+    assert 'artifact_dir / "part_e/cross_encoder_representations.pt"' not in source

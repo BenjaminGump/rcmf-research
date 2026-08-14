@@ -431,6 +431,13 @@ def multiview_artifact_paths(artifact_dir: Path) -> dict[str, Path]:
     }
 
 
+def cross_encoder_aggregate_path(artifact_dir: Path) -> Path:
+    return (
+        Path(artifact_dir)
+        / "part_e/cross_encoder_cache/cross_encoder_representations.pt"
+    )
+
+
 def _load_multiview_main_inputs(
     artifact_dir: Path,
     settings: Mapping[str, Any],
