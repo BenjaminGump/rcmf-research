@@ -1,0 +1,96 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_state_conditioned_transition_6b
+  version: factorized_state_transition_program_6b_v1
+  scope:
+    - reuse_validated_exp017_transition_teacher
+    - parent_grouped_two_axis_generalization
+    - frozen_qwen_state_transition_representations
+    - cheap_state_transition_interaction_gate
+    - factorized_state_conditioned_program
+    - frozen_exp016c_u112_rank128_linear_decoder
+    - qwen_frozen
+    - teacher_forced_target_scoring_only
+    - last_user_k
+    - k_4
+    - no_selector_training
+    - no_production_full_bank
+    - no_appworld_generation_or_evaluation
+    - no_stage_c2
+    - no_end_to_end_rcmf_training
+    - no_v4_tag
+
+injector:
+  type: additive_token
+  position: last_user_k
+  num_tokens: 4
+  initial_scale: 0.0
+
+stage_c_6b:
+  run_uuid: state_conditioned_transition_6b_20260814_001
+  seed: 20260818
+  exp017_artifact: runs/stage_c/transition_memory_6a_20260814_001
+  source_data: runs/appworld/official_react_gpt4o_train_success_full_demo_filtered_no_2a163ab3_20260803
+  source_state_representation_cache: runs/experiments/appworld_qwen_repr_full_prompt_filtered_no_2a163ab3_20260803_101000/train/representation_cache/decision_state_representations.pt
+  source_decoder_checkpoint: runs/stage_c/oracle_convergence_5fb_20260809_001/checkpoints/direct_sequence_utility_plus_sparse_kl_ratio1.0_u112.pt
+  expected:
+    extracted_transitions: 499
+    panel_transitions: 148
+    train_query_states: 24
+    heldout_query_states: 8
+    legal_teacher_rows: 4640
+    scoreable_teacher_rows: 4579
+    over_context_rows: 61
+  transition_split:
+    seed: 18018
+    train_parents: 29
+    heldout_parents: 8
+  representations:
+    version: frozen_qwen_state_transition_representations_6b_v1
+    transition_renderer: decision_transition_teacher_section_v1
+    transition_aggregation: token_weighted_mean_over_complete_chunks
+    batch_size: 1
+    heartbeat_interval_seconds: 240
+  cheap_gate:
+    seed: 18019
+    folds: 5
+    hidden_dim: 256
+    interaction_dim: 128
+    dropout: 0.05
+    learning_rate: 0.0003
+    weight_decay: 0.0001
+    batch_size: 256
+    huber_delta: 0.1
+    epoch_candidates: [10, 30, 60]
+    model_kinds:
+      - state_only
+      - transition_only
+      - additive
+      - signed_bilinear
+      - concat_mlp
+    gate:
+      minimum_spearman: 0.20
+      minimum_sign_agreement: 0.60
+      minimum_baseline_spearman_gain: 0.05
+      minimum_shuffle_spearman_drop: 0.05
+  program:
+    controller_ranks: [16, 8]
+    primary_controller_rank: 16
+    program_dim: 128
+    hidden_dim: 256
+    dropout: 0.05
+    decoder_rank: 128
+    decoder_bias: false
+    k: 4
+    position: last_user_k
+    ratio_budget: 1.0
+    utility_neutral_epsilon: 0.01
+    utility_huber_delta: 0.1
+    neutral_weight: 2.0
+    latent_norm_weight: 0.0001
+    sparse_teacher_kl_weight: 0.0
+  field_algebra:
+    key_rank: 128
+    controller_rank: 16
+    program_dim: 128
