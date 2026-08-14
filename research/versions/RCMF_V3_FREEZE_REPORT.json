@@ -1,0 +1,61 @@
+{
+  "format": "rcmf_version_freeze_report_v1",
+  "status": "passed",
+  "verified_at_utc": "2026-08-14T02:22:00Z",
+  "source_state_commit": "97ca723ad66597d2afcbbce1eb5466eb34c009f6",
+  "freeze_commit": "2eb1281ff66792aeb082cce39f6a362697f132e6",
+  "annotated_tag": {
+    "name": "rcmf-v3-component-validated-pre-transition",
+    "object_sha": "ee36ad8bad73858b7d6228febb4f90b6156d5979",
+    "peeled_commit_sha": "2eb1281ff66792aeb082cce39f6a362697f132e6",
+    "message": "RCMF V3: component-validated trajectory-memory field before decision-transition redesign"
+  },
+  "archive_branch": {
+    "name": "archive/rcmf-v3-component-validated",
+    "commit_sha": "2eb1281ff66792aeb082cce39f6a362697f132e6"
+  },
+  "v4_candidate_branch": {
+    "name": "research/v4-decision-transition-memory",
+    "initial_commit_sha": "2eb1281ff66792aeb082cce39f6a362697f132e6",
+    "official_v4_tag_created": false
+  },
+  "workflow_branch": {
+    "name": "workflow/research-loop",
+    "freeze_commit_sha": "2eb1281ff66792aeb082cce39f6a362697f132e6"
+  },
+  "remote": {
+    "name": "origin",
+    "url": "git@github.com:BenjaminGump/rcmf-research.git",
+    "verification_passed": true,
+    "refs": {
+      "refs/heads/archive/rcmf-v3-component-validated": "2eb1281ff66792aeb082cce39f6a362697f132e6",
+      "refs/heads/research/v4-decision-transition-memory": "2eb1281ff66792aeb082cce39f6a362697f132e6",
+      "refs/heads/workflow/research-loop": "2eb1281ff66792aeb082cce39f6a362697f132e6",
+      "refs/tags/rcmf-v3-component-validated-pre-transition": "ee36ad8bad73858b7d6228febb4f90b6156d5979",
+      "refs/tags/rcmf-v3-component-validated-pre-transition^{}": "2eb1281ff66792aeb082cce39f6a362697f132e6"
+    }
+  },
+  "equality_checks": {
+    "tag_peeled_equals_freeze": true,
+    "archive_equals_freeze": true,
+    "v4_initial_equals_freeze": true,
+    "workflow_equals_freeze": true
+  },
+  "pre_freeze_working_tree": {
+    "branch": "workflow/research-loop",
+    "head": "97ca723ad66597d2afcbbce1eb5466eb34c009f6",
+    "tracked_clean": true,
+    "permitted_untracked": [
+      ".codex_tmp/"
+    ]
+  },
+  "post_freeze_working_tree": {
+    "branch": "research/v4-decision-transition-memory",
+    "head_before_report_commit": "2eb1281ff66792aeb082cce39f6a362697f132e6",
+    "tracked_clean_before_report": true,
+    "permitted_untracked": [
+      ".codex_tmp/"
+    ]
+  },
+  "version_manifest": "research/versions/RCMF_V3_COMPONENT_VALIDATED_PRE_TRANSITION.md"
+}
