@@ -915,25 +915,35 @@ def transition_static_gate(
 def granularity_advantage(
     transition: Mapping[str, Any], trajectory: Mapping[str, Any]
 ) -> dict[str, Any]:
-    comparisons = {
-        "utility_spearman": float(
-            transition.get("utility_spearman", -1.0)
-        )
-        > float(trajectory.get("utility_spearman", -1.0)),
+    deltas = {
+        "utility_spearman": float(transition.get("utility_spearman", -1.0))
+        - float(trajectory.get("utility_spearman", -1.0)),
         "sign_agreement": float(transition.get("sign_agreement", 0.0))
-        > float(trajectory.get("sign_agreement", 0.0)),
+        - float(trajectory.get("sign_agreement", 0.0)),
         "normalized_huber_reduction": float(
             transition.get("normalized_huber_reduction", 0.0)
         )
-        > float(trajectory.get("normalized_huber_reduction", 0.0)),
+        - float(trajectory.get("normalized_huber_reduction", 0.0)),
         "swap_sensitivity": float(transition.get("swap_sensitivity", 0.0))
-        > float(trajectory.get("swap_sensitivity", 0.0)),
-        "heldout_task_consistency": int(
-            transition.get("positive_task_count", 0)
-        )
-        > int(trajectory.get("positive_task_count", 0)),
+        - float(trajectory.get("swap_sensitivity", 0.0)),
+        "heldout_task_consistency": int(transition.get("positive_task_count", 0))
+        - int(trajectory.get("positive_task_count", 0)),
+    }
+    minimum_material_deltas = {
+        "utility_spearman": 0.05,
+        "sign_agreement": 0.05,
+        "normalized_huber_reduction": 0.05,
+        "swap_sensitivity": 0.01,
+        "heldout_task_consistency": 1,
+    }
+    comparisons = {
+        key: float(deltas[key]) >= float(minimum_material_deltas[key])
+        for key in deltas
     }
     return {
+        "definition": "fixed_minimum_metric_delta_6a_v1",
+        "deltas_transition_minus_trajectory": deltas,
+        "minimum_material_deltas": minimum_material_deltas,
         "comparisons": comparisons,
         "advantage_count": sum(comparisons.values()),
         "passed": sum(comparisons.values()) >= 2,

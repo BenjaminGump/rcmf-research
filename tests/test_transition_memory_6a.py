@@ -17,6 +17,7 @@ from rcmf.schemas import DecisionExample, MemoryRecord
 from rcmf.training.transition_memory_6a import (
     decoder_manifest_state_ids,
     deterministic_identity_derangement,
+    granularity_advantage,
     is_legal_transition_pair,
     messages_with_transition_memory,
     pair_oracle_capacity_gate,
@@ -254,3 +255,21 @@ def test_deterministic_identity_derangement_has_no_fixed_points() -> None:
     assert set(first) == set(identities)
     assert set(first.values()) == set(identities)
     assert all(source != target for source, target in first.items())
+
+
+def test_granularity_advantage_requires_material_not_tiny_differences() -> None:
+    trajectory = {
+        "utility_spearman": 0.20,
+        "sign_agreement": 0.60,
+        "normalized_huber_reduction": 0.20,
+        "swap_sensitivity": 0.01,
+        "positive_task_count": 2,
+    }
+    tiny = {key: value + 0.001 for key, value in trajectory.items()}
+    assert not granularity_advantage(tiny, trajectory)["passed"]
+    material = dict(trajectory)
+    material["utility_spearman"] += 0.06
+    material["sign_agreement"] += 0.06
+    report = granularity_advantage(material, trajectory)
+    assert report["passed"]
+    assert report["advantage_count"] == 2

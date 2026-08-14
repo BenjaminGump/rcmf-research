@@ -858,6 +858,19 @@ def _run_static_identity_model(
         },
         seed=seed,
     )
+    required_material_controls = ("shuffled", "random", "swap")
+    material_control_checks = {
+        control: float(
+            bootstrap[f"correct_minus_{control}_sequence_huber"]["ci95"][1]
+        )
+        < 0.0
+        for control in required_material_controls
+    }
+    gate["checks"][
+        "paired_huber_ci_below_shuffled_random_swap"
+    ] = all(material_control_checks.values())
+    gate["material_control_checks"] = material_control_checks
+    gate["passed"] = all(gate["checks"].values())
     decoder_final_hash = module_state_sha256(decoder)
     if decoder_final_hash != initial_decoder_hash:
         raise RuntimeError(f"{name} modified the frozen decoder")
@@ -926,6 +939,44 @@ def _teacher_validity_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
         "exact_target_substring_fraction": exact_count / max(scored, 1),
         "passed": all(checks.values()),
     }
+
+
+def _teacher_length_stratification(
+    rows: Sequence[dict[str, Any]],
+) -> dict[str, Any]:
+    scored = [row for row in rows if row.get("valid_for_loss")]
+    output: dict[str, Any] = {
+        "format": "decision_transition_teacher_length_stratification_6a_v1"
+    }
+    for field in (
+        "source_state_tokens",
+        "action_tokens",
+        "observation_tokens",
+        "transition_section_tokens",
+    ):
+        ordered = sorted(int(row[field]) for row in scored)
+        q1 = ordered[int(round((len(ordered) - 1) / 3.0))]
+        q2 = ordered[int(round(2.0 * (len(ordered) - 1) / 3.0))]
+        buckets: dict[str, list[float]] = defaultdict(list)
+        for row in scored:
+            value = int(row[field])
+            bucket = "short" if value <= q1 else "medium" if value <= q2 else "long"
+            buckets[bucket].append(float(row["text_utility"]))
+        output[field] = {
+            "quantile_boundaries": {"q1": q1, "q2": q2},
+            "buckets": {
+                bucket: {
+                    "count": len(values),
+                    "mean_utility": statistics.fmean(values),
+                    "median_utility": statistics.median(values),
+                    "positive": sum(value > 0.01 for value in values),
+                    "neutral": sum(abs(value) <= 0.01 for value in values),
+                    "negative": sum(value < -0.01 for value in values),
+                }
+                for bucket, values in sorted(buckets.items())
+            },
+        }
+    return output
 
 
 def _pair_oracle_run(
@@ -1202,6 +1253,13 @@ def main() -> None:
     atomic_write_json(args.artifact_dir / "teacher_validity_gate.json", teacher_gate)
     if not teacher_gate["passed"]:
         raise RuntimeError(f"Transition teacher gate failed: {teacher_gate}")
+    teacher_length_stratification = _teacher_length_stratification(
+        _load_rows(args.artifact_dir / "teacher_cache.jsonl")
+    )
+    atomic_write_json(
+        args.artifact_dir / "teacher_length_stratification.json",
+        teacher_length_stratification,
+    )
 
     pair_response_rows = _adapt_response_rows(
         _load_rows(
@@ -1392,6 +1450,7 @@ def main() -> None:
         "artifact_dir": str(args.artifact_dir),
         "teacher_summary": str(teacher_summary_path),
         "teacher_validity_gate": teacher_gate,
+        "teacher_length_stratification": teacher_length_stratification,
         "decoder_validation": decoder_validation,
         "pair_oracle": pair_oracle,
         "conditional_direct_oracle": conditional_direct,
