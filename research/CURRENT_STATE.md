@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-08-14.
+Last updated: 2026-08-15.
 
 ## VERIFIED
 
@@ -1097,18 +1097,19 @@ VERIFIED:
 ## Immediate Workflow Status
 
 - Working branch: `research/v4-decision-transition-memory`.
-- EXP-018 experiment source commit before final records:
-  `0fa7e8dd6ac3a49d4895e624a72f9e9de2da547c`.
+- EXP-019 final source/audit commit before final records:
+  `5ca600bf76fcdb9db5b0278c60a31dc35b6a7128`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
-- Lambda post-EXP-018 status: no tmux server running and GPU
+- Lambda post-EXP-019 status: no tmux server running and GPU
   memory/utilization reported `0 MiB / 0%`.
 - Do not launch Stage C2, compiler training, selector work, Qwen action loss,
   full-bank end-to-end RCMF training, AppWorld agent evaluation, or an
   injection-site redesign. The next separately reviewed experiment should
-  diagnose and repair the frozen state/transition representation interaction
-  before any behavioral `p(s,m_transition)` training.
+  expand query-state teacher coverage, rerun the interaction upper bound and
+  field-compatible gate, and stop again for review before any behavioral
+  `p(s,m_transition)` training.
 
 ### EXP-017 decision-transition memory pilot
 
@@ -1189,3 +1190,64 @@ VERIFIED:
 - Tests passed locally (`169 passed, 1 skipped`) and on Lambda (`170 passed`).
   No selector, program/injector, Qwen behavioral backpropagation, full bank,
   Stage C2, AppWorld evaluation, end-to-end run, or V4 tag occurred.
+
+### EXP-019 interaction-residual and multi-view representation repair
+
+- EXP-019 final source/audit commit before records is
+  `5ca600bf76fcdb9db5b0278c60a31dc35b6a7128`; the last experiment-runner fix
+  is `cbb75d474e01ee19e35a35d76814b8c63f1efdc7`.
+- The immutable EXP-018 manifest and 4,579 scoreable rows were reused. Exact
+  A/B/C/D counts remain `2,667/904/752/256`; 61 over-context rows remain
+  masked, with no truncation or leakage.
+- Majority-sign accuracy is `0.584676/0.726126/0.644550/0.764706` for A/B/C/D.
+  D's value is exactly `117/(117+36)`, so sign agreement near 0.764706 is not
+  treated as learned interaction.
+- Cell A has total utility variance `0.109951`. State and transition main
+  effects explain `0.412241` and `0.035677`; their additive model explains
+  `0.449074`, leaving residual variance `0.060575`. Utility/residual effective
+  ranks are `14.453/16.097`.
+- The original-vector objective repair failed. On D, decomposed signed
+  bilinear reached raw/per-state/residual Spearman
+  `0.166696/0.050357/0.129785` and NDCG@4 `0.484875`. Its state-shuffle drop
+  was only `0.012744`, the transition-shuffle bootstrap CI included zero, and
+  only one of four held-out tasks was positive.
+- The span-aware cache contains state `[32,10,4096]` and transition
+  `[148,10,4096]` tensors for final-layer and mean-final-four-layer readouts.
+  All 900 spans were source-aligned; 439 expanded only to tokenizer
+  boundaries. There was no target-action access or truncation.
+- The best field-compatible multi-view model was the low-rank tensor. On D it
+  reached NDCG@4 `0.554092`, per-state Spearman `0.121518`, and residual
+  Spearman `0.188452`, but transition-only NDCG@4 was higher (`0.566808`),
+  the state-shuffle drop was only `0.020493`, and only one of four held-out
+  tasks was positive. It failed the gate.
+- Multi-view pair MLP and structured-feature controls also failed. Structured
+  features did not establish a signal that frozen-Qwen pooling alone missed.
+- The prompt-only frozen-Qwen cross-encoder cached all 4,579 legal scoreable
+  pairs without truncation. Its aggregate shape is `[4579,12288]` and SHA256
+  is `d40f4e2dfc516a02bb4066f195a27e6e3612a344a6761858787aefe86bc1c763`.
+- The cross-encoder fit cell A (NDCG@4 `0.820228`) and generalized to C
+  (`0.661463`) but failed B (`0.309609`) and D (`0.379564`). On D,
+  transition shuffling improved NDCG@4 to `0.495154`; only one of four tasks
+  showed positive relative behavior.
+- Five-fold cell-A learning curves covered 4, 8, and all 12 train query tasks.
+  The prompt cross-encoder moved from NDCG@4 `0.426066` at 8 tasks to
+  `0.431144` at 12 while residual Spearman moved from `-0.151063` to
+  `0.003225`; results remained unstable across folds.
+- Final decision branch: `query_task_coverage_insufficient`. The
+  representation gate was not repaired, and behavioral
+  `p(s,m_transition)` remains blocked.
+- A future 64-query cache projects to `9,280` legal / `9,158` scoreable /
+  `122` over-context pairs and `4.5510` H100 hours. A 96-query cache projects
+  to `13,920/13,737/183` pairs and `6.8265` H100 hours. Neither was launched.
+- The append-only ledger contains nine paired attempts: four normal phase
+  completions and five preserved implementation failures. Every attempt says
+  `scientific_parameter_changed=false`; atomic cross-encoder rows were reused
+  without duplication after recovery.
+- Independent validation passed with zero errors, including immutable hashes,
+  all cache/prediction/checkpoint hashes, 105 learning-curve rows, and the
+  attempt ledger. Full local tests passed `204 passed, 1 skipped`; strengthened
+  Lambda validator tests passed `6 passed`.
+- No behavioral program, injector, selector, production field, Qwen
+  behavioral backpropagation, Stage C2, end-to-end RCMF, AppWorld evaluation,
+  demo change, or V4 tag occurred. No tmux/process is active; GPU is
+  `0 MiB / 0%`; Lambda is safe to terminate after final Git synchronization.

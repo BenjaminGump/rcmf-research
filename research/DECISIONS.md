@@ -1091,6 +1091,75 @@ Implementation deviations and recovery:
   changed, no checkpoint resume was required, and the network/Codex disconnect
   did not trigger a duplicate run.
 
+## 2026-08-14 EXP-019 representation interaction repair
+
+VERIFIED:
+
+- EXP-019 reproduced EXP-018, retained exact A/B/C/D counts
+  `2,667/904/752/256`, and kept all 61 over-context rows masked without
+  leakage or truncation.
+- D's always-positive sign baseline is `0.764706`, exactly
+  `117/(117+36)`. Sign agreement is therefore diagnostic only and is not a
+  scientific gate.
+- Cell-A state and transition main effects jointly explain `0.449074` of
+  utility variance, leaving interaction-residual variance `0.060575` and
+  residual effective rank `16.097`.
+- Residual/listwise objective repair on the old representations failed the
+  double-held-out interaction gate. Signed bilinear D NDCG@4 was `0.484875`
+  with only a `0.012744` state-shuffle drop and a transition-shuffle contrast
+  whose task-grouped bootstrap interval included zero.
+- Span-aware frozen-Qwen views were valid and nonconstant, but no multi-view
+  field-compatible model passed. The strongest, a low-rank tensor, reached D
+  NDCG@4 `0.554092` versus transition-only `0.566808`, with state-shuffle
+  drop `0.020493` and only one positive held-out task.
+- The structured-feature model also failed. This does not support the branch
+  that Qwen pooling alone failed while deterministic structure succeeded.
+- The frozen-Qwen prompt-only cross-encoder cached all 4,579 pairs and fit A,
+  but failed D: NDCG@4 `0.379564`, per-state Spearman `-0.054573`, residual
+  Spearman `-0.035283`. Transition shuffling improved NDCG@4 to `0.495154`.
+- The cross-encoder's cell-A grouped learning curve remained slightly rising
+  and unstable at 12 query tasks. NDCG@4 moved `0.426066 -> 0.431144` from
+  8 to 12 tasks, while residual Spearman moved `-0.151063 -> 0.003225`.
+- Independent post-run validation passed with zero errors. All five failed and
+  four completed attempts remain paired in the append-only ledger, and no
+  scientific parameter changed during repair.
+
+Decision:
+
+- Record branch `query_task_coverage_insufficient`.
+- The EXP-019 representation gate is not repaired. Behavioral
+  `p(s,m_transition)` training remains blocked.
+- Do not conclude that prompt-only interaction is impossible: the strongest
+  upper-bound learning curve did not meet the preregistered saturation
+  condition at the current 12 train query tasks.
+- The next separately reviewed milestone should expand query-state teacher
+  coverage, preserving the transition panel, leakage rules, exact two-axis
+  evaluation, full-demo prompt, no-truncation rule, and train-only selection.
+- Rerun the prompt-only upper bound first. A field-compatible interaction must
+  then either pass the full D gate or retain at least 70% of the upper-bound
+  gain over the best single-axis baseline with material state- and
+  transition-shuffle sensitivity.
+- Do not launch behavioral training automatically even if an expanded
+  representation experiment passes; return for user and ChatGPT review.
+- Keep V4 as a candidate. Do not create or move an RCMF V4 tag.
+
+Implementation deviations and recovery:
+
+- Attempt 001 exposed an overly strict EXP-018 reproduction tolerance for a
+  `1.12e-9` serialization difference. The tolerance repair was regression
+  tested and did not change a metric or gate.
+- Attempts 003 and 004 exposed tokenizer-boundary handling errors in span
+  validation. The final implementation accepts only exact or token-expanded
+  spans whose decoded text remains source-aligned; it never truncates or
+  semantically broadens a span.
+- Attempt 006 finished every atomic cross-encoder row before a wrong
+  multiview-artifact path failed post-cache processing. Attempt 007 validated
+  and reused all 4,579 rows, with zero newly computed or duplicate rows.
+- Attempt 008 failed before learning-curve training due a wrong aggregate
+  path. Attempt 009 resumed from the validated Part-E artifact.
+- Failed attempts and reports were preserved. All ledger entries record
+  `scientific_parameter_changed=false`; no run UUID was duplicated.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:

@@ -590,40 +590,77 @@ Outcome:
   trajectory control, selector, injector, full bank, Stage C2, AppWorld run,
   or V4 tag was started.
 
-## Proposed EXP-019 Representation Interaction Repair - Review Required
+## EXP-019 Representation Interaction Repair - Completed, Gate Failed
+
+Outcome:
+
+- The immutable EXP-018 cells remained A/B/C/D = `2,667/904/752/256`.
+- Main effects explain `44.91%` of cell-A utility variance; nontrivial residual
+  variance and effective rank remain.
+- Residual/listwise objective repair on the original vectors failed.
+- Span-aware multi-view frozen-Qwen models and deterministic structured
+  features failed the double-held-out interaction gate.
+- The best field-compatible model, the multi-view low-rank tensor, reached D
+  NDCG@4 `0.554092`, below transition-only `0.566808`, and was insufficiently
+  sensitive to state shuffle.
+- The prompt-only frozen-Qwen cross-encoder fit A and C but failed B and D. On
+  D it reached NDCG@4 `0.379564`, while transition shuffle reached `0.495154`.
+- Its 12-query-task learning curve remained slightly rising and unstable.
+- Branch: `query_task_coverage_insufficient`.
+- The representation gate was not repaired; behavioral
+  `p(s,m_transition)` remains blocked.
+
+No behavioral program, injector, selector, production field, Qwen behavioral
+backpropagation, Stage C2, AppWorld evaluation, end-to-end run, demo change,
+or V4 tag was started.
+
+## Proposed EXP-020 Expanded Query-State Interaction Coverage - Review Required
 
 Goal:
 
-- Determine why the current frozen state/transition representations fail to
-  preserve transition-specific interaction on the double-held-out cell before
-  spending Qwen-backprop compute on `p(s,m_transition)`.
+- Determine whether the failed double-held-out interaction gate is caused by
+  only 12 train query tasks, using the same transition teacher and immutable
+  transition panel before any behavioral program work.
+
+Proposed fixed coverage levels:
+
+- Existing 32-query state panel as the locked continuity baseline.
+- 64 query states: projected `9,280` legal, `9,158` scoreable, `122`
+  over-context pairs, and `4.5510` H100 hours.
+- 96 query states: projected `13,920` legal, `13,737` scoreable, `183`
+  over-context pairs, and `6.8265` H100 hours.
 
 Required constraints:
 
-- Reuse the immutable EXP-018 two-axis manifest, all leakage/missingness masks,
-  and train-only selection protocol. Do not change the split after observing D.
-- Keep Qwen frozen initially and do not run the EXP-018 behavioral Parts E-G
-  until a replacement representation passes a separately preregistered D gate.
-- Diagnose pooling loss explicitly: compare the current final hidden vector
-  with richer frozen-Qwen token summaries or a small train-only cross-token
-  interaction that cannot inspect held-out labels.
-- Preserve state-shuffle, transition-shuffle, both-shuffle, state-only,
-  transition-only, and global controls. A candidate must depend materially on
-  both axes, not only improve aggregate sign agreement.
-- Audit whether complete observations dominate the transition pooled vector
-  and whether query representations preserve app/API/action-relevant content.
-- Keep EXP-017 and EXP-018 artifacts immutable; use a new run UUID with the
-  same append-only attempt and heartbeat guarantees.
+- Obtain user and ChatGPT approval of the exact query-task selection and split
+  before scoring. Do not choose the panel after inspecting new labels.
+- Preserve all same-task/episode/replay/lineage exclusions and mask
+  over-context rows without truncation or utility imputation.
+- Keep the three full-demo examples, transition panel, Qwen identity, renderer,
+  targets, and utility definition unchanged.
+- Use task-grouped train-only model selection. New held-out query tasks must not
+  affect hyperparameters or main-effect estimates.
+- Rerun the prompt-only cross-encoder upper bound first, with state,
+  transition, both-shuffle, and single-axis controls.
+- Only if the upper bound improves should a field-compatible multiview
+  bilinear/tensor model be tested. It must retain at least 70% of the
+  cross-encoder gain over the best single-axis baseline.
+- Keep append-only attempts, heartbeat, atomic per-pair rows, exact hashes, and
+  resumability. Laptop/Codex disconnects must not launch a duplicate run.
 
 Decision evidence:
 
-- If no richer upper bound passes the double-held-out gate, stop and reconsider
-  the representation source or supervision before any program/injector work.
-- If an unconstrained upper bound passes but a field-compatible interaction
-  still fails, record an interaction-factorization bottleneck.
-- Only a field-compatible, transition-shuffle-sensitive pass may return to the
-  behavioral `p(s,m_transition)` experiment. Do not automatically start that
-  run from the representation diagnostic.
+- If expanded cross-encoder learning curves saturate below the D gate, record
+  `teacher_utility_not_predictable_from_available_prompt_only_features` and
+  reassess the teacher target/memory-use formulation.
+- If the cross-encoder passes but field-compatible models fail the 70% rule,
+  record `independent_encoding_or_field_factorization_bottleneck`.
+- If structured/content-aware encoders pass while frozen-Qwen views fail,
+  record the representation path as the bottleneck and review a dedicated
+  encoder milestone.
+- Only a field-compatible, state- and transition-shuffle-sensitive pass can
+  justify discussing behavioral `p(s,m_transition)`. Even then, stop for user
+  and ChatGPT review instead of launching behavior automatically.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 
