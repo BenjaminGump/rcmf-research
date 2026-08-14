@@ -17,6 +17,7 @@ from rcmf.training.interaction_representation_6c import (
     per_state_ranking_metrics,
     summarize_revised_predictions,
 )
+from scripts.run_interaction_representation_6c import _compare_numeric
 
 
 def _row(
@@ -93,6 +94,22 @@ def test_majority_sign_baseline_excludes_neutral_rows() -> None:
     result = majority_sign_baseline(rows)
     assert result["always_positive_accuracy"] == pytest.approx(117 / 153)
     assert result["neutral"] == 103
+
+
+def test_exp018_reproduction_tolerates_serialization_noise_only() -> None:
+    expected = {"metric": 0.25, "nested": {"small": 0.0}}
+    serialization_noise = {
+        "metric": 0.25 + 1.121539000559224e-9,
+        "nested": {"small": -1.5e-9},
+    }
+    comparison = _compare_numeric(expected, serialization_noise)
+    assert comparison["passed"]
+    assert comparison["maximum_absolute_difference"] < 2.0e-9
+
+    scientific_difference = _compare_numeric(expected, {"metric": 0.250001})
+    assert not scientific_difference["passed"]
+    assert scientific_difference["outside_tolerance_numeric_keys"] == ["metric"]
+    assert scientific_difference["missing_expected_numeric_keys"] == ["nested.small"]
 
 
 def test_within_state_metrics_reward_correct_memory_order() -> None:

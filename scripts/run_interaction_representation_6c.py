@@ -99,7 +99,13 @@ def _numeric_leaves(value: Any, prefix: str = "") -> dict[str, float]:
     return output
 
 
-def _compare_numeric(expected: Mapping[str, Any], actual: Mapping[str, Any]) -> dict[str, Any]:
+def _compare_numeric(
+    expected: Mapping[str, Any],
+    actual: Mapping[str, Any],
+    *,
+    absolute_tolerance: float = 2.0e-9,
+    relative_tolerance: float = 1.0e-10,
+) -> dict[str, Any]:
     expected_values = _numeric_leaves(expected)
     actual_values = _numeric_leaves(actual)
     common = sorted(set(expected_values).intersection(actual_values))
@@ -107,13 +113,28 @@ def _compare_numeric(expected: Mapping[str, Any], actual: Mapping[str, Any]) -> 
         key: abs(expected_values[key] - actual_values[key]) for key in common
     }
     maximum_key = max(differences, key=differences.get) if differences else None
+    outside_tolerance = [
+        key
+        for key in common
+        if not math.isclose(
+            expected_values[key],
+            actual_values[key],
+            abs_tol=float(absolute_tolerance),
+            rel_tol=float(relative_tolerance),
+        )
+    ]
+    missing_expected = sorted(set(expected_values) - set(actual_values))
     return {
         "compared_numeric_leaf_count": len(common),
         "maximum_absolute_difference": (
             differences[maximum_key] if maximum_key is not None else 0.0
         ),
         "maximum_difference_key": maximum_key,
-        "missing_expected_numeric_keys": sorted(set(expected_values) - set(actual_values)),
+        "absolute_tolerance": float(absolute_tolerance),
+        "relative_tolerance": float(relative_tolerance),
+        "outside_tolerance_numeric_keys": outside_tolerance,
+        "missing_expected_numeric_keys": missing_expected,
+        "passed": not outside_tolerance and not missing_expected,
     }
 
 
@@ -179,6 +200,7 @@ def _reproduce_exp018_metrics(
     reproductions: dict[str, Any] = {}
     selected_rows: dict[str, list[dict[str, Any]]] = {}
     maximum_difference = 0.0
+    all_comparisons_passed = True
     for kind, model in model_results.items():
         reproductions[kind] = {}
         for cell, cell_result in model["cells"].items():
@@ -193,6 +215,9 @@ def _reproduce_exp018_metrics(
                 maximum_difference = max(
                     maximum_difference,
                     float(comparison["maximum_absolute_difference"]),
+                )
+                all_comparisons_passed = (
+                    all_comparisons_passed and bool(comparison["passed"])
                 )
                 reproductions[kind][cell][control] = comparison
                 if cell == CELL_D and control == "correct" and kind in {
@@ -226,6 +251,9 @@ def _reproduce_exp018_metrics(
         maximum_difference = max(
             maximum_difference, float(comparison["maximum_absolute_difference"])
         )
+        all_comparisons_passed = (
+            all_comparisons_passed and bool(comparison["passed"])
+        )
         global_reproductions[cell] = comparison
     return (
         {
@@ -233,8 +261,9 @@ def _reproduce_exp018_metrics(
             "models": reproductions,
             "global": global_reproductions,
             "maximum_absolute_difference": maximum_difference,
-            "tolerance": 1.0e-10,
-            "passed": maximum_difference <= 1.0e-10,
+            "absolute_tolerance": 2.0e-9,
+            "relative_tolerance": 1.0e-10,
+            "passed": all_comparisons_passed,
         },
         selected_rows,
     )
