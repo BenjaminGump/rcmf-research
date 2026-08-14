@@ -72,6 +72,49 @@ class FrozenToyModel(torch.nn.Module):
         return SimpleNamespace(hidden_states=tuple(base + index for index in range(5)))
 
 
+class MergedTailTokenizer(CharacterTokenizer):
+    def __init__(self) -> None:
+        self.values: dict[int, str] = {}
+        self.identifiers: dict[str, int] = {}
+
+    def __call__(
+        self,
+        text: str,
+        *,
+        add_special_tokens: bool = False,
+        truncation: bool = False,
+        return_offsets_mapping: bool = False,
+        return_tensors: str | None = None,
+    ):
+        del add_special_tokens, truncation
+        pieces = [(value, index, index + 1) for index, value in enumerate(text)]
+        if len(pieces) >= 2:
+            pieces = [*pieces[:-2], (text[-2:], len(text) - 2, len(text))]
+        ids = []
+        for value, _, _ in pieces:
+            if value not in self.identifiers:
+                identifier = 100000 + len(self.values)
+                self.identifiers[value] = identifier
+                self.values[identifier] = value
+            identifier = self.identifiers[value]
+            ids.append(identifier)
+        output = {"input_ids": ids, "attention_mask": [1] * len(ids)}
+        if return_offsets_mapping:
+            output["offset_mapping"] = [
+                (start, end) for _, start, end in pieces
+            ]
+        if return_tensors == "pt":
+            output = {
+                key: torch.tensor([value], dtype=torch.long)
+                for key, value in output.items()
+            }
+        return output
+
+    def decode(self, ids, **kwargs) -> str:
+        del kwargs
+        return "".join(self.values[int(value)] for value in ids)
+
+
 def _example(target: str = "NEVER_INCLUDE_THIS_TARGET") -> DecisionExample:
     return DecisionExample(
         benchmark="appworld",
@@ -126,6 +169,20 @@ def test_query_and_transition_spans_cover_exact_canonical_text() -> None:
         tokenizer, text, transition_spans
     )
     assert all(row["decoded_text_exact_match"] for row in transition_rows.values())
+
+
+def test_generation_boundary_uses_complete_final_token_extent() -> None:
+    tokenizer = MergedTailTokenizer()
+    rendered, state_spans, _ = query_state_text_and_char_spans(
+        tokenizer, _example(), "full_demo"
+    )
+    assert state_spans["generation_boundary"] == (len(rendered) - 2, len(rendered))
+    _, _, rows = tokenize_and_validate_char_spans(
+        tokenizer,
+        rendered,
+        {"generation_boundary": state_spans["generation_boundary"]},
+    )
+    assert rows["generation_boundary"]["decoded_text_exact_match"]
 
 
 def test_frozen_span_readouts_return_both_layers_and_poolings() -> None:

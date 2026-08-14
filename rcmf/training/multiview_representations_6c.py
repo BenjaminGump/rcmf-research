@@ -86,6 +86,25 @@ def query_state_text_and_char_spans(
     )
     if latest_user is None:
         raise ValueError("Canonical current-task conversation has no user message")
+    boundary_encoding = tokenizer(
+        rendered,
+        add_special_tokens=False,
+        truncation=False,
+        return_offsets_mapping=True,
+    )
+    boundary_offsets = boundary_encoding["offset_mapping"]
+    if isinstance(boundary_offsets, Tensor):
+        boundary_offsets = boundary_offsets.tolist()
+    if boundary_offsets and isinstance(boundary_offsets[0], list) and boundary_offsets[0] and isinstance(boundary_offsets[0][0], list):
+        boundary_offsets = boundary_offsets[0]
+    nonempty_offsets = [
+        (int(start), int(end))
+        for start, end in boundary_offsets
+        if int(end) > int(start)
+    ]
+    if not nonempty_offsets:
+        raise ValueError("Canonical prompt has no token with a character extent")
+    generation_boundary = nonempty_offsets[-1]
     spans = {
         "full_prompt_global": (0, len(rendered)),
         "current_task_goal": (
@@ -101,7 +120,7 @@ def query_state_text_and_char_spans(
             int(latest_user["char_start"]),
             int(latest_user["char_end"]),
         ),
-        "generation_boundary": (max(0, len(rendered) - 1), len(rendered)),
+        "generation_boundary": generation_boundary,
     }
     metadata = {
         "message_count": len(messages),
@@ -110,6 +129,9 @@ def query_state_text_and_char_spans(
         "current_task_history_definition": (
             "cumulative current-task conversation from goal start through latest "
             "available user observation; full-demo messages are excluded"
+        ),
+        "generation_boundary_definition": (
+            "complete character extent of the tokenizer's final nonempty prompt token"
         ),
         "target_action_accessed": False,
         "future_observation_accessed": False,
