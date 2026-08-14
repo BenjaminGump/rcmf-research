@@ -135,6 +135,8 @@ def _span_preflight(
     transition_tokens = []
     span_count = 0
     decoded_exact = 0
+    decoded_aligned = 0
+    token_boundary_expanded = 0
     for query in query_manifest["query_rows"]:
         state_id = str(query["state_example_id"])
         rendered, char_spans, _ = query_state_text_and_char_spans(
@@ -152,6 +154,15 @@ def _span_preflight(
         span_count += len(span_rows)
         decoded_exact += sum(
             bool(row["decoded_text_exact_match"]) for row in span_rows.values()
+        )
+        decoded_aligned += sum(
+            bool(row["decoded_matches_aligned_source"])
+            for row in span_rows.values()
+        )
+        token_boundary_expanded += sum(
+            int(row["token_aligned_char_start"]) != int(row["char_start"])
+            or int(row["token_aligned_char_end"]) != int(row["char_end"])
+            for row in span_rows.values()
         )
     for transition in panel_rows:
         transition_id = str(transition["transition_id"])
@@ -173,9 +184,18 @@ def _span_preflight(
         decoded_exact += sum(
             bool(row["decoded_text_exact_match"]) for row in span_rows.values()
         )
-    if decoded_exact != span_count:
+        decoded_aligned += sum(
+            bool(row["decoded_matches_aligned_source"])
+            for row in span_rows.values()
+        )
+        token_boundary_expanded += sum(
+            int(row["token_aligned_char_start"]) != int(row["char_start"])
+            or int(row["token_aligned_char_end"]) != int(row["char_end"])
+            for row in span_rows.values()
+        )
+    if decoded_aligned != span_count:
         raise ValueError(
-            f"Only {decoded_exact}/{span_count} spans decode exactly to source text"
+            f"Only {decoded_aligned}/{span_count} spans decode to aligned source text"
         )
     return {
         "format": "span_boundary_preflight_6c_v1",
@@ -183,8 +203,11 @@ def _span_preflight(
         "transition_count": len(transition_tokens),
         "span_count": span_count,
         "decoded_exact_count": decoded_exact,
-        "all_decoded_exact": True,
-        "all_roundtrip_valid": True,
+        "decoded_aligned_source_count": decoded_aligned,
+        "token_boundary_expanded_span_count": token_boundary_expanded,
+        "all_decoded_exact": decoded_exact == span_count,
+        "all_decoded_aligned_source_valid": True,
+        "all_decoded_aligned_source_valid": True,
         "no_truncation": True,
         "state_token_count": {
             "min": min(state_tokens),
@@ -1009,8 +1032,8 @@ def _run_parts_c_d(
             not bool(row["truncated"])
             for row in [*state_cache["rows"], *transition_cache["rows"]]
         ),
-        "all_span_roundtrips_valid": all(
-            bool(span["decoded_roundtrip_matches"])
+        "all_span_decoded_aligned_source_valid": all(
+            bool(span["decoded_matches_aligned_source"])
             for row in [*state_cache["rows"], *transition_cache["rows"]]
             for span in row["span_rows"].values()
         ),
@@ -1555,7 +1578,7 @@ def _markdown_report(summary: Mapping[str, Any]) -> str:
         f"- decision: `{summary['decision_after_part_d']}`",
         f"- source commit: `{summary['source_commit']}`",
         f"- no truncation: `{summary['representation_report']['no_truncation']}`",
-        f"- span roundtrips valid: `{summary['representation_report']['all_span_roundtrips_valid']}`",
+        f"- span decoded/aligned-source checks valid: `{summary['representation_report']['all_span_decoded_aligned_source_valid']}`",
         "",
         "## Double-Held-Out Results",
         "",

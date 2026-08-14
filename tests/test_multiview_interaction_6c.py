@@ -161,14 +161,16 @@ def test_query_and_transition_spans_cover_exact_canonical_text() -> None:
     _, _, state_rows = tokenize_and_validate_char_spans(
         tokenizer, rendered, state_spans
     )
-    assert all(row["decoded_text_exact_match"] for row in state_rows.values())
+    assert all(row["decoded_matches_aligned_source"] for row in state_rows.values())
 
     text, transition_spans, _ = transition_text_and_char_spans(_transition())
     assert set(transition_spans) == set(TRANSITION_VIEW_NAMES)
     _, _, transition_rows = tokenize_and_validate_char_spans(
         tokenizer, text, transition_spans
     )
-    assert all(row["decoded_text_exact_match"] for row in transition_rows.values())
+    assert all(
+        row["decoded_matches_aligned_source"] for row in transition_rows.values()
+    )
 
 
 def test_generation_boundary_uses_complete_final_token_extent() -> None:
@@ -183,6 +185,22 @@ def test_generation_boundary_uses_complete_final_token_extent() -> None:
         {"generation_boundary": state_spans["generation_boundary"]},
     )
     assert rows["generation_boundary"]["decoded_text_exact_match"]
+
+
+def test_semantic_span_aligns_outward_only_across_whitespace() -> None:
+    tokenizer = MergedTailTokenizer()
+    _, _, rows = tokenize_and_validate_char_spans(
+        tokenizer, "abcd\n", {"content": (0, 4)}
+    )
+    row = rows["content"]
+    assert row["token_aligned_char_end"] == 5
+    assert row["token_boundary_expansion"]["trailing_characters"] == 1
+    assert row["decoded_matches_aligned_source"]
+
+    with pytest.raises(ValueError, match="crosses non-whitespace"):
+        tokenize_and_validate_char_spans(
+            tokenizer, "abcdX", {"content": (0, 4)}
+        )
 
 
 def test_frozen_span_readouts_return_both_layers_and_poolings() -> None:

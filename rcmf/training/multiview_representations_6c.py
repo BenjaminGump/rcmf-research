@@ -216,35 +216,43 @@ def tokenize_and_validate_char_spans(
         token_end = selected[-1] + 1
         covered_start = int(offsets[token_start][0])
         covered_end = int(offsets[token_end - 1][1])
-        if covered_start != int(char_start) or covered_end != int(char_end):
+        leading_expansion = text[covered_start : int(char_start)]
+        trailing_expansion = text[int(char_end) : covered_end]
+        if leading_expansion.strip() or trailing_expansion.strip():
             raise ValueError(
-                f"Token boundary differs for {name}: chars {(char_start, char_end)} "
-                f"covered by {(covered_start, covered_end)}"
+                f"Token alignment for {name} crosses non-whitespace content: "
+                f"chars {(char_start, char_end)} covered by {(covered_start, covered_end)}"
             )
         source = text[int(char_start) : int(char_end)]
+        aligned_source = text[covered_start:covered_end]
         token_ids = input_ids[0, token_start:token_end].tolist()
         decoded = tokenizer.decode(
             token_ids,
             skip_special_tokens=False,
             clean_up_tokenization_spaces=False,
         )
-        roundtrip = tokenizer(
-            decoded, add_special_tokens=False, truncation=False
-        )["input_ids"]
-        if list(roundtrip) != list(token_ids):
-            raise ValueError(f"Decoded token roundtrip differs for {name}")
+        if decoded != aligned_source:
+            raise ValueError(f"Decoded token text differs from aligned source for {name}")
         rows[name] = {
             "char_start": int(char_start),
             "char_end": int(char_end),
+            "token_aligned_char_start": covered_start,
+            "token_aligned_char_end": covered_end,
             "token_start": token_start,
             "token_end": token_end,
             "token_count": token_end - token_start,
             "source_text_sha256": sha256_text(source),
+            "token_aligned_source_text_sha256": sha256_text(aligned_source),
             "decoded_text_sha256": sha256_text(decoded),
-            "decoded_roundtrip_token_sha256": hashlib.sha256(
+            "token_ids_sha256": hashlib.sha256(
                 torch.tensor(token_ids, dtype=torch.long).numpy().tobytes()
             ).hexdigest(),
-            "decoded_roundtrip_matches": True,
+            "token_boundary_expansion": {
+                "leading_characters": len(leading_expansion),
+                "trailing_characters": len(trailing_expansion),
+                "whitespace_only": True,
+            },
+            "decoded_matches_aligned_source": True,
             "decoded_text_exact_match": decoded == source,
         }
     return input_ids, attention_mask, rows
