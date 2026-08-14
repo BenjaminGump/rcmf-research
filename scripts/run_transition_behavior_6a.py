@@ -640,11 +640,27 @@ def _run_static_identity_model(
             huber_delta=objective.huber_delta,
             control=f"{name}_train_u{update_round}",
         )
+        validation_evaluation = _evaluate_identity_latents(
+            backend=backend,
+            decoder=decoder,
+            rows=validation_rows,
+            identity_ids=identities,
+            identity_latents=latents,
+            identity_assignment=None,
+            device=device,
+            model_dim=model_dim,
+            huber_delta=objective.huber_delta,
+            control=f"{name}_validation_u{update_round}",
+        )
         entry = {
             "updates_per_pair": update_round,
             "pair_ids": [str(row["pair_id"]) for row in train_rows],
             "update_accounting": accounting,
             "evaluation_summary": train_evaluation["summary"],
+            "validation_evaluation_summary_for_reporting_only": validation_evaluation[
+                "summary"
+            ],
+            "continuation_uses_validation": False,
             "train_interval": {
                 field: {
                     "mean": statistics.fmean(item[field] for item in interval),
@@ -676,6 +692,10 @@ def _run_static_identity_model(
         history.append(entry)
         rows_path = output_dir / f"train_evaluation_u{update_round:03d}.jsonl"
         write_jsonl(rows_path, train_evaluation["rows"])
+        write_jsonl(
+            output_dir / f"validation_evaluation_u{update_round:03d}.jsonl",
+            validation_evaluation["rows"],
+        )
         checkpoint_path = output_dir / "checkpoints" / f"{name}_u{update_round:03d}.pt"
         atomic_torch_save(
             {
