@@ -458,6 +458,7 @@ def _run_static_identity_model(
     teacher_runtime_s: float,
     behavior_started: float,
 ) -> dict[str, Any]:
+    run_started = time.perf_counter()
     output_dir.mkdir(parents=True, exist_ok=True)
     summary_path = output_dir / "summary.json"
     if summary_path.exists():
@@ -900,6 +901,7 @@ def _run_static_identity_model(
         "decoder_unchanged": decoder_final_hash == initial_decoder_hash,
         "checkpoint": _load_json(latest_pointer)["checkpoint"],
         "source_commit": maybe_git_commit(),
+        "runtime_s": time.perf_counter() - run_started,
     }
     atomic_write_json(summary_path, result)
     return result
@@ -1049,6 +1051,7 @@ def _pair_oracle_run(
     seed: int,
     output_dir: Path,
 ) -> dict[str, Any]:
+    run_started = time.perf_counter()
     pair_ids = [str(row["pair_id"]) for row in rows]
     base_norms = _precompute_direct_base_norms(
         backend=backend, rows=rows, device=device, k=K_TOKENS
@@ -1133,6 +1136,7 @@ def _pair_oracle_run(
         "decoder_initial_sha256": run["initial_decoder_state_sha256"],
         "decoder_final_sha256": run["final_decoder_state_sha256"],
         "decoder_unchanged": run["frozen_decoder_unchanged"],
+        "runtime_s": time.perf_counter() - run_started,
     }
     atomic_write_json(output_dir / "pair_oracle_summary.json", summary)
     return summary
@@ -1148,6 +1152,7 @@ def _conditional_direct_oracle(
     seed: int,
     output_dir: Path,
 ) -> dict[str, Any]:
+    run_started = time.perf_counter()
     selected = []
     for category in ("positive", "neutral", "negative", "random"):
         bucket = sorted(
@@ -1195,6 +1200,7 @@ def _conditional_direct_oracle(
         "zero_summary": zero["evaluation"]["summary"],
         "gate": gate,
         "checkpoint": run["checkpoint"],
+        "runtime_s": time.perf_counter() - run_started,
     }
     atomic_write_json(output_dir / "conditional_direct_summary.json", result)
     return result
@@ -1309,8 +1315,6 @@ def main() -> None:
     teacher_rows = _load_rows(args.artifact_dir / "teacher_cache.jsonl")
     teacher_gate = _teacher_validity_gate(teacher_summary, teacher_rows)
     atomic_write_json(args.artifact_dir / "teacher_validity_gate.json", teacher_gate)
-    if not teacher_gate["passed"]:
-        raise RuntimeError(f"Transition teacher gate failed: {teacher_gate}")
     teacher_length_stratification = _teacher_length_stratification(
         teacher_rows
     )
@@ -1318,6 +1322,53 @@ def main() -> None:
         args.artifact_dir / "teacher_length_stratification.json",
         teacher_length_stratification,
     )
+    if not teacher_gate["passed"]:
+        decision = transition_pilot_decision(
+            teacher_valid=False,
+            pair_oracle_passed=False,
+            direct_oracle_passed=None,
+            static_transition_passed=None,
+            granularity_passed=None,
+        )
+        stopped_summary = {
+            "format": "decision_transition_behavior_pilot_6a_v1",
+            "status": "stopped_at_teacher_validity_gate",
+            "timestamp_utc": utc_now(),
+            "source_commit": maybe_git_commit(),
+            "artifact_dir": str(args.artifact_dir),
+            "teacher_summary": str(teacher_summary_path),
+            "teacher_validity_gate": teacher_gate,
+            "teacher_length_stratification": teacher_length_stratification,
+            "decoder_validation": None,
+            "pair_oracle": None,
+            "static_transition": None,
+            "trajectory_baseline": None,
+            "granularity_advantage": None,
+            "decision": decision,
+            "runtime_s": time.perf_counter() - behavior_started,
+            "teacher_runtime_s": float(teacher_summary["runtime_s"]),
+            "actual_total_h100_hours": float(teacher_summary["runtime_s"])
+            / 3600.0,
+            "hard_scope": {
+                "stopped_before_behavior_model_load": True,
+                "qwen_behavior_forward_called": False,
+                "signed_selector_used_or_trained": False,
+                "content_compiler_used_or_trained": False,
+                "appworld_generation_or_evaluation": False,
+                "exp016d_launched": False,
+            },
+        }
+        atomic_write_json(args.artifact_dir / "behavior_summary.json", stopped_summary)
+        atomic_write_text(
+            args.artifact_dir / "behavior_report.md",
+            "# EXP-017 Decision-Transition Behavioral Pilot\n\n"
+            "## VERIFIED\n\n"
+            "The raw-transition teacher validity gate failed, so the frozen-decoder "
+            "pair oracle and all static-latent experiments were intentionally not run.\n\n"
+            f"Decision branch: `{decision['branch']}`.\n",
+        )
+        print(json.dumps(decision, indent=2, sort_keys=True), flush=True)
+        return
 
     pair_response_rows = _adapt_response_rows(
         _load_rows(
@@ -1500,6 +1551,8 @@ def main() -> None:
     final_decoder_hash = module_state_sha256(decoder)
     if final_decoder_hash != decoder_hash:
         raise RuntimeError("Frozen decoder changed during EXP-017")
+    behavior_runtime_s = time.perf_counter() - behavior_started
+    teacher_runtime_s = float(teacher_summary["runtime_s"])
     summary = {
         "format": "decision_transition_behavior_pilot_6a_v1",
         "status": "completed",
@@ -1517,7 +1570,12 @@ def main() -> None:
         "granularity_advantage": granularity,
         "decision": decision,
         "excluded_trajectory_parent_ids_without_valid_whole_trajectory_labels": excluded_trajectory_parents,
-        "runtime_s": time.perf_counter() - behavior_started,
+        "runtime_s": behavior_runtime_s,
+        "teacher_runtime_s": teacher_runtime_s,
+        "actual_total_h100_hours": (
+            teacher_runtime_s + behavior_runtime_s
+        )
+        / 3600.0,
         "decoder_initial_sha256": decoder_hash,
         "decoder_final_sha256": final_decoder_hash,
         "hard_scope": {
