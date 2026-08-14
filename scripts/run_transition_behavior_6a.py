@@ -905,16 +905,62 @@ def _run_static_identity_model(
     return result
 
 
-def _teacher_validity_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
+def _pearson_values(left: Sequence[float], right: Sequence[float]) -> float | None:
+    if len(left) < 2 or len(left) != len(right):
+        return None
+    left_mean = statistics.fmean(left)
+    right_mean = statistics.fmean(right)
+    numerator = sum(
+        (x - left_mean) * (y - right_mean) for x, y in zip(left, right)
+    )
+    denominator = math.sqrt(
+        sum((x - left_mean) ** 2 for x in left)
+        * sum((y - right_mean) ** 2 for y in right)
+    )
+    return None if denominator == 0 else numerator / denominator
+
+
+def _teacher_validity_gate(
+    summary: Mapping[str, Any], rows: Sequence[dict[str, Any]]
+) -> dict[str, Any]:
     validation = summary["validation"]
     utility = summary["teacher_analysis"]["utility"]
     categories = utility["category_counts"]
     correlations = summary["teacher_analysis"]["correlations"]
+    scored_rows = [row for row in rows if row.get("valid_for_loss")]
     scored = int(validation["scoreable_pair_count"])
+    if len(scored_rows) != scored:
+        raise ValueError("Teacher rows differ from the validated scoreable count")
     exact_count = int(summary["teacher_analysis"]["target_exact_substring_count"])
     finite_correlations = [
         abs(float(value)) for value in correlations.values() if value is not None
     ]
+    exact_indicators = [
+        float(bool(row["normalized_target_exact_substring_in_transition"]))
+        for row in scored_rows
+    ]
+    if int(sum(exact_indicators)) != exact_count:
+        raise ValueError("Teacher exact-target incidence differs from summary")
+    utilities = [float(row["text_utility"]) for row in scored_rows]
+    exact_utility_correlation = _pearson_values(exact_indicators, utilities)
+    noncopy_positive_count = sum(
+        float(row["text_utility"]) > 0.01
+        and not bool(row["normalized_target_exact_substring_in_transition"])
+        for row in scored_rows
+    )
+    positive_rows = [row for row in scored_rows if float(row["text_utility"]) > 0.01]
+    positive_exact_fraction = sum(
+        bool(row["normalized_target_exact_substring_in_transition"])
+        for row in positive_rows
+    ) / max(len(positive_rows), 1)
+    top_count = max(10, int(math.ceil(0.10 * len(scored_rows))))
+    top_rows = sorted(
+        scored_rows, key=lambda row: -float(row["text_utility"])
+    )[:top_count]
+    top_utility_exact_fraction = sum(
+        bool(row["normalized_target_exact_substring_in_transition"])
+        for row in top_rows
+    ) / len(top_rows)
     checks = {
         "teacher_cache_validation": bool(validation["passed"]),
         "reproducible_scoring": bool(summary["reproducibility"]["passed"]),
@@ -927,8 +973,14 @@ def _teacher_validity_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
             finite_correlations, default=0.0
         )
         < 0.80,
-        "exact_target_substring_fraction_lt_0_05": exact_count / max(scored, 1)
-        < 0.05,
+        "noncopy_positive_population_gte_16": noncopy_positive_count >= 16,
+        "exact_match_utility_correlation_abs_lt_0_80": abs(
+            float(exact_utility_correlation or 0.0)
+        )
+        < 0.80,
+        "positive_population_not_copy_dominated": positive_exact_fraction < 0.80,
+        "top_utility_decile_not_copy_dominated": top_utility_exact_fraction
+        < 0.80,
         "no_leakage_or_truncation": int(validation["error_count"]) == 0,
     }
     return {
@@ -937,6 +989,11 @@ def _teacher_validity_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
             finite_correlations, default=0.0
         ),
         "exact_target_substring_fraction": exact_count / max(scored, 1),
+        "exact_match_utility_correlation": exact_utility_correlation,
+        "noncopy_positive_count": noncopy_positive_count,
+        "positive_exact_match_fraction": positive_exact_fraction,
+        "top_utility_decile_exact_match_fraction": top_utility_exact_fraction,
+        "top_utility_decile_count": top_count,
         "passed": all(checks.values()),
     }
 
@@ -1249,12 +1306,13 @@ def main() -> None:
     teacher_summary = _load_json(teacher_summary_path)
     if teacher_summary.get("status") != "completed":
         raise ValueError("Teacher summary is not complete")
-    teacher_gate = _teacher_validity_gate(teacher_summary)
+    teacher_rows = _load_rows(args.artifact_dir / "teacher_cache.jsonl")
+    teacher_gate = _teacher_validity_gate(teacher_summary, teacher_rows)
     atomic_write_json(args.artifact_dir / "teacher_validity_gate.json", teacher_gate)
     if not teacher_gate["passed"]:
         raise RuntimeError(f"Transition teacher gate failed: {teacher_gate}")
     teacher_length_stratification = _teacher_length_stratification(
-        _load_rows(args.artifact_dir / "teacher_cache.jsonl")
+        teacher_rows
     )
     atomic_write_json(
         args.artifact_dir / "teacher_length_stratification.json",

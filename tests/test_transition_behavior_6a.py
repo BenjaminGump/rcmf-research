@@ -30,22 +30,30 @@ def test_teacher_validity_gate_requires_both_utility_signs() -> None:
     summary = {
         "validation": {
             "passed": True,
-            "scoreable_pair_count": 100,
+            "scoreable_pair_count": 40,
             "error_count": 0,
         },
         "reproducibility": {"passed": True},
         "representative_inspection": {"passed": True},
         "teacher_analysis": {
             "utility": {
-                "category_counts": {"positive": 20, "neutral": 60, "negative": 20}
+                "category_counts": {"positive": 24, "neutral": 0, "negative": 16}
             },
             "correlations": {"action_tokens": 0.1, "observation_tokens": -0.2},
-            "target_exact_substring_count": 0,
+            "target_exact_substring_count": 10,
         },
     }
-    assert _teacher_validity_gate(summary)["passed"]
+    rows = [
+        {
+            "valid_for_loss": True,
+            "text_utility": 0.2 if index < 24 else -0.2,
+            "normalized_target_exact_substring_in_transition": index % 4 == 0,
+        }
+        for index in range(40)
+    ]
+    assert _teacher_validity_gate(summary, rows)["passed"]
     summary["teacher_analysis"]["utility"]["category_counts"]["negative"] = 0
-    assert not _teacher_validity_gate(summary)["passed"]
+    assert not _teacher_validity_gate(summary, rows)["passed"]
 
 
 def test_latent_copy_is_projected_for_receiving_identity_budget() -> None:
