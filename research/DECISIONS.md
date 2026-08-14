@@ -982,6 +982,56 @@ Reason:
   constraint. A dynamic time gate could silently weaken the experiment after
   its design had already passed preflight review.
 
+## 2026-08-14 EXP-017 decision-transition pilot conclusion
+
+VERIFIED:
+
+- The 148-transition raw-text teacher passed all validity checks over 4,579
+  scoreable legal pairs. Positive/neutral/negative counts were
+  2,271/941/1,367.
+- The best transition beat its matched parent whole-trajectory teacher in
+  885/1,120 comparisons, showing useful transition-local signal and harmful
+  child transitions inside otherwise helpful parents.
+- The frozen rank-128 decoder pair oracle passed with utility Spearman
+  0.957418, sign agreement 0.976744, and sequence Huber 73.20% below zero.
+- A single static latent per transition failed held-out query states:
+  Spearman 0.123261, sign agreement 0.543103, and Huber 0.052237 versus zero
+  0.028513. All four held-out tasks failed.
+- The static transition model did not materially beat the directly comparable
+  whole-trajectory static baseline on two required dimensions. The granularity
+  gate failed.
+- Independent post-run validation passed with zero errors. Qwen and the frozen
+  decoder remained unchanged, and no selector, compiler, full bank, Stage C2,
+  AppWorld generation/evaluation, or end-to-end training was run.
+
+Decision:
+
+- Record branch `static_transition_program_insufficient`.
+- Keep decision transitions as a promising teacher/ledger decomposition, but
+  do not call transition granularity behaviorally validated.
+- Reject the hypothesis that one state-independent static 128D program per
+  transition is sufficient across query states.
+- The next reviewed milestone should test an explicitly state-conditioned
+  transition program `p(s,m_transition)` or equivalent interaction. Do not
+  respond by merely widening the static transition encoder.
+- Keep parent trajectories as human-readable ledger units. A parent deletion
+  subtracts all child transition deltas, preserving fixed-cost reversible
+  field algebra.
+- V4 remains a candidate. Do not create a V4 tag or merge this branch into
+  `workflow/research-loop` from EXP-017.
+- EXP-016D remains unlaunched; EXP-017 did not silently substitute for it.
+
+Implementation deviations and recovery:
+
+- Behavior attempt 1 stopped after pair-oracle u64 because the static runner
+  signature omitted `expected_validation_task_ids`.
+- Behavior attempt 2 stopped before any static update because the internal
+  evaluator incorrectly retained that unused required parameter.
+- Exit codes and logs were preserved. Regression tests now check the public
+  signature and every direct keyword-only call contract. The final run resumed
+  the existing pair-oracle checkpoint in the same `_001` artifact.
+- No scientific parameter or artifact identity changed during either repair.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:

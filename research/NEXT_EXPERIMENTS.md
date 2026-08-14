@@ -531,7 +531,13 @@ Result:
   `shared_decoder_optimization_or_generalization_failure`.
 - No compiler, selector, Stage C2, AppWorld, or end-to-end work was started.
 
-## EXP-016D Frozen-Linear Inversion Convergence Extension - Pending Review
+## EXP-016D Frozen-Linear Inversion Convergence Extension - Not Launched
+
+Status:
+
+- EXP-016D was not launched before the V3 freeze or during EXP-017.
+- Keep the proposal as a V3 diagnostic option, but it is not the immediate
+  V4-candidate priority after the completed transition pilot.
 
 Goal:
 
@@ -564,6 +570,54 @@ Decision evidence:
   generalization failure.
 - If it remains materially improving at a preregistered hard cap, stop for
   review rather than redesigning the decoder or injection site automatically.
+
+## EXP-018 State-Conditioned Transition Program Pilot - Pending Review
+
+Scientific basis:
+
+- EXP-017 validated the raw-transition teacher and frozen-decoder pair oracle,
+  but one fixed 128D latent per transition failed held-out query states.
+- The pair oracle reached utility Spearman `0.957418`, while the static
+  transition latent reached only `0.123261` and was significantly worse than
+  zero/random on sequence Huber.
+- The immediate bottleneck is therefore the state-independent program
+  assumption, not transition serialization, K=4 `last_user_k`, or reachability
+  through the frozen linear decoder.
+
+Goal:
+
+- Test whether an explicitly state-conditioned transition program
+  `p(s,m_transition)` can reconstruct transition teacher utility across
+  held-out states and held-out transitions without using a full bank.
+
+Required design review:
+
+- Start with a diagnostic factorized or interaction model over frozen state
+  and transition representations; keep Qwen and the validated rank-128 linear
+  decoder frozen.
+- Preserve the EXP-017 task-grouped query split, leakage exclusions, missing
+  masks, transition IDs, teacher cache, sequence-utility objective, ratio 1.0,
+  K=4, and `last_user_k`.
+- Include state-shuffle, transition-shuffle, zero, random, mean, static
+  transition, and pair-oracle controls.
+- Add a deterministic transition-held-out split so success cannot come from
+  memorizing the 24 selected transition identities.
+- Separate interaction capacity from content compilation. Do not begin with a
+  large content encoder or a production full-bank field.
+- Use train-only continuation/model selection. Held-out query and transition
+  labels are evaluation only.
+
+Decision gates to define before launch:
+
+- State-conditioned behavior must materially beat the static transition,
+  shuffled-state, shuffled-transition, random, and zero controls.
+- Utility correlation and sign agreement must remain positive on both
+  held-out query tasks and held-out transition identities.
+- Correct state-transition pairing must matter; a generic state-control
+  shortcut is not sufficient.
+- Stop for user/ChatGPT review after this causal pilot. Do not automatically
+  train a content-derived compiler, selector, full bank, Stage C2 model, or
+  AppWorld agent.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 

@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-08-13.
+Last updated: 2026-08-14.
 
 ## VERIFIED
 
@@ -1096,17 +1096,55 @@ VERIFIED:
 
 ## Immediate Workflow Status
 
-- Working branch: `workflow/research-loop`.
-- Latest Lambda-synced EXP-016C source commit before final records:
-  `95be149e26598546327c33e8207c1c4f833130aa`.
+- Working branch: `research/v4-decision-transition-memory`.
+- Latest Lambda-synced EXP-017 source commit before final records:
+  `88f9da7be7bcf6380d9df8ba1ce75b78bc14f9b6`.
 - Lambda cannot currently pull GitHub directly because the instance has no
   GitHub private key/deploy key; sync used a local git bundle after pushing to
   GitHub.
-- Lambda post-5F-C status: no tmux server running and GPU memory/utilization
-  reported `0 MiB / 0%`.
+- Lambda post-EXP-017 status: no tmux server running and GPU
+  memory/utilization reported `0 MiB / 0%`.
 - Do not launch Stage C2, compiler training, selector work, Qwen action loss,
   full-bank end-to-end RCMF training, AppWorld agent evaluation, or an
   injection-site redesign. The next separately reviewed experiment should
-  convergence-extend the existing frozen-linear held-out z checkpoints under
-  the corrected plateau rule while preserving K=4 `last_user_k`, ratio 1.0,
-  decoder hashes, pair IDs, and optimizer state.
+  test an explicitly state-conditioned transition program while preserving
+  the validated K=4 `last_user_k`, ratio-1.0, frozen-linear decoder path.
+
+### EXP-017 decision-transition memory pilot
+
+- RCMF V3 is frozen at documentation commit
+  `2eb1281ff66792aeb082cce39f6a362697f132e6` with annotated tag
+  `rcmf-v3-component-validated-pre-transition` and archive branch
+  `archive/rcmf-v3-component-validated`. The source state is
+  `97ca723ad66597d2afcbbce1eb5466eb34c009f6`.
+- V4-candidate work remains isolated on
+  `research/v4-decision-transition-memory`; no V4 tag exists and nothing was
+  merged into `workflow/research-loop`.
+- EXP-017 completed at source commit
+  `88f9da7be7bcf6380d9df8ba1ce75b78bc14f9b6` in
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/transition_memory_6a_20260814_001`.
+- Exact counts: 37 train parent trajectories, 499 extracted transitions, 148
+  panel transitions, 32 query states, 4,640 legal pairs, 4,579 scoreable
+  pairs, and 61 over-context masked pairs. Nothing was truncated.
+- The raw-transition teacher passed: positive/neutral/negative utility counts
+  were 2,271/941/1,367 and mean utility was 0.059851. Exact target-copy and
+  length/overlap diagnostics did not explain the signal.
+- Best child transition utility exceeded matched whole-parent utility in
+  885/1,120 comparisons. Helpful parents contained 1.958 helpful transitions
+  on average, while 218 helpful-parent groups also contained a harmful child.
+- The 64-pair frozen-linear oracle passed with Spearman 0.957418, sign
+  agreement 0.976744, and sequence Huber 0.028181 versus zero 0.105161.
+- A fixed latent per transition failed held-out states: Spearman 0.123261,
+  sign 0.543103, and Huber 0.052237 versus zero 0.028513. Correct latents were
+  significantly worse than zero and random, and all four held-out tasks failed.
+- The whole-trajectory static baseline also failed. Transition granularity won
+  only one of five material comparisons and was not validated.
+- Final branch: `static_transition_program_insufficient`. Pair-specific
+  effects are reachable, but one state-independent program per transition is
+  insufficient. The next reviewed experiment should test an explicitly
+  state-conditioned transition program rather than a larger static encoder.
+- Independent validation had zero errors. No tmux/process is active; GPU is
+  0 MiB / 0%; the instance is safe to terminate after final Git sync.
+- EXP-016D was not launched. No selector, content compiler, full-bank model,
+  Stage C2, AppWorld generation/evaluation, Qwen fine-tuning, or end-to-end
+  RCMF training occurred in EXP-017.
