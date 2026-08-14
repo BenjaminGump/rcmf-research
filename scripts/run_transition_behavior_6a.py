@@ -472,6 +472,7 @@ def _run_static_identity_model(
     train_rows: Sequence[dict[str, Any]],
     validation_rows: Sequence[dict[str, Any]],
     identity_ids: Sequence[str],
+    expected_validation_task_ids: Sequence[str],
     device: torch.device,
     model_dim: int,
     objective: Any,

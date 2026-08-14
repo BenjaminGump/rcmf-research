@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import inspect
+
 import torch
 
 from rcmf.training.oracle_decoder_5fc import LinearDeltaDecoder
 from scripts.run_transition_behavior_6a import (
     _adapt_response_rows,
     _project_latent_copy,
+    _run_static_identity_model,
     _runtime_extension_projection,
     _teacher_validity_gate,
 )
@@ -81,3 +84,8 @@ def test_runtime_projection_is_informational_and_has_no_training_gate() -> None:
     assert projection["exceeds_preflight_review_threshold"] is True
     assert projection["informational_only"] is True
     assert "allowed" not in projection
+
+
+def test_static_identity_runner_accepts_validation_task_contract() -> None:
+    parameters = inspect.signature(_run_static_identity_model).parameters
+    assert "expected_validation_task_ids" in parameters
