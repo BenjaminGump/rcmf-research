@@ -16,10 +16,13 @@ from rcmf.benchmarks.appworld.transitions import (
 from rcmf.schemas import DecisionExample, MemoryRecord
 from rcmf.training.transition_memory_6a import (
     decoder_manifest_state_ids,
+    deterministic_identity_derangement,
     is_legal_transition_pair,
     messages_with_transition_memory,
+    pair_oracle_capacity_gate,
     select_query_manifest,
     transition_field_algebra_validation,
+    transition_pilot_decision,
 )
 
 
@@ -217,3 +220,37 @@ def test_transition_field_parent_and_transition_reversibility() -> None:
     )
     assert report["passed"] is True
     assert all(report["checks"].values())
+
+
+def test_transition_pair_gate_and_decision_tree() -> None:
+    summary = {
+        "u_text_vs_u_student_spearman": 0.82,
+        "positive_negative_sign_agreement": 0.88,
+        "sequence_utility_huber": {"mean": 0.04},
+        "delta_ratio": {"max": 0.99},
+        "by_utility_category": {"neutral": {"mean_abs_u_student": 0.03}},
+    }
+    zero = {"sequence_utility_huber": {"mean": 0.10}}
+    assert pair_oracle_capacity_gate(summary=summary, zero_summary=zero)["passed"]
+    decision = transition_pilot_decision(
+        teacher_valid=True,
+        pair_oracle_passed=True,
+        direct_oracle_passed=None,
+        static_transition_passed=False,
+        granularity_passed=None,
+    )
+    assert decision["branch"] == "static_transition_program_insufficient"
+
+
+def test_deterministic_identity_derangement_has_no_fixed_points() -> None:
+    identities = [f"transition-{index}" for index in range(8)]
+    first = deterministic_identity_derangement(
+        identities, seed=17019, namespace="shuffle"
+    )
+    second = deterministic_identity_derangement(
+        identities, seed=17019, namespace="shuffle"
+    )
+    assert first == second
+    assert set(first) == set(identities)
+    assert set(first.values()) == set(identities)
+    assert all(source != target for source, target in first.items())

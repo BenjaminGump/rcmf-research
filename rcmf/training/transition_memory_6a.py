@@ -938,3 +938,90 @@ def granularity_advantage(
         "advantage_count": sum(comparisons.values()),
         "passed": sum(comparisons.values()) >= 2,
     }
+
+
+def pair_oracle_capacity_gate(
+    *, summary: Mapping[str, Any], zero_summary: Mapping[str, Any]
+) -> dict[str, Any]:
+    """Evaluate the pre-registered transition pair-oracle utility gate."""
+
+    huber = float(summary["sequence_utility_huber"]["mean"])
+    zero_huber = float(zero_summary["sequence_utility_huber"]["mean"])
+    reduction = normalized_huber_reduction(huber, zero_huber)
+    neutral = summary["by_utility_category"]["neutral"]
+    checks = {
+        "utility_spearman_gte_0_80": float(
+            summary.get("u_text_vs_u_student_spearman") or -1.0
+        )
+        >= 0.80,
+        "sign_agreement_gte_0_85": float(
+            summary.get("positive_negative_sign_agreement") or 0.0
+        )
+        >= 0.85,
+        "sequence_huber_reduction_gte_0_50": reduction >= 0.50,
+        "neutral_mean_abs_lte_0_05": float(
+            neutral.get("mean_abs_u_student") or math.inf
+        )
+        <= 0.05,
+        "ratio_lte_1_0": float(
+            summary.get("delta_ratio", {}).get("max") or math.inf
+        )
+        <= 1.0001,
+    }
+    return {
+        "checks": checks,
+        "sequence_utility_huber_reduction_vs_zero": reduction,
+        "passed": all(checks.values()),
+    }
+
+
+def deterministic_identity_derangement(
+    identity_ids: Sequence[str], *, seed: int, namespace: str
+) -> dict[str, str]:
+    """Return a stable no-fixed-point permutation for identity controls."""
+
+    ordered = sorted(str(value) for value in identity_ids)
+    if len(ordered) < 2:
+        raise ValueError("a derangement requires at least two identities")
+    ranked = sorted(
+        ordered,
+        key=lambda value: _stable_order_key(seed, namespace, value),
+    )
+    shift = 1 + int(
+        _stable_order_key(seed, namespace, "shift")[:16], 16
+    ) % (len(ranked) - 1)
+    rotated = ranked[shift:] + ranked[:shift]
+    result = dict(zip(ranked, rotated))
+    if any(source == target for source, target in result.items()):
+        raise RuntimeError("deterministic identity derangement contains a fixed point")
+    return result
+
+
+def transition_pilot_decision(
+    *,
+    teacher_valid: bool,
+    pair_oracle_passed: bool,
+    direct_oracle_passed: bool | None,
+    static_transition_passed: bool | None,
+    granularity_passed: bool | None,
+) -> dict[str, Any]:
+    if not teacher_valid:
+        branch = "transition_teacher_or_serialization_invalid"
+    elif not pair_oracle_passed:
+        branch = "transition_effect_not_reachable_through_validated_decoder"
+    elif not static_transition_passed:
+        branch = "static_transition_program_insufficient"
+    elif not granularity_passed:
+        branch = "transition_granularity_not_yet_justified"
+    else:
+        branch = "decision_transition_memory_unit_validated"
+    return {
+        "branch": branch,
+        "transition_teacher_valid": bool(teacher_valid),
+        "pair_oracle_passed": bool(pair_oracle_passed),
+        "conditional_direct_oracle_passed": direct_oracle_passed,
+        "static_transition_program_passed": static_transition_passed,
+        "granularity_advantage_passed": granularity_passed,
+        "transition_granularity_validated": branch
+        == "decision_transition_memory_unit_validated",
+    }
