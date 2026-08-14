@@ -333,6 +333,7 @@ def _evaluate_identity_latents(
     decoder: nn.Module,
     rows: Sequence[dict[str, Any]],
     identity_ids: Sequence[str],
+    expected_validation_task_ids: Sequence[str],
     identity_latents: Tensor,
     identity_assignment: Mapping[str, str] | None,
     device: torch.device,
@@ -496,8 +497,8 @@ def _run_static_identity_model(
         raise ValueError(f"{name} identities lack train rows: {absent_train}")
     validation_identity_set = {str(row["memory_id"]) for row in validation_rows}
     absent_validation = sorted(set(identities) - validation_identity_set)
-    if absent_validation:
-        raise ValueError(f"{name} identities lack validation rows: {absent_validation}")
+    if not validation_rows:
+        raise ValueError(f"{name} has no scoreable validation rows")
     for rows in by_identity.values():
         rows.sort(key=lambda row: str(row["pair_id"]))
 
@@ -523,6 +524,9 @@ def _run_static_identity_model(
         "identity_ids": identities,
         "train_pair_ids": [str(row["pair_id"]) for row in train_rows],
         "validation_pair_ids": [str(row["pair_id"]) for row in validation_rows],
+        "expected_validation_task_ids": [
+            str(value) for value in expected_validation_task_ids
+        ],
         "objective": vars(objective),
         "learning_rate": float(learning_rate),
         "ratio_budget": RATIO_BUDGET,
@@ -851,7 +855,7 @@ def _run_static_identity_model(
         for key, value in evaluations.items()
     }
     task_results = {}
-    for task_id in sorted({str(row["task_id"]) for row in validation_rows}):
+    for task_id in sorted(str(value) for value in expected_validation_task_ids):
         correct_task = [
             row for row in evaluations["correct"]["rows"] if row["source_state_task_id"] == task_id
         ]
@@ -905,6 +909,7 @@ def _run_static_identity_model(
         "identity_ids": identities,
         "train_pair_count": len(train_rows),
         "validation_pair_count": len(validation_rows),
+        "identities_without_validation_rows": absent_validation,
         "final_updates_per_identity": final_updates,
         "update_accounting": update_count_summary(identities, update_counts),
         "history": history,
@@ -1335,6 +1340,12 @@ def main() -> None:
     if teacher_summary.get("status") != "completed":
         raise ValueError("Teacher summary is not complete")
     teacher_rows = _load_rows(args.artifact_dir / "teacher_cache.jsonl")
+    query_manifest = _load_json(args.artifact_dir / "query_manifest.json")
+    expected_validation_task_ids = [
+        str(value) for value in query_manifest["validation_task_ids"]
+    ]
+    if len(expected_validation_task_ids) != 4:
+        raise ValueError("EXP-017 query manifest does not contain four validation tasks")
     teacher_gate = _teacher_validity_gate(teacher_summary, teacher_rows)
     atomic_write_json(args.artifact_dir / "teacher_validity_gate.json", teacher_gate)
     teacher_length_stratification = _teacher_length_stratification(
@@ -1417,11 +1428,20 @@ def main() -> None:
         trajectory_response_source, identity_ids=selected_parent_ids
     )
     trajectory_identity_ids = sorted(
-        {str(row["memory_id"]) for row in trajectory_response_rows}
+        {
+            str(row["memory_id"])
+            for row in trajectory_response_rows
+            if row["split"] == "train"
+        }
     )
     excluded_trajectory_parents = sorted(
         set(selected_parent_ids) - set(trajectory_identity_ids)
     )
+    trajectory_response_rows = [
+        row
+        for row in trajectory_response_rows
+        if str(row["memory_id"]) in set(trajectory_identity_ids)
+    ]
     if len(pair_response_rows) != 64:
         raise ValueError(f"Pair response cache has {len(pair_response_rows)} rows, expected 64")
     if len(static_identity_ids) != 24:
@@ -1522,6 +1542,7 @@ def main() -> None:
             train_rows=static_train,
             validation_rows=static_validation,
             identity_ids=static_identity_ids,
+            expected_validation_task_ids=expected_validation_task_ids,
             device=device,
             model_dim=model_dim,
             objective=objective,
@@ -1541,6 +1562,7 @@ def main() -> None:
             train_rows=trajectory_train,
             validation_rows=trajectory_validation,
             identity_ids=trajectory_identity_ids,
+            expected_validation_task_ids=expected_validation_task_ids,
             device=device,
             model_dim=model_dim,
             objective=objective,
