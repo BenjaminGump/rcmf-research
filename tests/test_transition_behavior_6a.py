@@ -6,6 +6,7 @@ from rcmf.training.oracle_decoder_5fc import LinearDeltaDecoder
 from scripts.run_transition_behavior_6a import (
     _adapt_response_rows,
     _project_latent_copy,
+    _runtime_extension_projection,
     _teacher_validity_gate,
 )
 
@@ -67,3 +68,16 @@ def test_latent_copy_is_projected_for_receiving_identity_budget() -> None:
     ratios = decoder(projected).norm(dim=1) / base_norms
     assert torch.all(ratios <= 1.00001)
     assert torch.equal(latents, torch.tensor([[4.0, 0.0], [0.0, 2.0]]))
+
+
+def test_runtime_projection_is_informational_and_has_no_training_gate() -> None:
+    projection = _runtime_extension_projection(
+        teacher_runtime_s=13.0 * 3600.0,
+        behavior_started=0.0,
+        completed_updates=64,
+        identity_count=24,
+        additional_updates=64,
+    )
+    assert projection["exceeds_preflight_review_threshold"] is True
+    assert projection["informational_only"] is True
+    assert "allowed" not in projection

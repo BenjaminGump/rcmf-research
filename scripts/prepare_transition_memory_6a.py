@@ -243,7 +243,8 @@ def _runtime_projection(
         * inference_s
         + 3600.0
     )
-    hard_stop = float(runtime["hard_stop_expected_h100_hours"])
+    review_threshold = float(runtime["preflight_review_threshold_h100_hours"])
+    expected_hours = expected_seconds / 3600.0
     return {
         "format": "decision_transition_runtime_projection_6a_v1",
         "basis": {
@@ -275,10 +276,10 @@ def _runtime_projection(
             "panel_count": panel_count,
         },
         "best_case_h100_hours": best_seconds / 3600.0,
-        "expected_h100_hours": expected_seconds / 3600.0,
+        "expected_h100_hours": expected_hours,
         "conservative_h100_hours": conservative_seconds / 3600.0,
-        "hard_stop_expected_h100_hours": hard_stop,
-        "expected_runtime_gate_passed": expected_seconds / 3600.0 <= hard_stop,
+        "preflight_review_threshold_h100_hours": review_threshold,
+        "expected_runtime_review_required": expected_hours > review_threshold,
     }
 
 
@@ -318,7 +319,10 @@ def _report(summary: Mapping[str, Any]) -> str:
             f"- best case: `{runtime['best_case_h100_hours']:.3f}` H100-hours",
             f"- expected: `{runtime['expected_h100_hours']:.3f}` H100-hours",
             f"- conservative: `{runtime['conservative_h100_hours']:.3f}` H100-hours",
-            f"- expected <= 12-hour gate: `{runtime['expected_runtime_gate_passed']}`",
+            "- preflight review threshold: "
+            f"`{runtime['preflight_review_threshold_h100_hours']:.3f}` H100-hours",
+            "- explicit runtime approval required: "
+            f"`{runtime['expected_runtime_review_required']}`",
             "",
             "The projection covers raw-teacher scoring, response-cache scoring, pair-oracle "
             "optimization, static transition and trajectory baselines, controls, validation, "
@@ -592,9 +596,9 @@ def main() -> None:
     summary = {
         "format": "decision_transition_preflight_summary_6a_v1",
         "status": (
-            "passed_ready_for_gpu_review"
-            if runtime_projection["expected_runtime_gate_passed"]
-            else "stopped_projected_runtime_exceeds_12_h100_hours"
+            "paused_projected_runtime_requires_explicit_approval"
+            if runtime_projection["expected_runtime_review_required"]
+            else "passed_ready_for_gpu_review"
         ),
         "timestamp_utc": utc_now(),
         "source_commit": maybe_git_commit(),
@@ -686,9 +690,10 @@ def main() -> None:
     atomic_write_text(args.output_dir / "preflight_report.md", _report(summary))
     print(json.dumps(summary["counts"], indent=2, sort_keys=True), flush=True)
     print(json.dumps(runtime_projection, indent=2, sort_keys=True), flush=True)
-    if not runtime_projection["expected_runtime_gate_passed"]:
+    if runtime_projection["expected_runtime_review_required"]:
         raise SystemExit(
-            "Projected expected GPU runtime exceeds 12 H100 hours; stopped before GPU work"
+            "Projected expected GPU runtime exceeds the preflight review threshold; "
+            "stopped before GPU work pending explicit approval"
         )
 
 

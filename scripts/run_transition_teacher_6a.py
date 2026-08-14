@@ -856,6 +856,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--parent-teacher-cache", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--progress-interval-s", type=float, default=300.0)
+    parser.add_argument(
+        "--approve-runtime-over-review-threshold",
+        action="store_true",
+        help="Record explicit approval to run an unchanged design above the preflight review threshold.",
+    )
     return parser.parse_args()
 
 
@@ -866,10 +871,22 @@ def main() -> None:
     cfg = load_config(args.config)
     settings = cfg.raw["stage_c_6a"]
     preflight_summary = _load_json(args.preflight_dir / "preflight_summary.json")
-    if preflight_summary["status"] != "passed_ready_for_gpu_review":
+    runtime_projection = preflight_summary["runtime_projection"]
+    review_required = bool(
+        runtime_projection.get(
+            "expected_runtime_review_required",
+            not runtime_projection.get("expected_runtime_gate_passed", True),
+        )
+    )
+    allowed_statuses = {"passed_ready_for_gpu_review"}
+    if args.approve_runtime_over_review_threshold:
+        allowed_statuses.add("paused_projected_runtime_requires_explicit_approval")
+    if preflight_summary["status"] not in allowed_statuses:
         raise ValueError(f"Preflight is not approved for GPU scoring: {preflight_summary['status']}")
-    if not preflight_summary["runtime_projection"]["expected_runtime_gate_passed"]:
-        raise ValueError("Preflight expected runtime exceeds the 12 H100-hour gate")
+    if review_required and not args.approve_runtime_over_review_threshold:
+        raise ValueError(
+            "Preflight runtime exceeds the review threshold and requires explicit approval"
+        )
     query_manifest = _load_json(args.preflight_dir / "query_manifest.json")
     panel_rows = _load_rows(args.preflight_dir / "transition_panel.jsonl")
     preflight_rows = _load_rows(args.preflight_dir / "pair_preflight.jsonl")

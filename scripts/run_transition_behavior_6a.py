@@ -83,7 +83,7 @@ K_TOKENS = 4
 LATENT_DIM = 128
 RATIO_BUDGET = 1.0
 REPRO_TOLERANCE = 2.0e-4
-MAX_H100_SECONDS = 12.0 * 3600.0
+PREFLIGHT_REVIEW_THRESHOLD_SECONDS = 12.0 * 3600.0
 
 
 def utc_now() -> str:
@@ -391,7 +391,7 @@ def _bootstrap_controls(
     }
 
 
-def _runtime_allows_extension(
+def _runtime_extension_projection(
     *,
     teacher_runtime_s: float,
     behavior_started: float,
@@ -410,8 +410,13 @@ def _runtime_allows_extension(
         "observed_seconds_per_identity_update": seconds_per_update,
         "projected_additional_s": projected_additional,
         "projected_total_h100_hours": projected_total / 3600.0,
-        "hard_limit_h100_hours": MAX_H100_SECONDS / 3600.0,
-        "allowed": projected_total <= MAX_H100_SECONDS,
+        "preflight_review_threshold_h100_hours": (
+            PREFLIGHT_REVIEW_THRESHOLD_SECONDS / 3600.0
+        ),
+        "exceeds_preflight_review_threshold": (
+            projected_total > PREFLIGHT_REVIEW_THRESHOLD_SECONDS
+        ),
+        "informational_only": True,
     }
 
 
@@ -557,21 +562,21 @@ def _run_static_identity_model(
     interval: list[dict[str, float]] = []
     final_train_evaluation: dict[str, Any] | None = None
     continuation: dict[str, Any] = {"assessable": False, "continue_to_128": False}
-    runtime_gate: dict[str, Any] | None = None
+    runtime_projection: dict[str, Any] | None = None
     maximum_round = 128
     checkpoint_rounds = {16, 32, 64, 128}
     identity_to_index = {value: index for index, value in enumerate(identities)}
     loop_maximum = maximum_round
     if completed_rounds >= 64 and history:
         continuation = assess_u64_inversion_continuation(history)
-        runtime_gate = _runtime_allows_extension(
+        runtime_projection = _runtime_extension_projection(
             teacher_runtime_s=teacher_runtime_s,
             behavior_started=behavior_started,
             completed_updates=completed_rounds,
             identity_count=len(identities),
             additional_updates=64,
         )
-        if not continuation["continue_to_128"] or not runtime_gate["allowed"]:
+        if not continuation["continue_to_128"]:
             loop_maximum = completed_rounds
 
     for update_round in range(completed_rounds + 1, loop_maximum + 1):
@@ -680,7 +685,7 @@ def _run_static_identity_model(
         provisional = [*history, entry]
         if update_round == 64:
             continuation = assess_u64_inversion_continuation(provisional)
-            runtime_gate = _runtime_allows_extension(
+            runtime_projection = _runtime_extension_projection(
                 teacher_runtime_s=teacher_runtime_s,
                 behavior_started=behavior_started,
                 completed_updates=update_round,
@@ -688,7 +693,7 @@ def _run_static_identity_model(
                 additional_updates=64,
             )
             entry["u64_continuation"] = continuation
-            entry["runtime_extension_gate"] = runtime_gate
+            entry["runtime_projection_at_u64"] = runtime_projection
         history.append(entry)
         rows_path = output_dir / f"train_evaluation_u{update_round:03d}.jsonl"
         write_jsonl(rows_path, train_evaluation["rows"])
@@ -731,11 +736,7 @@ def _run_static_identity_model(
         )
         final_train_evaluation = train_evaluation
         interval = []
-        if update_round == 64 and (
-            not continuation["continue_to_128"]
-            or runtime_gate is None
-            or not runtime_gate["allowed"]
-        ):
+        if update_round == 64 and not continuation["continue_to_128"]:
             break
 
     if history and final_train_evaluation is None:
@@ -934,7 +935,7 @@ def _run_static_identity_model(
         "update_accounting": update_count_summary(identities, update_counts),
         "history": history,
         "u64_continuation": continuation,
-        "runtime_extension_gate": runtime_gate,
+        "runtime_projection_at_u64": runtime_projection,
         "evaluations": portable,
         "gate": gate,
         "task_results": task_results,

@@ -953,6 +953,35 @@ Reason:
   memory-specific behavior. A complete decision transition is therefore the
   next atomic-memory hypothesis to test.
 
+## 2026-08-14 EXP-017 runtime threshold semantics
+
+VERIFIED:
+
+- The unchanged EXP-017 preflight contains 148 transitions, 32 queries, 4,640
+  legal pairs, 4,579 scoreable pairs, and 61 over-context masked pairs.
+- Its projected best/expected/conservative costs are 7.596/8.687/12.270 H100
+  hours. The expected projection is below the 12-hour review threshold.
+- The teacher phase completed without truncation or pair reduction. Its
+  4,640-row cache passed validation in 2.275 H100 hours.
+
+Decision:
+
+- Treat 12 H100 hours only as a preflight review threshold, not as a compute
+  budget or a dynamic stopping rule.
+- If a future expected preflight projection exceeds the threshold, pause for
+  explicit approval and then run the approved design unchanged.
+- During EXP-017 behavior optimization, optional u128 continuation is governed
+  only by the pre-registered train-only convergence rule. Runtime projections
+  at u64 are informational and cannot suppress continuation.
+- Do not reduce the transition panel, query set, legal pair set, optimization
+  updates, controls, or validation to meet 12 hours.
+
+Reason:
+
+- H100 cost is reimbursable, and scientific completeness is the governing
+  constraint. A dynamic time gate could silently weaken the experiment after
+  its design had already passed preflight review.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:
