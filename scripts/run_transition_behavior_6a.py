@@ -333,7 +333,6 @@ def _evaluate_identity_latents(
     decoder: nn.Module,
     rows: Sequence[dict[str, Any]],
     identity_ids: Sequence[str],
-    expected_validation_task_ids: Sequence[str],
     identity_latents: Tensor,
     identity_assignment: Mapping[str, str] | None,
     device: torch.device,

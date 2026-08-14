@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import ast
 import inspect
 
 import torch
 
 from rcmf.training.oracle_decoder_5fc import LinearDeltaDecoder
+from scripts import run_transition_behavior_6a as behavior_module
 from scripts.run_transition_behavior_6a import (
     _adapt_response_rows,
     _project_latent_copy,
@@ -89,3 +91,27 @@ def test_runtime_projection_is_informational_and_has_no_training_gate() -> None:
 def test_static_identity_runner_accepts_validation_task_contract() -> None:
     parameters = inspect.signature(_run_static_identity_model).parameters
     assert "expected_validation_task_ids" in parameters
+
+
+def test_static_runner_internal_keyword_call_contracts_are_complete() -> None:
+    tree = ast.parse(inspect.getsource(behavior_module))
+    for function_name in ("_run_static_identity_model", "_evaluate_identity_latents"):
+        required = {
+            name
+            for name, parameter in inspect.signature(
+                getattr(behavior_module, function_name)
+            ).parameters.items()
+            if parameter.kind is inspect.Parameter.KEYWORD_ONLY
+            and parameter.default is inspect.Parameter.empty
+        }
+        calls = [
+            node
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == function_name
+        ]
+        assert calls
+        for call in calls:
+            supplied = {keyword.arg for keyword in call.keywords if keyword.arg}
+            assert required <= supplied
