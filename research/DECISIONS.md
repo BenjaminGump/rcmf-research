@@ -916,6 +916,43 @@ Prospective rule:
   Spearman change `<0.01`, and current Huber no worse than `1.02` times the
   best observed Huber. Large deterioration cannot count as convergence.
 
+## 2026-08-14 Freeze RCMF V3 before transition-memory research
+
+VERIFIED:
+
+- The source state is commit
+  `97ca723ad66597d2afcbbce1eb5466eb34c009f6` on
+  `workflow/research-loop`.
+- V3 uses one complete successful trajectory as one `MemoryRecord` and one
+  logical compiled field write.
+- Teacher, signed-selector, reversible-field, direct K=4 input-injection, and
+  rank-128 linear decoder components have strong validated evidence.
+- Content-derived static trajectory programs and end-to-end trajectory-memory
+  behavior are not validated.
+
+Decision:
+
+- Freeze the current design as
+  `RCMF V3 - Component-Validated Trajectory-Memory Field (Pre-Transition)`.
+- Use annotated tag `rcmf-v3-component-validated-pre-transition` and archive
+  branch `archive/rcmf-v3-component-validated` as immutable/browsable refs.
+- Begin transition-memory research only on
+  `research/v4-decision-transition-memory` and describe it as a V4 candidate.
+- Do not create V1 or V2 tags without independently auditing their exact
+  representative commits. Do not create a V4 tag in the transition pilot.
+- Do not describe V3 as final, successful, working, or end-to-end validated.
+- Preserve parent trajectories as human-readable ledger units. A future
+  transition field must delete a parent by subtracting all child transition
+  deltas, preserving the fixed-cost reversible-field principle.
+
+Reason:
+
+- V3 diagnostics show that pair-specific behavioral signals exist and can be
+  executed through the validated injection/decoder path, but one static
+  content-derived vector per whole trajectory does not preserve
+  memory-specific behavior. A complete decision transition is therefore the
+  next atomic-memory hypothesis to test.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:
