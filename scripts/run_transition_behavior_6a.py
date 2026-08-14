@@ -205,7 +205,12 @@ def _build_tokenized_rows(
 
 
 def _load_frozen_decoder(
-    *, checkpoint: Path, model_dim: int, device: torch.device, output_dir: Path
+    *,
+    checkpoint: Path,
+    model_dim: int,
+    device: torch.device,
+    output_dir: Path,
+    query_state_ids: set[str],
 ) -> tuple[nn.Module, dict[str, Any]]:
     payload = torch.load(checkpoint, map_location="cpu", weights_only=False)
     expected_pair_ids = [str(value) for value in payload.get("pair_ids", [])]
@@ -233,6 +238,15 @@ def _load_frozen_decoder(
     }
     if not all(hash_checks.values()):
         raise ValueError(f"u112 checkpoint hashes differ: {hash_checks}")
+    source_state_ids = {
+        pair_id.split("::memory::", 1)[0]
+        if "::memory::" in pair_id
+        else pair_id.rsplit("::", 2)[0]
+        for pair_id in expected_pair_ids
+    }
+    query_overlap = sorted(source_state_ids.intersection(query_state_ids))
+    if query_overlap:
+        raise ValueError(f"EXP-016C source-state/query overlap: {query_overlap}")
     source_delta = validation.pop("tensor").to(device=device, dtype=torch.float64)
     _, singular, vh = torch.linalg.svd(
         flatten_delta(source_delta).to(torch.float64), full_matrices=False
@@ -254,6 +268,9 @@ def _load_frozen_decoder(
         "source_delta_sha256": delta_hash,
         "source_pair_count": len(expected_pair_ids),
         "source_pair_ids_sha256": sha256_text("\n".join(expected_pair_ids)),
+        "source_state_count": len(source_state_ids),
+        "query_state_count": len(query_state_ids),
+        "source_query_state_overlap": query_overlap,
         "source_validation": validation,
         "hash_checks": hash_checks,
         "basis_construction": "uncentered_svd_vh_first_128_float64_factorization",
@@ -264,6 +281,7 @@ def _load_frozen_decoder(
         "source_singular_values": [float(value) for value in singular.cpu().tolist()],
         "zero_latent_max_abs_delta": float(zero.abs().max().cpu()),
         "passed": all(hash_checks.values())
+        and not query_overlap
         and orthogonality_error <= 1.0e-5
         and float(zero.abs().max().cpu()) == 0.0,
     }
@@ -722,6 +740,10 @@ def _run_static_identity_model(
     swap_map = deterministic_identity_derangement(
         identities, seed=seed, namespace=f"{name}:swap"
     )
+    if swap_map == shuffle_map:
+        swap_map = deterministic_identity_derangement(
+            identities, seed=seed, namespace=f"{name}:swap:alternate"
+        )
     generator = torch.Generator(device="cpu").manual_seed(seed + 80_000)
     random_latents = torch.randn(
         len(identities), LATENT_DIM, generator=generator, dtype=torch.float32
@@ -1442,6 +1464,7 @@ def main() -> None:
         model_dim=model_dim,
         device=device,
         output_dir=args.artifact_dir,
+        query_state_ids={str(row["state_example_id"]) for row in pair_rows},
     )
     decoder_hash = module_state_sha256(decoder)
     objective = OBJECTIVES_5FA[str(settings["objective"]["name"])]
