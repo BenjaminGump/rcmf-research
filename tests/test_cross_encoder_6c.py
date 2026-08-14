@@ -17,7 +17,10 @@ from rcmf.training.cross_encoder_6c import (
 from rcmf.training.multiview_representations_6c import (
     tokenize_and_validate_char_spans,
 )
-from scripts.run_cross_encoder_interaction_6c import _prediction_rows
+from scripts.run_cross_encoder_interaction_6c import (
+    _prediction_rows,
+    multiview_artifact_paths,
+)
 
 
 class CharacterTokenizer:
@@ -156,8 +159,7 @@ def test_cross_encoder_controls_change_only_the_requested_pair_axis() -> None:
 def test_cross_encoder_zero_interaction_and_head_gradient() -> None:
     rows = _rows()
     feature_by_pair = {
-        row["pair_id"]: torch.full((6,), float(index))
-        for index, row in enumerate(rows)
+        row["pair_id"]: torch.full((6,), float(index)) for index, row in enumerate(rows)
     }
     controls = cross_encoder_control_sources(rows, seed=23)
     assert (
@@ -210,3 +212,18 @@ def test_correct_prediction_does_not_require_unused_shuffle_candidates() -> None
         device=torch.device("cpu"),
     )
     assert predictions[0]["control_source_pair_id"] == "only-pair"
+
+
+def test_multiview_artifact_paths_match_parts_c_d_cache_layout(tmp_path: Path) -> None:
+    paths = multiview_artifact_paths(tmp_path)
+    assert paths == {
+        "state_cache": tmp_path / "parts_c_d/multiview_cache/state_multiview.pt",
+        "transition_cache": tmp_path
+        / "parts_c_d/multiview_cache/transition_multiview.pt",
+        "main_checkpoint": tmp_path / "parts_c_d/checkpoints/main/final_layer.pt",
+    }
+    source = (
+        Path(__file__).resolve().parents[1] / "scripts/run_data_sufficiency_6c.py"
+    ).read_text(encoding="utf-8")
+    assert "multiview_artifact_paths(artifact_dir)" in source
+    assert "parts_c_d/state_multiview.pt" not in source

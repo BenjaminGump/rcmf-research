@@ -107,9 +107,7 @@ def _metric_kwargs(settings: Mapping[str, Any]) -> dict[str, Any]:
         "ranking_ks": settings["metrics"]["ranking_ks"],
         "neutral_epsilon": float(settings["metrics"]["neutral_epsilon"]),
         "best_tie_tolerance": float(settings["metrics"]["best_tie_tolerance"]),
-        "huber_delta": float(
-            settings["current_representation"]["utility_huber_delta"]
-        ),
+        "huber_delta": float(settings["current_representation"]["utility_huber_delta"]),
     }
 
 
@@ -131,7 +129,9 @@ def _validate_inputs(
     expected = settings["expected"]
     if len(pair_rows) != int(expected["scoreable_rows"]):
         raise ValueError("EXP-019 scoreable pair count differs before Part E")
-    counts = {cell: sum(str(row["cell"]) == cell for row in pair_rows) for cell in CELLS}
+    counts = {
+        cell: sum(str(row["cell"]) == cell for row in pair_rows) for cell in CELLS
+    }
     if counts != {str(key): int(value) for key, value in expected["cells"].items()}:
         raise ValueError(f"EXP-019 cells differ before Part E: {counts}")
     pair_ids = [str(row["pair_id"]) for row in pair_rows]
@@ -148,7 +148,9 @@ def _validate_inputs(
         if bool(source["over_context"]) or source["leakage_overlap"]:
             raise ValueError(f"Illegal/over-context scoreable pair: {row['pair_id']}")
         if bool(row["truncated"]) or bool(row["over_context"]):
-            raise ValueError(f"Scoreable row was truncated/over-context: {row['pair_id']}")
+            raise ValueError(
+                f"Scoreable row was truncated/over-context: {row['pair_id']}"
+            )
     hashes = {
         "parts_c_d_summary": sha256_file(artifact_dir / "parts_c_d_summary.json"),
         "two_axis_pair_rows": sha256_file(exp018 / "two_axis_pair_rows.jsonl"),
@@ -286,7 +288,9 @@ def _pair_cache(
         if token_count != int(preflight["combined_prompt_tokens"]):
             raise ValueError(f"Cross-encoder prompt token count differs: {pair_id}")
         if token_count + int(row["target_tokens"]) > int(preflight["context_limit"]):
-            raise ValueError(f"Cross-encoder pair unexpectedly exceeds context: {pair_id}")
+            raise ValueError(
+                f"Cross-encoder pair unexpectedly exceeds context: {pair_id}"
+            )
         expected = {
             "format": f"{CROSS_ENCODER_CACHE_VERSION}_row",
             "pair_id": pair_id,
@@ -297,7 +301,9 @@ def _pair_cache(
             "transition_content_sha256": str(row["transition_content_sha256"]),
             "renderer_version": renderer_version,
             "teacher_renderer_version": str(preflight["renderer_version"]),
-            "transition_renderer_version": str(preflight["transition_renderer_version"]),
+            "transition_renderer_version": str(
+                preflight["transition_renderer_version"]
+            ),
             "model_name": str(backend.model_name),
             "model_config_commit_hash": model_commit,
         }
@@ -306,12 +312,18 @@ def _pair_cache(
         if row_path.exists():
             candidate = torch.load(row_path, map_location="cpu", weights_only=False)
             if any(candidate.get(key) != value for key, value in expected.items()):
-                raise ValueError(f"Existing cross-encoder cache row differs: {row_path}")
+                raise ValueError(
+                    f"Existing cross-encoder cache row differs: {row_path}"
+                )
             values = candidate.get("representations")
             if not isinstance(values, torch.Tensor) or tuple(values.shape) != (3, 4096):
-                raise ValueError(f"Existing cross-encoder tensor shape differs: {row_path}")
+                raise ValueError(
+                    f"Existing cross-encoder tensor shape differs: {row_path}"
+                )
             if cross_encoder_tensor_hash(values) != str(candidate["tensor_sha256"]):
-                raise ValueError(f"Existing cross-encoder tensor hash differs: {row_path}")
+                raise ValueError(
+                    f"Existing cross-encoder tensor hash differs: {row_path}"
+                )
             payload = candidate
             reused += 1
         if payload is None:
@@ -363,7 +375,9 @@ def _pair_cache(
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
     aggregate_path = output_dir.parent / "cross_encoder_representations.pt"
-    matrix = torch.stack([features[str(row["pair_id"])] for row in ordered]).to(torch.float16)
+    matrix = torch.stack([features[str(row["pair_id"])] for row in ordered]).to(
+        torch.float16
+    )
     aggregate = {
         "format": f"{CROSS_ENCODER_CACHE_VERSION}_aggregate",
         "ordered_pair_ids": [str(row["pair_id"]) for row in ordered],
@@ -407,18 +421,32 @@ def _pair_cache(
     return features, report
 
 
+def multiview_artifact_paths(artifact_dir: Path) -> dict[str, Path]:
+    root = Path(artifact_dir) / "parts_c_d"
+    cache_root = root / "multiview_cache"
+    return {
+        "state_cache": cache_root / "state_multiview.pt",
+        "transition_cache": cache_root / "transition_multiview.pt",
+        "main_checkpoint": root / "checkpoints/main/final_layer.pt",
+    }
+
+
 def _load_multiview_main_inputs(
     artifact_dir: Path,
     settings: Mapping[str, Any],
     device: torch.device,
 ) -> tuple[Any, dict[str, float], dict[str, float], dict[str, Any]]:
-    root = artifact_dir / "parts_c_d"
-    state_cache = torch.load(root / "state_multiview.pt", map_location="cpu", weights_only=False)
+    paths = multiview_artifact_paths(artifact_dir)
+    state_cache = torch.load(
+        paths["state_cache"], map_location="cpu", weights_only=False
+    )
     transition_cache = torch.load(
-        root / "transition_multiview.pt", map_location="cpu", weights_only=False
+        paths["transition_cache"], map_location="cpu", weights_only=False
     )
     state_values = state_cache["representations"]["final_layer"].to(torch.float32)
-    transition_values = transition_cache["representations"]["final_layer"].to(torch.float32)
+    transition_values = transition_cache["representations"]["final_layer"].to(
+        torch.float32
+    )
     state_ids = [str(value) for value in state_cache["ordered_ids"]]
     transition_ids = [str(value) for value in transition_cache["ordered_ids"]]
     main = ViewSetMainEffectHeads(
@@ -429,7 +457,7 @@ def _load_multiview_main_inputs(
         hidden_dim=int(settings["multiview"]["hidden_dim"]),
         dropout=float(settings["multiview"]["dropout"]),
     )
-    checkpoint_path = root / "checkpoints/main/final_layer.pt"
+    checkpoint_path = paths["main_checkpoint"]
     checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
     main.load_state_dict(checkpoint["model_state_dict"])
     main.to(device).eval()
@@ -437,14 +465,18 @@ def _load_multiview_main_inputs(
         parameter.requires_grad_(False)
     with torch.no_grad():
         state_predictions = main.state(state_values.to(device)).cpu().tolist()
-        transition_predictions = main.transition(transition_values.to(device)).cpu().tolist()
+        transition_predictions = (
+            main.transition(transition_values.to(device)).cpu().tolist()
+        )
     metadata = {
         "state_values": state_values,
         "transition_values": transition_values,
         "state_ids": state_ids,
         "transition_ids": transition_ids,
         "state_position": {value: index for index, value in enumerate(state_ids)},
-        "transition_position": {value: index for index, value in enumerate(transition_ids)},
+        "transition_position": {
+            value: index for index, value in enumerate(transition_ids)
+        },
         "checkpoint_path": str(checkpoint_path),
         "checkpoint_sha256": sha256_file(checkpoint_path),
     }
@@ -490,9 +522,7 @@ def _prediction_rows(
 ) -> list[dict[str, Any]]:
     if control == "correct":
         source_ids: list[str | None] = [str(row["pair_id"]) for row in rows]
-        features = torch.stack(
-            [feature_by_pair[str(row["pair_id"])] for row in rows]
-        )
+        features = torch.stack([feature_by_pair[str(row["pair_id"])] for row in rows])
     elif control == "zero_interaction":
         source_ids = [None] * len(rows)
         features = None
@@ -509,9 +539,11 @@ def _prediction_rows(
         interactions = torch.zeros(len(rows), dtype=torch.float32)
     else:
         with torch.no_grad():
-            interactions = model(
-                normalize_features(features, normalization).to(device)
-            ).detach().cpu()
+            interactions = (
+                model(normalize_features(features, normalization).to(device))
+                .detach()
+                .cpu()
+            )
     output = []
     for index, row in enumerate(rows):
         pair_id = str(row["pair_id"])
@@ -582,13 +614,17 @@ def _cv_select_epochs(
     transition_position = main_metadata["transition_position"]
     candidates = []
     cv_rows = []
-    epochs_values = [int(value) for value in settings["cross_encoder"]["epoch_candidates"]]
+    epochs_values = [
+        int(value) for value in settings["cross_encoder"]["epoch_candidates"]
+    ]
     for epochs in epochs_values:
         fold_metrics = []
         for fold in cv_manifest["folds"]:
             fold_index = int(fold["fold"])
             train_rows = [row_by_id[value] for value in fold["train_pair_ids"]]
-            validation_rows = [row_by_id[value] for value in fold["validation_pair_ids"]]
+            validation_rows = [
+                row_by_id[value] for value in fold["validation_pair_ids"]
+            ]
             decomposition = fit_two_way_decomposition(
                 train_rows,
                 max_iterations=int(
@@ -618,7 +654,9 @@ def _cv_select_epochs(
             if main_path.exists():
                 payload = torch.load(main_path, map_location="cpu", weights_only=False)
                 if payload["metadata"] != main_metadata_expected:
-                    raise ValueError(f"Cross-encoder CV main checkpoint differs: {main_path}")
+                    raise ValueError(
+                        f"Cross-encoder CV main checkpoint differs: {main_path}"
+                    )
                 main.load_state_dict(payload["model_state_dict"])
                 main_training = payload["training"]
             else:
@@ -633,9 +671,7 @@ def _cv_select_epochs(
                     learning_rate=float(
                         settings["decomposition"]["main_learning_rate"]
                     ),
-                    weight_decay=float(
-                        settings["decomposition"]["main_weight_decay"]
-                    ),
+                    weight_decay=float(settings["decomposition"]["main_weight_decay"]),
                     huber_delta=float(settings["decomposition"]["huber_delta"]),
                     seed=_seed(int(settings["seed"]), "cross-cv-main", fold_index),
                     device=device,
@@ -662,7 +698,9 @@ def _cv_select_epochs(
                         main_metadata["state_ids"],
                         (
                             float(value)
-                            for value in main.state(state_values.to(device)).cpu().tolist()
+                            for value in main.state(state_values.to(device))
+                            .cpu()
+                            .tolist()
                         ),
                     )
                 )
@@ -671,9 +709,9 @@ def _cv_select_epochs(
                         main_metadata["transition_ids"],
                         (
                             float(value)
-                            for value in main.transition(
-                                transition_values.to(device)
-                            ).cpu().tolist()
+                            for value in main.transition(transition_values.to(device))
+                            .cpu()
+                            .tolist()
                         ),
                     )
                 )
@@ -709,7 +747,9 @@ def _cv_select_epochs(
             if head_path.exists():
                 payload = torch.load(head_path, map_location="cpu", weights_only=False)
                 if payload["metadata"] != head_metadata:
-                    raise ValueError(f"Cross-encoder CV head checkpoint differs: {head_path}")
+                    raise ValueError(
+                        f"Cross-encoder CV head checkpoint differs: {head_path}"
+                    )
                 head.load_state_dict(payload["model_state_dict"])
                 head_training = payload["training"]
                 normalization = payload["normalization"]
@@ -821,10 +861,16 @@ def _run_part_e(
     started = time.perf_counter()
     exp017 = Path(settings["exp017_artifact"])
     exp018 = Path(settings["exp018_artifact"])
-    input_validation = _validate_inputs(settings=settings, artifact_dir=args.artifact_dir)
-    atomic_write_json(args.artifact_dir / "part_e/input_validation.json", input_validation)
+    input_validation = _validate_inputs(
+        settings=settings, artifact_dir=args.artifact_dir
+    )
+    atomic_write_json(
+        args.artifact_dir / "part_e/input_validation.json", input_validation
+    )
     pair_rows = _load_rows(exp018 / "two_axis_pair_rows.jsonl")
-    cells = {cell: [row for row in pair_rows if str(row["cell"]) == cell] for cell in CELLS}
+    cells = {
+        cell: [row for row in pair_rows if str(row["cell"]) == cell] for cell in CELLS
+    }
     preflight_by_pair = {
         str(row["pair_id"]): row for row in _load_rows(exp017 / "pair_preflight.jsonl")
     }
@@ -864,7 +910,9 @@ def _run_part_e(
         source_commit=args.lambda_head,
         attempt=attempt,
     )
-    atomic_write_json(args.artifact_dir / "part_e/cross_encoder_cache_report.json", cache_report)
+    atomic_write_json(
+        args.artifact_dir / "part_e/cross_encoder_cache_report.json", cache_report
+    )
     del backend
     gc.collect()
     if torch.cuda.is_available():
@@ -940,7 +988,8 @@ def _run_part_e(
             {
                 "metadata": checkpoint_metadata,
                 "model_state_dict": {
-                    key: value.detach().cpu() for key, value in head.state_dict().items()
+                    key: value.detach().cpu()
+                    for key, value in head.state_dict().items()
                 },
                 "optimizer_state_dict": optimizer_state,
                 "normalization": {
@@ -978,11 +1027,13 @@ def _run_part_e(
                 "rows_sha256": sha256_file(path),
             }
             if control == "correct" and cell in {CELL_B, CELL_C, CELL_D}:
-                controls[control]["task_grouped_bootstrap_ci95"] = task_grouped_bootstrap(
-                    predicted,
-                    samples=int(settings["metrics"]["bootstrap_samples"]),
-                    seed=int(settings["metrics"]["bootstrap_seed"]),
-                    metric_settings=_bootstrap_kwargs(settings),
+                controls[control]["task_grouped_bootstrap_ci95"] = (
+                    task_grouped_bootstrap(
+                        predicted,
+                        samples=int(settings["metrics"]["bootstrap_samples"]),
+                        seed=int(settings["metrics"]["bootstrap_seed"]),
+                        metric_settings=_bootstrap_kwargs(settings),
+                    )
                 )
         cell_results[cell] = {"controls": controls}
         attempt.progress(
@@ -1007,7 +1058,9 @@ def _run_part_e(
             )
         ),
     }
-    correct_rows = _load_rows(Path(cell_results[CELL_D]["controls"]["correct"]["rows_path"]))
+    correct_rows = _load_rows(
+        Path(cell_results[CELL_D]["controls"]["correct"]["rows_path"])
+    )
     shuffled_state_rows = _load_rows(
         Path(cell_results[CELL_D]["controls"]["shuffled_state"]["rows_path"])
     )
@@ -1039,7 +1092,9 @@ def _run_part_e(
         state_only=baselines["state_only"],
         transition_only=baselines["transition_only"],
         shuffled_state=cell_results[CELL_D]["controls"]["shuffled_state"]["metrics"],
-        shuffled_transition=cell_results[CELL_D]["controls"]["shuffled_transition"]["metrics"],
+        shuffled_transition=cell_results[CELL_D]["controls"]["shuffled_transition"][
+            "metrics"
+        ],
         per_task=per_task,
         transition_shuffle_contrast=contrasts["shuffled_transition"],
         thresholds=settings["interaction_gate"],
@@ -1135,7 +1190,9 @@ def _markdown_report(summary: Mapping[str, Any]) -> str:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run EXP-019 conditional prompt-only Part E")
+    parser = argparse.ArgumentParser(
+        description="Run EXP-019 conditional prompt-only Part E"
+    )
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--artifact-dir", type=Path, required=True)
     parser.add_argument("--attempt-id", required=True)
@@ -1145,7 +1202,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--github-head", required=True)
     parser.add_argument("--lambda-head", required=True)
     parser.add_argument("--tmux-session", default="exp019")
-    parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
+    parser.add_argument(
+        "--device", default="cuda" if torch.cuda.is_available() else "cpu"
+    )
     return parser.parse_args()
 
 

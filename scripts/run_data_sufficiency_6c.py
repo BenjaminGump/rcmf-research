@@ -52,6 +52,7 @@ from rcmf.utils.serialization import (
 from scripts.run_cross_encoder_interaction_6c import (
     _base_score_maps as cross_base_score_maps,
     _prediction_rows as cross_prediction_rows,
+    multiview_artifact_paths,
 )
 from scripts.run_interaction_representation_6c import (
     _train_or_load_interaction as current_interaction_checkpoint,
@@ -94,9 +95,7 @@ def _metric_kwargs(settings: Mapping[str, Any]) -> dict[str, Any]:
         "ranking_ks": settings["metrics"]["ranking_ks"],
         "neutral_epsilon": float(settings["metrics"]["neutral_epsilon"]),
         "best_tie_tolerance": float(settings["metrics"]["best_tie_tolerance"]),
-        "huber_delta": float(
-            settings["current_representation"]["utility_huber_delta"]
-        ),
+        "huber_delta": float(settings["current_representation"]["utility_huber_delta"]),
     }
 
 
@@ -138,6 +137,7 @@ def _summary_row(
 
 
 def _load_representations(exp018: Path, artifact_dir: Path) -> dict[str, Any]:
+    multiview_paths = multiview_artifact_paths(artifact_dir)
     current_state = torch.load(
         exp018 / "representation_cache/query_state_representations.pt",
         map_location="cpu",
@@ -149,12 +149,12 @@ def _load_representations(exp018: Path, artifact_dir: Path) -> dict[str, Any]:
         weights_only=False,
     )
     state_multiview = torch.load(
-        artifact_dir / "parts_c_d/state_multiview.pt",
+        multiview_paths["state_cache"],
         map_location="cpu",
         weights_only=False,
     )
     transition_multiview = torch.load(
-        artifact_dir / "parts_c_d/transition_multiview.pt",
+        multiview_paths["transition_cache"],
         map_location="cpu",
         weights_only=False,
     )
@@ -189,12 +189,8 @@ def _load_representations(exp018: Path, artifact_dir: Path) -> dict[str, Any]:
             "current_transition": sha256_file(
                 exp018 / "representation_cache/transition_representations.pt"
             ),
-            "state_multiview": sha256_file(
-                artifact_dir / "parts_c_d/state_multiview.pt"
-            ),
-            "transition_multiview": sha256_file(
-                artifact_dir / "parts_c_d/transition_multiview.pt"
-            ),
+            "state_multiview": sha256_file(multiview_paths["state_cache"]),
+            "transition_multiview": sha256_file(multiview_paths["transition_cache"]),
             "cross_encoder": sha256_file(
                 artifact_dir / "part_e/cross_encoder_representations.pt"
             ),
@@ -219,8 +215,7 @@ def _run_current_models(
         value: index for index, value in enumerate(representations["state_ids"])
     }
     transition_position = {
-        value: index
-        for index, value in enumerate(representations["transition_ids"])
+        value: index for index, value in enumerate(representations["transition_ids"])
     }
     main_path = output_dir / "current/main.pt"
     main, _, _ = current_main_checkpoint(
@@ -232,7 +227,9 @@ def _run_current_models(
         state_position=state_position,
         transition_position=transition_position,
         settings=settings["decomposition"],
-        seed=_seed(int(settings["learning_curves"]["seed"]), fold, task_count, "current-main"),
+        seed=_seed(
+            int(settings["learning_curves"]["seed"]), fold, task_count, "current-main"
+        ),
         device=device,
         metadata={
             "format": "learning_curve_current_main_6c_v1",
@@ -278,9 +275,7 @@ def _run_current_models(
         )
         prediction_path = output_dir / "predictions" / f"{kind}.jsonl"
         write_jsonl(prediction_path, predictions)
-        metrics = summarize_revised_predictions(
-            predictions, **_metric_kwargs(settings)
-        )
+        metrics = summarize_revised_predictions(predictions, **_metric_kwargs(settings))
         output.append(
             _summary_row(
                 model_kind=kind,
@@ -337,8 +332,7 @@ def _run_multiview_models(
         value: index for index, value in enumerate(representations["state_ids"])
     }
     transition_position = {
-        value: index
-        for index, value in enumerate(representations["transition_ids"])
+        value: index for index, value in enumerate(representations["transition_ids"])
     }
     training_settings = _multiview_training_settings(settings)
     main_by_layer = {}
@@ -353,7 +347,9 @@ def _run_multiview_models(
                 path=main_path,
                 decomposition=decomposition,
                 state_representations=representations["state_multiview"][layer],
-                transition_representations=representations["transition_multiview"][layer],
+                transition_representations=representations["transition_multiview"][
+                    layer
+                ],
                 state_position=state_position,
                 transition_position=transition_position,
                 settings=training_settings,
@@ -380,9 +376,9 @@ def _run_multiview_models(
         if kind == "structured_feature_interaction":
             pair_features = feature_builder.rows(train_rows)
             normalization = feature_stats(pair_features)
-            pair_features = (
-                pair_features - normalization["mean"]
-            ) / normalization["std"]
+            pair_features = (pair_features - normalization["mean"]) / normalization[
+                "std"
+            ]
             feature_dim = int(pair_features.shape[-1])
         checkpoint = output_dir / "multiview" / f"{kind}.pt"
         model, training, _ = multiview_interaction_checkpoint(
@@ -434,9 +430,7 @@ def _run_multiview_models(
         )
         prediction_path = output_dir / "predictions" / f"{kind}.jsonl"
         write_jsonl(prediction_path, predictions)
-        metrics = summarize_revised_predictions(
-            predictions, **_metric_kwargs(settings)
-        )
+        metrics = summarize_revised_predictions(predictions, **_metric_kwargs(settings))
         output.append(
             _summary_row(
                 model_kind=kind,
@@ -468,8 +462,7 @@ def _run_cross_encoder(
         value: index for index, value in enumerate(representations["state_ids"])
     }
     transition_position = {
-        value: index
-        for index, value in enumerate(representations["transition_ids"])
+        value: index for index, value in enumerate(representations["transition_ids"])
     }
     training_settings = _multiview_training_settings(settings)
     main_path = output_dir / "cross_encoder/main_final_layer.pt"
@@ -506,7 +499,9 @@ def _run_cross_encoder(
                     float(value)
                     for value in main.state(
                         representations["state_multiview"]["final_layer"].to(device)
-                    ).cpu().tolist()
+                    )
+                    .cpu()
+                    .tolist()
                 ),
             )
         )
@@ -519,7 +514,9 @@ def _run_cross_encoder(
                         representations["transition_multiview"]["final_layer"].to(
                             device
                         )
-                    ).cpu().tolist()
+                    )
+                    .cpu()
+                    .tolist()
                 ),
             )
         )
@@ -579,7 +576,8 @@ def _run_cross_encoder(
             {
                 "metadata": metadata,
                 "model_state_dict": {
-                    key: value.detach().cpu() for key, value in model.state_dict().items()
+                    key: value.detach().cpu()
+                    for key, value in model.state_dict().items()
                 },
                 "optimizer_state_dict": optimizer_state,
                 "normalization": {
@@ -651,7 +649,9 @@ def _run_part_f(
         for level in fold["levels"]
     ):
         raise ValueError("Learning-curve subset lost train-parent transition coverage")
-    atomic_write_json(args.artifact_dir / "part_f/learning_curve_manifest.json", manifest)
+    atomic_write_json(
+        args.artifact_dir / "part_f/learning_curve_manifest.json", manifest
+    )
     representations = _load_representations(exp018, args.artifact_dir)
     examples = load_decision_examples(
         Path(settings["source_data"]) / "decision_examples.jsonl"
@@ -782,9 +782,7 @@ def _run_part_f(
                 latest_validated_checkpoint=str(progress_path),
             )
     rows = [by_key[key] for key in sorted(by_key)]
-    expected_rows = (
-        len(CURRENT_MODELS) + len(MULTIVIEW_MODELS) + 1
-    ) * total_levels
+    expected_rows = (len(CURRENT_MODELS) + len(MULTIVIEW_MODELS) + 1) * total_levels
     if len(rows) != expected_rows:
         raise ValueError(
             f"Learning-curve result count differs: {len(rows)} != {expected_rows}"
@@ -883,7 +881,9 @@ def _markdown_report(summary: Mapping[str, Any]) -> str:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run EXP-019 Part F data sufficiency audit")
+    parser = argparse.ArgumentParser(
+        description="Run EXP-019 Part F data sufficiency audit"
+    )
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--artifact-dir", type=Path, required=True)
     parser.add_argument("--attempt-id", required=True)
@@ -893,7 +893,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--github-head", required=True)
     parser.add_argument("--lambda-head", required=True)
     parser.add_argument("--tmux-session", default="exp019")
-    parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
+    parser.add_argument(
+        "--device", default="cuda" if torch.cuda.is_available() else "cpu"
+    )
     return parser.parse_args()
 
 
@@ -904,7 +906,16 @@ def main() -> None:
     summary_path = args.artifact_dir / "part_f_summary.json"
     if summary_path.exists():
         summary = _load_json(summary_path)
-        print(json.dumps({"reused": True, "summary": str(summary_path), "decision": summary["decision"]}, sort_keys=True))
+        print(
+            json.dumps(
+                {
+                    "reused": True,
+                    "summary": str(summary_path),
+                    "decision": summary["decision"],
+                },
+                sort_keys=True,
+            )
+        )
         return
     attempts = _load_rows(args.artifact_dir / "attempts.jsonl")
     if any(str(row.get("attempt_id")) == args.attempt_id for row in attempts):
@@ -928,7 +939,16 @@ def main() -> None:
         heartbeat_interval_s=float(settings["runtime"]["heartbeat_interval_seconds"]),
     ) as attempt:
         summary = _run_part_f(args=args, settings=settings, attempt=attempt)
-    print(json.dumps({"reused": False, "summary": str(summary_path), "decision": summary["decision"]}, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "reused": False,
+                "summary": str(summary_path),
+                "decision": summary["decision"],
+            },
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":

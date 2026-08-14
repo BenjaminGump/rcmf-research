@@ -301,6 +301,8 @@ def validate_artifact(root: Path, exp018: Path) -> dict[str, Any]:
         "exp018_immutable_snapshot.json",
         "parts_a_b_summary.json",
         "parts_c_d_summary.json",
+        "parts_c_d/multiview_cache/state_multiview.pt",
+        "parts_c_d/multiview_cache/transition_multiview.pt",
         "part_e/input_validation.json",
         "part_e/cross_encoder_token_preflight.json",
         "part_e/cross_encoder_cache_report.json",
