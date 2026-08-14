@@ -172,8 +172,10 @@ zero/random/shuffled/swap controls plus task-held-out evaluation.
   `2.098806 h`.
 - Artifact root:
   `/lambda/nfs/rcmf-persist/project/runs/stage_c/transition_memory_6a_20260814_001`.
-- Primary summary: `<root>/summary.json`.
-- Generated report: `<root>/report.md`.
+- Primary summaries: `<root>/teacher_summary.json` and
+  `<root>/behavior_summary.json`.
+- Generated reports: `<root>/teacher_report.md` and
+  `<root>/behavior_report.md`.
 - Pair/static/trajectory caches contain 64/765/728 validated rows.
 - Independent validator: passed with zero errors.
 - Final test suites: local `162 passed, 1 skipped`; Lambda `163 passed`.
