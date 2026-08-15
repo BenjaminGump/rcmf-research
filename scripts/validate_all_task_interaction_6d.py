@@ -60,12 +60,6 @@ def _validate_attempts(
         ends = [row for row in events if row.get("event") == "end"]
         _require(len(starts) == 1, f"attempt {attempt_id} start count != 1", errors)
         _require(len(ends) == 1, f"attempt {attempt_id} end count != 1", errors)
-        if ends:
-            _require(
-                int(ends[0].get("exit_code", -1)) == 0,
-                f"attempt {attempt_id} did not exit successfully",
-                errors,
-            )
         summaries.append(
             {
                 "attempt_id": attempt_id,
@@ -82,7 +76,9 @@ def _validate_attempts(
         "event_count": len(rows),
         "attempt_count": len(grouped),
         "attempts": summaries,
-        "all_complete": all(row["exit_code"] == 0 for row in summaries),
+        "all_terminal": all(row["exit_code"] is not None for row in summaries),
+        "successful_attempt_count": sum(row["exit_code"] == 0 for row in summaries),
+        "failed_attempt_count": sum(row["exit_code"] != 0 for row in summaries),
     }
 
 

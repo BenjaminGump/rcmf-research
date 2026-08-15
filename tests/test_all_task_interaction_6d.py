@@ -276,6 +276,7 @@ def test_postrun_validator_checks_full_pair_and_cache_counts() -> None:
     assert "cross_encoder_tensor_hash" in source
     assert "scientific_parameter_changed" in source
     assert "validation state leaked into A/C" in source
+    assert '"failed_attempt_count"' in source
 
 
 def test_preflight_entrypoint_supports_append_only_resume_provenance() -> None:
