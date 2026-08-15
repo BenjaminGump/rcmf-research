@@ -1,0 +1,125 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_memory_use_target_6e
+  version: relative_intent_memory_use_target_6e_v1
+  scope:
+    - immutable_exp017_exp018_exp019_exp020
+    - locked_raw_transition_utility_comparator
+    - serialization_robustness_192_pairs
+    - relative_pairwise_and_intent_conditioned_targets
+    - cached_frozen_representations_only_for_model_audit
+    - qwen_frozen
+    - no_behavioral_program_training
+    - no_additive_token_injector_training
+    - no_selector_training
+    - no_production_transition_field
+    - no_appworld_generation_or_evaluation
+    - no_stage_c2
+    - no_end_to_end_rcmf
+    - no_demo_change
+    - no_new_queries_or_transitions
+    - no_v4_tag
+
+stage_c_6e:
+  run_uuid: memory_use_target_6e_20260816_001
+  seed: 21021
+  artifact_dir: runs/stage_c/memory_use_target_6e_20260816_001
+  source_data: runs/appworld/official_react_gpt4o_train_success_full_demo_filtered_no_2a163ab3_20260803
+  exp017_artifact: runs/stage_c/transition_memory_6a_20260814_001
+  exp018_artifact: runs/stage_c/state_conditioned_transition_6b_20260814_001
+  exp019_artifact: runs/stage_c/interaction_representation_6c_20260814_001
+  exp020_artifact: runs/stage_c/all_task_interaction_6d_20260815_001
+
+  expected:
+    query_states: 92
+    train_query_states: 74
+    train_query_tasks: 37
+    validation_query_states: 18
+    validation_query_tasks: 9
+    transitions: 148
+    transition_parents: 37
+    legal_rows: 13320
+    scoreable_rows: 13128
+    over_context_rows: 192
+    cell_a: 8205
+    cell_b: 2051
+    cell_c: 2296
+    cell_d: 576
+
+  context_limit: 40960
+  runtime:
+    heartbeat_interval_seconds: 240
+    review_threshold_h100_hours: 12.0
+    observed_teacher_seconds_per_forward: 1.3241631310966235
+    serialization_bytes_per_row: 4096
+    runtime_safety_factor_best: 0.85
+    runtime_safety_factor_expected: 1.15
+    runtime_safety_factor_conservative: 1.75
+
+  serialization:
+    format_version: raw_transition_serialization_audit_6e_v1
+    cells: [A, D]
+    pairs_per_cell: 96
+    category_targets:
+      positive: 24
+      neutral: 24
+      negative: 24
+      random: 24
+    templates: [canonical_json, compact_tagged]
+    teacher_section_placement: before_current_user_state
+    gate:
+      median_template_spearman: 0.70
+      sign_agreement: 0.75
+      mean_per_state_top4_overlap: 0.50
+      maximum_length_utility_abs_correlation: 0.20
+
+  targets:
+    neutral_epsilon: 0.01
+    robust_scale_epsilon: 1.0e-6
+    robust_clip: 8.0
+    pair_gap_threshold: 0.05
+    pair_gap_coverage_thresholds: [0.02, 0.05, 0.10]
+    pair_gap_weight_clip: 0.25
+    intent_match_api_family: app
+
+  intent:
+    probe_hidden_dim: 256
+    probe_dropout: 0.05
+    calibration_temperatures: [0.50, 0.75, 1.00, 1.25, 1.50, 2.00, 3.00]
+    calibration_bins: 10
+
+  models:
+    grouped_cv_folds: 5
+    grouped_cv_seed: 21022
+    epoch_candidates: [30, 60, 120]
+    learning_rate: 0.0003
+    weight_decay: 0.0001
+    projection_dim: 64
+    interaction_rank: 32
+    hidden_dim: 256
+    dropout: 0.05
+    teacher_temperature: 0.10
+    student_temperature: 0.10
+    huber_delta: 0.10
+    losses:
+      percentile_regression: 0.20
+      listwise: 0.40
+      pairwise: 1.00
+      neutral_preservation: 0.10
+
+  metrics:
+    ranking_ks: [1, 4, 8]
+    bootstrap_samples: 1000
+    bootstrap_seed: 21023
+    best_tie_tolerance: 1.0e-8
+
+  gate:
+    raw_ndcg4_transition_gain: 0.05
+    mean_per_state_spearman: 0.20
+    interaction_residual_spearman: 0.20
+    gap_weighted_pairwise_accuracy: 0.60
+    transition_shuffle_ndcg4_drop: 0.08
+    state_shuffle_ndcg4_drop: 0.08
+    minimum_positive_heldout_tasks: 6
+    predicted_intent_oracle_gain_retention: 0.70
