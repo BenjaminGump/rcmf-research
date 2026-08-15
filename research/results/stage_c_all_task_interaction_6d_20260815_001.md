@@ -104,9 +104,11 @@ Actual H100-active durations were:
 | Action-intent probe | .160524 |
 | Total | 12.373621 |
 
-Final artifact size is 33,257,018,470 bytes, or 30.973 GiB. The actual total
-slightly exceeded 12 hours, but 12 hours was a review threshold rather than a
-compute cap; the expected preflight projection was 9.09 hours.
+Final artifact directory size, including the post-run validation outputs, is
+33,258,921,348 bytes, or 30.9748 GiB. The validator's pre-report accounting was
+33,257,018,470 bytes. The actual total slightly exceeded 12 hours, but 12
+hours was a review threshold rather than a compute cap; the expected preflight
+projection was 9.09 hours.
 
 ## Frozen Representations
 

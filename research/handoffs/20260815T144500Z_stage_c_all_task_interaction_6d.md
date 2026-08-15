@@ -111,7 +111,9 @@ target-NLL utility does not generalize sufficiently.
   conservative.
 - Actual H100 hours: teacher 2.987934, representations 3.453412, models
   5.771751, intent .160524, total 12.373621.
-- Artifact size: 33,257,018,470 bytes, or 30.973 GiB.
+- Final artifact directory size including validation outputs: 33,258,921,348
+  bytes, or 30.9748 GiB. Validator pre-report accounting was 33,257,018,470
+  bytes.
 - The complete design ran unchanged. The 12-hour line was used only as a
   preflight review threshold, never as a compute cap.
 

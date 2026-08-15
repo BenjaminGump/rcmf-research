@@ -1287,8 +1287,9 @@ VERIFIED:
   branch: `state_intent_available_but_memory_utility_target_not_generalizing`.
   The representation gate remains failed and behavioral
   `p(s,m_transition)` remains blocked.
-- Actual H100-active runtime was `12.373621` hours and artifact size was
-  `33,257,018,470` bytes (`30.973 GiB`). The full design ran unchanged; the
+- Actual H100-active runtime was `12.373621` hours and the final artifact
+  directory size, including validation outputs, was `33,258,921,348` bytes
+  (`30.9748 GiB`). The full design ran unchanged; the
   12-hour value remained a review threshold rather than a compute cap.
 - Ten attempt start/end pairs are preserved: seven completed and three failed.
   All used one run UUID and record `scientific_parameter_changed=false`.
