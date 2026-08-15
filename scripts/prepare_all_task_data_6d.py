@@ -42,6 +42,26 @@ def _load_rows(path: Path) -> list[dict[str, Any]]:
     return rows
 
 
+def _ensure_backend_tokenizer(
+    backend: Any,
+    *,
+    tokenizer_loader: Any | None = None,
+) -> Any:
+    """Load the canonical tokenizer without materializing the frozen 8B model."""
+    if backend.tokenizer is None:
+        if tokenizer_loader is None:
+            from transformers import AutoTokenizer
+
+            tokenizer_loader = AutoTokenizer.from_pretrained
+        backend.tokenizer = tokenizer_loader(
+            backend.model_name,
+            trust_remote_code=True,
+        )
+    if backend.tokenizer is None:
+        raise RuntimeError("Canonical Qwen tokenizer was not loaded")
+    return backend.tokenizer
+
+
 def _validate_transition_representation_reuse(
     *,
     source_path: Path,
@@ -190,6 +210,7 @@ def main() -> None:
         )
         examples = load_decision_examples(source_data / "decision_examples.jsonl")
         backend = build_backend(cfg, load_model=False)
+        _ensure_backend_tokenizer(backend)
         representation_dir = args.artifact_dir / "representation_cache"
         representation_dir.mkdir(parents=True, exist_ok=True)
         state_values, state_ids, state_report = _state_representation_cache(

@@ -285,6 +285,10 @@ def _state_representation_cache(
     prompt_profile: str,
     output_path: Path,
 ) -> tuple[torch.Tensor, list[str], dict[str, Any]]:
+    if backend.tokenizer is None:
+        raise RuntimeError(
+            "Canonical tokenizer is required for state prompt hash validation"
+        )
     source = torch.load(source_cache_path, map_location="cpu", weights_only=False)
     if source.get("format") != "pooled_qwen_hidden_v1":
         raise ValueError(f"Unexpected state representation format: {source.get('format')}")

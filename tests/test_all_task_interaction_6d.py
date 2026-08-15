@@ -13,6 +13,7 @@ from rcmf.training.all_task_interaction_6d import (
     validate_reusable_teacher_rows,
 )
 from scripts.run_action_intent_probe_6d import _intent_labels, _task_folds
+from scripts.prepare_all_task_data_6d import _ensure_backend_tokenizer
 
 
 def _example(task_id: str, step_id: int) -> SimpleNamespace:
@@ -288,3 +289,23 @@ def test_preflight_entrypoint_supports_append_only_resume_provenance() -> None:
     assert 'parser.add_argument("--resume-checkpoint", default=None)' in source
     assert "parent_attempt_id=args.parent_attempt_id" in source
     assert "resume_checkpoint=args.resume_checkpoint" in source
+
+
+def test_data_preparation_loads_canonical_tokenizer_without_qwen_model() -> None:
+    sentinel = object()
+    calls = []
+    backend = SimpleNamespace(
+        tokenizer=None,
+        model=None,
+        model_name="Qwen/Qwen3-8B",
+    )
+
+    def loader(model_name: str, **kwargs):
+        calls.append((model_name, kwargs))
+        return sentinel
+
+    result = _ensure_backend_tokenizer(backend, tokenizer_loader=loader)
+    assert result is sentinel
+    assert backend.tokenizer is sentinel
+    assert backend.model is None
+    assert calls == [("Qwen/Qwen3-8B", {"trust_remote_code": True})]
