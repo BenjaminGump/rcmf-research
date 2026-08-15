@@ -293,6 +293,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--github-head", required=True)
     parser.add_argument("--lambda-head", required=True)
     parser.add_argument("--tmux-session", default="none-preflight")
+    parser.add_argument("--parent-attempt-id", default=None)
+    parser.add_argument("--resume-checkpoint", default=None)
     return parser.parse_args()
 
 
@@ -369,6 +371,8 @@ def main() -> None:
         tmux_session=args.tmux_session,
         config_sha256=config_hash,
         data_manifest_hashes=data_hashes,
+        parent_attempt_id=args.parent_attempt_id,
+        resume_checkpoint=args.resume_checkpoint,
         scientific_parameter_changed=False,
         heartbeat_interval_s=float(settings["runtime"]["heartbeat_interval_seconds"]),
     ) as attempt:

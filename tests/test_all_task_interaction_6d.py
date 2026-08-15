@@ -276,3 +276,14 @@ def test_postrun_validator_checks_full_pair_and_cache_counts() -> None:
     assert "cross_encoder_tensor_hash" in source
     assert "scientific_parameter_changed" in source
     assert "validation state leaked into A/C" in source
+
+
+def test_preflight_entrypoint_supports_append_only_resume_provenance() -> None:
+    root = Path(__file__).resolve().parents[1]
+    source = (root / "scripts/prepare_all_task_interaction_6d.py").read_text(
+        encoding="utf-8"
+    )
+    assert 'parser.add_argument("--parent-attempt-id", default=None)' in source
+    assert 'parser.add_argument("--resume-checkpoint", default=None)' in source
+    assert "parent_attempt_id=args.parent_attempt_id" in source
+    assert "resume_checkpoint=args.resume_checkpoint" in source
