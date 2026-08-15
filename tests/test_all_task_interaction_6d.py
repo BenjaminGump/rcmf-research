@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -11,6 +12,7 @@ from rcmf.training.all_task_interaction_6d import (
     select_all_task_query_manifest,
     validate_reusable_teacher_rows,
 )
+from scripts.run_action_intent_probe_6d import _intent_labels, _task_folds
 
 
 def _example(task_id: str, step_id: int) -> SimpleNamespace:
@@ -171,6 +173,7 @@ def test_runtime_projection_uses_new_rows_and_review_threshold() -> None:
         total_scoreable_pairs=13000,
         reused_scoreable_pairs=4500,
         new_query_count=60,
+        additional_intent_state_count=546,
         observed_teacher_seconds_per_pair=1.3,
         observed_cross_encoder_seconds_per_pair=1.6,
         observed_multiview_seconds_per_state=2.0,
@@ -181,6 +184,11 @@ def test_runtime_projection_uses_new_rows_and_review_threshold() -> None:
         review_threshold_h100_hours=12.0,
     )
     assert projection["inputs"]["new_scoreable_pairs"] == 8500
+    assert projection["inputs"]["additional_intent_state_count"] == 546
+    assert projection["phase_expected_seconds"][
+        "additional_action_intent_multiview_cache"
+    ] == 1092.0
+    assert projection["artifact_size_projection"]["action_intent_artifact_bytes"] > 0
     assert projection["expected_h100_hours"] < 12
     assert not projection["expected_runtime_review_required"]
 
@@ -196,3 +204,75 @@ def test_runtime_projection_uses_new_rows_and_review_threshold() -> None:
 )
 def test_learning_curve_classification(values: tuple[float, ...], expected: str) -> None:
     assert classify_learning_curve(values) == expected
+
+
+def test_teacher_runner_is_scoring_only_and_uses_fsync_journal() -> None:
+    root = Path(__file__).resolve().parents[1]
+    source = (root / "scripts/run_all_task_transition_teacher_6d.py").read_text(
+        encoding="utf-8"
+    )
+    assert "append_jsonl_fsync" in source
+    assert "_score_mean_target_nll" in source
+    assert "forward_train(" not in source
+    assert ".generate(" not in source
+    assert "AdditiveTokenMemoryInjector" not in source
+    assert "selector" not in source.lower() or '"selector_training": False' in source
+
+
+def test_model_runner_uses_uniform_control_result_contract() -> None:
+    root = Path(__file__).resolve().parents[1]
+    source = (root / "scripts/run_all_task_models_6d.py").read_text(
+        encoding="utf-8"
+    )
+    assert 'setdefault(f"{axis}_only", {"cells": {}})' in source
+    assert '"controls": {' in source
+    assert '"correct": {' in source
+
+
+def test_action_intent_labels_are_deterministic() -> None:
+    labels = _intent_labels(
+        "```python\nprint(apis.spotify.search_tracks(query='x'))\n```\n"
+    )
+    assert labels == {
+        "target_app": "spotify",
+        "target_api": "spotify.search_tracks",
+        "action_type": "api_read_or_login",
+        "completion_action": "false",
+    }
+    complete = _intent_labels(
+        "```python\napis.supervisor.complete_task(answer='done')\n```\n"
+    )
+    assert complete["completion_action"] == "true"
+
+
+def test_action_intent_task_folds_are_grouped_and_deterministic() -> None:
+    tasks = [f"task_{index}" for index in range(13)]
+    first = _task_folds(tasks, folds=5, seed=20020)
+    second = _task_folds(list(reversed(tasks)), folds=5, seed=20020)
+    assert first == second
+    assert set().union(*first) == set(tasks)
+    assert sum(len(fold) for fold in first) == len(tasks)
+
+
+def test_action_intent_probe_preserves_hard_scope() -> None:
+    root = Path(__file__).resolve().parents[1]
+    source = (root / "scripts/run_action_intent_probe_6d.py").read_text(
+        encoding="utf-8"
+    )
+    assert "target_not_encoded" in source
+    assert "parameter.requires_grad_(False)" in source
+    assert "AdditiveTokenMemoryInjector" not in source
+    assert ".generate(" not in source
+    assert "forward_train(" not in source
+
+
+def test_postrun_validator_checks_full_pair_and_cache_counts() -> None:
+    root = Path(__file__).resolve().parents[1]
+    source = (root / "scripts/validate_all_task_interaction_6d.py").read_text(
+        encoding="utf-8"
+    )
+    for expected in ("13320", "13128", "192", "4640", "8549", "131"):
+        assert expected in source
+    assert "cross_encoder_tensor_hash" in source
+    assert "scientific_parameter_changed" in source
+    assert "validation state leaked into A/C" in source

@@ -20,7 +20,7 @@ from rcmf.training.transition_memory_6a import (
 ALL_TASK_QUERY_MANIFEST_VERSION = "all_task_transition_query_manifest_6d_v1"
 LEARNING_CURVE_MANIFEST_VERSION = "nested_all_task_query_learning_curve_6d_v1"
 REUSE_VALIDATION_VERSION = "exp017_transition_teacher_reuse_validation_6d_v1"
-RUNTIME_PROJECTION_VERSION = "all_task_interaction_runtime_projection_6d_v1"
+RUNTIME_PROJECTION_VERSION = "all_task_interaction_runtime_projection_6d_v2"
 
 
 def _stable_key(seed: int, namespace: str, value: str) -> str:
@@ -442,6 +442,7 @@ def runtime_and_size_projection(
     total_scoreable_pairs: int,
     reused_scoreable_pairs: int,
     new_query_count: int,
+    additional_intent_state_count: int,
     observed_teacher_seconds_per_pair: float,
     observed_cross_encoder_seconds_per_pair: float,
     observed_multiview_seconds_per_state: float,
@@ -459,18 +460,50 @@ def runtime_and_size_projection(
         + int(new_query_count) * float(observed_teacher_seconds_per_pair)
     )
     cross_seconds = new_scoreable * float(observed_cross_encoder_seconds_per_pair)
-    multiview_seconds = int(new_query_count) * float(observed_multiview_seconds_per_state)
+    query_multiview_seconds = int(new_query_count) * float(
+        observed_multiview_seconds_per_state
+    )
+    intent_multiview_seconds = int(additional_intent_state_count) * float(
+        observed_multiview_seconds_per_state
+    )
+    intent_probe_training_seconds = 300.0
     # EXP-020 performs three independently selected LC levels. Historical EXP-019
     # model time included one full selection plus a selected-epoch three-level curve.
     model_seconds = float(observed_model_runtime_seconds) * 1.75
-    expected_seconds = teacher_seconds + cross_seconds + multiview_seconds + model_seconds
+    expected_seconds = (
+        teacher_seconds
+        + cross_seconds
+        + query_multiview_seconds
+        + intent_multiview_seconds
+        + model_seconds
+        + intent_probe_training_seconds
+    )
     best_seconds = expected_seconds * 0.90
     conservative_seconds = expected_seconds * 1.35
     scale = max(
         float(total_scoreable_pairs) / max(int(prior_scoreable_pairs), 1),
         (int(prior_query_count) + int(new_query_count)) / max(int(prior_query_count), 1),
     )
-    expected_bytes = round(float(prior_artifact_bytes) * min(scale, 3.0) * 1.15)
+    base_expected_bytes = round(
+        float(prior_artifact_bytes) * min(scale, 3.0) * 1.15
+    )
+    # Two layers x ten views x 4096 float32 values per state, plus the all-state
+    # aggregate and one 40960->256 probe checkpoint with Adam state.
+    per_state_tensor_bytes = 2 * 10 * 4096 * 4
+    intent_tensor_bytes = (
+        int(additional_intent_state_count) * per_state_tensor_bytes
+        + (
+            int(prior_query_count)
+            + int(new_query_count)
+            + int(additional_intent_state_count)
+        )
+        * per_state_tensor_bytes
+    )
+    probe_checkpoint_bytes = 3 * (40960 * 256 * 4)
+    intent_artifact_bytes = round(
+        (intent_tensor_bytes + probe_checkpoint_bytes) * 1.25
+    )
+    expected_bytes = base_expected_bytes + intent_artifact_bytes
     payload = {
         "format": RUNTIME_PROJECTION_VERSION,
         "inputs": {
@@ -478,6 +511,7 @@ def runtime_and_size_projection(
             "reused_scoreable_pairs": int(reused_scoreable_pairs),
             "new_scoreable_pairs": new_scoreable,
             "new_query_count": int(new_query_count),
+            "additional_intent_state_count": int(additional_intent_state_count),
             "observed_teacher_seconds_per_pair": float(observed_teacher_seconds_per_pair),
             "observed_cross_encoder_seconds_per_pair": float(
                 observed_cross_encoder_seconds_per_pair
@@ -490,7 +524,9 @@ def runtime_and_size_projection(
         "phase_expected_seconds": {
             "teacher_scoring_and_new_l0": teacher_seconds,
             "prompt_cross_encoder_cache": cross_seconds,
-            "new_state_multiview_cache": multiview_seconds,
+            "new_query_state_multiview_cache": query_multiview_seconds,
+            "additional_action_intent_multiview_cache": intent_multiview_seconds,
+            "action_intent_probe_training": intent_probe_training_seconds,
             "model_cv_learning_curves_controls_reports": model_seconds,
         },
         "best_case_h100_hours": best_seconds / 3600.0,
@@ -503,9 +539,12 @@ def runtime_and_size_projection(
         "artifact_size_projection": {
             "method": (
                 "EXP-019 on-disk bytes scaled by the larger of scoreable-pair and query-count "
-                "growth, capped at 3x, then 15% atomic-checkpoint headroom"
+                "growth, capped at 3x, then 15% atomic-checkpoint headroom, plus explicit "
+                "all-successful-state action-intent tensors and probe checkpoint"
             ),
             "prior_artifact_bytes": int(prior_artifact_bytes),
+            "base_expected_bytes_before_action_intent": base_expected_bytes,
+            "action_intent_artifact_bytes": intent_artifact_bytes,
             "scale_before_headroom": min(scale, 3.0),
             "expected_bytes": expected_bytes,
             "expected_gib": expected_bytes / (1024.0**3),

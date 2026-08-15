@@ -444,6 +444,7 @@ def main() -> None:
             total_scoreable_pairs=scoreable,
             reused_scoreable_pairs=reused_scoreable,
             new_query_count=len(query_manifest["query_rows"]) - len(prior_query_manifest["query_rows"]),
+            additional_intent_state_count=len(examples) - len(query_manifest["query_rows"]),
             observed_teacher_seconds_per_pair=float(settings["runtime"]["observed_teacher_seconds_per_pair"]),
             observed_cross_encoder_seconds_per_pair=float(settings["runtime"]["observed_cross_encoder_seconds_per_pair"]),
             observed_multiview_seconds_per_state=float(settings["runtime"]["observed_multiview_seconds_per_state"]),
