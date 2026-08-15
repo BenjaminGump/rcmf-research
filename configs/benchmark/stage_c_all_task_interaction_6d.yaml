@@ -1,0 +1,148 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_all_task_interaction_6d
+  version: all_task_query_coverage_interaction_6d_v1
+  scope:
+    - immutable_exp017_transition_panel_and_teacher_definition
+    - immutable_exp018_parent_split
+    - immutable_exp019_model_architectures_and_objectives
+    - all_37_train_and_9_validation_query_tasks
+    - nested_lc12_lc24_lc37
+    - qwen_frozen
+    - no_behavioral_program_training
+    - no_additive_token_injector_training
+    - no_selector_training
+    - no_production_transition_field
+    - no_appworld_generation_or_evaluation
+    - no_stage_c2
+    - no_end_to_end_rcmf
+    - no_demo_change
+    - no_v4_tag
+
+stage_c_6d:
+  run_uuid: all_task_query_interaction_6d_20260815_001
+  seed: 20020
+  query_seed: 20021
+  learning_curve_seed: 20022
+  artifact_dir: runs/stage_c/all_task_interaction_6d_20260815_001
+  source_data: runs/appworld/official_react_gpt4o_train_success_full_demo_filtered_no_2a163ab3_20260803
+  split_manifest: runs/teacher/raw_text_full_cache_20260805_001/student_split_manifest.json
+  decoder_manifest: runs/stage_c/oracle_decoder_5fc_20260810_003/decoder_split_manifest.json
+  full_state_representation_cache: runs/experiments/appworld_qwen_repr_full_prompt_filtered_no_2a163ab3_20260803_101000/train/representation_cache/decision_state_representations.pt
+  exp017_artifact: runs/stage_c/transition_memory_6a_20260814_001
+  exp018_artifact: runs/stage_c/state_conditioned_transition_6b_20260814_001
+  exp019_artifact: runs/stage_c/interaction_representation_6c_20260814_001
+
+  expected:
+    transitions: 148
+    transition_parents: 37
+    original_queries: 32
+    original_legal_rows: 4640
+    original_scoreable_rows: 4579
+    original_over_context_rows: 61
+    train_tasks: 37
+    validation_tasks: 9
+    train_queries: 74
+    validation_queries: 18
+    total_queries: 92
+    train_transition_parents: 29
+    heldout_transition_parents: 8
+
+  context_limit: 40960
+  runtime:
+    heartbeat_interval_seconds: 240
+    review_threshold_h100_hours: 12.0
+    observed_teacher_seconds_per_pair: 1.3241631310966235
+    observed_cross_encoder_seconds_per_pair: 1.5945
+    observed_multiview_seconds_per_state: 3.0
+    observed_model_runtime_seconds: 3187.0
+
+  metrics:
+    neutral_epsilon: 0.01
+    ranking_ks: [1, 4, 8]
+    bootstrap_samples: 1000
+    bootstrap_seed: 20023
+    best_tie_tolerance: 1.0e-8
+
+  decomposition:
+    alternating_least_squares_iterations: 1000
+    tolerance: 1.0e-10
+    main_hidden_dim: 256
+    main_dropout: 0.05
+    main_epochs: 200
+    main_learning_rate: 0.0003
+    main_weight_decay: 0.0001
+    huber_delta: 0.1
+
+  current_representation:
+    folds: 5
+    seed: 20024
+    hidden_dim: 256
+    interaction_dim: 128
+    dropout: 0.05
+    learning_rate: 0.0003
+    weight_decay: 0.0001
+    epoch_candidates: [30, 60, 120]
+    residual_huber_delta: 0.1
+    utility_huber_delta: 0.1
+    teacher_temperature: 0.10
+    student_temperature: 0.10
+    pair_gap_threshold: 0.05
+    pair_gap_clip: 5.0
+    losses:
+      residual_huber: 1.0
+      state_listwise: 0.20
+      gap_pairwise: 0.20
+      raw_utility_auxiliary: 0.10
+
+  multiview:
+    renderer_version: state_transition_multiview_spans_6c_v1
+    layer_candidates: [final_layer, mean_final_four_layers]
+    pooling_rules: [token_mean, final_token]
+    state_views:
+      - full_prompt_global
+      - current_task_goal
+      - current_task_history
+      - latest_user_output
+      - generation_boundary
+    transition_views:
+      - source_task_goal
+      - pre_action_state
+      - complete_action
+      - post_action_observation
+      - full_transition_global
+    batch_size: 1
+    projection_dim: 64
+    interaction_rank: 32
+    hidden_dim: 256
+    dropout: 0.05
+    learning_rate: 0.0003
+    weight_decay: 0.0001
+    epoch_candidates: [30, 60, 120]
+
+  cross_encoder:
+    renderer_version: prompt_transition_cross_encoder_6c_v1
+    views:
+      - generation_boundary
+      - transition_section_mean
+      - current_task_span_mean
+    batch_size: 1
+    scalar_head_hidden_dim: 256
+    epoch_candidates: [30, 60, 120]
+
+  expanded_gate:
+    cross_encoder_ndcg4_transition_gain: 0.05
+    mean_per_state_spearman: 0.20
+    interaction_residual_spearman: 0.20
+    transition_shuffle_ndcg4_drop: 0.08
+    state_shuffle_ndcg4_drop: 0.08
+    minimum_positive_heldout_tasks: 6
+    field_gain_retention: 0.70
+
+  learning_curves:
+    task_counts: [12, 24, 37]
+    grouped_cv_folds: 5
+    material_ndcg_gain: 0.03
+    material_residual_gain: 0.05
+    instability_threshold: 0.08
