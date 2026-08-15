@@ -4,6 +4,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+import torch
 
 from rcmf.training.all_task_interaction_6d import (
     build_fixed_learning_curve_manifest,
@@ -14,6 +15,7 @@ from rcmf.training.all_task_interaction_6d import (
 )
 from scripts.run_action_intent_probe_6d import _intent_labels, _task_folds
 from scripts.prepare_all_task_data_6d import _ensure_backend_tokenizer
+from scripts.build_all_task_representations_6d import _cross_row_matches_aggregate
 
 
 def _example(task_id: str, step_id: int) -> SimpleNamespace:
@@ -309,3 +311,11 @@ def test_data_preparation_loads_canonical_tokenizer_without_qwen_model() -> None
     assert backend.tokenizer is sentinel
     assert backend.model is None
     assert calls == [("Qwen/Qwen3-8B", {"trust_remote_code": True})]
+
+
+def test_cross_row_reuse_compares_flattened_immutable_aggregate() -> None:
+    row = torch.arange(12, dtype=torch.float16).reshape(3, 4)
+    aggregate = row.flatten().clone()
+    assert _cross_row_matches_aggregate(row, aggregate)
+    aggregate[-1] += 1
+    assert not _cross_row_matches_aggregate(row, aggregate)

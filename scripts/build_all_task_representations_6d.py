@@ -66,6 +66,13 @@ def _expanded_view_names(names: tuple[str, ...]) -> list[str]:
     return [f"{view}/{pool}" for view in names for pool in POOLING_RULES]
 
 
+def _cross_row_matches_aggregate(
+    row_tensor: torch.Tensor,
+    aggregate_tensor: torch.Tensor,
+) -> bool:
+    return torch.equal(row_tensor.flatten(), aggregate_tensor.flatten())
+
+
 def _state_multiview_cache(
     *,
     backend: Any,
@@ -369,7 +376,9 @@ def _cross_encoder_cache(
             if any(candidate.get(key) != value for key, value in expected.items()):
                 raise ValueError(f"Immutable cross-encoder row differs: {pair_id}")
             old_tensor = old["representations"][old_position[pair_id]]
-            if not torch.equal(candidate["representations"], old_tensor):
+            if not _cross_row_matches_aggregate(
+                candidate["representations"], old_tensor
+            ):
                 raise ValueError(f"Immutable cross-encoder aggregate differs: {pair_id}")
             payload = candidate
             immutable_reused += 1
