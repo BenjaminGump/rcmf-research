@@ -1251,3 +1251,54 @@ VERIFIED:
   behavioral backpropagation, Stage C2, end-to-end RCMF, AppWorld evaluation,
   demo change, or V4 tag occurred. No tmux/process is active; GPU is
   `0 MiB / 0%`; Lambda is safe to terminate after final Git synchronization.
+
+### EXP-020 all-task query-coverage interaction test
+
+- EXP-020 source/audit commit is
+  `886cf2134599e8243d96d3e9fd497c661ae3e3c3`; artifact root is
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/all_task_interaction_6d_20260815_001`.
+- The deterministic query manifest contains 92 states: 74 train states from
+  all 37 train tasks and 18 heldout states from all 9 validation tasks. Every
+  task supplies exactly two early/later states, and all original 32 states are
+  an exact subset.
+- The immutable 148-transition panel and 29/8 parent split produce 13,616
+  Cartesian pairs, 296 illegal leakage pairs, 13,320 legal pairs, 13,128
+  scoreable rows, and 192 over-context rows. Nothing was truncated.
+- All 4,640 EXP-017 rows were strictly validated and reused. The run newly
+  scored 8,549 rows; the completed cache contains 6,332 positive, 2,102
+  neutral, and 4,694 negative utilities.
+- Expanded A/B/C/D scoreable counts are `8,205/2,051/2,296/576`.
+- On the fixed 9-task heldout set, prompt cross-encoder D NDCG@4 increases
+  `.360914 -> .461709 -> .523176` across LC12/LC24/LC37. This is materially
+  increasing, so coverage mattered, but the LC37 gate still fails.
+- At LC37 the cross-encoder has D per-state/residual Spearman
+  `.117526/.063559`, state/transition-shuffle drops `.017769/.062644`, a
+  transition-shuffle bootstrap CI that includes zero, and positive relative
+  behavior on only 5/9 tasks.
+- The low-rank field reaches D NDCG@4 `.510827`, per-state/residual Spearman
+  `.134551/.439346`, and state/transition-shuffle drops `.175431/.114643`.
+  It retains 71.22% of the cross-encoder gain, but only 4/9 tasks are positive
+  and its transition-shuffle CI includes zero.
+- The optional 638-state action-intent probe succeeds: correct-state mean
+  accuracy `.875899`, shuffled `.420863`, majority `.559353`. State decision
+  intent is available; the raw-transition target-NLL utility interaction is
+  the more specific generalization problem.
+- Primary branch: `query_task_coverage_still_data_limited`. Final diagnostic
+  branch: `state_intent_available_but_memory_utility_target_not_generalizing`.
+  The representation gate remains failed and behavioral
+  `p(s,m_transition)` remains blocked.
+- Actual H100-active runtime was `12.373621` hours and artifact size was
+  `33,257,018,470` bytes (`30.973 GiB`). The full design ran unchanged; the
+  12-hour value remained a review threshold rather than a compute cap.
+- Ten attempt start/end pairs are preserved: seven completed and three failed.
+  All used one run UUID and record `scientific_parameter_changed=false`.
+  Atomic rows and checkpoints were resumed without duplication after fixes to
+  launcher provenance, strict tokenizer loading, and cross-cache shape
+  normalization.
+- Independent validation passed with zero errors. Tests passed locally
+  (`221 passed, 1 skipped`) and on Lambda (`17 passed`). No tmux/process is
+  active; GPU is `0 MiB / 0%`; Lambda is safe to terminate after final Git
+  synchronization.
+- No behavioral program, injector, selector change, production field, Qwen
+  behavioral backpropagation, Stage C2, end-to-end RCMF, AppWorld evaluation,
+  demo change, or V4 tag occurred.

@@ -1160,6 +1160,74 @@ Implementation deviations and recovery:
 - Failed attempts and reports were preserved. All ledger entries record
   `scientific_parameter_changed=false`; no run UUID was duplicated.
 
+## 2026-08-15 EXP-020 all-task query coverage
+
+VERIFIED:
+
+- EXP-020 covers all 37 train tasks and all 9 heldout validation tasks with
+  exactly two deterministic early/later states each. The 92-state manifest
+  contains the immutable original 32-state panel as an exact subset.
+- The unchanged 148-transition panel yields 13,616 Cartesian pairs, 296
+  leakage-excluded pairs, 13,320 legal pairs, 13,128 scoreable rows, and 192
+  masked over-context rows. All 4,640 compatible EXP-017 rows were reused and
+  8,549 rows were newly scored. No input was truncated.
+- A/B/C/D scoreable counts are `8,205/2,051/2,296/576`. B/C/D labels did not
+  affect model, view, epoch, or hyperparameter selection.
+- Prompt cross-encoder D NDCG@4 increases
+  `.360914 -> .461709 -> .523176` across LC12/LC24/LC37 on the same 9-task
+  evaluation set. The curve is materially increasing rather than saturated.
+- Despite the increase, LC37 cross-encoder per-state Spearman is `.117526`,
+  residual Spearman is `.063559`, state/transition-shuffle drops are
+  `.017769/.062644`, the transition-shuffle bootstrap CI includes zero, and
+  only 5/9 heldout tasks show positive relative behavior. The upper-bound gate
+  fails.
+- The multiview low-rank field retains 71.22% of the cross-encoder gain over
+  transition-only and has material state/transition-shuffle drops, but its D
+  per-state Spearman is only `.134551`, the transition-shuffle CI includes
+  zero, and only 4/9 tasks are positive. The field-compatible gate fails.
+- The all-successful-example action-intent probe reaches `.875899` correct
+  mean accuracy versus `.420863` after state shuffling and `.559353` majority.
+  Frozen state views retain heldout-task decision intent.
+- Independent validation reports zero errors. No behavioral program, injector,
+  selector, production field, Qwen behavioral backpropagation, Stage C2,
+  AppWorld evaluation, end-to-end run, demo change, or V4 tag occurred.
+
+Decision:
+
+- Record the preregistered primary branch
+  `query_task_coverage_still_data_limited`: the cross-encoder fails at LC37,
+  but its fixed-evaluation learning curve remains materially increasing.
+- Record the optional diagnostic branch
+  `state_intent_available_but_memory_utility_target_not_generalizing` because
+  action intent generalizes while every state-transition utility model fails
+  the interaction gate.
+- Do not treat more query coverage as having repaired the representation gate.
+  Behavioral `p(s,m_transition)` remains blocked.
+- Do not automatically score more states from the same 37 tasks. A separately
+  reviewed next milestone should compare an action-intent-conditioned or
+  relative/pairwise memory-use target with absolute raw-text target-NLL
+  utility. Additional source tasks or augmentation remain options if that
+  target audit supports them.
+- Keep the full teacher cache and representations as immutable diagnostics.
+  Keep V4 as a candidate and do not create or move a V4 tag.
+
+Implementation deviations and recovery:
+
+- Attempt 002 exposed missing resume-provenance arguments in the preflight
+  launcher and failed before tokenizer, model, GPU, or artifact work. The
+  launcher contract and regression tests were added.
+- Attempt 005 exposed that `build_backend(load_model=False)` leaves the
+  tokenizer unset. Strict validation had therefore reached a generic renderer
+  fallback. Existing teacher and prompt hashes were unchanged; the repair
+  explicitly loads the canonical tokenizer and rejects fallback in this path.
+- Attempt 007 completed all 60 new state rows before a shape-sensitive check
+  compared immutable `[3,4096]` rows with flattened `[12288]` rows. Flattened
+  values were exactly equal. The repair normalizes shape only for strict value
+  comparison, and attempt 008 resumed from the latest atomic row.
+- All ten attempts remain append-only, use one run UUID, and record
+  `scientific_parameter_changed=false`. Network/laptop disconnects did not
+  create a duplicate process or artifact.
+
 ## 2026-08-04 Lambda GitHub sync fallback
 
 VERIFIED:

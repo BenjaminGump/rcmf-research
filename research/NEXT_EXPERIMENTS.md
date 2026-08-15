@@ -614,53 +614,65 @@ No behavioral program, injector, selector, production field, Qwen behavioral
 backpropagation, Stage C2, AppWorld evaluation, end-to-end run, demo change,
 or V4 tag was started.
 
-## Proposed EXP-020 Expanded Query-State Interaction Coverage - Review Required
+## EXP-020 All-Task Query Coverage - Completed, Gate Failed
+
+Outcome:
+
+- The final manifest covers all 37 train tasks and all 9 heldout tasks with 92
+  states. The unchanged transition panel yields 13,320 legal, 13,128
+  scoreable, and 192 masked over-context pairs.
+- Prompt cross-encoder D NDCG@4 rises
+  `.360914 -> .461709 -> .523176` across LC12/LC24/LC37, so the curve is
+  materially increasing rather than saturated.
+- The LC37 cross-encoder still fails: per-state/residual Spearman
+  `.117526/.063559`, state/transition-shuffle drops `.017769/.062644`, a
+  transition-shuffle CI spanning zero, and only 5/9 positive heldout tasks.
+- The low-rank field retains 71.22% of the cross-encoder gain and has larger
+  shuffle drops, but per-state Spearman is `.134551`, only 4/9 tasks are
+  positive, and the transition-shuffle CI also spans zero.
+- The optional 638-state action-intent probe succeeds with correct-state mean
+  `.875899` versus shuffled `.420863`. Decision intent is present even though
+  pairwise transition utility does not generalize.
+- Primary branch: `query_task_coverage_still_data_limited`.
+- Final diagnostic branch:
+  `state_intent_available_but_memory_utility_target_not_generalizing`.
+- The representation gate is not repaired; behavioral
+  `p(s,m_transition)` remains blocked.
+
+## Proposed Post-EXP-020 Utility-Target Audit - Review Required
 
 Goal:
 
-- Determine whether the failed double-held-out interaction gate is caused by
-  only 12 train query tasks, using the same transition teacher and immutable
-  transition panel before any behavioral program work.
-
-Proposed fixed coverage levels:
-
-- Existing 32-query state panel as the locked continuity baseline.
-- 64 query states: projected `9,280` legal, `9,158` scoreable, `122`
-  over-context pairs, and `4.5510` H100 hours.
-- 96 query states: projected `13,920` legal, `13,737` scoreable, `183`
-  over-context pairs, and `6.8265` H100 hours.
+- Determine whether a state action-intent-conditioned or relative/pairwise
+  memory-use label generalizes better than the current absolute raw-text
+  target-NLL utility, before spending compute on any behavioral program.
 
 Required constraints:
 
-- Obtain user and ChatGPT approval of the exact query-task selection and split
-  before scoring. Do not choose the panel after inspecting new labels.
-- Preserve all same-task/episode/replay/lineage exclusions and mask
-  over-context rows without truncation or utility imputation.
-- Keep the three full-demo examples, transition panel, Qwen identity, renderer,
-  targets, and utility definition unchanged.
-- Use task-grouped train-only model selection. New held-out query tasks must not
-  affect hyperparameters or main-effect estimates.
-- Rerun the prompt-only cross-encoder upper bound first, with state,
-  transition, both-shuffle, and single-axis controls.
-- Only if the upper bound improves should a field-compatible multiview
-  bilinear/tensor model be tested. It must retain at least 70% of the
-  cross-encoder gain over the best single-axis baseline.
-- Keep append-only attempts, heartbeat, atomic per-pair rows, exact hashes, and
-  resumability. Laptop/Codex disconnects must not launch a duplicate run.
+- Obtain a new user/ChatGPT milestone contract before implementation.
+- Reuse the immutable EXP-020 query, transition, parent, leakage, and
+  representation artifacts wherever the candidate target permits.
+- Define every candidate label before inspecting the 9 heldout tasks. Estimate
+  all main effects, normalizers, and thresholds from train cells only.
+- Preserve the current raw-transition target as a locked comparator; do not
+  rewrite or relabel the EXP-017/020 caches in place.
+- Test state and transition shuffle sensitivity, per-state ranking, heldout
+  task consistency, and paired confidence intervals. Pooled sign accuracy is
+  insufficient.
+- Do not start behavioral `p(s,m_transition)`, an injector, a selector, Stage
+  C2, AppWorld generation, or end-to-end RCMF in the target-audit milestone.
 
-Decision evidence:
+Candidate questions:
 
-- If expanded cross-encoder learning curves saturate below the D gate, record
-  `teacher_utility_not_predictable_from_available_prompt_only_features` and
-  reassess the teacher target/memory-use formulation.
-- If the cross-encoder passes but field-compatible models fail the 70% rule,
-  record `independent_encoding_or_field_factorization_bottleneck`.
-- If structured/content-aware encoders pass while frozen-Qwen views fail,
-  record the representation path as the bottleneck and review a dedicated
-  encoder milestone.
-- Only a field-compatible, state- and transition-shuffle-sensitive pass can
-  justify discussing behavioral `p(s,m_transition)`. Even then, stop for user
-  and ChatGPT review instead of launching behavior automatically.
+- Does predicting relative utility within the same state remove transition
+  popularity and prompt-difficulty main effects?
+- Does conditioning comparisons on predicted target app/API/action type make
+  helpful-transition ranking more transferable across tasks?
+- Are raw-memory NLL gains too noisy or semantically indirect to serve as a
+  deployable interaction label despite being valid teacher measurements?
+- Would additional source tasks or task augmentation improve the target after
+  the target itself is shown to be learnable? Do not assume more states from
+  the same 37 tasks are sufficient.
 
 ## EXP-003 Trace-Level First-37 Diagnosis
 
