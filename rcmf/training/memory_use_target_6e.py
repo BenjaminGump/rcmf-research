@@ -658,25 +658,45 @@ def relative_target_objective(
         teacher = torch.softmax(utility / float(teacher_temperature), dim=0)
         student_log = torch.log_softmax(score / float(student_temperature), dim=0)
         listwise_terms.append(-(teacher * student_log).sum())
-        for left in range(len(indices)):
-            for right in range(left + 1, len(indices)):
-                gap = float(utility[left] - utility[right])
-                if abs(gap) < float(pair_gap_threshold):
-                    continue
-                if matched_intent_only:
-                    left_signature = rows[indices[left]]["transition_signature"]
-                    right_signature = rows[indices[right]]["transition_signature"]
-                    same_app = bool(set(left_signature["apps"]) & set(right_signature["apps"]))
-                    same_type = left_signature["coarse_action_type"] == right_signature["coarse_action_type"]
-                    if not (same_app and same_type):
-                        continue
-                direction = 1.0 if gap > 0.0 else -1.0
-                weight = min(abs(gap) / float(pair_gap_weight_clip), 1.0)
-                pairwise_terms.append(
-                    weight * F.softplus(-direction * (score[left] - score[right]))
-                )
+        gap = utility[:, None] - utility[None, :]
+        pair_mask = torch.triu(
+            torch.ones_like(gap, dtype=torch.bool), diagonal=1
+        ) & (gap.abs() >= float(pair_gap_threshold))
+        if matched_intent_only:
+            signatures = [rows[value]["transition_signature"] for value in indices]
+            app_vocabulary = sorted({
+                str(app) for signature in signatures for app in signature["apps"]
+            })
+            app_position = {app: position for position, app in enumerate(app_vocabulary)}
+            membership = torch.zeros(
+                (len(indices), len(app_vocabulary)),
+                device=scores.device,
+                dtype=torch.float32,
+            )
+            for row_index, signature in enumerate(signatures):
+                for app in signature["apps"]:
+                    membership[row_index, app_position[str(app)]] = 1.0
+            same_app = membership @ membership.T > 0.0
+            type_vocabulary = {
+                value: position for position, value in enumerate(sorted({
+                    str(signature["coarse_action_type"]) for signature in signatures
+                }))
+            }
+            type_ids = torch.tensor(
+                [type_vocabulary[str(signature["coarse_action_type"])] for signature in signatures],
+                device=scores.device,
+                dtype=torch.long,
+            )
+            pair_mask &= same_app & (type_ids[:, None] == type_ids[None, :])
+        if pair_mask.any():
+            direction = gap.sign()
+            weight = (gap.abs() / float(pair_gap_weight_clip)).clamp(max=1.0)
+            score_gap = score[:, None] - score[None, :]
+            pairwise_terms.append(
+                (weight * F.softplus(-direction * score_gap))[pair_mask]
+            )
     listwise = torch.stack(listwise_terms).mean() if listwise_terms else scores.sum() * 0.0
-    pairwise = torch.stack(pairwise_terms).mean() if pairwise_terms else scores.sum() * 0.0
+    pairwise = torch.cat(pairwise_terms).mean() if pairwise_terms else scores.sum() * 0.0
     if target_name == "T0":
         total = regression + float(loss_weights["listwise"]) * listwise + float(loss_weights["pairwise"]) * pairwise
     elif target_name in {"T3", "T6"}:

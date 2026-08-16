@@ -4,6 +4,7 @@ import math
 from pathlib import Path
 
 import torch
+import torch.nn.functional as F
 
 from scripts.run_serialization_robustness_6e import _locked_template0_row
 
@@ -181,6 +182,105 @@ def test_relative_objective_has_pairwise_gradient_for_positive_and_negative_gaps
     assert parts["pairwise"] > 0
     assert scores.grad is not None
     assert scores.grad[0] < 0 < scores.grad[1]
+
+
+def _scalar_relative_objective_reference(
+    scores: torch.Tensor,
+    rows: list[dict],
+    *,
+    matched_intent_only: bool,
+) -> torch.Tensor:
+    utilities = torch.tensor(
+        [float(row["text_utility"]) for row in rows],
+        dtype=scores.dtype,
+        device=scores.device,
+    )
+    percentiles = torch.tensor(
+        [float(row["T3"]) for row in rows], dtype=scores.dtype, device=scores.device
+    )
+    groups: dict[str, list[int]] = {}
+    for index, row in enumerate(rows):
+        groups.setdefault(str(row["state_example_id"]), []).append(index)
+    listwise_terms = []
+    pairwise_terms = []
+    for state_id in sorted(groups):
+        indices = groups[state_id]
+        index = torch.tensor(indices, device=scores.device)
+        utility = utilities[index]
+        score = scores[index]
+        teacher = torch.softmax(utility / 0.1, dim=0)
+        listwise_terms.append(-(teacher * torch.log_softmax(score / 0.1, dim=0)).sum())
+        for left in range(len(indices)):
+            for right in range(left + 1, len(indices)):
+                gap = float(utility[left] - utility[right])
+                if abs(gap) < 0.05:
+                    continue
+                if matched_intent_only:
+                    a = rows[indices[left]]["transition_signature"]
+                    b = rows[indices[right]]["transition_signature"]
+                    if not (
+                        set(a["apps"]) & set(b["apps"])
+                        and a["coarse_action_type"] == b["coarse_action_type"]
+                    ):
+                        continue
+                direction = 1.0 if gap > 0 else -1.0
+                weight = min(abs(gap) / 0.25, 1.0)
+                pairwise_terms.append(
+                    weight * F.softplus(-direction * (score[left] - score[right]))
+                )
+    error = scores - percentiles
+    regression = torch.where(
+        error.abs() <= 0.1,
+        0.5 * error.square() / 0.1,
+        error.abs() - 0.05,
+    ).mean()
+    listwise = torch.stack(listwise_terms).mean()
+    pairwise = torch.stack(pairwise_terms).mean()
+    return 0.2 * regression + 0.4 * listwise + pairwise
+
+
+def test_vectorized_relative_objective_matches_scalar_loss_and_gradient() -> None:
+    rows = []
+    actions = (
+        "apis.phone.search_contacts()",
+        "apis.phone.send_message()",
+        "apis.spotify.search_tracks()",
+        "apis.phone.search_contacts()",
+    )
+    utilities = (0.31, 0.12, -0.08, -0.29)
+    for state_index in range(2):
+        for index, (action, utility) in enumerate(zip(actions, utilities, strict=True)):
+            rows.append({
+                **_pair("A", state_index * 10 + index, "neutral"),
+                "state_example_id": f"state-{state_index}",
+                "text_utility": utility + state_index * 0.01,
+                "transition_signature": action_signature(action),
+            })
+    rows = add_relative_targets(rows, scale_epsilon=1.0e-6, robust_clip=8.0)
+    for matched in (False, True):
+        vector_scores = torch.linspace(-0.2, 0.3, len(rows), requires_grad=True)
+        scalar_scores = vector_scores.detach().clone().requires_grad_(True)
+        vector_loss, _ = relative_target_objective(
+            vector_scores,
+            rows,
+            target_name="T3",
+            pair_gap_threshold=0.05,
+            pair_gap_weight_clip=0.25,
+            teacher_temperature=0.1,
+            student_temperature=0.1,
+            huber_delta=0.1,
+            loss_weights={"percentile_regression": 0.2, "listwise": 0.4, "pairwise": 1.0},
+            matched_intent_only=matched,
+        )
+        scalar_loss = _scalar_relative_objective_reference(
+            scalar_scores, rows, matched_intent_only=matched
+        )
+        vector_loss.backward()
+        scalar_loss.backward()
+        torch.testing.assert_close(vector_loss, scalar_loss, rtol=1.0e-6, atol=1.0e-7)
+        torch.testing.assert_close(
+            vector_scores.grad, scalar_scores.grad, rtol=1.0e-6, atol=1.0e-7
+        )
 
 
 def test_cached_field_and_cross_scorers_have_expected_shapes() -> None:
