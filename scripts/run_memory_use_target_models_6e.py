@@ -627,8 +627,24 @@ def _locked_transition_only_baselines(
                     "Locked EXP-020 transition-only row hash differs for "
                     f"cell {short_name}: {actual_sha256} != {rows_sha256}"
                 )
+        metrics = copy.deepcopy(correct["metrics"])
+        locked_rows = _load_rows(rows_path) if verify_rows else []
+        normalized_rows = (
+            _normalized_raw_metric_rows(locked_rows) if locked_rows else []
+        )
         output[short_name] = {
-            **copy.deepcopy(correct["metrics"]),
+            "count": int(metrics["count"]),
+            "raw_utility": metrics,
+            "candidate_target": copy.deepcopy(metrics),
+            "raw_utility_huber": float(metrics["raw_huber"]),
+            "candidate_target_huber": float(metrics["raw_huber"]),
+            "gap_weighted_pairwise_accuracy": (
+                gap_weighted_pairwise_accuracy(
+                    normalized_rows, threshold=0.05, weight_clip=0.25
+                )
+                if normalized_rows
+                else None
+            ),
             "locked_source": {
                 "experiment": "EXP-020",
                 "level": str(locked_level["level"]),

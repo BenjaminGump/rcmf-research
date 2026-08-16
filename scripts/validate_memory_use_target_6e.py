@@ -155,7 +155,7 @@ def main() -> None:
                     [short]["raw_utility"]["per_state"]["ndcg@4"]["mean"]
                     == model["locked_t0_exp020"]["models"]["transition_only"]
                     ["cells"][long]["controls"]["correct"]["metrics"]
-                    ["raw_utility"]["per_state"]["ndcg@4"]["mean"]
+                    ["per_state"]["ndcg@4"]["mean"]
                     for short, long in {
                         "B": "heldout_state__train_transition",
                         "C": "train_state__heldout_transition",

@@ -396,13 +396,21 @@ def test_locked_transition_only_uses_exact_exp020_metrics_and_hash(tmp_path: Pat
         "D": "heldout_state__heldout_transition",
     }.items():
         path = tmp_path / f"{short}.jsonl"
-        path.write_text("{}\n", encoding="utf-8")
+        path.write_text(
+            '{"pair_id":"p","state_example_id":"s","state_task_id":"t",'
+            '"transition_id":"m","u_text":0.1,"u_predicted":0.1}\n',
+            encoding="utf-8",
+        )
         from rcmf.utils.serialization import sha256_file
 
         cells[long] = {
             "controls": {
                 "correct": {
-                    "metrics": {"raw_utility": {"per_state": {"ndcg@4": {"mean": 0.1}}}},
+                    "metrics": {
+                        "count": 1,
+                        "raw_huber": 0.2,
+                        "per_state": {"ndcg@4": {"mean": 0.1}},
+                    },
                     "rows_path": str(path),
                     "rows_sha256": sha256_file(path),
                 }
@@ -415,6 +423,7 @@ def test_locked_transition_only_uses_exact_exp020_metrics_and_hash(tmp_path: Pat
     result = _locked_transition_only_baselines(locked)
     assert set(result) == {"B", "C", "D"}
     assert result["D"]["raw_utility"]["per_state"]["ndcg@4"]["mean"] == 0.1
+    assert result["D"]["raw_utility_huber"] == 0.2
     assert result["D"]["locked_source"]["level"] == "LC37"
 
 
