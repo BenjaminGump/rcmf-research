@@ -1387,3 +1387,42 @@ Implementation and validation notes:
   no scientific artifact was rewritten.
 - The launcher shell wrote cosmetic `0n` to `exit_code.txt`. The authoritative
   attempt ledger records integer exit code 0 and heartbeat status `completed`.
+
+## 2026-08-17 EXP-024A exact replay invalid
+
+VERIFIED:
+
+- Signature/strata/condition preflight completed under the unchanged EXP-023
+  definitions. It fixed 323 one-step conditions over 45 states and passed the
+  non-documentation coverage gate.
+- Exact replay failed all 45 selected states before Qwen was loaded. There are
+  no generated candidate actions or behavioral control results.
+- Official successful trajectory artifacts are AppWorld 0.1.0; the Lambda
+  package is 0.2.0.dev0 from upstream commit `a072b7a...`.
+
+Decision:
+
+- Apply the preregistered branch `appworld_one_step_replay_invalid` and stop.
+  Do not weaken observation normalization, skip failed states, or proceed with
+  partial replay coverage.
+- Record all absent behavior metrics as `not_run_replay_gate_failed`, never as
+  numerical zero.
+- Treat the version mismatch as a verified provenance mismatch and a causal
+  hypothesis. Only a matched-version replay can verify that it caused the
+  divergence.
+- The next review should isolate AppWorld 0.1.0 code and data without modifying
+  the current verified 0.2.0.dev0 environment. Re-run replay first and require
+  45/45 before Qwen generation.
+- Field training, behavioral program training, injector/selector changes,
+  Stage C2, full AppWorld evaluation, and a V4 tag remain prohibited.
+
+Implementation recovery:
+
+- Preflight attempt 001 incorrectly reused labels limited to EXP-020's 92-state
+  query manifest, omitting 27 states unique to the immutable 45-state one-step
+  manifest. The failed attempt was preserved. The repair recomputed all legal
+  labels with the unchanged EXP-023 parser/tier logic and added a regression
+  test; attempt 002 then completed.
+- The original success-only post-run validator could not represent a valid
+  preregistered stop. A branch-aware finalizer and validator now require zero
+  generation artifacts, preserve failed attempts, and passed 132/132 checks.

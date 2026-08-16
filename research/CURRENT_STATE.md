@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-08-16.
+Last updated: 2026-08-17.
 
 ## VERIFIED
 
@@ -1423,3 +1423,42 @@ VERIFIED:
   fix; prior scientific artifacts were not rewritten. H100 use was zero,
   runtime was 4,663.52 seconds, and the artifact is 402,387,856 bytes.
 - V4 remains a candidate; no V4 tag was created or moved.
+
+## 2026-08-17 EXP-024A replay-gate stop
+
+VERIFIED:
+
+- The corrected signature-balanced preflight covers 45 immutable audit states
+  across all 9 held-out tasks. Strata A/B/C/D/E are `9/23/12/1/0`; the primary
+  non-documentation Tier-3/4 set has 32 states across 9 tasks.
+- The complete 499-transition bank forms 150 signature classes. There are 349
+  transitions in 54 duplicate classes and 210 API-documentation transitions.
+- The immutable manifest contains 323 conditions: C0-C5 45 each, C6 37, C7 15,
+  and C8 1. No prompt or transition was truncated.
+- Exact isolated AppWorld replay passed `0/45`. Complete histories matched for
+  `2/45`; target observations matched for `23/45`; and only `81/372` history
+  observations matched. Both zero-history states failed their target step.
+- All 9 official source trajectories record AppWorld code/data/evaluation
+  version `0.1.0`. Lambda runs AppWorld `0.2.0.dev0` from upstream commit
+  `a072b7a86e7c1d5b1d7175659d750ebb9b79f10a`.
+- No Qwen generation or candidate action execution ran. Actual H100 use was
+  zero. Post-run validation passed `132/132`, the Lambda full suite passed
+  `282`, and final artifact size is 48,298,504 bytes.
+
+INFERENCE:
+
+- The AppWorld code/data contract mismatch is the leading cause candidate for
+  the replay divergence. A matched-version replay is required before treating
+  this as verified causality.
+
+Decision:
+
+- Stop with `appworld_one_step_replay_invalid`.
+- Preserve all prior artifacts and the four-attempt append-only ledger. Do not
+  reinterpret missing behavioral metrics as zeros.
+- Reproduce AppWorld 0.1.0 in an isolated, pinned environment and rerun only
+  exact replay validation. EXP-024A generation remains blocked until 45/45
+  states pass.
+- Behavioral `p(s,m_transition)`, the procedural field, injector, selector,
+  Stage C2, and AppWorld task evaluation remain blocked. V4 remains a
+  candidate; no V4 tag was created or moved.

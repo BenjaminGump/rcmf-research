@@ -1,33 +1,40 @@
 # Next Experiments
 
-The current priority is a separately reviewed procedural-coverage repair.
-EXP-022 found that the fixed 148-transition panel covers only 12/18 held-out
-states with a legal Tier-3/4 train-parent transition, below the 70% gate.
-Behavioral `p(s,m_transition)` remains blocked.
+The current priority is AppWorld replay-contract recovery. EXP-024A passed its
+signature/condition preflight but exact one-step reconstruction failed all 45
+states before Qwen generation. Behavioral `p(s,m_transition)` remains blocked.
 
-## EXP-023 Full-Transition Procedural Coverage Preflight
+## Next: Matched AppWorld 0.1.0 Replay Recovery
 
 Goal:
 
-- Recompute deterministic procedural coverage using all 499 legal training
-  transitions instead of the diagnostic 148-transition panel.
-- Determine whether high-tier coverage is repaired before any model, Qwen
-  generation, or AppWorld replay work.
+- Create an isolated, version- and data-hash-pinned AppWorld 0.1.0 environment
+  matching the nine immutable official successful trajectories.
+- Re-run only the existing 45-state exact replay validator under the unchanged
+  action alignment and observation normalization.
 
-Required preflight:
+Requirements:
 
-- Preserve same-task/episode/replay/lineage exclusions and the 29/8 parent
-  semantics where applicable.
-- Report exact legal/scoreable/over-context counts, Tier-3/4 coverage per cell
-  and task, context-length offenders, projected artifact size, and projected
-  H100/AppWorld runtime. Do not truncate or downsample to fit 12 hours.
-- Reuse EXP-022 signatures only when content hashes match exactly.
+- Preserve the EXP-024A `_001` artifact and append-only ledger unchanged.
+- Do not replace the current verified AppWorld 0.2.0.dev0 environment in place.
+- Record package commit, code/data release hashes, task/database hashes, replay
+  output hashes, and environment isolation identity.
+- Diagnose any remaining observation differences without relaxing comparison
+  semantics or removing states.
 
 Stop condition:
 
-- Do not train the field-compatible procedural model or run one-step behavior
-  unless the expanded panel passes a preregistered coverage gate reviewed by
-  the user and ChatGPT.
+- Do not resume EXP-024A Qwen generation unless all 45 states pass exact replay.
+- If matched AppWorld 0.1.0 still fails, stop and investigate dataset snapshot,
+  random-state, time, or API rendering contracts before any behavioral work.
+
+## EXP-024A Signature-Balanced Causal Audit (Stopped)
+
+- Preflight fixed 323 conditions over 45 states and 499 transitions.
+- Replay passed `0/45`; Qwen generations and H100 hours are zero.
+- Decision branch: `appworld_one_step_replay_invalid`.
+- See
+  `research/results/stage_c_procedural_causal_audit_6h_20260817_001.md`.
 
 ## EXP-022 Procedural/Outcome Supervision Audit (Completed)
 
