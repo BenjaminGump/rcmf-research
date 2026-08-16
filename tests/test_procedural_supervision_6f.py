@@ -8,6 +8,10 @@ from scripts.prepare_procedural_supervision_6f import (
     _record_preflight_completion,
     _signature_credential_leakage_paths,
 )
+from scripts.validate_procedural_supervision_6f import (
+    _attempt_ledger_checks,
+    _coverage_details,
+)
 
 from rcmf.training.procedural_supervision_6f import (
     canonical_procedure_signature,
@@ -195,3 +199,60 @@ def test_preflight_completion_uses_attempt_progress(tmp_path: Path) -> None:
         "gate_passed": False,
         "latest_validated_checkpoint": str(summary_path),
     }
+
+
+def test_validation_attempt_ledger_requires_closed_attempts() -> None:
+    rows = [
+        {
+            "attempt_id": "one",
+            "event": "start",
+            "run_uuid": "run",
+            "scientific_parameter_changed": False,
+        },
+        {
+            "attempt_id": "one",
+            "event": "end",
+            "run_uuid": "run",
+            "scientific_parameter_changed": False,
+        },
+    ]
+    assert all(_attempt_ledger_checks(rows).values())
+    assert not _attempt_ledger_checks(rows[:1])["attempts_have_one_end"]
+
+
+def test_coverage_details_lists_states_without_high_tier() -> None:
+    rows = [
+        {
+            "cell": "B",
+            "state_example_id": "state-1",
+            "state_task_id": "task-1",
+            "transition_id": "transition-1",
+            "procedural_tier": 2,
+            "exact_api_sequence": True,
+            "query_primary_app": "spotify",
+            "query_primary_api": "search_tracks",
+            "query_coarse_action_type": "read_query",
+            "transition_primary_app": "spotify",
+            "transition_primary_api": "search_tracks",
+            "transition_coarse_action_type": "read_query",
+        },
+        {
+            "cell": "B",
+            "state_example_id": "state-2",
+            "state_task_id": "task-2",
+            "transition_id": "transition-1",
+            "procedural_tier": 4,
+            "exact_api_sequence": True,
+            "query_primary_app": "spotify",
+            "query_primary_api": "search_tracks",
+            "query_coarse_action_type": "read_query",
+            "transition_primary_app": "spotify",
+            "transition_primary_api": "search_tracks",
+            "transition_coarse_action_type": "read_query",
+        },
+    ]
+    details = _coverage_details(rows)
+    assert details["B"]["states_without_tier3_or_4_count"] == 1
+    assert details["B"]["states_without_tier3_or_4"][0][
+        "state_example_id"
+    ] == "state-1"
