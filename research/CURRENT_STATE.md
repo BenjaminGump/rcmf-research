@@ -1363,7 +1363,8 @@ VERIFIED:
 - Tier-3/4 state coverage is A/B/C/D `60/74, 12/18, 41/74, 9/18`.
 - The registered B coverage gate failed: `12/18 = 66.6667% < 70%`.
 - Independent validation passed 20/20 checks. Local tests passed 254 with one
-  skip; Lambda focused tests passed 16.
+  skip; Lambda focused tests passed 16 and the final Lambda full suite passed
+  255.
 - No model, Qwen forward, AppWorld instance, replay, generation, or H100 work
   ran after the stop decision.
 - The branch is `transition_panel_procedural_coverage_insufficient`.

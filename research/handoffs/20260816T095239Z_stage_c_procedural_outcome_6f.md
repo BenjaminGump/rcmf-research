@@ -35,8 +35,8 @@ ledger API. No scientific parameter changed and no disconnect created a
 duplicate run.
 
 Validation passed `20/20`; local tests passed `254` with one skip; Lambda
-focused tests passed `16`. Artifact size was `27,279,055` bytes before final
-record sync. Root:
+focused tests passed `16` and its final full suite passed `255`. Artifact size
+was `27,282,707` bytes before final record sync. Root:
 `/lambda/nfs/rcmf-persist/project/runs/stage_c/procedural_outcome_6f_20260816_001`.
 
 ## Recommended Review

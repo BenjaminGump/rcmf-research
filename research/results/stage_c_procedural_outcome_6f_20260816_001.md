@@ -106,9 +106,9 @@ validator passed `20/20` checks: counts, hashes, unique pair keys, tier range,
 credential safety, behavior-manifest identity, closed attempt pairs, unchanged
 scientific parameters, and absence of model/replay artifacts.
 
-Local tests: `254 passed, 1 skipped`. Lambda focused tests: `16 passed`.
-H100 use was `0.0 h`; final artifact size before the record commit was
-`27,279,055` bytes (about `26.02 MiB`).
+Local tests: `254 passed, 1 skipped`. Lambda focused tests: `16 passed`; the
+final Lambda full suite passed `255`. H100 use was `0.0 h`; final artifact size
+before the record commit was `27,282,707` bytes (about `26.02 MiB`).
 
 ## Interpretation
 
