@@ -759,3 +759,44 @@ Measure:
 Before training on any new prepared AppWorld data or subset, run the context
 length preflight. If over-limit examples exist, stop and ask the user before
 filtering.
+
+## EXP-023 Full-Transition Coverage Preflight - Completed, Diversity Gate Failed
+
+Outcome:
+
+- The full 499-transition bank nominally repairs procedural coverage: strict B
+  and deployment E each cover 17/18 held-out states at Tier 3/4.
+- The old 148 panel was globally insufficient rather than merely split
+  limited; none of its six B gaps was repaired by D alone.
+- Full context preflight found 44,910 legal, 43,415 scoreable, and 1,495
+  over-context pairs with no truncation and no high-tier-only missing state.
+- Coverage is not sufficiently diverse under the fixed audit rule: only 10/18
+  B states have at least two high-tier signatures and parents; seven have only
+  one signature and six are covered only by API-documentation transitions.
+- Branch: `nominal_procedural_coverage_lacks_diversity`.
+
+## Proposed EXP-024 Diversity-Aware Procedural Field And One-Step Audit - Review Required
+
+Before launch:
+
+- Obtain a user/ChatGPT decision on how repeated canonical signatures and
+  API-documentation records count. Candidate policies may include immutable
+  bank records with equivalence-class weighting or an explicitly expanded
+  source-trajectory bank; do not choose using held-out labels and do not
+  silently deduplicate.
+- Preserve all 499 transitions, exact leakage rules, no-truncation behavior,
+  92 queries, 45 one-step query states, fixed tiers, and the existing parent
+  split unless a new reviewed contract explicitly changes them.
+- Keep deployment-space E and strict parent-generalization B/D as separate
+  reported gates.
+- Required projected compute is `6.702/13.837/27.599` best/expected/
+  conservative H100 hours. Because expected compute exceeds the 12-hour review
+  threshold, obtain explicit approval before launching the full unchanged run.
+- Optional cross-encoder expansion adds 13.415 expected H100 hours and must be
+  separately justified. Required/with-optional storage is 2.77/3.96 GiB.
+- Continue using one run UUID, append-only attempts, heartbeat, atomic pair and
+  condition outputs, optimizer checkpoints, and hash-validated resume.
+
+Until this review is complete, do not train the procedural field, run Qwen
+generation, create AppWorld replay instances, train behavioral
+`p(s,m_transition)`, or start Stage C2/end-to-end RCMF.

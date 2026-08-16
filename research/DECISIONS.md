@@ -1338,3 +1338,52 @@ Implementation recovery:
 - A nonexistent `AttemptLedger.checkpoint` call failed after durable outputs.
   The repair uses the established `progress(latest_validated_checkpoint=...)`
   API and has a dedicated regression test. Failed attempts remain preserved.
+
+## 2026-08-16 EXP-023 full-transition coverage and diversity decision
+
+VERIFIED:
+
+- The complete 499-transition bank gives scoreable Tier-3/4 coverage to 17/18
+  held-out query states in strict train-parent B and deployment-space E. This
+  exceeds the unchanged 70% historical continuity threshold.
+- The old 148 panel remains globally insufficient: B/D/E coverage is
+  `12/18, 9/18, 12/18`, and none of the six B gaps is rescued by D alone.
+- Full-bank scoreable A/B/C/D/E Tier-3/4 coverage is
+  `70/74, 17/18, 55/74, 12/18, 17/18`; exact-API coverage is
+  `73/74, 18/18, 63/74, 15/18, 18/18`.
+- The bank contains 150 signatures for 499 transitions. API documentation is
+  210/499, and 349 transitions occur in 54 duplicate groups. In B, only 10/18
+  states have at least two high-tier signatures and two high-tier parents;
+  seven have one signature, two have one parent, and six rely solely on API
+  documentation for high-tier coverage.
+- Exact context preflight found 44,910 legal, 43,415 scoreable, and 1,495
+  over-context pairs, with no truncation and no state losing all high-tier
+  candidates to context.
+
+Decision:
+
+- Record branch `nominal_procedural_coverage_lacks_diversity`.
+- Distinguish the results precisely: the original 70% nominal B threshold
+  passes, while the preregistered diversity interpretation does not. Do not
+  describe the nominal coverage result itself as failed.
+- Keep the procedural field model, Qwen/AppWorld one-step audit, and behavioral
+  `p(s,m_transition)` blocked until duplicate-signature and API-documentation
+  dominance are reviewed.
+- A future EXP-024 must preregister whether signatures are equivalence classes,
+  weighted records, or unchanged repeated records. It must not choose this
+  policy from held-out labels or silently deduplicate the bank.
+- The required expected EXP-024 projection is 13.837 H100 hours, above the
+  12-hour review threshold. Obtain explicit approval before launch; do not
+  weaken the full design merely to fit the threshold.
+- Keep V4 as a candidate and do not create or move a V4 tag.
+
+Implementation and validation notes:
+
+- The scientific run contains exactly one normally completed attempt and no
+  parameter change or duplicate run.
+- The first independent-validator invocation interpreted logical data-hash keys
+  as filesystem paths. The validator-only fix and regression test are in
+  `3c5ed9171cd9ba3e9882673752846edc09b02fb4`; final validation passed 24/24 and
+  no scientific artifact was rewritten.
+- The launcher shell wrote cosmetic `0n` to `exit_code.txt`. The authoritative
+  attempt ledger records integer exit code 0 and heartbeat status `completed`.

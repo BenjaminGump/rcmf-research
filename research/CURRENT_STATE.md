@@ -1380,3 +1380,46 @@ VERIFIED:
   changed and no disconnect created a duplicate run.
 - Raw-NLL remains an immutable secondary measurement. V4 remains a candidate;
   no V4 tag was created or moved.
+
+### EXP-023 full-transition procedural coverage preflight
+
+- EXP-023 execution source is
+  `59e1f15b733a3259727b0631265207f0c9354344`; the independent-validator fix is
+  `3c5ed9171cd9ba3e9882673752846edc09b02fb4`. Artifact root is
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/procedural_coverage_6g_20260816_001`.
+- All 499 transitions parsed by AST with zero fallback, zero credential
+  leakage, and exact agreement for all 148 old-panel signatures. They form 150
+  unique canonical signatures; 349 transitions belong to 54 duplicate groups,
+  and 210/499 (42.08%) are API-documentation actions.
+- The 92-query x 499-transition product contains 45,908 pairs: 998 illegal,
+  44,910 legal, 43,415 scoreable, and 1,495 over context. Nothing was
+  truncated. Legal A/B/C/D counts are `29,736/7,434/6,192/1,548`; scoreable
+  counts are `28,582/7,112/6,173/1,548`.
+- Old-panel B/D/E Tier-3/4 coverage is `12/18, 9/18, 12/18`; none of the six
+  original B gaps is repaired by D alone. The old panel is globally
+  insufficient rather than merely parent-split limited.
+- Full-bank A/B/C/D/E Tier-3/4 coverage is
+  `70/74, 17/18, 55/74, 12/18, 17/18`. Exact-API coverage is
+  `73/74, 18/18, 63/74, 15/18, 18/18`.
+- Nominal B coverage clears the original 70% criterion, but B/E diverse
+  coverage is only 10/18 under the fixed requirement of at least two high-tier
+  signatures and two source parents. Seven B states have one high-tier
+  signature, two have one high-tier parent, and six are covered only by API
+  documentation.
+- Context missingness is 3.3289%; one parent causes 1,192/1,495 over-context
+  pairs. No state's only Tier-3/4 candidates are over context.
+- The preflighted 45-state one-step design has 21,624/22,455 scoreable pairs
+  and 302 available conditions. No Qwen, AppWorld, model, or execution work ran.
+- The projected required EXP-024 cost is `6.702/13.837/27.599` best/expected/
+  conservative H100 hours and 2.77 GiB; an optional cross-encoder raises the
+  expected total to 27.252 H100 hours and storage to 3.96 GiB. Explicit
+  >12-hour approval is required before launch.
+- Decision branch: `nominal_procedural_coverage_lacks_diversity`. The nominal
+  coverage gate passed, but the full scientific coverage/diversity gate did
+  not. Procedural field training, one-step behavior, and behavioral
+  `p(s,m_transition)` remain blocked pending review.
+- The one scientific attempt completed normally with no parameter change.
+  Independent validation passed 24/24 checks after a validator-only path/hash
+  fix; prior scientific artifacts were not rewritten. H100 use was zero,
+  runtime was 4,663.52 seconds, and the artifact is 402,387,856 bytes.
+- V4 remains a candidate; no V4 tag was created or moved.
