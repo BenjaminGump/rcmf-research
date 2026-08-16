@@ -1,0 +1,79 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_procedural_coverage_6g
+  version: full_transition_procedural_coverage_6g_v1
+  scope:
+    - immutable_exp017_exp020_exp021_exp022
+    - all_499_extracted_transitions
+    - unchanged_exp022_procedural_parser_and_tiers
+    - strict_parent_and_deployment_coverage
+    - tokenizer_only_context_preflight
+    - future_exp024_runtime_storage_estimate
+    - no_model_training
+    - no_qwen_forward_or_generation
+    - no_appworld_instance_or_action
+    - no_behavioral_program_training
+    - no_additive_token_injector_training
+    - no_selector_training
+    - no_production_transition_field
+    - no_stage_c2
+    - no_end_to_end_rcmf
+    - no_v4_tag
+
+stage_c_6g:
+  run_uuid: procedural_coverage_6g_20260816_001
+  seed: 23023
+  artifact_dir: runs/stage_c/procedural_coverage_6g_20260816_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  source_data: runs/appworld/official_react_gpt4o_train_success_full_demo_filtered_no_2a163ab3_20260803
+  exp017_artifact: runs/stage_c/transition_memory_6a_20260814_001
+  exp018_artifact: runs/stage_c/state_conditioned_transition_6b_20260814_001
+  exp019_artifact: runs/stage_c/interaction_representation_6c_20260814_001
+  exp020_artifact: runs/stage_c/all_task_interaction_6d_20260815_001
+  exp021_artifact: runs/stage_c/memory_use_target_6e_20260816_001
+  exp022_artifact: runs/stage_c/procedural_outcome_6f_20260816_001
+
+  expected:
+    decision_examples: 638
+    transitions: 499
+    old_panel_transitions: 148
+    transition_parents: 37
+    query_states: 92
+    train_query_states: 74
+    heldout_query_states: 18
+    train_query_tasks: 37
+    heldout_query_tasks: 9
+    train_transition_parents: 29
+    heldout_transition_parents: 8
+    old_legal_rows: 13320
+    old_scoreable_rows: 13128
+    old_over_context_rows: 192
+    old_b_high_tier_states: 12
+    old_b_state_count: 18
+    one_step_query_states: 45
+
+  context_limit: 40960
+  high_tier_minimum: 3
+  heldout_high_tier_coverage_gate: 0.70
+  diversity_minimum_unique_signatures: 2
+  diversity_minimum_parents: 2
+  heartbeat_interval_seconds: 240
+
+  runtime:
+    review_threshold_h100_hours: 12.0
+    observed_cross_encoder_seconds_per_pair: 1.5945
+    observed_exp020_model_seconds: 20778.304790295893
+    transition_representation_fallback_seconds: 130.0
+    transition_representation_row_bytes: 336085
+    cross_encoder_row_bytes: 42100
+    field_model_artifact_bytes: 2147483648
+    one_step_artifact_bytes_per_condition: 2359296
+    generation_seconds_per_condition:
+      best: 20.0
+      expected: 45.0
+      conservative: 90.0
+    replay_execution_seconds_per_condition:
+      best: 2.0
+      expected: 5.0
+      conservative: 10.0
