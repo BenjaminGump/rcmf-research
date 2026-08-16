@@ -5,6 +5,7 @@ from pathlib import Path
 
 from scripts.prepare_procedural_supervision_6f import (
     _credential_leakage_paths,
+    _record_preflight_completion,
     _signature_credential_leakage_paths,
 )
 
@@ -169,3 +170,28 @@ def test_credential_scan_excludes_uuid_metadata_but_not_signature_values() -> No
     assert _signature_credential_leakage_paths(safe) == [
         "root.action_signature.raw:email"
     ]
+
+
+def test_preflight_completion_uses_attempt_progress(tmp_path: Path) -> None:
+    class RecordingAttempt:
+        def __init__(self) -> None:
+            self.values = None
+
+        def progress(self, **values: object) -> None:
+            self.values = values
+
+    attempt = RecordingAttempt()
+    summary_path = tmp_path / "preflight_summary.json"
+    _record_preflight_completion(
+        attempt,  # type: ignore[arg-type]
+        summary_path=summary_path,
+        summary={
+            "status": "transition_panel_procedural_coverage_insufficient",
+            "gate": {"passed": False},
+        },
+    )
+    assert attempt.values == {
+        "status": "transition_panel_procedural_coverage_insufficient",
+        "gate_passed": False,
+        "latest_validated_checkpoint": str(summary_path),
+    }

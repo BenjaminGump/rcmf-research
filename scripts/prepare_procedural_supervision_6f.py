@@ -54,6 +54,19 @@ def _assert_count(name: str, actual: int, expected: int) -> None:
         raise ValueError(f"{name} differs: {actual} != {expected}")
 
 
+def _record_preflight_completion(
+    attempt: AttemptLedger,
+    *,
+    summary_path: Path,
+    summary: Mapping[str, Any],
+) -> None:
+    attempt.progress(
+        status=str(summary["status"]),
+        gate_passed=bool(summary["gate"]["passed"]),
+        latest_validated_checkpoint=str(summary_path),
+    )
+
+
 def _task_id(example: Any) -> str:
     return str(example.metadata.get("task_id") or str(example.episode_id).split(":")[-1])
 
@@ -539,7 +552,11 @@ def main() -> None:
         atomic_write_json(args.artifact_dir / "preflight_summary.json", summary)
         atomic_write_text(args.artifact_dir / "procedural_signature_report.md", _report(summary))
         atomic_write_text(args.artifact_dir / "procedural_label_coverage_report.md", _report(summary))
-        attempt.checkpoint("preflight_summary.json")
+        _record_preflight_completion(
+            attempt,
+            summary_path=args.artifact_dir / "preflight_summary.json",
+            summary=summary,
+        )
         print(json.dumps(summary, indent=2, sort_keys=True))
 
 
