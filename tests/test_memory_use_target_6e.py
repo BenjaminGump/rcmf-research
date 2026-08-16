@@ -7,6 +7,11 @@ import torch
 import torch.nn.functional as F
 
 from scripts.run_serialization_robustness_6e import _locked_template0_row
+from scripts.run_memory_use_target_models_6e import (
+    _locked_transition_only_baselines,
+    _ndcg4_contrast,
+    _per_task_relative_behavior,
+)
 from scripts.validate_memory_use_target_6e import _attempt_ledger_checks
 
 from rcmf.benchmarks.appworld.prompt import get_initial_messages
@@ -341,12 +346,91 @@ def test_entrypoints_preserve_hard_scope() -> None:
     root = Path(__file__).resolve().parents[1]
     scoring = (root / "scripts/run_serialization_robustness_6e.py").read_text(encoding="utf-8")
     models = (root / "scripts/run_memory_use_target_models_6e.py").read_text(encoding="utf-8")
+    repair = (root / "scripts/repair_memory_use_target_record_6e.py").read_text(encoding="utf-8")
     assert "_score_mean_target_nll" in scoring
     assert ".generate(" not in scoring
     assert "forward_train(" not in scoring
     assert "build_backend" not in models
     assert "AdditiveTokenMemoryInjector" not in models
     assert ".generate(" not in models
+    assert "_train_checkpoints(" not in repair
+    assert "build_backend" not in repair
+    assert ".generate(" not in repair
+
+
+def _ranking_rows(task: str, state: str, utilities: list[float], scores: list[float]):
+    return [
+        {
+            "pair_id": f"{state}-m{index}",
+            "state_example_id": state,
+            "state_task_id": task,
+            "transition_id": f"m{index}",
+            "text_utility": utility,
+            "score": score,
+        }
+        for index, (utility, score) in enumerate(zip(utilities, scores))
+    ]
+
+
+def test_positive_task_count_compares_each_task_with_its_locked_baseline() -> None:
+    candidate = [
+        *_ranking_rows("task-a", "state-a", [0.4, 0.2, 0.0], [3.0, 2.0, 1.0]),
+        *_ranking_rows("task-b", "state-b", [0.4, 0.2, 0.0], [1.0, 2.0, 3.0]),
+    ]
+    baseline = []
+    for row in _ranking_rows("task-a", "state-a", [0.4, 0.2, 0.0], [1.0, 3.0, 2.0]):
+        baseline.append({**row, "u_text": row["text_utility"], "u_predicted": row["score"]})
+    for row in _ranking_rows("task-b", "state-b", [0.4, 0.2, 0.0], [3.0, 2.0, 1.0]):
+        baseline.append({**row, "u_text": row["text_utility"], "u_predicted": row["score"]})
+    result = _per_task_relative_behavior(candidate, baseline)
+    assert result["positive_task_count"] == 1
+    assert result["tasks"]["task-a"]["positive"]
+    assert not result["tasks"]["task-b"]["positive"]
+
+
+def test_locked_transition_only_uses_exact_exp020_metrics_and_hash(tmp_path: Path) -> None:
+    cells = {}
+    for short, long in {
+        "B": "heldout_state__train_transition",
+        "C": "train_state__heldout_transition",
+        "D": "heldout_state__heldout_transition",
+    }.items():
+        path = tmp_path / f"{short}.jsonl"
+        path.write_text("{}\n", encoding="utf-8")
+        from rcmf.utils.serialization import sha256_file
+
+        cells[long] = {
+            "controls": {
+                "correct": {
+                    "metrics": {"raw_utility": {"per_state": {"ndcg@4": {"mean": 0.1}}}},
+                    "rows_path": str(path),
+                    "rows_sha256": sha256_file(path),
+                }
+            }
+        }
+    locked = {
+        "level": "LC37",
+        "models": {"transition_only": {"cells": cells}},
+    }
+    result = _locked_transition_only_baselines(locked)
+    assert set(result) == {"B", "C", "D"}
+    assert result["D"]["raw_utility"]["per_state"]["ndcg@4"]["mean"] == 0.1
+    assert result["D"]["locked_source"]["level"] == "LC37"
+
+
+def test_ndcg_bootstrap_uses_actual_paired_contrast_key() -> None:
+    cell = {
+        "paired_bootstrap_contrasts": {
+            "shuffled_transition": {
+                "ndcg@4_correct_minus_control": {
+                    "mean": 0.2,
+                    "ci95_low": 0.1,
+                    "ci95_high": 0.3,
+                }
+            }
+        }
+    }
+    assert _ndcg4_contrast(cell, "shuffled_transition")["ci95_low"] == 0.1
 
 
 def test_preflight_uses_actual_exp019_record_and_can_log_bootstrap_failure() -> None:

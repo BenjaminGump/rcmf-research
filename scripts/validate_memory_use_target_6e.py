@@ -83,6 +83,9 @@ def main() -> None:
         "serialization_teacher_cache.jsonl", "serialization_summary.json",
         "intent_probe_calibration.json", "a_only_grouped_cv_selection.json",
         "model_audit_summary.json", "final_target_audit_report.md",
+        "model_audit_summary_pre_locked_transition_repair.json",
+        "final_target_audit_report_pre_locked_transition_repair.md",
+        "scientific_gate_repair.json",
         "attempts.jsonl", "heartbeat.json",
     ]
     errors = [f"missing:{name}" for name in required if not (root / name).exists()]
@@ -141,6 +144,29 @@ def main() -> None:
                     set(architectures[kind]["cells"]) == {"B", "C", "D"}
                     for architectures in model["final_results"]["models"].values()
                     for kind in ("field", "cross")
+                ),
+                "locked_transition_only_comparator": all(
+                    model["final_results"]["baselines"]["transition_only"][short][
+                        "locked_source"
+                    ]["rows_sha256"]
+                    == model["locked_t0_exp020"]["models"]["transition_only"]
+                    ["cells"][long]["controls"]["correct"]["rows_sha256"]
+                    and model["final_results"]["baselines"]["transition_only"]
+                    [short]["raw_utility"]["per_state"]["ndcg@4"]["mean"]
+                    == model["locked_t0_exp020"]["models"]["transition_only"]
+                    ["cells"][long]["controls"]["correct"]["metrics"]
+                    ["raw_utility"]["per_state"]["ndcg@4"]["mean"]
+                    for short, long in {
+                        "B": "heldout_state__train_transition",
+                        "C": "train_state__heldout_transition",
+                        "D": "heldout_state__heldout_transition",
+                    }.items()
+                ),
+                "record_only_gate_repair": (
+                    bool(model.get("record_repair"))
+                    and not bool(model["record_repair"]["scientific_parameter_changed"])
+                    and not bool(model["record_repair"]["model_or_checkpoint_changed"])
+                    and not bool(model["record_repair"]["training_rerun"])
                 ),
                 "hard_scope": all(
                     not bool(model["hard_scope"][key])

@@ -24,6 +24,7 @@ from rcmf.training.cross_encoder_6c import (
 )
 from rcmf.training.interaction_representation_6c import (
     paired_task_bootstrap_contrast,
+    summarize_revised_predictions,
     task_grouped_bootstrap,
 )
 from rcmf.training.memory_use_target_6e import (
@@ -55,6 +56,11 @@ from scripts.run_action_intent_probe_6d import ActionIntentProbe, LABEL_NAMES
 CELLS = ("B", "C", "D")
 CONTROLS = ("correct", "shuffled_state", "shuffled_transition", "both_shuffled")
 MODEL_TARGETS = ("T3", "T4", "T6", "T7")
+EXP020_CELL_NAMES = {
+    "B": "heldout_state__train_transition",
+    "C": "train_state__heldout_transition",
+    "D": "heldout_state__heldout_transition",
+}
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -600,10 +606,45 @@ def _transition_only_rows(rows_a: Sequence[Mapping[str, Any]], rows: Sequence[Ma
     return [{**dict(row), "score": float(means.get(str(row["transition_id"]), global_mean)), "interaction_score": 0.0, "intent_score": 0.0, "control": "transition_only"} for row in rows]
 
 
+def _locked_transition_only_baselines(
+    locked_level: Mapping[str, Any], *, verify_rows: bool = True
+) -> dict[str, dict[str, Any]]:
+    """Load the immutable EXP-020 LC37 transition-only comparator."""
+    cells = locked_level["models"]["transition_only"]["cells"]
+    output: dict[str, dict[str, Any]] = {}
+    for short_name, long_name in EXP020_CELL_NAMES.items():
+        correct = cells[long_name]["controls"]["correct"]
+        rows_path = Path(str(correct["rows_path"]))
+        rows_sha256 = str(correct["rows_sha256"])
+        if verify_rows:
+            if not rows_path.is_file():
+                raise FileNotFoundError(
+                    f"Locked EXP-020 transition-only rows are missing: {rows_path}"
+                )
+            actual_sha256 = sha256_file(rows_path)
+            if actual_sha256 != rows_sha256:
+                raise ValueError(
+                    "Locked EXP-020 transition-only row hash differs for "
+                    f"cell {short_name}: {actual_sha256} != {rows_sha256}"
+                )
+        output[short_name] = {
+            **copy.deepcopy(correct["metrics"]),
+            "locked_source": {
+                "experiment": "EXP-020",
+                "level": str(locked_level["level"]),
+                "cell": long_name,
+                "rows_path": str(rows_path),
+                "rows_sha256": rows_sha256,
+            },
+        }
+    return output
+
+
 def _final_models(
     *, rows: list[dict[str, Any]], rows_a: list[dict[str, Any]], reps: Mapping[str, Any],
     cv: Mapping[str, Any], intent_model: IntentCompatibilityModel,
     predicted_intent: Mapping[str, Any], settings: Mapping[str, Any],
+    locked_transition_only: Mapping[str, Mapping[str, Any]],
     output_root: Path, device: torch.device, attempt: AttemptLedger,
 ) -> dict[str, Any]:
     cells = {cell: [row for row in rows if str(row["cell"]) == cell] for cell in CELLS}
@@ -681,8 +722,9 @@ def _final_models(
 
     baselines = {"transition_only": {}, "intent_only_predicted": {}, "intent_only_oracle": {}}
     for cell, selected in cells.items():
-        transition_rows = _transition_only_rows(rows_a, selected)
-        baselines["transition_only"][cell] = summarize_target_predictions(transition_rows, target_key="T0", **_metric_kwargs(settings))
+        baselines["transition_only"][cell] = copy.deepcopy(
+            locked_transition_only[cell]
+        )
         for oracle, name in ((False, "intent_only_predicted"), (True, "intent_only_oracle")):
             controls = {}
             for control in CONTROLS:
@@ -696,25 +738,89 @@ def _final_models(
     return {"models": results, "baselines": baselines}
 
 
-def _per_task_positive_count(rows: Sequence[Mapping[str, Any]], transition_baseline: Mapping[str, Any]) -> int:
-    by_task: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+def _normalized_raw_metric_rows(
+    rows: Sequence[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    normalized = []
     for row in rows:
-        by_task[str(row["state_task_id"])].append(row)
-    count = 0
-    baseline_ndcg = float(transition_baseline["raw_utility"]["per_state"]["ndcg@4"]["mean"] or 0.0)
-    for selected in by_task.values():
-        metrics = summarize_target_predictions(
-            selected, target_key="T3", ranking_ks=(1, 4, 8), neutral_epsilon=0.01,
-            best_tie_tolerance=1.0e-8, huber_delta=0.1,
-            pair_gap_threshold=0.05, pair_gap_weight_clip=0.25,
+        normalized.append(
+            {
+                **dict(row),
+                "u_text": float(row.get("u_text", row.get("text_utility"))),
+                "u_predicted": float(row.get("u_predicted", row.get("score"))),
+                "residual_target": float(
+                    row.get("residual_target", row.get("raw_residual_target", 0.0))
+                ),
+                "residual_predicted": float(
+                    row.get(
+                        "residual_predicted",
+                        row.get("interaction_score", row.get("score", 0.0)),
+                    )
+                ),
+            }
         )
-        count += float(metrics["raw_utility"]["per_state"]["ndcg@4"]["mean"] or 0.0) > baseline_ndcg
-    return count
+    return normalized
+
+
+def _per_task_relative_behavior(
+    rows: Sequence[Mapping[str, Any]],
+    transition_baseline_rows: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    candidate_by_task: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    baseline_by_task: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in _normalized_raw_metric_rows(rows):
+        candidate_by_task[str(row["state_task_id"])].append(row)
+    for row in _normalized_raw_metric_rows(transition_baseline_rows):
+        baseline_by_task[str(row["state_task_id"])].append(row)
+    if set(candidate_by_task) != set(baseline_by_task):
+        raise ValueError("Candidate and locked transition baseline task sets differ")
+    metric_kwargs = {
+        "ranking_ks": (1, 4, 8),
+        "neutral_epsilon": 0.01,
+        "best_tie_tolerance": 1.0e-8,
+        "huber_delta": 0.1,
+    }
+    tasks = {}
+    for task_id in sorted(candidate_by_task):
+        candidate = candidate_by_task[task_id]
+        baseline = baseline_by_task[task_id]
+        if {str(row["pair_id"]) for row in candidate} != {
+            str(row["pair_id"]) for row in baseline
+        }:
+            raise ValueError(
+                f"Candidate and locked transition baseline pair IDs differ for {task_id}"
+            )
+        candidate_summary = summarize_revised_predictions(candidate, **metric_kwargs)
+        baseline_summary = summarize_revised_predictions(baseline, **metric_kwargs)
+        candidate_ndcg = float(
+            candidate_summary["per_state"]["ndcg@4"]["mean"] or 0.0
+        )
+        baseline_ndcg = float(
+            baseline_summary["per_state"]["ndcg@4"]["mean"] or 0.0
+        )
+        tasks[task_id] = {
+            "candidate_ndcg@4": candidate_ndcg,
+            "locked_transition_only_ndcg@4": baseline_ndcg,
+            "difference": candidate_ndcg - baseline_ndcg,
+            "positive": candidate_ndcg > baseline_ndcg,
+        }
+    return {
+        "positive_task_count": sum(bool(value["positive"]) for value in tasks.values()),
+        "task_count": len(tasks),
+        "tasks": tasks,
+    }
+
+
+def _ndcg4_contrast(cell: Mapping[str, Any], control: str) -> Mapping[str, Any]:
+    return cell["paired_bootstrap_contrasts"][control][
+        "ndcg@4_correct_minus_control"
+    ]
 
 
 def _gate_and_decision(
     *, selected_target: str, final: Mapping[str, Any], rows_d: list[dict[str, Any]],
-    settings: Mapping[str, Any], serialization_passed: bool,
+    locked_transition_rows_d: list[dict[str, Any]], settings: Mapping[str, Any],
+    serialization_passed: bool,
 ) -> dict[str, Any]:
     if not serialization_passed:
         return {"passed": False, "decision_branch": "raw_nll_teacher_serialization_instability", "checks": {}}
@@ -728,11 +834,12 @@ def _gate_and_decision(
     transition_ndcg = float(transition_only["raw_utility"]["per_state"]["ndcg@4"]["mean"] or 0.0)
     state_gap = ndcg - float(state_shuffle["raw_utility"]["per_state"]["ndcg@4"]["mean"] or 0.0)
     transition_gap = ndcg - float(transition_shuffle["raw_utility"]["per_state"]["ndcg@4"]["mean"] or 0.0)
-    contrast = field["paired_bootstrap_contrasts"]["shuffled_transition"]
-    ndcg_ci = contrast.get("mean_per_state_ndcg@4", {})
-    positive_tasks = _per_task_positive_count(
-        _load_rows(Path(field["controls"]["correct"]["rows_path"])), transition_only
+    ndcg_ci = _ndcg4_contrast(field, "shuffled_transition")
+    relative_tasks = _per_task_relative_behavior(
+        _load_rows(Path(field["controls"]["correct"]["rows_path"])),
+        locked_transition_rows_d,
     )
+    positive_tasks = int(relative_tasks["positive_task_count"])
     thresholds = settings["gate"]
     checks = {
         "raw_ndcg4_transition_gain": ndcg - transition_ndcg >= float(thresholds["raw_ndcg4_transition_gain"]),
@@ -755,6 +862,23 @@ def _gate_and_decision(
     content_gain = ndcg - float(predicted_intent["raw_utility"]["per_state"]["ndcg@4"]["mean"] or 0.0)
     checks["predicted_intent_oracle_gain_retention"] = retention is not None and retention >= float(thresholds["predicted_intent_oracle_gain_retention"])
     checks["transition_content_adds_value"] = content_gain > 0.0
+    cross_state = float(cross["controls"]["shuffled_state"]["metrics"]["raw_utility"]["per_state"]["ndcg@4"]["mean"] or 0.0)
+    cross_transition = float(cross["controls"]["shuffled_transition"]["metrics"]["raw_utility"]["per_state"]["ndcg@4"]["mean"] or 0.0)
+    cross_relative_tasks = _per_task_relative_behavior(
+        _load_rows(Path(cross["controls"]["correct"]["rows_path"])),
+        locked_transition_rows_d,
+    )
+    cross_checks = {
+        "raw_ndcg4_transition_gain": cross_ndcg - transition_ndcg >= float(thresholds["raw_ndcg4_transition_gain"]),
+        "mean_per_state_spearman": float(cross_correct["raw_utility"]["per_state"]["spearman"]["mean"] or 0.0) >= float(thresholds["mean_per_state_spearman"]),
+        "interaction_residual_spearman": float(cross_correct["raw_utility"]["interaction_residual_spearman"] or 0.0) >= float(thresholds["interaction_residual_spearman"]),
+        "gap_weighted_pairwise_accuracy": float(cross_correct["gap_weighted_pairwise_accuracy"] or 0.0) >= float(thresholds["gap_weighted_pairwise_accuracy"]),
+        "state_shuffle_gap": cross_ndcg - cross_state >= float(thresholds["state_shuffle_ndcg4_drop"]),
+        "transition_shuffle_gap": cross_ndcg - cross_transition >= float(thresholds["transition_shuffle_ndcg4_drop"]),
+        "transition_shuffle_bootstrap_ci_excludes_zero": float(_ndcg4_contrast(cross, "shuffled_transition")["ci95_low"]) > 0.0,
+        "positive_heldout_tasks": int(cross_relative_tasks["positive_task_count"]) >= int(thresholds["minimum_positive_heldout_tasks"]),
+    }
+    cross_passed = all(cross_checks.values())
     passed = field_passed and checks["predicted_intent_oracle_gain_retention"] and checks["transition_content_adds_value"] and selected_target in {"T6", "T7"}
     if passed:
         branch = "relative_intent_conditioned_memory_use_target_validated"
@@ -762,7 +886,7 @@ def _gate_and_decision(
         branch = "query_intent_prediction_or_calibration_bottleneck"
     elif predicted_gain > 0.05 and content_gain <= 0.0:
         branch = "coarse_action_intent_explains_memory_use_signal"
-    elif cross_ndcg - transition_ndcg >= 0.05 and not field_passed:
+    elif cross_passed and not field_passed:
         branch = "revised_target_learnable_but_field_factorization_insufficient"
     else:
         branch = "raw_nll_memory_use_target_not_deployably_predictable"
@@ -770,6 +894,9 @@ def _gate_and_decision(
         "passed": passed, "field_gate_passed_before_intent_checks": field_passed,
         "checks": checks, "decision_branch": branch,
         "selected_target": selected_target,
+        "cross_encoder_gate": {"passed": cross_passed, "checks": cross_checks},
+        "per_task_relative_behavior": relative_tasks,
+        "cross_per_task_relative_behavior": cross_relative_tasks,
         "metrics": {
             "field_ndcg@4": ndcg, "transition_only_ndcg@4": transition_ndcg,
             "state_shuffle_gap": state_gap, "transition_shuffle_gap": transition_gap,
@@ -792,6 +919,16 @@ def _report(summary: Mapping[str, Any]) -> str:
         f"- serialization gate: `{summary['serialization_gate_passed']}`",
         f"- revised target gate: `{gate['passed']}`",
         f"- decision branch: `{gate['decision_branch']}`", "",
+        f"- locked EXP-020 transition-only D NDCG@4: `{float(gate['metrics']['transition_only_ndcg@4']):.6f}`",
+        f"- positive heldout tasks versus their own locked baselines: `{int(gate['metrics']['positive_heldout_task_count'])}/9`",
+        *(
+            [
+                "- The prior gate record is preserved and superseded by a record-only locked-comparator repair; no model or checkpoint changed.",
+                "",
+            ]
+            if summary.get("record_repair")
+            else [""]
+        ),
         "## Cell-D Primary Metrics", "",
         "| Target | Architecture | Raw NDCG@4 | Raw Spearman | Residual Spearman | Gap pair accuracy | State shuffle gap | Transition shuffle gap |",
         "|---|---|---:|---:|---:|---:|---:|---:|",
@@ -842,6 +979,8 @@ def main() -> None:
     if not bool(serialization["robustness"]["gate_passed"]):
         raise RuntimeError("Serialization robustness gate failed; model audit must stop")
     exp020 = Path(settings["exp020_artifact"])
+    locked_t0_exp020 = _load_json(exp020 / "model_summary.json")["levels"]["LC37"]
+    locked_transition_only = _locked_transition_only_baselines(locked_t0_exp020)
     rows = _load_rows(args.artifact_dir / "candidate_target_rows.jsonl")
     locked = _load_json(args.artifact_dir / "locked_raw_utility_decomposition.json")["cell_a_decomposition"]
     for row in rows:
@@ -904,13 +1043,17 @@ def main() -> None:
         final = _final_models(
             rows=rows, rows_a=rows_a, reps=reps, cv=cv,
             intent_model=intent_model, predicted_intent=predicted_intent,
-            settings=settings, output_root=args.artifact_dir / "models/final",
+            settings=settings, locked_transition_only=locked_transition_only,
+            output_root=args.artifact_dir / "models/final",
             device=device, attempt=attempt,
         )
         selected_target = str(cv["selected_primary_revised_target"]["target"])
         rows_d = [row for row in rows if str(row["cell"]) == "D"]
         gate = _gate_and_decision(
             selected_target=selected_target, final=final, rows_d=rows_d,
+            locked_transition_rows_d=_load_rows(
+                Path(locked_transition_only["D"]["locked_source"]["rows_path"])
+            ),
             settings=settings, serialization_passed=True,
         )
         summary = {
@@ -920,7 +1063,7 @@ def main() -> None:
             "serialization_gate_passed": True,
             "intent_probe": intent_summary,
             "intent_model": {"checkpoint": str(intent_path), "checkpoint_sha256": sha256_file(intent_path), "training": intent_training},
-            "locked_t0_exp020": _load_json(exp020 / "model_summary.json")["levels"]["LC37"],
+            "locked_t0_exp020": locked_t0_exp020,
             "cv_selection": cv,
             "final_results": final,
             "scientific_gate": gate,
