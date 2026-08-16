@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from scripts.prepare_procedural_supervision_6f import _credential_leakage_paths
+
 from rcmf.training.procedural_supervision_6f import (
     canonical_procedure_signature,
     observation_signature,
@@ -140,3 +142,11 @@ def test_preflight_uses_canonical_state_identity_argument_order() -> None:
     )
     assert "state_example_id(index, example)" in source
     assert "state_example_id(example, index)" not in source
+
+
+def test_credential_leakage_diagnostic_reports_paths_without_values() -> None:
+    findings = _credential_leakage_paths(
+        {"safe": "phone_number", "nested": {"value": "person@example.com"}}
+    )
+    assert findings == ["root.nested.value:email"]
+    assert "person@example.com" not in json.dumps(findings)

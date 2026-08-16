@@ -72,13 +72,20 @@ def _source_step_map(records: Sequence[Any]) -> dict[tuple[str, int], dict[str, 
     return output
 
 
-def _safe_signature_payload(row: Mapping[str, Any]) -> bool:
-    text = json.dumps(row, sort_keys=True, ensure_ascii=True)
-    if re.search(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", text):
-        return False
-    if re.search(r"\b\d{7,}\b", text):
-        return False
-    return True
+def _credential_leakage_paths(value: Any, path: str = "root") -> list[str]:
+    findings: list[str] = []
+    if isinstance(value, Mapping):
+        for key, item in value.items():
+            findings.extend(_credential_leakage_paths(item, f"{path}.{key}"))
+    elif isinstance(value, (list, tuple)):
+        for index, item in enumerate(value):
+            findings.extend(_credential_leakage_paths(item, f"{path}[{index}]"))
+    elif isinstance(value, str):
+        if re.search(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", value):
+            findings.append(f"{path}:email")
+        if re.search(r"\b\d{7,}\b", value):
+            findings.append(f"{path}:long_number")
+    return findings
 
 
 def _hard_pair_coverage(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
@@ -387,8 +394,20 @@ def main() -> None:
             }
             transition_by_id[transition_id] = row
             signature_rows.append(row)
-        if any(not _safe_signature_payload(row) for row in signature_rows):
-            raise ValueError("Canonical procedural signature leaked raw email/phone-like values")
+        leakage_paths = [
+            {"kind": row["kind"], "id": str(row.get("state_example_id") or row.get("transition_id")), "paths": paths}
+            for row in signature_rows
+            if (paths := _credential_leakage_paths(row))
+        ]
+        if leakage_paths:
+            atomic_write_json(
+                args.artifact_dir / "credential_leakage_diagnostics.json",
+                {"count": len(leakage_paths), "rows": leakage_paths},
+            )
+            raise ValueError(
+                "Canonical procedural signature leaked raw email/phone-like values; "
+                f"diagnostic paths={leakage_paths[:3]}"
+            )
         write_jsonl(args.artifact_dir / "procedural_signatures.jsonl", signature_rows)
 
         label_rows: list[dict[str, Any]] = []
