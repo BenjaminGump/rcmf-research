@@ -26,6 +26,7 @@ AUDIT_STRATA_VERSION = "procedural_causal_audit_strata_6h_v1"
 CONDITION_MANIFEST_VERSION = "procedural_causal_condition_manifest_6h_v1"
 OBSERVATION_NORMALIZATION_VERSION = "appworld_observation_normalization_6h_v1"
 GENERATION_RESULT_VERSION = "procedural_causal_generation_result_6h_v1"
+REPLAY_FAILURE_DIAGNOSTIC_VERSION = "appworld_replay_failure_diagnostic_6h_v1"
 
 FENCED_CODE_RE = re.compile(
     r"```(?:python)?\s*(.*?)```", flags=re.IGNORECASE | re.DOTALL
@@ -920,6 +921,79 @@ def normalize_observation(text: str) -> str:
 
 def normalized_observation_hash(text: str) -> str:
     return hashlib.sha256(normalize_observation(text).encode("utf-8")).hexdigest()
+
+
+def summarize_replay_failure(
+    rows: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    if not rows:
+        raise ValueError("Replay diagnostics require at least one state row")
+    state_ids = [str(row["state_example_id"]) for row in rows]
+    if len(set(state_ids)) != len(state_ids):
+        raise ValueError("Replay diagnostics contain duplicate state IDs")
+
+    history_checks = [
+        check for row in rows for check in row.get("history_checks", [])
+    ]
+    task_rows: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    first_mismatches: Counter[str] = Counter()
+    for row in rows:
+        task_rows[str(row["task_id"])].append(row)
+        first_mismatch = next(
+            (
+                int(check["step_id"])
+                for check in row.get("history_checks", [])
+                if not bool(check["observation_match"])
+            ),
+            None,
+        )
+        first_mismatches[
+            "no_history_mismatch" if first_mismatch is None else str(first_mismatch)
+        ] += 1
+
+    by_task = {
+        task_id: {
+            "state_count": len(values),
+            "history_match_state_count": sum(
+                bool(value["history_match"]) for value in values
+            ),
+            "target_match_state_count": sum(
+                bool(value["target_observation_match"]) for value in values
+            ),
+            "passed_state_count": sum(bool(value["passed"]) for value in values),
+        }
+        for task_id, values in sorted(task_rows.items())
+    }
+    zero_history = [row for row in rows if int(row["history_step_count"]) == 0]
+    return {
+        "format": REPLAY_FAILURE_DIAGNOSTIC_VERSION,
+        "state_count": len(rows),
+        "task_count": len(task_rows),
+        "passed_state_count": sum(bool(row["passed"]) for row in rows),
+        "failed_state_count": sum(not bool(row["passed"]) for row in rows),
+        "history_match_state_count": sum(
+            bool(row["history_match"]) for row in rows
+        ),
+        "target_match_state_count": sum(
+            bool(row["target_observation_match"]) for row in rows
+        ),
+        "history_step_count": len(history_checks),
+        "history_step_match_count": sum(
+            bool(check["observation_match"]) for check in history_checks
+        ),
+        "history_step_match_fraction": (
+            sum(bool(check["observation_match"]) for check in history_checks)
+            / len(history_checks)
+            if history_checks
+            else None
+        ),
+        "zero_history_state_count": len(zero_history),
+        "zero_history_target_match_count": sum(
+            bool(row["target_observation_match"]) for row in zero_history
+        ),
+        "first_history_mismatch_step_counts": dict(sorted(first_mismatches.items())),
+        "by_task": by_task,
+    }
 
 
 def observation_similarity(left: str, right: str) -> float:

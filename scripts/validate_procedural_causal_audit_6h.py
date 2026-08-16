@@ -38,7 +38,7 @@ def main() -> None:
     settings = cfg.raw["stage_c_6h"]
     if os.name != "nt" and not os.path.ismount(Path(settings["persistent_root"])):
         raise RuntimeError("Persistent filesystem is not mounted")
-    required = (
+    base_required = (
         "run_manifest.json",
         "attempts.jsonl",
         "heartbeat.json",
@@ -48,21 +48,43 @@ def main() -> None:
         "condition_prompt_preflight.jsonl",
         "preflight_summary.json",
         "replay/replay_summary.json",
-        "generation_summary.json",
-        "one_step_metrics.json",
-        "causal_comparisons.json",
-        "same_signature_consistency.json",
-        "raw_nll_behavior_relationship.json",
         "final_exp024a_summary.json",
         "final_exp024a_report.md",
     )
     checks: dict[str, bool] = {
         f"required:{name}": (args.artifact_dir / name).exists()
-        for name in required
+        for name in base_required
     }
     if not all(checks.values()):
         failed = [name for name, value in checks.items() if not value]
         raise FileNotFoundError(f"Missing post-run artifacts: {failed}")
+
+    replay = _load_json(args.artifact_dir / "replay" / "replay_summary.json")
+    final = _load_json(args.artifact_dir / "final_exp024a_summary.json")
+    replay_failure_stop = (
+        final["decision"]["decision_branch"]
+        == "appworld_one_step_replay_invalid"
+    )
+    branch_required = (
+        ("replay_failure_diagnostics.json", "replay_failure_report.md")
+        if replay_failure_stop
+        else (
+            "generation_summary.json",
+            "one_step_metrics.json",
+            "causal_comparisons.json",
+            "same_signature_consistency.json",
+            "raw_nll_behavior_relationship.json",
+        )
+    )
+    checks.update(
+        {
+            f"required:{name}": (args.artifact_dir / name).exists()
+            for name in branch_required
+        }
+    )
+    if not all(checks.values()):
+        failed = [name for name, value in checks.items() if not value]
+        raise FileNotFoundError(f"Missing branch artifacts: {failed}")
 
     run_manifest = _load_json(args.artifact_dir / "run_manifest.json")
     equivalence = _load_json(
@@ -74,9 +96,11 @@ def main() -> None:
         read_jsonl(args.artifact_dir / "condition_prompt_preflight.jsonl")
     )
     preflight = _load_json(args.artifact_dir / "preflight_summary.json")
-    replay = _load_json(args.artifact_dir / "replay" / "replay_summary.json")
-    generation = _load_json(args.artifact_dir / "generation_summary.json")
-    final = _load_json(args.artifact_dir / "final_exp024a_summary.json")
+    generation = (
+        None
+        if replay_failure_stop
+        else _load_json(args.artifact_dir / "generation_summary.json")
+    )
     attempts = list(read_jsonl(args.artifact_dir / "attempts.jsonl"))
     expected = settings["expected"]
 
@@ -138,20 +162,76 @@ def main() -> None:
             "preflight_no_appworld": preflight["appworld_instance_count"] == 0,
             "replay_all_states": replay["state_count"]
             == expected["one_step_audit_states"],
-            "replay_all_passed": bool(replay["all_states_passed"]),
-            "generation_complete": bool(generation["all_complete"]),
-            "generation_count": generation["condition_count"]
-            == conditions["condition_count"],
-            "generation_unique": generation["unique_condition_key_count"]
-            == conditions["condition_count"],
-            "final_condition_count": final["condition_count"]
-            == conditions["condition_count"],
-            "final_replay_passed": bool(final["replay"]["all_states_passed"]),
             "field_training_blocked": bool(
                 final["decision"]["field_training_remains_blocked"]
             ),
         }
     )
+
+    if replay_failure_stop:
+        diagnostic = _load_json(
+            args.artifact_dir / "replay_failure_diagnostics.json"
+        )
+        checks.update(
+            {
+                "replay_gate_failed": not bool(replay["all_states_passed"]),
+                "replay_failure_present": replay["failed_state_count"] > 0,
+                "diagnostic_state_count": diagnostic["replay_diagnostics"][
+                    "state_count"
+                ]
+                == expected["one_step_audit_states"],
+                "diagnostic_failure_count": diagnostic["replay_diagnostics"][
+                    "failed_state_count"
+                ]
+                == replay["failed_state_count"],
+                "diagnostic_branch": diagnostic["decision_branch"]
+                == "appworld_one_step_replay_invalid",
+                "appworld_provenance_recorded": bool(
+                    diagnostic["appworld_provenance"]["installed"][
+                        "package_version"
+                    ]
+                )
+                and diagnostic["appworld_provenance"]["source"]["task_count"]
+                == 9,
+                "version_comparison_recorded": isinstance(
+                    diagnostic["appworld_provenance"][
+                        "installed_matches_source_versions"
+                    ],
+                    bool,
+                ),
+                "no_generation_summary": not (
+                    args.artifact_dir / "generation_summary.json"
+                ).exists(),
+                "final_zero_generations": final[
+                    "actual_qwen_generation_count"
+                ]
+                == 0,
+                "final_zero_h100": float(final["actual_h100_hours"]) == 0.0,
+                "final_planned_condition_count": final[
+                    "planned_condition_count"
+                ]
+                == conditions["condition_count"],
+                "final_actual_condition_count": final["actual_condition_count"]
+                == 0,
+            }
+        )
+    else:
+        assert generation is not None
+        checks.update(
+            {
+                "replay_all_passed": bool(replay["all_states_passed"]),
+                "generation_complete": bool(generation["all_complete"]),
+                "generation_count": generation["condition_count"]
+                == conditions["condition_count"],
+                "generation_unique": generation["unique_condition_key_count"]
+                == conditions["condition_count"],
+                "final_condition_count": final["condition_count"]
+                == conditions["condition_count"],
+                "final_replay_passed": bool(
+                    final["replay"]["all_states_passed"]
+                ),
+            }
+        )
 
     class_by_id = {
         row["signature_class_id"]: row for row in equivalence["classes"]
@@ -174,27 +254,30 @@ def main() -> None:
 
     output_paths = sorted((args.artifact_dir / "condition_outputs").glob("*.json"))
     output_rows = [_load_json(path) for path in output_paths]
-    checks["one_output_per_condition"] = len(output_rows) == conditions[
-        "condition_count"
-    ]
-    checks["output_keys_exact"] = {
-        row["condition_key"] for row in output_rows
-    } == {row["condition_key"] for row in conditions["conditions"]}
-    checks["output_format"] = all(
-        row["format"] == GENERATION_RESULT_VERSION for row in output_rows
-    )
-    checks["frozen_qwen_identity"] = all(
-        row["model_name"] == settings["generation"]["model_name"]
-        and not bool(row["do_sample"])
-        and not bool(row["enable_thinking"])
-        and float(row["temperature"]) == 0.0
-        for row in output_rows
-    )
-    checks["fresh_environment_hashes"] = all(
-        bool(row["environment_reconstruction_sha256"])
-        and bool(row["history_replay_match"])
-        for row in output_rows
-    )
+    if replay_failure_stop:
+        checks["no_condition_outputs"] = not output_rows
+    else:
+        checks["one_output_per_condition"] = len(output_rows) == conditions[
+            "condition_count"
+        ]
+        checks["output_keys_exact"] = {
+            row["condition_key"] for row in output_rows
+        } == {row["condition_key"] for row in conditions["conditions"]}
+        checks["output_format"] = all(
+            row["format"] == GENERATION_RESULT_VERSION for row in output_rows
+        )
+        checks["frozen_qwen_identity"] = all(
+            row["model_name"] == settings["generation"]["model_name"]
+            and not bool(row["do_sample"])
+            and not bool(row["enable_thinking"])
+            and float(row["temperature"]) == 0.0
+            for row in output_rows
+        )
+        checks["fresh_environment_hashes"] = all(
+            bool(row["environment_reconstruction_sha256"])
+            and bool(row["history_replay_match"])
+            for row in output_rows
+        )
 
     start_counts = Counter(
         row["attempt_id"] for row in attempts if row["event"] == "start"
@@ -205,11 +288,26 @@ def main() -> None:
     checks["attempt_start_end_pairing"] = start_counts == end_counts and all(
         value == 1 for value in start_counts.values()
     )
-    checks["attempt_success"] = all(
-        int(row["exit_code"]) == 0
-        for row in attempts
-        if row["event"] == "end"
+    end_rows = [row for row in attempts if row["event"] == "end"]
+    checks["attempt_exit_codes_recorded"] = all(
+        isinstance(row.get("exit_code"), int) for row in end_rows
     )
+    if replay_failure_stop:
+        checks["replay_gate_failure_in_ledger"] = any(
+            "appworld_one_step_replay_invalid" in str(row.get("stop_reason"))
+            for row in end_rows
+        )
+        checks["finalization_attempt_succeeded"] = any(
+            row["phase"] == "replay_failure_diagnosis_and_finalization"
+            and int(row["exit_code"]) == 0
+            for row in end_rows
+        )
+    else:
+        checks["analysis_attempt_succeeded"] = any(
+            row["phase"] == "causal_metrics_and_scientific_gate"
+            and int(row["exit_code"]) == 0
+            for row in end_rows
+        )
     checks["attempt_no_scientific_change"] = all(
         not bool(row["scientific_parameter_changed"]) for row in attempts
     )

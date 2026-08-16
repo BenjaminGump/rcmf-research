@@ -14,6 +14,7 @@ from rcmf.training.procedural_causal_audit_6h import (
     normalize_observation,
     paired_task_bootstrap,
     signature_only_card,
+    summarize_replay_failure,
     validate_audit_label_coverage,
 )
 from scripts.run_procedural_causal_audit_6h import (
@@ -372,6 +373,62 @@ def test_replay_contract_and_history_execution_use_pair_state() -> None:
             "observation_match": True,
         }
     ]
+
+
+def test_replay_failure_summary_counts_atomic_state_outputs() -> None:
+    rows = [
+        {
+            "state_example_id": "s1",
+            "task_id": "t1",
+            "history_step_count": 2,
+            "history_checks": [
+                {"step_id": 1, "observation_match": False},
+                {"step_id": 2, "observation_match": True},
+            ],
+            "history_match": False,
+            "target_observation_match": True,
+            "passed": False,
+        },
+        {
+            "state_example_id": "s2",
+            "task_id": "t2",
+            "history_step_count": 0,
+            "history_checks": [],
+            "history_match": True,
+            "target_observation_match": False,
+            "passed": False,
+        },
+    ]
+    summary = summarize_replay_failure(rows)
+    assert summary["state_count"] == 2
+    assert summary["failed_state_count"] == 2
+    assert summary["history_match_state_count"] == 1
+    assert summary["target_match_state_count"] == 1
+    assert summary["history_step_match_count"] == 1
+    assert summary["history_step_match_fraction"] == 0.5
+    assert summary["zero_history_target_match_count"] == 0
+    assert summary["first_history_mismatch_step_counts"] == {
+        "1": 1,
+        "no_history_mismatch": 1,
+    }
+
+
+def test_replay_failure_finalizer_forbids_generation_artifacts() -> None:
+    source = Path(
+        "scripts/finalize_procedural_causal_replay_failure_6h.py"
+    ).read_text(encoding="utf-8")
+    assert "Replay gate was crossed: generation artifacts already exist" in source
+    assert '"actual_qwen_generation_count": 0' in source
+    assert '"appworld_one_step_replay_invalid"' in source
+
+
+def test_postrun_validator_supports_preregistered_replay_stop() -> None:
+    source = Path("scripts/validate_procedural_causal_audit_6h.py").read_text(
+        encoding="utf-8"
+    )
+    assert "replay_failure_stop" in source
+    assert 'checks["no_condition_outputs"] = not output_rows' in source
+    assert '"replay_gate_failure_in_ledger"' in source
 
 
 def test_prepare_scope_contains_no_qwen_forward_or_appworld(tmp_path: Path) -> None:
