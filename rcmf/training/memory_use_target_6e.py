@@ -27,6 +27,28 @@ from rcmf.training.state_conditioned_transition_6b import DenseTower
 
 
 TARGET_AUDIT_VERSION = "relative_intent_memory_use_target_6e_v1"
+
+TWO_AXIS_CELL_IDS = {
+    "A": "A",
+    "B": "B",
+    "C": "C",
+    "D": "D",
+    "train_state__train_transition": "A",
+    "heldout_state__train_transition": "B",
+    "train_state__heldout_transition": "C",
+    "heldout_state__heldout_transition": "D",
+}
+
+
+def canonical_two_axis_cell(value: object) -> str:
+    """Map immutable EXP-020 split names to the compact A/B/C/D convention."""
+    cell = str(value)
+    try:
+        return TWO_AXIS_CELL_IDS[cell]
+    except KeyError as exc:
+        raise ValueError(f"Unknown two-axis cell: {cell!r}") from exc
+
+
 SERIALIZATION_VERSION = "raw_transition_serialization_audit_6e_v1"
 ACTION_SIGNATURE_VERSION = "deterministic_action_signature_6e_v1"
 TARGET_NAMES = ("T0", "T3", "T4", "T5", "T6", "T7")

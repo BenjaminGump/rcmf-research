@@ -22,6 +22,7 @@ from rcmf.training.memory_use_target_6e import (
     TARGET_AUDIT_VERSION,
     action_signature,
     add_relative_targets,
+    canonical_two_axis_cell,
     decompose_locked_utility,
     messages_with_serialized_transition,
     pairwise_coverage,
@@ -317,7 +318,7 @@ def main() -> None:
         _assert_count("validation query states", query_manifest["validation_query_count"], expected["validation_query_states"])
         _assert_count("transitions", len(panel_rows), expected["transitions"])
         _assert_count("scoreable rows", len(pair_rows), expected["scoreable_rows"])
-        cell_counts = Counter(str(row["cell"]) for row in pair_rows)
+        cell_counts = Counter(canonical_two_axis_cell(row["cell"]) for row in pair_rows)
         for cell in "ABCD":
             _assert_count(f"cell {cell}", cell_counts[cell], expected[f"cell_{cell.lower()}"])
         if len({str(row["pair_id"]) for row in pair_rows}) != len(pair_rows):
@@ -346,6 +347,8 @@ def main() -> None:
         enriched = []
         for row in pair_rows:
             copy = dict(row)
+            copy["source_cell"] = str(row["cell"])
+            copy["cell"] = canonical_two_axis_cell(row["cell"])
             copy["query_action_signature"] = query_signatures[str(row["state_example_id"])]
             copy["transition_signature"] = transition_signatures[str(row["transition_id"])]
             enriched.append(copy)

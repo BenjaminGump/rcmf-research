@@ -10,6 +10,7 @@ from rcmf.training.memory_use_target_6e import (
     CachedArchitectureScorer,
     action_signature,
     add_relative_targets,
+    canonical_two_axis_cell,
     intent_feature_vector,
     messages_with_serialized_transition,
     pairwise_coverage,
@@ -18,6 +19,20 @@ from rcmf.training.memory_use_target_6e import (
     serialization_robustness,
     transition_teacher_section_for_template,
 )
+
+
+def test_exp020_cell_names_are_canonicalized_without_ambiguity() -> None:
+    assert canonical_two_axis_cell("train_state__train_transition") == "A"
+    assert canonical_two_axis_cell("heldout_state__train_transition") == "B"
+    assert canonical_two_axis_cell("train_state__heldout_transition") == "C"
+    assert canonical_two_axis_cell("heldout_state__heldout_transition") == "D"
+    assert canonical_two_axis_cell("A") == "A"
+    try:
+        canonical_two_axis_cell("unknown")
+    except ValueError as exc:
+        assert "Unknown two-axis cell" in str(exc)
+    else:
+        raise AssertionError("Unknown cell must fail closed")
 
 
 def _transition(index: int = 0) -> dict:
