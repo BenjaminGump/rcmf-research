@@ -29,7 +29,9 @@ from rcmf.training.memory_use_target_6e import (
 )
 from rcmf.training.state_conditioned_transition_6b import (
     AttemptLedger,
+    append_jsonl_fsync,
     initialize_or_validate_run_manifest,
+    utc_now,
 )
 from rcmf.training.transition_memory_6a import state_example_id
 from rcmf.utils.serialization import (
@@ -212,6 +214,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--tmux-session", default="none-preflight")
     parser.add_argument("--parent-attempt-id", default=None)
     parser.add_argument("--resume-checkpoint", default=None)
+    parser.add_argument("--prior-bootstrap-failure-id", default=None)
+    parser.add_argument("--prior-bootstrap-failure-reason", default=None)
     return parser.parse_args()
 
 
@@ -232,7 +236,7 @@ def main() -> None:
         "teacher_cache": exp020 / "teacher_cache.jsonl",
         "transition_panel": exp017 / "transition_panel.jsonl",
         "parent_split": exp018 / "transition_parent_split_manifest.json",
-        "exp019_summary": exp019 / "final_summary.json",
+        "exp019_postrun_validation": exp019 / "postrun_validation.json",
         "exp020_summary": exp020 / "final_summary.json",
         "decision_examples": source / "decision_examples.jsonl",
     }
@@ -255,6 +259,40 @@ def main() -> None:
             "cached_field_and_cross_architectures",
         ],
     )
+    if bool(args.prior_bootstrap_failure_id) != bool(args.prior_bootstrap_failure_reason):
+        raise ValueError(
+            "Prior bootstrap failure ID and reason must be provided together"
+        )
+    if args.prior_bootstrap_failure_id:
+        attempts_path = args.artifact_dir / "attempts.jsonl"
+        existing_attempt_ids = {
+            str(row["attempt_id"]) for row in read_jsonl(attempts_path)
+        } if attempts_path.exists() else set()
+        if args.prior_bootstrap_failure_id not in existing_attempt_ids:
+            timestamp = utc_now()
+            append_jsonl_fsync(
+                attempts_path,
+                {
+                    "format": "rcmf_lambda_attempt_ledger_v1",
+                    "attempt_id": str(args.prior_bootstrap_failure_id),
+                    "run_uuid": str(settings["run_uuid"]),
+                    "phase": "preflight_bootstrap",
+                    "start_timestamp_utc": timestamp,
+                    "end_timestamp_utc": timestamp,
+                    "local_head": args.local_head,
+                    "github_head": args.github_head,
+                    "lambda_head": args.lambda_head,
+                    "tmux_session": "exp021-preflight",
+                    "process_command": "prepare_memory_use_target_6e.py",
+                    "exit_code": 1,
+                    "status": "failed",
+                    "stop_reason": str(args.prior_bootstrap_failure_reason),
+                    "latest_validated_checkpoint": None,
+                    "scientific_parameter_changed": False,
+                    "parent_attempt_id": None,
+                    "resume_checkpoint": None,
+                },
+            )
     save_resolved_config(cfg, args.artifact_dir / "resolved_config.yaml")
     atomic_write_json(args.artifact_dir / "stage_c_6e_settings.json", settings)
     with AttemptLedger(

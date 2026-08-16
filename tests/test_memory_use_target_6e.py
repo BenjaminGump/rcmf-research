@@ -183,3 +183,14 @@ def test_entrypoints_preserve_hard_scope() -> None:
     assert "build_backend" not in models
     assert "AdditiveTokenMemoryInjector" not in models
     assert ".generate(" not in models
+
+
+def test_preflight_uses_actual_exp019_record_and_can_log_bootstrap_failure() -> None:
+    root = Path(__file__).resolve().parents[1]
+    source = (root / "scripts/prepare_memory_use_target_6e.py").read_text(
+        encoding="utf-8"
+    )
+    assert 'exp019 / "postrun_validation.json"' in source
+    assert 'exp019 / "final_summary.json"' not in source
+    assert 'parser.add_argument("--prior-bootstrap-failure-id"' in source
+    assert "append_jsonl_fsync(" in source
