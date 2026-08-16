@@ -1,0 +1,96 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_procedural_causal_audit_6h
+  version: procedural_causal_audit_6h_v1
+  scope:
+    - immutable_exp017_exp020_exp021_exp022_exp023
+    - complete_499_transition_bank
+    - immutable_45_state_one_step_manifest
+    - signature_balanced_oracle_conditions
+    - exact_appworld_one_step_replay
+    - deterministic_frozen_qwen_generation
+    - no_model_training
+    - no_behavioral_program_training
+    - no_additive_token_injector_training
+    - no_selector_training
+    - no_full_react_trajectory
+    - no_stage_c2
+    - no_end_to_end_rcmf
+    - no_v4_tag
+
+stage_c_6h:
+  run_uuid: procedural_causal_audit_6h_20260817_001
+  seed: 24024
+  artifact_dir: runs/stage_c/procedural_causal_audit_6h_20260817_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  source_data: runs/appworld/official_react_gpt4o_train_success_full_demo_filtered_no_2a163ab3_20260803
+  exp017_artifact: runs/stage_c/transition_memory_6a_20260814_001
+  exp020_artifact: runs/stage_c/all_task_interaction_6d_20260815_001
+  exp021_artifact: runs/stage_c/memory_use_target_6e_20260816_001
+  exp022_artifact: runs/stage_c/procedural_outcome_6f_20260816_001
+  exp023_artifact: runs/stage_c/procedural_coverage_6g_20260816_001
+
+  expected:
+    decision_examples: 638
+    memory_records: 46
+    transitions: 499
+    unique_signatures: 150
+    duplicate_transitions: 349
+    api_documentation_transitions: 210
+    query_states: 92
+    one_step_audit_states: 45
+    full_legal_pairs: 44910
+    full_scoreable_pairs: 43415
+    one_step_scoreable_pairs: 21624
+
+  selection:
+    high_tier_minimum: 3
+    minimum_primary_states: 18
+    minimum_primary_tasks: 6
+
+  replay:
+    observation_normalization: appworld_observation_normalization_6h_v1
+    require_all_states: true
+    random_seed: 100
+    max_interactions: 1000
+    max_api_calls_per_interaction: 1000
+
+  generation:
+    model_name: Qwen/Qwen3-8B
+    dtype: bfloat16
+    device_map: null
+    temperature: 0.0
+    top_p: 1.0
+    do_sample: false
+    enable_thinking: false
+    max_new_tokens: 1024
+    context_limit: 40960
+    prompt_profile: full_demo
+
+  runtime:
+    review_threshold_h100_hours: 12.0
+    generation_seconds_per_condition:
+      best: 20.0
+      expected: 45.0
+      conservative: 90.0
+    replay_seconds_per_condition:
+      best: 2.0
+      expected: 5.0
+      conservative: 10.0
+    artifact_bytes_per_condition: 2359296
+
+  metrics:
+    bootstrap_samples: 10000
+    bootstrap_seed: 24025
+
+  gates:
+    oracle_exact_api_gain: 0.10
+    material_control_gain: 0.05
+    raw_content_gain_over_signature_card: 0.05
+    maximum_execution_drop: 0.05
+    minimum_positive_tasks: 6
+    same_signature_direction_agreement: 0.70
+    metadata_gain_retention: 0.90
+
+  heartbeat_interval_seconds: 240
