@@ -23,6 +23,7 @@ from rcmf.training.procedural_causal_audit_6h import (
     classify_audit_states,
     messages_with_signature_card,
     signature_only_card,
+    validate_audit_label_coverage,
 )
 from rcmf.training.state_conditioned_transition_6b import (
     AttemptLedger,
@@ -38,6 +39,7 @@ from rcmf.utils.serialization import (
     read_jsonl,
     sha256_file,
 )
+from scripts.prepare_procedural_coverage_6g import _build_label_rows
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -400,6 +402,22 @@ def main() -> None:
         one_step_manifest = _load_json(paths["one_step_query_manifest"])
         expanded_query_manifest = _load_json(paths["expanded_query_manifest"])
         audit_rows = list(one_step_manifest["rows"])
+        exp022_signature_path = exp022 / "procedural_signatures.jsonl"
+        if not exp022_signature_path.exists():
+            raise FileNotFoundError(
+                f"Immutable EXP-022 signatures missing: {exp022_signature_path}"
+            )
+        exp023_run_manifest = _load_json(exp023 / "run_manifest.json")
+        exp022_signature_sha256 = sha256_file(exp022_signature_path)
+        if (
+            exp023_run_manifest["data_manifest_hashes"]["exp022_signatures"]
+            != exp022_signature_sha256
+        ):
+            raise ValueError(
+                "EXP-022 procedural signatures differ from the immutable "
+                "EXP-023 source hash"
+            )
+        source_signature_rows = _load_rows(exp022_signature_path)
 
         _assert_count("decision examples", len(examples), expected["decision_examples"])
         _assert_count("transitions", len(transitions), expected["transitions"])
@@ -422,12 +440,72 @@ def main() -> None:
         _assert_count("API-documentation transitions", equivalence["api_documentation_transition_count"], expected["api_documentation_transitions"])
         atomic_write_json(args.artifact_dir / "signature_equivalence_manifest.json", equivalence)
 
-        audit_ids = {str(row["state_example_id"]) for row in audit_rows}
-        audit_labels = [
+        query_signatures = {
+            str(row["state_example_id"]): row
+            for row in source_signature_rows
+            if str(row.get("kind")) == "query"
+        }
+        _assert_count(
+            "query procedural signatures",
+            len(query_signatures),
+            expected["decision_examples"],
+        )
+        transition_signatures = {
+            str(row["transition_id"]): row for row in signatures
+        }
+        split_by_parent: dict[str, str] = {}
+        for row in labels:
+            parent_id = str(row["transition_parent_id"])
+            split = str(row["transition_split"])
+            previous = split_by_parent.setdefault(parent_id, split)
+            if previous != split:
+                raise ValueError(
+                    f"Transition parent has inconsistent split: {parent_id}"
+                )
+        audit_labels = _build_label_rows(
+            preflight_rows=one_step_preflight,
+            query_signatures=query_signatures,
+            transition_signatures=transition_signatures,
+            parent_split={"split_by_parent": split_by_parent},
+        )
+        label_coverage = validate_audit_label_coverage(
+            audit_rows,
+            audit_labels,
+            expected_scoreable_count=int(expected["one_step_scoreable_pairs"]),
+        )
+        full_labels_by_pair = {str(row["pair_id"]): row for row in labels}
+        overlap_rows = [
             row
-            for row in labels
-            if str(row["state_example_id"]) in audit_ids
+            for row in audit_labels
+            if str(row["pair_id"]) in full_labels_by_pair
         ]
+        overlap_mismatches = [
+            str(row["pair_id"])
+            for row in overlap_rows
+            if row != full_labels_by_pair[str(row["pair_id"])]
+        ]
+        if overlap_mismatches:
+            raise ValueError(
+                "Recomputed one-step labels do not reproduce EXP-023 labels: "
+                + ", ".join(overlap_mismatches[:5])
+            )
+        _atomic_write_jsonl(
+            args.artifact_dir / "one_step_procedural_label_rows.jsonl",
+            audit_labels,
+        )
+        atomic_write_json(
+            args.artifact_dir / "one_step_procedural_label_validation.json",
+            {
+                "format": "one_step_procedural_label_validation_6h_v1",
+                **label_coverage,
+                "exp022_signature_sha256": exp022_signature_sha256,
+                "overlap_with_exp023_full_labels": len(overlap_rows),
+                "overlap_mismatch_count": 0,
+                "label_rows_sha256": sha256_file(
+                    args.artifact_dir / "one_step_procedural_label_rows.jsonl"
+                ),
+            },
+        )
         scoreable_audit_labels = [
             row for row in audit_labels if bool(row["scoreable_under_context"])
         ]
@@ -503,6 +581,8 @@ def main() -> None:
                     "manifest_sha256",
                 )
             },
+            "audit_label_coverage": label_coverage,
+            "exp022_signature_sha256": exp022_signature_sha256,
             "condition_manifest": {
                 key: condition_manifest[key]
                 for key in (

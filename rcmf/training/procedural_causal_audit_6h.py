@@ -417,6 +417,52 @@ def classify_audit_states(
     return payload
 
 
+def validate_audit_label_coverage(
+    audit_rows: Sequence[Mapping[str, Any]],
+    label_rows: Sequence[Mapping[str, Any]],
+    *,
+    expected_scoreable_count: int,
+) -> dict[str, Any]:
+    """Reject the EXP-020-only subset bug before audit-state stratification."""
+    expected_ids = {
+        str(row["state_example_id"]) for row in audit_rows
+    }
+    if len(expected_ids) != len(audit_rows):
+        raise ValueError("Audit-state manifest contains duplicate IDs")
+    grouped: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    for row in label_rows:
+        state_id = str(row["state_example_id"])
+        if state_id not in expected_ids:
+            raise ValueError(f"Unexpected state in audit labels: {state_id}")
+        grouped[state_id].append(row)
+    missing = sorted(expected_ids - set(grouped))
+    scoreable = sum(
+        bool(row["scoreable_under_context"]) for row in label_rows
+    )
+    if missing:
+        raise ValueError(
+            "Audit procedural labels omit states: " + ", ".join(missing)
+        )
+    if scoreable != int(expected_scoreable_count):
+        raise ValueError(
+            f"Audit scoreable labels differ: {scoreable} != "
+            f"{expected_scoreable_count}"
+        )
+    return {
+        "audit_state_count": len(expected_ids),
+        "legal_label_count": len(label_rows),
+        "scoreable_label_count": scoreable,
+        "over_context_label_count": len(label_rows) - scoreable,
+        "minimum_legal_candidates_per_state": min(
+            len(values) for values in grouped.values()
+        ),
+        "maximum_legal_candidates_per_state": max(
+            len(values) for values in grouped.values()
+        ),
+        "all_audit_states_covered": True,
+    }
+
+
 def _representative_candidates(
     rows: Sequence[Mapping[str, Any]],
     class_by_signature: Mapping[str, Mapping[str, Any]],

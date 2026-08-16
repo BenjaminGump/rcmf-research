@@ -14,6 +14,7 @@ from rcmf.training.procedural_causal_audit_6h import (
     normalize_observation,
     paired_task_bootstrap,
     signature_only_card,
+    validate_audit_label_coverage,
 )
 from scripts.run_procedural_causal_audit_6h import (
     _execute_history,
@@ -252,6 +253,27 @@ def test_strata_and_condition_manifest_preserve_canonical_controls() -> None:
     assert by_name["C2_signature_only"]["transition_id"] == "t1"
     assert by_name["C5_unrelated"]["transition_id"] == "t3"
     assert conditions["condition_counts"]["C0_bare"] == 1
+
+
+def test_audit_label_coverage_rejects_exp020_only_subset() -> None:
+    audit = [
+        {"state_example_id": "covered"},
+        {"state_example_id": "one-step-only"},
+    ]
+    labels = [
+        {
+            "state_example_id": "covered",
+            "scoreable_under_context": True,
+        }
+    ]
+    try:
+        validate_audit_label_coverage(
+            audit, labels, expected_scoreable_count=1
+        )
+    except ValueError as exc:
+        assert "one-step-only" in str(exc)
+    else:
+        raise AssertionError("Missing one-step labels were silently accepted")
 
 
 def test_observation_normalization_and_action_metrics() -> None:
