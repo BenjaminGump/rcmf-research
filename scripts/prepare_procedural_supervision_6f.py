@@ -88,6 +88,19 @@ def _credential_leakage_paths(value: Any, path: str = "root") -> list[str]:
     return findings
 
 
+def _signature_credential_leakage_paths(row: Mapping[str, Any]) -> list[str]:
+    fields = (
+        ("target_signature", "state_stage_signature", "oracle_successor_observation_signature")
+        if row.get("kind") == "query"
+        else ("action_signature", "pre_action_stage_signature", "post_action_observation_signature")
+    )
+    return [
+        finding
+        for field in fields
+        for finding in _credential_leakage_paths(row[field], f"root.{field}")
+    ]
+
+
 def _hard_pair_coverage(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     result: dict[str, Any] = {}
     for cell in "ABCD":
@@ -397,7 +410,7 @@ def main() -> None:
         leakage_paths = [
             {"kind": row["kind"], "id": str(row.get("state_example_id") or row.get("transition_id")), "paths": paths}
             for row in signature_rows
-            if (paths := _credential_leakage_paths(row))
+            if (paths := _signature_credential_leakage_paths(row))
         ]
         if leakage_paths:
             atomic_write_json(

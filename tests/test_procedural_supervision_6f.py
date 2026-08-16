@@ -3,7 +3,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from scripts.prepare_procedural_supervision_6f import _credential_leakage_paths
+from scripts.prepare_procedural_supervision_6f import (
+    _credential_leakage_paths,
+    _signature_credential_leakage_paths,
+)
 
 from rcmf.training.procedural_supervision_6f import (
     canonical_procedure_signature,
@@ -150,3 +153,19 @@ def test_credential_leakage_diagnostic_reports_paths_without_values() -> None:
     )
     assert findings == ["root.nested.value:email"]
     assert "person@example.com" not in json.dumps(findings)
+
+
+def test_credential_scan_excludes_uuid_metadata_but_not_signature_values() -> None:
+    safe = {
+        "kind": "transition",
+        "transition_id": "37199155-8711-5c14-98d0-83c4d34e2d89",
+        "parent_id": "63811814-e639-557d-a560-1d594f10d8ed",
+        "action_signature": {"role": "literal"},
+        "pre_action_stage_signature": {"authenticated": False},
+        "post_action_observation_signature": {"schema_keys": ["phone_number"]},
+    }
+    assert _signature_credential_leakage_paths(safe) == []
+    safe["action_signature"]["raw"] = "person@example.com"
+    assert _signature_credential_leakage_paths(safe) == [
+        "root.action_signature.raw:email"
+    ]
