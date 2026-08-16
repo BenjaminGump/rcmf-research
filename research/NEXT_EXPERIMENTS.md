@@ -1,42 +1,40 @@
 # Next Experiments
 
-The current priority is a reviewed replacement for raw transition target-NLL
-utility as the deployable memory-use target. EXP-021 found that serialization
-is stable and state action intent is learnable, but no relative or
-intent-conditioned target passed the double-held-out field-compatible gate.
+The current priority is a separately reviewed procedural-coverage repair.
+EXP-022 found that the fixed 148-transition panel covers only 12/18 held-out
+states with a legal Tier-3/4 train-parent transition, below the 70% gate.
 Behavioral `p(s,m_transition)` remains blocked.
 
-## EXP-022 Structural/Outcome Memory-Use Supervision Review
+## EXP-023 Full-Transition Procedural Coverage Preflight
 
 Goal:
 
-- Preregister and compare targets that are closer to deployable procedural
-  behavior than raw text-conditioned next-token NLL.
-- Candidate families are deterministic next-action/API compatibility,
-  structured procedural compatibility, and environment/outcome-level benefit.
-- Preserve the 92-query/148-transition EXP-020 panel as the first locked
-  comparator where labels are available, while separating teacher redesign
-  from architecture changes.
+- Recompute deterministic procedural coverage using all 499 legal training
+  transitions instead of the diagnostic 148-transition panel.
+- Determine whether high-tier coverage is repaired before any model, Qwen
+  generation, or AppWorld replay work.
 
 Required preflight:
 
-- Define each label without validation-task leakage and specify whether it is
-  available at deployment time.
-- Report class balance, missingness, action/app/API coverage, and annotation or
-  environment cost before scoring.
-- Use held-out query tasks and transition parents, state/transition shuffle
-  controls, transition-only popularity controls, and task-grouped confidence
-  intervals.
-- If genuinely new tasks or task augmentation are proposed, report exact task
-  provenance and keep them separate from the exhausted 37-task source set.
+- Preserve same-task/episode/replay/lineage exclusions and the 29/8 parent
+  semantics where applicable.
+- Report exact legal/scoreable/over-context counts, Tier-3/4 coverage per cell
+  and task, context-length offenders, projected artifact size, and projected
+  H100/AppWorld runtime. Do not truncate or downsample to fit 12 hours.
+- Reuse EXP-022 signatures only when content hashes match exactly.
 
 Stop condition:
 
-- Do not resume behavioral `p(s,m_transition)`, injector training, selector
-  training, Stage C2, AppWorld generation, or a production field until a
-  field-compatible target passes a separately approved cross-task gate.
-- Do not simply add more states from the same 37 tasks under the unchanged raw
-  NLL utility.
+- Do not train the field-compatible procedural model or run one-step behavior
+  unless the expanded panel passes a preregistered coverage gate reviewed by
+  the user and ChatGPT.
+
+## EXP-022 Procedural/Outcome Supervision Audit (Completed)
+
+- Stopped at the preregistered coverage gate: 12/18 held-out states had a
+  legal Tier-3/4 candidate, below the required 70%.
+- No field model, AppWorld replay, or one-step generation ran.
+- See `research/results/stage_c_procedural_outcome_6f_20260816_001.md`.
 
 ## EXP-001 Correctness Smoke Before Full Training
 

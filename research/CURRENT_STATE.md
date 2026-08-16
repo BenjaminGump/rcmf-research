@@ -1348,3 +1348,34 @@ VERIFIED:
 - Behavioral `p(s,m_transition)` remains blocked. No program, injector,
   selector, production field, Qwen behavioral backpropagation, Stage C2,
   AppWorld evaluation, demo change, or V4 tag occurred.
+
+### EXP-022 procedural/outcome supervision audit
+
+- EXP-022 source/validation commit is
+  `1c9ed7fca9517e0cf75b5589862d60674a17c4da`; artifact root is
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/procedural_outcome_6f_20260816_001`.
+- All 638 successful query actions and all 148 fixed-panel transition actions
+  parsed by AST. No action was dropped, all query targets matched the source
+  successful trajectories, and no raw credential value leaked into a
+  signature.
+- The compiler produced 13,128 unique procedural labels with unchanged
+  A/B/C/D counts `8,205/2,051/2,296/576`.
+- Tier-3/4 state coverage is A/B/C/D `60/74, 12/18, 41/74, 9/18`.
+- The registered B coverage gate failed: `12/18 = 66.6667% < 70%`.
+- Independent validation passed 20/20 checks. Local tests passed 254 with one
+  skip; Lambda focused tests passed 16.
+- No model, Qwen forward, AppWorld instance, replay, generation, or H100 work
+  ran after the stop decision.
+- The branch is `transition_panel_procedural_coverage_insufficient`.
+  Behavioral `p(s,m_transition)` remains blocked. B/C/D field and behavioral
+  metrics are intentionally absent because the protocol stopped before model
+  training.
+- A separately reviewed next milestone may expand the panel from 148 to all
+  499 training transitions, but must preflight exact leakage, context,
+  coverage, pair count, runtime, and artifact size before scoring or training.
+- Four append-only attempts used one run UUID. Two exposed UUID false positives
+  in an overbroad credential scan; one completed outputs before a bookkeeping
+  API error; the tested fourth attempt completed. No scientific parameter
+  changed and no disconnect created a duplicate run.
+- Raw-NLL remains an immutable secondary measurement. V4 remains a candidate;
+  no V4 tag was created or moved.

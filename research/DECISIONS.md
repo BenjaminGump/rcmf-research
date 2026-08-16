@@ -1303,3 +1303,38 @@ Implementation deviations and recovery:
   before writing a replacement summary. The second used a tested shape adapter
   and completed. Every ledger row records
   `scientific_parameter_changed=false`.
+
+## 2026-08-16 EXP-022 transition-panel coverage stop
+
+VERIFIED:
+
+- The fixed 148-transition panel gives legal Tier-3/4 candidates to only 12 of
+  18 held-out query states in cell B (`66.6667%`). The preregistered threshold
+  is 70%.
+- Cell D coverage is 9/18. Six B states lack any legal Tier-3/4 train-parent
+  transition.
+- Parser, label, hash, ledger, and no-training/no-replay checks passed 20/20.
+
+Decision:
+
+- Stop EXP-022 with branch
+  `transition_panel_procedural_coverage_insufficient` before model training and
+  AppWorld replay. Do not round 66.6667% to the gate, substitute states, or
+  silently expand the panel.
+- Do not interpret absent field/shuffle/behavior metrics as failed models; they
+  were never run under the registered stop rule.
+- Keep behavioral `p(s,m_transition)` blocked.
+- The next review may consider all 499 transitions as a coverage repair. It
+  must preserve leakage/no-truncation rules and report exact context and cost
+  preflight before launch.
+- Keep raw-NLL as a secondary comparator and V4 as a candidate. Do not create
+  or move a V4 tag.
+
+Implementation recovery:
+
+- The credential safety scanner initially inspected UUID metadata and produced
+  false positives. It now scans signature payloads only; regression tests prove
+  UUID metadata is excluded while credential-like signature values still fail.
+- A nonexistent `AttemptLedger.checkpoint` call failed after durable outputs.
+  The repair uses the established `progress(latest_validated_checkpoint=...)`
+  API and has a dedicated regression test. Failed attempts remain preserved.
