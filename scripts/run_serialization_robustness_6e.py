@@ -70,6 +70,39 @@ def _validate_cached_row(row: Mapping[str, Any], preflight: Mapping[str, Any]) -
         raise ValueError("Scoreable serialization row has non-finite loss")
 
 
+def _locked_template0_row(
+    selected: Mapping[str, Any],
+    pair_row: Mapping[str, Any],
+    teacher_row: Mapping[str, Any],
+) -> dict[str, Any]:
+    pair_id = str(selected["pair_id"])
+    if str(pair_row["pair_id"]) != pair_id or str(teacher_row["pair_id"]) != pair_id:
+        raise ValueError(f"Template-0 immutable pair identity differs: {pair_id}")
+    for key in ("target_token_sha256", "transition_content_sha256"):
+        if str(pair_row[key]) != str(teacher_row[key]):
+            raise ValueError(f"Template-0 immutable hash differs for {pair_id}: {key}")
+    for key in ("L0", "Lj_transition", "text_utility"):
+        if abs(float(pair_row[key]) - float(teacher_row[key])) > 1.0e-6:
+            raise ValueError(f"Template-0 immutable score differs for {pair_id}: {key}")
+    if not bool(pair_row["valid_for_loss"]) or not bool(teacher_row["valid_for_loss"]):
+        raise ValueError(f"Selected Template-0 row is not scoreable: {pair_id}")
+    if any(bool(row["over_context"]) or bool(row["truncated"]) for row in (pair_row, teacher_row)):
+        raise ValueError(f"Selected Template-0 row violates no-truncation contract: {pair_id}")
+    return {
+        **dict(selected),
+        "template": "template0",
+        "combined_prompt_tokens": int(teacher_row["combined_prompt_tokens"]),
+        "target_tokens": int(teacher_row["target_tokens"]),
+        "L0": float(pair_row["L0"]),
+        "Lj_transition": float(pair_row["Lj_transition"]),
+        "text_utility": float(pair_row["text_utility"]),
+        "score_status": "reused_locked_exp020",
+        "valid_for_loss": True,
+        "over_context": False,
+        "truncated": False,
+    }
+
+
 def _report(summary: Mapping[str, Any]) -> str:
     robust = summary["robustness"]
     return "\n".join(
@@ -134,7 +167,13 @@ def main() -> None:
     query_manifest = _load_json(exp020 / "expanded_query_manifest.json")
     panel_rows = _load_rows(exp017 / "transition_panel.jsonl")
     locked_rows = _load_rows(exp020 / "two_axis_pair_rows.jsonl")
+    locked_teacher_rows = _load_rows(exp020 / "teacher_cache.jsonl")
     locked_by_pair = {str(row["pair_id"]): row for row in locked_rows}
+    locked_teacher_by_pair = {
+        str(row["pair_id"]): row for row in locked_teacher_rows
+    }
+    if len(locked_teacher_by_pair) != len(locked_teacher_rows):
+        raise ValueError("Duplicate immutable EXP-020 teacher-cache pair key")
     transitions = {str(row["transition_id"]): row for row in panel_rows}
     examples = load_decision_examples(source / "decision_examples.jsonl")
     preflight_by_key = {
@@ -247,19 +286,8 @@ def main() -> None:
         output = []
         for selected in audit["rows"]:
             locked = locked_by_pair[str(selected["pair_id"])]
-            output.append({
-                **dict(selected),
-                "template": "template0",
-                "combined_prompt_tokens": int(locked["combined_prompt_tokens"]),
-                "target_tokens": int(locked["target_tokens"]),
-                "L0": float(locked["L0"]),
-                "Lj_transition": float(locked["Lj_transition"]),
-                "text_utility": float(locked["text_utility"]),
-                "score_status": "reused_locked_exp020",
-                "valid_for_loss": True,
-                "over_context": False,
-                "truncated": False,
-            })
+            teacher_locked = locked_teacher_by_pair[str(selected["pair_id"])]
+            output.append(_locked_template0_row(selected, locked, teacher_locked))
             for template in ("canonical_json", "compact_tagged"):
                 output.append(completed[f"{selected['pair_id']}::{template}"])
         keys = {(str(row["pair_id"]), str(row["template"])) for row in output}

@@ -5,6 +5,8 @@ from pathlib import Path
 
 import torch
 
+from scripts.run_serialization_robustness_6e import _locked_template0_row
+
 from rcmf.benchmarks.appworld.prompt import get_initial_messages
 from rcmf.training.memory_use_target_6e import (
     CachedArchitectureScorer,
@@ -33,6 +35,38 @@ def test_exp020_cell_names_are_canonicalized_without_ambiguity() -> None:
         assert "Unknown two-axis cell" in str(exc)
     else:
         raise AssertionError("Unknown cell must fail closed")
+
+
+def test_template0_uses_exact_teacher_cache_combined_token_count() -> None:
+    selected = {"pair_id": "pair-1", "cell": "A"}
+    pair_row = {
+        "pair_id": "pair-1",
+        "target_token_sha256": "target",
+        "transition_content_sha256": "memory",
+        "L0": 0.5,
+        "Lj_transition": 0.4,
+        "text_utility": 0.1,
+        "target_tokens": 7,
+        "valid_for_loss": True,
+        "over_context": False,
+        "truncated": False,
+    }
+    teacher_row = {
+        **pair_row,
+        "combined_prompt_tokens": 12345,
+    }
+    output = _locked_template0_row(selected, pair_row, teacher_row)
+    assert output["combined_prompt_tokens"] == 12345
+    assert output["target_tokens"] == 7
+    assert output["score_status"] == "reused_locked_exp020"
+
+    teacher_row["text_utility"] = 0.2
+    try:
+        _locked_template0_row(selected, pair_row, teacher_row)
+    except ValueError as exc:
+        assert "immutable score differs" in str(exc)
+    else:
+        raise AssertionError("Mismatched immutable teacher score must fail closed")
 
 
 def _transition(index: int = 0) -> dict:
