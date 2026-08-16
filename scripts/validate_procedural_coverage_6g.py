@@ -29,6 +29,45 @@ def _load_rows(path: Path) -> list[dict[str, Any]]:
     return list(read_jsonl(path))
 
 
+def _immutable_input_paths(settings: Mapping[str, Any]) -> dict[str, Path]:
+    source = Path(settings["source_data"])
+    exp017 = Path(settings["exp017_artifact"])
+    exp018 = Path(settings["exp018_artifact"])
+    exp019 = Path(settings["exp019_artifact"])
+    exp020 = Path(settings["exp020_artifact"])
+    exp021 = Path(settings["exp021_artifact"])
+    exp022 = Path(settings["exp022_artifact"])
+    return {
+        "decision_examples": source / "decision_examples.jsonl",
+        "transition_manifest": exp017 / "transition_manifest.jsonl",
+        "transition_panel": exp017 / "transition_panel.jsonl",
+        "exp017_validation": exp017 / "postrun_validation.json",
+        "parent_split": exp018 / "transition_parent_split_manifest.json",
+        "exp019_multiview_report": exp019
+        / "parts_c_d/multiview_cache_report.json",
+        "expanded_query_manifest": exp020 / "expanded_query_manifest.json",
+        "old_pair_preflight": exp020 / "pair_preflight.jsonl",
+        "exp020_final": exp020 / "final_summary.json",
+        "exp020_model_summary": exp020 / "model_summary.json",
+        "exp020_validation": exp020 / "postrun_validation.json",
+        "exp021_validation": exp021 / "postrun_validation.json",
+        "exp022_signatures": exp022 / "procedural_signatures.jsonl",
+        "exp022_labels": exp022 / "procedural_label_rows.jsonl",
+        "exp022_one_step": exp022 / "one_step_query_manifest.json",
+        "exp022_summary": exp022 / "final_exp022_summary.json",
+        "exp022_validation": exp022 / "postrun_validation.json",
+    }
+
+
+def _source_hashes_match(
+    paths: Mapping[str, Path], hashes: Mapping[str, str]
+) -> bool:
+    return set(paths) == set(hashes) and all(
+        path.exists() and sha256_file(path) == hashes[name]
+        for name, path in paths.items()
+    )
+
+
 def _attempt_checks(rows: Sequence[Mapping[str, Any]], run_uuid: str) -> dict[str, bool]:
     starts = Counter(
         str(row["attempt_id"]) for row in rows if str(row.get("event")) == "start"
@@ -162,9 +201,8 @@ def main() -> None:
     cell_counts = Counter(str(row["cell"]) for row in labels)
     summary_cells = summary["counts"]["cell_counts"]
     attempts_ok = _attempt_checks(attempts, str(settings["run_uuid"]))
-    source_hashes_unchanged = all(
-        Path(name).exists() and sha256_file(name) == digest
-        for name, digest in run_manifest["data_manifest_hashes"].items()
+    source_hashes_unchanged = _source_hashes_match(
+        _immutable_input_paths(settings), run_manifest["data_manifest_hashes"]
     )
     prohibited_files = [
         str(path.relative_to(root))

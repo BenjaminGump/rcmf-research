@@ -19,6 +19,7 @@ from scripts.prepare_procedural_coverage_6g import (
     _one_step_condition_preflight,
     _validate_preflight_checkpoint,
 )
+from scripts.validate_procedural_coverage_6g import _source_hashes_match
 from rcmf.utils.serialization import atomic_write_json, sha256_file
 
 
@@ -294,3 +295,11 @@ def test_exp023_entrypoint_has_no_model_or_appworld_execution() -> None:
     assert "AppWorld(" not in source
     assert "generate(" not in source
     assert "canonical_procedure_signature" in source
+
+
+def test_validator_resolves_manifest_names_to_paths(tmp_path: Path) -> None:
+    source = tmp_path / "source.json"
+    source.write_text("immutable\n", encoding="utf-8")
+    hashes = {"logical_source_name": sha256_file(source)}
+    assert _source_hashes_match({"logical_source_name": source}, hashes)
+    assert not _source_hashes_match({"wrong_name": source}, hashes)
