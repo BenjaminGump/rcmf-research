@@ -256,3 +256,4 @@ def test_coverage_details_lists_states_without_high_tier() -> None:
     assert details["B"]["states_without_tier3_or_4"][0][
         "state_example_id"
     ] == "state-1"
+    assert details["scoreable_transition_coverage"]["transition_count"] == 1

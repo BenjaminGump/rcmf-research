@@ -106,7 +106,8 @@ def _coverage_details(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
             ),
             "task_coverage": dict(sorted(task_coverage.items())),
         }
-    cells["panel"] = {
+    cells["scoreable_transition_coverage"] = {
+        "transition_count": len(all_transitions),
         "transition_primary_app_counts": dict(
             sorted(
                 Counter(
@@ -228,6 +229,36 @@ def main() -> None:
         cell_counts = Counter(str(row["cell"]) for row in labels)
         recomputed_coverage = summarize_label_coverage(labels)
         details = _coverage_details(labels)
+        transition_signatures = [
+            row for row in signatures if str(row["kind"]) == "transition"
+        ]
+        transition_panel_coverage = {
+            "transition_count": len(transition_signatures),
+            "primary_app_counts": dict(
+                sorted(
+                    Counter(
+                        str(row["action_signature"]["primary_app"])
+                        for row in transition_signatures
+                    ).items()
+                )
+            ),
+            "primary_api_counts": dict(
+                sorted(
+                    Counter(
+                        str(row["action_signature"]["primary_api"])
+                        for row in transition_signatures
+                    ).items()
+                )
+            ),
+            "action_type_counts": dict(
+                sorted(
+                    Counter(
+                        str(row["action_signature"]["coarse_action_type"])
+                        for row in transition_signatures
+                    ).items()
+                )
+            ),
+        }
         b_coverage = recomputed_coverage["cells"]["B"]
         expected_cells = {"A": 8205, "B": 2051, "C": 2296, "D": 576}
         checks.update(
@@ -338,6 +369,7 @@ def main() -> None:
                 },
                 "label_coverage": recomputed_coverage,
                 "coverage_details": details,
+                "transition_panel_coverage": transition_panel_coverage,
                 "hard_same_intent_pairs": summary["labels"][
                     "hard_same_intent_pairs"
                 ],
