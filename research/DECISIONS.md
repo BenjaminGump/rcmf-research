@@ -1246,3 +1246,60 @@ Decision:
   Lambda from the bundle.
 - Record this fallback in
   `docs/Codex_Lambda_RCMF_远程执行规范.md`.
+
+## 2026-08-16 EXP-021 memory-use target audit
+
+VERIFIED:
+
+- The immutable EXP-020 utility cache and split were reproduced exactly:
+  92 query states, 148 transitions, 13,320 legal rows, 13,128 scoreable rows,
+  192 over-context rows, and A/B/C/D `8,205/2,051/2,296/576`.
+- The fixed 192-pair serialization audit passes all registered robustness
+  checks. The raw target remains the locked historical comparator.
+- Cell-A-only grouped CV selects T4 pairwise preference. No B/C/D label was
+  used for target, epoch, loss, or model selection.
+- On D, selected T4 field NDCG@4 `.433983` is below immutable EXP-020
+  transition-only `.480274`; per-state/residual Spearman is
+  `.117200/-.051060`, only 4/9 tasks improve, and the transition-shuffle CI
+  includes zero.
+- Oracle and predicted intent do not beat transition-only. No revised target
+  passes the field-compatible deployability gate.
+
+Decision:
+
+- Record branch `raw_nll_memory_use_target_not_deployably_predictable`.
+- Keep raw transition target-NLL utility as a valid deterministic measurement,
+  but do not use it as the next deployment target under the current evidence.
+- Keep behavioral `p(s,m_transition)` blocked. Do not train the program,
+  injector, selector, full field, Stage C2, or AppWorld agent from this result.
+- The next reviewed milestone should compare structural procedural labels,
+  direct next-action/API compatibility, and environment/outcome supervision.
+  Genuinely new source tasks or augmentation may be considered only after the
+  teacher target is preregistered. Do not add more states from the exhausted
+  37-task source merely to repeat the same target.
+- Keep V4 as a candidate and do not create or move a V4 tag.
+
+Implementation deviations and recovery:
+
+- The initial preflight referenced an obsolete EXP-019 summary path. The path
+  was corrected before scientific work began.
+- Cell labels in immutable EXP-020 metadata required canonical A/B/C/D alias
+  normalization. Counts and row identities were unchanged.
+- Serialization attempt 001 completed all durable rows before an aliased
+  combined-token field failed aggregation. Attempt 002 reused every row and
+  scored nothing again.
+- Model attempt 001 exposed a mathematically redundant scalar pair-loss loop.
+  The exact vectorized form was regression tested; attempt 002 restarted model
+  fitting because the interrupted process had no atomic optimizer checkpoint.
+- The attempt validator initially assumed every row had start/end event
+  semantics. It now validates the one preserved legacy failure row separately.
+- Final gate evaluation initially used a run-local transition mean instead of
+  the locked EXP-020 transition-only comparator, read the wrong
+  transition-shuffle bootstrap key, and used one global baseline for per-task
+  comparisons. The old report is preserved and marked superseded. A
+  record-only repair recomputed the gate from unchanged predictions and locked
+  metrics.
+- The first repair attempt exposed the nested EXP-020 metric schema and failed
+  before writing a replacement summary. The second used a tested shape adapter
+  and completed. Every ledger row records
+  `scientific_parameter_changed=false`.

@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-08-15.
+Last updated: 2026-08-16.
 
 ## VERIFIED
 
@@ -1303,3 +1303,48 @@ VERIFIED:
 - No behavioral program, injector, selector change, production field, Qwen
   behavioral backpropagation, Stage C2, end-to-end RCMF, AppWorld evaluation,
   demo change, or V4 tag occurred.
+
+### EXP-021 relative and intent-conditioned target audit
+
+- EXP-021 source/audit commit is
+  `3995b3cfdffdfc700846d2dec928cf5f7574e6fd`; artifact root is
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/memory_use_target_6e_20260816_001`.
+- All EXP-020 inputs remained immutable: 92 queries, 148 transitions, 13,320
+  legal rows, 13,128 scoreable rows, 192 masked over-context rows, and
+  A/B/C/D counts `8,205/2,051/2,296/576`.
+- The 192-pair serialization audit passed. Median cross-template Spearman was
+  `.833893`, sign agreement `.892081`, and mean per-state top-4 overlap
+  `.966667`. The 381 new Qwen forwards took `.167312 H100 h`; no input was
+  truncated.
+- Cell-A raw utility variance is `.094417`; additive state/transition main
+  effects explain `.434646`, leaving residual variance `.053379`. Raw and
+  residual effective ranks are `35.879/41.605`.
+- Train-only intent predictions remain strong on held-out queries: app/API/
+  action-type accuracies are `.944444/.833333/.888889`, versus shuffled
+  `.277778/.222222/.500000`. Completion is noninformative because all held-out
+  completion labels are false.
+- Five-fold A-only grouped CV selected T4 gap-weighted pairwise preference
+  before B/C/D evaluation. On D, the selected field reaches NDCG@4 `.433983`,
+  per-state Spearman `.117200`, residual Spearman `-.051060`, and gap accuracy
+  `.583228`.
+- The immutable EXP-020 transition-only D NDCG@4 is `.480274`. T4 field has
+  state/transition-shuffle drops `.072329/.094174`; the transition-shuffle
+  bootstrap CI includes zero, and only 4/9 tasks beat their own locked
+  baseline.
+- Oracle and predicted intent D NDCG@4 are `.337362/.344384`, both below the
+  locked transition-only comparator. Transition content adds some isolated
+  gain over intent, but no fixed target passes the joint field-compatible gate.
+- The formal branch is
+  `raw_nll_memory_use_target_not_deployably_predictable`. A prior generated
+  branch, `revised_target_learnable_but_field_factorization_insufficient`, is
+  superseded because its record evaluator used the wrong transition baseline,
+  bootstrap key, and per-task comparator. Old records are preserved; no model,
+  prediction, or cache was changed.
+- Independent validation passed 20/20 checks with no errors. The append-only
+  ledger has 17 rows, one run UUID, and no scientific parameter changes.
+- Successful serialization/model work used `2.147676 H100 h`; including the
+  preserved interrupted scalar-loss attempt gives approximately `2.504051`
+  H100 h. The final artifact is about `7.05 GB` (`6.57 GiB`).
+- Behavioral `p(s,m_transition)` remains blocked. No program, injector,
+  selector, production field, Qwen behavioral backpropagation, Stage C2,
+  AppWorld evaluation, demo change, or V4 tag occurred.

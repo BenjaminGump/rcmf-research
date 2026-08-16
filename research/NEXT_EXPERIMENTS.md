@@ -1,9 +1,42 @@
 # Next Experiments
 
-The current priority is correctness and observability before any expensive full
-GPU run. The next iteration should first prove that representation rendering,
-full legal memory-bank construction, record-level memory writes, and
-additive-token injection behave as intended.
+The current priority is a reviewed replacement for raw transition target-NLL
+utility as the deployable memory-use target. EXP-021 found that serialization
+is stable and state action intent is learnable, but no relative or
+intent-conditioned target passed the double-held-out field-compatible gate.
+Behavioral `p(s,m_transition)` remains blocked.
+
+## EXP-022 Structural/Outcome Memory-Use Supervision Review
+
+Goal:
+
+- Preregister and compare targets that are closer to deployable procedural
+  behavior than raw text-conditioned next-token NLL.
+- Candidate families are deterministic next-action/API compatibility,
+  structured procedural compatibility, and environment/outcome-level benefit.
+- Preserve the 92-query/148-transition EXP-020 panel as the first locked
+  comparator where labels are available, while separating teacher redesign
+  from architecture changes.
+
+Required preflight:
+
+- Define each label without validation-task leakage and specify whether it is
+  available at deployment time.
+- Report class balance, missingness, action/app/API coverage, and annotation or
+  environment cost before scoring.
+- Use held-out query tasks and transition parents, state/transition shuffle
+  controls, transition-only popularity controls, and task-grouped confidence
+  intervals.
+- If genuinely new tasks or task augmentation are proposed, report exact task
+  provenance and keep them separate from the exhausted 37-task source set.
+
+Stop condition:
+
+- Do not resume behavioral `p(s,m_transition)`, injector training, selector
+  training, Stage C2, AppWorld generation, or a production field until a
+  field-compatible target passes a separately approved cross-task gate.
+- Do not simply add more states from the same 37 tasks under the unchanged raw
+  NLL utility.
 
 ## EXP-001 Correctness Smoke Before Full Training
 
