@@ -1,0 +1,107 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_procedural_outcome_6f
+  version: procedural_outcome_supervision_6f_v1
+  scope:
+    - immutable_exp017_exp020_exp021
+    - deterministic_procedural_signatures
+    - fixed_procedural_tiers
+    - cached_frozen_representations
+    - bounded_one_step_appworld_audit
+    - qwen_frozen
+    - no_behavioral_program_training
+    - no_additive_token_injector_training
+    - no_selector_training
+    - no_production_transition_field
+    - no_full_trajectory_evaluation
+    - no_stage_c2
+    - no_end_to_end_rcmf
+    - no_demo_change
+    - no_injection_change
+    - no_v4_tag
+
+stage_c_6f:
+  run_uuid: procedural_outcome_6f_20260816_001
+  seed: 22022
+  artifact_dir: runs/stage_c/procedural_outcome_6f_20260816_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  source_data: runs/appworld/official_react_gpt4o_train_success_full_demo_filtered_no_2a163ab3_20260803
+  exp017_artifact: runs/stage_c/transition_memory_6a_20260814_001
+  exp020_artifact: runs/stage_c/all_task_interaction_6d_20260815_001
+  exp021_artifact: runs/stage_c/memory_use_target_6e_20260816_001
+
+  expected:
+    decision_examples: 638
+    query_states: 92
+    train_query_states: 74
+    train_query_tasks: 37
+    validation_query_states: 18
+    validation_query_tasks: 9
+    transitions: 148
+    transition_parents: 37
+    legal_rows: 13320
+    scoreable_rows: 13128
+    over_context_rows: 192
+    cell_a: 8205
+    cell_b: 2051
+    cell_c: 2296
+    cell_d: 576
+
+  labels:
+    high_tier_minimum: 3
+    heldout_high_tier_coverage_gate: 0.70
+    hard_pair_minimum_tier_gap: 1
+
+  models:
+    grouped_cv_folds: 5
+    grouped_cv_seed: 22023
+    epoch_candidates: [30, 60, 120]
+    learning_rate: 0.0003
+    weight_decay: 0.0001
+    projection_dim: 64
+    interaction_rank: 32
+    hidden_dim: 256
+    dropout: 0.05
+    teacher_temperature: 0.35
+    student_temperature: 0.35
+    pair_gap_weight_clip: 4.0
+    losses:
+      listwise: 1.0
+      pairwise: 1.0
+      exact_api: 0.20
+      state_stage: 0.10
+
+  metrics:
+    ranking_ks: [1, 4, 8]
+    bootstrap_samples: 1000
+    bootstrap_seed: 22024
+
+  gate:
+    procedural_ndcg4_transition_gain: 0.05
+    exact_or_high_tier_recall4: 0.40
+    within_state_pairwise_accuracy: 0.65
+    state_shuffle_ndcg4_drop: 0.08
+    transition_shuffle_ndcg4_drop: 0.08
+    minimum_positive_heldout_tasks: 6
+
+  replay:
+    preflight_states: 6
+    audit_states_per_heldout_task: 5
+    expected_audit_states: 45
+    generation_conditions:
+      - baseline
+      - oracle_procedural
+      - field_top
+      - same_intent_hard_negative
+      - transition_popularity
+      - deterministic_random
+    optional_unseen_parent_oracle: true
+    temperature: 0.0
+    top_p: 1.0
+    max_new_tokens: 1024
+    thinking: false
+    context_limit: 40960
+    review_threshold_h100_hours: 12.0
+    heartbeat_interval_seconds: 240
+
