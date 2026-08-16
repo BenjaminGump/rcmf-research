@@ -7,6 +7,7 @@ import torch
 import torch.nn.functional as F
 
 from scripts.run_serialization_robustness_6e import _locked_template0_row
+from scripts.validate_memory_use_target_6e import _attempt_ledger_checks
 
 from rcmf.benchmarks.appworld.prompt import get_initial_messages
 from rcmf.training.memory_use_target_6e import (
@@ -68,6 +69,20 @@ def test_template0_uses_exact_teacher_cache_combined_token_count() -> None:
         assert "immutable score differs" in str(exc)
     else:
         raise AssertionError("Mismatched immutable teacher score must fail closed")
+
+
+def test_attempt_ledger_validator_accepts_start_end_events_and_legacy_terminal() -> None:
+    rows = [
+        {"attempt_id": "a", "event": "start"},
+        {"attempt_id": "a", "event": "end", "status": "completed"},
+        {"attempt_id": "bootstrap", "status": "failed"},
+    ]
+    assert all(_attempt_ledger_checks(rows).values())
+
+    duplicate_end = [*rows, {"attempt_id": "a", "event": "end", "status": "failed"}]
+    checks = _attempt_ledger_checks(duplicate_end)
+    assert not checks["attempt_event_keys_unique"]
+    assert not checks["attempts_have_one_terminal_row"]
 
 
 def _transition(index: int = 0) -> dict:

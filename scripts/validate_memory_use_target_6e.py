@@ -40,6 +40,37 @@ def _report(result: dict[str, Any]) -> str:
     )
 
 
+def _attempt_ledger_checks(rows: list[dict[str, Any]]) -> dict[str, bool]:
+    by_attempt: dict[str, list[dict[str, Any]]] = {}
+    event_keys = []
+    for row in rows:
+        attempt_id = str(row["attempt_id"])
+        by_attempt.setdefault(attempt_id, []).append(row)
+        event = row.get("event")
+        if event is None:
+            event = f"legacy_terminal:{row.get('status')}"
+        event_keys.append((attempt_id, str(event)))
+    terminal_counts = {}
+    start_counts = {}
+    for attempt_id, selected in by_attempt.items():
+        terminal_counts[attempt_id] = sum(
+            row.get("event") == "end"
+            or (
+                row.get("event") is None
+                and str(row.get("status")) in {"completed", "failed"}
+            )
+            for row in selected
+        )
+        start_counts[attempt_id] = sum(row.get("event") == "start" for row in selected)
+    return {
+        "attempt_event_keys_unique": len(set(event_keys)) == len(event_keys),
+        "attempt_start_rows_unique": all(value <= 1 for value in start_counts.values()),
+        "attempts_have_one_terminal_row": all(
+            value == 1 for value in terminal_counts.values()
+        ),
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Validate EXP-021 artifacts")
     parser.add_argument("--artifact-dir", type=Path, required=True)
@@ -120,10 +151,7 @@ def main() -> None:
                         "demo_changed", "query_or_transition_added", "v4_tag_created_or_moved",
                     )
                 ) and int(model["hard_scope"]["qwen_forward_calls"]) == 0,
-                "attempt_ids_unique": len({str(row["attempt_id"]) for row in attempts}) == len(attempts),
-                "attempts_have_terminal_rows": all(
-                    str(row.get("status")) in {"completed", "failed"} for row in attempts
-                ),
+                **_attempt_ledger_checks(attempts),
             }
         )
         decision = str(model["scientific_gate"]["decision_branch"])
