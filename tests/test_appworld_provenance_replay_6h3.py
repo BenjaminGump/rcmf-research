@@ -16,7 +16,11 @@ from rcmf.training.appworld_provenance_replay_6h3 import (
     summarize_corpus_identity,
     training_contamination_report,
 )
-from scripts.analyze_provenance_quarantine_sensitivity_6h3 import _without_task
+from scripts.analyze_provenance_quarantine_sensitivity_6h3 import (
+    _positive_task_count,
+    _target_rows_as_raw_predictions,
+    _without_task,
+)
 from scripts.prepare_appworld_provenance_replay_6h3 import (
     _archive_member_hits,
     _redacted_line_context,
@@ -34,6 +38,40 @@ def _state(state_id: str, task_id: str, step_id: int) -> dict:
         "state_task_id": task_id,
         "step_id": step_id,
     }
+
+
+def test_exp021_target_rows_are_normalized_before_raw_per_task_metrics() -> None:
+    def rows(control: str, scores: list[float]) -> list[dict]:
+        return [
+            {
+                "pair_id": f"state::m{index}",
+                "state_example_id": "state",
+                "state_task_id": "task",
+                "transition_id": f"m{index}",
+                "text_utility": utility,
+                "score": score,
+                "control": control,
+            }
+            for index, (utility, score) in enumerate(
+                zip([0.4, 0.2, -0.1], scores)
+            )
+        ]
+
+    correct = _target_rows_as_raw_predictions(rows("correct", [3.0, 2.0, 1.0]))
+    shuffled = _target_rows_as_raw_predictions(
+        rows("shuffled_transition", [1.0, 2.0, 3.0])
+    )
+    result = _positive_task_count(
+        correct,
+        {"shuffled_transition": shuffled},
+        settings={
+            "ranking_ks": [1, 4, 8],
+            "neutral_epsilon": 0.01,
+            "best_tie_tolerance": 1.0e-8,
+            "huber_delta": 0.1,
+        },
+    )
+    assert result["positive_task_count"] == 1
 
 
 def test_corpus_identity_summary_is_task_unique_and_counts_mismatches() -> None:

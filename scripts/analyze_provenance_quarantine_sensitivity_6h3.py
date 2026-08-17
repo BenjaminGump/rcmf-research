@@ -184,6 +184,23 @@ def _positive_task_count(
     }
 
 
+def _target_rows_as_raw_predictions(
+    rows: Sequence[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    return [
+        {
+            **dict(row),
+            "u_text": float(row["text_utility"]),
+            "u_predicted": float(row["score"]),
+            "residual_target": float(row.get("raw_residual_target", 0.0)),
+            "residual_predicted": float(
+                row.get("interaction_score", row["score"])
+            ),
+        }
+        for row in rows
+    ]
+
+
 def _target_control_pack(
     paths: Mapping[str, Path],
     *,
@@ -240,9 +257,9 @@ def _target_control_pack(
             for control in ("shuffled_state", "shuffled_transition", "both_shuffled")
         },
         "quarantine_positive_task_gate": _positive_task_count(
-            filtered["correct"],
+            _target_rows_as_raw_predictions(filtered["correct"]),
             {
-                name: filtered[name]
+                name: _target_rows_as_raw_predictions(filtered[name])
                 for name in ("shuffled_state", "shuffled_transition", "both_shuffled")
             },
             settings=settings,
