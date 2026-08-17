@@ -12,7 +12,10 @@ from rcmf.training.clean_cache_rebuild_7b import (
     source_identity_audit,
     transition_change_manifest,
 )
-from rcmf.training.clean_cache_execution_7b import seed_jsonl
+from rcmf.training.clean_cache_execution_7b import (
+    seed_jsonl,
+    transition_representation_work_queue,
+)
 from rcmf.utils.serialization import read_jsonl
 
 
@@ -150,3 +153,29 @@ def test_seed_jsonl_rejects_changed_reusable_row(tmp_path: Path) -> None:
             expected_keys={"a"},
             key_fn=lambda row: str(row["id"]),
         )
+
+
+def test_transition_representation_queue_includes_rows_outside_model_panel() -> None:
+    mapping = [
+        {
+            "old_transition_id": f"old-{index}",
+            "clean_transition_id": f"clean-{index}",
+            "parent_task_id": "b0a8eae_3",
+            "step_index": index,
+        }
+        for index in range(17)
+    ]
+    clean = [
+        {
+            "transition_id": f"clean-{index}",
+            "parent_task_id": "b0a8eae_3",
+            "step_index": index,
+        }
+        for index in range(17)
+    ]
+    panel_ids = {"clean-1", "clean-4", "clean-8", "clean-12"}
+    queue = transition_representation_work_queue(
+        transition_mapping=mapping, clean_transitions=clean
+    )
+    assert len(queue) == 17
+    assert sum(row["transition_id"] in panel_ids for row in queue) == 4

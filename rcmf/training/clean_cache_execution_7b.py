@@ -37,6 +37,26 @@ from rcmf.utils.serialization import (
 EXECUTION_VERSION = "identity_reconciled_incremental_cache_execution_7b_v1"
 
 
+def transition_representation_work_queue(
+    *,
+    transition_mapping: Sequence[Mapping[str, Any]],
+    clean_transitions: Sequence[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    clean_by_id = {str(row["transition_id"]): dict(row) for row in clean_transitions}
+    output = []
+    for mapping in transition_mapping:
+        clean_id = str(mapping["clean_transition_id"])
+        row = clean_by_id.get(clean_id)
+        if row is None:
+            raise ValueError(f"Clean transition is missing from the structural corpus: {clean_id}")
+        if str(row["parent_task_id"]) != str(mapping["parent_task_id"]):
+            raise ValueError(f"Transition parent differs for {clean_id}")
+        if int(row["step_index"]) != int(mapping["step_index"]):
+            raise ValueError(f"Transition step differs for {clean_id}")
+        output.append({**row, "source_old_transition_id": str(mapping["old_transition_id"])})
+    return output
+
+
 def _rows(path: Path) -> list[dict[str, Any]]:
     values = list(read_jsonl(path))
     if not values:
@@ -521,12 +541,61 @@ def rebuild_representations(
         for row in transition_mapping
     }
     clean_to_old = {clean: old for old, clean in old_to_clean.items()}
+    clean_transition_rows = _rows(data_dir / "transition_manifest.jsonl")
+    transition_work_queue = transition_representation_work_queue(
+        transition_mapping=transition_mapping,
+        clean_transitions=clean_transition_rows,
+    )
+    if len(transition_work_queue) != 17:
+        raise ValueError(
+            f"Changed transition representation work queue is {len(transition_work_queue)}, expected 17"
+        )
+    recomputed_transition_vectors: dict[str, torch.Tensor] = {}
+    recomputed_transition_metadata: dict[str, dict[str, Any]] = {}
+    for position, row in enumerate(transition_work_queue, start=1):
+        transition_id = str(row["transition_id"])
+        text = transition_teacher_section(dict(row))
+        metadata = {
+            "format": "identity_reconciled_transition_representation_row_7b_v1",
+            "transition_id": transition_id,
+            "source_old_transition_id": str(row["source_old_transition_id"]),
+            "transition_content_sha256": str(row["transition_content_sha256"]),
+            "teacher_section_sha256": sha256_text(text),
+            "model_name": str(backend.model_name),
+            "corpus_lineage_sha256": corpus_lineage_sha256,
+            "recomputed": True,
+        }
+
+        def compute_transition(value: str = text) -> torch.Tensor:
+            chunks, owners, counts = backend.encode_text_chunks_with_metadata(
+                [value], batch_size=1, add_special_tokens=True
+            )
+            if set(owners.tolist()) != {0}:
+                raise ValueError("Single transition representation has unexpected owners")
+            weights = counts.to(torch.float32).unsqueeze(-1)
+            return (chunks.to(torch.float32) * weights).sum(0) / weights.sum().clamp_min(1.0)
+
+        vector, reused = _load_or_compute_vector(
+            row_path=transition_rows_dir / f"{transition_id}.pt",
+            metadata=metadata,
+            compute=compute_transition,
+        )
+        recomputed_transition_vectors[transition_id] = vector
+        recomputed_transition_metadata[transition_id] = metadata
+        reused_checkpoints += int(reused)
+        computed += int(not reused)
+        attempt.progress(
+            status="transition_representations",
+            completed=position,
+            total=len(transition_work_queue),
+            latest_validated_checkpoint=str(transition_rows_dir / f"{transition_id}.pt"),
+        )
     panel = _rows(clean_transition_preflight_dir / "transition_panel.jsonl")
     panel_by_id = {str(row["transition_id"]): row for row in panel}
     ordered_transition_ids = sorted(panel_by_id)
     transition_vectors = []
     transition_metadata = []
-    changed_transition_count = 0
+    changed_panel_transition_count = 0
     for position, transition_id in enumerate(ordered_transition_ids, start=1):
         row = panel_by_id[transition_id]
         source_old_id = clean_to_old.get(transition_id, transition_id)
@@ -544,35 +613,9 @@ def rebuild_representations(
                 "representation_sha256": tensor_state_sha256({"representation": vector}),
             }
         else:
-            changed_transition_count += 1
-            text = transition_teacher_section(dict(row))
-            metadata = {
-                "format": "identity_reconciled_transition_representation_row_7b_v1",
-                "transition_id": transition_id,
-                "source_old_transition_id": source_old_id,
-                "transition_content_sha256": str(row["transition_content_sha256"]),
-                "teacher_section_sha256": sha256_text(text),
-                "model_name": str(backend.model_name),
-                "corpus_lineage_sha256": corpus_lineage_sha256,
-                "recomputed": True,
-            }
-
-            def compute_transition(value: str = text) -> torch.Tensor:
-                chunks, owners, counts = backend.encode_text_chunks_with_metadata(
-                    [value], batch_size=1, add_special_tokens=True
-                )
-                if set(owners.tolist()) != {0}:
-                    raise ValueError("Single transition representation has unexpected owners")
-                weights = counts.to(torch.float32).unsqueeze(-1)
-                return (chunks.to(torch.float32) * weights).sum(0) / weights.sum().clamp_min(1.0)
-
-            vector, reused = _load_or_compute_vector(
-                row_path=transition_rows_dir / f"{transition_id}.pt",
-                metadata=metadata,
-                compute=compute_transition,
-            )
-            reused_checkpoints += int(reused)
-            computed += int(not reused)
+            changed_panel_transition_count += 1
+            vector = recomputed_transition_vectors[transition_id]
+            metadata = recomputed_transition_metadata[transition_id]
         transition_vectors.append(vector)
         transition_metadata.append(metadata)
         attempt.progress(
@@ -585,8 +628,6 @@ def rebuild_representations(
                 else str(old_transition_path)
             ),
         )
-    if changed_transition_count != 17:
-        raise ValueError(f"Changed transition representation count is {changed_transition_count}, expected 17")
     transition_tensor = torch.stack(transition_vectors)
     state_out = {
         **{key: value for key, value in state_payload.items() if key != "representations"},
@@ -624,8 +665,9 @@ def rebuild_representations(
         "representation_tensor_sha256": tensor_state_sha256(
             {"representations": transition_tensor}
         ),
-        "recomputed_row_count": changed_transition_count,
-        "reused_row_count": len(ordered_transition_ids) - changed_transition_count,
+        "recomputed_source_row_count": len(transition_work_queue),
+        "recomputed_panel_row_count": changed_panel_transition_count,
+        "reused_panel_row_count": len(ordered_transition_ids) - changed_panel_transition_count,
     }
     output_dir.mkdir(parents=True, exist_ok=True)
     _atomic_torch_save(state_out, output_dir / "decision_state_representations.pt")
@@ -656,8 +698,9 @@ def rebuild_representations(
         },
         "transition": {
             "count": len(ordered_transition_ids),
-            "recomputed": changed_transition_count,
-            "reused": len(ordered_transition_ids) - changed_transition_count,
+            "source_rows_recomputed": len(transition_work_queue),
+            "panel_rows_recomputed": changed_panel_transition_count,
+            "panel_rows_reused": len(ordered_transition_ids) - changed_panel_transition_count,
             "shape": list(transition_tensor.shape),
             "sha256": sha256_file(output_dir / "transition_representations.pt"),
         },
