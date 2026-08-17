@@ -60,10 +60,42 @@ stage_c_7b:
     model_name: Qwen/Qwen3-8B
     dtype: bfloat16
     frozen: true
+    historical_source_data: runs/appworld/official_react_gpt4o_train_success_full_demo_filtered_no_2a163ab3_20260803
+    dependency_graph: runs/stage_c/identity_reconciliation_7a_20260817_001/artifact_dependency_graph.json
+    minimum_recompute_estimate: runs/stage_c/identity_reconciliation_7a_20260817_001/minimum_recompute_estimate.json
+    historical_caches:
+      raw_text_teacher: runs/teacher/raw_text_full_cache_20260805_001/teacher_cache_full_rows.jsonl
+      stage_c1_response: runs/stage_c1/response_cache_20260806_001/response_cache.jsonl
+      pair_response_5d: runs/stage_c/pair_grounding_5d_20260807_001/pair_response_cache/pair_response_cache.jsonl
+      transition_teacher: runs/stage_c/transition_memory_6a_20260814_001/teacher_cache.jsonl
+      transition_manifest: runs/stage_c/transition_memory_6a_20260814_001/transition_manifest.jsonl
+      state_representations: runs/experiments/appworld_qwen_repr_full_prompt_filtered_no_2a163ab3_20260803_101000/train/representation_cache/decision_state_representations.pt
+      memory_representations: runs/experiments/appworld_qwen_repr_full_prompt_filtered_no_2a163ab3_20260803_101000/train/representation_cache/memory_record_representations.pt
+      transition_representations: runs/stage_c/state_conditioned_transition_6b_20260814_001/representation_cache/transition_representations.pt
+    output_root: runs/stage_c/replay_clean_rebuild_7b_20260818_001/clean_cache_rebuild
     expected_scoring_rows: 3658
     expected_state_representations: 35
     expected_memory_representations: 2
     expected_transition_representations: 17
+    expected_cache_rows:
+      raw_text_teacher: 28710
+      stage_c1_response: 638
+      pair_response_5d: 1728
+      transition_teacher: 4640
+    expected_affected_rows:
+      raw_text_teacher: 2781
+      stage_c1_response: 60
+      pair_response_5d: 121
+      transition_teacher: 696
+    projected_h100_hours:
+      best: 1.1255384615384616
+      expected: 1.406923076923077
+      conservative: 2.1103846153846155
+    projected_wall_time_hours:
+      best: 1.1255384615384616
+      expected: 1.6883076923076923
+      conservative: 2.813846153846154
+    projected_storage_bytes: 759120307
     review_threshold_h100_hours: 12.0
 
   generation:
