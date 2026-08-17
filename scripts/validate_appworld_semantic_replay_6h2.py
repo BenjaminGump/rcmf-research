@@ -4,7 +4,7 @@ import argparse
 import json
 from collections import Counter
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 import _bootstrap  # noqa: F401
 
@@ -14,6 +14,27 @@ from rcmf.utils.serialization import atomic_write_json, atomic_write_text, read_
 
 def _load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _legacy_task_source_manifest_hashes(
+    task_manifests: Mapping[str, Any],
+) -> dict[str, str]:
+    output: dict[str, str] = {}
+    for task_id, value in task_manifests.items():
+        candidates = value if isinstance(value, list) else [value]
+        source_suffix = f"/data/tasks/{task_id}"
+        source_rows = [
+            row
+            for row in candidates
+            if isinstance(row, Mapping)
+            and str(row.get("root", "")).replace("\\", "/").endswith(source_suffix)
+        ]
+        if len(source_rows) != 1:
+            raise ValueError(
+                f"Expected one immutable source-task manifest for {task_id}, found {len(source_rows)}"
+            )
+        output[str(task_id)] = str(source_rows[0]["manifest_sha256"])
+    return output
 
 
 def parse_args() -> argparse.Namespace:
@@ -71,10 +92,9 @@ def main() -> None:
     parent_environment = _load_json(
         Path(settings["parent_exp024r"]) / "environment_provenance.json"
     )
-    parent_task_hashes = {
-        task_id: value["manifest_sha256"]
-        for task_id, value in parent_environment["task_manifests"].items()
-    }
+    parent_task_hashes = _legacy_task_source_manifest_hashes(
+        parent_environment["task_manifests"]
+    )
     probe_task_hashes = {
         str(row["task_id"]): str(row["task_files"]["sha256"])
         for row in probe["rows"]

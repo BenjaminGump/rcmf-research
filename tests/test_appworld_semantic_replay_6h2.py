@@ -27,6 +27,9 @@ from scripts.run_appworld_semantic_replay_6h2 import (
     _repeat_equivalence,
     _sentinel_decision,
 )
+from scripts.validate_appworld_semantic_replay_6h2 import (
+    _legacy_task_source_manifest_hashes,
+)
 from scripts.prepare_appworld_semantic_replay_6h2 import (
     _find_probe_request_by_hash,
     _legacy_history_observation_count,
@@ -451,3 +454,19 @@ def test_optional_exp020_manifest_absence_is_explicit_not_a_key_error() -> None:
     assert present["present"] and present["task_id_match"] is True
     assert absent == {"present": False, "task_id_match": None, "row_sha256": None}
     assert mismatch["present"] and mismatch["task_id_match"] is False
+
+
+def test_validator_selects_source_task_manifest_from_parent_manifest_list() -> None:
+    manifests = {
+        "task-1": [
+            {
+                "root": "/legacy/root/data/tasks/task-1",
+                "manifest_sha256": "source-hash",
+            },
+            {
+                "root": "/legacy/root/experiments/outputs/verification/tasks/task-1",
+                "manifest_sha256": "verification-hash",
+            },
+        ]
+    }
+    assert _legacy_task_source_manifest_hashes(manifests) == {"task-1": "source-hash"}
