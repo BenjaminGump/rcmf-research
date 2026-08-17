@@ -896,3 +896,39 @@ Blocked until that review:
 - AppWorld semantic replay and any 40-state causal-audit continuation;
 - procedural field or behavioral `p(s,m_transition)` training;
 - injector, selector, Stage C2, end-to-end RCMF, or a V4 tag.
+
+## Proposed EXP-025B Minimum Rebuild With Replay Preflight - Review Required
+
+Goal:
+
+- Convert the validated EXP-025A structural corpus candidate into a formally
+  replay-valid, minimally recomputed V4 input lineage.
+
+Mandatory step zero:
+
+- Preregister a schema-limited semantic rule for AppWorld 0.1.0 login calls
+  whose entire observation is a JWT. It may ignore only the already verified
+  temporal `exp` value and consequent signature after stable claims match.
+- Rerun the fixed sentinel twice and all 45 states. Require complete semantic
+  replay before any Qwen or model work.
+
+Minimum rebuild after replay passes:
+
+1. Regenerate `35` state, `2` memory, and `17` transition representations.
+2. Recompute `3,658` invalid Qwen-scored rows; reuse hash-valid unaffected
+   rows.
+3. Rebuild Stage-B labels and all structural manifests.
+4. Retrain only checkpoints required by the current V4 hypothesis; do not
+   automatically rerun every historical V3 experiment.
+5. Rerun procedural coverage on the reconciled lineage.
+6. Resume the one-step causal audit only after all preceding gates pass.
+
+Estimated rebuild cost is `1.126/1.407/2.110` best/expected/conservative H100
+hours, `1.126/1.688/2.814` wall hours, and about `759 MB` of new storage.
+
+Blocked pending review and replay pass:
+
+- Qwen representation or teacher-score recomputation;
+- any selector, program, injector, field, or Qwen training;
+- EXP-024A generation, AppWorld condition execution, Stage C2, end-to-end RCMF,
+  or a V4 tag.

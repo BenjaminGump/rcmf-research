@@ -1539,3 +1539,42 @@ Implementation recovery:
   as coherent. Both are preserved under hashed attempt snapshots.
 - Regression-tested source-layer and behavioral-coherence rules in preflight
   003 produced the final result. No scientific parameter changed.
+
+## 2026-08-17 EXP-025A identity reconciliation and strict replay failure
+
+VERIFIED:
+
+- The corpus defect is an unpinned active-task-snapshot lookup during official
+  trace ingestion, not a task suffix, row offset, or behaviorally mixed world.
+- Both affected tasks are header-only corruption and pass complete candidate
+  replay after changing only their canonical query headers to official 0.1.0
+  metadata.
+- A structurally valid 46-task candidate was built without changing actions or
+  observations. Train-side influence invalidates old checkpoints even where
+  individual cache rows are reusable.
+- The corrected sentinel passes, but the strict full replay is `42/45` because
+  three root-level login JWTs fall outside the preregistered token-field
+  schema. All three differ only in `exp`; the contract was not broadened.
+
+Decision:
+
+- Apply `repair_query_header_to_official_metadata` to both `b0a8eae_2` and
+  `b0a8eae_3` in the new corpus lineage only. Historical artifacts remain
+  immutable.
+- Record `identity_reconciled_corpus_replay_failure` rather than the ready-corpus
+  branches. Distinguish `structural_corpus_candidate_ready=true` from
+  `clean_corpus_ready=false`.
+- Do not declare any old checkpoint clean. Require retraining for every model
+  influenced by train-side `b0a8eae_3`.
+- Do not broaden semantic-v2 after observing root-level JWTs. A narrow root
+  login-token contract requires separate preregistration and replay review.
+- Keep all generation, representation/teacher recomputation, model training,
+  Stage C2, end-to-end RCMF, and V4 tagging blocked.
+
+Implementation recovery:
+
+- Three failed attempts exposed an access-token schema placeholder and two
+  saved-prediction schema variants. All failures are preserved, regression
+  tested, and resumed without changing scientific inputs.
+- The final append-only ledger has 17 complete attempts and no open row. The
+  post-run validator reports zero errors.

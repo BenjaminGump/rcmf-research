@@ -1543,3 +1543,31 @@ Decision:
 - EXP-024A generation and all behavioral/model work remain blocked. The next
   review must reconcile corpus identity and train-side contamination. V4
   remains a candidate; no tag was created or moved.
+
+### EXP-025A identity-reconciled structural corpus and replay stop
+
+- The exact ingestion defect was reproduced: archived actions/observations
+  were paired with query headers rebuilt from an unpinned active AppWorld task
+  snapshot.
+- Both `b0a8eae_2` and train-side `b0a8eae_3` are verified
+  `source_query_header_only_corruption`. Official-header semantic replay passes
+  all `18/18` and `17/17` decision states respectively, with zero exceptions
+  and zero non-temporal mismatches.
+- The pre-registered policy repairs both headers. The new structural candidate
+  contains `46` tasks (`37/9`), `638` decisions, and `638` transitions with
+  lineage `f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb`.
+  All structural checks pass and recorded actions/observations are unchanged.
+- The dependency graph covers `27` artifacts. Minimum recomputation is `3,658`
+  Qwen scoring rows plus `35/2/17` state/memory/transition representations;
+  train-influenced checkpoints require retraining and are not declared clean.
+- Contaminated-checkpoint sensitivity changes no prior decision branch. The
+  EXP-022 fixed-panel coverage point is fragile, but no blocked interaction
+  gate passes after filtering.
+- The corrected 13-state sentinel passes twice. Full replay passes identity
+  `45/45`, targets `45/45`, prior observations `369/372`, and complete states
+  `42/45`. Three Spotify login observations are root-level JWTs differing only
+  in `exp`, outside the frozen semantic-v2 `access_token` field contract.
+- Decision branch: `identity_reconciled_corpus_replay_failure`. The structural
+  candidate is ready; a formally replay-validated clean corpus is not.
+  Generation, Qwen/cache recomputation, model training, Stage C2, and V4
+  tagging remain blocked.
