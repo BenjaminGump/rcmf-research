@@ -28,6 +28,7 @@ from scripts.run_appworld_semantic_replay_6h2 import (
     _sentinel_decision,
 )
 from scripts.validate_appworld_semantic_replay_6h2 import (
+    _attempt_ledger_status,
     _legacy_task_source_manifest_hashes,
 )
 from scripts.prepare_appworld_semantic_replay_6h2 import (
@@ -470,3 +471,17 @@ def test_validator_selects_source_task_manifest_from_parent_manifest_list() -> N
         ]
     }
     assert _legacy_task_source_manifest_hashes(manifests) == {"task-1": "source-hash"}
+
+
+def test_validator_reads_append_only_attempt_ledger_once(tmp_path: Path) -> None:
+    ledger = tmp_path / "attempts.jsonl"
+    rows = [
+        {"attempt_id": "attempt-1", "event": "start"},
+        {"attempt_id": "attempt-1", "event": "end"},
+        {"attempt_id": "attempt-2", "event": "start"},
+        {"attempt_id": "attempt-2", "event": "end"},
+    ]
+    ledger.write_text("".join(json.dumps(row) + "\n" for row in rows), encoding="utf-8")
+    attempt_ids, complete = _attempt_ledger_status(ledger)
+    assert attempt_ids == ["attempt-1", "attempt-2"]
+    assert complete

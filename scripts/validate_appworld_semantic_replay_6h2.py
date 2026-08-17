@@ -37,6 +37,17 @@ def _legacy_task_source_manifest_hashes(
     return output
 
 
+def _attempt_ledger_status(path: Path) -> tuple[list[str], bool]:
+    attempts = list(read_jsonl(path))
+    events = Counter((str(row["attempt_id"]), str(row["event"])) for row in attempts)
+    attempt_ids = sorted({str(row["attempt_id"]) for row in attempts})
+    completed = all(
+        events[(attempt_id, "start")] == 1 and events[(attempt_id, "end")] == 1
+        for attempt_id in attempt_ids
+    )
+    return attempt_ids, completed
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -79,12 +90,8 @@ def main() -> None:
     identity = _load_json(args.artifact_dir / "identity_provenance_audit.json")
     preflight = _load_json(args.artifact_dir / "preflight_decision.json")
     final = _load_json(args.artifact_dir / "final_exp024r2_summary.json")
-    attempts = read_jsonl(args.artifact_dir / "attempts.jsonl")
-    events = Counter((str(row["attempt_id"]), str(row["event"])) for row in attempts)
-    attempt_ids = sorted({str(row["attempt_id"]) for row in attempts})
-    completed_attempts = all(
-        events[(attempt_id, "start")] == 1 and events[(attempt_id, "end")] == 1
-        for attempt_id in attempt_ids
+    attempt_ids, completed_attempts = _attempt_ledger_status(
+        args.artifact_dir / "attempts.jsonl"
     )
     sentinel_path = args.artifact_dir / "replay" / "semantic_sentinel_summary.json"
     full_path = args.artifact_dir / "replay" / "full_semantic_replay_summary.json"
