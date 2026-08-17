@@ -21,6 +21,9 @@ from rcmf.training.procedural_causal_analysis_7b import (
     validate_formal_rows,
 )
 from scripts.run_procedural_causal_audit_7b import _state_contract
+from scripts.prepare_procedural_causal_audit_7b import (
+    _validate_required_condition_coverage,
+)
 
 
 def _example() -> SimpleNamespace:
@@ -345,3 +348,21 @@ def test_formal_validation_requires_same_world_and_all_core_conditions() -> None
     rows[0]["live_worker"]["same_world_execution"] = False
     with pytest.raises(ValueError, match="clean_corpus_behavioral_audit_infrastructure_invalid"):
         validate_formal_rows(rows, manifest, summary)
+
+
+def test_clean_preflight_rejects_missing_required_control() -> None:
+    _validate_required_condition_coverage(
+        {
+            "missing_conditions": [
+                {"condition_name": "C6_alternate_same_signature", "required": False}
+            ]
+        }
+    )
+    with pytest.raises(RuntimeError, match="required C0-C5"):
+        _validate_required_condition_coverage(
+            {
+                "missing_conditions": [
+                    {"condition_name": "C3_hard_negative", "required": True}
+                ]
+            }
+        )

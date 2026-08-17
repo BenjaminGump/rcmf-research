@@ -82,6 +82,17 @@ def _attempt_ids(path: Path) -> set[str]:
     return {str(row["attempt_id"]) for row in read_jsonl(path)} if path.exists() else set()
 
 
+def _validate_required_condition_coverage(manifest: Mapping[str, Any]) -> None:
+    missing_required = [
+        row for row in manifest["missing_conditions"] if bool(row["required"])
+    ]
+    if missing_required:
+        raise RuntimeError(
+            "Clean condition manifest is missing required C0-C5 controls: "
+            f"{missing_required[:5]}"
+        )
+
+
 def _query_signatures(
     examples: Sequence[Any], records: Sequence[Any]
 ) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
@@ -391,6 +402,7 @@ def main() -> None:
             raise RuntimeError("Clean non-documentation high-tier task gate failed")
         atomic_write_json(output / "clean_audit_state_strata.json", strata)
         conditions = build_condition_manifest(strata, labels, equivalence)
+        _validate_required_condition_coverage(conditions)
         conditions["format"] = CLEAN_CONDITION_MANIFEST_VERSION
         conditions["corpus_lineage_sha256"] = str(settings["expected_corpus_lineage_sha256"])
         conditions.pop("manifest_sha256", None)
@@ -430,6 +442,8 @@ def main() -> None:
             context_limit=int(audit["generation"]["context_limit"]),
             requested_new_tokens=int(audit["generation"]["max_new_tokens"]),
         )
+        if int(prompt_summary["truncated_count"]) != 0:
+            raise RuntimeError("Clean causal-audit prompts require truncation")
         _atomic_jsonl(output / "clean_condition_prompt_preflight.jsonl", prompt_rows)
         runtime = generation_runtime_projection(len(conditions["conditions"]), 45, audit)
         summary = {
