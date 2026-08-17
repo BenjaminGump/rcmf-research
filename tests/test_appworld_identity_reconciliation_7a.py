@@ -31,10 +31,16 @@ from scripts.finalize_appworld_identity_reconciliation_7a import (
     STAGE_C1_RESPONSE_CACHE_PATH,
     _reconcile_legacy_contract_query,
 )
+from scripts.analyze_appworld_identity_reconciliation_7a import (
+    _classify_root_temporal_jwt_difference,
+)
 from scripts.run_appworld_identity_reconciliation_7a import (
     CHECKPOINT_VERSION,
     _checkpoint_index,
     _checkpoint_contract_matches_base,
+)
+from scripts.validate_appworld_identity_reconciliation_7a import (
+    _attempt_lifecycle_errors,
 )
 
 
@@ -223,6 +229,44 @@ def test_corpus_branch_and_dependency_classification() -> None:
 def test_dependency_audit_uses_materialized_response_cache_filenames() -> None:
     assert STAGE_C1_RESPONSE_CACHE_PATH.name == "response_cache.jsonl"
     assert PAIR_5D_RESPONSE_CACHE_PATH.name == "pair_response_cache.jsonl"
+
+
+def _test_jwt(*, subject: str, exp: int) -> str:
+    import base64
+
+    def segment(value: dict) -> str:
+        raw = json.dumps(value, separators=(",", ":")).encode("utf-8")
+        return base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
+
+    return f"{segment({'alg': 'HS256', 'typ': 'JWT'})}.{segment({'sub': subject, 'exp': exp})}.sig"
+
+
+def test_root_temporal_jwt_is_diagnostic_only() -> None:
+    expected = _test_jwt(subject="user", exp=100)
+    actual = _test_jwt(subject="user", exp=291)
+    step = {
+        "expected_raw_observation": expected,
+        "actual_raw_observation": actual,
+        "semantic_comparison": {"jwt_field_count": 0},
+    }
+    result = _classify_root_temporal_jwt_difference(step)
+    assert result["temporal_only_root_jwt"]
+    assert result["exp_delta_seconds"] == 191
+    assert not result["allowed_token_field_matched"]
+    changed_subject = {**step, "actual_raw_observation": _test_jwt(subject="other", exp=291)}
+    assert not _classify_root_temporal_jwt_difference(changed_subject)[
+        "temporal_only_root_jwt"
+    ]
+
+
+def test_failed_attempt_with_end_record_is_not_unfinished() -> None:
+    attempts = [
+        {"attempt_id": "failed", "event": "start"},
+        {"attempt_id": "failed", "event": "end", "exit_code": 1},
+        {"attempt_id": "passed", "event": "start"},
+        {"attempt_id": "passed", "event": "end", "exit_code": 0},
+    ]
+    assert _attempt_lifecycle_errors(attempts) == []
 
 
 def test_exp025a_scope_is_qwen_and_gpu_free() -> None:

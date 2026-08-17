@@ -15,6 +15,19 @@ def _load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _attempt_lifecycle_errors(attempts: list[dict[str, Any]]) -> list[str]:
+    errors = []
+    started = {str(row["attempt_id"]) for row in attempts if row.get("event") == "start"}
+    ended = {str(row["attempt_id"]) for row in attempts if row.get("event") == "end"}
+    if started != ended:
+        errors.append("unfinished_attempt")
+    for attempt_id in started | ended:
+        events = [str(row.get("event")) for row in attempts if str(row["attempt_id"]) == attempt_id]
+        if events.count("start") != 1 or events.count("end") != 1:
+            errors.append(f"attempt_event_count:{attempt_id}")
+    return errors
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -51,28 +64,24 @@ def main() -> None:
     attempts = list(read_jsonl(args.artifact_dir / "attempts.jsonl"))
     if {str(row["run_uuid"]) for row in attempts} != {str(settings["run_uuid"])}:
         errors.append("run_uuid_mismatch")
-    started = {str(row["attempt_id"]) for row in attempts if row.get("event") == "start"}
-    ended = {
-        str(row["attempt_id"])
-        for row in attempts
-        if row.get("event") == "end" and int(row.get("exit_code", 1)) == 0
-    }
-    if started != ended:
-        errors.append("unfinished_or_failed_attempt")
-    for attempt_id in started:
-        events = [str(row.get("event")) for row in attempts if str(row["attempt_id"]) == attempt_id]
-        if events.count("start") != 1 or events.count("end") != 1:
-            errors.append(f"attempt_event_count:{attempt_id}")
+    errors.extend(_attempt_lifecycle_errors(attempts))
     final = _load(args.artifact_dir / "final_exp025a_summary.json")
     structural = _load(args.artifact_dir / "structural_finalization_summary.json")
     sentinel = _load(args.artifact_dir / "replay/reconciled_sentinel_summary.json")
     full = _load(args.artifact_dir / "replay/reconciled_full_summary.json")
-    if not bool(final["clean_corpus_ready"]):
-        errors.append("clean_corpus_not_ready")
     if not bool(structural["structural_validation"]["passed"]):
         errors.append("structural_validation_failed")
-    if not bool(sentinel["gate"]["passed"] and full["gate"]["passed"]):
-        errors.append("semantic_replay_failed")
+    replay_passed = bool(sentinel["gate"]["passed"] and full["gate"]["passed"])
+    expected_branch = (
+        str(structural["decision_branch"])
+        if replay_passed
+        else "identity_reconciled_corpus_replay_failure"
+    )
+    if str(final["decision_branch"]) != expected_branch:
+        errors.append("scientific_branch_mismatch")
+    expected_clean = bool(structural["clean_corpus_ready"] and replay_passed)
+    if bool(final["clean_corpus_ready"]) != expected_clean:
+        errors.append("clean_corpus_gate_mismatch")
     if int(final["qwen_import_forward_representation_count"]) != 0:
         errors.append("qwen_scope_violation")
     if float(final["h100_hours"]) != 0.0 or int(final["model_training_count"]) != 0:

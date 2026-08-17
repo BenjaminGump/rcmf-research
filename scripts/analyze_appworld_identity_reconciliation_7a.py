@@ -10,6 +10,7 @@ from typing import Any
 import _bootstrap  # noqa: F401
 
 from rcmf.config import load_config
+from rcmf.training.appworld_semantic_replay_6h2 import decode_jwt_strict
 from rcmf.training.state_conditioned_transition_6b import AttemptLedger
 from rcmf.utils.serialization import atomic_write_json, atomic_write_text, read_jsonl, sha256_file
 
@@ -20,6 +21,83 @@ def _load(path: Path) -> dict[str, Any]:
 
 def _attempt_ids(path: Path) -> set[str]:
     return {str(row["attempt_id"]) for row in read_jsonl(path)} if path.exists() else set()
+
+
+def _classify_root_temporal_jwt_difference(step: dict[str, Any]) -> dict[str, Any]:
+    comparison = dict(step.get("semantic_comparison", {}))
+    try:
+        expected = decode_jwt_strict(str(step["expected_raw_observation"]).strip())
+        actual = decode_jwt_strict(str(step["actual_raw_observation"]).strip())
+    except (KeyError, ValueError):
+        return {"temporal_only_root_jwt": False}
+    expected_stable = {key: value for key, value in expected.payload.items() if key != "exp"}
+    actual_stable = {key: value for key, value in actual.payload.items() if key != "exp"}
+    differing_claims = sorted(
+        key
+        for key in set(expected.payload) | set(actual.payload)
+        if expected.payload.get(key) != actual.payload.get(key)
+    )
+    temporal_only = bool(
+        comparison.get("jwt_field_count") == 0
+        and expected.header == actual.header
+        and expected_stable == actual_stable
+        and differing_claims == ["exp"]
+    )
+    left_exp = expected.payload.get("exp")
+    right_exp = actual.payload.get("exp")
+    return {
+        "temporal_only_root_jwt": temporal_only,
+        "header_sha256": comparison.get("expected_semantic_sha256"),
+        "stable_claim_names": sorted(expected_stable),
+        "stable_claims_match": expected_stable == actual_stable,
+        "differing_claims": differing_claims,
+        "exp_delta_seconds": (
+            int(right_exp - left_exp)
+            if isinstance(left_exp, (int, float)) and isinstance(right_exp, (int, float))
+            else None
+        ),
+        "schema_location": "$",
+        "allowed_token_field_matched": False,
+        "raw_values_recorded_in_github_safe_output": False,
+    }
+
+
+def _full_replay_failure_diagnostic(checkpoint_path: Path) -> dict[str, Any]:
+    checkpoint = _load(checkpoint_path)
+    failures = []
+    for key, entry in sorted(dict(checkpoint.get("rows", {})).items()):
+        if not str(key).startswith("full:"):
+            continue
+        result = _load(Path(str(entry["output_path"])))
+        for step in result.get("steps", []):
+            if bool(step.get("semantic_v2_match")):
+                continue
+            failures.append(
+                {
+                    "state_example_id": str(result["state_example_id"]),
+                    "task_id": str(result["task_id"]),
+                    "step_id": int(step["step_id"]),
+                    "is_target": bool(step["is_target"]),
+                    "action_sha256": str(step["action_sha256"]),
+                    "expected_raw_sha256": step["semantic_comparison"].get(
+                        "expected_raw_sha256"
+                    ),
+                    "actual_raw_sha256": step["semantic_comparison"].get(
+                        "actual_raw_sha256"
+                    ),
+                    **_classify_root_temporal_jwt_difference(dict(step)),
+                }
+            )
+    return {
+        "format": "identity_reconciled_replay_failure_diagnostic_7a_v1",
+        "failure_count": len(failures),
+        "state_count": len({row["state_example_id"] for row in failures}),
+        "task_count": len({row["task_id"] for row in failures}),
+        "all_failures_temporal_only_root_jwt": bool(failures)
+        and all(row["temporal_only_root_jwt"] for row in failures),
+        "semantic_contract_broadened": False,
+        "rows": failures,
+    }
 
 
 def parse_args() -> argparse.Namespace:
@@ -57,6 +135,7 @@ def main() -> None:
         "sensitivity": args.artifact_dir / "contaminated_checkpoint_sensitivity.json",
         "sentinel": args.artifact_dir / "replay" / "reconciled_sentinel_summary.json",
         "full": args.artifact_dir / "replay" / "reconciled_full_summary.json",
+        "checkpoint": args.artifact_dir / "replay" / "checkpoint_index.json",
     }
     for name, path in paths.items():
         if not path.is_file():
@@ -72,6 +151,11 @@ def main() -> None:
         heartbeat_interval_s=float(settings["heartbeat_interval_seconds"]),
     ) as attempt:
         payload = {name: _load(path) for name, path in paths.items()}
+        replay_failure = _full_replay_failure_diagnostic(paths["checkpoint"])
+        atomic_write_json(
+            args.artifact_dir / "reconciled_replay_failure_diagnostic.json",
+            replay_failure,
+        )
         structural_branch = str(payload["structural"]["decision_branch"])
         replay_passed = bool(payload["sentinel"]["gate"]["passed"] and payload["full"]["gate"]["passed"])
         branch = structural_branch if replay_passed else "identity_reconciled_corpus_replay_failure"
@@ -111,8 +195,13 @@ def main() -> None:
             "transition_count": corpus["transition_count"],
             "corpus_lineage_sha256": corpus["lineage_sha256"],
             "structural_validation_passed": corpus["passed"],
+            "structural_corpus_candidate_ready": bool(
+                payload["structural"]["clean_corpus_ready"]
+            ),
             "sentinel_gate_passed": payload["sentinel"]["gate"]["passed"],
             "full_replay_gate_passed": payload["full"]["gate"]["passed"],
+            "full_replay_metrics": payload["full"]["repeat_summaries"][0],
+            "full_replay_failure_diagnostic": replay_failure,
             "decision_branch": branch,
             "clean_corpus_ready": clean_ready,
             "dependency_artifact_count": payload["dependency"]["artifact_count"],
@@ -120,7 +209,11 @@ def main() -> None:
             "recompute_estimate": payload["estimate"],
             "sensitivity_conclusion": payload["sensitivity"]["qualitative_conclusion"],
             "generation_and_training_remain_blocked_in_exp025a": True,
-            "recommended_next_milestone": "EXP-025B_minimum_v4_rebuild_chain_from_identity_reconciled_corpus",
+            "recommended_next_milestone": (
+                "EXP-025B_minimum_v4_rebuild_chain_from_identity_reconciled_corpus"
+                if replay_passed
+                else "EXP-025B_with_blocking_root_jwt_semantic_replay_preflight"
+            ),
             "qwen_import_forward_representation_count": 0,
             "h100_hours": 0.0,
             "model_training_count": 0,
@@ -178,10 +271,15 @@ def main() -> None:
                 "# Reconciled Semantic Replay", "",
                 f"- Repeated sentinel: `{payload['sentinel']['gate']['passed']}`",
                 f"- Full manifest: `{payload['full']['gate']['passed']}`",
+                f"- Prior semantic matches: `{payload['full']['repeat_summaries'][0]['prior_semantic_match_count']}/{payload['full']['repeat_summaries'][0]['prior_observation_count']}`",
+                f"- Target semantic matches: `{payload['full']['repeat_summaries'][0]['target_semantic_match_count']}/{payload['full']['repeat_summaries'][0]['target_observation_count']}`",
+                f"- Root-level temporal JWT failures: `{replay_failure['failure_count']}` across `{replay_failure['state_count']}` states.",
+                "- Those values are outside the frozen access_token field allowlist; the contract was not broadened.",
                 "- JWT semantic-v2 remains limited to access_token.exp.",
             ]),
             "EXP-025B_minimum_rebuild_plan.md": "\n".join([
                 "# Proposed EXP-025B Minimum Rebuild", "",
+                "0. Resolve and preregister the root-level login-token semantic replay contract; no model work starts while replay remains failed.",
                 "1. Regenerate affected structural, state, memory, and transition representations.",
                 "2. Recompute only invalid raw-teacher rows.",
                 "3. Rebuild labels and manifests.",
@@ -194,6 +292,7 @@ def main() -> None:
                 "# EXP-025A Final Report", "",
                 f"Decision branch: `{branch}`.",
                 f"Clean corpus ready: `{clean_ready}`.",
+                f"Structurally reconciled corpus candidate ready: `{payload['structural']['clean_corpus_ready']}`.",
                 f"Generation/training blocked in this milestone: `True`.",
                 "No Qwen or H100 was used, and no historical artifact was rewritten.",
             ]),
@@ -208,4 +307,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
