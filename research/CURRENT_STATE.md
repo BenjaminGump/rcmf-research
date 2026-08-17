@@ -1521,3 +1521,25 @@ Decision:
 - Behavioral `p(s,m_transition)`, field/program/injector/selector training,
   Stage C2, end-to-end RCMF, AppWorld generation, and V4 tagging remain
   blocked.
+
+### EXP-024R3 corpus provenance audit stopped on two inconsistent tasks
+
+- The complete provenance audit accounts for all `46` successful trajectories
+  and all `638` decision examples. Identity matches `44/46` tasks.
+- The mismatched tasks are `b0a8eae_2` and `b0a8eae_3`; both source layers
+  agree internally but disagree with both agreeing official 0.1.0 snapshots
+  on first name, last name, email, and phone.
+- `b0a8eae_2` is classified as `source_query_header_only_corruption`: its
+  trajectory behavior references the official identity five times and the
+  source-query identity zero times. One matching task spec exists but is not
+  a coherent historical trajectory snapshot.
+- The bounded immutable-resource search found no exact coherent historical
+  snapshot: `exact_historical_snapshot_not_found`.
+- `b0a8eae_2` is held-out-only. `b0a8eae_3` contaminates the Stage-B train
+  split, train labels, teacher-source memories, and EXP-017 transition parents.
+- Decision branch: `source_dataset_identity_consistency_failure`. No
+  quarantine, sentinel, 45/40-state replay, Qwen work, or sensitivity
+  recomputation ran. Postrun validation passed `28/28`.
+- EXP-024A generation and all behavioral/model work remain blocked. The next
+  review must reconcile corpus identity and train-side contamination. V4
+  remains a candidate; no tag was created or moved.

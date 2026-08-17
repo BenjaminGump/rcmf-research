@@ -864,3 +864,35 @@ Blocked until that review and gate pass:
 - EXP-024A Qwen generation and memory-condition execution;
 - procedural field or behavioral `p(s,m_transition)` training;
 - injector, selector, Stage C2, end-to-end RCMF, or a V4 tag.
+
+## Proposed Post-EXP-024R3 Corpus Identity Reconciliation - Review Required
+
+Goal:
+
+- Resolve the dataset-building provenance of both `b0a8eae_2` and
+  `b0a8eae_3`, then determine whether a provenance-valid reconstruction is
+  scientifically and operationally possible.
+
+Required design:
+
+- Trace both supervisor headers through raw experiment export, trajectory
+  ingestion, task joins, and decision-example rendering. Test explicitly for
+  a systematic task-ID/index join error.
+- Enumerate every artifact derived from train-side `b0a8eae_3`, including
+  Stage-B labels, teacher-source memories, transition manifests/caches, and
+  downstream trained checkpoints.
+- Decide whether remediation requires rebuilding affected source records,
+  labels, transition caches, and downstream experiments. Preserve every old
+  artifact and publish a provenance map rather than overwriting data.
+- Revisit the 45-state versus whole-task quarantine only after all mismatch
+  tasks are resolved or formally excluded under a separately reviewed corpus
+  contract.
+- Recompute EXP-018 through EXP-023 sensitivity only on a genuinely
+  provenance-valid corpus. Do not use a `b0a8eae_2`-only deletion.
+
+Blocked until that review:
+
+- EXP-024A Qwen generation and memory-condition execution;
+- AppWorld semantic replay and any 40-state causal-audit continuation;
+- procedural field or behavioral `p(s,m_transition)` training;
+- injector, selector, Stage C2, end-to-end RCMF, or a V4 tag.

@@ -1503,3 +1503,39 @@ Implementation recovery:
 - Validator-only fixes selected the immutable `/data/tasks/<task_id>` manifest
   from EXP-024R's list schema and materialized the JSONL ledger once. Final
   validation passed 23/23 without changing scientific outputs.
+
+## 2026-08-17 EXP-024R3 corpus identity consistency failure
+
+VERIFIED:
+
+- Two of 46 source tasks, `b0a8eae_2` and `b0a8eae_3`, have supervisor
+  identity hashes inconsistent with both agreeing official AppWorld 0.1.0
+  snapshots. All 638 decisions remain consistent with their parent raw
+  trajectory queries.
+- `b0a8eae_2` is `source_query_header_only_corruption`; its behavior follows
+  the official identity. A matching task spec is not a coherent snapshot.
+- No exact coherent historical snapshot was found in the bounded immutable
+  search.
+- `b0a8eae_3` is train-side and contributes to train labels, teacher-source
+  memories, and transition parents.
+
+Decision:
+
+- Record `source_dataset_identity_consistency_failure` and stop before any
+  task quarantine or AppWorld replay.
+- Do not create a 40-state provenance-valid manifest. Its prerequisite that
+  `b0a8eae_2` be the only inconsistent task is false.
+- Do not recompute only a `b0a8eae_2` deletion sensitivity analysis; it would
+  not define a provenance-valid corpus while `b0a8eae_3` remains in training.
+- Preserve EXP-018 through EXP-023 metrics and decisions as immutable, while
+  marking their source-identity provenance scope for review.
+- Keep EXP-024A generation, semantic replay, field/program/injector/selector
+  work, Stage C2, end-to-end RCMF, and V4 tagging blocked.
+
+Implementation recovery:
+
+- Preflight 001 incorrectly coupled source-layer agreement to current source
+  file visibility; preflight 002 overclassified an identity-matching task spec
+  as coherent. Both are preserved under hashed attempt snapshots.
+- Regression-tested source-layer and behavioral-coherence rules in preflight
+  003 produced the final result. No scientific parameter changed.
