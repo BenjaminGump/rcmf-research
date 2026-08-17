@@ -835,3 +835,32 @@ Blocked until review:
 - EXP-024A generation and condition execution;
 - procedural field or behavioral `p(s,m_transition)` training;
 - Qwen forward/generation, Stage C2, end-to-end RCMF, or a V4 tag.
+
+## Proposed Post-EXP-024R2 Source Snapshot Provenance Recovery - Review Required
+
+Goal:
+
+- Resolve the five `b0a8eae_2` source-query/task-supervisor identity
+  mismatches without editing immutable identities, replacing states, or
+  lowering the 45/45 gate.
+
+Required design:
+
+- Search immutable historical experiment bundles, task archives, manifests,
+  and database snapshots for the exact source supervisor-query hash.
+- Establish whether the raw successful trajectory was generated from a
+  missing task snapshot or whether its prompt query is identity-inconsistent
+  with the official task used for execution.
+- Keep all raw identity values Lambda-private and commit only redacted hashes
+  and provenance.
+- Do not regenerate trajectories, substitute another supervisor, edit the
+  source query, or silently drop the five states.
+- If and only if all 45 identities are resolved, rerun the fixed 13-state
+  sentinel twice in fresh AppWorld 0.1.0 worlds under semantic v2. Require
+  13/13 twice before running full 45-state semantic replay.
+
+Blocked until that review and gate pass:
+
+- EXP-024A Qwen generation and memory-condition execution;
+- procedural field or behavioral `p(s,m_transition)` training;
+- injector, selector, Stage C2, end-to-end RCMF, or a V4 tag.

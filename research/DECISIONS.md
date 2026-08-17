@@ -1464,3 +1464,42 @@ Implementation recovery:
   v2 contract/results in separate paths.
 - Analysis attempt 001 expected a redundant history-count field. Analysis 002
   resumed from the unchanged sentinel summary after a tested aggregation fix.
+
+## 2026-08-17 EXP-024R2 semantic replay blocked by source identity
+
+VERIFIED:
+
+- AppWorld 0.1.0's observed login-token differences are strictly temporal:
+  all 11 JWT pairs differ only in `exp`, retain matching headers/stable claims,
+  validate through installed AppWorld, and have zero non-temporal mismatch.
+- A schema-limited semantic contract can safely ignore only the allowed `exp`
+  value and consequent signature while rejecting identity, permission,
+  response, malformed-token, and external-timestamp changes.
+- The all-45 source identity gate is 40/45. Five fixed `b0a8eae_2` states use
+  one internally consistent source query whose supervisor differs from both
+  retained official 0.1.0 task snapshots.
+
+Decision:
+
+- Record `source_query_task_identity_snapshot_unresolved`.
+- Do not run the repeated sentinel or full semantic replay when identity is
+  below 45/45. Their missing metrics are `not_run`, not zero.
+- Do not claim `appworld_010_semantic_replay_validated`; only the JWT semantic
+  component is validated.
+- Keep EXP-024A generation and every behavioral/program/field training path
+  blocked until the exact historical identity provenance is resolved and the
+  fixed sentinel then passes twice.
+- Preserve locked v1 as the historical comparator. Semantic v2 remains a
+  prospective secondary replay contract and does not rewrite EXP-024R.
+- Keep V4 as a candidate and do not create or move a tag.
+
+Implementation recovery:
+
+- Four preflight failures exposed old-summary naming, non-JWT schema fields,
+  valid-JWT index alignment, and EXP-020 subset-coverage assumptions. All are
+  preserved in the append-only ledger and repaired with regression tests.
+- The identity-only probe completed once and was reused by exact scientific
+  request hash. No duplicate probe world or run UUID was created.
+- Validator-only fixes selected the immutable `/data/tasks/<task_id>` manifest
+  from EXP-024R's list schema and materialized the JSONL ledger once. Final
+  validation passed 23/23 without changing scientific outputs.

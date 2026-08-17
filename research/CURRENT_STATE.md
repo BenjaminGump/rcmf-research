@@ -1489,3 +1489,35 @@ Decision:
   bytes.
 - No Qwen import/forward/generation, memory condition, field/program/injector/
   selector training, Stage C2, environment evaluation, or V4 tag occurred.
+
+### EXP-024R2 JWT semantic replay and identity provenance audit
+
+- EXP-024R2 source/validator commit is
+  `ad6ce7f110d147f05abac8ce9b1080ea2f151cde`; artifact root is
+  `/lambda/nfs/rcmf-persist/project/runs/stage_c/appworld_semantic_replay_6h2_20260817_001`.
+- AppWorld 0.1.0 uses HS256 JWTs with `sub=<app>+<username>` and only an `exp`
+  time claim, generated from a UTC clock with a random `[600,1800)`-second
+  lifetime. No `iat`, `nbf`, or `jti` generation was found.
+- The prospective semantic-v2 contract passed its component gate: all 11
+  expected/actual JWT pairs match on header and stable claims, both validate
+  through installed AppWorld, actual tokens work for subsequent recorded
+  calls, and non-temporal mismatches are zero. Expiration deltas are ten at
+  191 seconds and one at 834 seconds.
+- The all-45 identity audit passes 40/45. The five failures are steps
+  `6/7/12/17/18` from `b0a8eae_2`; decision text, raw trajectory, and replay
+  contract agree, but all four supervisor identity hashes disagree with both
+  retained official 0.1.0 task snapshots. No matching immutable snapshot was
+  found.
+- Decision branch: `source_query_task_identity_snapshot_unresolved`. The fixed
+  semantic-v2 sentinel and full 45-state replay were not run under the strict
+  identity gate. Semantic replay is not validated and EXP-024A generation
+  remains blocked.
+- Six append-only attempts preserve four preflight infrastructure failures and
+  two normal completions under one run UUID; no scientific parameter changed
+  and the validated identity probe was reused without a duplicate run.
+- Postrun validation passed 23/23 checks. Local tests passed 328 with one skip;
+  Lambda focused tests passed 30. H100/Qwen use was zero and the artifact is
+  341,695 bytes.
+- Behavioral `p(s,m_transition)`, field/program/injector/selector training,
+  Stage C2, end-to-end RCMF, AppWorld generation, and V4 tagging remain
+  blocked.
