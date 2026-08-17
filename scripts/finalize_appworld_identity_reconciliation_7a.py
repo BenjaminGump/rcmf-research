@@ -45,6 +45,15 @@ from rcmf.utils.serialization import atomic_write_json, atomic_write_text, read_
 from scripts.prepare_appworld_provenance_replay_6h3 import _field_hashes, _full_query, _spec_fields
 
 
+STAGE_C1_RESPONSE_CACHE_PATH = Path(
+    "runs/stage_c1/response_cache_20260806_001/response_cache.jsonl"
+)
+PAIR_5D_RESPONSE_CACHE_PATH = Path(
+    "runs/stage_c/pair_grounding_5d_20260807_001/"
+    "pair_response_cache/pair_response_cache.jsonl"
+)
+
+
 def _load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -183,8 +192,8 @@ def _build_dependency_graph(
     ]
     needles = [*AFFECTED_TASK_IDS, b3_memory, *b3_transition_ids]
     teacher = Path("runs/teacher/raw_text_full_cache_20260805_001/teacher_cache_full_rows.jsonl")
-    stage_c1 = Path("runs/stage_c1/response_cache_20260806_001/response_cache_rows.jsonl")
-    pair_5d = Path("runs/stage_c/pair_grounding_5d_20260807_001/pair_response_cache/pair_response_cache_rows.jsonl")
+    stage_c1 = STAGE_C1_RESPONSE_CACHE_PATH
+    pair_5d = PAIR_5D_RESPONSE_CACHE_PATH
     transition_cache = Path(settings["parent_exp017"]) / "teacher_cache.jsonl"
     counts = {
         "raw_teacher": _count_jsonl_needles(teacher, needles),

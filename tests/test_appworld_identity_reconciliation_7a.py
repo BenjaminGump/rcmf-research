@@ -27,6 +27,8 @@ from rcmf.training.appworld_legacy_replay_6h1 import (
 from scripts.appworld_semantic_replay_bridge_6h2 import collect_token_pairs
 from scripts.prepare_appworld_official_traces import load_task_query
 from scripts.finalize_appworld_identity_reconciliation_7a import (
+    PAIR_5D_RESPONSE_CACHE_PATH,
+    STAGE_C1_RESPONSE_CACHE_PATH,
     _reconcile_legacy_contract_query,
 )
 from scripts.run_appworld_identity_reconciliation_7a import (
@@ -216,6 +218,11 @@ def test_corpus_branch_and_dependency_classification() -> None:
         )
         == "model_retraining_required"
     )
+
+
+def test_dependency_audit_uses_materialized_response_cache_filenames() -> None:
+    assert STAGE_C1_RESPONSE_CACHE_PATH.name == "response_cache.jsonl"
+    assert PAIR_5D_RESPONSE_CACHE_PATH.name == "pair_response_cache.jsonl"
 
 
 def test_exp025a_scope_is_qwen_and_gpu_free() -> None:
