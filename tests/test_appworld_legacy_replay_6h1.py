@@ -21,6 +21,7 @@ from rcmf.training.appworld_legacy_replay_6h1 import (
     venv_root_from_executable,
 )
 from rcmf.training.procedural_causal_audit_6h import normalize_observation
+from scripts.analyze_appworld_legacy_replay_6h1 import _history_observation_count
 from scripts.appworld_legacy_replay_bridge_6h1 import (
     _full_demo_task_query,
     _task_identity_checks,
@@ -204,6 +205,14 @@ def test_sentinel_diagnostics_redacts_observations_and_credentials() -> None:
     serialized = json.dumps(diagnostics)
     assert "access_token" not in serialized
     assert "phone+user" not in serialized
+
+
+def test_analysis_counts_history_from_result_steps() -> None:
+    rows = [
+        {"steps": [{"is_target": False}, {"is_target": False}, {"is_target": True}]},
+        {"steps": [{"is_target": True}]},
+    ]
+    assert _history_observation_count(rows) == 2
 
 
 def test_sentinel_includes_no_history_each_task_step_two_and_extremes() -> None:

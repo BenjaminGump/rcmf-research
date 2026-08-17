@@ -29,6 +29,15 @@ def _attempt_ids(path: Path) -> set[str]:
     return {str(row["attempt_id"]) for row in read_jsonl(path)}
 
 
+def _history_observation_count(rows: list[dict[str, Any]]) -> int:
+    return sum(
+        1
+        for row in rows
+        for step in row.get("steps", [])
+        if not bool(step.get("is_target"))
+    )
+
+
 def _report(summary: dict[str, Any]) -> str:
     replay = summary["legacy_replay"]
     old = summary["paired_comparison"]["appworld_0_2_dev0"]
@@ -136,9 +145,7 @@ def main() -> None:
             if str(row["state_example_id"]) in selected_ids
         ]
         paired = paired_environment_comparison(old_rows, legacy_rows)
-        paired["history_observation_count"] = sum(
-            int(row["history_step_count"]) for row in legacy_rows
-        )
+        paired["history_observation_count"] = _history_observation_count(legacy_rows)
         branch = str(replay["decision"]["decision_branch"])
         full_pass = branch == "appworld_010_replay_validated" and int(
             replay["complete_replay_pass_count"]
