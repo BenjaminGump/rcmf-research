@@ -15,6 +15,18 @@ from rcmf.utils.serialization import read_jsonl, sha256_file, sha256_text
 
 PREFLIGHT_VERSION = "identity_reconciled_incremental_cache_preflight_7b_v1"
 AFFECTED_TASK_IDS = frozenset({"b0a8eae_2", "b0a8eae_3"})
+TRANSITION_QWEN_DERIVED_FIELDS = frozenset(
+    {
+        "canonical_pre_action_state_tokens",
+        "complete_action_tokens",
+        "complete_post_action_observation_tokens",
+        "source_task_goal_tokens",
+        "teacher_section_sha256",
+        "teacher_section_tokens",
+        "tokenizer_name_or_path",
+        "transition_jsonl_line",
+    }
+)
 
 
 def canonical_json_sha256(value: Any) -> str:
@@ -273,9 +285,24 @@ def transition_change_manifest(
         for row in clean_transitions
     }
     mapping = []
+    omitted_qwen_fields: set[str] = set()
     for identity, old_row in sorted(old.items()):
         if identity[0] not in AFFECTED_TASK_IDS:
-            if canonical_json_sha256(old_row) != canonical_json_sha256(clean[identity]):
+            clean_row = clean[identity]
+            old_only = set(old_row) - set(clean_row)
+            new_only = set(clean_row) - set(old_row)
+            if new_only or not old_only.issubset(TRANSITION_QWEN_DERIVED_FIELDS):
+                raise ValueError(
+                    f"Unaffected transition schema changed unexpectedly: {identity} "
+                    f"old_only={sorted(old_only)} new_only={sorted(new_only)}"
+                )
+            omitted_qwen_fields.update(old_only)
+            old_structural = {
+                key: value
+                for key, value in old_row.items()
+                if key not in TRANSITION_QWEN_DERIVED_FIELDS
+            }
+            if canonical_json_sha256(old_structural) != canonical_json_sha256(clean_row):
                 raise ValueError(f"Unaffected transition changed: {identity}")
             continue
         clean_row = clean[identity]
@@ -293,5 +320,8 @@ def transition_change_manifest(
     return {
         "changed_transition_count": len(mapping),
         "mapping": mapping,
-        "unaffected_transitions_byte_identical": True,
+        "unaffected_transition_structural_fields_identical": True,
+        "qwen_derived_old_fields_intentionally_absent_from_clean_structural_manifest": sorted(
+            omitted_qwen_fields
+        ),
     }

@@ -10,6 +10,7 @@ from rcmf.training.clean_cache_rebuild_7b import (
     affected_reasons,
     audit_jsonl_cache,
     source_identity_audit,
+    transition_change_manifest,
 )
 
 
@@ -89,4 +90,25 @@ def test_cache_audit_rejects_duplicate_keys(tmp_path: Path) -> None:
         audit_jsonl_cache(
             cache_name="raw_text_teacher", path=path,
             affected_memory_ids=set(), affected_old_transition_ids=set(),
+        )
+
+
+def test_transition_change_allows_only_documented_qwen_field_omissions() -> None:
+    shared = {
+        "parent_task_id": "clean",
+        "step_index": 1,
+        "transition_id": "same",
+        "transition_content_sha256": "content",
+    }
+    old = {**shared, "teacher_section_tokens": 12, "tokenizer_name_or_path": "Qwen/Qwen3-8B"}
+    report = transition_change_manifest(old_transitions=[old], clean_transitions=[shared])
+    assert report["changed_transition_count"] == 0
+    assert report["unaffected_transition_structural_fields_identical"]
+    assert report[
+        "qwen_derived_old_fields_intentionally_absent_from_clean_structural_manifest"
+    ] == ["teacher_section_tokens", "tokenizer_name_or_path"]
+    with pytest.raises(ValueError, match="schema changed unexpectedly"):
+        transition_change_manifest(
+            old_transitions=[{**shared, "undocumented": 1}],
+            clean_transitions=[shared],
         )
