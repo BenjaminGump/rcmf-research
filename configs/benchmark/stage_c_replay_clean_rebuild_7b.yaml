@@ -72,6 +72,10 @@ stage_c_7b:
       state_representations: runs/experiments/appworld_qwen_repr_full_prompt_filtered_no_2a163ab3_20260803_101000/train/representation_cache/decision_state_representations.pt
       memory_representations: runs/experiments/appworld_qwen_repr_full_prompt_filtered_no_2a163ab3_20260803_101000/train/representation_cache/memory_record_representations.pt
       transition_representations: runs/stage_c/state_conditioned_transition_6b_20260814_001/representation_cache/transition_representations.pt
+      raw_text_pilot: runs/teacher/raw_text_pilot_20260805_001
+      raw_text_audit3b: runs/teacher/raw_text_audit3b_20260805_001
+      student_split_manifest: runs/teacher/raw_text_full_cache_20260805_001/student_split_manifest.json
+      decoder_split_manifest: runs/stage_c/oracle_decoder_5fc_20260810_003/decoder_split_manifest.json
     output_root: runs/stage_c/replay_clean_rebuild_7b_20260818_001/clean_cache_rebuild
     expected_scoring_rows: 3658
     expected_state_representations: 35

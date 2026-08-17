@@ -171,6 +171,7 @@ def _row_for_state(
     model_config_commit_hash: str | None,
     context_limit: int,
     top_k: int,
+    corpus_lineage_sha256: str | None = None,
 ) -> dict[str, Any]:
     base_messages = _appworld_messages_from_example(example, prompt_profile)
     base_prompt, prompt_metadata = _render_prompt_with_metadata(tokenizer, base_messages, prompt_profile)
@@ -249,6 +250,8 @@ def _row_for_state(
         "source_commit_sha": source_commit,
         "scoring_timestamp_utc": utc_now(),
     }
+    if corpus_lineage_sha256 is not None:
+        row["corpus_lineage_sha256"] = corpus_lineage_sha256
     del baseline["logits"], teacher["logits"]
     return row
 
@@ -388,6 +391,7 @@ def main() -> None:
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--top-k", type=int, default=64)
     parser.add_argument("--progress-interval-s", type=float, default=120.0)
+    parser.add_argument("--corpus-lineage-sha256", default=None)
     args = parser.parse_args()
 
     started = time.perf_counter()
@@ -441,6 +445,7 @@ def main() -> None:
             model_config_commit_hash=model_hash,
             context_limit=context_limit,
             top_k=args.top_k,
+            corpus_lineage_sha256=args.corpus_lineage_sha256,
         )
         completed[state_id] = row
         append_jsonl(rows_path, row)
@@ -497,6 +502,7 @@ def main() -> None:
         "cache_size_bytes": rows_path.stat().st_size if rows_path.exists() else 0,
         "response_cache_sha256": sha256_file(rows_path),
         "validation": validation,
+        "corpus_lineage_sha256": args.corpus_lineage_sha256,
         "representative_rows": {
             "positive": max(positives, key=lambda item: item[0])[1] if positives else None,
             "neutral": min(neutrals, key=lambda item: abs(item[0]))[1] if neutrals else None,

@@ -856,6 +856,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--parent-teacher-cache", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--progress-interval-s", type=float, default=300.0)
+    parser.add_argument("--corpus-lineage-sha256", default=None)
+    parser.add_argument(
+        "--teacher-cache-only",
+        action="store_true",
+        help="Stop after validating the raw transition teacher cache and parent comparison.",
+    )
     parser.add_argument(
         "--approve-runtime-over-review-threshold",
         action="store_true",
@@ -963,6 +969,8 @@ def main() -> None:
             "scoring_timestamp_utc": utc_now(),
             "score_time_s": 0.0,
         }
+        if args.corpus_lineage_sha256 is not None:
+            row["corpus_lineage_sha256"] = args.corpus_lineage_sha256
         example = context["example"]
         row.update(
             _overlap_features(
@@ -1071,6 +1079,39 @@ def main() -> None:
             f"Representative teacher inspection found malformed/leaking rows: "
             f"{inspection['malformed_or_leaking_pair_ids'][:20]}"
         )
+
+    if args.teacher_cache_only:
+        summary = {
+            "format": "identity_reconciled_transition_teacher_cache_7b_v1",
+            "status": "completed_teacher_cache_only",
+            "timestamp_utc": utc_now(),
+            "source_commit": source_commit,
+            "corpus_lineage_sha256": args.corpus_lineage_sha256,
+            "config": str(args.config),
+            "data": str(args.data),
+            "preflight_dir": str(args.preflight_dir),
+            "output_dir": str(args.output_dir),
+            "model_name": backend.model_name,
+            "context_limit": context_limit,
+            "validation": validation,
+            "reproducibility": reproducibility,
+            "teacher_analysis": teacher_analysis,
+            "parent_comparison": parent_summary,
+            "representative_inspection": {
+                "passed": inspection["passed"],
+                "path": str(args.output_dir / "representative_inspection.json"),
+            },
+            "newly_scored_rows": new_scored,
+            "new_over_context_rows": new_over_context,
+            "reused_rows": len(preflight_rows) - new_scored - new_over_context,
+            "runtime_s": time.perf_counter() - started,
+            "teacher_cache": str(args.output_dir / "teacher_cache.jsonl"),
+            "teacher_cache_sha256": sha256_file(args.output_dir / "teacher_cache.jsonl"),
+        }
+        atomic_write_json(args.output_dir / "teacher_summary.json", summary)
+        print(json.dumps(validation, indent=2, sort_keys=True), flush=True)
+        print(f"completed transition teacher cache in {summary['runtime_s'] / 3600:.3f}h", flush=True)
+        return
 
     pair_oracle_rows, pair_oracle_manifest = select_pair_oracle_subset(
         ordered_rows,

@@ -535,6 +535,7 @@ def make_new_row(
     memory_index: int,
     preflight: dict[str, Any],
     l0: float,
+    corpus_lineage_sha256: str | None = None,
 ) -> dict[str, Any]:
     example = examples[example_index]
     record = records[memory_index]
@@ -592,6 +593,8 @@ def make_new_row(
         "scoring_timestamp_source": "full_cache_scoring_time",
         "skipped_reason": "over_context" if over_context else None,
     }
+    if corpus_lineage_sha256 is not None:
+        row["corpus_lineage_sha256"] = corpus_lineage_sha256
     row.update(overlap_features(example, record))
     return row
 
@@ -1290,6 +1293,12 @@ def main() -> None:
     parser.add_argument("--expected-legal-pairs", type=int, default=EXPECTED_LEGAL_PAIR_COUNT)
     parser.add_argument("--expected-scoreable-pairs", type=int, default=EXPECTED_SCOREABLE_PAIR_COUNT)
     parser.add_argument("--expected-over-context-pairs", type=int, default=EXPECTED_OVER_CONTEXT_PAIR_COUNT)
+    parser.add_argument("--corpus-lineage-sha256", default=None)
+    parser.add_argument(
+        "--disable-external-cache-reuse",
+        action="store_true",
+        help="Use only rows already present in the output cache when rebuilding a new lineage.",
+    )
     args = parser.parse_args()
 
     started = time.perf_counter()
@@ -1334,19 +1343,26 @@ def main() -> None:
         index: contexts[index]["target_token_sha256"]
         for index in range(len(examples))
     }
-    cache_sources, cache_validation_stats = merge_cached_rows(
-        [
-            pilot_dir / "teacher_labels.jsonl",
-            audit3b_dir / "teacher_labels_audit3b.jsonl",
-        ],
-        examples=examples,
-        records=records,
-        backend_model_name=backend.model_name,
-        renderer_version=renderer_metadata["renderer_version"],
-        expected_checkpoint_identity=expected_checkpoint_identity,
-        target_token_hashes=target_token_hashes,
-        cache_generation_commit_sha=source_commit,
-    )
+    if args.disable_external_cache_reuse:
+        cache_sources = {}
+        cache_validation_stats = {
+            "external_cache_reuse_disabled": True,
+            "accepted_unique_pairs": 0,
+        }
+    else:
+        cache_sources, cache_validation_stats = merge_cached_rows(
+            [
+                pilot_dir / "teacher_labels.jsonl",
+                audit3b_dir / "teacher_labels_audit3b.jsonl",
+            ],
+            examples=examples,
+            records=records,
+            backend_model_name=backend.model_name,
+            renderer_version=renderer_metadata["renderer_version"],
+            expected_checkpoint_identity=expected_checkpoint_identity,
+            target_token_hashes=target_token_hashes,
+            cache_generation_commit_sha=source_commit,
+        )
     atomic_write_json(output_dir / "cache_validation_sources.json", cache_validation_stats)
 
     rows_path = output_dir / "teacher_cache_full_rows.jsonl"
@@ -1445,6 +1461,7 @@ def main() -> None:
             memory_index=memory_index,
             preflight=preflight,
             l0=l0,
+            corpus_lineage_sha256=args.corpus_lineage_sha256,
         )
         if row["score_status"] == "over_context":
             completed_rows[key] = row
@@ -1579,6 +1596,7 @@ def main() -> None:
         comparison=comparison,
     )
     summary["reproducibility_check"] = reproducibility
+    summary["corpus_lineage_sha256"] = args.corpus_lineage_sha256
     atomic_write_json(output_dir / "summary.json", summary)
     atomic_write_text(output_dir / "report.md", render_markdown(summary))
     final_progress = progress_snapshot(

@@ -12,6 +12,8 @@ from rcmf.training.clean_cache_rebuild_7b import (
     source_identity_audit,
     transition_change_manifest,
 )
+from rcmf.training.clean_cache_execution_7b import seed_jsonl
+from rcmf.utils.serialization import read_jsonl
 
 
 def _example(task: str, state: str = "state") -> DecisionExample:
@@ -111,4 +113,40 @@ def test_transition_change_allows_only_documented_qwen_field_omissions() -> None
         transition_change_manifest(
             old_transitions=[{**shared, "undocumented": 1}],
             clean_transitions=[shared],
+        )
+
+
+def test_seed_jsonl_is_idempotent_and_preserves_completed_rows(tmp_path: Path) -> None:
+    output = tmp_path / "cache.jsonl"
+    output.write_text(json.dumps({"id": "affected", "value": 7}) + "\n", encoding="utf-8")
+    reusable = [{"id": "a", "value": 1}, {"id": "b", "value": 2}]
+    expected = {"affected", "a", "b"}
+    first = seed_jsonl(
+        output_path=output,
+        reusable_rows=reusable,
+        expected_keys=expected,
+        key_fn=lambda row: str(row["id"]),
+    )
+    second = seed_jsonl(
+        output_path=output,
+        reusable_rows=reusable,
+        expected_keys=expected,
+        key_fn=lambda row: str(row["id"]),
+    )
+    rows = list(read_jsonl(output))
+    assert len(rows) == 3
+    assert rows[0] == {"id": "affected", "value": 7}
+    assert first["appended_row_count"] == 2
+    assert second["appended_row_count"] == 0
+
+
+def test_seed_jsonl_rejects_changed_reusable_row(tmp_path: Path) -> None:
+    output = tmp_path / "cache.jsonl"
+    output.write_text(json.dumps({"id": "a", "value": 9}) + "\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="Reusable row changed"):
+        seed_jsonl(
+            output_path=output,
+            reusable_rows=[{"id": "a", "value": 1}],
+            expected_keys={"a"},
+            key_fn=lambda row: str(row["id"]),
         )

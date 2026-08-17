@@ -120,6 +120,7 @@ def _reuse_stage_c1_row(
     source_commit: str | None,
     model_config_commit_hash: str | None,
     context_limit: int,
+    corpus_lineage_sha256: str | None = None,
 ) -> dict[str, Any]:
     positions = add_teacher_delta_fields(copy.deepcopy(stage_c1_row["target_positions"]))
     row = {
@@ -174,6 +175,8 @@ def _reuse_stage_c1_row(
         "source_stage_c1_best_pair_key": stage_c1_row.get("best_pair_key"),
         "scoring_timestamp_utc": utc_now(),
     }
+    if corpus_lineage_sha256 is not None:
+        row["corpus_lineage_sha256"] = corpus_lineage_sha256
     return row
 
 
@@ -191,6 +194,7 @@ def _score_pair_response_row(
     context_limit: int,
     top_k: int,
     baseline_cache: dict[str, dict[str, Any]],
+    corpus_lineage_sha256: str | None = None,
 ) -> dict[str, Any]:
     base_prompt, prompt_metadata, target_ids, target_text, base_messages = _base_prompt_and_target(
         tokenizer=tokenizer,
@@ -268,6 +272,8 @@ def _score_pair_response_row(
         "source_commit_sha": source_commit,
         "scoring_timestamp_utc": utc_now(),
     }
+    if corpus_lineage_sha256 is not None:
+        row["corpus_lineage_sha256"] = corpus_lineage_sha256
     del teacher["logits"]
     return row
 
@@ -283,6 +289,7 @@ def build_pair_response_cache(
     prompt_profile: str,
     top_k: int,
     progress_interval_s: float,
+    corpus_lineage_sha256: str | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     started = time.perf_counter()
     tokenizer = backend.tokenizer
@@ -334,6 +341,7 @@ def build_pair_response_cache(
                 source_commit=source_commit,
                 model_config_commit_hash=model_hash,
                 context_limit=context_limit,
+                corpus_lineage_sha256=corpus_lineage_sha256,
             )
             reuse_count += 1
         else:
@@ -352,6 +360,7 @@ def build_pair_response_cache(
                 context_limit=context_limit,
                 top_k=top_k,
                 baseline_cache=baseline_cache,
+                corpus_lineage_sha256=corpus_lineage_sha256,
             )
             new_count += 1
         completed[pid] = row
@@ -423,6 +432,7 @@ def build_pair_response_cache(
         "cache_size_bytes": rows_path.stat().st_size if rows_path.exists() else 0,
         "pair_response_cache_sha256": sha256_file(rows_path),
         "validation": validation,
+        "corpus_lineage_sha256": corpus_lineage_sha256,
     }
     atomic_write_json(output_dir / "pair_response_cache_summary.json", summary)
     atomic_write_json(output_dir / "pair_response_cache_validation.json", validation)
@@ -1796,6 +1806,7 @@ def main() -> None:
     parser.add_argument("--ratio-targets", type=float, nargs="+", default=[0.5, 1.0, 2.0])
     parser.add_argument("--progress-interval-s", type=float, default=120.0)
     parser.add_argument("--cache-only", action="store_true")
+    parser.add_argument("--corpus-lineage-sha256", default=None)
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     args = parser.parse_args()
 
@@ -1830,6 +1841,7 @@ def main() -> None:
         prompt_profile=cfg.benchmark.prompt_profile,
         top_k=args.top_k,
         progress_interval_s=args.progress_interval_s,
+        corpus_lineage_sha256=args.corpus_lineage_sha256,
     )
     if args.cache_only:
         print(f"pair cache built and validated at {pair_cache_dir}", flush=True)
