@@ -307,6 +307,8 @@ def _central_interaction_checks(
 ) -> dict[str, Any]:
     correct = model["quarantine"]["correct"]
     transition = transition_only["quarantine"]
+    if "correct" in transition:
+        transition = transition["correct"]
     correct_ndcg = _ndcg4(correct)
     checks = {
         "ndcg4_gain_at_least_0.05": correct_ndcg - _ndcg4(transition) >= 0.05,

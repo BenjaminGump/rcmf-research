@@ -17,6 +17,7 @@ from rcmf.training.appworld_provenance_replay_6h3 import (
     training_contamination_report,
 )
 from scripts.analyze_provenance_quarantine_sensitivity_6h3 import (
+    _central_interaction_checks,
     _positive_task_count,
     _target_rows_as_raw_predictions,
     _without_task,
@@ -72,6 +73,31 @@ def test_exp021_target_rows_are_normalized_before_raw_per_task_metrics() -> None
         },
     )
     assert result["positive_task_count"] == 1
+
+
+def test_central_gate_accepts_control_indexed_transition_baseline() -> None:
+    def summary(ndcg: float) -> dict:
+        return {
+            "per_state": {
+                "ndcg@4": {"mean": ndcg},
+                "spearman": {"mean": 0.3},
+            },
+            "interaction_residual_spearman": 0.3,
+        }
+
+    model = {
+        "quarantine": {
+            "correct": summary(0.7),
+            "shuffled_state": summary(0.5),
+            "shuffled_transition": summary(0.5),
+        },
+        "quarantine_positive_vs_shuffle_task_gate": {"positive_task_count": 3},
+    }
+    transition = {"quarantine": {"correct": summary(0.5)}}
+    result = _central_interaction_checks(
+        model, transition, minimum_positive_tasks=3
+    )
+    assert result["checks"]["ndcg4_gain_at_least_0.05"]
 
 
 def test_corpus_identity_summary_is_task_unique_and_counts_mismatches() -> None:
