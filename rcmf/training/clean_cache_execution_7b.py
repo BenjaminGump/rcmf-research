@@ -274,39 +274,58 @@ def seed_pair_response(*, labels_dir: Path, old_path: Path, output_dir: Path) ->
     selected_by_id = _keyed(selected, lambda row: str(row["pair_id"]))
     for pair_id, row in existing.items():
         selected_pair = selected_by_id.get(pair_id)
-        if selected_pair is None or not _selected_pair_matches_old(
+        if selected_pair is None:
+            raise ValueError(f"Existing pair-response row is stale or invalid: {pair_id}")
+        old_candidate = old.get(pair_id)
+        if old_candidate is not None and _selected_pair_matches_old(
+            selected_pair, old_candidate
+        ):
+            continue
+        if not _selected_pair_matches_old(
             selected_pair, row, allow_reconciled_tasks=True
         ):
             raise ValueError(f"Existing pair-response row is stale or invalid: {pair_id}")
-    reusable = []
+
+    canonical_rows = []
+    legacy_reusable_count = 0
+    resumed_recomputed_count = 0
+    replaced_existing_with_legacy_count = 0
     for pair in selected:
-        if str(pair["pair_id"]) in existing:
-            continue
-        candidate = old.get(str(pair["pair_id"]))
+        pair_id = str(pair["pair_id"])
+        candidate = old.get(pair_id)
         if candidate is not None and _selected_pair_matches_old(pair, candidate):
-            reusable.append(candidate)
+            canonical_rows.append(candidate)
+            legacy_reusable_count += 1
+            if pair_id in existing and existing[pair_id] != candidate:
+                replaced_existing_with_legacy_count += 1
+            continue
+        completed = existing.get(pair_id)
+        if completed is not None:
+            canonical_rows.append(completed)
+            resumed_recomputed_count += 1
     expected = {str(row["pair_id"]) for row in selected}
     output_dir.mkdir(parents=True, exist_ok=True)
     write_jsonl(output_dir / "clean_selected_pairs_seed.jsonl", selected)
     atomic_write_json(output_dir / "clean_pair_selection_seed_summary.json", selection_summary)
-    result = seed_jsonl(
-        output_path=output_path,
-        reusable_rows=reusable,
-        expected_keys=expected,
-        key_fn=lambda row: str(row["pair_id"]),
-    )
-    result.update(
-        {
-            "format": EXECUTION_VERSION,
-            "cache": "pair_response_5d",
-            "selected_pair_count": len(selected),
-            "resumed_row_count": len(existing),
-            "legacy_reusable_row_count": len(reusable),
-            "cascade_recompute_count": len(selected) - len(existing) - len(reusable),
-            "historical_static_affected_count": 121,
-        }
-    )
-    return result
+    temporary_path = output_path.with_name(f".{output_path.name}.seed.tmp")
+    write_jsonl(temporary_path, canonical_rows)
+    os.replace(temporary_path, output_path)
+    return {
+        "format": EXECUTION_VERSION,
+        "cache": "pair_response_5d",
+        "output_path": str(output_path),
+        "output_sha256": sha256_file(output_path),
+        "selected_pair_count": len(selected),
+        "expected_key_count": len(expected),
+        "existing_row_count_before_seed": len(existing),
+        "existing_row_count_after_seed": len(canonical_rows),
+        "resumed_recomputed_row_count": resumed_recomputed_count,
+        "legacy_reusable_row_count": legacy_reusable_count,
+        "replaced_existing_with_legacy_count": replaced_existing_with_legacy_count,
+        "cascade_recompute_count": len(selected) - legacy_reusable_count,
+        "remaining_recompute_count": len(selected) - len(canonical_rows),
+        "historical_static_affected_count": 121,
+    }
 
 
 def validate_transition_preflight(*, old_dir: Path, clean_dir: Path) -> dict[str, Any]:

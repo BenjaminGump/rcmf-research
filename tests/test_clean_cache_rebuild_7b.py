@@ -14,6 +14,7 @@ from rcmf.training.clean_cache_rebuild_7b import (
 )
 from rcmf.training.clean_cache_execution_7b import (
     _selected_pair_matches_old,
+    seed_pair_response,
     seed_jsonl,
     transition_representation_work_queue,
 )
@@ -214,6 +215,51 @@ def test_pair_response_resume_allows_reconciled_rows_only_when_explicit() -> Non
     assert _selected_pair_matches_old(
         selected, completed, allow_reconciled_tasks=True
     )
+
+
+def test_pair_response_seed_restores_legacy_row_over_recomputed_resume(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    selected = {
+        "pair_id": "pair",
+        "state_example_id": "state",
+        "task_id": "clean-task",
+        "memory_id": "memory",
+        "memory_task_id": "clean-memory-task",
+        "selection_category": "positive",
+        "utility_category": "positive",
+        "L0": 0.5,
+        "raw_utility": 0.25,
+        "memory_text_sha256": "memory-hash",
+    }
+    legacy = {**selected, "text_utility": selected["raw_utility"], "cache_source": "old"}
+    legacy.pop("raw_utility")
+    recomputed = {**legacy, "cache_source": "clean", "corpus_lineage_sha256": "lineage"}
+    old_path = tmp_path / "old.jsonl"
+    old_path.write_text(json.dumps(legacy) + "\n", encoding="utf-8")
+    labels_dir = tmp_path / "labels"
+    labels_dir.mkdir()
+    (labels_dir / "student_labels.jsonl").write_text("{}\n", encoding="utf-8")
+    (labels_dir / "effective_memory_bank.jsonl").write_text("{}\n", encoding="utf-8")
+    output_dir = tmp_path / "output"
+    output_dir.mkdir()
+    (output_dir / "pair_response_cache.jsonl").write_text(
+        json.dumps(recomputed) + "\n", encoding="utf-8"
+    )
+    monkeypatch.setattr(
+        "rcmf.training.clean_cache_execution_7b.select_stratified_pair_set",
+        lambda *_args, **_kwargs: ([selected], {"selected_pair_count": 1}),
+    )
+
+    report = seed_pair_response(
+        labels_dir=labels_dir, old_path=old_path, output_dir=output_dir
+    )
+
+    assert list(read_jsonl(output_dir / "pair_response_cache.jsonl")) == [legacy]
+    assert report["legacy_reusable_row_count"] == 1
+    assert report["replaced_existing_with_legacy_count"] == 1
+    assert report["cascade_recompute_count"] == 0
+    assert report["remaining_recompute_count"] == 0
 
 
 def test_transition_representation_queue_includes_rows_outside_model_panel() -> None:
