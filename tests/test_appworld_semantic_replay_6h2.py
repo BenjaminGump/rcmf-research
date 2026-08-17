@@ -30,6 +30,7 @@ from scripts.run_appworld_semantic_replay_6h2 import (
 from scripts.prepare_appworld_semantic_replay_6h2 import (
     _find_probe_request_by_hash,
     _legacy_history_observation_count,
+    _optional_manifest_status,
     _probe_scientific_request_hash,
     _valid_jwt_pairs,
     _valid_semantic_jwt_reports,
@@ -439,3 +440,14 @@ def test_identity_probe_checkpoint_reuse_ignores_only_attempt_prefix(tmp_path: P
     assert _find_probe_request_by_hash(tmp_path, prior_hash) == prior
     assert _probe_scientific_request_hash(prior) == _probe_scientific_request_hash(current)
     assert _probe_scientific_request_hash(prior) != _probe_scientific_request_hash(changed)
+
+
+def test_optional_exp020_manifest_absence_is_explicit_not_a_key_error() -> None:
+    rows = {"state-present": {"state_example_id": "state-present", "task_id": "task-1"}}
+    present = _optional_manifest_status(rows, "state-present", "task-1")
+    absent = _optional_manifest_status(rows, "state-added-for-audit", "task-1")
+    mismatch = _optional_manifest_status(rows, "state-present", "task-2")
+
+    assert present["present"] and present["task_id_match"] is True
+    assert absent == {"present": False, "task_id_match": None, "row_sha256": None}
+    assert mismatch["present"] and mismatch["task_id_match"] is False

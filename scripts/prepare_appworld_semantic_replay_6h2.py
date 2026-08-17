@@ -196,6 +196,19 @@ def _row_map(rows: Sequence[Mapping[str, Any]], key: str = "state_example_id") -
     return output
 
 
+def _optional_manifest_status(
+    rows_by_id: Mapping[str, Mapping[str, Any]], state_id: str, task_id: str
+) -> dict[str, Any]:
+    row = rows_by_id.get(state_id)
+    if row is None:
+        return {"present": False, "task_id_match": None, "row_sha256": None}
+    return {
+        "present": True,
+        "task_id_match": task_id == str(row["task_id"]),
+        "row_sha256": canonical_hash(row),
+    }
+
+
 def _field_hashes_from_spec(path: Path) -> dict[str, str]:
     values = _load_json(path)
     supervisor = values["supervisor"]
@@ -256,17 +269,20 @@ def _build_identity_audit(
         field_matches = {
             key: reference[key] == str(official_hashes[key]) for key in sorted(reference)
         }
+        exp020_status = _optional_manifest_status(exp020_by_id, state_id, task_id)
         task_id_checks = {
             "query_manifest": task_id == str(query["task_id"]),
             "decision_metadata": task_id == str(example.metadata.get("task_id")),
             "raw_trajectory_record": task_id == str(record.task_id),
             "contract": task_id == str(contract["task_id"]),
-            "exp020_manifest": state_id in exp020_by_id and task_id == str(exp020_by_id[state_id]["task_id"]),
+            "exp020_manifest_if_present": exp020_status["task_id_match"],
             "exp024a_manifest": state_id in exp024a_by_id and task_id == str(exp024a_by_id[state_id]["task_id"]),
             "official_task": task_id == str(official["task_id"]),
         }
         identity_match = bool(
-            source_layers_agree and all(field_matches.values()) and all(task_id_checks.values())
+            source_layers_agree
+            and all(field_matches.values())
+            and all(value is not False for value in task_id_checks.values())
         )
         row = {
             "state_example_id": state_id,
@@ -280,7 +296,7 @@ def _build_identity_audit(
             "mismatched_fields": sorted(key for key, value in field_matches.items() if not value),
             "task_id_checks": task_id_checks,
             "query_manifest_rows": {
-                "exp020_sha256": canonical_hash(exp020_by_id[state_id]),
+                "exp020": exp020_status,
                 "exp022_sha256": canonical_hash(query),
                 "exp024a_sha256": canonical_hash(exp024a_by_id[state_id]),
             },
@@ -364,6 +380,12 @@ def _build_identity_audit(
         "task_count": len({row["task_id"] for row in rows}),
         "identity_match_count": sum(bool(row["identity_match"]) for row in rows),
         "identity_mismatch_count": len(mismatches),
+        "exp020_present_state_count": sum(
+            bool(row["query_manifest_rows"]["exp020"]["present"]) for row in rows
+        ),
+        "exp020_absent_state_count": sum(
+            not bool(row["query_manifest_rows"]["exp020"]["present"]) for row in rows
+        ),
         "mismatch_state_ids": [row["state_example_id"] for row in mismatches],
         "mismatch_task_ids": mismatch_tasks,
         "mismatch_field_counts": dict(
