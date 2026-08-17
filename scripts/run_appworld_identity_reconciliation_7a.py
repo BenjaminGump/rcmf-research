@@ -101,6 +101,14 @@ def _checkpoint_index(path: Path) -> dict[str, Any]:
     return payload
 
 
+def _checkpoint_contract_matches_base(
+    generated_contract: Mapping[str, Any], base_contract: Mapping[str, Any]
+) -> bool:
+    return str(generated_contract.get("source_contract_sha256", "")) == canonical_hash(
+        upgrade_replay_contract(base_contract)
+    )
+
+
 def _manifest_paths(artifact_dir: Path, phase: str) -> tuple[Path, Path, range]:
     if phase == "affected":
         return (
@@ -181,6 +189,7 @@ def main() -> None:
     checkpoint_path = args.artifact_dir / "replay" / "checkpoint_index.json"
     checkpoint = _checkpoint_index(checkpoint_path)
     checkpoint_rows = dict(checkpoint["rows"])
+    superseded_checkpoint_rows = list(checkpoint.get("superseded_rows", []))
     with AttemptLedger(
         args.artifact_dir,
         run_uuid=str(settings["run_uuid"]),
@@ -204,7 +213,20 @@ def main() -> None:
             rows = []
             for position, state_id in enumerate(selected_ids, start=1):
                 key = f"{args.phase}:repeat_{repeat_index}:{state_id}"
+                base = _load_json(Path(str(contract_by_id[state_id]["contract_path"])))
                 existing = checkpoint_rows.get(key)
+                if existing is not None:
+                    contract = _load_json(Path(str(existing["contract_path"])))
+                    if not _checkpoint_contract_matches_base(contract, base):
+                        superseded_checkpoint_rows.append(
+                            {
+                                "key": key,
+                                "reason": "source_contract_hash_changed",
+                                "row": dict(existing),
+                            }
+                        )
+                        checkpoint_rows.pop(key)
+                        existing = None
                 if existing is not None:
                     contract = _load_json(Path(str(existing["contract_path"])))
                     result = _load_json(Path(str(existing["output_path"])))
@@ -213,7 +235,6 @@ def main() -> None:
                         raise ValueError(f"Replay checkpoint hash changed: {key}")
                     rows.append(result)
                     continue
-                base = _load_json(Path(str(contract_by_id[state_id]["contract_path"])))
                 contract = _semantic_contract(
                     base,
                     settings=settings,
@@ -269,12 +290,17 @@ def main() -> None:
                     "attempt_id": args.attempt_id,
                     "contract_path": str(contract_path),
                     "contract_sha256": canonical_hash(contract),
+                    "source_contract_sha256": contract["source_contract_sha256"],
                     "output_path": str(output_path),
                     "result_sha256": canonical_hash(result),
                 }
                 atomic_write_json(
                     checkpoint_path,
-                    {"format": CHECKPOINT_VERSION, "rows": checkpoint_rows},
+                    {
+                        "format": CHECKPOINT_VERSION,
+                        "rows": checkpoint_rows,
+                        "superseded_rows": superseded_checkpoint_rows,
+                    },
                 )
                 rows.append(result)
                 attempt.progress(

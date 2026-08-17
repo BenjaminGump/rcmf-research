@@ -28,6 +28,7 @@ from rcmf.training.appworld_identity_reconciliation_7a import (
     select_corpus_decision_branch,
     text_sha256,
 )
+from rcmf.training.appworld_legacy_replay_6h1 import upgrade_replay_contract
 from rcmf.training.appworld_semantic_replay_6h2 import canonical_hash, parse_full_demo_query
 from rcmf.training.datasets import (
     _parse_appworld_state_text,
@@ -60,6 +61,19 @@ def _attempt_ids(path: Path) -> set[str]:
 
 def _safe_name(value: str) -> str:
     return "".join(character if character.isalnum() or character in "_.-" else "_" for character in value)
+
+
+def _reconcile_legacy_contract_query(
+    contract: Mapping[str, Any], query: str
+) -> dict[str, Any]:
+    payload = dict(contract)
+    if "expected_task_instruction" in payload:
+        payload["expected_task_instruction"] = str(query)
+    payload["expected_task_query"] = str(query)
+    upgraded = upgrade_replay_contract(payload)
+    if upgraded["expected_task_query"] != str(query):
+        raise ValueError("Legacy replay contract did not preserve reconciled query")
+    return upgraded
 
 
 def _atomic_copy_or_validate(source: Path, destination: Path) -> None:
@@ -306,7 +320,11 @@ def _build_dependency_graph(
 
 
 def _build_replay_manifests(
-    *, artifact_dir: Path, settings: Mapping[str, Any], remediations: Mapping[str, str]
+    *,
+    artifact_dir: Path,
+    settings: Mapping[str, Any],
+    remediations: Mapping[str, str],
+    attempt_id: str,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     exp024r = Path(settings["parent_exp024r"])
     environment = _load_json(exp024r / "environment_provenance.json")
@@ -315,7 +333,12 @@ def _build_replay_manifests(
     audit_rows = _manifest_rows(_load_json(Path(settings["parent_exp022"]) / "one_step_query_manifest.json"))
     audit = build_reconciled_audit_manifest(audit_rows, remediations)
     official_root = Path(settings["snapshots"]["official_010_data_root"])
-    contract_dir = artifact_dir / "private" / "reconciled_replay_contracts"
+    contract_dir = (
+        artifact_dir
+        / "private"
+        / "reconciled_replay_contracts"
+        / _safe_name(attempt_id)
+    )
     contract_dir.mkdir(parents=True, exist_ok=True)
     rows = []
     for state in audit["rows"]:
@@ -324,8 +347,11 @@ def _build_replay_manifests(
         contract = _load_json(Path(str(source_row["contract_path"])))
         task_id = str(state["task_id"])
         if remediations.get(task_id) == REPAIR_ACTION:
-            contract["expected_task_query"] = _full_query(
-                _spec_fields(official_root / "tasks" / task_id / "specs.json")
+            contract = _reconcile_legacy_contract_query(
+                contract,
+                _full_query(
+                    _spec_fields(official_root / "tasks" / task_id / "specs.json")
+                ),
             )
         path = contract_dir / f"{_safe_name(state_id)}.json"
         atomic_write_json(path, contract)
@@ -556,7 +582,10 @@ def main() -> None:
         atomic_write_json(args.artifact_dir / "artifact_dependency_graph.json", graph)
         atomic_write_json(args.artifact_dir / "minimum_recompute_estimate.json", estimates)
         audit, sentinel, contracts = _build_replay_manifests(
-            artifact_dir=args.artifact_dir, settings=settings, remediations=remediations
+            artifact_dir=args.artifact_dir,
+            settings=settings,
+            remediations=remediations,
+            attempt_id=args.attempt_id,
         )
         atomic_write_json(args.artifact_dir / "reconciled_one_step_manifest.json", audit)
         atomic_write_json(args.artifact_dir / "reconciled_sentinel_manifest.json", sentinel)

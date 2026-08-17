@@ -20,11 +20,19 @@ from rcmf.training.appworld_identity_reconciliation_7a import (
     validate_repaired_payload,
     write_jsonl_with_line_replacements,
 )
+from rcmf.training.appworld_legacy_replay_6h1 import (
+    canonical_hash as legacy_canonical_hash,
+    upgrade_replay_contract,
+)
 from scripts.appworld_semantic_replay_bridge_6h2 import collect_token_pairs
 from scripts.prepare_appworld_official_traces import load_task_query
+from scripts.finalize_appworld_identity_reconciliation_7a import (
+    _reconcile_legacy_contract_query,
+)
 from scripts.run_appworld_identity_reconciliation_7a import (
     CHECKPOINT_VERSION,
     _checkpoint_index,
+    _checkpoint_contract_matches_base,
 )
 
 
@@ -248,3 +256,74 @@ def test_replay_bridge_skips_access_token_schema_placeholders() -> None:
     expected = {"response_schema": {"access_token": "string"}}
     actual = {"response_schema": {"access_token": "string"}}
     assert collect_token_pairs(expected, actual, semantic=semantic_v2) == []
+
+
+def test_reconciled_query_survives_legacy_v1_contract_upgrade() -> None:
+    legacy = {
+        "format": "appworld_legacy_replay_contract_6h1_v1",
+        "state_example_id": "state",
+        "task_id": "task",
+        "target_step": 1,
+        "history_step_count": 0,
+        "expected_task_instruction": "stale query",
+        "normalization_version": "appworld_observation_normalization_6h_v1",
+        "legacy_python": "/legacy/python",
+        "appworld_root": "/legacy/root",
+        "experiment_name": "test",
+        "random_seed": 1,
+        "max_interactions": 10,
+        "max_api_calls_per_interaction": 10,
+        "source_hashes": {},
+        "actions": [
+            {
+                "step_id": 1,
+                "is_target": True,
+                "code": "print('ok')",
+                "response_sha256": "a" * 64,
+                "expected_observation": "ok",
+                "expected_observation_sha256": "b" * 64,
+            }
+        ],
+    }
+    legacy["actions_sha256"] = legacy_canonical_hash(legacy["actions"])
+    reconciled = _reconcile_legacy_contract_query(legacy, "official query")
+    assert reconciled["expected_task_query"] == "official query"
+    assert "expected_task_instruction" not in reconciled
+
+
+def test_replay_checkpoint_rejects_changed_source_contract() -> None:
+    base = {
+        "format": "appworld_legacy_replay_contract_6h1_v1",
+        "state_example_id": "state",
+        "task_id": "task",
+        "target_step": 1,
+        "history_step_count": 0,
+        "expected_task_instruction": "query-a",
+        "normalization_version": "appworld_observation_normalization_6h_v1",
+        "legacy_python": "/legacy/python",
+        "appworld_root": "/legacy/root",
+        "experiment_name": "test",
+        "random_seed": 1,
+        "max_interactions": 10,
+        "max_api_calls_per_interaction": 10,
+        "source_hashes": {},
+        "actions": [
+            {
+                "step_id": 1,
+                "is_target": True,
+                "code": "print('ok')",
+                "response_sha256": "a" * 64,
+                "expected_observation": "ok",
+                "expected_observation_sha256": "b" * 64,
+            }
+        ],
+    }
+    base["actions_sha256"] = legacy_canonical_hash(base["actions"])
+    generated = {
+        "source_contract_sha256": semantic_v2.canonical_hash(
+            upgrade_replay_contract(base)
+        )
+    }
+    assert _checkpoint_contract_matches_base(generated, base)
+    changed = {**base, "expected_task_instruction": "query-b"}
+    assert not _checkpoint_contract_matches_base(generated, changed)
