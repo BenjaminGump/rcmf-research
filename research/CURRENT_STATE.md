@@ -1462,3 +1462,30 @@ Decision:
 - Behavioral `p(s,m_transition)`, the procedural field, injector, selector,
   Stage C2, and AppWorld task evaluation remain blocked. V4 remains a
   candidate; no V4 tag was created or moved.
+
+### EXP-024R exact AppWorld 0.1.0 replay validation
+
+- The isolated AppWorld package/code/data/evaluation triple is exactly
+  `0.1.0/0.1.0/0.1.0`. Official verification passes 138/138 tests and 147/147
+  tasks without modifying the existing 0.2.0.dev0 environment.
+- The corrected 13-state sentinel passes 3/13 states, 5/13 complete histories,
+  93/102 prior observations, and 11/13 targets. Both no-history states pass.
+- On the same 13 states, 0.2.0.dev0 had 0/13 complete, 2/13 histories, 27/102
+  prior observations, and 6/13 targets. Exact 0.1.0 is materially closer but
+  does not pass the exact gate.
+- All 11 locked-normalization differences are authentication JWT timing
+  differences: ten expiration deltas are 191 seconds and one is 834 seconds.
+  The locked normalization was not changed.
+- One source query/task identity mismatch remains at
+  `appworld:trace:b0a8eae_2:step:7:line:284`; task/instruction/DB match, but
+  the supervisor identity hashes differ.
+- The formal branch is
+  `appworld_010_execution_semantics_or_normalization_mismatch`. Full 45-state
+  replay was not run, version mismatch was not causally confirmed as the sole
+  cause, and EXP-024A generation remains blocked.
+- Eight append-only attempts preserve all infrastructure and validator
+  recoveries. Post-run validation passed every check. H100 use was zero; the
+  artifact is 6,277,720 bytes and the external capsule root is 176,204,608
+  bytes.
+- No Qwen import/forward/generation, memory condition, field/program/injector/
+  selector training, Stage C2, environment evaluation, or V4 tag occurred.

@@ -1426,3 +1426,41 @@ Implementation recovery:
 - The original success-only post-run validator could not represent a valid
   preregistered stop. A branch-aware finalizer and validator now require zero
   generation artifacts, preserve failed attempts, and passed 132/132 checks.
+
+## 2026-08-17 EXP-024R matched-version replay remains invalid
+
+VERIFIED:
+
+- A fully isolated AppWorld 0.1.0 capsule passes official tests and task
+  verification and exposes package/code/data/evaluation 0.1.0.
+- The corrected sentinel improves sharply over 0.2.0.dev0 but passes only
+  3/13 states. Both no-history states pass, so the old package-version mismatch
+  was not the complete replay cause.
+- Every remaining normalized observation difference is a time-dependent login
+  JWT. One source query supervisor identity also disagrees with its task
+  metadata.
+
+Decision:
+
+- Record `appworld_010_execution_semantics_or_normalization_mismatch`.
+- Do not launch the full 45-state replay, Qwen generation, or any EXP-024A
+  memory condition. Missing 45-state metrics remain `not_run`, not zero.
+- Do not change the locked normalization after observing the JWT mismatch. Any
+  semantic-token comparison must be separately preregistered as a secondary
+  definition while retaining the locked exact result.
+- Treat AppWorld 0.1.0 matching as necessary but insufficient. Its role is a
+  verified contributor, not a causally complete explanation.
+- Keep behavioral `p(s,m_transition)`, procedural field training, injector,
+  selector, Stage C2, end-to-end RCMF, and V4 tagging blocked.
+
+Implementation recovery:
+
+- The wheel metadata permits Python 3.10 but official source imports
+  `typing.Self`; use isolated Python 3.11.15. The release has no dependency
+  lock, and Click 8.1.7 is required for the Typer 0.12.5 CLI. Neither changes a
+  scientific parameter.
+- Sentinel attempt 001 compared a full current-task query with the core
+  AppWorld instruction. It is preserved and superseded by regression-tested
+  v2 contract/results in separate paths.
+- Analysis attempt 001 expected a redundant history-count field. Analysis 002
+  resumed from the unchanged sentinel summary after a tested aggregation fix.

@@ -807,3 +807,31 @@ Before launch:
 Until this review is complete, do not train the procedural field, run Qwen
 generation, create AppWorld replay instances, train behavioral
 `p(s,m_transition)`, or start Stage C2/end-to-end RCMF.
+
+## Proposed Post-EXP-024R Historical Replay Contract Audit - Review Required
+
+Goal:
+
+- Determine whether historical execution time/randomness and one source-query
+  identity inconsistency explain the remaining exact AppWorld 0.1.0 replay
+  failure.
+
+Required design:
+
+- Preserve the 0.1.0 capsule, immutable 45 states, recorded actions, and locked
+  observation normalization.
+- Recover source experiment timestamps, frozen-clock behavior, authentication
+  token issuance semantics, and any historical task/database snapshots from
+  official artifacts before rerunning anything.
+- Audit task instruction and supervisor identity consistency for all 45 states,
+  with raw personal values retained only in Lambda-private artifacts.
+- Rerun the unchanged 13-state sentinel first. Require 13/13 complete replay
+  before launching the full 45-state validation.
+- If a semantic JWT comparison is scientifically desired, preregister it as a
+  separate secondary metric; do not rewrite the locked exact comparator.
+
+Blocked until review:
+
+- EXP-024A generation and condition execution;
+- procedural field or behavioral `p(s,m_transition)` training;
+- Qwen forward/generation, Stage C2, end-to-end RCMF, or a V4 tag.
