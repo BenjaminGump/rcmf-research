@@ -91,6 +91,7 @@ def main() -> None:
         "preregistered_task_mismatched": str(expected["quarantined_task_id"]) in set(corpus["identity_mismatch_task_ids"]),
         "official_backup_agree": bool(forensic["official_and_backup_agree"]),
         "snapshot_search_complete": bool(search["search_complete"]),
+        "snapshot_coherence_explicit": "matching_identity_snapshot_coherence" in search,
         "contamination_audits_all_mismatches": set(contamination.get("mismatch_task_audits", {})) == set(corpus["identity_mismatch_task_ids"]),
         "preflight_final_branch_compatible": (
             str(preflight["decision_branch"]) == branch

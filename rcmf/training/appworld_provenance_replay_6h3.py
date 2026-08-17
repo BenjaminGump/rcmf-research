@@ -82,11 +82,15 @@ def classify_provenance_failure(
         source_identity_evidence_count > 0 and official_identity_evidence_count > 0
     ):
         return "mixed_source_environment_corruption"
-    if exact_snapshot_found and source_layers_agree and supervisor_only_mismatch:
-        return "alternate_task_snapshot_used"
     if source_layers_agree and supervisor_only_mismatch:
         if source_identity_evidence_count > 0 and official_identity_evidence_count == 0:
-            return "alternate_task_snapshot_used"
+            return (
+                "alternate_task_snapshot_used"
+                if exact_snapshot_found
+                else "source_snapshot_unrecoverable"
+            )
+        if source_identity_evidence_count == 0 and official_identity_evidence_count > 0:
+            return "source_query_header_only_corruption"
         if source_identity_evidence_count == 0:
             return "source_query_header_only_corruption"
     return "source_snapshot_unrecoverable"

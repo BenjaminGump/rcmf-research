@@ -89,7 +89,27 @@ def test_failure_classification_separates_header_snapshot_join_and_mixing() -> N
         classify_provenance_failure(
             **{**common, "source_identity_evidence_count": 2}
         )
+        == "source_snapshot_unrecoverable"
+    )
+    assert (
+        classify_provenance_failure(
+            **{
+                **common,
+                "source_identity_evidence_count": 2,
+                "exact_snapshot_found": True,
+            }
+        )
         == "alternate_task_snapshot_used"
+    )
+    assert (
+        classify_provenance_failure(
+            **{
+                **common,
+                "official_identity_evidence_count": 3,
+                "exact_snapshot_found": True,
+            }
+        )
+        == "source_query_header_only_corruption"
     )
 
 

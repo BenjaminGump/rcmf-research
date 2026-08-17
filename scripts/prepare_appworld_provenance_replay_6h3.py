@@ -935,6 +935,19 @@ def main() -> None:
         )
         if not bool(transfer_search["search_complete"]):
             raise RuntimeError("A transfer bundle contains unreachable heads and was not fully searched")
+        record = records_by_task[task_id]
+        evidence = _trajectory_identity_evidence(
+            record,
+            source_fields=source_fields,
+            official_fields=official_fields,
+        )
+        exact_coherent_snapshots = (
+            exact_task_snapshots
+            if int(evidence["source_identity_evidence_count"]) > 0
+            and int(evidence["official_identity_evidence_count"]) == 0
+            and int(evidence["mixed_identity_step_count"]) == 0
+            else []
+        )
         snapshot_search = {
             "format": SNAPSHOT_SEARCH_VERSION,
             "task_id": task_id,
@@ -955,7 +968,10 @@ def main() -> None:
             "git_lfs": lfs_search,
             "transfer_bundle_inventory": transfer_search,
             "identity_candidate_count": len(identity_candidates),
-            "exact_task_snapshot_count": len(exact_task_snapshots),
+            "matching_identity_task_snapshot_count": len(exact_task_snapshots),
+            "matching_identity_task_snapshot_found": bool(exact_task_snapshots),
+            "exact_task_snapshot_count": len(exact_coherent_snapshots),
+            "exact_coherent_task_snapshot_count": len(exact_coherent_snapshots),
             "other_task_identity_match_count": len(other_task_matches),
             "source_corpus_other_task_identity_match_count": len(source_identity_matches_other_tasks),
             "source_corpus_other_task_identity_matches": source_identity_matches_other_tasks,
@@ -968,18 +984,23 @@ def main() -> None:
                 }
                 for row in identity_candidates
             ],
-            "exact_historical_snapshot_found": bool(exact_task_snapshots),
+            "matching_identity_snapshot_coherence": (
+                "coherent_with_trajectory_identity_evidence"
+                if exact_coherent_snapshots
+                else "matching_task_spec_found_but_not_coherent_with_trajectory"
+                if exact_task_snapshots
+                else "no_matching_task_spec"
+            ),
+            "exact_historical_snapshot_found": bool(exact_coherent_snapshots),
             "search_complete": bool(transfer_search["search_complete"]),
-            "search_result": "exact_historical_snapshot_found" if exact_task_snapshots else "exact_historical_snapshot_not_found",
+            "search_result": (
+                "exact_historical_snapshot_found"
+                if exact_coherent_snapshots
+                else "exact_historical_snapshot_not_found"
+            ),
         }
         atomic_write_json(args.artifact_dir / "bounded_snapshot_search.json", snapshot_search)
 
-        record = records_by_task[task_id]
-        evidence = _trajectory_identity_evidence(
-            record,
-            source_fields=source_fields,
-            official_fields=official_fields,
-        )
         b0_row = next(row for row in corpus_rows if row["task_id"] == task_id)
         supervisor_only = set(b0_row["mismatched_fields"]) == {"first_name", "last_name", "email", "phone_number"}
         classification = classify_provenance_failure(
@@ -989,7 +1010,7 @@ def main() -> None:
             source_identity_evidence_count=int(evidence["source_identity_evidence_count"]),
             official_identity_evidence_count=int(evidence["official_identity_evidence_count"]),
             mixed_identity_step_count=int(evidence["mixed_identity_step_count"]),
-            exact_snapshot_found=bool(exact_task_snapshots),
+            exact_snapshot_found=bool(exact_coherent_snapshots),
         )
         b0_examples = examples_by_task[task_id]
         if len(b0_examples) != int(expected["quarantined_decision_count"]):
@@ -1021,7 +1042,10 @@ def main() -> None:
             "matching_other_task_ids": sorted({row["task_id"] for row in other_task_matches}),
             "matches_other_source_corpus_task": bool(source_identity_matches_other_tasks),
             "matching_other_source_corpus_task_ids": source_identity_matches_other_tasks,
-            "exact_snapshot_found": bool(exact_task_snapshots),
+            "matching_identity_snapshot_found": bool(exact_task_snapshots),
+            "matching_identity_snapshot_count": len(exact_task_snapshots),
+            "matching_identity_snapshot_coherent": bool(exact_coherent_snapshots),
+            "exact_snapshot_found": bool(exact_coherent_snapshots),
             "snapshot_search_result": snapshot_search["search_result"],
             "raw_identity_values_redacted": True,
         }
@@ -1081,7 +1105,7 @@ def main() -> None:
 
         branch = select_preflight_branch(
             mismatch_task_count=int(corpus["identity_mismatch_count"]),
-            exact_snapshot_found=bool(exact_task_snapshots),
+            exact_snapshot_found=bool(exact_coherent_snapshots),
             training_contaminated=bool(contamination["contaminates_training"]),
         )
         quarantine = None
@@ -1124,7 +1148,8 @@ def main() -> None:
             "corpus_identity_mismatch_task_ids": corpus["identity_mismatch_task_ids"],
             "failure_classification": classification,
             "snapshot_search_result": snapshot_search["search_result"],
-            "snapshot_found": bool(exact_task_snapshots),
+            "matching_identity_snapshot_found": bool(exact_task_snapshots),
+            "snapshot_found": bool(exact_coherent_snapshots),
             "training_contaminated": bool(contamination["contaminates_training"]),
             "any_mismatch_task_contaminates_training": bool(
                 contamination["any_mismatch_task_contaminates_training"]
