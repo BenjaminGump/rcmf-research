@@ -1596,3 +1596,46 @@ Decision:
   historical artifacts remain immutable. The minimum incremental clean-cache
   rebuild is now allowed, while every model-training path and V4 tagging remain
   blocked.
+
+### EXP-025B clean-corpus oracle one-step causal audit
+
+- The incremental clean rebuild completed without retraining any checkpoint.
+  Final clean caches recomputed `35/2/17` state/memory/source-transition
+  representations and `2,781/162/324/696` raw-teacher, Stage-C1, Pair-5D, and
+  transition-teacher rows. The final Qwen-scoring total was `3,963` rows; the
+  additional `305` above the direct preflight count came from the required
+  downstream teacher-condition cascade.
+- All merged-cache validation passed: zero duplicate keys, zero truncation,
+  exact unaffected-row identity, correct leakage masks, reconciled lineage on
+  every new row, and no superseded `b0a8eae_3` transition ID.
+- The clean causal manifest contains `45` states, `9` tasks, `499` train-bank
+  transitions, `150` procedural signature classes, and `323` conditions:
+  `45` each for C0-C5, `37` C6 alternates, `15` C7 strict-B controls, and one
+  C8 diagnostic. Compared with EXP-024A, `312` conditions are semantically
+  unchanged and `11` changed only by reconciled transition IDs.
+- The complete live-world smoke passed, including same-world prompt/execution,
+  replay namespace continuity, atomic interruption, resume, finalization, and
+  validation. The formal run completed `323/323` unique conditions with zero
+  replay or execution-infrastructure exceptions.
+- On the `32` primary non-documentation Tier-3/4 states, raw oracle C1 versus
+  bare C0 improved exact app/API match by `+0.125`, canonical action-signature
+  match by `+0.34375`, execution success by `+0.0625`, and semantic successor
+  match by `+0.40625`. Positive relative behavior occurred on `7/9` tasks.
+- C1 beat signature-only C2 by `+0.21875` exact API and `+0.3125` action
+  signature; their task-bootstrap confidence intervals exclude zero. C2
+  retained only `9.09%` of C1's signature gain over bare.
+- C1 also beat hard-negative C3 and unrelated C5 on exact API, action
+  signature, and successor behavior. API-documentation-only states did not
+  drive the result.
+- The C1/C6 alternate-exemplar audit covers `37` pairs: effect direction agrees
+  on `86.49%`, exact API and execution outcomes agree on `97.30%`, and effect
+  Pearson/Spearman are `0.8419/0.7911`.
+- Clean raw-NLL/outcome analysis is limited to `16` selected conditions across
+  `8` states because the locked comparator cache covers the old 148-transition
+  panel. Raw-NLL versus semantic-successor effect is Pearson/Spearman
+  `0.3164/0.3695`; this subset is explicitly underpowered.
+- Decision branch:
+  `raw_transition_content_behaviorally_validated_on_clean_corpus`. This is a
+  clean oracle one-step causal result, not a deployable field result. Field,
+  program, injector, selector, Stage C2, and end-to-end training remain blocked
+  pending a separately reviewed EXP-025C.

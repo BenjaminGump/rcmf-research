@@ -1603,3 +1603,56 @@ Decision:
   clean and do not retrain them in this milestone.
 - Keep field/program/injector/selector training, Stage C2, end-to-end RCMF,
   full AppWorld evaluation, and V4 tagging blocked.
+
+## 2026-08-18 EXP-025B clean oracle causal-content validation
+
+VERIFIED:
+
+- The replay-validated reconciled lineage supports a complete incremental
+  rebuild with hash-exact reuse of unaffected rows and no historical artifact
+  rewrite. All final cache, leakage, truncation, identity, and duplicate-key
+  checks pass.
+- The live AppWorld 0.1.0 bridge keeps replay variables, live JWTs, prompt
+  observations, and generated-code execution in the same fresh world and
+  Python namespace for every condition.
+- Frozen Qwen completed all `323/323` preregistered conditions. On the primary
+  non-documentation Tier-3/4 subset, the raw procedural oracle materially beats
+  bare, signature-only, hard-negative, and unrelated controls. The action-
+  signature and successor improvements have task-grouped confidence intervals
+  excluding zero, and `7/9` tasks are positive.
+- Raw versus alternate same-signature exemplars satisfy the preregistered
+  consistency gate. API-documentation-only rows do not explain the primary
+  gain.
+
+INFERENCE:
+
+- Under this oracle one-step contract, raw episodic transition content carries
+  behavioral information beyond the normalized procedural metadata card.
+- The next useful question is whether a signature-balanced deployable field can
+  predict the helpful transition while preserving this content effect.
+
+UNVERIFIED:
+
+- No field, selector, program, injector, or deployable retrieval mechanism was
+  trained or evaluated. The result does not establish full-trajectory benefit,
+  Stage C repair, or end-to-end RCMF value.
+- The clean raw-NLL correlation is descriptive only because only `16` selected
+  conditions across `8` states intersect the locked 148-panel comparator.
+
+Decision:
+
+- Record `raw_transition_content_behaviorally_validated_on_clean_corpus`.
+- Treat the oracle causal-content gate as passed and the replay/cache
+  infrastructure as valid.
+- Keep field/program training blocked until a separately reviewed EXP-025C.
+  Do not automatically resume historical V3 training, p(s,m_transition),
+  selector/injector work, Stage C2, end-to-end RCMF, or V4 tagging.
+
+Implementation recovery:
+
+- Preserve the failed representation-count and Pair-5D reuse attempts in the
+  append-only ledger. Their regression-tested fixes changed no scientific
+  parameter; the canonical Pair-5D pass restored unnecessarily recomputed rows
+  to exact legacy bytes.
+- The final ledger has `22` closed attempts (`44` start/end rows), no open
+  attempt, and no duplicate scientific run.

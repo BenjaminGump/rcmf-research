@@ -932,3 +932,33 @@ Blocked pending review and replay pass:
 - any selector, program, injector, field, or Qwen training;
 - EXP-024A generation, AppWorld condition execution, Stage C2, end-to-end RCMF,
   or a V4 tag.
+
+## Proposed EXP-025C Signature-Balanced Field Prediction - Review Required
+
+Goal:
+
+- Test whether a deployable field can select behaviorally helpful raw
+  transitions on the replay-validated reconciled corpus without collapsing to
+  procedural signature frequency or API-documentation prompting.
+
+Required design:
+
+- Keep the EXP-025B `499`-transition clean bank, `150` signature classes,
+  frozen representations, AppWorld 0.1.0 bridge, and three demonstrations.
+- Train a field-compatible predictor with inverse signature-class-frequency
+  weights and explicit API-documentation stratification.
+- Report strict train-parent B separately from full deployment-space E; do not
+  use deployment coverage to conceal parent-generalization failure.
+- Compare correct content with signature-only, popularity, hard-negative,
+  unrelated, state-shuffle, transition-shuffle, and alternate-exemplar
+  controls.
+- After the field gate is frozen, run a deployable top-transition one-step audit
+  on the same clean 45-state contract and quantify retained oracle gain.
+
+Hard boundary:
+
+- EXP-025C must not automatically train behavioral p(s,m_transition), the
+  additive injector, the signed selector, Stage C2, or end-to-end RCMF.
+- Do not rerun old V3 checkpoint families or create/move a V4 tag.
+- Preserve the EXP-025B oracle result as a causal upper bound, not a deployable
+  result.
