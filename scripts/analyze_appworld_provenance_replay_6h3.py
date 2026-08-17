@@ -83,7 +83,6 @@ def main() -> None:
         "search": args.artifact_dir / "bounded_snapshot_search.json",
         "contamination": args.artifact_dir / "training_contamination_audit.json",
         "preflight": args.artifact_dir / "preflight_decision.json",
-        "sensitivity": args.artifact_dir / "prior_result_quarantine_sensitivity.json",
     }
     for name, path in required.items():
         if not path.exists():
@@ -112,7 +111,32 @@ def main() -> None:
         search = _load_json(required["search"])
         contamination = _load_json(required["contamination"])
         preflight = _load_json(required["preflight"])
-        sensitivity = _load_json(required["sensitivity"])
+        preflight_branch = str(preflight["decision_branch"])
+        sensitivity_path = args.artifact_dir / "prior_result_quarantine_sensitivity.json"
+        if preflight_branch == "source_dataset_identity_consistency_failure":
+            sensitivity = {
+                "status": "not_run_source_dataset_identity_consistency_failure",
+                "model_training_count": 0,
+                "qwen_import_forward_generation_count": 0,
+                "qualitative_conclusion": {
+                    "any_prior_gate_point_status_changed": None,
+                    "exp022_fixed_panel_coverage_flip_only": None,
+                    "overall_research_conclusion_changed": None,
+                    "original_metrics_replaced": False,
+                    "interpretation": (
+                        "Not recomputed: more than one source task has an unresolved "
+                        "identity inconsistency, so a b0a8eae_2-only sensitivity analysis "
+                        "would not define a provenance-valid corpus. Original metrics and "
+                        "branches remain immutable; their provenance scope requires review."
+                    ),
+                },
+            }
+        else:
+            if not sensitivity_path.exists():
+                raise FileNotFoundError(
+                    f"Analysis prerequisite missing: sensitivity={sensitivity_path}"
+                )
+            sensitivity = _load_json(sensitivity_path)
         quarantine_path = args.artifact_dir / "provenance_valid_one_step_manifest_v1.json"
         sentinel_manifest_path = args.artifact_dir / "provenance_valid_sentinel_manifest.json"
         sentinel_path = args.artifact_dir / "replay" / "provenance_valid_sentinel_summary.json"
@@ -145,6 +169,7 @@ def main() -> None:
                 f"- EXP-024A audit states: `{corpus['exp024a_audit_state_count']}`",
                 f"- Identity-mismatched tasks: `{corpus['identity_mismatch_count']}`: `{corpus['identity_mismatch_task_ids']}`",
                 f"- Mismatched fields: `{corpus['mismatch_field_counts']}`",
+                f"- Source files available at recorded paths: `{sum(bool(row.get('source_file_available')) for row in corpus['rows'])}/{corpus['task_count']}`",
                 "",
                 "All identity values in Git-safe outputs are represented by hashes. The 638-row decision identity ledger is complete and preserves source-line identities without exposing synthetic credentials.",
             ]
@@ -187,6 +212,8 @@ def main() -> None:
                 f"- Training contamination: `{contamination['contaminates_training']}`",
                 f"- Held-out only: `{contamination['heldout_only']}`",
                 f"- Stage-B split: `{contamination['stage_b_split']}`",
+                f"- All mismatched task audits: `{contamination.get('mismatch_task_audits', {})}`",
+                f"- Any mismatched task contaminates training: `{contamination.get('any_mismatch_task_contaminates_training')}`",
                 f"- Quarantined task: `{settings['expected']['quarantined_task_id']}`",
                 f"- Quarantined audit states: `{quarantine['quarantined_state_count'] if quarantine else 'not applicable'}`",
                 f"- Retained states/tasks: `{quarantine['retained_state_count'] if quarantine else 'not applicable'}/{quarantine['retained_task_count'] if quarantine else 'not applicable'}`",
@@ -237,7 +264,18 @@ def main() -> None:
                 f"- Interpretation: {sensitivity['qualitative_conclusion']['interpretation']}",
             ]
         )
-        future_contract = """# Future EXP-024A-Q Behavioral Audit Contract
+        if branch == "source_dataset_identity_consistency_failure":
+            future_contract = """# Future Behavioral Audit Contract
+
+No EXP-024A-Q behavioral audit is preregistered from this branch. Multiple source tasks have unresolved identity inconsistencies, so the corpus-wide provenance scope must be resolved before a valid quarantine set can be defined.
+
+- Do not run Qwen generation or memory conditions.
+- Audit every mismatched task and determine train-side contamination first.
+- Preserve the original 45-state manifest and all failed replay artifacts.
+- Define a new behavioral contract only after a separately reviewed corpus-level provenance decision.
+"""
+        else:
+            future_contract = """# Future EXP-024A-Q Behavioral Audit Contract
 
 This contract is preregistered but not executed in EXP-024R3. It applies only if the provenance-valid 40-state replay passes.
 
@@ -260,6 +298,12 @@ This contract is preregistered but not executed in EXP-024R3. It applies only if
             "snapshot_search_result": search["search_result"],
             "exact_snapshot_found": search["exact_historical_snapshot_found"],
             "training_contaminated": contamination["contaminates_training"],
+            "mismatch_task_training_audits": contamination.get(
+                "mismatch_task_audits", {}
+            ),
+            "any_mismatch_task_contaminates_training": contamination.get(
+                "any_mismatch_task_contaminates_training"
+            ),
             "quarantine_manifest": quarantine,
             "sentinel_manifest": sentinel_manifest,
             "sentinel": sentinel if sentinel is not None else "not_run",
@@ -268,11 +312,14 @@ This contract is preregistered but not executed in EXP-024R3. It applies only if
             "original_45_replay_resolved": branch == "exact_historical_snapshot_replay_validated",
             "provenance_valid_40_replay_validated": branch
             == "provenance_valid_subset_semantic_replay_validated",
+            "sensitivity_status": sensitivity.get("status", "completed"),
             "sensitivity_conclusion": sensitivity["qualitative_conclusion"],
             "generation_remains_blocked_in_this_milestone": True,
             "recommended_next_milestone": (
                 "separately_reviewed_EXP_024A_Q_40_state_8_task_causal_audit"
                 if branch == "provenance_valid_subset_semantic_replay_validated"
+                else "corpus_level_source_identity_reconciliation_and_training_contamination_review"
+                if branch == "source_dataset_identity_consistency_failure"
                 else "resolve_provenance_or_replay_failure_before_generation"
             ),
             "qwen_import_forward_generation_count": 0,
@@ -289,6 +336,7 @@ This contract is preregistered but not executed in EXP-024R3. It applies only if
                 f"Forensic classification: `{forensic['failure_classification']}`.",
                 f"Snapshot result: `{search['search_result']}`.",
                 f"Train-side contamination: `{contamination['contaminates_training']}`.",
+                f"Any mismatched-task train-side contamination: `{contamination.get('any_mismatch_task_contaminates_training')}`.",
                 f"Semantic replay validated: `{semantic_validated}`.",
                 f"Generation remains blocked in EXP-024R3: `True`.",
                 "",

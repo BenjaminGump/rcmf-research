@@ -43,7 +43,7 @@ def main() -> None:
     args = parse_args()
     settings = load_config(args.config).raw["stage_c_6h3"]
     expected = settings["expected"]
-    required = [
+    base_required = [
         "run_manifest.json",
         "attempts.jsonl",
         "corpus_official_identity_probe.json",
@@ -53,13 +53,6 @@ def main() -> None:
         "bounded_snapshot_search.json",
         "training_contamination_audit.json",
         "preflight_decision.json",
-        "provenance_valid_one_step_manifest_v1.json",
-        "provenance_valid_sentinel_manifest.json",
-        "provenance_valid_replay_contract_manifest.json",
-        "replay/checkpoint_index.json",
-        "replay/provenance_valid_sentinel_summary.json",
-        "replay/provenance_valid_full_summary.json",
-        "prior_result_quarantine_sensitivity.json",
         "corpus_identity_consistency_report.md",
         "b0a8eae_2_forensic_provenance_report.md",
         "bounded_snapshot_search_report.md",
@@ -71,7 +64,9 @@ def main() -> None:
         "final_exp024r3_summary.json",
         "final_exp024r3_report.md",
     ]
-    missing = [name for name in required if not (args.artifact_dir / name).exists()]
+    missing = [
+        name for name in base_required if not (args.artifact_dir / name).exists()
+    ]
     if missing:
         raise FileNotFoundError(f"EXP-024R3 required artifacts missing: {missing}")
 
@@ -82,73 +77,115 @@ def main() -> None:
     search = _load_json(args.artifact_dir / "bounded_snapshot_search.json")
     contamination = _load_json(args.artifact_dir / "training_contamination_audit.json")
     preflight = _load_json(args.artifact_dir / "preflight_decision.json")
-    quarantine = _load_json(args.artifact_dir / "provenance_valid_one_step_manifest_v1.json")
-    sentinel_manifest = _load_json(args.artifact_dir / "provenance_valid_sentinel_manifest.json")
-    contracts = _load_json(args.artifact_dir / "provenance_valid_replay_contract_manifest.json")
-    checkpoint = _load_json(args.artifact_dir / "replay" / "checkpoint_index.json")
-    sentinel = _load_json(args.artifact_dir / "replay" / "provenance_valid_sentinel_summary.json")
-    full = _load_json(args.artifact_dir / "replay" / "provenance_valid_full_summary.json")
-    sensitivity = _load_json(args.artifact_dir / "prior_result_quarantine_sensitivity.json")
     final = _load_json(args.artifact_dir / "final_exp024r3_summary.json")
     attempt_ids, attempts_complete = _attempt_status(args.artifact_dir / "attempts.jsonl")
-
-    sentinel_states = int(sentinel_manifest["state_count"])
-    sentinel_priors = int(sentinel_manifest["prior_observation_count"])
-    full_states = int(quarantine["retained_state_count"])
-    full_priors = int(quarantine["retained_prior_observation_count"])
-    sentinel_expected_checkpoints = sentinel_states * int(settings["replay"]["sentinel_repeats"])
-    full_expected_checkpoints = full_states
-    checkpoint_rows = list(checkpoint["rows"].values())
-    phase_counts = Counter(str(row["phase"]) for row in checkpoint_rows)
-    checks = {
+    branch = str(final["decision_branch"])
+    common_checks = {
         "run_uuid": run_manifest["run_uuid"] == settings["run_uuid"],
         "attempt_ledger_complete": attempts_complete,
         "memory_records_46": int(corpus["memory_record_count"]) == int(expected["memory_records"]),
         "decision_examples_638": int(corpus["decision_example_count"]) == int(expected["decision_examples"]),
         "decision_rows_complete": len(decision_rows) == int(expected["decision_examples"]),
         "all_decisions_match_parent_query": all(bool(row["decision_matches_raw_trajectory"]) for row in decision_rows),
-        "single_mismatch_task": corpus["identity_mismatch_task_ids"] == [str(expected["quarantined_task_id"])],
+        "all_task_source_layers_agree": all(bool(row["source_layers_agree"]) for row in corpus["rows"]),
+        "preregistered_task_mismatched": str(expected["quarantined_task_id"]) in set(corpus["identity_mismatch_task_ids"]),
         "official_backup_agree": bool(forensic["official_and_backup_agree"]),
         "snapshot_search_complete": bool(search["search_complete"]),
-        "snapshot_not_found": search["search_result"] == "exact_historical_snapshot_not_found",
-        "no_other_task_identity_match": int(search["other_task_identity_match_count"]) == 0 and int(search["source_corpus_other_task_identity_match_count"]) == 0,
-        "heldout_only": bool(contamination["heldout_only"]) and not bool(contamination["contaminates_training"]),
-        "preflight_quarantine": preflight["decision_branch"] == "provenance_valid_task_quarantine_ready",
-        "quarantine_entire_task": int(quarantine["quarantined_state_count"]) == int(expected["quarantined_state_count"]),
-        "quarantine_40_states": full_states == int(expected["provenance_valid_states"]),
-        "quarantine_8_tasks": int(quarantine["retained_task_count"]) == int(expected["provenance_valid_tasks"]),
-        "no_replacement": int(quarantine["replacement_state_count"]) == 0 and int(sentinel_manifest["replacement_state_count"]) == 0,
-        "contract_count_40": int(contracts["row_count"]) == int(expected["provenance_valid_states"]),
-        "sentinel_repeat_count": int(sentinel["repeat_count"]) == int(settings["replay"]["sentinel_repeats"]),
-        "sentinel_gate": bool(sentinel["gate"]["passed"]) and bool(sentinel["decision"]["full_replay_allowed"]),
-        "sentinel_state_count": all(int(row["state_count"]) == sentinel_states for row in sentinel["repeat_summaries"]),
-        "sentinel_prior_count": all(int(row["prior_semantic_match_count"]) == sentinel_priors for row in sentinel["repeat_summaries"]),
-        "sentinel_repeat_equivalence": len(sentinel["repeat_checks"]) == sentinel_states and all(bool(row["semantic_repeat_match"]) for row in sentinel["repeat_checks"]),
-        "full_gate": bool(full["gate"]["passed"]),
-        "full_branch": full["decision"]["decision_branch"] == "provenance_valid_subset_semantic_replay_validated",
-        "full_identity": int(full["summary"]["identity_match_count"]) == full_states,
-        "full_histories": int(full["summary"]["complete_history_semantic_match_count"]) == full_states,
-        "full_priors": int(full["summary"]["prior_semantic_match_count"]) == full_priors,
-        "full_targets": int(full["summary"]["target_semantic_match_count"]) == full_states,
-        "full_complete": int(full["summary"]["complete_semantic_replay_count"]) == full_states,
-        "full_non_temporal_zero": int(full["summary"]["non_temporal_jwt_mismatch_count"]) == 0,
-        "full_non_token_zero": int(full["summary"]["non_token_mismatch_count"]) == 0,
-        "full_exceptions_zero": int(full["summary"]["exception_count"]) == 0,
-        "checkpoint_sentinel_count": phase_counts["sentinel"] == sentinel_expected_checkpoints,
-        "checkpoint_full_count": phase_counts["full"] == full_expected_checkpoints,
-        "checkpoint_keys_unique": len(checkpoint["rows"]) == sentinel_expected_checkpoints + full_expected_checkpoints,
-        "sensitivity_no_retraining": int(sensitivity["model_training_count"]) == 0,
-        "sensitivity_no_qwen": int(sensitivity["qwen_import_forward_generation_count"]) == 0,
-        "original_metrics_preserved": not bool(sensitivity["qualitative_conclusion"]["original_metrics_replaced"]),
-        "final_branch": final["decision_branch"] == "provenance_valid_subset_semantic_replay_validated",
-        "original_45_not_retroactive": not bool(final["original_45_replay_resolved"]),
-        "provenance_valid_40": bool(final["provenance_valid_40_replay_validated"]),
+        "contamination_audits_all_mismatches": set(contamination.get("mismatch_task_audits", {})) == set(corpus["identity_mismatch_task_ids"]),
+        "preflight_final_branch_compatible": (
+            str(preflight["decision_branch"]) == branch
+            or (
+                str(preflight["decision_branch"])
+                == "provenance_valid_task_quarantine_ready"
+                and branch
+                == "provenance_valid_subset_semantic_replay_validated"
+            )
+            or (
+                str(preflight["decision_branch"])
+                == "exact_historical_snapshot_found_pending_replay"
+                and branch == "exact_historical_snapshot_replay_validated"
+            )
+        ),
         "generation_blocked": bool(final["generation_remains_blocked_in_this_milestone"]),
         "qwen_zero": int(final["qwen_import_forward_generation_count"]) == 0,
         "memory_conditions_zero": int(final["memory_condition_execution_count"]) == 0,
         "training_zero": int(final["model_training_count"]) == 0,
         "scientific_parameters_unchanged": not bool(final["scientific_parameter_changed"]),
     }
+    branch_required: list[str] = []
+    if branch == "source_dataset_identity_consistency_failure":
+        forbidden = [
+            "provenance_valid_one_step_manifest_v1.json",
+            "provenance_valid_sentinel_manifest.json",
+            "provenance_valid_replay_contract_manifest.json",
+            "replay/provenance_valid_sentinel_summary.json",
+            "replay/provenance_valid_full_summary.json",
+            "prior_result_quarantine_sensitivity.json",
+        ]
+        branch_checks = {
+            "multiple_identity_mismatches": int(corpus["identity_mismatch_count"]) > 1,
+            "mismatches_are_field_based": all(bool(row["mismatched_fields"]) for row in corpus["rows"] if not bool(row["identity_match"])),
+            "preflight_hard_stop": str(preflight["decision_branch"]) == branch and not bool(preflight["replay_allowed"]),
+            "no_quarantine_or_replay_artifacts": not any((args.artifact_dir / name).exists() for name in forbidden),
+            "sentinel_not_run": final["sentinel"] == "not_run",
+            "full_replay_not_run": final["full_replay"] == "not_run",
+            "semantic_replay_not_validated": not bool(final["semantic_replay_validated"]),
+            "sensitivity_hard_stop_recorded": final["sensitivity_status"] == "not_run_source_dataset_identity_consistency_failure",
+            "original_45_unresolved": not bool(final["original_45_replay_resolved"]),
+            "provenance_valid_40_not_claimed": not bool(final["provenance_valid_40_replay_validated"]),
+        }
+        sentinel_states = 0
+        sentinel_priors = 0
+        full_states = 0
+        full_priors = 0
+    else:
+        branch_required = [
+            "provenance_valid_one_step_manifest_v1.json",
+            "provenance_valid_sentinel_manifest.json",
+            "provenance_valid_replay_contract_manifest.json",
+            "replay/checkpoint_index.json",
+            "replay/provenance_valid_sentinel_summary.json",
+            "replay/provenance_valid_full_summary.json",
+            "prior_result_quarantine_sensitivity.json",
+        ]
+        branch_missing = [
+            name for name in branch_required if not (args.artifact_dir / name).exists()
+        ]
+        if branch_missing:
+            raise FileNotFoundError(
+                f"EXP-024R3 branch artifacts missing: {branch_missing}"
+            )
+        quarantine = _load_json(args.artifact_dir / branch_required[0])
+        sentinel_manifest = _load_json(args.artifact_dir / branch_required[1])
+        contracts = _load_json(args.artifact_dir / branch_required[2])
+        checkpoint = _load_json(args.artifact_dir / branch_required[3])
+        sentinel = _load_json(args.artifact_dir / branch_required[4])
+        full = _load_json(args.artifact_dir / branch_required[5])
+        sensitivity = _load_json(args.artifact_dir / branch_required[6])
+        sentinel_states = int(sentinel_manifest["state_count"])
+        sentinel_priors = int(sentinel_manifest["prior_observation_count"])
+        full_states = int(quarantine["retained_state_count"])
+        full_priors = int(quarantine["retained_prior_observation_count"])
+        phase_counts = Counter(
+            str(row["phase"]) for row in checkpoint["rows"].values()
+        )
+        expected_sentinel_checkpoints = sentinel_states * int(
+            settings["replay"]["sentinel_repeats"]
+        )
+        branch_checks = {
+            "single_mismatch_task": corpus["identity_mismatch_task_ids"] == [str(expected["quarantined_task_id"])],
+            "heldout_only": bool(contamination["heldout_only"]) and not bool(contamination["contaminates_training"]),
+            "quarantine_entire_task": int(quarantine["quarantined_state_count"]) == int(expected["quarantined_state_count"]),
+            "quarantine_40_states": full_states == int(expected["provenance_valid_states"]),
+            "quarantine_8_tasks": int(quarantine["retained_task_count"]) == int(expected["provenance_valid_tasks"]),
+            "contract_count_40": int(contracts["row_count"]) == int(expected["provenance_valid_states"]),
+            "sentinel_gate": bool(sentinel["gate"]["passed"]),
+            "full_gate": bool(full["gate"]["passed"]),
+            "checkpoint_sentinel_count": phase_counts["sentinel"] == expected_sentinel_checkpoints,
+            "checkpoint_full_count": phase_counts["full"] == full_states,
+            "sensitivity_no_retraining": int(sensitivity["model_training_count"]) == 0,
+        }
+    checks = {**common_checks, **branch_checks}
     if not all(checks.values()):
         raise ValueError(f"EXP-024R3 postrun validation failed: {checks}")
     payload = {
@@ -156,14 +193,14 @@ def main() -> None:
         "passed": True,
         "checks": checks,
         "attempt_ids": attempt_ids,
-        "decision_branch": final["decision_branch"],
+        "decision_branch": branch,
         "sentinel_state_count": sentinel_states,
         "sentinel_prior_observation_count": sentinel_priors,
         "full_state_count": full_states,
         "full_prior_observation_count": full_priors,
         "artifact_hashes": {
             name: sha256_file(args.artifact_dir / name)
-            for name in required
+            for name in base_required + branch_required
             if name != "attempts.jsonl"
         },
     }

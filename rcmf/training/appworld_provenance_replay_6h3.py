@@ -27,6 +27,17 @@ def redacted_path(path: str) -> dict[str, str]:
     }
 
 
+def source_query_layers_agree(
+    raw_trajectory_query_sha256: str,
+    decision_query_sha256s: Sequence[str],
+) -> bool:
+    """Compare immutable corpus layers without requiring an external source file."""
+    decision_hashes = [str(value) for value in decision_query_sha256s]
+    return bool(decision_hashes) and set(decision_hashes) == {
+        str(raw_trajectory_query_sha256)
+    }
+
+
 def summarize_corpus_identity(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     if not rows:
         raise ValueError("Corpus identity audit requires rows")

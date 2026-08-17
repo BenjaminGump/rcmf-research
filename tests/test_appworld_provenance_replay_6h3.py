@@ -12,6 +12,7 @@ from rcmf.training.appworld_provenance_replay_6h3 import (
     classify_provenance_failure,
     semantic_replay_gate,
     select_preflight_branch,
+    source_query_layers_agree,
     summarize_corpus_identity,
     training_contamination_report,
 )
@@ -50,6 +51,13 @@ def test_corpus_identity_summary_is_task_unique_and_counts_mismatches() -> None:
     assert summary["mismatch_field_counts"] == {"email": 1, "phone_number": 1}
     with pytest.raises(ValueError, match="unique"):
         summarize_corpus_identity([rows[0], rows[0]])
+
+
+def test_source_query_layers_do_not_depend_on_external_source_file_visibility() -> None:
+    query_hash = "a" * 64
+    assert source_query_layers_agree(query_hash, [query_hash, query_hash])
+    assert not source_query_layers_agree(query_hash, [])
+    assert not source_query_layers_agree(query_hash, [query_hash, "b" * 64])
 
 
 def test_failure_classification_separates_header_snapshot_join_and_mixing() -> None:
