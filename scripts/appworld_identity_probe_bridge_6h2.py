@@ -89,7 +89,17 @@ def verify_token(token: str) -> dict[str, Any]:
     from appworld.common.utils import import_apis_module
 
     token_sha256 = hashlib.sha256(str(token).encode()).hexdigest()
-    payload = decode_unverified_payload(token)
+    try:
+        payload = decode_unverified_payload(token)
+    except Exception as error:  # noqa: BLE001 - malformed input is an audited failure
+        return {
+            "token_sha256": token_sha256,
+            "subject_sha256": None,
+            "app_name_sha256": None,
+            "payload_validator_accepted": False,
+            "current_user_validator_accepted": False,
+            "exception_type": type(error).__name__,
+        }
     subject = payload.get("sub")
     app_name = str(subject).split("+", 1)[0] if isinstance(subject, str) and "+" in subject else ""
     report = {

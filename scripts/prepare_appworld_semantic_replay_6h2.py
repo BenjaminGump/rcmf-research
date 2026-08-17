@@ -23,6 +23,7 @@ from rcmf.training.appworld_semantic_replay_6h2 import (
     SEMANTIC_NORMALIZATION_VERSION,
     canonical_hash,
     compare_observations_semantic,
+    decode_jwt_strict,
     identity_hashes,
 )
 from rcmf.training.datasets import (
@@ -78,6 +79,18 @@ def _token_pairs(expected: Any, actual: Any, path: str = "$") -> list[dict[str, 
     elif isinstance(expected, list) and isinstance(actual, list):
         for index, (left, right) in enumerate(zip(expected, actual)):
             output.extend(_token_pairs(left, right, f"{path}[{index}]"))
+    return output
+
+
+def _valid_jwt_pairs(expected: Any, actual: Any) -> list[dict[str, str]]:
+    output = []
+    for pair in _token_pairs(expected, actual):
+        try:
+            decode_jwt_strict(pair["expected"])
+            decode_jwt_strict(pair["actual"])
+        except ValueError:
+            continue
+        output.append(pair)
     return output
 
 
@@ -488,7 +501,7 @@ def main() -> None:
                     and "access_token" in str(candidate.get("action", ""))
                 ]
                 for pair_index, pair in enumerate(
-                    _token_pairs(
+                    _valid_jwt_pairs(
                         _json_value(str(step["expected_raw_observation"])),
                         _json_value(str(step["actual_raw_observation"])),
                     )

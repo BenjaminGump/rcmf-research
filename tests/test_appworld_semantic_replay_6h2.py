@@ -28,6 +28,7 @@ from scripts.run_appworld_semantic_replay_6h2 import (
 )
 from scripts.prepare_appworld_semantic_replay_6h2 import (
     _legacy_history_observation_count,
+    _valid_jwt_pairs,
 )
 
 
@@ -387,3 +388,17 @@ def test_preflight_reads_immutable_exp024r_history_count_schema() -> None:
     assert _legacy_history_observation_count({"history_observation_count": 102}) == 102
     with pytest.raises(KeyError, match="history_observation_count"):
         _legacy_history_observation_count({"prior_observation_count": 102})
+
+
+def test_direct_validator_request_excludes_non_jwt_access_token_schema_fields() -> None:
+    expected = {
+        "schema": {"access_token": "string"},
+        "login": {"access_token": _jwt({"sub": "spotify+u", "exp": 100})},
+    }
+    actual = {
+        "schema": {"access_token": "string"},
+        "login": {"access_token": _jwt({"sub": "spotify+u", "exp": 200})},
+    }
+    pairs = _valid_jwt_pairs(expected, actual)
+    assert len(pairs) == 1
+    assert pairs[0]["path"] == "$.login.access_token"
