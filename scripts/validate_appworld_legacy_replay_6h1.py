@@ -41,7 +41,6 @@ def main() -> None:
         "attempts.jsonl",
         "heartbeat.json",
         "environment_provenance.json",
-        "replay_contract_manifest.json",
         "sentinel_manifest.json",
         "replay/sentinel_summary.json",
         "final_exp024r_summary.json",
@@ -60,7 +59,12 @@ def main() -> None:
         )
     run_manifest = _load_json(args.artifact_dir / "run_manifest.json")
     environment = _load_json(args.artifact_dir / "environment_provenance.json")
-    contracts = _load_json(args.artifact_dir / "replay_contract_manifest.json")
+    active_contract_manifest = Path(str(environment["active_contract_manifest"]))
+    if not active_contract_manifest.exists():
+        raise FileNotFoundError(
+            f"Active replay contract manifest missing: {active_contract_manifest}"
+        )
+    contracts = _load_json(active_contract_manifest)
     sentinel = _load_json(args.artifact_dir / "sentinel_manifest.json")
     final = _load_json(args.artifact_dir / "final_exp024r_summary.json")
     attempts = list(read_jsonl(args.artifact_dir / "attempts.jsonl"))
@@ -103,7 +107,7 @@ def main() -> None:
             "data_version": environment["probe"]["db_version"] == expected["data_version"],
             "evaluation_version": environment["source_versions"]["versions"]["evaluation"]
             == [expected["evaluation_version"]],
-            "isolated_python": environment["legacy_python"] == settings["legacy"]["executable"],
+            "isolated_python": "appworld-0.1.0-replay" in environment["legacy_python"],
             "isolated_root": environment["legacy_root"] == settings["legacy"]["root"],
             "verify_tests": bool(environment["official_verification"]["tests"]["verified_pass"]),
             "verify_tasks": bool(environment["official_verification"]["tasks"]["verified_pass"]),

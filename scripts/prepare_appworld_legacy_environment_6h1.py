@@ -235,6 +235,41 @@ def _wheel_metadata(wheel: Path, provenance_dir: Path) -> dict[str, Any]:
     }
 
 
+def _select_compatible_runtime(
+    requested: Mapping[str, Any], wheel: Path
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    effective = dict(requested)
+    with zipfile.ZipFile(wheel) as archive:
+        environment_source = archive.read("appworld/environment.py").decode("utf-8")
+    imports_typing_self = bool(
+        re.search(r"from\s+typing\s+import[^\n]*\bSelf\b", environment_source)
+    )
+    requested_version = tuple(int(value) for value in str(requested["python_version"]).split("."))
+    changed = imports_typing_self and requested_version < (3, 11)
+    if changed:
+        effective.update(
+            {
+                "seed_python": "/usr/bin/python3.11",
+                "python_version": "3.11",
+                "venv": str(requested["venv"]) + "-py311",
+                "executable": str(requested["venv"]) + "-py311/bin/python",
+                "appworld_cli": str(requested["venv"]) + "-py311/bin/appworld",
+            }
+        )
+    return effective, {
+        "requested_python_version": str(requested["python_version"]),
+        "effective_python_version": str(effective["python_version"]),
+        "wheel_imports_typing_self": imports_typing_self,
+        "runtime_changed": changed,
+        "reason": (
+            "official_0_1_0_source_imports_typing_Self_which_requires_python_3_11"
+            if changed
+            else "requested_runtime_is_source_compatible"
+        ),
+        "scientific_parameter_changed": False,
+    }
+
+
 def _verification_passed(text: str, exit_code: int, *, kind: str) -> bool:
     lowered = text.lower()
     fatal_markers = (
@@ -385,23 +420,11 @@ def main() -> None:
         if not all(checks.values()):
             raise ValueError(f"EXP-024A immutable contract failed: {checks}")
 
-        examples = load_decision_examples(paths["decision_examples"])
-        records = load_memory_records(paths["memory_records"])
-        contracts = _build_contracts(
-            queries=queries,
-            examples=examples,
-            records=records,
-            old_rows=old_rows,
-            settings=settings,
-            artifact_dir=args.artifact_dir,
-            source_hashes=data_hashes,
-        )
-        atomic_write_json(args.artifact_dir / "replay_contract_manifest.json", contracts)
         sentinel = build_sentinel_manifest(old_rows)
         atomic_write_json(args.artifact_dir / "sentinel_manifest.json", sentinel)
-        attempt.progress(latest_validated_checkpoint="replay_contract_manifest.json")
 
-        legacy = settings["legacy"]
+        requested_legacy = settings["legacy"]
+        legacy = dict(requested_legacy)
         base = Path(legacy["base"])
         root = Path(legacy["root"])
         cache = Path(legacy["cache"])
@@ -415,10 +438,38 @@ def main() -> None:
         wheel_metadata = _wheel_metadata(wheel, provenance_dir)
         attempt.progress(latest_validated_checkpoint=str(wheel))
 
+        legacy, runtime_compatibility = _select_compatible_runtime(requested_legacy, wheel)
+        effective_settings = dict(settings)
+        effective_settings["legacy"] = legacy
+        examples = load_decision_examples(paths["decision_examples"])
+        records = load_memory_records(paths["memory_records"])
+        version_suffix = str(legacy["python_version"]).replace(".", "")
+        contract_namespace = (
+            f"contracts_py{version_suffix}"
+            if runtime_compatibility["runtime_changed"]
+            else "contracts"
+        )
+        contracts = _build_contracts(
+            queries=queries,
+            examples=examples,
+            records=records,
+            old_rows=old_rows,
+            settings=effective_settings,
+            artifact_dir=args.artifact_dir / contract_namespace,
+            source_hashes=data_hashes,
+        )
+        contract_manifest_path = args.artifact_dir / (
+            f"replay_contract_manifest_py{version_suffix}.json"
+            if runtime_compatibility["runtime_changed"]
+            else "replay_contract_manifest.json"
+        )
+        atomic_write_json(contract_manifest_path, contracts)
+        attempt.progress(latest_validated_checkpoint=str(contract_manifest_path))
+
         seed_python = Path(legacy["seed_python"])
         venv = Path(legacy["venv"])
         legacy_python = Path(legacy["executable"])
-        logs = args.artifact_dir / "environment" / "logs"
+        logs = args.artifact_dir / "environment" / "logs" / _safe_name(args.attempt_id)
         logs.mkdir(parents=True, exist_ok=True)
         base_env = dict(os.environ)
         base_env.update(
@@ -568,7 +619,7 @@ def main() -> None:
             [
                 "# AppWorld 0.1.0 Replay Capsule Reconstruction",
                 "",
-                f"1. Create Python 3.10 venv at `{venv}`.",
+                f"1. Create Python {legacy['python_version']} venv at `{venv}`.",
                 f"2. Verify `{wheel}` has SHA256 `{legacy['wheel_sha256']}`.",
                 f"3. Install with `pip --no-index --find-links {resolved}`.",
                 f"4. Set `APPWORLD_ROOT={root}` and `APPWORLD_CACHE={cache}`.",
@@ -593,6 +644,8 @@ def main() -> None:
             "legacy_cli": str(appworld_cli),
             "legacy_root": str(root),
             "legacy_cache": str(cache),
+            "requested_legacy_runtime": dict(requested_legacy),
+            "runtime_compatibility": runtime_compatibility,
             "wheel": {
                 "path": str(wheel),
                 "sha256": sha256_file(wheel),
@@ -617,6 +670,7 @@ def main() -> None:
             "official_verification": verify_results,
             "commands": command_results + [freeze_result],
             "contract_manifest_sha256": contracts["manifest_sha256"],
+            "active_contract_manifest": str(contract_manifest_path),
             "sentinel_manifest_sha256": sentinel["manifest_sha256"],
             "qwen_import_count": 0,
             "qwen_forward_count": 0,

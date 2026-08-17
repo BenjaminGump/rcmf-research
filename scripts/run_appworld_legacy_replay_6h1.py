@@ -142,18 +142,23 @@ def main() -> None:
     required = {
         "run_manifest": args.artifact_dir / "run_manifest.json",
         "environment": args.artifact_dir / "environment_provenance.json",
-        "contracts": args.artifact_dir / "replay_contract_manifest.json",
         "sentinel": args.artifact_dir / "sentinel_manifest.json",
     }
     for name, path in required.items():
         if not path.exists():
             raise FileNotFoundError(f"Replay prerequisite missing: {name}={path}")
     environment = _load_json(required["environment"])
-    contract_manifest = _load_json(required["contracts"])
+    active_contract_manifest = Path(str(environment["active_contract_manifest"]))
+    if not active_contract_manifest.exists():
+        raise FileNotFoundError(
+            f"Active replay contract manifest missing: {active_contract_manifest}"
+        )
+    required["contracts"] = active_contract_manifest
+    contract_manifest = _load_json(active_contract_manifest)
     sentinel_manifest = _load_json(required["sentinel"])
     legacy = settings["legacy"]
-    executable = Path(legacy["executable"])
-    root = Path(legacy["root"])
+    executable = Path(str(environment["legacy_python"]))
+    root = Path(str(environment["legacy_root"]))
     validate_legacy_runtime(
         executable=executable,
         root=root,
@@ -236,7 +241,7 @@ def main() -> None:
             env.update(
                 {
                     "APPWORLD_ROOT": str(root),
-                    "APPWORLD_CACHE": str(legacy["cache"]),
+                    "APPWORLD_CACHE": str(environment["legacy_cache"]),
                     "PYTHONNOUSERSITE": "1",
                     "PYTHONPATH": "",
                     "PYTHONUNBUFFERED": "1",

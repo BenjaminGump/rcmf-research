@@ -16,7 +16,10 @@ from rcmf.training.appworld_legacy_replay_6h1 import (
     validate_replay_contract,
 )
 from rcmf.training.procedural_causal_audit_6h import normalize_observation
-from scripts.prepare_appworld_legacy_environment_6h1 import _verification_passed
+from scripts.prepare_appworld_legacy_environment_6h1 import (
+    _select_compatible_runtime,
+    _verification_passed,
+)
 from scripts.run_appworld_legacy_replay_6h1 import _decision, _effective_contract
 
 
@@ -189,3 +192,25 @@ def test_official_verification_requires_positive_semantic_result() -> None:
     assert not _verification_passed("Some tests failed.", 0, kind="tests")
     assert _verification_passed("Passed 20/20 tasks.", 0, kind="tasks")
     assert not _verification_passed("Passed 19/20 tasks.\nFailed task_ids:", 0, kind="tasks")
+
+
+def test_official_wheel_typing_self_promotes_isolated_runtime_to_py311(
+    tmp_path: Path,
+) -> None:
+    import zipfile
+
+    wheel = tmp_path / "appworld.whl"
+    with zipfile.ZipFile(wheel, "w") as archive:
+        archive.writestr("appworld/environment.py", "from typing import Any, Self\n")
+    requested = {
+        "python_version": "3.10",
+        "seed_python": "/usr/bin/python3.10",
+        "venv": "/home/ubuntu/venvs/appworld-0.1.0-replay",
+        "executable": "/home/ubuntu/venvs/appworld-0.1.0-replay/bin/python",
+        "appworld_cli": "/home/ubuntu/venvs/appworld-0.1.0-replay/bin/appworld",
+    }
+    effective, provenance = _select_compatible_runtime(requested, wheel)
+    assert effective["python_version"] == "3.11"
+    assert effective["venv"].endswith("-py311")
+    assert provenance["runtime_changed"]
+    assert not provenance["scientific_parameter_changed"]
