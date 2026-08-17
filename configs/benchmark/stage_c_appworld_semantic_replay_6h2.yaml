@@ -1,0 +1,71 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_appworld_semantic_replay_6h2
+  version: appworld_semantic_replay_6h2_v1
+  scope:
+    - prospective_schema_limited_jwt_semantic_equivalence
+    - all_45_source_identity_provenance_audit
+    - repeated_immutable_13_state_sentinel
+    - gated_immutable_45_state_replay
+    - exact_appworld_0_1_0_capsule_only
+    - no_qwen_import_forward_or_generation
+    - no_memory_condition_execution
+    - no_model_training
+    - no_appworld_task_evaluation
+    - no_stage_c2
+    - no_v4_tag
+
+stage_c_6h2:
+  run_uuid: appworld_semantic_replay_6h2_20260817_001
+  artifact_dir: runs/stage_c/appworld_semantic_replay_6h2_20260817_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  parent_exp024a: runs/stage_c/procedural_causal_audit_6h_20260817_001
+  parent_exp024r: runs/stage_c/appworld_legacy_replay_6h1_20260817_001
+  exp020_artifact: runs/stage_c/all_task_interaction_6d_20260815_001
+  exp022_artifact: runs/stage_c/procedural_outcome_6f_20260816_001
+  source_data: runs/appworld/official_react_gpt4o_train_success_full_demo_filtered_no_2a163ab3_20260803
+
+  expected:
+    state_count: 45
+    task_count: 9
+    sentinel_state_count: 13
+    sentinel_prior_observation_count: 102
+    full_prior_observation_count: 372
+    condition_count: 323
+    package_version: 0.1.0
+    data_version: 0.1.0
+    evaluation_version: 0.1.0
+
+  legacy:
+    executable: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    appworld_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+    appworld_cache: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/cache
+    base: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0
+    appworld_api_lib: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/lib/python3.11/site-packages/appworld/apps/api_lib.py
+    fastapi_login_source: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/lib/python3.11/site-packages/fastapi_login/fastapi_login.py
+    wheel_sha256: 128bdb088bd1c76b8ac763e831334f0843507e9e5a5e2e88ec4e2949e2e5d476
+
+  normalization:
+    locked_v1: appworld_observation_normalization_6h_v1
+    semantic_v2: appworld_observation_semantic_normalization_6h2_v1
+    allowed_token_fields:
+      - access_token
+    allowed_temporal_claims:
+      - exp
+
+  replay:
+    identity_bridge: scripts/appworld_identity_probe_bridge_6h2.py
+    semantic_bridge: scripts/appworld_semantic_replay_bridge_6h2.py
+    semantic_module: rcmf/training/appworld_semantic_replay_6h2.py
+    random_seed: 100
+    max_interactions: 1000
+    max_api_calls_per_interaction: 1000
+    subprocess_timeout_seconds: 600
+    repeats: 2
+
+  identity_snapshot_candidates:
+    - /lambda/nfs/rcmf-persist/project/data_appworld_0.1.0_backup_20260730
+    - /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root/data
+
+  heartbeat_interval_seconds: 240
