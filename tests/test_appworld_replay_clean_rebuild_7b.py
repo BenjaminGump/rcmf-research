@@ -17,6 +17,10 @@ from scripts.run_replay_clean_rebuild_7b import (
     CHECKPOINT_VERSION,
     _checkpoint_index,
 )
+from scripts.freeze_replay_validated_contract_7b import (
+    REPLAY_VALIDATED_CORPUS_VERSION,
+    _attempt_lifecycle,
+)
 
 
 def _segment(value: dict) -> str:
@@ -224,3 +228,27 @@ def test_replay_phase_sources_do_not_import_qwen_or_training_backends() -> None:
         assert "HFQwenBackend" not in source
         assert "from_pretrained" not in source
         assert "optimizer" not in source.lower()
+
+
+def test_replay_validated_contract_has_new_immutable_version() -> None:
+    assert REPLAY_VALIDATED_CORPUS_VERSION == (
+        "appworld_identity_reconciled_replay_validated_v1"
+    )
+
+
+def test_contract_freeze_rejects_open_or_failed_attempts() -> None:
+    assert _attempt_lifecycle(
+        [
+            {"attempt_id": "a", "event": "start"},
+            {"attempt_id": "a", "event": "end", "exit_code": 0},
+        ]
+    )["passed"]
+    assert not _attempt_lifecycle(
+        [{"attempt_id": "a", "event": "start"}]
+    )["passed"]
+    assert not _attempt_lifecycle(
+        [
+            {"attempt_id": "a", "event": "start"},
+            {"attempt_id": "a", "event": "end", "exit_code": 1},
+        ]
+    )["passed"]

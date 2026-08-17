@@ -1578,3 +1578,28 @@ Implementation recovery:
   tested, and resumed without changing scientific inputs.
 - The final append-only ledger has 17 complete attempts and no open row. The
   post-run validator reports zero errors.
+
+## 2026-08-18 EXP-025B root-login JWT replay validation
+
+VERIFIED:
+
+- The only EXP-025A full-replay failures were three root-level JWT outputs from
+  one `spotify.login` history action. In both new full repeats, those JWTs match
+  on algorithm, type, subject/app/user stable claims and differ only in `exp`;
+  installed AppWorld 0.1.0 validation and subsequent authenticated calls pass.
+- Adversarial tests reject changed identity, app, username, role/permission,
+  token type, algorithm, non-token response content, non-login actions,
+  malformed tokens, JWT/non-JWT pairs, and arbitrary root timestamps.
+- The original corrected sentinel, fixed three-state extension sentinel, and
+  complete 45-state replay each pass twice with exact semantic and database
+  repeatability. V1 and v2 metrics remain preserved as historical controls.
+
+Decision:
+
+- Record `identity_reconciled_replay_validated` and freeze
+  `appworld_identity_reconciled_replay_validated_v1` before any Qwen work.
+- Permit only the preregistered incremental cache rebuild and oracle one-step
+  causal audit in EXP-025B. Do not declare old train-influenced checkpoints
+  clean and do not retrain them in this milestone.
+- Keep field/program/injector/selector training, Stage C2, end-to-end RCMF,
+  full AppWorld evaluation, and V4 tagging blocked.

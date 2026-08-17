@@ -1571,3 +1571,28 @@ Decision:
   candidate is ready; a formally replay-validated clean corpus is not.
   Generation, Qwen/cache recomputation, model training, Stage C2, and V4
   tagging remain blocked.
+
+### EXP-025B replay-validated clean data contract
+
+- The prospective `appworld_observation_semantic_normalization_7b_v1` adds
+  only root path `$` for an AST-verified single `apis.<app>.login(...)` call.
+  Both JWTs must validate under AppWorld 0.1.0, headers and stable claims must
+  match, `exp` must be the only changed claim, and subsequent recorded
+  authenticated calls must accept the live token.
+- The corrected 13-state sentinel passes twice at identity/history/target
+  `13/13`, prior observations `102/102`, zero exceptions, and exact semantic
+  repeat equivalence.
+- The fixed three-state schema-extension sentinel passes twice. Locked v2
+  remains history `0/3` and prior observations `17/20`; prospective v3 reaches
+  history `3/3`, prior observations `20/20`, and complete replay `3/3` with
+  exactly three root-login-JWT extensions per repeat.
+- The reconciled 45-state audit passes twice under v3: identity/history/target/
+  complete replay are each `45/45`, prior observations are `372/372`,
+  exceptions and non-temporal JWT mismatches are zero, and all state/database
+  fingerprints repeat exactly. Locked v2 remains `42/45` histories and
+  `369/372` prior observations.
+- Record `identity_reconciled_replay_validated`. The structural lineage remains
+  `f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb`;
+  historical artifacts remain immutable. The minimum incremental clean-cache
+  rebuild is now allowed, while every model-training path and V4 tagging remain
+  blocked.
