@@ -11,7 +11,10 @@ from typing import Any
 import _bootstrap  # noqa: F401
 
 from rcmf.config import load_config
-from rcmf.training.appworld_legacy_replay_6h1 import paired_environment_comparison
+from rcmf.training.appworld_legacy_replay_6h1 import (
+    paired_environment_comparison,
+    sentinel_failure_diagnostics,
+)
 from rcmf.training.state_conditioned_transition_6b import AttemptLedger
 from rcmf.utils.serialization import atomic_write_json, atomic_write_text, read_jsonl, sha256_file
 
@@ -37,7 +40,8 @@ def _report(summary: dict[str, Any]) -> str:
         f"- Decision branch: `{summary['decision_branch']}`",
         f"- Legacy package/code/data/evaluation: `{summary['version_triple']}`",
         f"- Sentinel states passed: {summary['sentinel']['complete_replay_pass_count']}/{summary['sentinel']['state_count']}",
-        f"- Replay states passed: {replay['complete_replay_pass_count']}/{replay['state_count']}",
+        f"- Full 45-state replay: {summary['full_replay_status']}",
+        f"- Evaluated legacy states passed: {replay['complete_replay_pass_count']}/{replay['state_count']}",
         f"- Prior observations matched: {new['history_observation_match_count']}/{summary['paired_comparison']['history_observation_count']}",
         f"- Target observations matched: {new['target_observation_match_count']}/{replay['state_count']}",
         "",
@@ -50,6 +54,8 @@ def _report(summary: dict[str, Any]) -> str:
         "",
         f"Version mismatch causally confirmed: {summary['version_mismatch_causally_confirmed']}.",
         f"EXP-024A generation remains blocked: {summary['exp024a_generation_remains_blocked']}.",
+        f"Normalized sentinel differences: {summary['sentinel_diagnostics']['normalized_mismatch_categories']}.",
+        f"Initial identity failures: {summary['sentinel_diagnostics']['identity_failure_count']}.",
         "",
         "No Qwen model was imported or run, no memory condition was executed, and no AppWorld candidate action was generated.",
     ]
@@ -145,6 +151,8 @@ def main() -> None:
                 str(source_versions["evaluation"][0]),
             ]
         )
+        diagnostics = sentinel_failure_diagnostics(legacy_rows)
+        old_full_summary = _load_json(paths["old_replay"])
         summary = {
             "format": "appworld_legacy_replay_final_summary_6h1_v1",
             "run_uuid": settings["run_uuid"],
@@ -155,12 +163,17 @@ def main() -> None:
             "sentinel": sentinel,
             "legacy_replay": replay,
             "paired_comparison": paired,
+            "old_appworld_0_2_dev0_full_45_reference": old_full_summary,
+            "sentinel_diagnostics": diagnostics,
+            "full_replay_status": (
+                "completed" if replay_path.exists() else "not_run_blocked_by_sentinel"
+            ),
             "version_mismatch_causally_confirmed": full_pass,
             "exp024a_generation_remains_blocked": not full_pass,
             "recommended_next_milestone": (
                 "separately_reviewed_exp024a_generation_under_appworld_0_1_0"
                 if full_pass
-                else "resolve_exact_historical_data_or_execution_divergence_before_generation"
+                else "resolve_historical_auth_token_timing_and_source_identity_before_generation"
             ),
             "qwen_import_count": 0,
             "qwen_forward_count": 0,
@@ -200,8 +213,13 @@ def main() -> None:
         )
         atomic_write_text(
             args.artifact_dir / "legacy_45_state_replay_report.md",
-            f"# Immutable Replay\n\nDecision: `{branch}`. Passed "
-            f"{replay['complete_replay_pass_count']}/{replay['state_count']} states.\n",
+            "# Immutable 45-State Replay\n\n"
+            + (
+                f"Decision: `{branch}`. Passed "
+                f"{replay['complete_replay_pass_count']}/{replay['state_count']} states.\n"
+                if replay_path.exists()
+                else f"Not run because sentinel decision `{branch}` blocked the full replay.\n"
+            ),
         )
         attempt.progress(latest_validated_checkpoint="final_exp024r_summary.json")
         print(json.dumps(summary, indent=2, sort_keys=True))

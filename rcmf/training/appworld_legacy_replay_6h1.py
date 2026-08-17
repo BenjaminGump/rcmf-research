@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import base64
 import hashlib
 import json
 import os
@@ -78,6 +79,107 @@ def normalize_observation_locked(text: str) -> str:
 
 def observation_hash(text: str) -> str:
     return hashlib.sha256(normalize_observation_locked(text).encode("utf-8")).hexdigest()
+
+
+def _decode_jwt_payload(token: str) -> dict[str, Any] | None:
+    parts = str(token).split(".")
+    if len(parts) != 3:
+        return None
+    try:
+        padded = parts[1] + "=" * (-len(parts[1]) % 4)
+        payload = json.loads(base64.urlsafe_b64decode(padded).decode("utf-8"))
+    except Exception:  # noqa: BLE001 - diagnostic parser must not mask replay output
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def classify_observation_difference(expected: str, actual: str) -> dict[str, Any]:
+    """Classify locked-normalization differences without changing normalization."""
+    expected_normalized = normalize_observation_locked(expected)
+    actual_normalized = normalize_observation_locked(actual)
+    if expected_normalized == actual_normalized:
+        return {"category": "locked_normalization_match"}
+    try:
+        expected_value = json.loads(expected_normalized)
+        actual_value = json.loads(actual_normalized)
+    except Exception:  # noqa: BLE001 - non-JSON observations remain an explicit class
+        return {"category": "other_normalized_difference"}
+    if not isinstance(expected_value, dict) or not isinstance(actual_value, dict):
+        return {"category": "other_normalized_difference"}
+    if set(expected_value) != set(actual_value) or "access_token" not in expected_value:
+        return {"category": "other_normalized_difference"}
+    if any(
+        expected_value[key] != actual_value[key]
+        for key in expected_value
+        if key != "access_token"
+    ):
+        return {"category": "other_normalized_difference"}
+    expected_payload = _decode_jwt_payload(str(expected_value["access_token"]))
+    actual_payload = _decode_jwt_payload(str(actual_value["access_token"]))
+    if expected_payload is None or actual_payload is None:
+        return {"category": "other_normalized_difference"}
+    expected_stable = {key: value for key, value in expected_payload.items() if key != "exp"}
+    actual_stable = {key: value for key, value in actual_payload.items() if key != "exp"}
+    if expected_stable != actual_stable:
+        return {"category": "other_normalized_difference"}
+    expected_exp = expected_payload.get("exp")
+    actual_exp = actual_payload.get("exp")
+    delta = None
+    if isinstance(expected_exp, (int, float)) and isinstance(actual_exp, (int, float)):
+        delta = int(actual_exp - expected_exp)
+    return {
+        "category": "time_dependent_auth_token",
+        "expected_exp": expected_exp,
+        "actual_exp": actual_exp,
+        "exp_delta_seconds": delta,
+    }
+
+
+def sentinel_failure_diagnostics(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    mismatches = []
+    identities = []
+    for row in rows:
+        if not bool(row.get("initial_task_identity_match")):
+            identities.append(
+                {
+                    "state_example_id": str(row["state_example_id"]),
+                    "task_id": str(row["task_id"]),
+                    "checks": dict(row.get("task_identity_checks", {})),
+                    "expected_task_query_sha256": row.get("expected_task_query_sha256"),
+                    "actual_task_query_sha256": row.get("actual_task_query_sha256"),
+                }
+            )
+        for step in row.get("steps", []):
+            if bool(step.get("normalized_match")):
+                continue
+            classification = classify_observation_difference(
+                str(step.get("expected_raw_observation", "")),
+                str(step.get("actual_raw_observation", "")),
+            )
+            mismatches.append(
+                {
+                    "state_example_id": str(row["state_example_id"]),
+                    "task_id": str(row["task_id"]),
+                    "step_id": int(step["step_id"]),
+                    "is_target": bool(step["is_target"]),
+                    **classification,
+                }
+            )
+    categories = Counter(str(row["category"]) for row in mismatches)
+    deltas = [
+        int(row["exp_delta_seconds"])
+        for row in mismatches
+        if row.get("exp_delta_seconds") is not None
+    ]
+    return {
+        "identity_failure_count": len(identities),
+        "identity_failures": identities,
+        "normalized_mismatch_count": len(mismatches),
+        "normalized_mismatch_categories": dict(sorted(categories.items())),
+        "auth_token_exp_delta_seconds": sorted(deltas),
+        "mismatches": mismatches,
+        "locked_normalization_changed": False,
+    }
 
 
 def directory_manifest(root: Path) -> dict[str, Any]:

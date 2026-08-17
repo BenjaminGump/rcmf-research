@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import json
 from pathlib import Path
 
@@ -10,7 +11,9 @@ from rcmf.training.appworld_legacy_replay_6h1 import (
     LOCKED_NORMALIZATION_VERSION,
     build_sentinel_manifest,
     canonical_hash,
+    classify_observation_difference,
     normalize_observation_locked,
+    sentinel_failure_diagnostics,
     summarize_replay_results,
     upgrade_replay_contract,
     validate_legacy_runtime,
@@ -155,6 +158,52 @@ def test_full_demo_query_identity_compares_equivalent_boundaries() -> None:
     }
     assert all(_task_identity_checks(contract, metadata).values())
     assert metadata["instruction"] != query
+
+
+def _jwt(payload: dict) -> str:
+    encoded = base64.urlsafe_b64encode(json.dumps(payload).encode()).decode().rstrip("=")
+    return f"header.{encoded}.signature"
+
+
+def test_auth_token_timing_difference_is_diagnostic_not_normalized_away() -> None:
+    expected = json.dumps(
+        {"access_token": _jwt({"sub": "spotify+user", "exp": 100}), "token_type": "Bearer"}
+    )
+    actual = json.dumps(
+        {"access_token": _jwt({"sub": "spotify+user", "exp": 291}), "token_type": "Bearer"}
+    )
+    result = classify_observation_difference(expected, actual)
+    assert result["category"] == "time_dependent_auth_token"
+    assert result["exp_delta_seconds"] == 191
+    assert normalize_observation_locked(expected) != normalize_observation_locked(actual)
+
+
+def test_sentinel_diagnostics_redacts_observations_and_credentials() -> None:
+    expected = json.dumps({"access_token": _jwt({"sub": "phone+user", "exp": 100})})
+    actual = json.dumps({"access_token": _jwt({"sub": "phone+user", "exp": 200})})
+    row = _result("state", "task", passed=False, history=0)
+    row.update(
+        {
+            "initial_task_identity_match": False,
+            "task_identity_checks": {"task_query_match": False},
+            "expected_task_query_sha256": "expected-hash",
+            "actual_task_query_sha256": "actual-hash",
+        }
+    )
+    row["steps"][0].update(
+        {
+            "expected_raw_observation": expected,
+            "actual_raw_observation": actual,
+            "normalized_match": False,
+        }
+    )
+    diagnostics = sentinel_failure_diagnostics([row])
+    assert diagnostics["normalized_mismatch_categories"] == {
+        "time_dependent_auth_token": 1
+    }
+    serialized = json.dumps(diagnostics)
+    assert "access_token" not in serialized
+    assert "phone+user" not in serialized
 
 
 def test_sentinel_includes_no_history_each_task_step_two_and_extremes() -> None:
