@@ -1,0 +1,28 @@
+{
+  "format": "rcmf.exp025a.identity_reconciliation_provenance.v1",
+  "recorded_at": "2026-08-17",
+  "starting_head": "4472a06d64a3104e5d48a17b30bb795ecd1fb61f",
+  "source_branch": "research/v4-decision-transition-memory",
+  "archive_branch": "archive/v4-candidate-pre-identity-reconciliation",
+  "working_branch": "research/v4-identity-reconciled-corpus",
+  "known_identity_mismatches": [
+    {
+      "task_id": "b0a8eae_2",
+      "split": "validation",
+      "prior_classification": "source_query_header_only_corruption"
+    },
+    {
+      "task_id": "b0a8eae_3",
+      "split": "train",
+      "prior_classification": "unresolved"
+    }
+  ],
+  "historical_artifact_policy": "All V4-candidate artifacts through EXP-024R3 remain immutable because they derive from the pre-reconciliation source corpus and preserve the scientific record.",
+  "scope": {
+    "qwen_allowed": false,
+    "h100_allowed": false,
+    "model_training_allowed": false,
+    "historical_artifact_rewrite_allowed": false,
+    "v4_tag_allowed": false
+  }
+}

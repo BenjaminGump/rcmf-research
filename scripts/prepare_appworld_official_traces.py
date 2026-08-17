@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 from pathlib import Path
 from statistics import mean, median
@@ -18,38 +19,39 @@ from rcmf.benchmarks.appworld.traces import (
 from rcmf.config import load_config, save_resolved_config
 from rcmf.training.datasets import save_decision_examples, save_memory_records
 from rcmf.utils.serialization import atomic_write_json
+from rcmf.utils.serialization import sha256_file
 
 
 FAILED_RE = re.compile(r"^Num Failed Tests\s*:\s*(?P<count>\d+)\s*$", re.MULTILINE)
 PASSED_RE = re.compile(r"^Num Passed Tests\s*:\s*(?P<count>\d+)\s*$", re.MULTILINE)
 
 
-def supervisor_payload(supervisor: Any) -> dict[str, str]:
-    return {
-        "first_name": str(getattr(supervisor, "first_name", "")),
-        "last_name": str(getattr(supervisor, "last_name", "")),
-        "email": str(getattr(supervisor, "email", "")),
-        "phone_number": str(getattr(supervisor, "phone_number", "")),
-    }
-
-
-def load_task_query(task_id: str, prompt_profile: str) -> str:
-    from appworld.task import Task
-
-    task = Task.load(
-        task_id,
-        storage_type="memory",
-        load_ground_truth=False,
-        include_api_response_schemas=False,
+def load_task_query(
+    task_id: str,
+    prompt_profile: str,
+    *,
+    task_spec_root: Path,
+) -> tuple[str, dict[str, str]]:
+    """Load query identity from an explicit, versioned task-spec snapshot."""
+    spec_path = task_spec_root / "tasks" / task_id / "specs.json"
+    if not spec_path.is_file():
+        raise FileNotFoundError(f"Missing pinned task spec: {spec_path}")
+    payload = json.loads(spec_path.read_text(encoding="utf-8"))
+    supervisor = dict(payload["supervisor"])
+    query = build_task_message(
+        str(payload["instruction"]),
+        {
+            "first_name": str(supervisor["first_name"]),
+            "last_name": str(supervisor["last_name"]),
+            "email": str(supervisor["email"]),
+            "phone_number": str(supervisor["phone_number"]),
+        },
+        profile=prompt_profile,
     )
-    try:
-        return build_task_message(
-            task.instruction,
-            supervisor_payload(task.supervisor),
-            profile=prompt_profile,
-        )
-    finally:
-        task.close()
+    return query, {
+        "task_spec_path": str(spec_path),
+        "task_spec_sha256": sha256_file(spec_path),
+    }
 
 
 def report_stats(report_path: Path) -> dict[str, int | bool]:
@@ -92,6 +94,7 @@ def build_trace_from_task_dir(
     task_dir: Path,
     system_prompt: str,
     prompt_profile: str,
+    task_spec_root: Path,
 ) -> tuple[AppWorldTrace, dict[str, Any]]:
     task_id = task_dir.name
     environment_io_path = task_dir / "logs" / "environment_io.md"
@@ -106,9 +109,14 @@ def build_trace_from_task_dir(
         environment_io_path.read_text(encoding="utf-8", errors="replace"),
         source_path=str(environment_io_path),
     )
+    query, query_provenance = load_task_query(
+        task_id,
+        prompt_profile=prompt_profile,
+        task_spec_root=task_spec_root,
+    )
     trace = AppWorldTrace(
         task_id=task_id,
-        query=load_task_query(task_id, prompt_profile=prompt_profile),
+        query=query,
         steps=steps,
         is_correct=bool(stats["success"]),
         system_prompt=system_prompt,
@@ -121,6 +129,7 @@ def build_trace_from_task_dir(
         "source_path": str(environment_io_path),
         "report_path": str(report_path),
         "num_steps": len(steps),
+        **query_provenance,
         **stats,
     }
     return trace, metadata
@@ -150,6 +159,15 @@ def main() -> None:
     )
     parser.add_argument("--dataset-name", default=None, help="Optional AppWorld split name for canonical order.")
     parser.add_argument("--output", required=True)
+    parser.add_argument(
+        "--task-spec-root",
+        type=Path,
+        required=True,
+        help=(
+            "Explicit pinned AppWorld data root containing tasks/<task_id>/specs.json. "
+            "The active AppWorld installation is never used implicitly for query identity."
+        ),
+    )
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--start-index", type=int, default=0)
     parser.add_argument(
@@ -170,6 +188,9 @@ def main() -> None:
 
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
+    task_spec_root = args.task_spec_root.resolve()
+    if not (task_spec_root / "tasks").is_dir():
+        raise FileNotFoundError(f"Pinned task-spec root has no tasks directory: {task_spec_root}")
     prompt_profile = cfg.benchmark.prompt_profile
     system_prompt = get_system_prompt(prompt_profile)
 
@@ -185,6 +206,7 @@ def main() -> None:
                 task_dir,
                 system_prompt=system_prompt,
                 prompt_profile=prompt_profile,
+                task_spec_root=task_spec_root,
             )
         except Exception as exc:
             skipped.append({"task_id": task_dir.name, "index": offset, "reason": str(exc)})
@@ -218,6 +240,7 @@ def main() -> None:
                 "success": trace.is_correct,
                 "passed_tests": metadata["passed_tests"],
                 "failed_tests": metadata["failed_tests"],
+                "task_spec_sha256": metadata["task_spec_sha256"],
             }
         )
         print(
@@ -234,6 +257,8 @@ def main() -> None:
             "source": "official_appworld_experiment_output",
             "experiment_output": str(experiment_output),
             "dataset_name": dataset_name,
+            "task_spec_root": str(task_spec_root),
+            "query_identity_source": "explicit_pinned_task_specs",
             "task_dirs_requested": len(task_dirs),
             "used_tasks": len(used),
             "skipped_tasks": len(skipped),

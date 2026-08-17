@@ -1,0 +1,95 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_appworld_identity_reconciliation_7a
+  version: appworld_identity_reconciliation_7a_v1
+  scope:
+    - corpus_and_provenance_only
+    - cpu_and_legacy_appworld_semantic_replay
+    - no_qwen_import_forward_generation_or_representation
+    - no_h100
+    - no_model_training
+    - no_historical_artifact_rewrite
+    - no_stage_c2
+    - no_v4_tag
+
+stage_c_7a:
+  run_uuid: appworld_identity_reconciliation_7a_20260817_001
+  artifact_dir: runs/stage_c/identity_reconciliation_7a_20260817_001
+  reconciled_corpus_dir: runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  source_data: runs/appworld/official_react_gpt4o_train_success_full_demo_filtered_no_2a163ab3_20260803
+  source_experiment_root: experiments/outputs/legacy_react_code_agent/openai/gpt-4o-2024-05-13/train
+  split_manifest: runs/teacher/raw_text_full_cache_20260805_001/student_split_manifest.json
+  stage_b_labels: runs/stage_b/student_labels_20260806_002
+  parent_exp017: runs/stage_c/transition_memory_6a_20260814_001
+  parent_exp018: runs/stage_c/state_conditioned_transition_6b_20260814_001
+  parent_exp019: runs/stage_c/interaction_representation_6c_20260814_001
+  parent_exp020: runs/stage_c/all_task_interaction_6d_20260815_001
+  parent_exp021: runs/stage_c/memory_use_target_6e_20260816_001
+  parent_exp022: runs/stage_c/procedural_outcome_6f_20260816_001
+  parent_exp023: runs/stage_c/procedural_coverage_6g_20260816_001
+  parent_exp024a: runs/stage_c/procedural_causal_audit_6h_20260817_001
+  parent_exp024r: runs/stage_c/appworld_legacy_replay_6h1_20260817_001
+  parent_exp024r2: runs/stage_c/appworld_semantic_replay_6h2_20260817_001
+  parent_exp024r3: runs/stage_c/appworld_provenance_replay_6h3_20260817_001
+
+  branches:
+    starting_head: 4472a06d64a3104e5d48a17b30bb795ecd1fb61f
+    source: research/v4-decision-transition-memory
+    archive: archive/v4-candidate-pre-identity-reconciliation
+    working: research/v4-identity-reconciled-corpus
+
+  snapshots:
+    active_unpinned_data_root: data
+    official_010_data_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root/data
+    immutable_backup_data_root: /lambda/nfs/rcmf-persist/project/data_appworld_0.1.0_backup_20260730
+
+  expected:
+    task_count: 46
+    decision_count: 638
+    train_tasks: 37
+    validation_tasks: 9
+    transitions: 499
+    affected_tasks:
+      b0a8eae_2:
+        split: validation
+        decisions: 18
+        candidate_prior_observations: 153
+      b0a8eae_3:
+        split: train
+        decisions: 17
+        candidate_prior_observations: 136
+    audit_states: 45
+    audit_tasks: 9
+    audit_prior_observations: 372
+
+  legacy:
+    executable: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    appworld_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+    appworld_cache: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/cache
+
+  replay:
+    semantic_bridge: scripts/appworld_semantic_replay_bridge_6h2.py
+    semantic_module: rcmf/training/appworld_semantic_replay_6h2.py
+    random_seed: 100
+    max_interactions: 1000
+    max_api_calls_per_interaction: 1000
+    subprocess_timeout_seconds: 600
+    sentinel_repeats: 2
+
+  estimates:
+    h100_hourly_row_rate: 2600
+    representation_rows_per_h100_hour: 3000
+    best_case_multiplier: 0.8
+    conservative_multiplier: 1.5
+
+  sensitivity:
+    ranking_ks: [1, 4, 8]
+    neutral_epsilon: 0.01
+    best_tie_tolerance: 1.0e-8
+    huber_delta: 0.1
+    pair_gap_threshold: 0.05
+    pair_gap_weight_clip: 0.25
+
+  heartbeat_interval_seconds: 240
