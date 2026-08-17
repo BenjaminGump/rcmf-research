@@ -13,6 +13,7 @@ from rcmf.training.clean_cache_rebuild_7b import (
     transition_change_manifest,
 )
 from rcmf.training.clean_cache_execution_7b import (
+    _selected_pair_matches_old,
     seed_jsonl,
     transition_representation_work_queue,
 )
@@ -153,6 +154,66 @@ def test_seed_jsonl_rejects_changed_reusable_row(tmp_path: Path) -> None:
             expected_keys={"a"},
             key_fn=lambda row: str(row["id"]),
         )
+
+
+def test_pair_response_reuse_maps_raw_utility_to_legacy_text_utility() -> None:
+    selected = {
+        "pair_id": "pair",
+        "state_example_id": "state",
+        "task_id": "clean-task",
+        "memory_id": "memory",
+        "memory_task_id": "clean-memory-task",
+        "selection_category": "positive",
+        "utility_category": "positive",
+        "L0": 0.5,
+        "raw_utility": 0.25,
+        "memory_text_sha256": "memory-hash",
+    }
+    legacy = {**selected, "text_utility": selected["raw_utility"]}
+    legacy.pop("raw_utility")
+    assert _selected_pair_matches_old(selected, legacy)
+    legacy["text_utility"] = 0.2
+    assert not _selected_pair_matches_old(selected, legacy)
+
+
+def test_pair_response_reuse_rejects_identity_change() -> None:
+    selected = {
+        "pair_id": "pair",
+        "state_example_id": "state",
+        "task_id": "clean-task",
+        "memory_id": "memory",
+        "memory_task_id": "clean-memory-task",
+        "selection_category": "positive",
+        "utility_category": "positive",
+        "L0": 0.5,
+        "raw_utility": 0.25,
+        "memory_text_sha256": "memory-hash",
+    }
+    legacy = {**selected, "text_utility": selected["raw_utility"]}
+    legacy.pop("raw_utility")
+    legacy["memory_id"] = "other-memory"
+    assert not _selected_pair_matches_old(selected, legacy)
+
+
+def test_pair_response_resume_allows_reconciled_rows_only_when_explicit() -> None:
+    selected = {
+        "pair_id": "pair",
+        "state_example_id": "state",
+        "task_id": "b0a8eae_3",
+        "memory_id": "memory",
+        "memory_task_id": "clean-memory-task",
+        "selection_category": "positive",
+        "utility_category": "positive",
+        "L0": 0.5,
+        "raw_utility": 0.25,
+        "memory_text_sha256": "memory-hash",
+    }
+    completed = {**selected, "text_utility": selected["raw_utility"]}
+    completed.pop("raw_utility")
+    assert not _selected_pair_matches_old(selected, completed)
+    assert _selected_pair_matches_old(
+        selected, completed, allow_reconciled_tasks=True
+    )
 
 
 def test_transition_representation_queue_includes_rows_outside_model_panel() -> None:

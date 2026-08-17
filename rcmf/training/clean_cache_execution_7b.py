@@ -228,10 +228,15 @@ def seed_stage_c1(
     return result
 
 
-def _selected_pair_matches_old(selected: Mapping[str, Any], row: Mapping[str, Any]) -> bool:
-    if str(selected["task_id"]) in AFFECTED_TASK_IDS:
+def _selected_pair_matches_old(
+    selected: Mapping[str, Any],
+    row: Mapping[str, Any],
+    *,
+    allow_reconciled_tasks: bool = False,
+) -> bool:
+    if not allow_reconciled_tasks and str(selected["task_id"]) in AFFECTED_TASK_IDS:
         return False
-    if str(selected["memory_task_id"]) in AFFECTED_TASK_IDS:
+    if not allow_reconciled_tasks and str(selected["memory_task_id"]) in AFFECTED_TASK_IDS:
         return False
     fields = (
         "state_index",
@@ -250,10 +255,11 @@ def _selected_pair_matches_old(selected: Mapping[str, Any], row: Mapping[str, An
         "selection_category",
         "utility_category",
         "L0",
-        "text_utility",
         "memory_text_sha256",
     )
-    return all(selected.get(field) == row.get(field) for field in fields)
+    return all(selected.get(field) == row.get(field) for field in fields) and (
+        selected.get("raw_utility") == row.get("text_utility")
+    )
 
 
 def seed_pair_response(*, labels_dir: Path, old_path: Path, output_dir: Path) -> dict[str, Any]:
@@ -263,8 +269,19 @@ def seed_pair_response(*, labels_dir: Path, old_path: Path, output_dir: Path) ->
         label_rows, memory_bank, config=PairSelectionConfig()
     )
     old = _keyed(_rows(old_path), lambda row: str(row["pair_id"]))
+    output_path = output_dir / "pair_response_cache.jsonl"
+    existing = _keyed(_rows(output_path), lambda row: str(row["pair_id"]))
+    selected_by_id = _keyed(selected, lambda row: str(row["pair_id"]))
+    for pair_id, row in existing.items():
+        selected_pair = selected_by_id.get(pair_id)
+        if selected_pair is None or not _selected_pair_matches_old(
+            selected_pair, row, allow_reconciled_tasks=True
+        ):
+            raise ValueError(f"Existing pair-response row is stale or invalid: {pair_id}")
     reusable = []
     for pair in selected:
+        if str(pair["pair_id"]) in existing:
+            continue
         candidate = old.get(str(pair["pair_id"]))
         if candidate is not None and _selected_pair_matches_old(pair, candidate):
             reusable.append(candidate)
@@ -273,7 +290,7 @@ def seed_pair_response(*, labels_dir: Path, old_path: Path, output_dir: Path) ->
     write_jsonl(output_dir / "clean_selected_pairs_seed.jsonl", selected)
     atomic_write_json(output_dir / "clean_pair_selection_seed_summary.json", selection_summary)
     result = seed_jsonl(
-        output_path=output_dir / "pair_response_cache.jsonl",
+        output_path=output_path,
         reusable_rows=reusable,
         expected_keys=expected,
         key_fn=lambda row: str(row["pair_id"]),
@@ -283,7 +300,9 @@ def seed_pair_response(*, labels_dir: Path, old_path: Path, output_dir: Path) ->
             "format": EXECUTION_VERSION,
             "cache": "pair_response_5d",
             "selected_pair_count": len(selected),
-            "cascade_recompute_count": len(selected) - len(reusable),
+            "resumed_row_count": len(existing),
+            "legacy_reusable_row_count": len(reusable),
+            "cascade_recompute_count": len(selected) - len(existing) - len(reusable),
             "historical_static_affected_count": 121,
         }
     )
