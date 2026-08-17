@@ -26,6 +26,9 @@ from scripts.run_appworld_semantic_replay_6h2 import (
     _repeat_equivalence,
     _sentinel_decision,
 )
+from scripts.prepare_appworld_semantic_replay_6h2 import (
+    _legacy_history_observation_count,
+)
 
 
 def _segment(value: dict) -> str:
@@ -378,3 +381,9 @@ def test_config_locks_capsule_semantics_and_no_generation() -> None:
     assert ALLOWED_TOKEN_FIELDS == frozenset({"access_token"})
     assert ALLOWED_TEMPORAL_CLAIMS == frozenset({"exp"})
     assert SEMANTIC_NORMALIZATION_VERSION.endswith("6h2_v1")
+
+
+def test_preflight_reads_immutable_exp024r_history_count_schema() -> None:
+    assert _legacy_history_observation_count({"history_observation_count": 102}) == 102
+    with pytest.raises(KeyError, match="history_observation_count"):
+        _legacy_history_observation_count({"prior_observation_count": 102})

@@ -144,6 +144,13 @@ def _manifest_rows(payload: Mapping[str, Any]) -> list[Mapping[str, Any]]:
     raise ValueError("Query manifest has no rows/query_rows")
 
 
+def _legacy_history_observation_count(summary: Mapping[str, Any]) -> int:
+    """Read the immutable EXP-024R name while rejecting ambiguous summaries."""
+    if "history_observation_count" not in summary:
+        raise KeyError("EXP-024R summary has no history_observation_count")
+    return int(summary["history_observation_count"])
+
+
 def _row_map(rows: Sequence[Mapping[str, Any]], key: str = "state_example_id") -> dict[str, Mapping[str, Any]]:
     output: dict[str, Mapping[str, Any]] = {}
     for row in rows:
@@ -434,7 +441,8 @@ def main() -> None:
             "states": len(queries) == int(expected["state_count"]),
             "tasks": len({str(row["task_id"]) for row in queries}) == int(expected["task_count"]),
             "sentinel_states": int(sentinel["state_count"]) == int(expected["sentinel_state_count"]),
-            "sentinel_prior_observations": int(old_sentinel["prior_observation_count"]) == int(expected["sentinel_prior_observation_count"]),
+            "sentinel_prior_observations": _legacy_history_observation_count(old_sentinel)
+            == int(expected["sentinel_prior_observation_count"]),
             "full_prior_observations": sum(int(row["step_id"]) - 1 for row in queries) == int(expected["full_prior_observation_count"]),
             "conditions": int(condition_manifest["condition_count"]) == int(expected["condition_count"]),
             "legacy_python": str(parent_environment["legacy_python"]) == str(settings["legacy"]["executable"]),
