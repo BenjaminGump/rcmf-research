@@ -33,6 +33,10 @@ def _primitive(value: Any) -> Any:
     return repr(value)
 
 
+def _lexical_absolute(path: Path) -> Path:
+    return Path(os.path.abspath(path))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
@@ -40,7 +44,7 @@ def main() -> None:
     parser.add_argument("--expected-root", type=Path, required=True)
     args = parser.parse_args()
 
-    if Path(sys.executable).resolve() != args.expected_python.resolve():
+    if _lexical_absolute(Path(sys.executable)) != _lexical_absolute(args.expected_python):
         raise RuntimeError(f"Probe used wrong Python: {sys.executable}")
     root = Path(os.environ.get("APPWORLD_ROOT", "")).resolve()
     if root != args.expected_root.resolve():
@@ -50,7 +54,8 @@ def main() -> None:
     from appworld.common import constants
 
     module_path = Path(appworld.__file__).resolve()
-    if args.expected_python.resolve().parents[1] not in module_path.parents:
+    expected_venv = _lexical_absolute(args.expected_python).parent.parent
+    if expected_venv not in module_path.parents:
         raise RuntimeError(f"AppWorld import leaked outside legacy venv: {module_path}")
     exposed_versions = {
         name: _primitive(getattr(constants, name))

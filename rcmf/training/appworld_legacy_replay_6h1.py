@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 import hashlib
 import json
+import os
 from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
 from difflib import SequenceMatcher
@@ -35,6 +36,15 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def lexical_absolute(path: Path) -> Path:
+    """Return an absolute path without dereferencing a venv Python symlink."""
+    return Path(os.path.abspath(path))
+
+
+def venv_root_from_executable(executable: Path) -> Path:
+    return lexical_absolute(executable).parent.parent
 
 
 def normalize_observation_locked(text: str) -> str:
@@ -101,7 +111,9 @@ def validate_legacy_runtime(
         raise FileNotFoundError(f"Legacy executable missing: {executable}")
     if not root.is_dir():
         raise FileNotFoundError(f"Legacy APPWORLD_ROOT missing: {root}")
-    if current_executable is not None and executable.resolve() == current_executable.resolve():
+    if current_executable is not None and lexical_absolute(executable) == lexical_absolute(
+        current_executable
+    ):
         raise ValueError("Legacy replay executable aliases the current RCMF Python")
     if "appworld-0.1.0-replay" not in executable.as_posix():
         raise ValueError(f"Unexpected legacy executable path: {executable}")
@@ -297,7 +309,7 @@ def validate_bridge_result(
         raise ValueError("Unexpected legacy bridge result version")
     if result.get("contract_sha256") != canonical_hash(contract):
         raise ValueError("Legacy bridge result contract hash mismatch")
-    if Path(str(result["python_executable"])).resolve() != executable.resolve():
+    if lexical_absolute(Path(str(result["python_executable"]))) != lexical_absolute(executable):
         raise ValueError("Legacy bridge used the wrong Python executable")
     if Path(str(result["appworld_root"])).resolve() != root.resolve():
         raise ValueError("Legacy bridge used the wrong APPWORLD_ROOT")

@@ -65,6 +65,10 @@ def _sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _lexical_absolute(path: Path) -> Path:
+    return Path(os.path.abspath(path))
+
+
 def _directory_hash(root: Path) -> dict[str, Any]:
     rows = [
         {
@@ -120,8 +124,8 @@ def main() -> None:
     if canonical_hash(contract["actions"]) != contract["actions_sha256"]:
         raise ValueError("Replay action hash mismatch")
     root = Path(str(contract["appworld_root"])).resolve()
-    expected_python = Path(str(contract["legacy_python"])).resolve()
-    if Path(sys.executable).resolve() != expected_python:
+    expected_python = Path(str(contract["legacy_python"]))
+    if _lexical_absolute(Path(sys.executable)) != _lexical_absolute(expected_python):
         raise RuntimeError(f"Wrong replay Python: {sys.executable}")
     if Path(os.environ.get("APPWORLD_ROOT", "")).resolve() != root:
         raise RuntimeError("Bridge APPWORLD_ROOT differs from the contract")
@@ -132,7 +136,8 @@ def main() -> None:
     if appworld.__version__ != "0.1.0" or DB_VERSION != "0.1.0":
         raise RuntimeError(f"Wrong AppWorld version triple: {appworld.__version__}/{DB_VERSION}")
     module_path = Path(appworld.__file__).resolve()
-    if expected_python.parents[1] not in module_path.parents:
+    expected_venv = _lexical_absolute(expected_python).parent.parent
+    if expected_venv not in module_path.parents:
         raise RuntimeError(f"AppWorld import leaked outside legacy venv: {module_path}")
 
     from appworld import AppWorld

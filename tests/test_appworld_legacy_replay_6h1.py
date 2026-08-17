@@ -14,6 +14,7 @@ from rcmf.training.appworld_legacy_replay_6h1 import (
     summarize_replay_results,
     validate_legacy_runtime,
     validate_replay_contract,
+    venv_root_from_executable,
 )
 from rcmf.training.procedural_causal_audit_6h import normalize_observation
 from scripts.prepare_appworld_legacy_environment_6h1 import (
@@ -149,6 +150,13 @@ def test_runtime_rejects_current_python_or_nonlegacy_root(tmp_path: Path) -> Non
             root=root,
             current_executable=executable,
         )
+
+
+def test_venv_root_is_lexical_and_does_not_follow_python_symlink() -> None:
+    executable = Path("/home/ubuntu/venvs/appworld-0.1.0-replay/bin/python")
+    assert venv_root_from_executable(executable).as_posix().endswith(
+        "/home/ubuntu/venvs/appworld-0.1.0-replay"
+    )
 
 
 def test_replay_summary_rejects_duplicate_state_keys() -> None:
