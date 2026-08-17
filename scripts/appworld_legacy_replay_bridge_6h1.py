@@ -13,8 +13,8 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-CONTRACT_VERSION = "appworld_legacy_replay_contract_6h1_v1"
-RESULT_VERSION = "appworld_legacy_replay_result_6h1_v1"
+CONTRACT_VERSION = "appworld_legacy_replay_contract_6h1_v2"
+RESULT_VERSION = "appworld_legacy_replay_result_6h1_v2"
 NORMALIZATION_VERSION = "appworld_observation_normalization_6h_v1"
 
 
@@ -91,6 +91,31 @@ def _state_fingerprint(world: Any) -> dict[str, Any]:
         "method": "public_ModelCollection.model_hashes",
         "model_hash_count": len(model_hashes),
         "sha256": canonical_hash(model_hashes),
+    }
+
+
+def _full_demo_task_query(instruction: str, supervisor: Mapping[str, Any]) -> str:
+    return (
+        "Now here is another task in a different environment. The task is the following:\n"
+        f"My name is: {supervisor.get('first_name', '')} "
+        f"{supervisor.get('last_name', '')}. "
+        f"My personal email is {supervisor.get('email', '')} and phone number is "
+        f"{supervisor.get('phone_number', '')}.\n"
+        f"Task: {instruction}"
+    )
+
+
+def _task_identity_checks(
+    contract: Mapping[str, Any], task_metadata: Mapping[str, Any]
+) -> dict[str, bool]:
+    actual_query = _full_demo_task_query(
+        str(task_metadata["instruction"]),
+        task_metadata["supervisor"],
+    )
+    return {
+        "task_query_match": actual_query == str(contract["expected_task_query"]),
+        "task_id_match": str(task_metadata["task_id"]) == str(contract["task_id"]),
+        "db_version_match": str(task_metadata["db_version"]) == "0.1.0",
     }
 
 
@@ -232,7 +257,10 @@ def main() -> None:
         (step["step_id"] for step in steps if not step["normalized_match"]),
         None,
     )
-    instruction_match = task_metadata["instruction"] == str(contract["expected_task_instruction"])
+    actual_task_query = _full_demo_task_query(
+        str(task_metadata["instruction"]), task_metadata["supervisor"]
+    )
+    identity_checks = _task_identity_checks(contract, task_metadata)
     result = {
         "format": RESULT_VERSION,
         "contract_sha256": canonical_hash(contract),
@@ -249,9 +277,14 @@ def main() -> None:
         "experiment_name": experiment_name,
         "task_metadata": task_metadata,
         "initial_task_files": initial_task_files,
-        "initial_task_identity_match": instruction_match
-        and task_metadata["task_id"] == task_id
-        and task_metadata["db_version"] == "0.1.0",
+        "expected_task_query_sha256": hashlib.sha256(
+            str(contract["expected_task_query"]).encode("utf-8")
+        ).hexdigest(),
+        "actual_task_query_sha256": hashlib.sha256(
+            actual_task_query.encode("utf-8")
+        ).hexdigest(),
+        "task_identity_checks": identity_checks,
+        "initial_task_identity_match": all(identity_checks.values()),
         "initial_state_fingerprint": initial_state,
         "final_state_fingerprint": final_state,
         "state_snapshot_api": {

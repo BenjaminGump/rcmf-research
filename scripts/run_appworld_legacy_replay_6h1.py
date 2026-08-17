@@ -16,12 +16,15 @@ import _bootstrap  # noqa: F401
 from rcmf.config import load_config
 from rcmf.training.appworld_legacy_replay_6h1 import (
     summarize_replay_results,
+    upgrade_replay_contract,
     validate_bridge_result,
     validate_legacy_runtime,
     validate_replay_contract,
 )
 from rcmf.training.state_conditioned_transition_6b import AttemptLedger
 from rcmf.utils.serialization import atomic_write_json, atomic_write_text, read_jsonl, sha256_file
+
+REPLAY_SCHEMA_NAMESPACE = "v2"
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -41,7 +44,7 @@ def _safe_name(value: str) -> str:
 def _effective_contract(
     base: Mapping[str, Any], *, attempt_id: str, run_uuid: str
 ) -> dict[str, Any]:
-    payload = dict(base)
+    payload = upgrade_replay_contract(base)
     payload["experiment_name"] = (
         f"exp024r_{_safe_name(run_uuid)}_{_safe_name(str(base['state_example_id']))}_"
         f"{_safe_name(attempt_id)}"
@@ -177,7 +180,9 @@ def main() -> None:
     if args.phase == "sentinel":
         selected_ids = [str(row["state_example_id"]) for row in sentinel_manifest["rows"]]
     else:
-        sentinel_summary_path = args.artifact_dir / "replay" / "sentinel_summary.json"
+        sentinel_summary_path = (
+            args.artifact_dir / "replay" / f"sentinel_summary_{REPLAY_SCHEMA_NAMESPACE}.json"
+        )
         if not sentinel_summary_path.exists():
             raise FileNotFoundError("Full replay requires the sentinel summary")
         sentinel_summary = _load_json(sentinel_summary_path)
@@ -204,9 +209,11 @@ def main() -> None:
         scientific_parameter_changed=False,
         heartbeat_interval_s=float(settings["heartbeat_interval_seconds"]),
     ) as attempt:
-        output_dir = args.artifact_dir / "replay" / "states"
-        contract_dir = args.artifact_dir / "replay" / "attempt_contracts"
-        log_dir = args.artifact_dir / "replay" / "logs"
+        output_dir = args.artifact_dir / "replay" / f"states_{REPLAY_SCHEMA_NAMESPACE}"
+        contract_dir = (
+            args.artifact_dir / "replay" / f"attempt_contracts_{REPLAY_SCHEMA_NAMESPACE}"
+        )
+        log_dir = args.artifact_dir / "replay" / f"logs_{REPLAY_SCHEMA_NAMESPACE}"
         for path in (output_dir, contract_dir, log_dir):
             path.mkdir(parents=True, exist_ok=True)
         results = []
@@ -305,7 +312,7 @@ def main() -> None:
         }
         summary.update(
             {
-                "format": f"appworld_legacy_{args.phase}_summary_6h1_v1",
+                "format": f"appworld_legacy_{args.phase}_summary_6h1_v2",
                 "phase": args.phase,
                 "reused_state_count": reused,
                 "new_state_count": computed,
@@ -329,7 +336,11 @@ def main() -> None:
         output_summary = (
             args.artifact_dir
             / "replay"
-            / ("sentinel_summary.json" if args.phase == "sentinel" else "replay_summary.json")
+            / (
+                f"sentinel_summary_{REPLAY_SCHEMA_NAMESPACE}.json"
+                if args.phase == "sentinel"
+                else f"replay_summary_{REPLAY_SCHEMA_NAMESPACE}.json"
+            )
         )
         atomic_write_json(output_summary, summary)
         attempt.progress(latest_validated_checkpoint=str(output_summary))

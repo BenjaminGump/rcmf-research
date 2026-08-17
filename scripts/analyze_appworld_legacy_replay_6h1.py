@@ -86,14 +86,14 @@ def main() -> None:
     parent = Path(settings["parent_exp024a"])
     paths = {
         "environment": args.artifact_dir / "environment_provenance.json",
-        "sentinel": args.artifact_dir / "replay" / "sentinel_summary.json",
+        "sentinel": args.artifact_dir / "replay" / "sentinel_summary_v2.json",
         "contracts": args.artifact_dir / "replay_contract_manifest.json",
         "old_replay": parent / "replay" / "replay_summary.json",
     }
     for name, path in paths.items():
         if not path.exists():
             raise FileNotFoundError(f"Finalization input missing: {name}={path}")
-    replay_path = args.artifact_dir / "replay" / "replay_summary.json"
+    replay_path = args.artifact_dir / "replay" / "replay_summary_v2.json"
     selected_summary_path = replay_path if replay_path.exists() else paths["sentinel"]
     if Path(args.resume_checkpoint).resolve() != selected_summary_path.resolve():
         raise ValueError("Finalization resume checkpoint is not the latest replay summary")
@@ -120,7 +120,7 @@ def main() -> None:
         environment = _load_json(paths["environment"])
         sentinel = _load_json(paths["sentinel"])
         replay = _load_json(selected_summary_path)
-        state_paths = sorted((args.artifact_dir / "replay" / "states").glob("*.json"))
+        state_paths = sorted((args.artifact_dir / "replay" / "states_v2").glob("*.json"))
         legacy_rows = [_load_json(path) for path in state_paths]
         selected_ids = {str(row["state_example_id"]) for row in legacy_rows}
         old_paths = sorted((parent / "replay" / "states").glob("*.json"))
@@ -166,6 +166,11 @@ def main() -> None:
             "qwen_forward_count": 0,
             "qwen_generation_count": 0,
             "memory_condition_execution_count": 0,
+            "superseded_identity_validation": {
+                "attempt_id": "exp024r-sentinel-001",
+                "reason": "v1 compared the full current-task query to world.task.instruction",
+                "preserved_summary": "replay/sentinel_summary.json",
+            },
             "analysis_elapsed_seconds": time.perf_counter() - started,
         }
         atomic_write_json(args.artifact_dir / "final_exp024r_summary.json", summary)

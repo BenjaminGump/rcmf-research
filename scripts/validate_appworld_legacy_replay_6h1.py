@@ -42,7 +42,7 @@ def main() -> None:
         "heartbeat.json",
         "environment_provenance.json",
         "sentinel_manifest.json",
-        "replay/sentinel_summary.json",
+        "replay/sentinel_summary_v2.json",
         "final_exp024r_summary.json",
         "final_exp024r_report.md",
         "paired_0_2_vs_0_1_comparison.json",
@@ -68,13 +68,13 @@ def main() -> None:
     sentinel = _load_json(args.artifact_dir / "sentinel_manifest.json")
     final = _load_json(args.artifact_dir / "final_exp024r_summary.json")
     attempts = list(read_jsonl(args.artifact_dir / "attempts.jsonl"))
-    replay_path = args.artifact_dir / "replay" / "replay_summary.json"
+    replay_path = args.artifact_dir / "replay" / "replay_summary_v2.json"
     replay = (
         _load_json(replay_path)
         if replay_path.exists()
-        else _load_json(args.artifact_dir / "replay" / "sentinel_summary.json")
+        else _load_json(args.artifact_dir / "replay" / "sentinel_summary_v2.json")
     )
-    state_paths = sorted((args.artifact_dir / "replay" / "states").glob("*.json"))
+    state_paths = sorted((args.artifact_dir / "replay" / "states_v2").glob("*.json"))
     state_rows = [_load_json(path) for path in state_paths]
     state_ids = [str(row["state_example_id"]) for row in state_rows]
     events = Counter((str(row["attempt_id"]), str(row["event"])) for row in attempts)
@@ -115,6 +115,9 @@ def main() -> None:
             "attempt_start_end_pairs": starts == ends == attempt_ids,
             "state_key_unique": len(state_ids) == len(set(state_ids)),
             "state_count_matches_summary": len(state_rows) == replay["state_count"],
+            "failed_v1_sentinel_preserved": (
+                args.artifact_dir / "replay" / "sentinel_summary.json"
+            ).exists(),
             "no_qwen_import": final["qwen_import_count"] == 0,
             "no_qwen_forward": final["qwen_forward_count"] == 0,
             "no_qwen_generation": final["qwen_generation_count"] == 0,

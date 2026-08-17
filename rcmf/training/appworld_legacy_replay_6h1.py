@@ -13,8 +13,9 @@ from typing import Any
 from rcmf.benchmarks.appworld.data import extract_code_and_fix_content
 from rcmf.training.datasets import _parse_appworld_state_text
 
-LEGACY_REPLAY_CONTRACT_VERSION = "appworld_legacy_replay_contract_6h1_v1"
-LEGACY_REPLAY_RESULT_VERSION = "appworld_legacy_replay_result_6h1_v1"
+LEGACY_REPLAY_CONTRACT_VERSION_V1 = "appworld_legacy_replay_contract_6h1_v1"
+LEGACY_REPLAY_CONTRACT_VERSION = "appworld_legacy_replay_contract_6h1_v2"
+LEGACY_REPLAY_RESULT_VERSION = "appworld_legacy_replay_result_6h1_v2"
 LEGACY_SENTINEL_MANIFEST_VERSION = "appworld_legacy_sentinel_manifest_6h1_v1"
 LOCKED_NORMALIZATION_VERSION = "appworld_observation_normalization_6h_v1"
 
@@ -144,7 +145,7 @@ def build_replay_contract(
     if step_id < 1 or step_id > len(raw_steps):
         raise ValueError(f"Replay step outside trajectory for {state_id}: {step_id}")
 
-    _, task_instruction, parsed_history = _parse_appworld_state_text(str(example.state_text))
+    _, task_query, parsed_history = _parse_appworld_state_text(str(example.state_text))
     if len(parsed_history) != step_id - 1:
         raise ValueError(
             f"State history length differs for {state_id}: {len(parsed_history)} != {step_id - 1}"
@@ -186,7 +187,7 @@ def build_replay_contract(
         "task_id": task_id,
         "target_step": step_id,
         "history_step_count": step_id - 1,
-        "expected_task_instruction": task_instruction,
+        "expected_task_query": task_query,
         "normalization_version": LOCKED_NORMALIZATION_VERSION,
         "legacy_python": str(legacy_python),
         "appworld_root": str(appworld_root),
@@ -198,6 +199,22 @@ def build_replay_contract(
         "actions": actions,
     }
     payload["actions_sha256"] = canonical_hash(actions)
+    validate_replay_contract(payload)
+    return payload
+
+
+def upgrade_replay_contract(contract: Mapping[str, Any]) -> dict[str, Any]:
+    """Upgrade the preserved v1 task-query field without changing replay content."""
+    payload = dict(contract)
+    version = payload.get("format")
+    if version == LEGACY_REPLAY_CONTRACT_VERSION_V1:
+        task_query = payload.pop("expected_task_instruction", None)
+        if not isinstance(task_query, str) or not task_query.strip():
+            raise ValueError("Legacy v1 replay contract has no task query")
+        payload["expected_task_query"] = task_query
+        payload["format"] = LEGACY_REPLAY_CONTRACT_VERSION
+    elif version != LEGACY_REPLAY_CONTRACT_VERSION:
+        raise ValueError(f"Unexpected legacy replay contract version: {version}")
     validate_replay_contract(payload)
     return payload
 
@@ -281,6 +298,9 @@ def validate_replay_contract(contract: Mapping[str, Any]) -> None:
         raise ValueError("Unexpected legacy replay contract version")
     if contract.get("normalization_version") != LOCKED_NORMALIZATION_VERSION:
         raise ValueError("Legacy replay contract changed observation normalization")
+    expected_task_query = contract.get("expected_task_query")
+    if not isinstance(expected_task_query, str) or not expected_task_query.strip():
+        raise ValueError("Legacy replay contract has no expected task query")
     actions = list(contract.get("actions", []))
     if not actions:
         raise ValueError("Legacy replay contract has no target action")

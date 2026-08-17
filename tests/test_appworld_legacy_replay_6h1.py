@@ -12,11 +12,16 @@ from rcmf.training.appworld_legacy_replay_6h1 import (
     canonical_hash,
     normalize_observation_locked,
     summarize_replay_results,
+    upgrade_replay_contract,
     validate_legacy_runtime,
     validate_replay_contract,
     venv_root_from_executable,
 )
 from rcmf.training.procedural_causal_audit_6h import normalize_observation
+from scripts.appworld_legacy_replay_bridge_6h1 import (
+    _full_demo_task_query,
+    _task_identity_checks,
+)
 from scripts.prepare_appworld_legacy_environment_6h1 import (
     _select_compatible_runtime,
     _verification_passed,
@@ -46,6 +51,7 @@ def _contract() -> dict:
         "task_id": "task",
         "target_step": 2,
         "history_step_count": 1,
+        "expected_task_query": "Now here is another task in a different environment.",
         "legacy_python": "/home/ubuntu/venvs/appworld-0.1.0-replay/bin/python",
         "appworld_root": "/lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root",
         "experiment_name": "base",
@@ -118,6 +124,37 @@ def test_effective_contract_changes_only_attempt_experiment_identity() -> None:
     assert "attempt-002" in result["experiment_name"]
     assert result["actions"] == base["actions"]
     assert result["actions_sha256"] == base["actions_sha256"]
+
+
+def test_v1_contract_upgrade_preserves_full_task_query() -> None:
+    contract = _contract()
+    task_query = contract.pop("expected_task_query")
+    contract["expected_task_instruction"] = task_query
+    contract["format"] = "appworld_legacy_replay_contract_6h1_v1"
+    upgraded = upgrade_replay_contract(contract)
+    assert upgraded["format"] == LEGACY_REPLAY_CONTRACT_VERSION
+    assert upgraded["expected_task_query"] == task_query
+    assert "expected_task_instruction" not in upgraded
+
+
+def test_full_demo_query_identity_compares_equivalent_boundaries() -> None:
+    supervisor = {
+        "first_name": "Melissa",
+        "last_name": "Bailey",
+        "email": "mel.bailey@gmail.com",
+        "phone_number": "3383946795",
+    }
+    instruction = "Like all matching transactions."
+    query = _full_demo_task_query(instruction, supervisor)
+    contract = {"task_id": "2a163ab_1", "expected_task_query": query}
+    metadata = {
+        "task_id": "2a163ab_1",
+        "db_version": "0.1.0",
+        "instruction": instruction,
+        "supervisor": supervisor,
+    }
+    assert all(_task_identity_checks(contract, metadata).values())
+    assert metadata["instruction"] != query
 
 
 def test_sentinel_includes_no_history_each_task_step_two_and_extremes() -> None:
