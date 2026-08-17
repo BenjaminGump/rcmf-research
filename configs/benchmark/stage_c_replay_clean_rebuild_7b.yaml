@@ -1,0 +1,80 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_replay_clean_rebuild_7b
+  version: replay_validated_clean_rebuild_7b_v1
+  scope:
+    - prospective_root_login_jwt_semantic_replay
+    - incremental_identity_reconciled_cache_rebuild
+    - frozen_qwen_one_step_causal_audit
+    - no_model_training
+    - no_historical_artifact_rewrite
+    - no_full_react_or_appworld_task_evaluation
+    - no_stage_c2
+    - no_v4_tag
+
+stage_c_7b:
+  run_uuid: replay_validated_clean_rebuild_7b_20260818_001
+  artifact_dir: runs/stage_c/replay_clean_rebuild_7b_20260818_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  parent_exp025a: runs/stage_c/identity_reconciliation_7a_20260817_001
+  reconciled_corpus_dir: runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  expected_corpus_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+
+  source:
+    starting_head: d74b8e9aa1c15dce1516e5a43e53e20b2970cc38
+    branch: research/v4-identity-reconciled-corpus
+
+  expected:
+    train_tasks: 37
+    validation_tasks: 9
+    train_decisions: 499
+    validation_decisions: 139
+    transitions: 638
+    train_transitions: 499
+    sentinel_states: 13
+    sentinel_tasks: 9
+    sentinel_prior_observations: 102
+    root_jwt_sentinel_states: 3
+    root_jwt_sentinel_tasks: 1
+    root_jwt_sentinel_prior_observations: 20
+    audit_states: 45
+    audit_tasks: 9
+    audit_prior_observations: 372
+
+  legacy:
+    executable: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    appworld_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+    appworld_cache: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/cache
+
+  replay:
+    semantic_bridge: scripts/appworld_semantic_replay_bridge_7b.py
+    semantic_module: rcmf/training/appworld_replay_clean_rebuild_7b.py
+    random_seed: 100
+    max_interactions: 1000
+    max_api_calls_per_interaction: 1000
+    subprocess_timeout_seconds: 600
+    repeats: 2
+
+  cache_rebuild:
+    model_name: Qwen/Qwen3-8B
+    dtype: bfloat16
+    frozen: true
+    expected_scoring_rows: 3658
+    expected_state_representations: 35
+    expected_memory_representations: 2
+    expected_transition_representations: 17
+    review_threshold_h100_hours: 12.0
+
+  generation:
+    model_name: Qwen/Qwen3-8B
+    dtype: bfloat16
+    device_map: auto
+    temperature: 0.0
+    top_p: 1.0
+    do_sample: false
+    enable_thinking: false
+    prompt_profile: appworld_full_demo
+    review_threshold_h100_hours: 12.0
+
+  heartbeat_interval_seconds: 240
