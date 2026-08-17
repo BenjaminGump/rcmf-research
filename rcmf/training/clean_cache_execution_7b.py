@@ -9,13 +9,12 @@ from typing import Any, Callable
 import torch
 
 from rcmf.benchmarks.appworld.transitions import transition_teacher_section
-from rcmf.schemas import DecisionExample, MemoryRecord
+from rcmf.schemas import MemoryRecord
 from rcmf.training.clean_cache_rebuild_7b import (
     AFFECTED_TASK_IDS,
     canonical_json_sha256,
-    example_task_id,
 )
-from rcmf.training.datasets import _target_suffix, load_decision_examples, load_memory_records
+from rcmf.training.datasets import load_decision_examples, load_memory_records
 from rcmf.training.oracle_convergence_5fb import tensor_state_sha256
 from rcmf.training.pair_grounding_5d import PairSelectionConfig, select_stratified_pair_set
 from rcmf.training.stage_c1 import (
@@ -192,7 +191,6 @@ def seed_stage_c1(
     old_path: Path,
     output_dir: Path,
 ) -> dict[str, Any]:
-    examples = load_decision_examples(data_dir / "decision_examples.jsonl")
     records = load_memory_records(data_dir / "memory_records.jsonl")
     label_rows = _rows(labels_dir / "student_labels.jsonl")
     memory_bank = _rows(labels_dir / "effective_memory_bank.jsonl")
@@ -230,9 +228,7 @@ def seed_stage_c1(
     return result
 
 
-def _selected_pair_matches_old(
-    selected: Mapping[str, Any], row: Mapping[str, Any]
-) -> bool:
+def _selected_pair_matches_old(selected: Mapping[str, Any], row: Mapping[str, Any]) -> bool:
     if str(selected["task_id"]) in AFFECTED_TASK_IDS:
         return False
     if str(selected["memory_task_id"]) in AFFECTED_TASK_IDS:
@@ -260,9 +256,7 @@ def _selected_pair_matches_old(
     return all(selected.get(field) == row.get(field) for field in fields)
 
 
-def seed_pair_response(
-    *, labels_dir: Path, old_path: Path, output_dir: Path
-) -> dict[str, Any]:
+def seed_pair_response(*, labels_dir: Path, old_path: Path, output_dir: Path) -> dict[str, Any]:
     label_rows = _rows(labels_dir / "student_labels.jsonl")
     memory_bank = _rows(labels_dir / "effective_memory_bank.jsonl")
     selected, selection_summary = select_stratified_pair_set(
@@ -296,9 +290,7 @@ def seed_pair_response(
     return result
 
 
-def validate_transition_preflight(
-    *, old_dir: Path, clean_dir: Path
-) -> dict[str, Any]:
+def validate_transition_preflight(*, old_dir: Path, clean_dir: Path) -> dict[str, Any]:
     old_queries = json.loads((old_dir / "query_manifest.json").read_text(encoding="utf-8"))
     clean_queries = json.loads((clean_dir / "query_manifest.json").read_text(encoding="utf-8"))
     old_ids = [str(row["state_example_id"]) for row in old_queries["query_rows"]]
@@ -376,9 +368,7 @@ def seed_transition_teacher(
         key_fn=lambda row: str(row["pair_id"]),
     )
     old_l0 = json.loads((old_dir / "l0_cache.json").read_text(encoding="utf-8"))
-    clean_state_tasks = {
-        str(row["state_example_id"]): str(row["task_id"]) for row in preflight
-    }
+    clean_state_tasks = {str(row["state_example_id"]): str(row["task_id"]) for row in preflight}
     reusable_l0 = {
         key: value
         for key, value in old_l0.items()
@@ -537,8 +527,7 @@ def rebuild_representations(
         for index, transition_id in enumerate(old_transition_ids)
     }
     old_to_clean = {
-        str(row["old_transition_id"]): str(row["clean_transition_id"])
-        for row in transition_mapping
+        str(row["old_transition_id"]): str(row["clean_transition_id"]) for row in transition_mapping
     }
     clean_to_old = {clean: old for old, clean in old_to_clean.items()}
     clean_transition_rows = _rows(data_dir / "transition_manifest.jsonl")
@@ -662,9 +651,7 @@ def rebuild_representations(
             clean_transition_preflight_dir / "transition_panel.jsonl"
         ),
         "source_old_cache_sha256": sha256_file(old_transition_path),
-        "representation_tensor_sha256": tensor_state_sha256(
-            {"representations": transition_tensor}
-        ),
+        "representation_tensor_sha256": tensor_state_sha256({"representations": transition_tensor}),
         "recomputed_source_row_count": len(transition_work_queue),
         "recomputed_panel_row_count": changed_panel_transition_count,
         "reused_panel_row_count": len(ordered_transition_ids) - changed_panel_transition_count,
@@ -675,9 +662,13 @@ def rebuild_representations(
     _atomic_torch_save(transition_out, output_dir / "transition_representations.pt")
     unchanged_state = sorted(set(range(len(examples))) - set(changed_state_indices))
     unchanged_memory = sorted(set(range(len(records))) - set(changed_memory_indices))
-    if not torch.equal(state_tensor[unchanged_state], state_payload["representations"][unchanged_state]):
+    if not torch.equal(
+        state_tensor[unchanged_state], state_payload["representations"][unchanged_state]
+    ):
         raise ValueError("An unaffected state representation changed")
-    if not torch.equal(memory_tensor[unchanged_memory], memory_payload["representations"][unchanged_memory]):
+    if not torch.equal(
+        memory_tensor[unchanged_memory], memory_payload["representations"][unchanged_memory]
+    ):
         raise ValueError("An unaffected memory representation changed")
     report = {
         "format": "identity_reconciled_representation_rebuild_7b_v1",
@@ -710,4 +701,229 @@ def rebuild_representations(
         "passed": True,
     }
     atomic_write_json(output_dir / "representation_rebuild_report.json", report)
+    return report
+
+
+def _validate_merged_rows(
+    *,
+    name: str,
+    clean_path: Path,
+    old_path: Path,
+    key_field: str,
+    expected_count: int,
+    corpus_lineage_sha256: str,
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    clean_rows = _rows(clean_path)
+    old_rows = _keyed(_rows(old_path), lambda row: str(row[key_field]))
+    clean = _keyed(clean_rows, lambda row: str(row[key_field]))
+    if len(clean) != expected_count:
+        raise ValueError(f"{name} row count differs: {len(clean)} != {expected_count}")
+    recomputed = []
+    reused = []
+    for key, row in clean.items():
+        lineage = row.get("corpus_lineage_sha256")
+        if lineage is not None:
+            if str(lineage) != corpus_lineage_sha256:
+                raise ValueError(f"{name} row has wrong corpus lineage: {key}")
+            recomputed.append(row)
+        else:
+            prior = old_rows.get(key)
+            if prior is None or not _canonical_equal(prior, row):
+                raise ValueError(f"{name} reusable row is not byte/canonical identical: {key}")
+            reused.append(row)
+        if row.get("truncated") is not False:
+            raise ValueError(f"{name} row was truncated: {key}")
+        if row.get("leakage_overlap"):
+            raise ValueError(f"{name} row has leakage overlap: {key}")
+    report = {
+        "cache": name,
+        "path": str(clean_path),
+        "row_count": len(clean),
+        "unique_key_count": len(clean),
+        "recomputed_row_count": len(recomputed),
+        "reused_row_count": len(reused),
+        "all_recomputed_rows_lineage_stamped": True,
+        "all_reused_rows_canonical_identical": True,
+        "no_truncation": True,
+        "no_leakage_overlap": True,
+        "sha256": sha256_file(clean_path),
+    }
+    return report, recomputed
+
+
+def _utility_identity_samples(
+    rows: Sequence[Mapping[str, Any]], *, key_field: str
+) -> dict[str, Any]:
+    categories: dict[str, Mapping[str, Any]] = {}
+    for row in sorted(rows, key=lambda value: str(value[key_field])):
+        category = row.get("utility_category")
+        if category in {"positive", "neutral", "negative"}:
+            categories.setdefault(str(category), row)
+    checks = {}
+    for category in ("positive", "neutral", "negative"):
+        row = categories.get(category)
+        if row is None:
+            checks[category] = {"available": False, "passed": None}
+            continue
+        utility = float(row["text_utility"])
+        lj_key = "Lj_text" if row.get("Lj_text") is not None else "Lj_transition"
+        reproduced = float(row["L0"]) - float(row[lj_key])
+        passed = abs(utility - reproduced) <= 1e-8
+        if not passed:
+            raise ValueError(f"Utility identity failed for {category} sample")
+        checks[category] = {
+            "available": True,
+            "key": str(row[key_field]),
+            "utility": utility,
+            "reproduced": reproduced,
+            "passed": True,
+        }
+    return {
+        "selection": "lexicographically_first_recomputed_row_per_utility_category",
+        "checks": checks,
+        "all_available_samples_passed": all(
+            value["passed"] is not False for value in checks.values()
+        ),
+    }
+
+
+def validate_clean_cache_rebuild(
+    *,
+    output_root: Path,
+    old_paths: Mapping[str, Path],
+    affected_manifest: Mapping[str, Any],
+    corpus_lineage_sha256: str,
+    expected_counts: Mapping[str, int],
+) -> dict[str, Any]:
+    specifications = (
+        (
+            "raw_text_teacher",
+            output_root / "raw_text_teacher/teacher_cache_full_rows.jsonl",
+            old_paths["raw_text_teacher"],
+            "pair_key",
+        ),
+        (
+            "stage_c1_response",
+            output_root / "stage_c1_response/response_cache.jsonl",
+            old_paths["stage_c1_response"],
+            "state_example_id",
+        ),
+        (
+            "pair_response_5d",
+            output_root / "pair_response_5d/pair_response_cache.jsonl",
+            old_paths["pair_response_5d"],
+            "pair_id",
+        ),
+        (
+            "transition_teacher",
+            output_root / "transition_teacher/teacher_cache.jsonl",
+            old_paths["transition_teacher"],
+            "pair_id",
+        ),
+    )
+    cache_reports = {}
+    recomputed_by_name = {}
+    for name, clean_path, old_path, key in specifications:
+        report, recomputed = _validate_merged_rows(
+            name=name,
+            clean_path=clean_path,
+            old_path=old_path,
+            key_field=key,
+            expected_count=int(expected_counts[name]),
+            corpus_lineage_sha256=corpus_lineage_sha256,
+        )
+        cache_reports[name] = report
+        recomputed_by_name[name] = recomputed
+
+    raw_expected = int(affected_manifest["caches"]["raw_text_teacher"]["affected_row_count"])
+    transition_expected = int(
+        affected_manifest["caches"]["transition_teacher"]["affected_row_count"]
+    )
+    if cache_reports["raw_text_teacher"]["recomputed_row_count"] != raw_expected:
+        raise ValueError("Raw-teacher recomputation count differs from exact preflight")
+    if cache_reports["transition_teacher"]["recomputed_row_count"] != transition_expected:
+        raise ValueError("Transition-teacher recomputation count differs from exact preflight")
+
+    representation_report = json.loads(
+        (output_root / "representations/representation_rebuild_report.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    if not bool(representation_report.get("passed")):
+        raise ValueError("Representation rebuild report did not pass")
+    if (
+        int(representation_report["state"]["recomputed"]) != 35
+        or int(representation_report["memory"]["recomputed"]) != 2
+        or int(representation_report["transition"]["source_rows_recomputed"]) != 17
+    ):
+        raise ValueError("Representation recomputation counts differ from 35/2/17")
+
+    transition_mapping = list(affected_manifest["transition_changes"]["mapping"])
+    superseded = {
+        str(row["old_transition_id"])
+        for row in transition_mapping
+        if str(row["old_transition_id"]) != str(row["clean_transition_id"])
+    }
+    clean_transition_rows = _rows(output_root / "transition_preflight/transition_manifest.jsonl")
+    clean_transition_ids = {str(row["transition_id"]) for row in clean_transition_rows}
+    remaining_superseded = sorted(clean_transition_ids.intersection(superseded))
+    if remaining_superseded:
+        raise ValueError(f"Superseded transition IDs remain: {remaining_superseded[:5]}")
+    transition_cache_ids = {
+        str(row["transition_id"])
+        for row in _rows(output_root / "transition_teacher/teacher_cache.jsonl")
+    }
+    if transition_cache_ids.intersection(superseded):
+        raise ValueError("Superseded transition IDs remain in clean teacher cache")
+
+    summary_paths = {
+        "raw_text_teacher": output_root / "raw_text_teacher/summary.json",
+        "stage_c1_response": output_root / "stage_c1_response/summary.json",
+        "pair_response_5d": output_root / "pair_response_5d/pair_response_cache_summary.json",
+        "transition_teacher": output_root / "transition_teacher/teacher_summary.json",
+    }
+    summaries = {
+        name: json.loads(path.read_text(encoding="utf-8")) for name, path in summary_paths.items()
+    }
+    for name, summary in summaries.items():
+        if str(summary.get("corpus_lineage_sha256")) != corpus_lineage_sha256:
+            raise ValueError(f"{name} summary has wrong corpus lineage")
+        validation = summary.get("validation")
+        if isinstance(validation, Mapping) and not bool(validation.get("passed")):
+            raise ValueError(f"{name} internal validation failed")
+
+    raw_samples = _utility_identity_samples(
+        recomputed_by_name["raw_text_teacher"], key_field="pair_key"
+    )
+    transition_samples = _utility_identity_samples(
+        recomputed_by_name["transition_teacher"], key_field="pair_id"
+    )
+    report = {
+        "format": "identity_reconciled_clean_cache_validation_7b_v1",
+        "corpus_lineage_sha256": corpus_lineage_sha256,
+        "caches": cache_reports,
+        "representations": representation_report,
+        "raw_teacher_preflight_recompute_count": raw_expected,
+        "transition_teacher_preflight_recompute_count": transition_expected,
+        "stage_c1_cascade_recompute_count": cache_reports["stage_c1_response"][
+            "recomputed_row_count"
+        ],
+        "pair_5d_cascade_recompute_count": cache_reports["pair_response_5d"][
+            "recomputed_row_count"
+        ],
+        "utility_identity_samples": {
+            "raw_text_teacher": raw_samples,
+            "transition_teacher": transition_samples,
+        },
+        "superseded_transition_id_count": len(superseded),
+        "superseded_transition_ids_absent": True,
+        "unaffected_rows_canonical_identical": True,
+        "all_recomputed_rows_lineage_stamped": True,
+        "duplicate_key_count": 0,
+        "truncated_row_count": 0,
+        "leakage_overlap_row_count": 0,
+        "internal_cache_validations_passed": True,
+        "passed": True,
+    }
+    atomic_write_json(output_root / "postrun_validation.json", report)
     return report

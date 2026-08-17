@@ -18,6 +18,7 @@ from rcmf.training.clean_cache_execution_7b import (
     seed_raw_teacher,
     seed_stage_c1,
     seed_transition_teacher,
+    validate_clean_cache_rebuild,
     validate_transition_preflight,
 )
 from rcmf.training.state_conditioned_transition_6b import AttemptLedger
@@ -33,6 +34,7 @@ PHASES = (
     "stage_c1",
     "pair_5d",
     "transition_teacher",
+    "validate",
 )
 
 
@@ -47,7 +49,11 @@ def _run(command: list[str]) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run one resumable EXP-025B clean-cache phase.")
-    parser.add_argument("--config", type=Path, default=Path("configs/benchmark/stage_c_replay_clean_rebuild_7b.yaml"))
+    parser.add_argument(
+        "--config",
+        type=Path,
+        default=Path("configs/benchmark/stage_c_replay_clean_rebuild_7b.yaml"),
+    )
     parser.add_argument("--artifact-dir", type=Path, required=True)
     parser.add_argument("--phase", choices=PHASES, required=True)
     parser.add_argument("--attempt-id", required=True)
@@ -301,6 +307,16 @@ def main() -> None:
                 "seed": seed,
                 "summary": _json(output_dir / "teacher_summary.json"),
             }
+        elif args.phase == "validate":
+            report = validate_clean_cache_rebuild(
+                output_root=output_root,
+                old_paths=old,
+                affected_manifest=affected,
+                corpus_lineage_sha256=lineage,
+                expected_counts={
+                    str(key): int(value) for key, value in rebuild["expected_cache_rows"].items()
+                },
+            )
         else:
             raise AssertionError(args.phase)
         phase_dir.mkdir(parents=True, exist_ok=True)

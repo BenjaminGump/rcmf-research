@@ -113,4 +113,47 @@ stage_c_7b:
     prompt_profile: appworld_full_demo
     review_threshold_h100_hours: 12.0
 
+  causal_audit:
+    exp018_artifact: runs/stage_c/state_conditioned_transition_6b_20260814_001
+    exp022_artifact: runs/stage_c/procedural_outcome_6f_20260816_001
+    exp023_artifact: runs/stage_c/procedural_coverage_6g_20260816_001
+    exp024a_artifact: runs/stage_c/procedural_causal_audit_6h_20260817_001
+    generation:
+      model_name: Qwen/Qwen3-8B
+      dtype: bfloat16
+      device_map: null
+      temperature: 0.0
+      top_p: 1.0
+      do_sample: false
+      enable_thinking: false
+      max_new_tokens: 1024
+      context_limit: 40960
+      prompt_profile: full_demo
+    runtime:
+      review_threshold_h100_hours: 12.0
+      generation_seconds_per_condition:
+        best: 20.0
+        expected: 45.0
+        conservative: 90.0
+      replay_seconds_per_condition:
+        best: 2.0
+        expected: 5.0
+        conservative: 10.0
+      validation_seconds_per_state:
+        best: 1.0
+        expected: 2.0
+        conservative: 4.0
+      artifact_bytes_per_condition: 2359296
+    metrics:
+      bootstrap_samples: 10000
+      bootstrap_seed: 24025
+    gates:
+      oracle_exact_api_gain: 0.10
+      material_control_gain: 0.05
+      raw_content_gain_over_signature_card: 0.05
+      maximum_execution_drop: 0.05
+      minimum_positive_tasks: 6
+      same_signature_direction_agreement: 0.70
+      metadata_gain_retention: 0.90
+
   heartbeat_interval_seconds: 240
