@@ -13,6 +13,7 @@ from rcmf.training.appworld_semantic_replay_6h2 import (
     ALLOWED_TEMPORAL_CLAIMS,
     ALLOWED_TOKEN_FIELDS,
     SEMANTIC_NORMALIZATION_VERSION,
+    canonical_hash,
     compare_identity_layers,
     compare_observations_semantic,
     decode_jwt_strict,
@@ -27,8 +28,11 @@ from scripts.run_appworld_semantic_replay_6h2 import (
     _sentinel_decision,
 )
 from scripts.prepare_appworld_semantic_replay_6h2 import (
+    _find_probe_request_by_hash,
     _legacy_history_observation_count,
+    _probe_scientific_request_hash,
     _valid_jwt_pairs,
+    _valid_semantic_jwt_reports,
 )
 
 
@@ -402,3 +406,36 @@ def test_direct_validator_request_excludes_non_jwt_access_token_schema_fields() 
     pairs = _valid_jwt_pairs(expected, actual)
     assert len(pairs) == 1
     assert pairs[0]["path"] == "$.login.access_token"
+
+
+def test_direct_validator_indices_only_valid_semantic_jwt_reports() -> None:
+    expected = {
+        "schema": {"access_token": "string"},
+        "login": {"access_token": _jwt({"sub": "spotify+u", "exp": 100})},
+    }
+    actual = {
+        "schema": {"access_token": "string"},
+        "login": {"access_token": _jwt({"sub": "spotify+u", "exp": 200})},
+    }
+    report = compare_observations_semantic(expected, actual)
+    valid_reports = _valid_semantic_jwt_reports(report)
+    assert len(report["jwt_reports"]) == 2
+    assert len(valid_reports) == 1
+    assert valid_reports[0]["path"] == "$.login.access_token"
+
+
+def test_identity_probe_checkpoint_reuse_ignores_only_attempt_prefix(tmp_path: Path) -> None:
+    prior = {
+        "task_ids": ["task-1"],
+        "jwt_pairs": [{"pair_id": "pair-1"}],
+        "experiment_prefix": "attempt-003",
+    }
+    current = {**prior, "experiment_prefix": "attempt-004"}
+    changed = {**current, "jwt_pairs": [{"pair_id": "pair-2"}]}
+    prior_path = tmp_path / "identity_probe_input_attempt-003.json"
+    prior_path.write_text(json.dumps(prior), encoding="utf-8")
+
+    prior_hash = canonical_hash(prior)
+    assert _find_probe_request_by_hash(tmp_path, prior_hash) == prior
+    assert _probe_scientific_request_hash(prior) == _probe_scientific_request_hash(current)
+    assert _probe_scientific_request_hash(prior) != _probe_scientific_request_hash(changed)

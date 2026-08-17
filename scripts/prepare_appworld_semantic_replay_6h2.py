@@ -94,6 +94,28 @@ def _valid_jwt_pairs(expected: Any, actual: Any) -> list[dict[str, str]]:
     return output
 
 
+def _valid_semantic_jwt_reports(report: Mapping[str, Any]) -> list[dict[str, Any]]:
+    return [
+        dict(item)
+        for item in report.get("jwt_reports", [])
+        if bool(item.get("valid_jwt_pair"))
+    ]
+
+
+def _probe_scientific_request_hash(request: Mapping[str, Any]) -> str:
+    payload = dict(request)
+    payload.pop("experiment_prefix", None)
+    return canonical_hash(payload)
+
+
+def _find_probe_request_by_hash(private_dir: Path, request_sha256: str) -> dict[str, Any] | None:
+    for path in sorted(private_dir.glob("identity_probe_input_*.json")):
+        candidate = _load_json(path)
+        if canonical_hash(candidate) == request_sha256:
+            return candidate
+    return None
+
+
 def _source_audit(api_lib: Path, fastapi_login: Path) -> dict[str, Any]:
     appworld_text = api_lib.read_text(encoding="utf-8")
     login_text = fastapi_login.read_text(encoding="utf-8")
@@ -540,7 +562,16 @@ def main() -> None:
         if probe_output.exists():
             official_probe = _load_json(probe_output)
             if official_probe.get("request_sha256") != canonical_hash(probe_request):
-                raise ValueError("Existing identity probe belongs to another request")
+                prior_request = _find_probe_request_by_hash(
+                    private_dir,
+                    str(official_probe.get("request_sha256", "")),
+                )
+                if prior_request is None:
+                    raise ValueError("Existing identity probe request is unavailable")
+                if _probe_scientific_request_hash(prior_request) != _probe_scientific_request_hash(
+                    probe_request
+                ):
+                    raise ValueError("Existing identity probe belongs to another scientific request")
         else:
             env = dict(os.environ)
             env.update(
@@ -579,10 +610,15 @@ def main() -> None:
         attempt.progress(latest_validated_checkpoint=str(probe_output))
 
         direct_by_id = {str(row["pair_id"]): row for row in official_probe["jwt_rows"]}
+        requested_pair_ids = {str(row["pair_id"]) for row in sensitive_jwt_pairs}
+        if set(direct_by_id) != requested_pair_ids:
+            raise ValueError("Identity probe JWT response IDs differ from the request")
         jwt_audit_rows = []
         non_temporal = 0
         for source_report in semantic_reports:
-            for index, jwt_report in enumerate(source_report["report"]["jwt_reports"]):
+            for index, jwt_report in enumerate(
+                _valid_semantic_jwt_reports(source_report["report"])
+            ):
                 pair_id = f"{source_report['state_example_id']}:{source_report['step_id']}:{index}"
                 direct = direct_by_id[pair_id]
                 non_temporal += int(bool(jwt_report["non_temporal_differing_claims"]))
