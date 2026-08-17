@@ -221,4 +221,5 @@ Stage C2, end-to-end RCMF, and V4 tagging remain blocked.
 - Validation: `postrun_validation.json` with zero errors
 - Local tests before record commit: `361 passed, 1 skipped`
 - Lambda focused tests before record commit: `17 passed`
+- Lambda complete suite after final source synchronization: `362 passed`
 - GPU use: `0%`, `0 MiB`; H100 hours: `0`
