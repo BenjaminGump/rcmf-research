@@ -1,0 +1,59 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_appworld_legacy_replay_6h1
+  version: appworld_legacy_replay_6h1_v1
+  scope:
+    - isolated_appworld_0_1_0_environment
+    - immutable_exp024a_45_state_replay_only
+    - no_qwen_import_or_forward
+    - no_memory_condition_execution
+    - no_model_training
+    - no_appworld_task_evaluation
+    - no_stage_c2
+    - no_v4_tag
+
+stage_c_6h1:
+  run_uuid: appworld_legacy_replay_6h1_20260817_001
+  artifact_dir: runs/stage_c/appworld_legacy_replay_6h1_20260817_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  parent_exp024a: runs/stage_c/procedural_causal_audit_6h_20260817_001
+  source_data: runs/appworld/official_react_gpt4o_train_success_full_demo_filtered_no_2a163ab3_20260803
+  exp022_artifact: runs/stage_c/procedural_outcome_6f_20260816_001
+
+  expected:
+    state_count: 45
+    task_count: 9
+    prior_observation_count: 372
+    condition_count: 323
+    old_replay_pass_count: 0
+    package_version: 0.1.0
+    data_version: 0.1.0
+    evaluation_version: 0.1.0
+
+  legacy:
+    seed_python: /usr/bin/python3.10
+    python_version: "3.10"
+    venv: /home/ubuntu/venvs/appworld-0.1.0-replay
+    executable: /home/ubuntu/venvs/appworld-0.1.0-replay/bin/python
+    appworld_cli: /home/ubuntu/venvs/appworld-0.1.0-replay/bin/appworld
+    base: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0
+    root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+    cache: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/cache
+    wheels: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/wheels
+    locks: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/locks
+    provenance: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/provenance
+    wheel_filename: appworld-0.1.0-4-py3-none-any.whl
+    wheel_url: https://files.pythonhosted.org/packages/ad/81/389ea0f19b2e4b03ccb73e11ba33320dd40a4db3d4089957c0cd02976422/appworld-0.1.0-4-py3-none-any.whl
+    wheel_sha256: 128bdb088bd1c76b8ac763e831334f0843507e9e5a5e2e88ec4e2949e2e5d476
+    data_bundle_url: https://s3.us-west-2.amazonaws.com/appworld.dev/data-0.1.0.bundle
+
+  replay:
+    bridge: scripts/appworld_legacy_replay_bridge_6h1.py
+    normalization_version: appworld_observation_normalization_6h_v1
+    random_seed: 100
+    max_interactions: 1000
+    max_api_calls_per_interaction: 1000
+    subprocess_timeout_seconds: 600
+
+  heartbeat_interval_seconds: 240
