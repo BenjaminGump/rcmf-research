@@ -247,22 +247,40 @@ def _select_compatible_runtime(
     requested_version = tuple(int(value) for value in str(requested["python_version"]).split("."))
     changed = imports_typing_self and requested_version < (3, 11)
     if changed:
+        runtime_profile = "py311_click817"
         effective.update(
             {
                 "seed_python": "/usr/bin/python3.11",
                 "python_version": "3.11",
-                "venv": str(requested["venv"]) + "-py311",
-                "executable": str(requested["venv"]) + "-py311/bin/python",
-                "appworld_cli": str(requested["venv"]) + "-py311/bin/appworld",
+                "venv": str(requested["venv"]) + "-py311-click817",
+                "executable": str(requested["venv"]) + "-py311-click817/bin/python",
+                "appworld_cli": str(requested["venv"]) + "-py311-click817/bin/appworld",
+                "runtime_profile": runtime_profile,
+                "dependency_constraints": {"click": "8.1.7"},
             }
         )
+    else:
+        runtime_profile = "requested"
+        effective["runtime_profile"] = runtime_profile
+        effective["dependency_constraints"] = {}
     return effective, {
         "requested_python_version": str(requested["python_version"]),
         "effective_python_version": str(effective["python_version"]),
         "wheel_imports_typing_self": imports_typing_self,
         "runtime_changed": changed,
+        "runtime_profile": runtime_profile,
+        "dependency_constraints": dict(effective["dependency_constraints"]),
+        "dependency_constraint_rationale": {
+            "click": (
+                "AppWorld 0.1.0 ships Typer 0.12.x constraints but no lock; "
+                "Click 8.4.2 raises Secondary-flag TypeError while release-era "
+                "Click 8.1.7 preserves the official CLI semantics."
+            )
+        }
+        if changed
+        else {},
         "reason": (
-            "official_0_1_0_source_imports_typing_Self_which_requires_python_3_11"
+            "official_0_1_0_source_requires_python_3_11_and_release_era_click_8_1_7"
             if changed
             else "requested_runtime_is_source_compatible"
         ),
@@ -443,9 +461,9 @@ def main() -> None:
         effective_settings["legacy"] = legacy
         examples = load_decision_examples(paths["decision_examples"])
         records = load_memory_records(paths["memory_records"])
-        version_suffix = str(legacy["python_version"]).replace(".", "")
+        runtime_profile = str(legacy["runtime_profile"])
         contract_namespace = (
-            f"contracts_py{version_suffix}"
+            f"contracts_{runtime_profile}"
             if runtime_compatibility["runtime_changed"]
             else "contracts"
         )
@@ -459,7 +477,7 @@ def main() -> None:
             source_hashes=data_hashes,
         )
         contract_manifest_path = args.artifact_dir / (
-            f"replay_contract_manifest_py{version_suffix}.json"
+            f"replay_contract_manifest_{runtime_profile}.json"
             if runtime_compatibility["runtime_changed"]
             else "replay_contract_manifest.json"
         )
@@ -493,6 +511,16 @@ def main() -> None:
             )
         resolved = wheel_dir / "resolved"
         resolved.mkdir(parents=True, exist_ok=True)
+        constraints_path = locks / f"{legacy['runtime_profile']}-constraints.txt"
+        constraint_lines = [
+            f"{name}=={version}"
+            for name, version in sorted(legacy["dependency_constraints"].items())
+        ]
+        atomic_write_text(
+            constraints_path,
+            ("\n".join(constraint_lines) + "\n") if constraint_lines else "",
+        )
+        constraint_args = ["--constraint", str(constraints_path)] if constraint_lines else []
         command_results.append(
             _run(
                 [
@@ -502,6 +530,7 @@ def main() -> None:
                     "download",
                     "--dest",
                     str(resolved),
+                    *constraint_args,
                     str(wheel),
                 ],
                 env=base_env,
@@ -518,6 +547,7 @@ def main() -> None:
                     "--no-index",
                     "--find-links",
                     str(resolved),
+                    *constraint_args,
                     str(wheel),
                 ],
                 env=base_env,
@@ -646,6 +676,11 @@ def main() -> None:
             "legacy_cache": str(cache),
             "requested_legacy_runtime": dict(requested_legacy),
             "runtime_compatibility": runtime_compatibility,
+            "dependency_constraints": {
+                "path": str(constraints_path),
+                "sha256": sha256_file(constraints_path),
+                "values": dict(legacy["dependency_constraints"]),
+            },
             "wheel": {
                 "path": str(wheel),
                 "sha256": sha256_file(wheel),

@@ -211,6 +211,8 @@ def test_official_wheel_typing_self_promotes_isolated_runtime_to_py311(
     }
     effective, provenance = _select_compatible_runtime(requested, wheel)
     assert effective["python_version"] == "3.11"
-    assert effective["venv"].endswith("-py311")
+    assert effective["venv"].endswith("-py311-click817")
+    assert effective["dependency_constraints"] == {"click": "8.1.7"}
+    assert provenance["runtime_profile"] == "py311_click817"
     assert provenance["runtime_changed"]
     assert not provenance["scientific_parameter_changed"]
