@@ -98,21 +98,39 @@ def collect_token_pairs(
     expected: Any,
     actual: Any,
     *,
+    semantic: Any,
     path: str = "$",
 ) -> list[dict[str, str]]:
     pairs: list[dict[str, str]] = []
     if isinstance(expected, Mapping) and isinstance(actual, Mapping):
         for key in sorted(set(expected) & set(actual), key=str):
             child = f"{path}.{key}"
-            if str(key) == "access_token" and isinstance(expected[key], str) and isinstance(actual[key], str):
+            if (
+                str(key) == "access_token"
+                and isinstance(expected[key], str)
+                and isinstance(actual[key], str)
+            ):
+                try:
+                    semantic.decode_jwt_strict(expected[key])
+                    semantic.decode_jwt_strict(actual[key])
+                except ValueError:
+                    continue
                 pairs.append(
                     {"path": child, "expected": expected[key], "actual": actual[key]}
                 )
             else:
-                pairs.extend(collect_token_pairs(expected[key], actual[key], path=child))
+                pairs.extend(
+                    collect_token_pairs(
+                        expected[key], actual[key], semantic=semantic, path=child
+                    )
+                )
     elif isinstance(expected, list) and isinstance(actual, list):
         for index, (left, right) in enumerate(zip(expected, actual)):
-            pairs.extend(collect_token_pairs(left, right, path=f"{path}[{index}]"))
+            pairs.extend(
+                collect_token_pairs(
+                    left, right, semantic=semantic, path=f"{path}[{index}]"
+                )
+            )
     return pairs
 
 
@@ -244,6 +262,7 @@ def main() -> None:
             for pair in collect_token_pairs(
                 parse_v1_value(semantic, expected_raw),
                 parse_v1_value(semantic, actual_raw),
+                semantic=semantic,
             ):
                 expected_validation = verify_token(pair["expected"], semantic)
                 actual_validation = verify_token(pair["actual"], semantic)

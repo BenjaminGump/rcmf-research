@@ -230,25 +230,29 @@ def _compare_values(
     jwt_reports: list[dict[str, Any]],
     non_token_differences: list[dict[str, Any]],
 ) -> tuple[Any, Any]:
-    if field_name in allowed_token_fields:
-        if not isinstance(expected, str) or not isinstance(actual, str):
-            non_token_differences.append(
-                {
-                    "path": path,
-                    "reason": "allowed_token_field_is_not_string_pair",
-                    "expected_sha256": value_hash(expected),
-                    "actual_sha256": value_hash(actual),
-                }
+    if (
+        field_name in allowed_token_fields
+        and isinstance(expected, str)
+        and isinstance(actual, str)
+    ):
+        expected_is_jwt = actual_is_jwt = True
+        try:
+            decode_jwt_strict(expected)
+        except ValueError:
+            expected_is_jwt = False
+        try:
+            decode_jwt_strict(actual)
+        except ValueError:
+            actual_is_jwt = False
+        if expected_is_jwt or actual_is_jwt:
+            left, right, report = _jwt_pair_report(
+                expected,
+                actual,
+                path=path,
+                allowed_temporal_claims=allowed_temporal_claims,
             )
-            return expected, actual
-        left, right, report = _jwt_pair_report(
-            expected,
-            actual,
-            path=path,
-            allowed_temporal_claims=allowed_temporal_claims,
-        )
-        jwt_reports.append(report)
-        return left, right
+            jwt_reports.append(report)
+            return left, right
 
     if isinstance(expected, Mapping) and isinstance(actual, Mapping):
         if set(expected) != set(actual):

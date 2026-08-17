@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from rcmf.training import appworld_semantic_replay_6h2 as semantic_v2
 from rcmf.training.appworld_identity_reconciliation_7a import (
     HEADER_ONLY_CLASSIFICATION,
     QUARANTINE_ACTION,
@@ -19,6 +20,7 @@ from rcmf.training.appworld_identity_reconciliation_7a import (
     validate_repaired_payload,
     write_jsonl_with_line_replacements,
 )
+from scripts.appworld_semantic_replay_bridge_6h2 import collect_token_pairs
 from scripts.prepare_appworld_official_traces import load_task_query
 from scripts.run_appworld_identity_reconciliation_7a import (
     CHECKPOINT_VERSION,
@@ -240,3 +242,9 @@ def test_replay_checkpoint_is_the_resume_authority(tmp_path: Path) -> None:
     }
     path.write_text(json.dumps(payload), encoding="utf-8")
     assert _checkpoint_index(path) == payload
+
+
+def test_replay_bridge_skips_access_token_schema_placeholders() -> None:
+    expected = {"response_schema": {"access_token": "string"}}
+    actual = {"response_schema": {"access_token": "string"}}
+    assert collect_token_pairs(expected, actual, semantic=semantic_v2) == []

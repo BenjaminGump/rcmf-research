@@ -164,6 +164,14 @@ def test_semantic_v2_rejects_malformed_token() -> None:
     assert not report["jwt_reports"][0]["valid_jwt_pair"]
 
 
+def test_semantic_v2_leaves_identical_non_jwt_token_schema_placeholder_unchanged() -> None:
+    expected = json.dumps({"response_schema": {"access_token": "string"}})
+    actual = json.dumps({"response_schema": {"access_token": "string"}})
+    report = compare_observations_semantic(expected, actual)
+    assert report["semantic_v2_match"]
+    assert report["jwt_field_count"] == 0
+
+
 def test_semantic_v2_does_not_ignore_arbitrary_timestamp() -> None:
     expected = json.dumps({"timestamp": 100, "value": "same"})
     actual = json.dumps({"timestamp": 200, "value": "same"})
@@ -424,7 +432,7 @@ def test_direct_validator_indices_only_valid_semantic_jwt_reports() -> None:
     }
     report = compare_observations_semantic(expected, actual)
     valid_reports = _valid_semantic_jwt_reports(report)
-    assert len(report["jwt_reports"]) == 2
+    assert len(report["jwt_reports"]) == 1
     assert len(valid_reports) == 1
     assert valid_reports[0]["path"] == "$.login.access_token"
 
