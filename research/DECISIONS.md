@@ -1692,3 +1692,56 @@ Implementation recovery:
   tested and changed no scientific parameter. The final failure is a genuine
   context/data constraint rather than an implementation crash.
 - The final ledger has `7` closed attempts, `14` events, and no open attempt.
+
+## 2026-08-18 EXP-025C-R missing-control-aware selector validation
+
+VERIFIED:
+
+- The selector ensemble, three seed checkpoints, calibration, predictions,
+  rankings, classes, and transition selections are hash-identical to EXP-025C.
+- `selector_behavioral_missing_policy_7cr_v1` retains the impossible F5 slot
+  as one explicit missing measurement. The final contract is `225` logical,
+  `224` executable, and one missing, with no truncation, class fallback,
+  changed selection, generated result, or imputation for the missing slot.
+- The lifecycle smoke and all `224/224` executable formal conditions pass the
+  AppWorld 0.1.0 same-world bridge. There are zero infrastructure exceptions,
+  duplicate outputs, or cross-condition contamination events.
+- On the primary subset, deployment-E F3 improves action-signature and
+  semantic-successor behavior over bare with task-bootstrap intervals excluding
+  zero, preserves execution, retains at least 70% of oracle gain on all three
+  retention metrics, and has positive relative behavior on `8/9` tasks.
+- F3 materially beats its signature-only card, hard negative, popularity, and
+  unrelated controls on preregistered primary metrics. Strict-B F1 passes its
+  separate behavioral claim and retains two of three oracle gains above 70%.
+- The complete-case F3-F5 successor contrast is `+0.16129`, 95% CI
+  `[0.06897,0.24138]`; the field-adverse one-row bound remains positive.
+
+INFERENCE:
+
+- Signature-balanced field selection can automatically retrieve useful raw
+  episodic transition content. Its behavioral benefit does not reduce to the
+  structured signature card, duplicate popularity, or the clean intent-only
+  control under this one-step audit.
+
+UNVERIFIED:
+
+- The result does not validate a state-conditioned transition program,
+  compiler, additive injector, full trajectory policy, Stage C2, or end-to-end
+  RCMF.
+
+Decision:
+
+- Supersede EXP-025C's behavioral-preflight stop with the prospective missing-
+  row completion; do not rewrite the EXP-025C artifacts or branch.
+- Record `signature_balanced_field_selector_behaviorally_validated`.
+- Treat automatic selector behavior as validated on the clean one-step
+  contract, while keeping p(s,m_transition) blocked until a separately reviewed
+  state-conditioned transition-program distillation milestone.
+- Do not start compiler/injector training, Stage C2, end-to-end RCMF, full
+  AppWorld evaluation, or V4 tagging.
+
+Implementation recovery:
+
+- Preserve all eight closed attempts. The malformed request SHA and two
+  operator transcription failures changed no scientific parameter; the
+  immutable manifest supersession and final independent validator both pass.

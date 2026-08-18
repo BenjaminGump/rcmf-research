@@ -1659,3 +1659,34 @@ Decision:
   not. No F1-F5 generation or AppWorld condition execution ran.
 - p(s,m_transition), program/compiler, injector, Stage C2, end-to-end RCMF,
   and V4 tagging remain blocked pending a narrow context-feasibility review.
+
+### EXP-025C-R deployable selector behavioral validation
+
+- The frozen EXP-025C selector, seed checkpoints, calibration, predictions,
+  and selections were reused without retraining or reranking. The canonical
+  ensemble SHA256 is
+  `c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f`.
+- The preregistered missing-row policy freezes `225` logical F1-F5 slots:
+  `224` executable and one explicit F5 `over_context_missing` row. It has no
+  generated response, outcome, metric, label, or imputation.
+- The lifecycle smoke passed. The formal run completed all `224/224`
+  executable conditions with zero replay/execution infrastructure errors,
+  using `125` EXP-025B outputs, `36` in-run aliases, and `63` new frozen-Qwen
+  generations and AppWorld same-world executions.
+- On the primary 32-state subset, deployment-E raw F3 versus bare improves
+  exact API by `+0.09375`, action signature by `+0.375`, execution by
+  `+0.0625`, and semantic successor by `+0.34375`. Signature and successor
+  task-bootstrap intervals exclude zero; `8/9` tasks are positive.
+- F3 beats its signature card F4 by `+0.1875` exact API, `+0.28125` action
+  signature, and `+0.3125` successor, all with intervals excluding zero.
+- F3 retains `0.75/1.0909/0.8462` of oracle exact-API/signature/successor gain.
+  Strict-B F1 retains `0.50/0.9091/0.7692`, and both strict-B and deployment-E
+  behavioral claims pass separately.
+- F3-F5 uses `31/32` primary paired states. Successor is `+0.16129` with 95%
+  CI `[0.06897,0.24138]`; its adverse one-row bound remains `+0.15625`.
+- Decision branch:
+  `signature_balanced_field_selector_behaviorally_validated`. Automatic field
+  selection is behaviorally validated on the clean one-step contract.
+  p(s,m_transition), compiler/injector, Stage C2, end-to-end RCMF, and V4
+  tagging remain blocked pending a separately reviewed program-distillation
+  milestone.

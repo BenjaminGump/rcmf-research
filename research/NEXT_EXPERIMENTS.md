@@ -989,3 +989,34 @@ retrain the selector. After a policy is approved, rerun only condition
 preflight, lifecycle smoke, and the frozen F1-F5 behavioral phase. Program,
 injector, p(s,m_transition), Stage C2, end-to-end RCMF, and V4 tagging remain
 blocked until behavioral retention is actually measured.
+
+## EXP-025C-R Completed - Next Milestone Requires Review
+
+EXP-025C-R used the approved missing-row policy and completed `224/224`
+executable conditions while retaining one explicit, non-imputed F5 missing
+slot. Both strict-B and deployment-E behavioral claims pass. Deployment-E F3
+retains `0.75/1.0909/0.8462` of the oracle exact-API/action-signature/semantic-
+successor gains, beats its signature-only card, and is positive on `8/9`
+tasks. The F3-F5 complete-case successor contrast and one-row sensitivity are
+also positive.
+
+Recommended separately reviewed EXP-025D goal:
+
+- Test state-conditioned transition-program distillation using the frozen
+  replay-validated clean corpus, frozen signature-balanced selector, and clean
+  one-step behavioral target.
+- Preserve strict-B parent generalization and deployment-E full-bank behavior
+  as separate claims.
+- Preregister the program latent, frozen decoder/injection contract, training
+  objective, controls, optimization schedule, and causal evaluation before any
+  run.
+- Treat the validated selector as a fixed upstream component; do not silently
+  retune it from program outcomes.
+- Require raw-content and signature-only controls so program behavior cannot
+  collapse to procedural metadata.
+
+Still blocked pending that review:
+
+- behavioral `p(s,m_transition)` or program-compiler training;
+- additive-token injector changes, Stage C2, end-to-end RCMF, full AppWorld
+  evaluation, or an RCMF V4 tag.
