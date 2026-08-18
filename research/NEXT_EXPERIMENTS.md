@@ -962,3 +962,30 @@ Hard boundary:
 - Do not rerun old V3 checkpoint families or create/move a V4 tag.
 - Preserve the EXP-025B oracle result as a causal upper bound, not a deployable
   result.
+
+## Proposed EXP-025C-R Context-Feasibility Amendment - Review Required
+
+Goal:
+
+- Resume the already trained EXP-025C selector audit without changing field
+  scores, seeds, candidate banks, or the 45 audit states.
+
+Blocking fact:
+
+- One F5 predicted-intent raw selection for `2a163ab_1` step 13 has no legal
+  same-class prompt under the `40,960` context limit. The singleton prompt is
+  `41,134` tokens. F1 and F3 are feasible for all states.
+
+The review must preregister exactly one policy before any generation:
+
+1. Mark the F5 contrast missing for that state and define paired denominators
+   prospectively.
+2. Use the next score-ranked context-feasible predicted-intent class, chosen
+   without behavioral outputs, and label this as a changed baseline contract.
+3. Validate a larger frozen-Qwen context contract separately before using it.
+
+Do not truncate, silently drop the state, substitute based on outcomes, or
+retrain the selector. After a policy is approved, rerun only condition
+preflight, lifecycle smoke, and the frozen F1-F5 behavioral phase. Program,
+injector, p(s,m_transition), Stage C2, end-to-end RCMF, and V4 tagging remain
+blocked until behavioral retention is actually measured.

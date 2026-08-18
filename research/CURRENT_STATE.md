@@ -1639,3 +1639,23 @@ Decision:
   clean oracle one-step causal result, not a deployable field result. Field,
   program, injector, selector, Stage C2, and end-to-end training remain blocked
   pending a separately reviewed EXP-025C.
+
+### EXP-025C signature-balanced field selector and behavioral-preflight stop
+
+- Clean full-bank labels contain `310,433` legal pairs across A/B/C/D/E
+  (`199,116/57,407/41,956/11,954/69,361`). Equal state/class weighting passes
+  to numerical tolerance.
+- The clean intent probe reaches `0.8759` mean strict held-out accuracy. The
+  three field seeds complete `120` epochs and `7,560` updates each.
+- The ensemble passes strict-B, deployment-E, and held-out-parent D selector
+  gates. B/D/E NDCG@4 is `0.7766/0.8264/0.7780`; B/E transition-shuffle drops
+  are `0.7715/0.7683`, both with task-bootstrap intervals excluding zero.
+- The conditional one-step phase stopped before Qwen load. One F5 predicted-
+  intent raw condition is a singleton signature class whose `41,134`-token
+  prompt exceeds the locked `40,960` context, with no same-class substitute.
+  F1/F3 selections are scoreable on all 45 states.
+- Decision branch: `clean_corpus_behavioral_audit_infrastructure_invalid`.
+  Selector ranking/generalization is verified; behavioral oracle retention is
+  not. No F1-F5 generation or AppWorld condition execution ran.
+- p(s,m_transition), program/compiler, injector, Stage C2, end-to-end RCMF,
+  and V4 tagging remain blocked pending a narrow context-feasibility review.

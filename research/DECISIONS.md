@@ -1656,3 +1656,39 @@ Implementation recovery:
   to exact legacy bytes.
 - The final ledger has `22` closed attempts (`44` start/end rows), no open
   attempt, and no duplicate scientific run.
+
+## 2026-08-18 EXP-025C selector pass and behavioral preflight block
+
+VERIFIED:
+
+- Signature-class balancing, clean intent prediction, A-only grouped CV, three
+  final seeds, and B/C/D/E evaluation completed on the replay-validated clean
+  lineage.
+- Strict-B and deployment-E pass all selector gates. Held-out-parent D also
+  has positive transition-only gain, shuffle sensitivity, and task coverage.
+- One required F5 raw condition has a `41,134`-token prompt against the locked
+  `40,960` limit. Its selected class is a singleton, so the mandated same-class
+  fallback does not exist.
+
+Decision:
+
+- Preserve the selector result as a passed ranking/generalization gate, but do
+  not call automatic field selection behaviorally validated.
+- Record `clean_corpus_behavioral_audit_infrastructure_invalid` because the
+  complete `45 x 5` condition contract cannot be frozen without truncation,
+  cross-class substitution, or a context-contract change.
+- Do not run a partial `224/225` audit and do not use another class selected
+  after seeing behavior. No Qwen generation or AppWorld condition execution is
+  allowed under the current manifest.
+- Require a separately reviewed, prospective context-feasibility rule before
+  resuming. Do not retrain the selector while resolving this manifest issue.
+- Keep p(s,m_transition), program/compiler, injector, Stage C2, end-to-end
+  RCMF, and V4 tagging blocked.
+
+Implementation recovery:
+
+- Four failed preflight attempts remain in the append-only ledger. Renderer,
+  immutable-config, and transition-cache count corrections were regression
+  tested and changed no scientific parameter. The final failure is a genuine
+  context/data constraint rather than an implementation crash.
+- The final ledger has `7` closed attempts, `14` events, and no open attempt.
