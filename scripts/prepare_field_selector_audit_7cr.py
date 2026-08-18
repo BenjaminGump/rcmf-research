@@ -23,6 +23,7 @@ from rcmf.training.signature_balanced_field_7c import condition_semantic_key
 from rcmf.training.state_conditioned_transition_6b import (
     AttemptLedger,
     initialize_or_validate_run_manifest,
+    validate_or_record_run_manifest_config_supersession,
 )
 from rcmf.utils.serialization import (
     atomic_write_json,
@@ -289,6 +290,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--parent-attempt-id", required=True)
     parser.add_argument("--resume-checkpoint", required=True)
     parser.add_argument("--tmux-session", default="exp025cr")
+    parser.add_argument("--supersede-config-sha256")
+    parser.add_argument("--config-supersession-reason")
     return parser.parse_args()
 
 
@@ -329,36 +332,8 @@ def main() -> None:
         if not path.exists():
             raise FileNotFoundError(f"Audit preflight input missing: {name}={path}")
     source_hashes = {name: sha256_file(path) for name, path in paths.items()}
-    initialize_or_validate_run_manifest(
-        args.artifact_dir / "run_manifest.json",
-        run_uuid=str(settings["run_uuid"]),
-        config_sha256=sha256_file(args.config),
-        data_manifest_hashes=source_hashes,
-        source_commit=args.lambda_head,
-        command_scope=["missing_policy", "preflight", "smoke", "formal", "analysis"],
-    )
-    selector_summary = _json(paths["selector_summary"])
-    selector_validation = _validate_selector_artifacts(
-        selector_summary,
-        parent_exp025c=parent_c,
-        expected_ensemble_sha256=str(
-            settings["expected_selector_ensemble_sha256"]
-        ),
-    )
-    if not all(
-        selector_validation[name]
-        for name in (
-            "strict_b_gate_passed",
-            "deployment_e_gate_passed",
-            "heldout_parent_d_gate_passed",
-        )
-    ):
-        raise RuntimeError("Frozen selector gates are not all passed")
-    old_generation = _json(paths["old_generation_summary"])
-    if not bool(old_generation["passed"]) or int(
-        old_generation["condition_count"]
-    ) != int(settings["expected"]["parent_conditions"]):
-        raise RuntimeError("EXP-025B formal condition outputs are incomplete")
+    config_hash = sha256_file(args.config)
+    command_scope = ["missing_policy", "preflight", "smoke", "formal", "analysis"]
 
     with AttemptLedger(
         args.artifact_dir,
@@ -370,13 +345,56 @@ def main() -> None:
         github_head=args.github_head,
         lambda_head=args.lambda_head,
         tmux_session=args.tmux_session,
-        config_sha256=sha256_file(args.config),
+        config_sha256=config_hash,
         data_manifest_hashes=source_hashes,
         parent_attempt_id=args.parent_attempt_id,
         resume_checkpoint=args.resume_checkpoint,
         scientific_parameter_changed=False,
         heartbeat_interval_s=float(settings["heartbeat_interval_seconds"]),
     ) as attempt:
+        if args.supersede_config_sha256:
+            validate_or_record_run_manifest_config_supersession(
+                args.artifact_dir / "run_manifest.json",
+                run_uuid=str(settings["run_uuid"]),
+                previous_config_sha256=args.supersede_config_sha256,
+                replacement_config_sha256=config_hash,
+                data_manifest_hashes=source_hashes,
+                source_commit=args.lambda_head,
+                command_scope=command_scope,
+                parent_attempt_id=args.parent_attempt_id,
+                reason=str(args.config_supersession_reason or ""),
+            )
+        else:
+            initialize_or_validate_run_manifest(
+                args.artifact_dir / "run_manifest.json",
+                run_uuid=str(settings["run_uuid"]),
+                config_sha256=config_hash,
+                data_manifest_hashes=source_hashes,
+                source_commit=args.lambda_head,
+                command_scope=command_scope,
+            )
+        selector_summary = _json(paths["selector_summary"])
+        selector_validation = _validate_selector_artifacts(
+            selector_summary,
+            parent_exp025c=parent_c,
+            expected_ensemble_sha256=str(
+                settings["expected_selector_ensemble_sha256"]
+            ),
+        )
+        if not all(
+            selector_validation[name]
+            for name in (
+                "strict_b_gate_passed",
+                "deployment_e_gate_passed",
+                "heldout_parent_d_gate_passed",
+            )
+        ):
+            raise RuntimeError("Frozen selector gates are not all passed")
+        old_generation = _json(paths["old_generation_summary"])
+        if not bool(old_generation["passed"]) or int(
+            old_generation["condition_count"]
+        ) != int(settings["expected"]["parent_conditions"]):
+            raise RuntimeError("EXP-025B formal condition outputs are incomplete")
         strict = _selected_classes(paths["strict_scores"])
         deployment = _selected_classes(paths["deployment_scores"])
         intent = _selected_classes(paths["intent_scores"])

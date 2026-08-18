@@ -323,8 +323,9 @@ def test_7cr_config_freezes_parent_selector_and_missing_contract() -> None:
         "841cbe179d0d577e9eb9cd4e37299cb9b123915f"
     )
     assert config["expected_selector_ensemble_sha256"] == (
-        "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42bb01255a9e623956611f"
+        "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f"
     )
+    assert len(config["expected_selector_ensemble_sha256"]) == 64
     assert config["missing_policy"]["state_example_id"] == MISSING_STATE
     assert config["missing_policy"]["signature_class_id"] == MISSING_CLASS
     assert config["missing_policy"]["prompt_tokens"] == 41134
