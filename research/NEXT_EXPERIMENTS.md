@@ -1020,3 +1020,26 @@ Still blocked pending that review:
 - behavioral `p(s,m_transition)` or program-compiler training;
 - additive-token injector changes, Stage C2, end-to-end RCMF, full AppWorld
   evaluation, or an RCMF V4 tag.
+
+## EXP-025D Runtime Approval Required
+
+The CPU/tokenizer-only preflight is complete. The full unchanged design is
+projected at `144.13/201.72/518.42` best/expected/conservative H100 hours,
+with `145.13/203.72/522.42` wall hours including final validation/reporting and
+`21.46 GB` projected storage.
+
+Exact frozen scope:
+
+- logical A/B/C/D/E pairs `640/139/112/112/139`;
+- scoreable A/B/C/D/E pairs `607/135/112/112/135`;
+- decoder `192` calibration plus `64` grouped-heldout pairs;
+- `970` new sparse-teacher rows;
+- expected decoder/program updates `16,384/352,704`;
+- all seven fixed program architectures, three conditional final seeds, and
+  all controls/held-out cells retained.
+
+Next action is explicit user approval to resume the same EXP-025D run UUID.
+After approval, execute the full prespecified experiment unchanged. Before
+approval, do not launch Qwen scoring/training or a duplicate run. Full-bank
+training, Stage C2, end-to-end RCMF, full AppWorld evaluation, and V4 tagging
+remain out of scope.

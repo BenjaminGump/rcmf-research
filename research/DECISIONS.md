@@ -1745,3 +1745,39 @@ Implementation recovery:
 - Preserve all eight closed attempts. The malformed request SHA and two
   operator transcription failures changed no scientific parameter; the
   immutable manifest supersession and final independent validator both pass.
+
+## 2026-08-18 EXP-025D preflight and runtime review
+
+VERIFIED:
+
+- The selector, clean lineages, source counts, ordered score tensors, and
+  strict-B/D/deployment-E frozen selections validate exactly.
+- The deterministic pair manifests meet the requested pilot ranges without
+  using held-out labels. Over-context rows remain missing with zero truncation
+  or class fallback.
+- The required top-64 teacher cache has `970` new unique scoreable pairs and
+  no complete reusable clean rows.
+- The fixed decoder/program schedule projects to `201.72` expected H100 hours
+  and `21.46 GB`, above the 12-hour review threshold.
+
+UNVERIFIED:
+
+- Decoder capacity, program fidelity, factorized versus PairMLP behavior,
+  B/C/D/E generalization, shuffle sensitivity, and compiled one-step behavior
+  have not been run.
+
+Decision:
+
+- Pause the same EXP-025D run UUID at
+  `completed_runtime_review_required` and request explicit approval.
+- Do not reduce pairs, updates, seeds, architectures, controls, or held-out
+  cells merely to fit the review threshold.
+- Do not claim a scientific branch or validated state-conditioned program.
+  Full-bank work, Stage C2, end-to-end RCMF, and V4 tagging remain blocked.
+
+Implementation recovery:
+
+- Preserve five closed attempts. The final append-only data-manifest
+  supersession changes only the `transitions` input from the structural
+  manifest to its ID-keyed EXP-025B token-preflight manifest; the original run
+  manifest is unchanged and no scientific parameter changed.

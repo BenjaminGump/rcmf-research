@@ -1690,3 +1690,27 @@ Decision:
   p(s,m_transition), compiler/injector, Stage C2, end-to-end RCMF, and V4
   tagging remain blocked pending a separately reviewed program-distillation
   milestone.
+
+### EXP-025D state-conditioned program runtime-review pause
+
+- Created archive `archive/v4-selector-behaviorally-validated` and working
+  branch `research/v4-state-conditioned-transition-program` at exact starting
+  SHA `f05a40dfc095fa3ec655441642b0548ef382cf10`; no V4 tag was created.
+- The deterministic manifests contain logical A/B/C/D/E counts
+  `640/139/112/112/139` and scoreable counts `607/135/112/112/135`.
+  All `41` over-context occurrences remain explicit missing measurements;
+  truncation and class substitution are zero.
+- Frozen B/D/E selections reproduce EXP-025C transition IDs exactly at
+  `139/139`, `112/112`, and `139/139`. The A-only decoder split is `192/64`
+  with zero grouped-state overlap.
+- The clean sparse-teacher audit requires `970` new top-64 pair rows and can
+  reuse zero complete rows. Seventeen scalar overlaps are insufficient for the
+  required sparse distributions.
+- Expected work is `16,384` decoder and `352,704` program pair updates,
+  `201.72` H100 hours, `203.72` total wall hours including records, and
+  `21.46 GB` of artifacts. Best/conservative H100 estimates are
+  `144.13/518.42` hours.
+- Status is `completed_runtime_review_required`. No Qwen model, forward,
+  training, or GPU work ran. Explicit approval is required because expected
+  H100 time exceeds the 12-hour review threshold. The state-conditioned
+  program remains unvalidated and all later stages remain blocked.
