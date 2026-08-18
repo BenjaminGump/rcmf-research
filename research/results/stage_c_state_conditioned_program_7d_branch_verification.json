@@ -1,0 +1,16 @@
+{
+  "archive_branch": "archive/v4-selector-behaviorally-validated",
+  "archive_branch_commit": "f05a40dfc095fa3ec655441642b0548ef382cf10",
+  "format": "exp025d_branch_input_provenance_v1",
+  "github_comparison_status": "identical",
+  "lambda_initial_commit": "f05a40dfc095fa3ec655441642b0548ef382cf10",
+  "local_initial_commit": "f05a40dfc095fa3ec655441642b0548ef382cf10",
+  "no_v4_tag_created": true,
+  "program_branch": "research/v4-state-conditioned-transition-program",
+  "program_branch_initial_commit": "f05a40dfc095fa3ec655441642b0548ef382cf10",
+  "replay_lineage_sha256": "5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1",
+  "selector_ensemble_sha256": "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f",
+  "source_branch": "research/v4-identity-reconciled-corpus",
+  "starting_commit": "f05a40dfc095fa3ec655441642b0548ef382cf10",
+  "structural_lineage_sha256": "f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb"
+}

@@ -1,0 +1,158 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_state_conditioned_program_7d
+  version: clean_state_conditioned_transition_program_7d_v1
+  scope:
+    - frozen_signature_balanced_selector
+    - clean_shared_no_bias_linear_decoder
+    - state_conditioned_transition_program
+    - teacher_forced_target_scoring_first
+    - conditional_bounded_one_step_audit
+    - qwen_frozen
+    - last_user_k
+    - k_4
+    - no_full_transition_bank
+    - no_selector_training
+    - no_stage_c2
+    - no_end_to_end_rcmf
+    - no_v4_tag
+
+injector:
+  type: additive_token
+  position: last_user_k
+  num_tokens: 4
+  initial_scale: 0.0
+
+stage_c_7d:
+  run_uuid: state_conditioned_transition_program_7d_20260818_001
+  artifact_dir: runs/stage_c/state_conditioned_transition_program_7d_20260818_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  parent_exp025b: runs/stage_c/replay_clean_rebuild_7b_20260818_001
+  parent_exp025c: runs/stage_c/signature_balanced_field_7c_20260818_001
+  parent_exp025cr: runs/stage_c/signature_balanced_field_7cr_20260818_001
+  reconciled_corpus_dir: runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  expected_structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+  expected_replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+  expected_selector_ensemble_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f
+  source:
+    starting_head: f05a40dfc095fa3ec655441642b0548ef382cf10
+    source_branch: research/v4-identity-reconciled-corpus
+    archive_branch: archive/v4-selector-behaviorally-validated
+    program_branch: research/v4-state-conditioned-transition-program
+  expected:
+    train_tasks: 37
+    validation_tasks: 9
+    train_decisions: 499
+    validation_decisions: 139
+    train_transitions: 499
+    transition_parents: 37
+    train_parents: 29
+    heldout_parents: 8
+    signature_classes: 150
+    audit_states: 45
+    primary_audit_states: 32
+
+  pair_manifest:
+    seed: 25075
+    program_a_target_pairs: 640
+    program_a_maximum_pairs: 640
+    decoder_calibration_pairs: 192
+    decoder_heldout_pairs: 64
+    b_pairs: 139
+    c_pairs: 112
+    d_pairs: 112
+    e_pairs: 139
+    minimum_b_pairs: 128
+    minimum_c_pairs: 96
+    minimum_d_pairs: 96
+
+  teacher_cache:
+    model_name: Qwen/Qwen3-8B
+    dtype: bfloat16
+    top_k: 64
+    context_limit: 40960
+    prompt_profile: full_demo
+    renderer_version: decision_transition_teacher_section_v1
+    seconds_per_forward:
+      best: 1.25
+      expected: 1.85
+      conservative: 3.50
+    artifact_bytes_per_row: 1250000
+
+  decoder:
+    latent_dim: 128
+    model_dim: 4096
+    k: 4
+    position: last_user_k
+    ratio_budget: 1.0
+    initialization_seed: 25076
+    batch_size: 1
+    calibration_updates: [16, 32, 64]
+    optional_updates: 128
+    latent_learning_rate: 0.05
+    decoder_learning_rate: 0.00001
+    max_gradient_norm: 1.0
+    sequence_huber_delta: 0.1
+    sparse_teacher_kl_weight: 0.05
+    ratio_restraint_weight: 0.001
+    continuation:
+      minimum_relative_huber_improvement: 0.01
+      minimum_spearman_improvement: 0.01
+      best_huber_multiplier: 1.02
+
+  program:
+    state_layer: final_layer
+    transition_layer: final_layer
+    state_views: 10
+    transition_views: 10
+    representation_dim: 4096
+    flattened_representation_dim: 40960
+    program_dim: 128
+    hidden_dim: 256
+    dropout: 0.05
+    primary_controller_rank: 16
+    controller_ranks: [16, 8]
+    ratio_budget: 1.0
+    batch_size: 1
+    tiny_pair_count: 24
+    tiny_updates_per_pair: 64
+    smoke_pair_count: 96
+    smoke_updates_per_pair: 16
+    checkpoint_updates_per_pair: [16, 32, 64]
+    optional_updates_per_pair: 128
+    primary_seed: 25077
+    final_seeds: [25077, 25078, 25079]
+    learning_rate: 0.0003
+    weight_decay: 0.0001
+    max_gradient_norm: 1.0
+    sequence_huber_delta: 0.1
+    sequence_utility_weight: 1.0
+    sparse_teacher_kl_weight: 0.05
+    target_delta_huber_weight: 0.10
+    within_state_pairwise_weight: 0.10
+    tier34_action_ce_weight: 0.05
+    perturbation_restraint_weight: 0.001
+    trainable_architectures:
+      - full_factorized_r16
+      - full_factorized_r8
+      - state_only
+      - static_only
+      - conditional_only
+      - pair_mlp
+      - free_id
+
+  runtime:
+    review_threshold_h100_hours: 12.0
+    seconds_per_backward_update:
+      best: 1.70
+      expected: 1.85
+      conservative: 2.40
+    report_validation_hours:
+      best: 1.0
+      expected: 2.0
+      conservative: 4.0
+    checkpoint_bytes_per_model: 450000000
+
+  bootstrap_samples: 5000
+  heartbeat_interval_seconds: 240
