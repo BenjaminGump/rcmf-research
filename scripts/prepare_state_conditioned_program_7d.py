@@ -78,7 +78,8 @@ def _load_inputs(settings: Mapping[str, Any]) -> dict[str, Path]:
         "corpus_summary": corpus / "summary.json",
         "structural_validation": corpus / "structural_validation.json",
         "decisions": corpus / "decision_examples.jsonl",
-        "transitions": corpus / "transition_manifest.jsonl",
+        "transitions": parent_b
+        / "clean_cache_rebuild/transition_preflight/transition_manifest.jsonl",
         "parent_split": parent_b
         / "clean_procedural_audit/clean_parent_split_manifest.json",
         "transition_signatures": parent_b
@@ -641,6 +642,10 @@ def main() -> None:
             if task_split[str(row["parent_task_id"])] == "train"
         ]
         transitions = {str(row["transition_id"]): row for row in train_transitions}
+        transition_token_counts = {
+            transition_id: int(row["teacher_section_tokens"])
+            for transition_id, row in transitions.items()
+        }
         labels = _rows(paths["labels"])
         labels_by_pair = {str(row["pair_id"]): row for row in labels}
         if len(labels_by_pair) != len(labels):
@@ -694,6 +699,7 @@ def main() -> None:
                 scores=scores,
                 ordered_state_ids=ordered_state_ids,
                 ordered_transition_ids=ordered_transition_ids,
+                transition_token_counts=transition_token_counts,
                 classes=classes,
                 target_size=int(pair_cfg["program_a_target_pairs"]),
                 maximum_size=int(pair_cfg["program_a_maximum_pairs"]),
@@ -704,6 +710,7 @@ def main() -> None:
                 scores=scores,
                 ordered_state_ids=ordered_state_ids,
                 ordered_transition_ids=ordered_transition_ids,
+                transition_token_counts=transition_token_counts,
                 classes=classes,
                 state_count=None,
                 cell="B",
@@ -714,6 +721,7 @@ def main() -> None:
                 scores=scores,
                 ordered_state_ids=ordered_state_ids,
                 ordered_transition_ids=ordered_transition_ids,
+                transition_token_counts=transition_token_counts,
                 classes=classes,
                 state_count=int(pair_cfg["c_pairs"]),
                 cell="C",
@@ -724,6 +732,7 @@ def main() -> None:
                 scores=scores,
                 ordered_state_ids=ordered_state_ids,
                 ordered_transition_ids=ordered_transition_ids,
+                transition_token_counts=transition_token_counts,
                 classes=classes,
                 state_count=int(pair_cfg["d_pairs"]),
                 cell="D",
@@ -737,6 +746,7 @@ def main() -> None:
                 scores=scores,
                 ordered_state_ids=ordered_state_ids,
                 ordered_transition_ids=ordered_transition_ids,
+                transition_token_counts=transition_token_counts,
                 classes=classes,
                 state_count=None,
                 cell="E",

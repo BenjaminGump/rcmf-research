@@ -73,6 +73,10 @@ def test_pair_manifest_is_deterministic_a_only_and_no_heldout_label_selected() -
         "scores": scores,
         "ordered_state_ids": states,
         "ordered_transition_ids": transitions,
+        "transition_token_counts": {
+            transition: 100 + index
+            for index, transition in enumerate(transitions)
+        },
         "classes": classes,
         "target_size": 20,
         "maximum_size": 30,
@@ -99,6 +103,10 @@ def test_frozen_cell_selection_uses_scores_and_structural_classes_only() -> None
         scores=scores,
         ordered_state_ids=states,
         ordered_transition_ids=transitions,
+        transition_token_counts={
+            transition: 100 + index
+            for index, transition in enumerate(transitions)
+        },
         classes=classes,
         state_count=6,
         cell="B",
@@ -127,6 +135,10 @@ def test_heldout_supervision_fields_are_absent_and_cannot_change_selection() -> 
         scores=scores,
         ordered_state_ids=states,
         ordered_transition_ids=transitions,
+        transition_token_counts={
+            transition: 100 + index
+            for index, transition in enumerate(transitions)
+        },
         classes=classes,
         state_count=6,
         cell="D",
@@ -137,12 +149,50 @@ def test_heldout_supervision_fields_are_absent_and_cannot_change_selection() -> 
         scores=scores,
         ordered_state_ids=states,
         ordered_transition_ids=transitions,
+        transition_token_counts={
+            transition: 100 + index
+            for index, transition in enumerate(transitions)
+        },
         classes=classes,
         state_count=6,
         cell="D",
         seed=21,
     )
     assert clean == contaminated
+
+
+def test_legal_exemplar_uses_transition_keyed_tokens_not_sorted_class_counts() -> None:
+    classes = {
+        "c": {
+            "signature_class_id": "c",
+            "canonical_transition_id": "t0",
+            "member_transition_ids": ["t0", "t1", "t2"],
+            "serialized_token_counts": [5, 10, 100],
+        }
+    }
+    rows = [
+        {
+            "state_example_id": "s",
+            "state_task_id": "task",
+            "transition_id": transition_id,
+            "transition_parent_id": f"p{index}",
+            "transition_parent_task_id": f"memory{index}",
+            "signature_class_id": "c",
+        }
+        for index, transition_id in enumerate(("t1", "t2"), start=1)
+    ]
+    manifest = build_frozen_cell_pairs(
+        candidate_rows=rows,
+        scores=torch.ones(1, 3),
+        ordered_state_ids=["s"],
+        ordered_transition_ids=["t0", "t1", "t2"],
+        transition_token_counts={"t0": 5, "t1": 100, "t2": 10},
+        classes=classes,
+        state_count=None,
+        cell="B",
+        seed=22,
+    )
+    assert manifest["pairs"][0]["transition_id"] == "t2"
 
 
 def test_over_context_pair_is_missing_without_selection_change() -> None:

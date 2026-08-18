@@ -96,6 +96,7 @@ def frozen_selector_choice(
     rows: Sequence[Mapping[str, Any]],
     score_row: Tensor,
     transition_positions: Mapping[str, int],
+    transition_token_counts: Mapping[str, int],
     classes: Mapping[str, Mapping[str, Any]],
 ) -> dict[str, Any]:
     """Choose a class from frozen scores, then its immutable canonical member."""
@@ -106,20 +107,16 @@ def frozen_selector_choice(
     class_id, class_score, members = ranked[0]
     member_by_id = {str(row["transition_id"]): row for row in members}
     class_row = classes[class_id]
-    token_counts = {
-        str(transition_id): int(token_count)
-        for transition_id, token_count in zip(
-            class_row["member_transition_ids"],
-            class_row["serialized_token_counts"],
-            strict=True,
-        )
-    }
     exemplar = select_scoreable_class_exemplar(
         class_row=class_row,
         legal_rows=members,
         transitions_by_id={
-            transition_id: {"teacher_section_tokens": token_count}
-            for transition_id, token_count in token_counts.items()
+            str(transition_id): {
+                "teacher_section_tokens": int(
+                    transition_token_counts[str(transition_id)]
+                )
+            }
+            for transition_id in class_row["member_transition_ids"]
         },
     )
     selected_id = str(exemplar["transition_id"])
@@ -144,6 +141,7 @@ def _role_candidates_for_state(
     rows_all_train_transitions: Sequence[Mapping[str, Any]],
     score_row: Tensor,
     transition_positions: Mapping[str, int],
+    transition_token_counts: Mapping[str, int],
     classes: Mapping[str, Mapping[str, Any]],
     seed: int,
 ) -> dict[str, dict[str, Any]]:
@@ -154,6 +152,7 @@ def _role_candidates_for_state(
         rows=rows_a,
         score_row=score_row,
         transition_positions=transition_positions,
+        transition_token_counts=transition_token_counts,
         classes=classes,
     )
     output["P1_frozen_strict_b_top"] = p1
@@ -162,6 +161,7 @@ def _role_candidates_for_state(
         rows=rows_all_train_transitions,
         score_row=score_row,
         transition_positions=transition_positions,
+        transition_token_counts=transition_token_counts,
         classes=classes,
     )
     if p2["transition_id"] in by_id_a:
@@ -257,6 +257,7 @@ def build_program_training_pairs(
     scores: Tensor,
     ordered_state_ids: Sequence[str],
     ordered_transition_ids: Sequence[str],
+    transition_token_counts: Mapping[str, int],
     classes: Mapping[str, Mapping[str, Any]],
     target_size: int,
     maximum_size: int,
@@ -284,6 +285,7 @@ def build_program_training_pairs(
             rows_all_train_transitions=all_by_state[state_id],
             score_row=scores[state_position[state_id]],
             transition_positions=transition_position,
+            transition_token_counts=transition_token_counts,
             classes=classes,
             seed=seed,
         )
@@ -444,6 +446,7 @@ def build_frozen_cell_pairs(
     scores: Tensor,
     ordered_state_ids: Sequence[str],
     ordered_transition_ids: Sequence[str],
+    transition_token_counts: Mapping[str, int],
     classes: Mapping[str, Mapping[str, Any]],
     state_count: int | None,
     cell: str,
@@ -472,6 +475,7 @@ def build_frozen_cell_pairs(
             rows=grouped[state_id],
             score_row=scores[state_position[state_id]],
             transition_positions=transition_position,
+            transition_token_counts=transition_token_counts,
             classes=classes,
         )
         output.append(
