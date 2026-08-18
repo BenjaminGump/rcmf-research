@@ -1331,31 +1331,9 @@ def validate_or_record_run_manifest_config_supersession(
 
     current_bytes = path.read_bytes()
     current = json.loads(current_bytes.decode("utf-8"))
-    expected = {
-        "format": RUN_MANIFEST_VERSION,
-        "run_uuid": str(run_uuid),
-        "config_sha256": str(previous_config_sha256),
-        "data_manifest_hashes": dict(sorted(data_manifest_hashes.items())),
-        "command_scope": list(command_scope),
-    }
-    for key, value in expected.items():
-        if current.get(key) != value:
-            raise ValueError(f"Run manifest supersession mismatch for {key}")
-
     target = supersession_path or path.with_name(
         "run_manifest_supersessions.jsonl"
     )
-    identity = {
-        "format": RUN_MANIFEST_CONFIG_SUPERSESSION_VERSION,
-        "run_uuid": str(run_uuid),
-        "original_run_manifest_sha256": hashlib.sha256(current_bytes).hexdigest(),
-        "previous_config_sha256": str(previous_config_sha256),
-        "replacement_config_sha256": str(replacement_config_sha256),
-        "source_commit": str(source_commit),
-        "parent_attempt_id": str(parent_attempt_id),
-        "reason": str(reason),
-        "scientific_parameter_changed": False,
-    }
     existing = []
     if target.exists():
         existing = [
@@ -1363,10 +1341,52 @@ def validate_or_record_run_manifest_config_supersession(
             for line in target.read_text(encoding="utf-8").splitlines()
             if line.strip()
         ]
+    initial_config_sha256 = (
+        str(existing[0]["previous_config_sha256"])
+        if existing
+        else str(previous_config_sha256)
+    )
+    expected = {
+        "format": RUN_MANIFEST_VERSION,
+        "run_uuid": str(run_uuid),
+        "config_sha256": initial_config_sha256,
+        "data_manifest_hashes": dict(sorted(data_manifest_hashes.items())),
+        "command_scope": list(command_scope),
+    }
+    for key, value in expected.items():
+        if current.get(key) != value:
+            raise ValueError(f"Run manifest supersession mismatch for {key}")
+
+    manifest_sha256 = hashlib.sha256(current_bytes).hexdigest()
+    prior_replacement = initial_config_sha256
     for row in existing:
-        if all(row.get(key) == value for key, value in identity.items()):
-            return {**current, "effective_config_sha256": replacement_config_sha256}
+        if row.get("format") != RUN_MANIFEST_CONFIG_SUPERSESSION_VERSION:
+            raise ValueError("Run-manifest supersession format differs")
+        if row.get("run_uuid") != str(run_uuid):
+            raise ValueError("Run-manifest supersession run UUID differs")
+        if row.get("original_run_manifest_sha256") != manifest_sha256:
+            raise ValueError("Run-manifest supersession manifest hash differs")
+        if row.get("previous_config_sha256") != prior_replacement:
+            raise ValueError("Run-manifest config supersession chain is broken")
+        if bool(row.get("scientific_parameter_changed")):
+            raise ValueError("Scientific config changes cannot use supersession")
+        prior_replacement = str(row["replacement_config_sha256"])
+    identity = {
+        "format": RUN_MANIFEST_CONFIG_SUPERSESSION_VERSION,
+        "run_uuid": str(run_uuid),
+        "original_run_manifest_sha256": manifest_sha256,
+        "previous_config_sha256": str(previous_config_sha256),
+        "replacement_config_sha256": str(replacement_config_sha256),
+        "source_commit": str(source_commit),
+        "parent_attempt_id": str(parent_attempt_id),
+        "reason": str(reason),
+        "scientific_parameter_changed": False,
+    }
     if existing:
-        raise ValueError("A different run-manifest config supersession already exists")
+        last = existing[-1]
+        if all(last.get(key) == value for key, value in identity.items()):
+            return {**current, "effective_config_sha256": replacement_config_sha256}
+        if prior_replacement != str(previous_config_sha256):
+            raise ValueError("Run-manifest config supersession is not contiguous")
     append_jsonl_fsync(target, {**identity, "timestamp_utc": utc_now()})
     return {**current, "effective_config_sha256": replacement_config_sha256}

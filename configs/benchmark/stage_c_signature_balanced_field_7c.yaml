@@ -47,8 +47,8 @@ stage_c_7c:
     output_root: runs/stage_c/signature_balanced_field_7c_20260818_001/representation_cache/multiview
     expected_recomputed_states: 35
     expected_reused_states: 603
-    expected_recomputed_transitions: 368
-    expected_reused_transitions: 131
+    expected_recomputed_transitions: 355
+    expected_reused_transitions: 144
     review_threshold_h100_hours: 12.0
     runtime_seconds_per_new_row:
       best: 1.5

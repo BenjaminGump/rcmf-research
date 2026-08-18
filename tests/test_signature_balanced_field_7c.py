@@ -236,16 +236,32 @@ def test_config_correction_supersedes_without_rewriting_run_manifest(
         .read_text(encoding="utf-8")
         .splitlines()
     ) == 1
-    with pytest.raises(ValueError, match="config_sha256"):
+    validate_or_record_run_manifest_config_supersession(
+        manifest_path,
+        run_uuid="run",
+        previous_config_sha256="new",
+        replacement_config_sha256="newer",
+        data_manifest_hashes={"data": "hash"},
+        source_commit="source-newer",
+        command_scope=scope,
+        parent_attempt_id="attempt-002",
+        reason="count_provenance_only",
+    )
+    assert len(
+        (tmp_path / "run_manifest_supersessions.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ) == 2
+    with pytest.raises(ValueError, match="contiguous"):
         validate_or_record_run_manifest_config_supersession(
             manifest_path,
             run_uuid="run",
             previous_config_sha256="unexpected",
-            replacement_config_sha256="new",
+            replacement_config_sha256="newest",
             data_manifest_hashes={"data": "hash"},
             source_commit="source-new",
             command_scope=scope,
-            parent_attempt_id="attempt-001",
+            parent_attempt_id="attempt-003",
             reason="renderer_provenance_only",
         )
 def test_field_training_resume_matches_uninterrupted_optimizer_state() -> None:
