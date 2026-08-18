@@ -1,0 +1,159 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_signature_balanced_field_7c
+  version: signature_balanced_field_selector_7c_v1
+  scope:
+    - clean_procedural_supervision
+    - signature_class_balanced_field_selector
+    - strict_parent_and_deployment_evaluation
+    - conditional_frozen_qwen_one_step_audit
+    - no_program_or_injector_training
+    - no_stage_c2
+    - no_v4_tag
+
+stage_c_7c:
+  run_uuid: signature_balanced_field_7c_20260818_001
+  artifact_dir: runs/stage_c/signature_balanced_field_7c_20260818_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  parent_exp025b: runs/stage_c/replay_clean_rebuild_7b_20260818_001
+  reconciled_corpus_dir: runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  expected_structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+  expected_replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+  source:
+    starting_head: d2dd315260906aa1aec71ff4fc9e58f297c506b1
+    branch: research/v4-identity-reconciled-corpus
+  expected:
+    train_tasks: 37
+    validation_tasks: 9
+    train_decisions: 499
+    validation_decisions: 139
+    train_transitions: 499
+    signature_classes: 150
+    duplicate_transitions: 349
+    duplicate_classes: 54
+    api_documentation_transitions: 210
+    audit_states: 45
+    old_conditions: 323
+    parent_split_train: 29
+    parent_split_heldout: 8
+
+  multiview_cache:
+    model_name: Qwen/Qwen3-8B
+    dtype: bfloat16
+    renderer_version: span_aware_multiview_frozen_qwen_v1
+    old_state_cache: runs/stage_c/all_task_interaction_6d_20260815_001/action_intent/representation_cache/all_successful_state_multiview.pt
+    old_transition_cache: runs/stage_c/all_task_interaction_6d_20260815_001/representation_cache/multiview/transition_multiview.pt
+    output_root: runs/stage_c/signature_balanced_field_7c_20260818_001/representation_cache/multiview
+    expected_recomputed_states: 35
+    expected_reused_states: 603
+    expected_recomputed_transitions: 368
+    expected_reused_transitions: 131
+    review_threshold_h100_hours: 12.0
+    runtime_seconds_per_new_row:
+      best: 1.5
+      expected: 3.5
+      conservative: 8.0
+    artifact_bytes_per_row: 700000
+
+  selector:
+    layer: final_layer
+    state_views: 10
+    transition_views: 10
+    input_dim: 4096
+    projection_dim: 64
+    interaction_rank: 32
+    batch_states: 8
+    maximum_pair_samples_per_state: 256
+    maximum_hard_samples_per_state: 128
+    cv_folds: 3
+    cv_seed: 25071
+    candidates:
+      - name: balanced_lr3e4_e60_t1
+        learning_rate: 0.0003
+        epochs: 60
+        temperature: 1.0
+        listwise_weight: 1.0
+        pairwise_weight: 1.0
+        hard_negative_weight: 0.5
+        exact_api_weight: 0.1
+        stage_weight: 0.1
+      - name: balanced_lr1e4_e120_t075
+        learning_rate: 0.0001
+        epochs: 120
+        temperature: 0.75
+        listwise_weight: 1.0
+        pairwise_weight: 1.0
+        hard_negative_weight: 0.5
+        exact_api_weight: 0.1
+        stage_weight: 0.1
+      - name: hard_lr3e4_e120_t075
+        learning_rate: 0.0003
+        epochs: 120
+        temperature: 0.75
+        listwise_weight: 1.0
+        pairwise_weight: 0.75
+        hard_negative_weight: 0.75
+        exact_api_weight: 0.1
+        stage_weight: 0.1
+    final_seeds: [25071, 25072, 25073]
+    weight_decay: 0.0001
+    checkpoint_interval_epochs: 10
+    intent_epoch_candidates: [30, 60, 120]
+    intent_hidden_dim: 256
+    bootstrap_samples: 10000
+    bootstrap_seed: 25073
+
+  gates:
+    strict_b:
+      ndcg4_gain: 0.05
+      tier34_recall4: 0.50
+      exact_api_recall4: 0.60
+      same_intent_pairwise_accuracy: 0.65
+      state_shuffle_drop: 0.08
+      transition_shuffle_drop: 0.08
+      positive_tasks: 6
+    deployment_e:
+      ndcg4_gain: 0.05
+      tier34_recall4: 0.60
+      exact_api_recall4: 0.65
+      top1_tier34_coverage: 0.70
+      state_shuffle_drop: 0.08
+      transition_shuffle_drop: 0.08
+      positive_tasks: 6
+    behavior:
+      oracle_retention: 0.70
+      maximum_execution_drop: 0.05
+      positive_tasks: 6
+      content_gain: 0.05
+
+  legacy:
+    executable: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    appworld_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+  replay:
+    random_seed: 100
+    max_interactions: 1000
+    max_api_calls_per_interaction: 1000
+    subprocess_timeout_seconds: 600
+  generation:
+    model_name: Qwen/Qwen3-8B
+    dtype: bfloat16
+    device_map: null
+    temperature: 0.0
+    top_p: 1.0
+    do_sample: false
+    enable_thinking: false
+    max_new_tokens: 1024
+    context_limit: 40960
+    prompt_profile: full_demo
+    review_threshold_h100_hours: 12.0
+    seconds_per_new_condition:
+      best: 2.0
+      expected: 4.0
+      conservative: 8.0
+    replay_seconds_per_condition:
+      best: 2.0
+      expected: 5.0
+      conservative: 10.0
+    artifact_bytes_per_condition: 2359296
+  heartbeat_interval_seconds: 240
