@@ -1,0 +1,87 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_signature_balanced_field_7cr
+  version: missing_control_aware_selector_audit_7cr_v1
+  scope:
+    - frozen_exp025c_selector
+    - one_explicit_over_context_missing_control
+    - frozen_qwen_one_step_audit
+    - no_selector_retraining_or_recalibration
+    - no_program_or_injector_training
+    - no_stage_c2
+    - no_v4_tag
+
+stage_c_7cr:
+  run_uuid: signature_balanced_field_7cr_20260818_001
+  artifact_dir: runs/stage_c/signature_balanced_field_7cr_20260818_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  parent_exp025b: runs/stage_c/replay_clean_rebuild_7b_20260818_001
+  parent_exp025c: runs/stage_c/signature_balanced_field_7c_20260818_001
+  reconciled_corpus_dir: runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  expected_structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+  expected_replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+  expected_selector_ensemble_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42bb01255a9e623956611f
+  source:
+    starting_head: 841cbe179d0d577e9eb9cd4e37299cb9b123915f
+    branch: research/v4-identity-reconciled-corpus
+  expected:
+    audit_states: 45
+    audit_tasks: 9
+    logical_slots: 225
+    executable_slots: 224
+    missing_slots: 1
+    primary_states: 32
+    parent_conditions: 323
+
+  missing_policy:
+    version: selector_behavioral_missing_policy_7cr_v1
+    state_example_id: appworld:trace:2a163ab_1:step:13:line:33
+    condition_name: F5_predicted_intent_raw
+    signature_class_id: procedure:046349e3bb380f803cd6bfd1545a10f26aa9cca1cf98bfa5db70b9b4772bf08f
+    transition_id: 9a6f8704-c1f5-5f99-84e4-a1e57a23ec83
+    class_size: 1
+    prompt_tokens: 41134
+    context_limit: 40960
+    missing_reason: selected_signature_class_has_no_context_feasible_raw_member
+
+  selector:
+    bootstrap_samples: 10000
+    bootstrap_seed: 25073
+  gates:
+    behavior:
+      oracle_retention: 0.70
+      maximum_execution_drop: 0.05
+      positive_tasks: 6
+      content_gain: 0.05
+
+  legacy:
+    executable: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    appworld_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+  replay:
+    random_seed: 100
+    max_interactions: 1000
+    max_api_calls_per_interaction: 1000
+    subprocess_timeout_seconds: 600
+  generation:
+    model_name: Qwen/Qwen3-8B
+    dtype: bfloat16
+    device_map: null
+    temperature: 0.0
+    top_p: 1.0
+    do_sample: false
+    enable_thinking: false
+    max_new_tokens: 1024
+    context_limit: 40960
+    prompt_profile: full_demo
+    review_threshold_h100_hours: 12.0
+    seconds_per_new_condition:
+      best: 2.0
+      expected: 4.0
+      conservative: 8.0
+    replay_seconds_per_condition:
+      best: 2.0
+      expected: 5.0
+      conservative: 10.0
+    artifact_bytes_per_condition: 2359296
+  heartbeat_interval_seconds: 240
