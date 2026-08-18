@@ -35,6 +35,7 @@ RUN_MANIFEST_VERSION = "resumable_experiment_run_manifest_v1"
 RUN_MANIFEST_CONFIG_SUPERSESSION_VERSION = (
     "run_manifest_config_supersession_v1"
 )
+RUN_MANIFEST_DATA_SUPERSESSION_VERSION = "run_manifest_data_supersession_v1"
 ATTEMPT_LEDGER_VERSION = "append_only_attempt_ledger_v1"
 HEARTBEAT_VERSION = "persistent_experiment_heartbeat_v1"
 
@@ -1390,3 +1391,103 @@ def validate_or_record_run_manifest_config_supersession(
             raise ValueError("Run-manifest config supersession is not contiguous")
     append_jsonl_fsync(target, {**identity, "timestamp_utc": utc_now()})
     return {**current, "effective_config_sha256": replacement_config_sha256}
+
+
+def validate_or_record_run_manifest_data_supersession(
+    path: Path,
+    *,
+    run_uuid: str,
+    config_sha256: str,
+    previous_data_manifest_hashes: Mapping[str, str],
+    replacement_data_manifest_hashes: Mapping[str, str],
+    source_commit: str,
+    command_scope: Sequence[str],
+    parent_attempt_id: str,
+    reason: str,
+    supersession_path: Path | None = None,
+) -> dict[str, Any]:
+    """Record a provenance-only input correction without rewriting a run manifest."""
+    if not path.exists():
+        raise ValueError("Cannot supersede a missing run manifest")
+    if not parent_attempt_id:
+        raise ValueError("A data-manifest supersession requires a parent attempt")
+    if not reason:
+        raise ValueError("A data-manifest supersession requires an explicit reason")
+    previous = dict(sorted(previous_data_manifest_hashes.items()))
+    replacement = dict(sorted(replacement_data_manifest_hashes.items()))
+    if previous == replacement:
+        raise ValueError("A data-manifest supersession must change an input hash")
+
+    current_bytes = path.read_bytes()
+    current = json.loads(current_bytes.decode("utf-8"))
+    target = supersession_path or path.with_name(
+        "run_manifest_data_supersessions.jsonl"
+    )
+    existing = []
+    if target.exists():
+        existing = [
+            json.loads(line)
+            for line in target.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+    initial_hashes = (
+        dict(existing[0]["previous_data_manifest_hashes"])
+        if existing
+        else previous
+    )
+    expected = {
+        "format": RUN_MANIFEST_VERSION,
+        "run_uuid": str(run_uuid),
+        "config_sha256": str(config_sha256),
+        "data_manifest_hashes": dict(sorted(initial_hashes.items())),
+        "command_scope": list(command_scope),
+    }
+    for key, value in expected.items():
+        if current.get(key) != value:
+            raise ValueError(f"Run manifest data supersession mismatch for {key}")
+
+    manifest_sha256 = hashlib.sha256(current_bytes).hexdigest()
+    prior_replacement = dict(sorted(initial_hashes.items()))
+    for row in existing:
+        if row.get("format") != RUN_MANIFEST_DATA_SUPERSESSION_VERSION:
+            raise ValueError("Run-manifest data supersession format differs")
+        if row.get("run_uuid") != str(run_uuid):
+            raise ValueError("Run-manifest data supersession run UUID differs")
+        if row.get("original_run_manifest_sha256") != manifest_sha256:
+            raise ValueError("Run-manifest data supersession manifest hash differs")
+        if row.get("previous_data_manifest_hashes") != prior_replacement:
+            raise ValueError("Run-manifest data supersession chain is broken")
+        if bool(row.get("scientific_parameter_changed")):
+            raise ValueError("Scientific input changes cannot use supersession")
+        prior_replacement = dict(sorted(row["replacement_data_manifest_hashes"].items()))
+
+    changed_keys = sorted(
+        key
+        for key in set(previous) | set(replacement)
+        if previous.get(key) != replacement.get(key)
+    )
+    identity = {
+        "format": RUN_MANIFEST_DATA_SUPERSESSION_VERSION,
+        "run_uuid": str(run_uuid),
+        "original_run_manifest_sha256": manifest_sha256,
+        "previous_data_manifest_hashes": previous,
+        "replacement_data_manifest_hashes": replacement,
+        "changed_keys": changed_keys,
+        "source_commit": str(source_commit),
+        "parent_attempt_id": str(parent_attempt_id),
+        "reason": str(reason),
+        "scientific_parameter_changed": False,
+    }
+    if existing:
+        last = existing[-1]
+        stable_identity = {
+            key: value
+            for key, value in identity.items()
+            if key not in {"source_commit", "parent_attempt_id"}
+        }
+        if all(last.get(key) == value for key, value in stable_identity.items()):
+            return {**current, "effective_data_manifest_hashes": replacement}
+        if prior_replacement != previous:
+            raise ValueError("Run-manifest data supersession is not contiguous")
+    append_jsonl_fsync(target, {**identity, "timestamp_utc": utc_now()})
+    return {**current, "effective_data_manifest_hashes": replacement}

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import copy
+import json
+from pathlib import Path
 
 import pytest
 import torch
@@ -23,6 +25,10 @@ from rcmf.training.state_conditioned_program_7d import (
     selector_candidate_projection,
     update_count_summary,
     weighted_field_algebra_validation,
+)
+from rcmf.training.state_conditioned_transition_6b import (
+    initialize_or_validate_run_manifest,
+    validate_or_record_run_manifest_data_supersession,
 )
 
 
@@ -193,6 +199,68 @@ def test_legal_exemplar_uses_transition_keyed_tokens_not_sorted_class_counts() -
         seed=22,
     )
     assert manifest["pairs"][0]["transition_id"] == "t2"
+
+
+def test_data_manifest_supersession_is_append_only_and_idempotent(
+    tmp_path: Path,
+) -> None:
+    manifest_path = tmp_path / "run_manifest.json"
+    scope = ["prepare"]
+    old_hashes = {"labels": "same", "transitions": "old"}
+    new_hashes = {"labels": "same", "transitions": "new"}
+    initialize_or_validate_run_manifest(
+        manifest_path,
+        run_uuid="run",
+        config_sha256="config",
+        data_manifest_hashes=old_hashes,
+        source_commit="source-old",
+        command_scope=scope,
+    )
+    original = manifest_path.read_bytes()
+    kwargs = {
+        "run_uuid": "run",
+        "config_sha256": "config",
+        "previous_data_manifest_hashes": old_hashes,
+        "replacement_data_manifest_hashes": new_hashes,
+        "source_commit": "source-new",
+        "command_scope": scope,
+        "parent_attempt_id": "attempt-003",
+        "reason": "use_transition_keyed_token_manifest",
+    }
+    result = validate_or_record_run_manifest_data_supersession(
+        manifest_path, **kwargs
+    )
+    assert manifest_path.read_bytes() == original
+    assert result["effective_data_manifest_hashes"] == new_hashes
+    sidecar = tmp_path / "run_manifest_data_supersessions.jsonl"
+    rows = sidecar.read_text(encoding="utf-8").splitlines()
+    assert len(rows) == 1
+    assert json.loads(rows[0])["changed_keys"] == ["transitions"]
+    validate_or_record_run_manifest_data_supersession(
+        manifest_path,
+        **{
+            **kwargs,
+            "source_commit": "source-later",
+            "parent_attempt_id": "attempt-004",
+        },
+    )
+    assert len(sidecar.read_text(encoding="utf-8").splitlines()) == 1
+
+    with pytest.raises(ValueError, match="not contiguous"):
+        validate_or_record_run_manifest_data_supersession(
+            manifest_path,
+            run_uuid="run",
+            config_sha256="config",
+            previous_data_manifest_hashes=old_hashes,
+            replacement_data_manifest_hashes={
+                "labels": "same",
+                "transitions": "newer",
+            },
+            source_commit="source-newer",
+            command_scope=scope,
+            parent_attempt_id="attempt-004",
+            reason="non_contiguous",
+        )
 
 
 def test_over_context_pair_is_missing_without_selection_change() -> None:

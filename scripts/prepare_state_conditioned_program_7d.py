@@ -33,6 +33,7 @@ from rcmf.training.state_conditioned_program_7d import (
 from rcmf.training.state_conditioned_transition_6b import (
     AttemptLedger,
     initialize_or_validate_run_manifest,
+    validate_or_record_run_manifest_data_supersession,
 )
 from rcmf.training.transition_memory_6a import (
     messages_with_transition_memory,
@@ -585,6 +586,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--parent-attempt-id", required=True)
     parser.add_argument("--resume-checkpoint", required=True)
     parser.add_argument("--tmux-session", default="exp025d")
+    parser.add_argument("--supersede-data-manifest-key")
+    parser.add_argument("--supersede-data-manifest-sha256")
+    parser.add_argument("--data-manifest-supersession-reason")
     return parser.parse_args()
 
 
@@ -601,6 +605,14 @@ def main() -> None:
     immutable = _validate_immutable_inputs(settings=settings, paths=paths)
     source_hashes = {name: sha256_file(path) for name, path in paths.items()}
     config_sha = sha256_file(args.config)
+    command_scope = [
+        "immutable input validation",
+        "deterministic pair manifest",
+        "tokenizer-only context preflight",
+        "teacher-cache reuse accounting",
+        "runtime/storage projection",
+        "no Qwen model load or forward",
+    ]
     with AttemptLedger(
         args.artifact_dir,
         run_uuid=str(settings["run_uuid"]),
@@ -618,21 +630,58 @@ def main() -> None:
         scientific_parameter_changed=False,
         heartbeat_interval_s=float(settings["heartbeat_interval_seconds"]),
     ) as attempt:
-        initialize_or_validate_run_manifest(
-            args.artifact_dir / "run_manifest.json",
-            run_uuid=str(settings["run_uuid"]),
-            config_sha256=config_sha,
-            data_manifest_hashes=source_hashes,
-            source_commit=args.lambda_head,
-            command_scope=[
-                "immutable input validation",
-                "deterministic pair manifest",
-                "tokenizer-only context preflight",
-                "teacher-cache reuse accounting",
-                "runtime/storage projection",
-                "no Qwen model load or forward",
-            ],
+        supersession_values = (
+            args.supersede_data_manifest_key,
+            args.supersede_data_manifest_sha256,
+            args.data_manifest_supersession_reason,
         )
+        if any(supersession_values) and not all(supersession_values):
+            raise ValueError("Data-manifest supersession arguments must be complete")
+        if args.supersede_data_manifest_key:
+            manifest_path = args.artifact_dir / "run_manifest.json"
+            current_manifest = _json(manifest_path)
+            previous_hashes = dict(current_manifest["data_manifest_hashes"])
+            key = str(args.supersede_data_manifest_key)
+            if previous_hashes.get(key) != str(
+                args.supersede_data_manifest_sha256
+            ):
+                raise ValueError("Declared prior data-manifest hash does not match")
+            changed_keys = sorted(
+                name
+                for name in set(previous_hashes) | set(source_hashes)
+                if previous_hashes.get(name) != source_hashes.get(name)
+            )
+            if changed_keys != [key]:
+                raise ValueError(
+                    "Data-manifest supersession changed undeclared inputs: "
+                    f"{changed_keys}"
+                )
+            validate_or_record_run_manifest_data_supersession(
+                manifest_path,
+                run_uuid=str(settings["run_uuid"]),
+                config_sha256=config_sha,
+                previous_data_manifest_hashes=previous_hashes,
+                replacement_data_manifest_hashes=source_hashes,
+                source_commit=args.lambda_head,
+                command_scope=command_scope,
+                parent_attempt_id=args.parent_attempt_id,
+                reason=str(args.data_manifest_supersession_reason),
+            )
+            attempt.progress(
+                status="run_manifest_data_supersession_validated",
+                latest_validated_checkpoint=str(
+                    args.artifact_dir / "run_manifest_data_supersessions.jsonl"
+                ),
+            )
+        else:
+            initialize_or_validate_run_manifest(
+                args.artifact_dir / "run_manifest.json",
+                run_uuid=str(settings["run_uuid"]),
+                config_sha256=config_sha,
+                data_manifest_hashes=source_hashes,
+                source_commit=args.lambda_head,
+                command_scope=command_scope,
+            )
         examples = load_decision_examples(paths["decisions"])
         task_split = _task_split(Path(settings["reconciled_corpus_dir"]))
         query_rows, _ = _query_signatures(examples, task_split)
