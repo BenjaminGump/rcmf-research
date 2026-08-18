@@ -41,7 +41,7 @@ stage_c_7c:
   multiview_cache:
     model_name: Qwen/Qwen3-8B
     dtype: bfloat16
-    renderer_version: span_aware_multiview_frozen_qwen_v1
+    renderer_version: state_transition_multiview_spans_6c_v1
     old_state_cache: runs/stage_c/all_task_interaction_6d_20260815_001/action_intent/representation_cache/all_successful_state_multiview.pt
     old_transition_cache: runs/stage_c/all_task_interaction_6d_20260815_001/representation_cache/multiview/transition_multiview.pt
     output_root: runs/stage_c/signature_balanced_field_7c_20260818_001/representation_cache/multiview

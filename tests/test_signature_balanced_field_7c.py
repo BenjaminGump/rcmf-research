@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 import torch
 
+from rcmf.config import load_config
 from rcmf.training.signature_balanced_field_7c import (
     ClassTarget,
     SignatureBalancedFieldSelector,
@@ -168,6 +169,18 @@ def test_grouped_folds_hold_out_tasks_and_parents_exactly_once() -> None:
         for other in folds[index + 1 :]:
             assert fold["heldout_tasks"].isdisjoint(other["heldout_tasks"])
             assert fold["heldout_parents"].isdisjoint(other["heldout_parents"])
+
+
+def test_clean_multiview_renderer_matches_immutable_exp020_contract() -> None:
+    current = load_config(
+        "configs/benchmark/stage_c_signature_balanced_field_7c.yaml"
+    )
+    exp020 = load_config(
+        "configs/benchmark/stage_c_all_task_interaction_6d.yaml"
+    )
+    assert current.raw["stage_c_7c"]["multiview_cache"]["renderer_version"] == (
+        exp020.raw["stage_c_6d"]["multiview"]["renderer_version"]
+    )
 
 
 def test_field_training_resume_matches_uninterrupted_optimizer_state() -> None:
