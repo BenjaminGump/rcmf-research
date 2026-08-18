@@ -44,6 +44,25 @@ def selector_candidate_projection(
     return output
 
 
+def frozen_pair_context_status(row: Mapping[str, Any]) -> dict[str, Any]:
+    """Mark over-context teacher rows missing without changing the frozen pair."""
+
+    output = dict(row)
+    over_context = bool(output["over_context"])
+    output.update(
+        {
+            "valid_for_teacher_cache": not over_context,
+            "score_status": (
+                "over_context_missing" if over_context else "scoreable"
+            ),
+            "context_substitution": False,
+            "truncated": False,
+            "cross_class_substitution": False,
+        }
+    )
+    return output
+
+
 def canonical_sha256(value: Any) -> str:
     encoded = json.dumps(
         value, ensure_ascii=True, sort_keys=True, separators=(",", ":")

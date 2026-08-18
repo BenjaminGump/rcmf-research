@@ -16,6 +16,7 @@ from rcmf.training.state_conditioned_program_7d import (
     build_frozen_cell_pairs,
     build_program_training_pairs,
     deterministic_random_orthonormal_decoder,
+    frozen_pair_context_status,
     grouped_decoder_pair_split,
     orthonormalize_decoder_preserving_outputs_,
     projected_program_parameter_counts,
@@ -142,6 +143,25 @@ def test_heldout_supervision_fields_are_absent_and_cannot_change_selection() -> 
         seed=21,
     )
     assert clean == contaminated
+
+
+def test_over_context_pair_is_missing_without_selection_change() -> None:
+    source = {
+        "pair_id": "s::transition::t",
+        "state_example_id": "s",
+        "transition_id": "t",
+        "signature_class_id": "c",
+        "over_context": True,
+    }
+    output = frozen_pair_context_status(source)
+    assert output["pair_id"] == source["pair_id"]
+    assert output["transition_id"] == source["transition_id"]
+    assert output["signature_class_id"] == source["signature_class_id"]
+    assert output["score_status"] == "over_context_missing"
+    assert output["valid_for_teacher_cache"] is False
+    assert output["context_substitution"] is False
+    assert output["cross_class_substitution"] is False
+    assert output["truncated"] is False
 
 
 def test_decoder_group_split_has_exact_counts_and_no_state_overlap() -> None:

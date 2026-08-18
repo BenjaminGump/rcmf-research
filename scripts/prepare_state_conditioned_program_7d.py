@@ -19,14 +19,12 @@ from rcmf.training.datasets import (
     _target_suffix,
     load_decision_examples,
 )
-from rcmf.training.signature_balanced_field_7c import (
-    select_scoreable_class_exemplar,
-)
 from rcmf.training.state_conditioned_program_7d import (
     assert_program_student_contract,
     build_frozen_cell_pairs,
     build_program_training_pairs,
     estimate_qwen_runtime,
+    frozen_pair_context_status,
     grouped_decoder_pair_split,
     projected_program_parameter_counts,
     selector_candidate_projection,
@@ -236,132 +234,32 @@ def _preflight_pair(
     return {**dict(row), **cache[key]}
 
 
-def _same_class_context_substitution(
-    *,
-    row: Mapping[str, Any],
-    legal_rows: Sequence[Mapping[str, Any]],
-    class_row: Mapping[str, Any],
-    tokenizer: Any,
-    contexts: Mapping[str, Mapping[str, Any]],
-    transitions: Mapping[str, Mapping[str, Any]],
-    prompt_profile: str,
-    context_limit: int,
-    cache: dict[tuple[str, str], dict[str, Any]],
-) -> dict[str, Any]:
-    scored = []
-    for source in legal_rows:
-        preflight = _preflight_pair(
-            row={**row, **{
-                "transition_id": source["transition_id"],
-                "transition_parent_id": source["transition_parent_id"],
-                "transition_parent_task_id": source["transition_parent_task_id"],
-            }},
-            tokenizer=tokenizer,
-            contexts=contexts,
-            transitions=transitions,
-            prompt_profile=prompt_profile,
-            context_limit=context_limit,
-            cache=cache,
-        )
-        scored.append(
-            {
-                **source,
-                "scoreable_under_context": not bool(preflight["over_context"]),
-            }
-        )
-    scoreable = [item for item in scored if item["scoreable_under_context"]]
-    if not scoreable:
-        return dict(row)
-    token_map = {
-        str(transition_id): int(token_count)
-        for transition_id, token_count in zip(
-            class_row["member_transition_ids"],
-            class_row["serialized_token_counts"],
-            strict=True,
-        )
-    }
-    transition_with_tokens = {
-        transition_id: {**dict(value), "teacher_section_tokens": token_map[transition_id]}
-        for transition_id, value in transitions.items()
-        if transition_id in token_map
-    }
-    exemplar = select_scoreable_class_exemplar(
-        class_row=class_row,
-        legal_rows=scoreable,
-        transitions_by_id=transition_with_tokens,
-    )
-    source = next(
-        value for value in scoreable if str(value["transition_id"]) == exemplar["transition_id"]
-    )
-    return {
-        **dict(row),
-        "transition_id": str(source["transition_id"]),
-        "transition_parent_id": str(source["transition_parent_id"]),
-        "transition_parent_task_id": str(source["transition_parent_task_id"]),
-        "pair_id": f"{row['state_example_id']}::transition::{source['transition_id']}",
-        "context_substitution": True,
-        "context_substitution_rule": str(exemplar["selection_rule"]),
-    }
-
-
 def _context_preflight_manifests(
     *,
     manifests: Mapping[str, Mapping[str, Any]],
-    candidate_rows_by_cell: Mapping[str, Sequence[Mapping[str, Any]]],
-    classes: Mapping[str, Mapping[str, Any]],
     tokenizer: Any,
     contexts: Mapping[str, Mapping[str, Any]],
     transitions: Mapping[str, Mapping[str, Any]],
     prompt_profile: str,
     context_limit: int,
 ) -> tuple[dict[str, list[dict[str, Any]]], dict[str, Any]]:
-    legal: dict[tuple[str, str, str], list[Mapping[str, Any]]] = defaultdict(list)
-    for cell, candidates in candidate_rows_by_cell.items():
-        for source in candidates:
-            state_id = str(source["state_example_id"])
-            class_id = str(source["signature_class_id"])
-            legal[(str(cell), state_id, class_id)].append(source)
-            if str(cell) in {"B", "D"}:
-                legal[("E", state_id, class_id)].append(source)
     cache: dict[tuple[str, str], dict[str, Any]] = {}
     output: dict[str, list[dict[str, Any]]] = {}
     for name, manifest in manifests.items():
         rows = []
         for source in manifest["pairs"]:
-            row = {**dict(source), "context_substitution": False}
-            preflight = _preflight_pair(
-                row=row,
-                tokenizer=tokenizer,
-                contexts=contexts,
-                transitions=transitions,
-                prompt_profile=prompt_profile,
-                context_limit=context_limit,
-                cache=cache,
+            row = dict(source)
+            preflight = frozen_pair_context_status(
+                _preflight_pair(
+                    row=row,
+                    tokenizer=tokenizer,
+                    contexts=contexts,
+                    transitions=transitions,
+                    prompt_profile=prompt_profile,
+                    context_limit=context_limit,
+                    cache=cache,
+                )
             )
-            if preflight["over_context"]:
-                class_id = str(row["signature_class_id"])
-                key = (str(row["cell"]), str(row["state_example_id"]), class_id)
-                alternatives = legal.get(key, [])
-                row = _same_class_context_substitution(
-                    row=row,
-                    legal_rows=alternatives,
-                    class_row=classes[class_id],
-                    tokenizer=tokenizer,
-                    contexts=contexts,
-                    transitions=transitions,
-                    prompt_profile=prompt_profile,
-                    context_limit=context_limit,
-                    cache=cache,
-                )
-                preflight = _preflight_pair(
-                    row=row,
-                    tokenizer=tokenizer,
-                    contexts=contexts,
-                    transitions=transitions,
-                    prompt_profile=prompt_profile,
-                    context_limit=context_limit,
-                    cache=cache,
-                )
             rows.append(preflight)
         output[name] = rows
     all_rows = [row for rows in output.values() for row in rows]
@@ -370,7 +268,7 @@ def _context_preflight_manifests(
         "unique_pair_count": len({str(row["pair_id"]) for row in all_rows}),
         "scoreable_pair_count": sum(not row["over_context"] for row in all_rows),
         "over_context_pair_count": sum(row["over_context"] for row in all_rows),
-        "same_class_substitution_count": sum(row["context_substitution"] for row in all_rows),
+        "same_class_substitution_count": 0,
         "truncation_count": 0,
         "cross_class_substitution_count": 0,
         "by_manifest": {
@@ -856,8 +754,6 @@ def main() -> None:
         )
         preflighted, context_report = _context_preflight_manifests(
             manifests=logical,
-            candidate_rows_by_cell=candidates_by_cell,
-            classes=classes,
             tokenizer=tokenizer,
             contexts=contexts,
             transitions=transitions,
@@ -870,7 +766,8 @@ def main() -> None:
         }
         frozen_selection_validation = {
             cell: _frozen_selection_comparison(
-                scoreable[cell], _rows(paths[f"selector_{cell.lower()}_diagnostics"])
+                preflighted[cell],
+                _rows(paths[f"selector_{cell.lower()}_diagnostics"]),
             )
             for cell in ("B", "D", "E")
         }
