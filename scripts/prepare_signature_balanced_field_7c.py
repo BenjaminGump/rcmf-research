@@ -34,6 +34,7 @@ from rcmf.training.signature_balanced_field_7c import (
 from rcmf.training.state_conditioned_transition_6b import (
     AttemptLedger,
     initialize_or_validate_run_manifest,
+    validate_or_record_run_manifest_config_supersession,
 )
 from rcmf.training.transition_memory_6a import (
     example_task_id,
@@ -542,6 +543,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--lambda-head", required=True)
     parser.add_argument("--parent-attempt-id")
     parser.add_argument("--resume-checkpoint")
+    parser.add_argument("--supersede-config-sha256")
+    parser.add_argument("--config-supersession-reason")
     parser.add_argument("--tmux-session", default="exp025c")
     return parser.parse_args()
 
@@ -590,19 +593,12 @@ def main() -> None:
             raise FileNotFoundError(f"Required immutable input missing: {name}={path}")
     config_hash = sha256_file(args.config)
     data_hashes = {name: sha256_file(path) for name, path in paths.items()}
-    initialize_or_validate_run_manifest(
-        args.artifact_dir / "run_manifest.json",
-        run_uuid=str(settings["run_uuid"]),
-        config_sha256=config_hash,
-        data_manifest_hashes=data_hashes,
-        source_commit=args.lambda_head,
-        command_scope=[
-            "clean procedural labels",
-            "signature-class balancing",
-            "multiview provenance preflight",
-            "no Qwen forward or model training",
-        ],
-    )
+    command_scope = [
+        "clean procedural labels",
+        "signature-class balancing",
+        "multiview provenance preflight",
+        "no Qwen forward or model training",
+    ]
     with AttemptLedger(
         args.artifact_dir,
         run_uuid=str(settings["run_uuid"]),
@@ -620,6 +616,27 @@ def main() -> None:
         scientific_parameter_changed=False,
         heartbeat_interval_s=float(settings["heartbeat_interval_seconds"]),
     ) as attempt:
+        if args.supersede_config_sha256:
+            validate_or_record_run_manifest_config_supersession(
+                args.artifact_dir / "run_manifest.json",
+                run_uuid=str(settings["run_uuid"]),
+                previous_config_sha256=args.supersede_config_sha256,
+                replacement_config_sha256=config_hash,
+                data_manifest_hashes=data_hashes,
+                source_commit=args.lambda_head,
+                command_scope=command_scope,
+                parent_attempt_id=str(args.parent_attempt_id or ""),
+                reason=str(args.config_supersession_reason or ""),
+            )
+        else:
+            initialize_or_validate_run_manifest(
+                args.artifact_dir / "run_manifest.json",
+                run_uuid=str(settings["run_uuid"]),
+                config_sha256=config_hash,
+                data_manifest_hashes=data_hashes,
+                source_commit=args.lambda_head,
+                command_scope=command_scope,
+            )
         examples = load_decision_examples(paths["decisions"])
         task_split = _task_split(corpus)
         query_rows, query_by_id = _query_signatures(examples, task_split)

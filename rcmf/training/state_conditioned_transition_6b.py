@@ -32,6 +32,9 @@ REPRESENTATION_CACHE_VERSION = "frozen_qwen_state_transition_representations_6b_
 REPRESENTATION_GATE_VERSION = "state_transition_representation_gate_6b_v1"
 FIELD_ALGEBRA_VERSION = "factorized_transition_field_algebra_6b_v1"
 RUN_MANIFEST_VERSION = "resumable_experiment_run_manifest_v1"
+RUN_MANIFEST_CONFIG_SUPERSESSION_VERSION = (
+    "run_manifest_config_supersession_v1"
+)
 ATTEMPT_LEDGER_VERSION = "append_only_attempt_ledger_v1"
 HEARTBEAT_VERSION = "persistent_experiment_heartbeat_v1"
 
@@ -1301,3 +1304,69 @@ def initialize_or_validate_run_manifest(
     payload = {**expected, "created_at_utc": utc_now()}
     atomic_write_json(path, payload)
     return payload
+
+
+def validate_or_record_run_manifest_config_supersession(
+    path: Path,
+    *,
+    run_uuid: str,
+    previous_config_sha256: str,
+    replacement_config_sha256: str,
+    data_manifest_hashes: Mapping[str, str],
+    source_commit: str,
+    command_scope: Sequence[str],
+    parent_attempt_id: str,
+    reason: str,
+    supersession_path: Path | None = None,
+) -> dict[str, Any]:
+    """Record a provenance-only config correction without rewriting a run manifest."""
+    if not path.exists():
+        raise ValueError("Cannot supersede a missing run manifest")
+    if not parent_attempt_id:
+        raise ValueError("A config supersession requires a parent attempt")
+    if not reason:
+        raise ValueError("A config supersession requires an explicit reason")
+    if previous_config_sha256 == replacement_config_sha256:
+        raise ValueError("A config supersession must change the config hash")
+
+    current_bytes = path.read_bytes()
+    current = json.loads(current_bytes.decode("utf-8"))
+    expected = {
+        "format": RUN_MANIFEST_VERSION,
+        "run_uuid": str(run_uuid),
+        "config_sha256": str(previous_config_sha256),
+        "data_manifest_hashes": dict(sorted(data_manifest_hashes.items())),
+        "command_scope": list(command_scope),
+    }
+    for key, value in expected.items():
+        if current.get(key) != value:
+            raise ValueError(f"Run manifest supersession mismatch for {key}")
+
+    target = supersession_path or path.with_name(
+        "run_manifest_supersessions.jsonl"
+    )
+    identity = {
+        "format": RUN_MANIFEST_CONFIG_SUPERSESSION_VERSION,
+        "run_uuid": str(run_uuid),
+        "original_run_manifest_sha256": hashlib.sha256(current_bytes).hexdigest(),
+        "previous_config_sha256": str(previous_config_sha256),
+        "replacement_config_sha256": str(replacement_config_sha256),
+        "source_commit": str(source_commit),
+        "parent_attempt_id": str(parent_attempt_id),
+        "reason": str(reason),
+        "scientific_parameter_changed": False,
+    }
+    existing = []
+    if target.exists():
+        existing = [
+            json.loads(line)
+            for line in target.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+    for row in existing:
+        if all(row.get(key) == value for key, value in identity.items()):
+            return {**current, "effective_config_sha256": replacement_config_sha256}
+    if existing:
+        raise ValueError("A different run-manifest config supersession already exists")
+    append_jsonl_fsync(target, {**identity, "timestamp_utc": utc_now()})
+    return {**current, "effective_config_sha256": replacement_config_sha256}

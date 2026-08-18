@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 import torch
 
@@ -15,6 +17,10 @@ from rcmf.training.signature_balanced_field_7c import (
     state_class_balanced_weights,
     train_field_selector,
     validate_class_balance,
+)
+from rcmf.training.state_conditioned_transition_6b import (
+    initialize_or_validate_run_manifest,
+    validate_or_record_run_manifest_config_supersession,
 )
 from scripts.run_signature_balanced_field_7c import (
     _class_balanced_calibration_values,
@@ -183,6 +189,65 @@ def test_clean_multiview_renderer_matches_immutable_exp020_contract() -> None:
     )
 
 
+def test_config_correction_supersedes_without_rewriting_run_manifest(
+    tmp_path: Path,
+) -> None:
+    manifest_path = tmp_path / "run_manifest.json"
+    scope = ["prepare"]
+    initialize_or_validate_run_manifest(
+        manifest_path,
+        run_uuid="run",
+        config_sha256="old",
+        data_manifest_hashes={"data": "hash"},
+        source_commit="source-old",
+        command_scope=scope,
+    )
+    original = manifest_path.read_bytes()
+    result = validate_or_record_run_manifest_config_supersession(
+        manifest_path,
+        run_uuid="run",
+        previous_config_sha256="old",
+        replacement_config_sha256="new",
+        data_manifest_hashes={"data": "hash"},
+        source_commit="source-new",
+        command_scope=scope,
+        parent_attempt_id="attempt-001",
+        reason="renderer_provenance_only",
+    )
+    assert manifest_path.read_bytes() == original
+    assert result["effective_config_sha256"] == "new"
+    supersessions = (
+        tmp_path / "run_manifest_supersessions.jsonl"
+    ).read_text(encoding="utf-8").splitlines()
+    assert len(supersessions) == 1
+    validate_or_record_run_manifest_config_supersession(
+        manifest_path,
+        run_uuid="run",
+        previous_config_sha256="old",
+        replacement_config_sha256="new",
+        data_manifest_hashes={"data": "hash"},
+        source_commit="source-new",
+        command_scope=scope,
+        parent_attempt_id="attempt-001",
+        reason="renderer_provenance_only",
+    )
+    assert len(
+        (tmp_path / "run_manifest_supersessions.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ) == 1
+    with pytest.raises(ValueError, match="config_sha256"):
+        validate_or_record_run_manifest_config_supersession(
+            manifest_path,
+            run_uuid="run",
+            previous_config_sha256="unexpected",
+            replacement_config_sha256="new",
+            data_manifest_hashes={"data": "hash"},
+            source_commit="source-new",
+            command_scope=scope,
+            parent_attempt_id="attempt-001",
+            reason="renderer_provenance_only",
+        )
 def test_field_training_resume_matches_uninterrupted_optimizer_state() -> None:
     states = ["s1", "s2", "s3", "s4"]
     transitions = ["t1", "t2", "t3", "t4"]
