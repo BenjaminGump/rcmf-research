@@ -14,6 +14,7 @@ from rcmf.training.state_conditioned_program_fast_7df import (
     FactorizedProgramFast,
     FreeIDProgramFast,
     build_bounded_a_pairs,
+    build_compiled_one_step_manifest,
     decoded_effect_stability,
     fast_field_validation,
     select_transition_program_inputs,
@@ -339,6 +340,31 @@ def test_bounded_a_manifest_is_exact_and_covers_all_train_tasks() -> None:
     assert all(manifest["coverage_checks"].values())
 
 
+def test_compiled_one_step_manifest_freezes_f3_and_uses_no_raw_transition() -> None:
+    f3 = [
+        {
+            "condition_name": "F3_deployment_e_field_raw",
+            "state_example_id": f"state-{index}",
+            "state_task_id": f"task-{index}",
+            "state_step_id": index,
+            "audit_stratum": "A",
+            "transition_id": f"transition-{index}",
+        }
+        for index in range(3)
+    ]
+    manifest = build_compiled_one_step_manifest(f3, seed=7)
+
+    assert manifest["state_count"] == 3
+    assert manifest["condition_count"] == 12
+    assert manifest["raw_transition_prompt_count"] == 0
+    for row in manifest["conditions"]:
+        assert not row["student_prompt_contains_raw_transition"]
+        if row["condition_name"] == "H3_compiled_shuffled_transition":
+            assert row["program_transition_id"] != row["selector_transition_id"]
+        else:
+            assert row["program_transition_id"] == row["selector_transition_id"]
+
+
 class _ToyProgramAdapter:
     def render_state(self, env_state, history):
         return f"{env_state}:{len(history)}"
@@ -374,3 +400,4 @@ def test_toy_adapter_field_cycle_does_not_import_appworld(monkeypatch) -> None:
     assert field.read(torch.ones(2), torch.ones(2)).shape == (3,)
     field.remove_fast("t")
     assert torch.equal(field.V0, torch.zeros_like(field.V0))
+

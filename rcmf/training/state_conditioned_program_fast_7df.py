@@ -34,6 +34,12 @@ OUTCOME_TRANSITION_VIEWS = (
     "full_transition_global",
 )
 POOLING_RULES = ("token_mean", "final_token")
+COMPILED_ONE_STEP_CONDITIONS = (
+    "H1_compiled_full_factorized",
+    "H2_compiled_static_only",
+    "H3_compiled_shuffled_transition",
+    "H4_zero_program",
+)
 
 
 def transition_view_layout(
@@ -637,6 +643,78 @@ def fast_field_validation(seed: int = 25081) -> dict[str, Any]:
     }
 
 
+def build_compiled_one_step_manifest(
+    field_selected_rows: Sequence[Mapping[str, Any]], *, seed: int = 25096
+) -> dict[str, Any]:
+    """Freeze H1-H4 inputs without consulting Qwen or AppWorld outcomes."""
+    rows_by_state: dict[str, Mapping[str, Any]] = {}
+    for row in field_selected_rows:
+        if str(row.get("condition_name")) != "F3_deployment_e_field_raw":
+            continue
+        state_id = str(row["state_example_id"])
+        if state_id in rows_by_state:
+            raise ValueError(f"Duplicate F3 selection for {state_id}")
+        rows_by_state[state_id] = row
+    if not rows_by_state:
+        raise ValueError("No frozen F3 selections were supplied")
+    transition_ids = sorted(
+        {str(row["transition_id"]) for row in rows_by_state.values()}
+    )
+    if len(transition_ids) < 2:
+        raise ValueError("Shuffled-transition control requires two transition IDs")
+
+    conditions: list[dict[str, Any]] = []
+    for state_id, source in sorted(rows_by_state.items()):
+        own_transition = str(source["transition_id"])
+        shuffled_transition = min(
+            (value for value in transition_ids if value != own_transition),
+            key=lambda value: stable_key(seed, "one-step-shuffle", state_id, value),
+        )
+        for name in COMPILED_ONE_STEP_CONDITIONS:
+            program_transition = (
+                shuffled_transition
+                if name == "H3_compiled_shuffled_transition"
+                else own_transition
+            )
+            payload = {
+                "format": "compiled_program_one_step_condition_7df_v1",
+                "condition_name": name,
+                "state_example_id": state_id,
+                "state_task_id": str(source["state_task_id"]),
+                "state_step_id": int(source["state_step_id"]),
+                "audit_stratum": str(source["audit_stratum"]),
+                "api_documentation_action": bool(
+                    source.get("api_documentation_action", False)
+                ),
+                "procedural_tier": source.get("procedural_tier"),
+                "signature_class_id": source.get("signature_class_id"),
+                "selector_transition_id": own_transition,
+                "program_transition_id": program_transition,
+                "prompt_kind": "bare_compiled_program",
+                "student_prompt_contains_raw_transition": False,
+                "selection_source": "frozen_exp025cr_deployment_e",
+                "selection_uses_qwen_or_appworld_outcomes": False,
+                "valid_for_generation": True,
+            }
+            payload["condition_key"] = canonical_sha256(payload)
+            conditions.append(payload)
+    manifest = {
+        "format": "compiled_program_one_step_manifest_7df_v1",
+        "state_count": len(rows_by_state),
+        "condition_count": len(conditions),
+        "condition_name_counts": dict(
+            sorted(Counter(row["condition_name"] for row in conditions).items())
+        ),
+        "raw_transition_prompt_count": sum(
+            bool(row["student_prompt_contains_raw_transition"])
+            for row in conditions
+        ),
+        "conditions": conditions,
+    }
+    manifest["manifest_sha256"] = canonical_sha256(manifest)
+    return manifest
+
+
 def decoded_effect_stability(
     first_z: Tensor,
     second_z: Tensor,
@@ -720,3 +798,4 @@ def fast_runtime_projection(
             "stability_updates": int(stability_pairs) * int(stability_updates),
         }
     return {"scenarios": output}
+
