@@ -1825,11 +1825,21 @@ def _optimize_canonical_latents(
         >= 0.90,
     }
     stability["passed"] = all(stability["checks"].values())
+    stability["latent_coordinates_stable"] = (
+        stability["latent_z_cosine_mean"] >= 0.85
+    )
     write_jsonl(root / "stability_primary_rows.jsonl", primary_eval["rows"])
     write_jsonl(root / "stability_repeat_rows.jsonl", repeat_eval["rows"])
     if not stability["passed"]:
         raise RuntimeError(f"Canonical pair targets are nonidentifiable: {stability}")
     final_update = int(history[-1]["updates_per_pair"])
+    target_space = (
+        "latent_z"
+        if stability["latent_coordinates_stable"]
+        else "decoded_delta_e"
+    )
+    decoder_weight = decoder.linear.weight.detach().cpu()
+    decoded_delta_e = primary.to(torch.float32) @ decoder_weight.T
     summary = {
         "format": "canonical_pair_latent_summary_7df_v1",
         "pair_count": len(rows),
@@ -1838,7 +1848,12 @@ def _optimize_canonical_latents(
         "u32_continuation": continuation,
         "stability": stability,
         "repeat_history": repeat_history,
-        "target_space": "latent_z",
+        "target_space": target_space,
+        "target_space_reason": (
+            "repeat_latent_coordinates_stable"
+            if target_space == "latent_z"
+            else "latent_coordinates_unstable_decoded_effects_stable"
+        ),
         "passed": stability["passed"],
     }
     atomic_write_json(root / "summary.json", summary)
@@ -1847,6 +1862,9 @@ def _optimize_canonical_latents(
             "format": "canonical_pair_latent_targets_7df_v1",
             "pair_ids": [str(row["pair_id"]) for row in rows],
             "latents": primary,
+            "decoded_delta_e": decoded_delta_e,
+            "decoded_delta_e_shape": list(decoded_delta_e.shape),
+            "target_space": target_space,
             "updates_per_pair": final_update,
             "decoder_sha256": module_state_sha256(decoder),
             "summary_sha256": canonical_sha256(summary),
@@ -1931,6 +1949,16 @@ def _tensor_metrics(predicted: Tensor, target: Tensor) -> dict[str, Any]:
     }
 
 
+def _program_target_values(
+    values: Tensor, *, target_space: str, decoder_weight: Tensor
+) -> Tensor:
+    if target_space == "latent_z":
+        return values
+    if target_space == "decoded_delta_e":
+        return values @ decoder_weight.T
+    raise ValueError(f"Unsupported program target space: {target_space}")
+
+
 def _program_split(rows: Sequence[Mapping[str, Any]]) -> tuple[list[int], list[int], dict[str, Any]]:
     tasks = sorted(
         {str(row["state_task_id"]) for row in rows},
@@ -1970,6 +1998,8 @@ def _train_one_program(
     transition_values: Tensor,
     transition_ids: Sequence[str],
     target: Tensor,
+    target_space: str,
+    decoder_weight: Tensor,
     train_indices: Sequence[int],
     validation_indices: Sequence[int],
     transition_view_names: Sequence[str],
@@ -1987,6 +2017,12 @@ def _train_one_program(
         model.parameters(),
         lr=float(settings["program"]["learning_rate"]),
         weight_decay=float(settings["program"]["weight_decay"]),
+    )
+    decoder_weight = decoder_weight.to(
+        device=state_values.device, dtype=torch.float32
+    )
+    target_values = _program_target_values(
+        target, target_space=target_space, decoder_weight=decoder_weight
     )
     batch_size = int(settings["program"]["batch_size"])
     max_epochs = int(settings["program"]["maximum_epochs"])
@@ -2020,10 +2056,16 @@ def _train_one_program(
                 transition_batch,
                 [transition_ids[index] for index in indices],
             )
-            target_batch = target[index_tensor]
-            loss = F.smooth_l1_loss(prediction, target_batch, beta=0.1)
+            prediction_values = _program_target_values(
+                prediction,
+                target_space=target_space,
+                decoder_weight=decoder_weight,
+            )
+            target_batch = target_values[index_tensor]
+            loss = F.smooth_l1_loss(prediction_values, target_batch, beta=0.1)
             loss = loss + 0.1 * (
-                1.0 - F.cosine_similarity(prediction, target_batch, dim=-1)
+                1.0
+                - F.cosine_similarity(prediction_values, target_batch, dim=-1)
             ).mean()
             optimizer.zero_grad(set_to_none=True)
             loss.backward()
@@ -2043,7 +2085,14 @@ def _train_one_program(
                 val_transition,
                 [transition_ids[index] for index in validation_indices],
             )
-            metrics = _tensor_metrics(val_prediction, target[val_tensor])
+            val_prediction_values = _program_target_values(
+                val_prediction,
+                target_space=target_space,
+                decoder_weight=decoder_weight,
+            )
+            metrics = _tensor_metrics(
+                val_prediction_values, target_values[val_tensor]
+            )
         history.append(
             {
                 "epoch": epoch,
@@ -2065,6 +2114,7 @@ def _train_one_program(
                     "name": name,
                     "seed": seed,
                     "epoch": epoch,
+                    "target_space": target_space,
                     "model_state_dict": {
                         key: value.detach().cpu()
                         for key, value in model.state_dict().items()
@@ -2089,24 +2139,32 @@ def _train_one_program(
             train_transition = shuffled_transition_values[train_tensor]
             val_transition = shuffled_transition_values[val_tensor]
         train_metrics = _tensor_metrics(
-            _program_predictions(
-                model,
-                name,
-                state_values[train_tensor],
-                train_transition,
-                [transition_ids[index] for index in train_indices],
+            _program_target_values(
+                _program_predictions(
+                    model,
+                    name,
+                    state_values[train_tensor],
+                    train_transition,
+                    [transition_ids[index] for index in train_indices],
+                ),
+                target_space=target_space,
+                decoder_weight=decoder_weight,
             ),
-            target[train_tensor],
+            target_values[train_tensor],
         )
         val_metrics = _tensor_metrics(
-            _program_predictions(
-                model,
-                name,
-                state_values[val_tensor],
-                val_transition,
-                [transition_ids[index] for index in validation_indices],
+            _program_target_values(
+                _program_predictions(
+                    model,
+                    name,
+                    state_values[val_tensor],
+                    val_transition,
+                    [transition_ids[index] for index in validation_indices],
+                ),
+                target_space=target_space,
+                decoder_weight=decoder_weight,
             ),
-            target[val_tensor],
+            target_values[val_tensor],
         )
     checkpoint = output_dir / "best.pt"
     atomic_torch_save(
@@ -2115,6 +2173,7 @@ def _train_one_program(
             "name": name,
             "seed": seed,
             "best_epoch": best_epoch,
+            "target_space": target_space,
             "model_state_dict": best_state,
             "train_transition_ids": sorted(
                 {transition_ids[index] for index in train_indices}
@@ -2129,6 +2188,7 @@ def _train_one_program(
     summary = {
         "name": name,
         "seed": seed,
+        "target_space": target_space,
         "best_epoch": best_epoch,
         "epochs_run": len(history),
         "train": train_metrics,
@@ -2147,6 +2207,8 @@ def _train_programs(
     artifact_dir: Path,
     a_pairs: Sequence[dict[str, Any]],
     targets: Tensor,
+    target_space: str,
+    decoder_weight: Tensor,
     attempt: AttemptLedger,
 ) -> dict[str, Any]:
     root = artifact_dir / "program"
@@ -2184,15 +2246,22 @@ def _train_programs(
     transition_values = transition_all[transition_indices]
     transition_ids = [str(row["transition_id"]) for row in a_pairs]
     target = targets.to(device=device, dtype=torch.float32)
+    decoder_weight = decoder_weight.to(device=device, dtype=torch.float32)
+    target_values = _program_target_values(
+        target, target_space=target_space, decoder_weight=decoder_weight
+    )
     train_indices, validation_indices, split = _program_split(a_pairs)
     summaries: dict[str, Any] = {}
     models: dict[str, nn.Module] = {}
     for name in settings["program"]["architectures"]:
         if name == "zero":
-            zero = torch.zeros_like(target[validation_indices])
+            zero = torch.zeros_like(target_values[validation_indices])
             summaries[name] = {
                 "name": name,
-                "validation": _tensor_metrics(zero, target[validation_indices]),
+                "target_space": target_space,
+                "validation": _tensor_metrics(
+                    zero, target_values[validation_indices]
+                ),
                 "parameter_count": 0,
             }
             continue
@@ -2204,6 +2273,8 @@ def _train_programs(
             transition_values=transition_values,
             transition_ids=transition_ids,
             target=target,
+            target_space=target_space,
+            decoder_weight=decoder_weight,
             train_indices=train_indices,
             validation_indices=validation_indices,
             transition_view_names=transition_cache["view_names"],
@@ -2248,6 +2319,8 @@ def _train_programs(
             transition_values=transition_values,
             transition_ids=transition_ids,
             target=target,
+            target_space=target_space,
+            decoder_weight=decoder_weight,
             train_indices=train_indices,
             validation_indices=validation_indices,
             transition_view_names=transition_cache["view_names"],
@@ -2266,6 +2339,7 @@ def _train_programs(
     )
     summary = {
         "format": "tensor_program_training_summary_7df_v1",
+        "target_space": target_space,
         "split": split,
         "architectures": summaries,
         "optional_primary_seed": optional_seed,
@@ -2731,6 +2805,7 @@ def main() -> None:
         )
         if args.stop_after == "latents":
             return
+        program_decoder_weight = decoder.linear.weight.detach().cpu()
         del backend, decoder
         gc.collect()
         torch.cuda.empty_cache()
@@ -2753,6 +2828,8 @@ def main() -> None:
             artifact_dir=args.artifact_dir,
             a_pairs=a_pairs,
             targets=a_targets,
+            target_space=str(latent_summary["target_space"]),
+            decoder_weight=program_decoder_weight,
             attempt=attempt,
         )
         if args.stop_after == "program":

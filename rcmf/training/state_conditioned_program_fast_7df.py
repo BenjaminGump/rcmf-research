@@ -722,16 +722,21 @@ def decoded_effect_stability(
     first_utilities: Sequence[float],
     second_utilities: Sequence[float],
 ) -> dict[str, Any]:
+    latent_cosine = F.cosine_similarity(
+        first_z.to(torch.float64), second_z.to(torch.float64), dim=-1
+    )
     first_delta = first_z.to(torch.float64) @ decoder_weight.to(torch.float64).T
     second_delta = second_z.to(torch.float64) @ decoder_weight.to(torch.float64).T
-    cosine = F.cosine_similarity(first_delta, second_delta, dim=-1)
+    decoded_cosine = F.cosine_similarity(first_delta, second_delta, dim=-1)
     signs = [
         (left == 0.0 and right == 0.0) or (left > 0.0) == (right > 0.0)
         for left, right in zip(first_utilities, second_utilities, strict=True)
     ]
     result = {
-        "decoded_delta_cosine_mean": float(cosine.mean()),
-        "decoded_delta_cosine_minimum": float(cosine.min()),
+        "latent_z_cosine_mean": float(latent_cosine.mean()),
+        "latent_z_cosine_minimum": float(latent_cosine.min()),
+        "decoded_delta_cosine_mean": float(decoded_cosine.mean()),
+        "decoded_delta_cosine_minimum": float(decoded_cosine.min()),
         "repeat_utility_spearman": spearman(first_utilities, second_utilities),
         "repeat_sign_agreement": sum(signs) / len(signs),
     }

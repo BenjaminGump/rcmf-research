@@ -27,6 +27,7 @@ from scripts.run_state_conditioned_program_fast_7df import (
     _decoder_evaluation_delta,
     _fallback_decoder_indices,
     _prefix_equivalence_or_resume,
+    _program_target_values,
     _project_prediction_ratio,
 )
 from rcmf.utils.serialization import atomic_write_json
@@ -150,9 +151,48 @@ def test_decoded_effect_stability_uses_latents_and_decoder_weight() -> None:
     )
 
     assert report["decoded_delta_cosine_mean"] > 0.99
+    assert report["latent_z_cosine_mean"] > 0.99
     assert report["repeat_utility_spearman"] > 0.999
     assert report["repeat_sign_agreement"] == 1.0
     assert report["passed"]
+
+
+def test_decoded_effect_stability_detects_coordinate_instability() -> None:
+    first = torch.tensor([[1.0, 0.0], [0.0, 1.0]])
+    second = torch.tensor([[0.0, 1.0], [1.0, 0.0]])
+    decoder_weight = torch.tensor([[1.0, 1.0]])
+
+    report = decoded_effect_stability(
+        first,
+        second,
+        decoder_weight,
+        [0.2, -0.2],
+        [0.2, -0.2],
+    )
+
+    assert report["latent_z_cosine_mean"] == 0.0
+    assert report["decoded_delta_cosine_mean"] == 1.0
+    assert report["passed"]
+
+
+def test_program_target_values_support_decoded_effect_fallback() -> None:
+    latents = torch.tensor([[1.0, 2.0]])
+    decoder_weight = torch.tensor([[1.0, 0.0], [0.5, 0.5]])
+
+    assert torch.equal(
+        _program_target_values(
+            latents, target_space="latent_z", decoder_weight=decoder_weight
+        ),
+        latents,
+    )
+    assert torch.equal(
+        _program_target_values(
+            latents,
+            target_space="decoded_delta_e",
+            decoder_weight=decoder_weight,
+        ),
+        torch.tensor([[1.0, 1.5]]),
+    )
 
 
 def test_free_id_known_rows_receive_gradients_and_unknown_rows_stay_zero() -> None:
