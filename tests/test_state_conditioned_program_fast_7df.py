@@ -22,6 +22,7 @@ from rcmf.training.state_conditioned_program_fast_7df import (
     transition_boundary_invariance,
 )
 from scripts.prepare_state_conditioned_program_fast_7df import _runtime_projection
+from scripts.finalize_state_conditioned_program_fast_7df import decision_branch
 from scripts.run_state_conditioned_program_fast_7df import (
     _behavioral_objective,
     _decoder_evaluation_delta,
@@ -192,6 +193,21 @@ def test_program_target_values_support_decoded_effect_fallback() -> None:
             decoder_weight=decoder_weight,
         ),
         torch.tensor([[1.0, 1.5]]),
+    )
+
+
+def test_fast_finalizer_stops_when_pair_mlp_gate_fails() -> None:
+    latent = {"passed": True}
+    program = {
+        "latent_gate": {
+            "pair_mlp": {"passed": False},
+            "primary": {"passed": False},
+        }
+    }
+
+    assert (
+        decision_branch(latent, program)
+        == "state_transition_representations_insufficient"
     )
 
 
