@@ -38,6 +38,7 @@ from rcmf.training.oracle_decoder_5fc import (
     apply_latent_inversion_step,
     flatten_delta,
     module_state_sha256,
+    project_independent_latents_to_ratio_,
     project_latents_to_output_ratio_,
     validate_direct_checkpoint,
 )
@@ -1587,6 +1588,13 @@ def _optimize_latent_table(
             raise RuntimeError(f"Unequal latent updates after u{update_round}")
         if update_round not in checkpoints:
             continue
+        strict_ratio_projection = project_independent_latents_to_ratio_(
+            table,
+            decoder,
+            base_norms,
+            max_ratio=1.0,
+            tolerance=0.0,
+        )
         latents = table.stacked().detach()
         snapshots[update_round] = latents.cpu().clone()
         with torch.no_grad():
@@ -1611,6 +1619,7 @@ def _optimize_latent_table(
             "mean_gradient_norm": statistics.fmean(
                 value["gradient_norm"] for value in interval_losses
             ),
+            "strict_numerical_ratio_projection": strict_ratio_projection,
             "elapsed_seconds": time.perf_counter() - started,
         }
         history.append(entry)
@@ -1643,6 +1652,20 @@ def _optimize_latent_table(
             f"huber={evaluation['summary']['sequence_utility_huber']['mean']:.6f}",
             flush=True,
         )
+    final_ratio_projection = project_independent_latents_to_ratio_(
+        table,
+        decoder,
+        base_norms,
+        max_ratio=1.0,
+        tolerance=0.0,
+    )
+    atomic_write_json(
+        output_dir / "final_ratio_projection.json",
+        {
+            "format": "strict_numerical_ratio_projection_7df_v1",
+            **final_ratio_projection,
+        },
+    )
     return table.stacked().detach().cpu(), history, snapshots
 
 
@@ -2287,7 +2310,7 @@ def _project_prediction_ratio(
 ) -> tuple[Tensor, Tensor]:
     projected = z.detach().clone()
     project_latents_to_output_ratio_(
-        projected, decoder, base_norms, max_ratio=1.0
+        projected, decoder, base_norms, max_ratio=1.0, tolerance=0.0
     )
     delta = decoder(projected).view(len(projected), K_TOKENS, -1)
     return projected, delta

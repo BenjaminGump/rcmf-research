@@ -6,6 +6,7 @@ import torch
 
 from rcmf.config import load_config
 from rcmf.benchmarks.program_adapter import ProgramBenchmarkAdapter
+from rcmf.training.oracle_decoder_5fc import LinearDeltaDecoder
 from rcmf.training.state_conditioned_program_7d import (
     WeightedFactorizedTransitionField,
     assert_program_student_contract,
@@ -26,6 +27,7 @@ from scripts.run_state_conditioned_program_fast_7df import (
     _decoder_evaluation_delta,
     _fallback_decoder_indices,
     _prefix_equivalence_or_resume,
+    _project_prediction_ratio,
 )
 from rcmf.utils.serialization import atomic_write_json
 
@@ -56,6 +58,19 @@ def test_runtime_projection_counts_bare_state_forwards() -> None:
     assert expected["bare_baseline_forward_count"] == 189
     assert expected["teacher_forced_control_count"] == 8
     assert expected["qwen_forward_count"] == 2017
+
+
+def test_fast_projection_removes_float32_ratio_overshoot() -> None:
+    decoder = LinearDeltaDecoder(1, 4)
+    with torch.no_grad():
+        decoder.linear.weight.fill_(0.5)
+    projected, delta = _project_prediction_ratio(
+        decoder=decoder,
+        z=torch.tensor([[1.0000005]], dtype=torch.float32),
+        base_norms=torch.ones(1),
+    )
+    assert float(delta.detach().norm(dim=(1, 2)).max()) <= 1.0
+    assert float(projected.max()) <= 1.0
 
 
 def test_pair_objective_keeps_target_delta_and_sparse_teacher_terms() -> None:

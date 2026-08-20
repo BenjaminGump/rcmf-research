@@ -365,7 +365,7 @@ def _project_live_latent(
         base_norm = embeddings[0, valid].to(torch.float32).flatten().norm().view(1)
     projected = z.to(backend.device, dtype=torch.float32).view(1, -1).clone()
     ratio = project_latents_to_output_ratio_(
-        projected, decoder, base_norm, max_ratio=1.0
+        projected, decoder, base_norm, max_ratio=1.0, tolerance=0.0
     )
     ratio["selected_token_indices"] = metadata["selected_token_indices"][0]
     ratio["base_norm"] = float(base_norm.item())
