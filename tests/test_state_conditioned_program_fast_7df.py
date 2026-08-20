@@ -17,12 +17,28 @@ from rcmf.training.state_conditioned_program_fast_7df import (
     select_transition_program_inputs,
     transition_boundary_invariance,
 )
+from scripts.prepare_state_conditioned_program_fast_7df import _runtime_projection
 
 
 def test_fast_config_pins_exact_selector_file_hash() -> None:
     cfg = load_config(
         "configs/benchmark/stage_c_state_conditioned_program_fast_7df.yaml"
     )
+
+
+def test_runtime_projection_counts_bare_state_forwards() -> None:
+    cfg = load_config(
+        "configs/benchmark/stage_c_state_conditioned_program_fast_7df.yaml"
+    )
+    runtime = _runtime_projection(
+        settings=cfg.raw["stage_c_7df"],
+        unique_pairs=224,
+        unique_states=189,
+        new_teacher_rows=224,
+    )
+    expected = runtime["scenarios"]["expected"]
+    assert expected["bare_baseline_forward_count"] == 189
+    assert expected["qwen_forward_count"] == 1847
     value = str(cfg.raw["stage_c_7df"]["expected_selector_ensemble_sha256"])
     assert len(value) == 64
     assert value == (

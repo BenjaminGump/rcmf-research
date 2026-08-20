@@ -143,7 +143,11 @@ def _decoder_repair_audit(
 
 
 def _runtime_projection(
-    *, settings: Mapping[str, Any], unique_pairs: int, new_teacher_rows: int
+    *,
+    settings: Mapping[str, Any],
+    unique_pairs: int,
+    unique_states: int,
+    new_teacher_rows: int,
 ) -> dict[str, Any]:
     rates = settings["runtime"]["rates"]
     repair_pairs = int(settings["decoder"]["expected_repair_rows"])
@@ -173,6 +177,7 @@ def _runtime_projection(
     optional_u64_backward = unique_pairs * 32
     forward_count = (
         new_teacher_rows
+        + unique_states
         + teacher_forced_forwards
         + checkpoint_forwards
         + repair_forwards
@@ -192,6 +197,7 @@ def _runtime_projection(
         margin_seconds = {"best": 600.0, "expected": 1200.0, "conservative": 2400.0}[name]
         scenarios[name] = {
             "qwen_forward_count": forward_count,
+            "bare_baseline_forward_count": unique_states,
             "qwen_backward_updates": backward,
             "conditional_one_step_generations": one_step_generations,
             "tensor_program_training_margin_seconds": margin_seconds,
@@ -479,6 +485,9 @@ def main() -> None:
         runtime = _runtime_projection(
             settings=settings,
             unique_pairs=len(all_unique),
+            unique_states=len(
+                {str(row["state_example_id"]) for row in all_unique.values()}
+            ),
             new_teacher_rows=int(reuse["new_top64_rows"]),
         )
         field_validation = fast_field_validation(seed + 1)
