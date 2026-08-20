@@ -22,7 +22,9 @@ from scripts.prepare_state_conditioned_program_fast_7df import _runtime_projecti
 from scripts.run_state_conditioned_program_fast_7df import (
     _behavioral_objective,
     _decoder_evaluation_delta,
+    _prefix_equivalence_or_resume,
 )
+from rcmf.utils.serialization import atomic_write_json
 
 
 def test_fast_config_pins_exact_selector_file_hash() -> None:
@@ -70,6 +72,37 @@ def test_decoder_heldout_delta_moves_to_the_evaluation_device() -> None:
     )
     assert result.shape == (3, 4, 5)
     assert result.device.type == "meta"
+
+
+def test_completed_prefix_equivalence_is_resumed_without_backend_call(tmp_path) -> None:
+    rows = [
+        {"pair_id": f"pair-{index}", "input_ids": list(range(length))}
+        for index, length in enumerate((3, 5, 7, 9))
+    ]
+    atomic_write_json(
+        tmp_path / "prefix_cache_equivalence.json",
+        {
+            "format": "prefix_kv_equivalence_7df_v1",
+            "representative_pair_count": 4,
+            "reports": [
+                {"pair_id": "pair-0"},
+                {"pair_id": "pair-2"},
+                {"pair_id": "pair-2"},
+                {"pair_id": "pair-3"},
+            ],
+            "passed": False,
+            "selected_training_path": "full_forward",
+        },
+    )
+    resumed = _prefix_equivalence_or_resume(
+        backend=None,
+        rows=rows,
+        device=torch.device("cpu"),
+        settings={},
+        artifact_dir=tmp_path,
+    )
+    assert resumed["resumed_from_completed_equivalence"]
+    assert resumed["selected_training_path"] == "full_forward"
 
 
 def test_free_id_known_rows_receive_gradients_and_unknown_rows_stay_zero() -> None:

@@ -567,6 +567,46 @@ def _prefix_equivalence(
     return output
 
 
+def _prefix_equivalence_or_resume(
+    *,
+    backend: Any,
+    rows: Sequence[dict[str, Any]],
+    device: torch.device,
+    settings: Mapping[str, Any],
+    artifact_dir: Path,
+) -> dict[str, Any]:
+    path = artifact_dir / "prefix_cache_equivalence.json"
+    if path.exists():
+        cached = _json(path)
+        lengths = sorted(rows, key=lambda row: len(row["input_ids"]))
+        positions = (
+            0,
+            len(lengths) // 2,
+            max(0, len(lengths) - 2),
+            len(lengths) - 1,
+        )
+        expected_ids = [str(lengths[index]["pair_id"]) for index in positions]
+        checks = {
+            "format": str(cached.get("format")) == "prefix_kv_equivalence_7df_v1",
+            "pair_count": int(cached.get("representative_pair_count", -1)) == 4,
+            "pair_ids": [str(row.get("pair_id")) for row in cached.get("reports", [])]
+            == expected_ids,
+            "path": str(cached.get("selected_training_path"))
+            in {"cached_prefix", "full_forward"},
+        }
+        if not all(checks.values()):
+            raise ValueError(f"Prefix resume identity differs: {checks}")
+        cached["resumed_from_completed_equivalence"] = True
+        return cached
+    return _prefix_equivalence(
+        backend=backend,
+        rows=rows,
+        device=device,
+        settings=settings,
+        artifact_dir=artifact_dir,
+    )
+
+
 def _student_forward(
     *,
     backend: Any,
@@ -2187,7 +2227,7 @@ def main() -> None:
             context_limit=int(settings["teacher_cache"]["context_limit"]),
         )
         try:
-            prefix = _prefix_equivalence(
+            prefix = _prefix_equivalence_or_resume(
                 backend=backend,
                 rows=tokenized,
                 device=backend.device,
