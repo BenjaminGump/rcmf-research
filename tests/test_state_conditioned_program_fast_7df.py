@@ -400,4 +400,3 @@ def test_toy_adapter_field_cycle_does_not_import_appworld(monkeypatch) -> None:
     assert field.read(torch.ones(2), torch.ones(2)).shape == (3,)
     field.remove_fast("t")
     assert torch.equal(field.V0, torch.zeros_like(field.V0))
-

@@ -798,4 +798,3 @@ def fast_runtime_projection(
             "stability_updates": int(stability_pairs) * int(stability_updates),
         }
     return {"scenarios": output}
-

@@ -278,6 +278,9 @@ def _preflight(
     condition_count = int(manifest["condition_count"])
     rates = settings["runtime"]["rates"]
     replay_rates = replay["causal_audit"]["runtime"]
+    elapsed_through_teacher_forced = float(
+        teacher_forced["actual_h100_hours_through_teacher_forced"]
+    )
     scenarios = {}
     for name in ("best", "expected", "conservative"):
         h100_seconds = condition_count * float(rates[name]["generation"])
@@ -288,6 +291,8 @@ def _preflight(
         scenarios[name] = {
             "h100_hours": h100_seconds / 3600.0,
             "wall_hours": wall_seconds / 3600.0,
+            "cumulative_projected_h100_hours": elapsed_through_teacher_forced
+            + h100_seconds / 3600.0,
         }
     report = {
         "format": "compiled_program_one_step_preflight_7df_v1",
@@ -299,7 +304,10 @@ def _preflight(
         "review_threshold_h100_hours": float(
             settings["runtime"]["review_threshold_h100_hours"]
         ),
-        "automatic_launch_allowed": scenarios["expected"]["h100_hours"]
+        "actual_h100_hours_through_teacher_forced": elapsed_through_teacher_forced,
+        "automatic_launch_allowed": scenarios["expected"][
+            "cumulative_projected_h100_hours"
+        ]
         <= float(settings["runtime"]["review_threshold_h100_hours"]),
         "projected_artifact_bytes": condition_count * 2_359_296,
         "parent_lifecycle_smoke_reused": True,
@@ -880,4 +888,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
