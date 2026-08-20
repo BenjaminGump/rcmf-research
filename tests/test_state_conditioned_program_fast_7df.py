@@ -4,6 +4,7 @@ import builtins
 
 import torch
 
+from rcmf.config import load_config
 from rcmf.benchmarks.program_adapter import ProgramBenchmarkAdapter
 from rcmf.training.state_conditioned_program_7d import (
     WeightedFactorizedTransitionField,
@@ -16,6 +17,17 @@ from rcmf.training.state_conditioned_program_fast_7df import (
     select_transition_program_inputs,
     transition_boundary_invariance,
 )
+
+
+def test_fast_config_pins_exact_selector_file_hash() -> None:
+    cfg = load_config(
+        "configs/benchmark/stage_c_state_conditioned_program_fast_7df.yaml"
+    )
+    value = str(cfg.raw["stage_c_7df"]["expected_selector_ensemble_sha256"])
+    assert len(value) == 64
+    assert value == (
+        "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f"
+    )
 
 
 TRANSITION_VIEWS = (

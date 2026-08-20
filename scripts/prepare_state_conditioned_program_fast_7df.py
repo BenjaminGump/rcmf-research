@@ -281,7 +281,6 @@ def main() -> None:
     missing = {name: str(path) for name, path in paths.items() if not path.exists()}
     if missing:
         raise FileNotFoundError(f"Missing immutable fast-pilot inputs: {missing}")
-    immutable = _validate_immutable_inputs(settings=settings, paths=paths)
     source_hashes = {name: sha256_file(path) for name, path in paths.items()}
     config_sha = sha256_file(args.config)
     command_scope = [
@@ -309,6 +308,7 @@ def main() -> None:
         scientific_parameter_changed=False,
         heartbeat_interval_s=float(settings["heartbeat_interval_seconds"]),
     ) as attempt:
+        immutable = _validate_immutable_inputs(settings=settings, paths=paths)
         initialize_or_validate_run_manifest(
             args.artifact_dir / "run_manifest.json",
             run_uuid=str(settings["run_uuid"]),
