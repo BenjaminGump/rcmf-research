@@ -663,6 +663,12 @@ def _decoder_gate(
     return {"passed": all(checks.values()), "checks": checks, "huber_reduction": reduction}
 
 
+def _decoder_evaluation_delta(
+    values: Tensor, *, device: torch.device, model_dim: int
+) -> Tensor:
+    return values.view(-1, K_TOKENS, int(model_dim)).to(device=device)
+
+
 def _repair_decoder(
     *,
     backend: Any,
@@ -720,10 +726,29 @@ def _repair_decoder(
             Path(str(settings["reconciled_corpus_dir"])) / "memory_records.jsonl"
         )
     }
+    cached_new_path = root / "new_clean_missing_response_row.json"
     repair_responses = []
     for pair_id in affected:
         if pair_id in clean_rows:
             repair_responses.append(clean_rows[pair_id])
+        elif cached_new_path.exists():
+            cached_new = _json(cached_new_path)
+            checks = {
+                "pair_id": str(cached_new.get("pair_id")) == pair_id,
+                "state": str(cached_new.get("state_example_id"))
+                == str(source_rows[pair_id]["state_example_id"]),
+                "memory": str(cached_new.get("memory_id"))
+                == str(source_rows[pair_id]["memory_id"]),
+                "target": str(cached_new.get("target_sha256"))
+                == str(source_rows[pair_id]["target_sha256"]),
+                "lineage": str(cached_new.get("corpus_lineage_sha256"))
+                == str(settings["expected_structural_lineage_sha256"]),
+                "model": str(cached_new.get("model_name"))
+                == str(settings["teacher_cache"]["model_name"]),
+            }
+            if not all(checks.values()):
+                raise ValueError(f"Cached clean decoder row differs: {checks}")
+            repair_responses.append(cached_new)
         else:
             repaired = _score_missing_clean_memory_row(
                 backend=backend,
@@ -733,7 +758,7 @@ def _repair_decoder(
                 examples=examples,
                 records_by_id=records,
             )
-            atomic_write_json(root / "new_clean_missing_response_row.json", repaired)
+            atomic_write_json(cached_new_path, repaired)
             repair_responses.append(repaired)
     repair_tokenized = _build_tokenized_pair_rows(
         backend=backend,
@@ -760,7 +785,32 @@ def _repair_decoder(
     update_counts = [0] * len(affected)
     objective = _behavioral_objective(settings, "decoder")
     history = []
-    for update_round in range(1, max(decoder_cfg["repair_updates"]) + 1):
+    completed_round = 0
+    available_checkpoints = sorted((root / "checkpoints").glob("repair_u*.pt"))
+    if available_checkpoints:
+        resume_path = available_checkpoints[-1]
+        resume = torch.load(resume_path, map_location="cpu", weights_only=False)
+        resumed_counts = [int(value) for value in resume["update_counts"]]
+        completed_round = min(resumed_counts)
+        checks = {
+            "format": str(resume.get("format"))
+            == "direct_row_repair_checkpoint_7df_v1",
+            "pair_ids": list(resume.get("pair_ids", [])) == affected,
+            "counts_equal": len(set(resumed_counts)) == 1,
+            "counts_match_checkpoint": completed_round
+            == int(resume_path.stem.rsplit("u", 1)[-1]),
+            "within_schedule": completed_round
+            <= max(int(value) for value in decoder_cfg["repair_updates"]),
+        }
+        if not all(checks.values()):
+            raise ValueError(f"Decoder row-repair resume differs: {checks}")
+        table.load_state_dict(resume["table_state_dict"])
+        optimizer.load_state_dict(resume["optimizer_state_dict"])
+        update_counts = resumed_counts
+        history = list(resume["history"])
+    for update_round in range(
+        completed_round + 1, max(decoder_cfg["repair_updates"]) + 1
+    ):
         order = list(range(len(affected)))
         random.Random(25091 * 1_000_000 + update_round).shuffle(order)
         for index in order:
@@ -861,7 +911,9 @@ def _repair_decoder(
     reconstructed_eval = _evaluate_direct_tensor(
         backend=backend,
         rows=heldout_rows,
-        delta_tensor=reconstructed.view(-1, K_TOKENS, model_dim),
+        delta_tensor=_decoder_evaluation_delta(
+            reconstructed, device=device, model_dim=model_dim
+        ),
         pair_ids=heldout_ids,
         device=device,
         k=K_TOKENS,
@@ -872,7 +924,9 @@ def _repair_decoder(
     zero_eval = _evaluate_direct_tensor(
         backend=backend,
         rows=heldout_rows,
-        delta_tensor=torch.zeros_like(reconstructed).view(-1, K_TOKENS, model_dim),
+        delta_tensor=_decoder_evaluation_delta(
+            torch.zeros_like(reconstructed), device=device, model_dim=model_dim
+        ),
         pair_ids=heldout_ids,
         device=device,
         k=K_TOKENS,

@@ -19,7 +19,10 @@ from rcmf.training.state_conditioned_program_fast_7df import (
     transition_boundary_invariance,
 )
 from scripts.prepare_state_conditioned_program_fast_7df import _runtime_projection
-from scripts.run_state_conditioned_program_fast_7df import _behavioral_objective
+from scripts.run_state_conditioned_program_fast_7df import (
+    _behavioral_objective,
+    _decoder_evaluation_delta,
+)
 
 
 def test_fast_config_pins_exact_selector_file_hash() -> None:
@@ -58,6 +61,15 @@ def test_pair_objective_keeps_target_delta_and_sparse_teacher_terms() -> None:
     assert objective.sequence_utility_weight == 1.0
     assert objective.sparse_teacher_kl_weight == 0.05
     assert objective.target_delta_weight == 0.10
+
+
+def test_decoder_heldout_delta_moves_to_the_evaluation_device() -> None:
+    values = torch.zeros(3, 4 * 5)
+    result = _decoder_evaluation_delta(
+        values, device=torch.device("meta"), model_dim=5
+    )
+    assert result.shape == (3, 4, 5)
+    assert result.device.type == "meta"
 
 
 def test_free_id_known_rows_receive_gradients_and_unknown_rows_stay_zero() -> None:
