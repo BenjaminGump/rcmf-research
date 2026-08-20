@@ -1714,3 +1714,23 @@ Decision:
   training, or GPU work ran. Explicit approval is required because expected
   H100 time exceeds the 12-hour review threshold. The state-conditioned
   program remains unvalidated and all later stages remain blocked.
+
+### EXP-025D-Fast bounded observation-excluded program pilot
+
+- The new bounded manifest contains A/B/C/D/E `128/24/24/24/32`, or `224`
+  unique scoreable pairs, with zero truncation or over-context rows.
+- Observation isolation, the six-view provenance contract, the benchmark
+  adapter boundary, and direct incremental field add/remove/replace all pass.
+- Exact prefix-KV equivalence failed within the timebox, so the run used the
+  scientifically clean full-forward path.
+- The bounded clean no-bias decoder passes its heldout gate. Canonical u64
+  pair targets reach utility Spearman `0.989921` and Huber `0.035762`.
+  Second-seed decoded-effect cosine is `0.965719`, utility Spearman is
+  `0.997059`, and sign agreement is `1.0`.
+- The tensor-space PairMLP upper bound fails: heldout cosine `0.214108` and MSE
+  reduction versus zero `0.000180`. The observation-excluded factorized model
+  also fails and is worse than static-only; the outcome-view diagnostic does
+  not rescue it.
+- Decision branch: `state_transition_representations_insufficient`. B/C/D/E
+  Qwen validation and H1-H4 AppWorld execution were not unlocked. Compiled
+  program, full bank, Stage C2, end-to-end RCMF, and V4 tagging remain blocked.

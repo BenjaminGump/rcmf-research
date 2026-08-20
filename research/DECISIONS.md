@@ -1781,3 +1781,43 @@ Implementation recovery:
   supersession changes only the `transitions` input from the structural
   manifest to its ID-keyed EXP-025B token-preflight manifest; the original run
   manifest is unchanged and no scientific parameter changed.
+
+## 2026-08-20 EXP-025D-Fast tensor-space stop
+
+VERIFIED:
+
+- The primary program is observation-excluded and records exactly six source
+  goal/state/action vectors; observation shuffle invariance passes.
+- Incremental field writes match explicit sums and audit rebuilds without
+  scanning unrelated records. Read shapes remain fixed.
+- A clean no-bias decoder passes, and canonical behavioral pair targets are
+  stable across optimizer seeds in latent and decoded-effect space.
+- PairMLP fails the preregistered tensor target gate, while the primary
+  factorized, static-only, shuffled, free-ID, and outcome-view controls all
+  remain near or worse than zero on grouped validation.
+
+INFERENCE:
+
+- Failure occurs at amortization from the current independent frozen state and
+  transition representations, not at canonical pair-target construction.
+- Adding post-action outcome views is not supported as a repair because that
+  diagnostic also fails.
+
+UNVERIFIED:
+
+- No B/C/D/E teacher-forced behavior, H1-H4 generation, AppWorld one-step
+  result, full-bank program, Stage C2, or end-to-end result exists.
+
+Decision:
+
+- Record `state_transition_representations_insufficient`.
+- Do not start full-bank integration or claim a working compiled program.
+- Require separately reviewed pair-aware representation repair before any
+  further Qwen or AppWorld program validation.
+
+Implementation recovery:
+
+- Preserve nine closed attempts. GPU-001/002/003 exposed device, decoder-path,
+  and stability-call issues; each fix has a regression test and changed no
+  scientific parameter. GPU-004 resumed exact u64/u16 checkpoints and reached
+  the scientific PairMLP stop.

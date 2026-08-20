@@ -1043,3 +1043,25 @@ After approval, execute the full prespecified experiment unchanged. Before
 approval, do not launch Qwen scoring/training or a duplicate run. Full-bank
 training, Stage C2, end-to-end RCMF, full AppWorld evaluation, and V4 tagging
 remain out of scope.
+
+## EXP-025D-Fast Completed - Representation Repair Review Required
+
+The bounded fast pilot reached `state_transition_representations_insufficient`.
+Canonical pair effects are stable, but PairMLP cannot predict them from the
+current independent frozen multiview representations. Do not resume the old
+201.72-hour EXP-025D design and do not begin full-bank integration.
+
+Recommended 3-5 day critical path for a separately reviewed milestone:
+
+1. Audit canonical-target effective rank, normalization, grouped split
+   difficulty, and nearest-neighbor structure on the same 224 pairs.
+2. Run one bounded pair-aware frozen-Qwen information upper bound against the
+   same targets, with no broad architecture or layer sweep.
+3. If it passes, distill one observation-excluded, field-compatible richer
+   representation and rerun PairMLP/factorized tensor gates.
+4. Only after tensor passage, run the existing B/C/D/E teacher-forced harness.
+5. Only after teacher-forced passage, run the existing H1-H4 same-world
+   one-step audit and decide whether full-bank integration is justified.
+
+Still blocked: p(s,m_transition), compiler/injector, full bank, Stage C2,
+end-to-end RCMF, full AppWorld evaluation, and V4 tagging.
