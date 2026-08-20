@@ -1756,7 +1756,6 @@ def _optimize_canonical_latents(
         repeat_delta = decoder(repeat.to(backend.device)).view(
             stability_count, K_TOKENS, -1
         )
-    effect = decoded_effect_stability(primary_delta.cpu(), repeat_delta.cpu())
     primary_eval = _evaluate_direct_tensor(
         backend=backend,
         rows=stability_rows,
@@ -1781,20 +1780,26 @@ def _optimize_canonical_latents(
     )
     primary_util = [float(row["u_student"]) for row in primary_eval["rows"]]
     repeat_util = [float(row["u_student"]) for row in repeat_eval["rows"]]
-    utility_rho = spearman(primary_util, repeat_util)
-    sign = statistics.fmean(
-        float((left >= 0.0) == (right >= 0.0))
-        for left, right in zip(primary_util, repeat_util)
+    stability = decoded_effect_stability(
+        primary_subset,
+        repeat,
+        decoder.linear.weight.detach().cpu(),
+        primary_util,
+        repeat_util,
     )
-    stability = {
-        **effect,
-        "repeat_utility_spearman": utility_rho,
-        "repeat_sign_agreement": sign,
-        "checks": {
-            "decoded_delta_cosine_gte_0_85": effect["mean_cosine"] >= 0.85,
-            "repeat_utility_spearman_gte_0_90": utility_rho >= 0.90,
-            "repeat_sign_agreement_gte_0_90": sign >= 0.90,
-        },
+    stability["checks"] = {
+        "decoded_delta_cosine_gte_0_85": stability[
+            "decoded_delta_cosine_mean"
+        ]
+        >= 0.85,
+        "repeat_utility_spearman_gte_0_90": (
+            stability["repeat_utility_spearman"] is not None
+            and stability["repeat_utility_spearman"] >= 0.90
+        ),
+        "repeat_sign_agreement_gte_0_90": stability[
+            "repeat_sign_agreement"
+        ]
+        >= 0.90,
     }
     stability["passed"] = all(stability["checks"].values())
     write_jsonl(root / "stability_primary_rows.jsonl", primary_eval["rows"])
