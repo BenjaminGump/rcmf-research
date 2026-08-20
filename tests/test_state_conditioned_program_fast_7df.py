@@ -14,6 +14,7 @@ from rcmf.training.state_conditioned_program_fast_7df import (
     FactorizedProgramFast,
     FreeIDProgramFast,
     build_bounded_a_pairs,
+    decoded_effect_stability,
     fast_field_validation,
     select_transition_program_inputs,
     transition_boundary_invariance,
@@ -117,6 +118,24 @@ def test_fallback_decoder_split_is_exact_and_grouped() -> None:
     assert len(heldout) == 16
     assert not set(calibration) & set(heldout)
     assert report["state_overlap"] == []
+    assert report["passed"]
+
+
+def test_decoded_effect_stability_uses_latents_and_decoder_weight() -> None:
+    first = torch.tensor([[1.0, 0.0], [0.0, 1.0]])
+    second = torch.tensor([[0.99, 0.01], [0.01, 0.99]])
+    decoder_weight = torch.eye(2)
+    report = decoded_effect_stability(
+        first,
+        second,
+        decoder_weight,
+        [0.2, -0.3],
+        [0.19, -0.29],
+    )
+
+    assert report["decoded_delta_cosine_mean"] > 0.99
+    assert report["repeat_utility_spearman"] > 0.999
+    assert report["repeat_sign_agreement"] == 1.0
     assert report["passed"]
 
 
