@@ -148,6 +148,7 @@ def _runtime_projection(
     unique_pairs: int,
     unique_states: int,
     new_teacher_rows: int,
+    new_clean_decoder_rows: int = 1,
 ) -> dict[str, Any]:
     rates = settings["runtime"]["rates"]
     repair_pairs = int(settings["decoder"]["expected_repair_rows"])
@@ -159,10 +160,15 @@ def _runtime_projection(
         int(settings["pair_manifest"][f"{cell.lower()}_pairs"])
         for cell in ("B", "C", "D", "E")
     )
-    architecture_count = len(settings["program"]["architectures"])
-    teacher_forced_forwards = heldout_pairs * architecture_count
+    # Teacher-forced validation evaluates the seven declared architectures plus
+    # the deterministic memory-swap control.
+    teacher_forced_control_count = len(settings["program"]["architectures"]) + 1
+    teacher_forced_forwards = heldout_pairs * teacher_forced_control_count
     checkpoint_forwards = unique_pairs * len(settings["pair_latents"]["updates"])
     repair_forwards = repair_pairs * len(settings["decoder"]["repair_updates"])
+    decoder_gate_forwards = 2 * 16
+    stability_forwards = 2 * stability_pairs
+    decoder_rescore_forwards = 2 * int(new_clean_decoder_rows)
     prefix_forwards = int(settings["prefix_cache"]["representative_pairs"]) * 4
     one_step_generations = (
         int(settings["one_step"]["audit_states"])
@@ -181,6 +187,9 @@ def _runtime_projection(
         + teacher_forced_forwards
         + checkpoint_forwards
         + repair_forwards
+        + decoder_gate_forwards
+        + stability_forwards
+        + decoder_rescore_forwards
         + prefix_forwards
     )
     scenarios = {}
@@ -198,6 +207,7 @@ def _runtime_projection(
         scenarios[name] = {
             "qwen_forward_count": forward_count,
             "bare_baseline_forward_count": unique_states,
+            "teacher_forced_control_count": teacher_forced_control_count,
             "qwen_backward_updates": backward,
             "conditional_one_step_generations": one_step_generations,
             "tensor_program_training_margin_seconds": margin_seconds,
@@ -221,6 +231,9 @@ def _runtime_projection(
         "projected_artifact_bytes": projected_bytes,
         "assumptions": {
             "repair_direct_rows": repair_pairs,
+            "new_clean_decoder_rows": int(new_clean_decoder_rows),
+            "decoder_gate_forwards": decoder_gate_forwards,
+            "stability_forwards": stability_forwards,
             "canonical_pair_updates": pair_updates,
             "optional_u64_only_in_conservative": True,
             "fallback_clean_decoder_only_in_conservative": True,
@@ -489,6 +502,9 @@ def main() -> None:
                 {str(row["state_example_id"]) for row in all_unique.values()}
             ),
             new_teacher_rows=int(reuse["new_top64_rows"]),
+            new_clean_decoder_rows=int(
+                decoder_repair["affected_pairs_requiring_new_clean_pair_score"]
+            ),
         )
         field_validation = fast_field_validation(seed + 1)
         if not field_validation["passed"]:

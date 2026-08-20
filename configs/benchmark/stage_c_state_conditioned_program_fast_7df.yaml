@@ -108,6 +108,7 @@ stage_c_7df:
     repair_updates: [8, 16, 32]
     learning_rate: 0.05
     sequence_huber_delta: 0.1
+    sequence_utility_weight: 1.0
     sparse_teacher_kl_weight: 0.05
     target_delta_huber_weight: 0.10
     ratio_restraint_weight: 0.001

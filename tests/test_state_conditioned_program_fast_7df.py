@@ -12,17 +12,24 @@ from rcmf.training.state_conditioned_program_7d import (
 )
 from rcmf.training.state_conditioned_program_fast_7df import (
     FactorizedProgramFast,
+    FreeIDProgramFast,
     build_bounded_a_pairs,
     fast_field_validation,
     select_transition_program_inputs,
     transition_boundary_invariance,
 )
 from scripts.prepare_state_conditioned_program_fast_7df import _runtime_projection
+from scripts.run_state_conditioned_program_fast_7df import _behavioral_objective
 
 
 def test_fast_config_pins_exact_selector_file_hash() -> None:
     cfg = load_config(
         "configs/benchmark/stage_c_state_conditioned_program_fast_7df.yaml"
+    )
+    value = str(cfg.raw["stage_c_7df"]["expected_selector_ensemble_sha256"])
+    assert len(value) == 64
+    assert value == (
+        "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f"
     )
 
 
@@ -35,15 +42,34 @@ def test_runtime_projection_counts_bare_state_forwards() -> None:
         unique_pairs=224,
         unique_states=189,
         new_teacher_rows=224,
+        new_clean_decoder_rows=1,
     )
     expected = runtime["scenarios"]["expected"]
     assert expected["bare_baseline_forward_count"] == 189
-    assert expected["qwen_forward_count"] == 1847
-    value = str(cfg.raw["stage_c_7df"]["expected_selector_ensemble_sha256"])
-    assert len(value) == 64
-    assert value == (
-        "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f"
+    assert expected["teacher_forced_control_count"] == 8
+    assert expected["qwen_forward_count"] == 2017
+
+
+def test_pair_objective_keeps_target_delta_and_sparse_teacher_terms() -> None:
+    cfg = load_config(
+        "configs/benchmark/stage_c_state_conditioned_program_fast_7df.yaml"
     )
+    objective = _behavioral_objective(cfg.raw["stage_c_7df"], "pair_latents")
+    assert objective.sequence_utility_weight == 1.0
+    assert objective.sparse_teacher_kl_weight == 0.05
+    assert objective.target_delta_weight == 0.10
+
+
+def test_free_id_known_rows_receive_gradients_and_unknown_rows_stay_zero() -> None:
+    model = FreeIDProgramFast(["known-a", "known-b"], program_dim=4)
+    output = model.forward_ids(
+        ["known-a", "unknown", "known-b"], device=torch.device("cpu")
+    )
+    output.sum().backward()
+
+    assert model.rows.weight.grad is not None
+    assert torch.equal(output[1], torch.zeros(4))
+    assert torch.equal(model.rows.weight.grad, torch.ones_like(model.rows.weight.grad))
 
 
 TRANSITION_VIEWS = (
