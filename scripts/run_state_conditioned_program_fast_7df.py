@@ -96,6 +96,9 @@ from scripts.run_transition_behavior_6a import _build_tokenized_rows
 RUN_FORMAT = "state_conditioned_program_fast_gpu_7df_v1"
 K_TOKENS = 4
 LATENT_DIM = 128
+FALLBACK_DECODER_CALIBRATION_PAIRS = 64
+FALLBACK_DECODER_HELDOUT_PAIRS = 16
+FALLBACK_DECODER_LEARNING_RATE = 1.0e-6
 
 
 def _behavioral_objective(
@@ -680,6 +683,37 @@ def _heldout_decoder_indices(pair_ids: Sequence[str], count: int = 16) -> tuple[
     return calibration, heldout
 
 
+def _fallback_decoder_indices(
+    pair_ids: Sequence[str],
+) -> tuple[list[int], list[int], dict[str, Any]]:
+    candidates, heldout = _heldout_decoder_indices(
+        pair_ids, FALLBACK_DECODER_HELDOUT_PAIRS
+    )
+    calibration = sorted(
+        candidates,
+        key=lambda index: stable_key(25096, "fallback-decoder", pair_ids[index]),
+    )[:FALLBACK_DECODER_CALIBRATION_PAIRS]
+    if len(calibration) != FALLBACK_DECODER_CALIBRATION_PAIRS:
+        raise ValueError("Fallback decoder does not have 64 calibration pairs")
+    calibration_states = {
+        str(pair_ids[index]).split("::memory::", 1)[0] for index in calibration
+    }
+    heldout_states = {
+        str(pair_ids[index]).split("::memory::", 1)[0] for index in heldout
+    }
+    report = {
+        "calibration_pair_count": len(calibration),
+        "heldout_pair_count": len(heldout),
+        "calibration_state_count": len(calibration_states),
+        "heldout_state_count": len(heldout_states),
+        "state_overlap": sorted(calibration_states & heldout_states),
+        "passed": not bool(calibration_states & heldout_states),
+    }
+    if not report["passed"]:
+        raise ValueError(f"Fallback decoder grouped split failed: {report}")
+    return calibration, heldout, report
+
+
 def _decoder_gate(
     reconstruction: Mapping[str, Any], zero: Mapping[str, Any]
 ) -> dict[str, Any]:
@@ -707,6 +741,374 @@ def _decoder_evaluation_delta(
     values: Tensor, *, device: torch.device, model_dim: int
 ) -> Tensor:
     return values.view(-1, K_TOKENS, int(model_dim)).to(device=device)
+
+
+def _fallback_clean_decoder(
+    *,
+    backend: Any,
+    settings: Mapping[str, Any],
+    root: Path,
+    final_path: Path,
+    pair_ids: Sequence[str],
+    repaired_delta: Tensor,
+    tokenized_rows: Sequence[dict[str, Any]],
+    model_dim: int,
+    attempt: AttemptLedger,
+) -> tuple[LinearDeltaDecoder, dict[str, Any]]:
+    fallback_root = root / "fallback_clean_linear"
+    fallback_root.mkdir(parents=True, exist_ok=True)
+    calibration, heldout, split = _fallback_decoder_indices(pair_ids)
+    calibration_ids = [str(pair_ids[index]) for index in calibration]
+    heldout_ids = [str(pair_ids[index]) for index in heldout]
+    calibration_rows = [tokenized_rows[index] for index in calibration]
+    heldout_rows = [tokenized_rows[index] for index in heldout]
+    flat_target = flatten_delta(repaired_delta)
+    _, _, full_vh = torch.linalg.svd(flat_target.to(torch.float64), full_matrices=False)
+    basis = full_vh[:LATENT_DIM].to(torch.float32)
+    device = backend.device
+    decoder = LinearDeltaDecoder(LATENT_DIM, K_TOKENS * int(model_dim)).to(device)
+    decoder.initialize_from_basis(basis.to(device))
+    decoder.train()
+    for parameter in decoder.parameters():
+        parameter.requires_grad_(True)
+
+    calibration_table = IndependentPairTensorTable(
+        calibration_ids, (LATENT_DIM,), init_std=0.0
+    ).to(device)
+    initial_calibration_z = flat_target[calibration] @ basis.T
+    with torch.no_grad():
+        for index, value in enumerate(initial_calibration_z):
+            calibration_table.rows[index].copy_(value.to(device))
+    calibration_optimizer = torch.optim.AdamW(
+        [
+            {
+                "params": list(calibration_table.parameters()),
+                "lr": float(settings["decoder"]["learning_rate"]),
+            },
+            {
+                "params": list(decoder.parameters()),
+                "lr": FALLBACK_DECODER_LEARNING_RATE,
+            },
+        ],
+        weight_decay=0.0,
+    )
+    calibration_base_norms = _precompute_direct_base_norms(
+        backend=backend, rows=calibration_rows, device=device, k=K_TOKENS
+    ).to(device)
+    objective = _behavioral_objective(settings, "decoder")
+    schedule = {int(value) for value in settings["decoder"]["repair_updates"]}
+    maximum = max(schedule)
+    calibration_counts = [0] * len(calibration_ids)
+    calibration_history: list[dict[str, Any]] = []
+    calibration_completed = 0
+    calibration_checkpoints = sorted(
+        (fallback_root / "calibration_checkpoints").glob("calibration_u*.pt")
+    )
+    if calibration_checkpoints:
+        path = calibration_checkpoints[-1]
+        payload = torch.load(path, map_location="cpu", weights_only=False)
+        checks = {
+            "format": str(payload.get("format"))
+            == "fallback_clean_decoder_calibration_7df_v1",
+            "pair_ids": list(payload.get("pair_ids", [])) == calibration_ids,
+            "target_pair_ids": list(payload.get("source_pair_ids", []))
+            == list(pair_ids),
+        }
+        if not all(checks.values()):
+            raise ValueError(f"Fallback decoder calibration resume differs: {checks}")
+        decoder.load_state_dict(payload["decoder_state_dict"])
+        calibration_table.load_state_dict(payload["table_state_dict"])
+        calibration_optimizer.load_state_dict(payload["optimizer_state_dict"])
+        calibration_counts = [int(value) for value in payload["update_counts"]]
+        calibration_history = list(payload["history"])
+        calibration_completed = int(payload["completed_rounds"])
+
+    for update_round in range(calibration_completed + 1, maximum + 1):
+        order = list(range(len(calibration_ids)))
+        random.Random(25097 * 1_000_000 + update_round).shuffle(order)
+        for index in order:
+            batch = _collate([calibration_rows[index]], device=device, k=K_TOKENS)
+            z = calibration_table.forward_indices([index])
+            delta = decoder(z).view(1, K_TOKENS, model_dim)
+            student = _forward_direct_delta(
+                backend=backend, batch=batch, delta_slots=delta
+            )
+            loss, terms = _training_loss(
+                logits=student["target_logits"], batch=batch, objective=objective
+            )
+            loss = (
+                loss
+                + _latent_preservation_loss(
+                    terms, calibration_rows[index]["response_cache"], settings
+                )
+                + float(settings["decoder"]["ratio_restraint_weight"])
+                * z.pow(2).mean()
+            )
+            apply_latent_inversion_step(
+                optimizer=calibration_optimizer,
+                loss=loss,
+                table=calibration_table,
+                decoder=decoder,
+                selected_indices=[index],
+                update_counts=calibration_counts,
+                base_norms=calibration_base_norms,
+                ratio_budget=1.0,
+                train_decoder=True,
+                max_grad_norm=1.0,
+            )
+        accounting = update_count_summary(calibration_ids, calibration_counts)
+        if not accounting["all_pairs_equal"]:
+            raise RuntimeError("Fallback decoder calibration updates are unequal")
+        if update_round not in schedule:
+            continue
+        decoder.eval()
+        with torch.no_grad():
+            delta = decoder(calibration_table.stacked()).view(
+                len(calibration_ids), K_TOKENS, model_dim
+            )
+        evaluation = _evaluate_direct_tensor(
+            backend=backend,
+            rows=calibration_rows,
+            delta_tensor=delta,
+            pair_ids=calibration_ids,
+            device=device,
+            k=K_TOKENS,
+            batch_size=1,
+            huber_delta=float(settings["decoder"]["sequence_huber_delta"]),
+            control=f"fallback_clean_decoder_calibration_u{update_round}",
+        )
+        decoder.train()
+        write_jsonl(
+            fallback_root / f"calibration_evaluation_u{update_round:03d}.jsonl",
+            evaluation["rows"],
+        )
+        calibration_history.append(
+            {
+                "updates_per_pair": update_round,
+                "summary": evaluation["summary"],
+                "update_accounting": accounting,
+            }
+        )
+        checkpoint = (
+            fallback_root
+            / "calibration_checkpoints"
+            / f"calibration_u{update_round:03d}.pt"
+        )
+        atomic_torch_save(
+            {
+                "format": "fallback_clean_decoder_calibration_7df_v1",
+                "pair_ids": calibration_ids,
+                "source_pair_ids": list(pair_ids),
+                "completed_rounds": update_round,
+                "update_counts": calibration_counts,
+                "decoder_state_dict": {
+                    key: value.detach().cpu()
+                    for key, value in decoder.state_dict().items()
+                },
+                "table_state_dict": {
+                    key: value.detach().cpu()
+                    for key, value in calibration_table.state_dict().items()
+                },
+                "optimizer_state_dict": calibration_optimizer.state_dict(),
+                "history": calibration_history,
+                "decoder_learning_rate": FALLBACK_DECODER_LEARNING_RATE,
+            },
+            checkpoint,
+        )
+        attempt.progress(
+            status="fallback_decoder_calibration",
+            latest_validated_checkpoint=str(checkpoint),
+            updates_per_calibration_pair=update_round,
+        )
+
+    decoder.eval()
+    for parameter in decoder.parameters():
+        parameter.requires_grad_(False)
+    decoder_hash = module_state_sha256(decoder)
+    heldout_table = IndependentPairTensorTable(
+        heldout_ids, (LATENT_DIM,), init_std=0.0
+    ).to(device)
+    with torch.no_grad():
+        initial_heldout_z = flat_target[heldout].to(device) @ decoder.linear.weight
+        for index, value in enumerate(initial_heldout_z):
+            heldout_table.rows[index].copy_(value)
+    heldout_optimizer = torch.optim.AdamW(
+        heldout_table.parameters(),
+        lr=float(settings["decoder"]["learning_rate"]),
+        weight_decay=0.0,
+    )
+    heldout_base_norms = _precompute_direct_base_norms(
+        backend=backend, rows=heldout_rows, device=device, k=K_TOKENS
+    ).to(device)
+    heldout_counts = [0] * len(heldout_ids)
+    heldout_history: list[dict[str, Any]] = []
+    heldout_completed = 0
+    heldout_checkpoints = sorted(
+        (fallback_root / "heldout_checkpoints").glob("heldout_u*.pt")
+    )
+    if heldout_checkpoints:
+        path = heldout_checkpoints[-1]
+        payload = torch.load(path, map_location="cpu", weights_only=False)
+        checks = {
+            "format": str(payload.get("format"))
+            == "fallback_clean_decoder_heldout_7df_v1",
+            "pair_ids": list(payload.get("pair_ids", [])) == heldout_ids,
+            "decoder": str(payload.get("decoder_sha256")) == decoder_hash,
+        }
+        if not all(checks.values()):
+            raise ValueError(f"Fallback decoder heldout resume differs: {checks}")
+        heldout_table.load_state_dict(payload["table_state_dict"])
+        heldout_optimizer.load_state_dict(payload["optimizer_state_dict"])
+        heldout_counts = [int(value) for value in payload["update_counts"]]
+        heldout_history = list(payload["history"])
+        heldout_completed = int(payload["completed_rounds"])
+
+    for update_round in range(heldout_completed + 1, maximum + 1):
+        order = list(range(len(heldout_ids)))
+        random.Random(25098 * 1_000_000 + update_round).shuffle(order)
+        for index in order:
+            batch = _collate([heldout_rows[index]], device=device, k=K_TOKENS)
+            z = heldout_table.forward_indices([index])
+            delta = decoder(z).view(1, K_TOKENS, model_dim)
+            student = _forward_direct_delta(
+                backend=backend, batch=batch, delta_slots=delta
+            )
+            loss, terms = _training_loss(
+                logits=student["target_logits"], batch=batch, objective=objective
+            )
+            loss = (
+                loss
+                + _latent_preservation_loss(
+                    terms, heldout_rows[index]["response_cache"], settings
+                )
+                + float(settings["decoder"]["ratio_restraint_weight"])
+                * z.pow(2).mean()
+            )
+            apply_latent_inversion_step(
+                optimizer=heldout_optimizer,
+                loss=loss,
+                table=heldout_table,
+                decoder=decoder,
+                selected_indices=[index],
+                update_counts=heldout_counts,
+                base_norms=heldout_base_norms,
+                ratio_budget=1.0,
+                train_decoder=False,
+                max_grad_norm=1.0,
+            )
+        accounting = update_count_summary(heldout_ids, heldout_counts)
+        if not accounting["all_pairs_equal"]:
+            raise RuntimeError("Fallback decoder heldout updates are unequal")
+        if update_round not in schedule:
+            continue
+        with torch.no_grad():
+            delta = decoder(heldout_table.stacked()).view(
+                len(heldout_ids), K_TOKENS, model_dim
+            )
+        evaluation = _evaluate_direct_tensor(
+            backend=backend,
+            rows=heldout_rows,
+            delta_tensor=delta,
+            pair_ids=heldout_ids,
+            device=device,
+            k=K_TOKENS,
+            batch_size=1,
+            huber_delta=float(settings["decoder"]["sequence_huber_delta"]),
+            control=f"fallback_clean_decoder_heldout_u{update_round}",
+        )
+        write_jsonl(
+            fallback_root / f"heldout_evaluation_u{update_round:03d}.jsonl",
+            evaluation["rows"],
+        )
+        heldout_history.append(
+            {
+                "updates_per_pair": update_round,
+                "summary": evaluation["summary"],
+                "update_accounting": accounting,
+            }
+        )
+        checkpoint = (
+            fallback_root / "heldout_checkpoints" / f"heldout_u{update_round:03d}.pt"
+        )
+        atomic_torch_save(
+            {
+                "format": "fallback_clean_decoder_heldout_7df_v1",
+                "pair_ids": heldout_ids,
+                "completed_rounds": update_round,
+                "update_counts": heldout_counts,
+                "table_state_dict": {
+                    key: value.detach().cpu()
+                    for key, value in heldout_table.state_dict().items()
+                },
+                "optimizer_state_dict": heldout_optimizer.state_dict(),
+                "history": heldout_history,
+                "decoder_sha256": decoder_hash,
+            },
+            checkpoint,
+        )
+        attempt.progress(
+            status="fallback_decoder_heldout_inversion",
+            latest_validated_checkpoint=str(checkpoint),
+            updates_per_heldout_pair=update_round,
+        )
+
+    final_evaluation = heldout_history[-1]
+    zero_evaluation = _evaluate_direct_tensor(
+        backend=backend,
+        rows=heldout_rows,
+        delta_tensor=torch.zeros(
+            len(heldout_rows), K_TOKENS, model_dim, device=device
+        ),
+        pair_ids=heldout_ids,
+        device=device,
+        k=K_TOKENS,
+        batch_size=1,
+        huber_delta=float(settings["decoder"]["sequence_huber_delta"]),
+        control="fallback_clean_decoder_heldout_zero",
+    )
+    gate = _decoder_gate(
+        {"summary": final_evaluation["summary"]}, zero_evaluation
+    )
+    continuation = _material_u32_improvement(heldout_history)
+    underoptimized = bool(not gate["passed"] and continuation["continue_to_64"])
+    accepted = bool(gate["passed"] or underoptimized)
+    write_jsonl(
+        fallback_root / "heldout_zero_rows.jsonl", zero_evaluation["rows"]
+    )
+    atomic_torch_save(
+        {
+            "format": "clean_fallback_behavioral_linear_decoder_7df_v1",
+            "decoder_state_dict": {
+                key: value.detach().cpu() for key, value in decoder.state_dict().items()
+            },
+            "basis_initialization": basis,
+            "calibration_pair_ids": calibration_ids,
+            "heldout_pair_ids": heldout_ids,
+            "decoder_sha256": decoder_hash,
+            "source_commit": maybe_git_commit(),
+        },
+        final_path,
+    )
+    summary = {
+        "format": "clean_fallback_behavioral_decoder_summary_7df_v1",
+        "path": "fallback_behaviorally_trained_no_bias_linear",
+        "split": split,
+        "decoder_learning_rate": FALLBACK_DECODER_LEARNING_RATE,
+        "latent_learning_rate": float(settings["decoder"]["learning_rate"]),
+        "calibration_history": calibration_history,
+        "heldout_history": heldout_history,
+        "heldout_zero": zero_evaluation["summary"],
+        "gate": gate,
+        "u32_continuation": continuation,
+        "underoptimized_continuing_bounded_pilot": underoptimized,
+        "decoder_sha256": decoder_hash,
+        "final_checkpoint": str(final_path),
+        "passed": accepted,
+    }
+    atomic_write_json(root / "summary.json", summary)
+    if not accepted:
+        raise RuntimeError(f"Fallback clean decoder gate failed: {summary}")
+    return decoder, summary
 
 
 def _repair_decoder(
@@ -975,8 +1377,36 @@ def _repair_decoder(
         control="repaired_decoder_grouped_heldout_zero",
     )
     gate = _decoder_gate(reconstructed_eval, zero_eval)
+    write_jsonl(
+        root / "grouped_heldout_reconstruction_rows.jsonl",
+        reconstructed_eval["rows"],
+    )
+    write_jsonl(root / "grouped_heldout_zero_rows.jsonl", zero_eval["rows"])
+    atomic_write_json(
+        root / "row_repair_svd_gate.json",
+        {
+            "format": "clean_row_repair_svd_gate_7df_v1",
+            "calibration_pair_count": len(calibration),
+            "heldout_pair_count": len(heldout),
+            "heldout_pair_ids": heldout_ids,
+            "reconstruction": reconstructed_eval["summary"],
+            "zero": zero_eval["summary"],
+            "gate": gate,
+            "passed": gate["passed"],
+        },
+    )
     if not gate["passed"]:
-        raise RuntimeError(f"Repaired rank128 decoder gate failed: {gate}")
+        return _fallback_clean_decoder(
+            backend=backend,
+            settings=settings,
+            root=root,
+            final_path=final_path,
+            pair_ids=pair_ids,
+            repaired_delta=repaired_delta,
+            tokenized_rows=all_tokenized,
+            model_dim=model_dim,
+            attempt=attempt,
+        )
     _, singular_full, vh_full = torch.linalg.svd(
         flatten_delta(repaired_delta).to(torch.float64), full_matrices=False
     )
@@ -1001,8 +1431,6 @@ def _repair_decoder(
         "source_commit": maybe_git_commit(),
     }
     atomic_torch_save(payload, final_path)
-    write_jsonl(root / "grouped_heldout_reconstruction_rows.jsonl", reconstructed_eval["rows"])
-    write_jsonl(root / "grouped_heldout_zero_rows.jsonl", zero_eval["rows"])
     summary = {
         "format": "clean_repaired_rank128_decoder_summary_7df_v1",
         "source_checkpoint": str(source_checkpoint),

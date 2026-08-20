@@ -22,6 +22,7 @@ from scripts.prepare_state_conditioned_program_fast_7df import _runtime_projecti
 from scripts.run_state_conditioned_program_fast_7df import (
     _behavioral_objective,
     _decoder_evaluation_delta,
+    _fallback_decoder_indices,
     _prefix_equivalence_or_resume,
 )
 from rcmf.utils.serialization import atomic_write_json
@@ -103,6 +104,20 @@ def test_completed_prefix_equivalence_is_resumed_without_backend_call(tmp_path) 
     )
     assert resumed["resumed_from_completed_equivalence"]
     assert resumed["selected_training_path"] == "full_forward"
+
+
+def test_fallback_decoder_split_is_exact_and_grouped() -> None:
+    pair_ids = [
+        f"state-{state}::memory::memory-{memory}"
+        for state in range(40)
+        for memory in range(5)
+    ]
+    calibration, heldout, report = _fallback_decoder_indices(pair_ids)
+    assert len(calibration) == 64
+    assert len(heldout) == 16
+    assert not set(calibration) & set(heldout)
+    assert report["state_overlap"] == []
+    assert report["passed"]
 
 
 def test_free_id_known_rows_receive_gradients_and_unknown_rows_stay_zero() -> None:
