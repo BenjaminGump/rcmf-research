@@ -1,0 +1,196 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_state_conditioned_program_fast_7df
+  version: observation_excluded_state_conditioned_program_fast_7df_v1
+  scope:
+    - frozen_signature_balanced_selector
+    - observation_excluded_transition_program
+    - canonical_pair_latent_targets
+    - tensor_space_program_training
+    - bounded_teacher_forced_validation
+    - conditional_bounded_one_step_audit
+    - qwen_frozen
+    - last_user_k
+    - k_4
+    - no_full_bank_training
+    - no_stage_c2
+    - no_end_to_end_rcmf
+    - no_v4_tag
+
+injector:
+  type: additive_token
+  position: last_user_k
+  num_tokens: 4
+  initial_scale: 0.0
+
+stage_c_7df:
+  run_uuid: state_conditioned_program_fast_7df_20260819_001
+  artifact_dir: runs/stage_c/state_conditioned_program_fast_7df_20260819_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  parent_exp025b: runs/stage_c/replay_clean_rebuild_7b_20260818_001
+  parent_exp025c: runs/stage_c/signature_balanced_field_7c_20260818_001
+  parent_exp025cr: runs/stage_c/signature_balanced_field_7cr_20260818_001
+  parent_exp025d_preflight: runs/stage_c/state_conditioned_transition_program_7d_20260818_001
+  reconciled_corpus_dir: runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  expected_structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+  expected_replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+  expected_selector_ensemble_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42bb01255a9e623956611f
+  source:
+    starting_head: a1e8bad323b05c741bfb914d0563f9e4a89726b6
+    source_branch: research/v4-state-conditioned-transition-program
+    archive_branch: archive/v4-pre-fast-program-pilot
+    fast_branch: research/v4-fast-program-pilot
+  expected:
+    train_tasks: 37
+    validation_tasks: 9
+    train_decisions: 499
+    validation_decisions: 139
+    train_transitions: 499
+    transition_parents: 37
+    train_parents: 29
+    heldout_parents: 8
+    signature_classes: 150
+    audit_states: 45
+    primary_audit_states: 32
+
+  pair_manifest:
+    seed: 25081
+    a_pairs: 128
+    b_pairs: 24
+    c_pairs: 24
+    d_pairs: 24
+    e_pairs: 32
+    expected_logical_pairs_before_deduplication: 232
+
+  representations:
+    state_layer: final_layer
+    transition_layer: final_layer
+    state_vector_count: 10
+    transition_vector_count_primary: 6
+    transition_vector_count_action_plus_outcome: 10
+    representation_dim: 4096
+    primary_views:
+      - source_task_goal
+      - pre_action_state
+      - complete_action
+    diagnostic_views:
+      - source_task_goal
+      - pre_action_state
+      - complete_action
+      - post_action_observation
+      - full_transition_global
+    pooling_rules:
+      - token_mean
+      - final_token
+
+  teacher_cache:
+    model_name: Qwen/Qwen3-8B
+    dtype: bfloat16
+    top_k: 64
+    context_limit: 40960
+    prompt_profile: full_demo
+    renderer_version: decision_transition_teacher_section_v1
+
+  decoder:
+    path: repaired_rank128_svd
+    source_checkpoint: runs/stage_c/oracle_convergence_5fb_20260809_001/checkpoints/direct_sequence_utility_plus_sparse_kl_ratio1.0_u112.pt
+    source_rows: runs/stage_c/oracle_convergence_5fb_20260809_001/evaluation_u112.jsonl
+    source_pair_cache: runs/stage_c/pair_grounding_5d_20260807_001/pair_response_cache/pair_response_cache.jsonl
+    clean_pair_cache: runs/stage_c/replay_clean_rebuild_7b_20260818_001/clean_cache_rebuild/pair_response_5d/pair_response_cache.jsonl
+    latent_dim: 128
+    model_dim: 4096
+    k: 4
+    position: last_user_k
+    ratio_budget: 1.0
+    affected_memory_task: b0a8eae_3
+    expected_repair_rows: 6
+    repair_updates: [8, 16, 32]
+    learning_rate: 0.05
+    sequence_huber_delta: 0.1
+    sparse_teacher_kl_weight: 0.05
+    target_delta_huber_weight: 0.10
+    ratio_restraint_weight: 0.001
+    gate:
+      minimum_heldout_spearman: 0.65
+      minimum_sign_agreement: 0.75
+      minimum_huber_reduction_vs_zero: 0.35
+      maximum_ratio: 1.0
+
+  pair_latents:
+    updates: [8, 16, 32]
+    optional_updates: 64
+    learning_rate: 0.05
+    sequence_huber_delta: 0.1
+    sequence_utility_weight: 1.0
+    sparse_teacher_kl_weight: 0.05
+    target_delta_huber_weight: 0.10
+    ratio_restraint_weight: 0.001
+    neutral_preservation_weight: 0.10
+    harmful_preservation_weight: 0.10
+    stability_pair_count: 16
+    stability_updates: 16
+    primary_seed: 25082
+    repeat_seed: 25083
+
+  program:
+    program_dim: 128
+    controller_rank: 16
+    hidden_dim: 256
+    dropout: 0.05
+    learning_rate: 0.0003
+    weight_decay: 0.0001
+    maximum_epochs: 400
+    checkpoint_epochs: [8, 16, 32, 64, 128, 256, 400]
+    early_stop_patience: 64
+    batch_size: 16
+    primary_seed: 25084
+    optional_primary_seed: 25085
+    architectures:
+      - full_factorized_r16_observation_excluded
+      - static_only_observation_excluded
+      - pair_mlp_observation_excluded
+      - free_id
+      - shuffled_transition
+      - zero
+      - full_factorized_r16_action_plus_outcome
+
+  prefix_cache:
+    timebox_engineering_hours: 4
+    representative_pairs: 4
+    equivalence_atol: 0.00001
+    equivalence_rtol: 0.00001
+
+  runtime:
+    review_threshold_h100_hours: 12.0
+    rates:
+      best:
+        forward: 1.25
+        backward: 1.70
+        generation: 6.0
+      expected:
+        forward: 1.85
+        backward: 1.85
+        generation: 7.85
+      conservative:
+        forward: 3.50
+        backward: 2.40
+        generation: 12.0
+    projected_bytes_per_teacher_row: 1250000
+    projected_bytes_per_checkpoint: 150000000
+
+  one_step:
+    enabled_after_teacher_forced_gate: true
+    parent_exp025b: runs/stage_c/replay_clean_rebuild_7b_20260818_001
+    parent_exp025cr: runs/stage_c/signature_balanced_field_7cr_20260818_001
+    audit_states: 45
+    primary_states: 32
+    new_conditions_per_state: 4
+    conditions:
+      - H1_compiled_full_factorized
+      - H2_compiled_static_only
+      - H3_compiled_shuffled_transition
+      - H4_zero_program
+
+  bootstrap_samples: 2000
+  heartbeat_interval_seconds: 240

@@ -179,6 +179,42 @@ class AppWorldAdapter(BenchmarkAdapter):
     def render_experience(self, trajectory: dict[str, Any]) -> str:
         return render_appworld_experience(trajectory)
 
+    def extract_transition_memories(self, trajectory: MemoryRecord) -> list[Any]:
+        from rcmf.benchmarks.appworld.transitions import extract_decision_transitions
+
+        return extract_decision_transitions(trajectory)
+
+    def render_raw_memory_teacher(
+        self, memory: Any, prompt_profile: str
+    ) -> str:
+        del prompt_profile
+        from rcmf.benchmarks.appworld.transitions import transition_teacher_section
+
+        return transition_teacher_section(memory)
+
+    def reference_target(self, example: DecisionExample) -> str:
+        return str(example.target_text)
+
+    def evaluate_generated_action(
+        self,
+        response_text: str,
+        code: str,
+        target_action: str,
+        observation: str,
+        target_observation: str,
+    ) -> dict[str, Any]:
+        from rcmf.training.procedural_causal_audit_6h import (
+            evaluate_generated_action,
+        )
+
+        return evaluate_generated_action(
+            response_text,
+            code,
+            target_action,
+            observation,
+            target_observation,
+        )
+
     def run_episode(self, policy: Any, task_id: str, config: Any | None = None) -> BenchmarkResult:
         start = time.perf_counter()
         result = policy.run_task(task_id)

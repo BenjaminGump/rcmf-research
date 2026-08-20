@@ -682,6 +682,15 @@ class _WeightedFieldRecord:
     delta_t: Tensor
 
 
+def parent_normalized_weight(parent_transition_count: int | None) -> float:
+    if parent_transition_count is None:
+        return 1.0
+    count = int(parent_transition_count)
+    if count <= 0:
+        raise ValueError("Parent transition count must be positive")
+    return 1.0 / count
+
+
 class WeightedFactorizedTransitionField:
     def __init__(
         self,
@@ -700,8 +709,9 @@ class WeightedFactorizedTransitionField:
             self.key_rank, self.controller_rank, self.program_dim, dtype=dtype
         )
         self.records: dict[str, _WeightedFieldRecord] = {}
+        self._parent_members: dict[str, set[str]] = defaultdict(set)
 
-    def _rebuild(self) -> None:
+    def audit_rebuild(self) -> None:
         """Rebuild in transition-ID order for bitwise reversible bookkeeping."""
 
         ordered = [self.records[key] for key in sorted(self.records)]
@@ -752,11 +762,17 @@ class WeightedFactorizedTransitionField:
             parent_id, weight, key, static_program, conditional_basis
         )
         self.records[transition_id] = record
-        self._rebuild()
+        self._parent_members[record.parent_id].add(transition_id)
+        self.audit_rebuild()
 
     def remove(self, transition_id: str) -> None:
-        self.records.pop(str(transition_id))
-        self._rebuild()
+        transition_id = str(transition_id)
+        record = self.records.pop(transition_id)
+        members = self._parent_members[record.parent_id]
+        members.remove(transition_id)
+        if not members:
+            del self._parent_members[record.parent_id]
+        self.audit_rebuild()
 
     def replace(
         self,
@@ -778,13 +794,72 @@ class WeightedFactorizedTransitionField:
         )
 
     def remove_parent(self, parent_id: str) -> list[str]:
-        selected = sorted(
-            transition_id
-            for transition_id, record in self.records.items()
-            if record.parent_id == str(parent_id)
-        )
+        selected = sorted(self._parent_members.get(str(parent_id), set()))
         for transition_id in selected:
             self.remove(transition_id)
+        return selected
+
+    def add_fast(
+        self,
+        transition_id: str,
+        parent_id: str,
+        weight: float,
+        key: Tensor,
+        static_program: Tensor,
+        conditional_basis: Tensor,
+    ) -> None:
+        transition_id = str(transition_id)
+        if transition_id in self.records:
+            raise KeyError(f"Transition already exists: {transition_id}")
+        record = self._record(
+            parent_id, weight, key, static_program, conditional_basis
+        )
+        self.records[transition_id] = record
+        self._parent_members[record.parent_id].add(transition_id)
+        self.V0.add_(record.delta_v0)
+        self.T.add_(record.delta_t)
+
+    def remove_fast(self, transition_id: str) -> None:
+        transition_id = str(transition_id)
+        record = self.records.pop(transition_id)
+        members = self._parent_members[record.parent_id]
+        members.remove(transition_id)
+        if not members:
+            del self._parent_members[record.parent_id]
+        self.V0.sub_(record.delta_v0)
+        self.T.sub_(record.delta_t)
+
+    def replace_fast(
+        self,
+        transition_id: str,
+        parent_id: str,
+        weight: float,
+        key: Tensor,
+        static_program: Tensor,
+        conditional_basis: Tensor,
+    ) -> None:
+        transition_id = str(transition_id)
+        old = self.records[transition_id]
+        replacement = self._record(
+            parent_id, weight, key, static_program, conditional_basis
+        )
+        old_members = self._parent_members[old.parent_id]
+        old_members.remove(transition_id)
+        if not old_members:
+            del self._parent_members[old.parent_id]
+        self._parent_members[replacement.parent_id].add(transition_id)
+        self.records[transition_id] = replacement
+        self.V0.add_(replacement.delta_v0 - old.delta_v0)
+        self.T.add_(replacement.delta_t - old.delta_t)
+
+    def remove_parent_fast(self, parent_id: str) -> list[str]:
+        selected = sorted(self._parent_members.get(str(parent_id), set()))
+        if not selected:
+            return []
+        records = [self.records.pop(transition_id) for transition_id in selected]
+        del self._parent_members[str(parent_id)]
+        self.V0.sub_(torch.stack([record.delta_v0 for record in records]).sum(0))
+        self.T.sub_(torch.stack([record.delta_t for record in records]).sum(0))
         return selected
 
     def read(self, query: Tensor, controller: Tensor) -> Tensor:

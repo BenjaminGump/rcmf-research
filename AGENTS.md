@@ -31,6 +31,14 @@ Before ending any substantial task, Codex must:
 A prose-only chat summary is not a valid handoff. Codex chat history is not a
 source of truth.
 
+## Production Memory Method Contract
+
+1. Production memory write must not scan the existing memory bank.
+2. Production whole-bank read complexity must not depend on memory count.
+3. Benchmark-specific logic must be confined to prompt/rendering and a compact adapter or optional auxiliary supervision.
+4. Raw human-readable memories remain the authoritative ledger.
+5. Deployment-time addition of a new memory must be feed-forward compilation, not Qwen backward optimization.
+
 ## Environment Notes
 
 - For AppWorld, agentic workflows, or Lambda experiment tooling, prefer the
