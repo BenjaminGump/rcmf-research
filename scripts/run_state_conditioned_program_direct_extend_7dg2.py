@@ -64,7 +64,6 @@ from scripts.run_state_conditioned_program_fast_7df import (
     K_TOKENS,
     LATENT_DIM,
     _build_backend,
-    _file_rows,
     _student_forward,
     _validate_cached_teacher_row,
 )
@@ -88,6 +87,15 @@ def _json(path: Path) -> dict[str, Any]:
 
 def _rows(path: Path) -> list[dict[str, Any]]:
     return [dict(row) for row in read_jsonl(path)]
+
+
+def _atomic_row_directory_rows(path: Path) -> list[dict[str, Any]]:
+    if not path.is_dir():
+        raise NotADirectoryError(path)
+    row_paths = sorted(path.glob("*.json"))
+    if not row_paths:
+        raise ValueError(f"Atomic row directory is empty: {path}")
+    return [_json(row_path) for row_path in row_paths]
 
 
 def _parse_args() -> argparse.Namespace:
@@ -377,7 +385,10 @@ def _load_teacher_rows(
         for rows in manifests.values()
         for row in rows
     }
-    rows = _file_rows(paths["parent_teacher_rows"])
+    rows = _atomic_row_directory_rows(paths["parent_teacher_rows"])
+    row_pair_ids = [str(row["pair_id"]) for row in rows]
+    if len(row_pair_ids) != len(set(row_pair_ids)):
+        raise ValueError("Parent teacher cache contains duplicate pair IDs")
     by_pair = {str(row["pair_id"]): row for row in rows}
     if set(by_pair) != set(pairs):
         raise ValueError("Parent teacher row keys differ from the G2 pair union")
@@ -1129,3 +1140,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
