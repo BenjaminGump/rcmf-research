@@ -6,6 +6,7 @@ from pathlib import Path
 
 from scripts.run_state_conditioned_program_direct_extend_7dg2 import (
     _atomic_row_directory_rows,
+    _freeze_training_source,
 )
 
 from rcmf.config import load_config
@@ -40,6 +41,35 @@ def test_atomic_teacher_row_directory_loader_reads_json_rows(tmp_path: Path) -> 
     ]
     with pytest.raises(NotADirectoryError):
         _atomic_row_directory_rows(tmp_path / "missing")
+
+
+def test_training_source_contract_preserves_preflight_source(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    run_manifest = tmp_path / "run_manifest.json"
+    contract_path = tmp_path / "training_source_contract.json"
+    run_manifest.write_text(
+        '{"initial_source_commit":"preflight-sha"}', encoding="utf-8"
+    )
+    monkeypatch.setattr(
+        "scripts.run_state_conditioned_program_direct_extend_7dg2.maybe_git_commit",
+        lambda: "training-sha",
+    )
+    contract = _freeze_training_source(
+        {
+            "run_manifest": run_manifest,
+            "training_source_contract": contract_path,
+        }
+    )
+    assert contract["preflight_source_commit"] == "preflight-sha"
+    assert contract["active_training_source_commit"] == "training-sha"
+    assert not contract["scientific_parameter_changed"]
+    assert _freeze_training_source(
+        {
+            "run_manifest": run_manifest,
+            "training_source_contract": contract_path,
+        }
+    ) == contract
 
 
 def test_config_locks_parent_checkpoint_seed_schedule_and_gain() -> None:
