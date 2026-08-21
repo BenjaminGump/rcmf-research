@@ -14,6 +14,8 @@ from rcmf.training.state_conditioned_program_direct_7dg import (
     runtime_projection,
     task_grouped_split,
 )
+from scripts.finalize_state_conditioned_program_direct_7dg import decision_branch
+from scripts.run_state_conditioned_program_direct_7dg import _pair_indices
 
 
 def _summary(*, rho: float, huber: float, ratio: float = 0.5) -> dict:
@@ -169,3 +171,29 @@ def test_runtime_projection_accounts_for_two_models_and_one_step() -> None:
     assert expected["backward_count_maximum"] == 320
     assert expected["teacher_forward_count"] == 3
     assert expected["one_step_generation_count"] == 180
+
+
+def test_final_decision_requires_one_step_after_factorized_pass() -> None:
+    direct = {"decision_branch": "factorized_teacher_forced_passed_one_step_pending"}
+    with pytest.raises(ValueError, match="one-step"):
+        decision_branch(direct, None)
+    assert decision_branch(
+        direct,
+        {"decision_branch": "compiled_transition_program_direct_pilot_passed"},
+    ) == "compiled_transition_program_direct_pilot_passed"
+    assert decision_branch(
+        {"decision_branch": "direct_behavior_pair_upper_bound_failed"}, None
+    ) == "direct_behavior_pair_upper_bound_failed"
+
+
+def test_pair_indices_accept_tokenized_memory_id_alias() -> None:
+    representations = {
+        "state_position": {"state-a": 3},
+        "transition_position": {"transition-a": 7},
+    }
+    state, transition = _pair_indices(
+        [{"state_example_id": "state-a", "memory_id": "transition-a"}],
+        representations,
+    )
+    assert state == [3]
+    assert transition == [7]

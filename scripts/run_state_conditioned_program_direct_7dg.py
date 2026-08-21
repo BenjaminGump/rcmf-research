@@ -253,13 +253,19 @@ def _objective(settings: Mapping[str, Any], name: str) -> ConvergenceObjective:
 def _pair_indices(
     rows: Sequence[Mapping[str, Any]], representations: Mapping[str, Any]
 ) -> tuple[list[int], list[int]]:
+    def transition_id(row: Mapping[str, Any]) -> str:
+        value = row.get("transition_id", row.get("memory_id"))
+        if value is None:
+            raise KeyError("A direct behavior row has no transition or memory ID")
+        return str(value)
+
     return (
         [
             int(representations["state_position"][str(row["state_example_id"])])
             for row in rows
         ],
         [
-            int(representations["transition_position"][str(row["transition_id"])])
+            int(representations["transition_position"][transition_id(row)])
             for row in rows
         ],
     )
