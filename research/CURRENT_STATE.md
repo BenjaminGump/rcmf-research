@@ -1754,3 +1754,21 @@ Decision:
 - Decision branch: `direct_behavior_factorized_program_failed`. H1-H4 were
   not unlocked. Compiled behavior, full bank, p(s,m_transition), Stage C2,
   end-to-end RCMF, full AppWorld evaluation, and V4 tagging remain blocked.
+
+### EXP-025D-G2 r16 convergence passes teacher forcing but fails behavior
+
+- Exact u16 continuation visited u32 and u48, then stopped before u64 under the
+  preregistered A-validation rule. The selected u48 checkpoint has Spearman
+  `0.614717`, Huber `0.150141`, and global `gamma=1.0`.
+- B/C/D/E Spearman is `0.5516/0.4473/0.5040/0.5738`; Huber reduction versus
+  zero is `29.70%/26.44%/30.03%/30.64%`. The teacher-forced gate passes.
+- All `180/180` H1-H4 generations and same-world executions completed. On the
+  primary 32 states, H1 action signature/successor is `0.28125/0.53125`
+  versus C0 `0.31250/0.43750` and raw F3 `0.68750/0.78125`.
+- H1 retains only `-0.0833/0.2727` of raw action-signature/successor gain,
+  does not beat shuffled transition, and is positive on `3/9` tasks.
+- Decision branch:
+  `calibrated_factorized_program_not_behaviorally_retained`. Full-bank
+  integration, p(s,m_transition), compiler/injector, Stage C2, end-to-end
+  RCMF, full AppWorld evaluation, and V4 tagging remain blocked.
+

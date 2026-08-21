@@ -1861,3 +1861,44 @@ Implementation recovery:
   provenance. The latter stopped after teacher-cache completion and before
   any training update; the resumed attempt reused the exact validated cache.
   No scientific parameter or global seed changed.
+
+## 2026-08-21 EXP-025D-G2 calibrated r16 behavioral stop
+
+VERIFIED:
+
+- Exact continuation from the immutable u16 checkpoint reaches u48 and passes
+  the A/B/E teacher-forced gate after A-only global-gain selection.
+- The H1 compiled intervention improves semantic successor over bare by
+  `+0.09375`, but retains only `27.27%` of the raw-transition successor gain,
+  loses action-signature accuracy, does not beat shuffled transition, and is
+  positive on only `3/9` tasks.
+- All final diagnostic bootstrap intervals use the single global seed `25101`.
+  The superseded seed-offset analysis is retained only as provenance.
+
+INFERENCE:
+
+- The prior r16 teacher-forced failure was under-convergence, but its one-step
+  failure is real under the current compiled intervention.
+- Matching scalar memory utility does not preserve the action-level mechanism
+  carried by selected raw transition text.
+
+UNVERIFIED:
+
+- No full-bank compiled program, p(s,m_transition), Stage C2, end-to-end RCMF,
+  full AppWorld evaluation, or V4 tag exists.
+
+Decision:
+
+- Record `calibrated_factorized_program_not_behaviorally_retained`.
+- Do not resume u64, start r64, or begin full-bank integration automatically.
+- Preserve the validated clean selector/raw-transition causal result for the
+  submission path. Any new compiled-program work requires separate review.
+
+Implementation recovery:
+
+- `train-001` and `train-002` stopped before the first update on atomic-row
+  loading and CUDA RNG-device restoration, respectively. Both fixes have
+  regression tests and changed no scientific parameter. A postrun analysis-
+  only correction removed per-metric bootstrap seed offsets without changing
+  training, generations, row metrics, or the scientific branch.
+

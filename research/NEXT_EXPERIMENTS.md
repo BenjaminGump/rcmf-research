@@ -1089,3 +1089,29 @@ Recommended next review, not yet authorized:
 Still blocked: compiled p(s,m_transition), full bank, program compiler,
 injector training, Stage C2, end-to-end RCMF, full AppWorld evaluation, and an
 RCMF V4 tag.
+
+## EXP-025D-G2 Completed - Behavioral Retention Review Required
+
+The exact r16 continuation resolves convergence of the teacher-forced utility
+objective: u48 passes A/B/E with B/E Spearman `0.5516/0.5738` and Huber
+reduction `29.70%/30.64%`. The compiled one-step intervention does not pass.
+It retains only `27.27%` of raw-transition semantic-successor gain, has
+negative action-signature retention, fails to beat shuffled transition, and
+is positive on `3/9` tasks.
+
+Recommended deadline action:
+
+1. Freeze the clean selector and raw-transition one-step causal result as the
+   validated positive V4-candidate contribution.
+2. Treat r16 compiled-program behavioral retention as a bounded negative
+   result; do not spend the submission window on u64 or r64 by default.
+3. Review paper scope and method claims before authorizing another component
+   experiment.
+4. If compilation remains essential, preregister a narrow objective that
+   directly preserves action/signature/successor behavior rather than scalar
+   teacher utility alone. This must be a separate milestone.
+
+Still blocked: full-bank program integration, p(s,m_transition), compiler or
+injector training, Stage C2, end-to-end RCMF, full AppWorld evaluation, and an
+RCMF V4 tag.
+
