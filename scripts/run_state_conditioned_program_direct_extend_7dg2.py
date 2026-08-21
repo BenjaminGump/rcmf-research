@@ -101,13 +101,30 @@ def _atomic_row_directory_rows(path: Path) -> list[dict[str, Any]]:
 def _freeze_training_source(paths: Mapping[str, Path]) -> dict[str, Any]:
     run_manifest = _json(paths["run_manifest"])
     current_commit = maybe_git_commit()
+    prior_path = paths.get("training_source_contract_v1")
+    prior_contract = (
+        _json(prior_path)
+        if prior_path is not None and prior_path.exists()
+        else None
+    )
     contract = {
-        "format": "experiment_training_source_contract_7dg2_v1",
+        "format": "experiment_training_source_contract_7dg2_v2",
         "run_uuid": RUN_UUID,
         "preflight_source_commit": str(run_manifest["initial_source_commit"]),
         "active_training_source_commit": current_commit,
-        "source_change_reason": "startup_only_atomic_teacher_row_loader_fix",
-        "failed_attempt_id": "exp025dg2-train-001",
+        "source_change_reason": "startup_only_rng_state_device_restore_fix",
+        "failed_attempt_ids": ["exp025dg2-train-001", "exp025dg2-train-002"],
+        "prior_training_source_contract": (
+            str(prior_path) if prior_contract is not None else None
+        ),
+        "prior_training_source_commit": (
+            str(prior_contract["active_training_source_commit"])
+            if prior_contract is not None
+            else None
+        ),
+        "prior_training_source_contract_sha256": (
+            sha256_file(prior_path) if prior_contract is not None else None
+        ),
         "scientific_parameter_changed": False,
     }
     target = paths["training_source_contract"]
@@ -157,7 +174,8 @@ def _paths(
         "parent_teacher_rows": parent / "teacher_cache/rows",
         "parent_teacher_summary": parent / "teacher_cache/summary.json",
         "run_manifest": artifact_dir / "run_manifest.json",
-        "training_source_contract": artifact_dir / "training_source_contract.json",
+        "training_source_contract_v1": artifact_dir / "training_source_contract.json",
+        "training_source_contract": artifact_dir / "training_source_contract_v2.json",
         "preflight": artifact_dir / "preflight_summary.json",
         "resume_integrity": artifact_dir / "resume_integrity.json",
         "calibration_audit": artifact_dir / "calibration_audit_u16.json",
@@ -1171,4 +1189,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
