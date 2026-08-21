@@ -98,6 +98,28 @@ def _atomic_row_directory_rows(path: Path) -> list[dict[str, Any]]:
     return [_json(row_path) for row_path in row_paths]
 
 
+def _freeze_training_source(paths: Mapping[str, Path]) -> dict[str, Any]:
+    run_manifest = _json(paths["run_manifest"])
+    current_commit = maybe_git_commit()
+    contract = {
+        "format": "experiment_training_source_contract_7dg2_v1",
+        "run_uuid": RUN_UUID,
+        "preflight_source_commit": str(run_manifest["initial_source_commit"]),
+        "active_training_source_commit": current_commit,
+        "source_change_reason": "startup_only_atomic_teacher_row_loader_fix",
+        "failed_attempt_id": "exp025dg2-train-001",
+        "scientific_parameter_changed": False,
+    }
+    target = paths["training_source_contract"]
+    if target.exists():
+        existing = _json(target)
+        if existing != contract:
+            raise ValueError("Frozen EXP-025D-G2 training source contract differs")
+        return existing
+    atomic_write_json(target, contract)
+    return contract
+
+
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -135,6 +157,7 @@ def _paths(
         "parent_teacher_rows": parent / "teacher_cache/rows",
         "parent_teacher_summary": parent / "teacher_cache/summary.json",
         "run_manifest": artifact_dir / "run_manifest.json",
+        "training_source_contract": artifact_dir / "training_source_contract.json",
         "preflight": artifact_dir / "preflight_summary.json",
         "resume_integrity": artifact_dir / "resume_integrity.json",
         "calibration_audit": artifact_dir / "calibration_audit_u16.json",
@@ -456,7 +479,7 @@ def _load_training_state(
         "allowed_checkpoint": completed in EXTENSION_CHECKPOINTS,
     }
     if source != paths["parent_checkpoint"]:
-        run_manifest = _json(paths["run_manifest"])
+        source_contract = _json(paths["training_source_contract"])
         checks.update(
             {
                 "extension_format": payload.get("extension_format")
@@ -470,7 +493,7 @@ def _load_training_state(
                     )
                 ),
                 "source_commit": str(payload.get("source_commit"))
-                == str(run_manifest["initial_source_commit"]),
+                == str(source_contract["active_training_source_commit"]),
                 "optimizer_state": bool(
                     payload.get("optimizer_state_dict", {}).get("state")
                 ),
@@ -700,6 +723,14 @@ def _train(
     preflight = _json(paths["preflight"])
     if not bool(preflight["automatic_launch_allowed"]):
         raise RuntimeError("Expected additional H100 time exceeds 14 hours")
+    training_source = _freeze_training_source(paths)
+    attempt.progress(
+        status="factorized_extension_training_source_frozen",
+        active_training_source_commit=training_source[
+            "active_training_source_commit"
+        ],
+        scientific_parameter_changed=False,
+    )
     manifests, split = _manifest_rows(paths)
     backend = _build_backend(cfg)
     if any(parameter.requires_grad for parameter in backend.model.parameters()):
