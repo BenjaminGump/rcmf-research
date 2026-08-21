@@ -1734,3 +1734,23 @@ Decision:
 - Decision branch: `state_transition_representations_insufficient`. B/C/D/E
   Qwen validation and H1-H4 AppWorld execution were not unlocked. Compiled
   program, full bank, Stage C2, end-to-end RCMF, and V4 tagging remain blocked.
+
+### EXP-025D-Direct direct behavioral factorization stop
+
+- The complete scoreable A/B/C/D/E manifest is `607/135/112/112/135`; the
+  A-only task-grouped split is `479/128` pairs across `29/8` disjoint tasks.
+- The teacher cache contains `970` unique rows: `132` reused and `838` newly
+  scored. No over-context row was truncated or assigned a target.
+- The direct PairMLP selected u8 and passed. A/B/C/D/E Spearman is
+  `0.5709/0.3864/0.4785/0.4065/0.3953`; Huber reduction versus zero is
+  `33.52%/23.62%/28.70%/27.04%/22.67%`.
+- The direct factorized model selected u16. A/B/C/D/E Spearman is
+  `0.4078/0.2947/0.4412/0.4185/0.2981`, but Huber reduction is
+  `+3.27%/-16.67%/-10.77%/-27.72%/-22.57%`. B/E fail positive Huber
+  reduction and E also fails the memory-swap contrast.
+- This distinguishes latent-target failure from behavioral information:
+  PairMLP can learn direct behavior, but the current r16 field-compatible
+  factorization cannot transfer calibrated utility to held-out B/E.
+- Decision branch: `direct_behavior_factorized_program_failed`. H1-H4 were
+  not unlocked. Compiled behavior, full bank, p(s,m_transition), Stage C2,
+  end-to-end RCMF, full AppWorld evaluation, and V4 tagging remain blocked.

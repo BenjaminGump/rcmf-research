@@ -1065,3 +1065,27 @@ Recommended 3-5 day critical path for a separately reviewed milestone:
 
 Still blocked: p(s,m_transition), compiler/injector, full bank, Stage C2,
 end-to-end RCMF, full AppWorld evaluation, and V4 tagging.
+
+## EXP-025D-Direct Completed - Immediate Scope Review Required
+
+The direct PairMLP upper bound passes, but the r16 field-compatible model fails
+held-out B/E Huber and the E memory-swap gate. Do not run H1-H4 or begin
+full-bank integration from this checkpoint.
+
+Recommended next review, not yet authorized:
+
+1. Use the existing saved predictions to diagnose static/conditional
+   cancellation, ratio saturation, decoder calibration drift, and why rank
+   correlation remains positive while Huber degrades on B/E.
+2. Decide whether one narrowly preregistered factorization/calibration repair
+   can fit the submission critical path. Do not reopen an architecture sweep
+   or multi-seed search.
+3. If no low-risk repair is justified, freeze the validated clean selector and
+   raw-transition one-step causal result as the positive contribution, and
+   report compiled-program amortization as a bounded negative result.
+4. Only a separately reviewed factorized teacher-forced pass may unlock the
+   existing H1-H4 one-step harness.
+
+Still blocked: compiled p(s,m_transition), full bank, program compiler,
+injector training, Stage C2, end-to-end RCMF, full AppWorld evaluation, and an
+RCMF V4 tag.

@@ -1821,3 +1821,43 @@ Implementation recovery:
   and stability-call issues; each fix has a regression test and changed no
   scientific parameter. GPU-004 resumed exact u64/u16 checkpoints and reached
   the scientific PairMLP stop.
+
+## 2026-08-21 EXP-025D-Direct factorized behavioral stop
+
+VERIFIED:
+
+- Direct frozen-Qwen training makes the observation-excluded PairMLP pass its
+  A/B/E gate, despite the same architecture failing canonical latent-z
+  distillation.
+- The r16 factorized model passes its A-validation gate after u16 and retains
+  positive B/E rank correlation, but B/E utility Huber is worse than zero and
+  E does not beat memory swap.
+- The selector hash, observation boundary, ratio budget, K=4 injection, demos,
+  and frozen-Qwen contract remain intact. No one-step phase ran.
+
+INFERENCE:
+
+- Canonical latent coordinates, rather than pair information itself, caused
+  the old PairMLP amortization failure.
+- The remaining bottleneck is field-compatible factorization/calibration
+  across held-out states, not a general inability to predict pair behavior.
+
+UNVERIFIED:
+
+- No compiled-program generation, one-step AppWorld behavior, full bank,
+  Stage C2, or end-to-end result exists.
+
+Decision:
+
+- Record `direct_behavior_factorized_program_failed`.
+- Do not run H1-H4 or claim a working compiled program.
+- Require immediate project-scope review before any narrow factorization
+  repair; do not start p(s,m_transition), compiler/injector, full-bank,
+  Stage C2, end-to-end, full AppWorld, or V4-tag work.
+
+Implementation recovery:
+
+- Preserve the rejected config typo and the tokenized-row lookup failure as
+  provenance. The latter stopped after teacher-cache completion and before
+  any training update; the resumed attempt reused the exact validated cache.
+  No scientific parameter or global seed changed.
