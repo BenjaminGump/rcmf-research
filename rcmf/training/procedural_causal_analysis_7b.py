@@ -99,6 +99,7 @@ def comparison_set(
     right: str,
     bootstrap_samples: int,
     seed: int,
+    per_metric_seed_offset: bool = True,
 ) -> dict[str, Any]:
     return {
         metric: paired_task_bootstrap(
@@ -107,7 +108,7 @@ def comparison_set(
             right_condition=right,
             metric=metric,
             samples=bootstrap_samples,
-            seed=seed + index,
+            seed=seed + index if per_metric_seed_offset else seed,
         )
         for index, metric in enumerate(PRIMARY_METRICS)
     }
@@ -541,3 +542,4 @@ def validate_formal_rows(
         "duplicate_condition_key_count": 0,
         "passed": True,
     }
+

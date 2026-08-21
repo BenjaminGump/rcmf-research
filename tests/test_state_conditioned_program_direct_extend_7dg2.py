@@ -276,5 +276,7 @@ def test_one_step_path_applies_frozen_global_gain_and_uses_extension_run_uuid() 
     assert "z = z * program_gain" in source
     assert 'run_settings = cfg.raw.get("stage_c_7dg2", settings)' in source
     assert 'run_uuid=str(run_settings["run_uuid"])' in source
+    assert source.count("per_metric_seed_offset=False") == 2
+
 
 

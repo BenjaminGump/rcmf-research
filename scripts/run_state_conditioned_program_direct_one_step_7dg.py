@@ -491,6 +491,7 @@ def _analyze(
             right=right,
             bootstrap_samples=int(settings["bootstrap_samples"]),
             seed=GLOBAL_SEED,
+            per_metric_seed_offset=False,
         )
         for left, right in pairs
     }
@@ -507,6 +508,7 @@ def _analyze(
         right="C0_bare",
         bootstrap_samples=int(settings["bootstrap_samples"]),
         seed=GLOBAL_SEED,
+        per_metric_seed_offset=False,
     )
     retention = {}
     for metric in (
@@ -693,3 +695,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
