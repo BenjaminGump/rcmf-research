@@ -160,6 +160,8 @@ def _load_program_latents(
         device=torch.device("cpu"),
     )
     checkpoint = _selected_factor_checkpoint(paths)
+    training_summary = _json(paths["factor_training"])
+    program_gain = float(training_summary.get("selected_gamma", 1.0))
     payload = torch.load(checkpoint, map_location="cpu", weights_only=False)
     model.load_state_dict(payload["model_state_dict"])
     model.eval()
@@ -191,6 +193,7 @@ def _load_program_latents(
                     if name == "H2_compiled_static_only"
                     else components["z"]
                 )
+                z = z * program_gain
             output.append(z.squeeze(0).cpu())
     latents = torch.stack(output)
     if not bool(torch.isfinite(latents).all()):
@@ -208,6 +211,7 @@ def _load_program_latents(
         "decoder_sha256": str(
             _json(paths["factor_training"])["trained_decoder_sha256"]
         ),
+        "program_gain": program_gain,
         "student_prompt_contains_raw_transition": False,
     }
 
@@ -217,7 +221,9 @@ def _preflight(
     settings: Mapping[str, Any],
     replay: Mapping[str, Any],
     artifact_dir: Path,
+    run_settings: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
+    run_settings = settings if run_settings is None else run_settings
     paths = _paths(settings, artifact_dir)
     _require_paths(
         paths,
@@ -257,10 +263,10 @@ def _preflight(
     scenarios = {}
     for name in ("best", "expected", "conservative"):
         h100_seconds = condition_count * float(
-            settings["runtime"]["rates"][name]["generation"]
+            run_settings["runtime"]["rates"][name]["generation"]
         )
         wall_seconds = condition_count * (
-            float(settings["runtime"]["rates"][name]["generation"])
+            float(run_settings["runtime"]["rates"][name]["generation"])
             + float(replay_rates["replay_seconds_per_condition"][name])
         )
         scenarios[name] = {
@@ -268,6 +274,16 @@ def _preflight(
             "one_step_wall_hours": wall_seconds / 3600.0,
             "cumulative_h100_hours": direct_h100 + h100_seconds / 3600.0,
         }
+    review_threshold = float(
+        run_settings.get(
+            "review_threshold_h100_hours",
+            run_settings["runtime"].get("review_threshold_h100_hours", 18.0),
+        )
+    )
+    extension_runtime = artifact_dir / "runtime_preflight.json"
+    launch_allowed = scenarios["expected"]["cumulative_h100_hours"] <= review_threshold
+    if run_settings is not settings and extension_runtime.exists():
+        launch_allowed = bool(_json(extension_runtime)["automatic_launch_allowed"])
     report = {
         "format": "compiled_program_one_step_preflight_7dg_v1",
         "global_seed": GLOBAL_SEED,
@@ -276,11 +292,13 @@ def _preflight(
         "qwen_generation_count": condition_count,
         "appworld_reconstruction_execution_count": condition_count,
         "runtime": scenarios,
-        "review_threshold_h100_hours": float(
-            settings["runtime"]["review_threshold_h100_hours"]
+        "review_threshold_h100_hours": review_threshold,
+        "automatic_launch_allowed": launch_allowed,
+        "authorization_source": (
+            str(extension_runtime)
+            if run_settings is not settings
+            else "one_step_cumulative_projection"
         ),
-        "automatic_launch_allowed": scenarios["expected"]["cumulative_h100_hours"]
-        <= float(settings["runtime"]["review_threshold_h100_hours"]),
         "projected_artifact_bytes": condition_count * 2_359_296,
         "parent_lifecycle_smoke_reused": True,
         "selector_sha256": sha256_file(paths["selector"]),
@@ -437,7 +455,11 @@ def _program_phase(
 
 
 def _analyze(
-    *, settings: Mapping[str, Any], artifact_dir: Path
+    *,
+    settings: Mapping[str, Any],
+    artifact_dir: Path,
+    success_branch: str = "compiled_transition_program_direct_pilot_passed",
+    failure_branch: str = "compiled_program_not_behaviorally_retained",
 ) -> dict[str, Any]:
     root = artifact_dir / ONE_STEP_ROOT
     generation = _json(root / "generation_summary.json")
@@ -530,9 +552,9 @@ def _analyze(
     }
     passed = all(checks.values())
     decision = (
-        "compiled_transition_program_direct_pilot_passed"
+        success_branch
         if passed
-        else "compiled_program_not_behaviorally_retained"
+        else failure_branch
     )
     summary = {
         "format": "compiled_program_one_step_analysis_7dg_v1",
@@ -576,7 +598,9 @@ def main() -> None:
     cfg = load_config(args.config)
     replay_cfg = load_config(args.replay_config)
     settings = cfg.raw["stage_c_7dg"]
+    run_settings = cfg.raw.get("stage_c_7dg2", settings)
     replay = replay_cfg.raw["stage_c_7b"]
+    extension = "stage_c_7dg2" in cfg.raw
     require_global_seed(int(settings["global_seed"]))
     seed_everything(GLOBAL_SEED)
     if os.name != "nt" and not os.path.ismount(
@@ -596,7 +620,7 @@ def main() -> None:
     }
     with AttemptLedger(
         args.artifact_dir,
-        run_uuid=str(settings["run_uuid"]),
+        run_uuid=str(run_settings["run_uuid"]),
         attempt_id=args.attempt_id,
         phase=f"compiled_program_direct_one_step_{args.phase}",
         command=[str(value) for value in sys.argv],
@@ -609,14 +633,17 @@ def main() -> None:
         parent_attempt_id=args.parent_attempt_id,
         resume_checkpoint=args.resume_checkpoint,
         scientific_parameter_changed=False,
-        heartbeat_interval_s=float(settings["heartbeat_interval_seconds"]),
+        heartbeat_interval_s=float(run_settings["heartbeat_interval_seconds"]),
     ) as attempt:
         if args.phase == "preflight":
             result = _preflight(
-                settings=settings, replay=replay, artifact_dir=args.artifact_dir
+                settings=settings,
+                replay=replay,
+                artifact_dir=args.artifact_dir,
+                run_settings=run_settings,
             )
         elif args.phase in {"smoke", "formal"}:
-            if args.phase == "formal":
+            if args.phase == "formal" and not extension:
                 smoke = _json(
                     args.artifact_dir
                     / ONE_STEP_ROOT
@@ -633,7 +660,20 @@ def main() -> None:
                 attempt_id=args.attempt_id,
             )
         else:
-            result = _analyze(settings=settings, artifact_dir=args.artifact_dir)
+            result = _analyze(
+                settings=settings,
+                artifact_dir=args.artifact_dir,
+                success_branch=(
+                    "compiled_transition_program_r16_validated"
+                    if extension
+                    else "compiled_transition_program_direct_pilot_passed"
+                ),
+                failure_branch=(
+                    "calibrated_factorized_program_not_behaviorally_retained"
+                    if extension
+                    else "compiled_program_not_behaviorally_retained"
+                ),
+            )
         checkpoints = {
             "preflight": "preflight.json",
             "smoke": "lifecycle_smoke/smoke_summary.json",

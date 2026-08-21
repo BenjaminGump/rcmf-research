@@ -1,0 +1,33 @@
+include: stage_c_state_conditioned_program_direct_7dg.yaml
+
+experiment:
+  name: stage_c_state_conditioned_program_direct_extend_7dg2
+  version: single_seed_factorized_convergence_calibration_7dg2_v1
+  seed: 25101
+
+stage_c_7dg2:
+  run_uuid: state_conditioned_program_direct_extend_7dg2_20260821_001
+  artifact_dir: runs/stage_c/state_conditioned_program_direct_extend_7dg2_20260821_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  parent_run: runs/stage_c/state_conditioned_program_direct_7dg_20260821_001
+  parent_run_uuid: state_conditioned_program_direct_7dg_20260821_001
+  expected_parent_checkpoint_sha256: 9433518d828930dfc31e63d18f5477ba563b8870cb4a91ec3665f6890c5e90ff
+  expected_parent_checkpoint_source_commit: 673b254d1429bdd427d1b44597741d8130121c00
+  expected_parent_final_summary_sha256: 9299bb932cb6dd571734b4777bcd32e371ee1098e163edc83d36137e35d99f98
+  checkpoints: [32, 48, 64]
+  program_gains: [0.25, 0.50, 0.75, 1.00]
+  review_threshold_h100_hours: 14.0
+  heartbeat_interval_seconds: 240
+  bootstrap_samples: 2000
+  runtime:
+    rates:
+      best:
+        forward: 1.25
+        generation: 6.0
+      expected:
+        forward: 1.85
+        generation: 7.85
+      conservative:
+        forward: 3.50
+        generation: 12.0

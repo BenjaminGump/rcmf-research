@@ -444,6 +444,7 @@ def _evaluate_controls(
     settings: Mapping[str, Any],
     output_dir: Path,
     controls: Sequence[str],
+    latent_scale: float = 1.0,
 ) -> dict[str, Any]:
     output_dir.mkdir(parents=True, exist_ok=True)
     device = backend.device
@@ -465,6 +466,7 @@ def _evaluate_controls(
             control=control,
             device=device,
         )
+        z = z * float(latent_scale)
         with torch.no_grad():
             delta, ratio, _ = _applied_delta(
                 decoder=decoder, z=z, base_norms=base_norms
