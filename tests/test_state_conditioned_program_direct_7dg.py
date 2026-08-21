@@ -32,6 +32,10 @@ def test_direct_config_and_seed_are_locked_to_25101() -> None:
     assert GLOBAL_SEED == 25101
     assert settings["global_seed"] == GLOBAL_SEED
     assert cfg.raw["experiment"]["seed"] == GLOBAL_SEED
+    assert settings["expected_selector_ensemble_sha256"] == (
+        "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f"
+    )
+    assert len(settings["expected_selector_ensemble_sha256"]) == 64
     assert require_global_seed(GLOBAL_SEED) == GLOBAL_SEED
     with pytest.raises(ValueError, match="25101"):
         require_global_seed(GLOBAL_SEED + 1)

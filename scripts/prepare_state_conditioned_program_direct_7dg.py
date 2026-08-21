@@ -23,6 +23,7 @@ from rcmf.training.state_conditioned_program_direct_7dg import (
 from rcmf.training.state_conditioned_transition_6b import (
     AttemptLedger,
     initialize_or_validate_run_manifest,
+    validate_or_record_run_manifest_config_supersession,
 )
 from rcmf.utils.serialization import (
     atomic_write_json,
@@ -267,14 +268,54 @@ def main() -> None:
         for name, path in paths.items()
         if path.is_file()
     }
-    initialize_or_validate_run_manifest(
-        args.artifact_dir / "run_manifest.json",
-        run_uuid=str(settings["run_uuid"]),
-        config_sha256=sha256_file(args.config),
-        data_manifest_hashes=data_hashes,
-        source_commit=args.lambda_head,
-        command_scope=["preflight", "pairmlp", "factorized", "one_step", "finalize"],
-    )
+    config_sha256 = sha256_file(args.config)
+    run_manifest_path = args.artifact_dir / "run_manifest.json"
+    command_scope = ["preflight", "pairmlp", "factorized", "one_step", "finalize"]
+    if run_manifest_path.exists():
+        current_manifest = _json(run_manifest_path)
+        initial_config_sha256 = str(current_manifest["config_sha256"])
+        if initial_config_sha256 != config_sha256:
+            supersession_path = args.artifact_dir / "run_manifest_supersessions.jsonl"
+            supersessions = _rows(supersession_path) if supersession_path.exists() else []
+            previous_config_sha256 = (
+                str(supersessions[-1]["replacement_config_sha256"])
+                if supersessions
+                else initial_config_sha256
+            )
+            validate_or_record_run_manifest_config_supersession(
+                run_manifest_path,
+                run_uuid=str(settings["run_uuid"]),
+                previous_config_sha256=previous_config_sha256,
+                replacement_config_sha256=config_sha256,
+                data_manifest_hashes=data_hashes,
+                source_commit=args.lambda_head,
+                command_scope=command_scope,
+                parent_attempt_id=args.parent_attempt_id,
+                reason=(
+                    "Corrected a 65-character selector identity typo to the "
+                    "verified immutable 64-character SHA256; no scientific "
+                    "parameter or artifact changed."
+                ),
+                supersession_path=supersession_path,
+            )
+        else:
+            initialize_or_validate_run_manifest(
+                run_manifest_path,
+                run_uuid=str(settings["run_uuid"]),
+                config_sha256=config_sha256,
+                data_manifest_hashes=data_hashes,
+                source_commit=args.lambda_head,
+                command_scope=command_scope,
+            )
+    else:
+        initialize_or_validate_run_manifest(
+            run_manifest_path,
+            run_uuid=str(settings["run_uuid"]),
+            config_sha256=config_sha256,
+            data_manifest_hashes=data_hashes,
+            source_commit=args.lambda_head,
+            command_scope=command_scope,
+        )
     with AttemptLedger(
         args.artifact_dir,
         run_uuid=str(settings["run_uuid"]),
@@ -285,7 +326,7 @@ def main() -> None:
         github_head=args.github_head,
         lambda_head=args.lambda_head,
         tmux_session=args.tmux_session,
-        config_sha256=sha256_file(args.config),
+        config_sha256=config_sha256,
         data_manifest_hashes=data_hashes,
         parent_attempt_id=args.parent_attempt_id,
         resume_checkpoint=args.resume_checkpoint,
