@@ -39,6 +39,13 @@ source of truth.
 4. Raw human-readable memories remain the authoritative ledger.
 5. Deployment-time addition of a new memory must be feed-forward compilation, not Qwen backward optimization.
 
+## EXP-025D-Direct Single-Seed Deadline Policy
+
+For EXP-025D-Direct, use exactly `GLOBAL_SEED = 25101` for deterministic
+manifests, parameter initialization, data ordering, training, and diagnostic
+bootstrap. Do not run multiple training seeds, repeated optimizer seeds, seed
+sweeps, or ensemble training unless the user explicitly changes this policy.
+
 ## Environment Notes
 
 - For AppWorld, agentic workflows, or Lambda experiment tooling, prefer the

@@ -1,0 +1,101 @@
+include: stage_c_state_conditioned_program_fast_7df.yaml
+
+experiment:
+  name: stage_c_state_conditioned_program_direct_7dg
+  version: single_seed_direct_behavior_program_7dg_v1
+  seed: 25101
+
+stage_c_7dg:
+  run_uuid: state_conditioned_program_direct_7dg_20260821_001
+  artifact_dir: runs/stage_c/state_conditioned_program_direct_7dg_20260821_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  starting_head: 343c0a3b91df9b810edeac65736dc954ea7960b1
+  archive_branch: archive/v4-latent-program-distillation-failed
+  working_branch: research/v4-direct-behavior-program
+
+  parent_exp025b: runs/stage_c/replay_clean_rebuild_7b_20260818_001
+  parent_exp025c: runs/stage_c/signature_balanced_field_7c_20260818_001
+  parent_exp025cr: runs/stage_c/signature_balanced_field_7cr_20260818_001
+  parent_exp025d_preflight: runs/stage_c/state_conditioned_transition_program_7d_20260818_001
+  parent_exp025df: runs/stage_c/state_conditioned_program_fast_7df_20260819_001
+  reconciled_corpus_dir: runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  expected_structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+  expected_replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+  expected_selector_ensemble_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42bb01255a9e623956611f
+  expected_clean_decoder_sha256: 71f5974e59d563453398bb16ba35e54f29b8c46405d0d0594294c4b8299a6a26
+  expected:
+    scoreable_A_pairs: 607
+    scoreable_B_pairs: 135
+    scoreable_C_pairs: 112
+    scoreable_D_pairs: 112
+    scoreable_E_pairs: 135
+    train_tasks: 37
+    validation_tasks: 9
+    train_transitions: 499
+
+  split:
+    validation_fraction: 0.20
+
+  teacher_cache:
+    model_name: Qwen/Qwen3-8B
+    dtype: bfloat16
+    top_k: 64
+    context_limit: 40960
+    prompt_profile: full_demo
+    renderer_version: decision_transition_teacher_section_v1
+
+  program:
+    state_vector_count: 10
+    transition_vector_count: 6
+    representation_dim: 4096
+    program_dim: 128
+    controller_rank: 16
+    hidden_dim: 256
+    dropout: 0.05
+    program_learning_rate: 0.0001
+    decoder_learning_rate: 0.000001
+    weight_decay: 0.0001
+    maximum_updates_per_pair: 16
+    checkpoint_updates: [8, 16]
+    max_grad_norm: 1.0
+    sequence_huber_delta: 0.1
+    sequence_utility_weight: 1.0
+    sparse_teacher_kl_weight: 0.05
+    target_delta_huber_weight: 0.10
+    neutral_preservation_weight: 0.10
+    harmful_preservation_weight: 0.10
+    preference_weight: 0.10
+    preference_minimum_gap: 0.05
+    preference_margin_cap: 0.25
+    ratio_restraint_weight: 0.001
+    ratio_budget: 1.0
+    continuation_minimum_huber_improvement: 0.05
+
+  runtime:
+    review_threshold_h100_hours: 18.0
+    rates:
+      best:
+        forward: 1.25
+        backward: 1.90
+        generation: 6.0
+      expected:
+        forward: 1.85
+        backward: 2.40
+        generation: 7.85
+      conservative:
+        forward: 3.50
+        backward: 4.00
+        generation: 12.0
+    projected_bytes_per_teacher_row: 1250000
+    projected_bytes_per_checkpoint: 350000000
+
+  one_step:
+    enabled_after_factorized_gate: true
+    audit_states: 45
+    primary_states: 32
+    new_conditions_per_state: 4
+    total_new_conditions: 180
+
+  bootstrap_samples: 2000
+  heartbeat_interval_seconds: 240
