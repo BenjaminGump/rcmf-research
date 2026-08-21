@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import random
+
 import pytest
 import torch
 from pathlib import Path
 
+from scripts.run_state_conditioned_program_direct_7dg import _restore_rng
 from scripts.run_state_conditioned_program_direct_extend_7dg2 import (
     _atomic_row_directory_rows,
     _freeze_training_source,
@@ -70,6 +73,39 @@ def test_training_source_contract_preserves_preflight_source(
             "training_source_contract": contract_path,
         }
     ) == contract
+
+
+def test_rng_restore_converts_serialized_cuda_states_to_cpu(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class FakeState:
+        def __init__(self, label: str) -> None:
+            self.label = label
+            self.cpu_calls = 0
+
+        def cpu(self) -> str:
+            self.cpu_calls += 1
+            return f"cpu:{self.label}"
+
+    torch_state = FakeState("torch")
+    cuda_state = FakeState("cuda")
+    restored: dict[str, object] = {}
+    monkeypatch.setattr(torch, "set_rng_state", lambda state: restored.setdefault("torch", state))
+    monkeypatch.setattr(torch.cuda, "is_available", lambda: True)
+    monkeypatch.setattr(
+        torch.cuda,
+        "set_rng_state_all",
+        lambda states: restored.setdefault("cuda", states),
+    )
+    _restore_rng(
+        {
+            "python_random_state": random.getstate(),
+            "torch_rng_state": torch_state,
+            "cuda_rng_state": [cuda_state],
+        }
+    )
+    assert restored == {"torch": "cpu:torch", "cuda": ["cpu:cuda"]}
+    assert torch_state.cpu_calls == cuda_state.cpu_calls == 1
 
 
 def test_config_locks_parent_checkpoint_seed_schedule_and_gain() -> None:
@@ -240,4 +276,5 @@ def test_one_step_path_applies_frozen_global_gain_and_uses_extension_run_uuid() 
     assert "z = z * program_gain" in source
     assert 'run_settings = cfg.raw.get("stage_c_7dg2", settings)' in source
     assert 'run_uuid=str(run_settings["run_uuid"])' in source
+
 
