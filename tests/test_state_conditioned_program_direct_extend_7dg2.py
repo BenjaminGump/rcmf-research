@@ -4,6 +4,10 @@ import pytest
 import torch
 from pathlib import Path
 
+from scripts.run_state_conditioned_program_direct_extend_7dg2 import (
+    _atomic_row_directory_rows,
+)
+
 from rcmf.config import load_config
 from rcmf.training.state_conditioned_program_direct_extend_7dg2 import (
     GLOBAL_SEED,
@@ -23,6 +27,19 @@ def _summary(rho: float, huber: float, ratio: float = 0.5) -> dict:
         "sequence_utility_huber": {"mean": huber},
         "delta_ratio": {"max": ratio},
     }
+
+
+def test_atomic_teacher_row_directory_loader_reads_json_rows(tmp_path: Path) -> None:
+    rows_dir = tmp_path / "rows"
+    rows_dir.mkdir()
+    (rows_dir / "b.json").write_text('{"pair_id":"pair-b"}', encoding="utf-8")
+    (rows_dir / "a.json").write_text('{"pair_id":"pair-a"}', encoding="utf-8")
+    assert [row["pair_id"] for row in _atomic_row_directory_rows(rows_dir)] == [
+        "pair-a",
+        "pair-b",
+    ]
+    with pytest.raises(NotADirectoryError):
+        _atomic_row_directory_rows(tmp_path / "missing")
 
 
 def test_config_locks_parent_checkpoint_seed_schedule_and_gain() -> None:
@@ -193,3 +210,4 @@ def test_one_step_path_applies_frozen_global_gain_and_uses_extension_run_uuid() 
     assert "z = z * program_gain" in source
     assert 'run_settings = cfg.raw.get("stage_c_7dg2", settings)' in source
     assert 'run_uuid=str(run_settings["run_uuid"])' in source
+
