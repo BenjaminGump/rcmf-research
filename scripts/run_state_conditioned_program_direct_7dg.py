@@ -371,7 +371,9 @@ def _restore_rng(payload: Mapping[str, Any]) -> None:
     random.setstate(payload["python_random_state"])
     torch.set_rng_state(payload["torch_rng_state"].cpu())
     if torch.cuda.is_available() and payload.get("cuda_rng_state"):
-        torch.cuda.set_rng_state_all(payload["cuda_rng_state"])
+        torch.cuda.set_rng_state_all(
+            [state.cpu() for state in payload["cuda_rng_state"]]
+        )
 
 
 def _derangement(pair_ids: Sequence[str], namespace: str) -> list[int]:
@@ -1159,3 +1161,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
