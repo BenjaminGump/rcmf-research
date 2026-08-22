@@ -18,11 +18,15 @@ from rcmf.training.deep_residual_amortization_7f import (
 
 def test_first37_task_ids_are_loaded_as_exact_strings() -> None:
     config_path = Path("configs/benchmark/stage_c_deep_residual_amortization_7f.yaml")
-    task_ids = yaml.safe_load(config_path.read_text(encoding="utf-8"))["stage_c_7f"]["first37"]["task_ids"]
+    settings = yaml.safe_load(config_path.read_text(encoding="utf-8"))["stage_c_7f"]
+    task_ids = settings["first37"]["task_ids"]
     assert len(task_ids) == 37
     assert len(set(task_ids)) == 37
     assert all(isinstance(task_id, str) for task_id in task_ids)
     assert task_ids[24:27] == ["8749218_1", "8749218_2", "8749218_3"]
+    assert settings["expected_selector_sha256"] == (
+        "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f"
+    )
 
 
 def test_shared_decoder_has_locked_shape_and_no_bias() -> None:
