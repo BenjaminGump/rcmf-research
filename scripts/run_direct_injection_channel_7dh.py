@@ -1579,7 +1579,7 @@ def main() -> None:
     g3 = raw["stage_c_7dg3"]
     policy = raw["stage_c_7dg3_policy"]
     run = raw["stage_c_7dh"]
-    replay = replay_cfg.raw
+    replay = replay_cfg.raw["stage_c_7b"]
     require_global_seed(int(run["global_seed"]))
     if os.name != "nt" and not os.path.ismount(Path(str(run["persistent_root"]))):
         raise RuntimeError("Persistent filesystem is not mounted")
