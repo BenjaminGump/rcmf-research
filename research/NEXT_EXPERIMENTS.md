@@ -1165,3 +1165,28 @@ Still blocked: widened PairMLP, r64, another compiled program, full-bank
 compilation, p(s,m_transition), Stage C2, end-to-end RCMF, full AppWorld
 evaluation, and an RCMF V4 tag.
 
+## EXP-026B Completed - Deep-Residual Compiler Review
+
+The free deep-residual oracle passes the carrier gate with `100%/100%` raw
+action-signature/semantic-successor gain retention and strong shuffled-control
+separation. This reopens exactly one compiled-program question; it does not
+validate a deployable program.
+
+Recommended separately reviewed milestone:
+
+1. Freeze layers `[7,14,21,28]`, the last four user positions, selector,
+   Qwen, clean corpus, prompt, demonstrations, and seed `25101`.
+2. Train one observation-excluded PairMLP from existing state/transition
+   representations to a 256D latent and one shared decoder to the fixed
+   `4 x 4 x 4096` residual carrier.
+3. Use the existing raw-memory token-policy teacher and direct one-step audit;
+   do not add another carrier, layer sweep, position sweep, or architecture
+   family.
+4. Require teacher-forced transfer, correct-versus-shuffled specificity, and
+   one-step raw-gain retention before any full-bank integration.
+5. If the compiler fails, freeze compiled-program work for submission. If it
+   passes, return for review before full-bank integration.
+
+Still blocked: p(s,m_transition), a production full bank, Stage C2,
+end-to-end RCMF, full AppWorld evaluation, and an RCMF V4 tag.
+

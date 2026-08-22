@@ -1983,3 +1983,45 @@ Implementation recovery:
   key mismatch. Regression tests cover the fixes; no scientific parameter,
   completed training phase, or generated condition changed or duplicated.
 
+## 2026-08-22 EXP-026B deep-residual carrier capacity validated
+
+VERIFIED:
+
+- A free pair-specific residual intervention at deterministic layers
+  `[7,14,21,28]` and the locked four last-user positions exactly retains the
+  raw F3 action-signature and semantic-successor gains on 32 primary states.
+- R versus S improves action signature by `+0.3125` and semantic successor by
+  `+0.28125`; both task-bootstrap intervals exclude zero. Execution is
+  `1.0000`, and `8/9` tasks are positive.
+- Zero equivalence, hook locality, nonzero gradients at all active layers,
+  decode exclusion, norm budget, and frozen-Qwen checks pass.
+
+INFERENCE:
+
+- The EXP-026A failure was specific to the shallow input-embedding carrier,
+  not a general inability of a fixed-size neural intervention to preserve raw
+  episodic behavior.
+- One narrowly scoped deep-residual compiler experiment is now justified.
+
+UNVERIFIED:
+
+- Whether observation-excluded state/transition representations can amortize
+  the free DeltaH oracle; full-bank, multi-step, and end-to-end behavior.
+
+Decision:
+
+- Record `deep_residual_carrier_capacity_validated`.
+- Stop EXP-026B without training a compiler. Require separate review for one
+  single-seed PairMLP to 256D latent to shared deep-residual decoder at the
+  fixed four layers and positions.
+- Do not test another carrier, broaden layer/position search, start a full
+  bank, p(s,m_transition), Stage C2, end-to-end RCMF, full AppWorld evaluation,
+  or create/move a V4 tag.
+
+Implementation recovery:
+
+- Three append-only validation attempts stopped before training on audit
+  device placement, unbatched shape handling, and activation-checkpoint hook
+  lifetime. Regression tests cover each fix; no scientific parameter, pair
+  update, or generated condition was changed or duplicated.
+

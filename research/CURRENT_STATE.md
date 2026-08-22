@@ -1809,3 +1809,22 @@ Decision:
   Stage C2, end-to-end RCMF, full AppWorld evaluation, and V4 tagging remain
   blocked.
 
+### EXP-026B deep-residual carrier capacity pass
+
+- The deterministic carrier uses decoder blocks `[7,14,21,28]`, the locked
+  last four user-token positions, and `65,536` free scalars per pair. Four
+  representative states pass exact zero-logit/NLL/generation/KV equivalence,
+  locality, active-layer gradient, and frozen-Qwen checks.
+- All 32 pair-specific residuals reached u16. Policy KL falls from `0.337537`
+  at zero to `0.003246`; teacher CE falls from `0.348049` to `0.006278`; the
+  maximum layer/global norm ratios are `0.484395/0.129083`.
+- All `64/64` new R/S one-step generations and same-world executions complete
+  with zero exceptions. R matches raw F3 exactly on action signature and
+  semantic successor (`0.68750/0.78125`) and beats S by
+  `+0.31250/+0.28125`.
+- Raw-gain retention is `100%/100%`, with positive behavior on `8/9` tasks.
+  Decision branch: `deep_residual_carrier_capacity_validated`.
+- This validates a free deep carrier, not a deployable compiled program. No
+  compiler, PairMLP, factorized program, full bank, Stage C2, end-to-end RCMF,
+  full AppWorld evaluation, or V4 tag was created.
+
