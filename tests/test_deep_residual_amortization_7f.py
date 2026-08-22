@@ -10,9 +10,11 @@ from rcmf.training.deep_residual_amortization_7f import (
     SharedDeepResidualDecoder,
     aggregate_and_select_class,
     best_visited_checkpoint,
+    build_amortized_one_step_manifest,
     classify_one_step_behavior,
     continue_after_u8,
     differentiable_layer_ratio_projection,
+    revised_u16_runtime_authorization,
 )
 
 
@@ -73,6 +75,27 @@ def test_u8_continuation_uses_u4_only() -> None:
     assert result["continue_to_u16"]
 
 
+def test_revised_u16_runtime_gate_uses_measured_u8_throughput() -> None:
+    allowed = revised_u16_runtime_authorization(
+        phase_a_actual_h100_hours=1.0,
+        pairmlp_elapsed_through_u8_hours=5.0,
+        fixed_final_evaluation_hours=2.0,
+        phase_c_one_step_hours=0.5,
+        review_threshold_h100_hours=18.0,
+    )
+    assert allowed["projected_total_h100_hours_through_u16"] == pytest.approx(13.5)
+    assert allowed["automatic_u16_authorized"] is True
+    blocked = revised_u16_runtime_authorization(
+        phase_a_actual_h100_hours=2.0,
+        pairmlp_elapsed_through_u8_hours=7.0,
+        fixed_final_evaluation_hours=2.0,
+        phase_c_one_step_hours=0.5,
+        review_threshold_h100_hours=18.0,
+    )
+    assert blocked["projected_total_h100_hours_through_u16"] == pytest.approx(18.5)
+    assert blocked["automatic_u16_authorized"] is False
+
+
 def test_class_selection_uses_mean_not_duplicate_sum() -> None:
     result = aggregate_and_select_class(
         [0.6, 0.6, 1.0],
@@ -81,6 +104,29 @@ def test_class_selection_uses_mean_not_duplicate_sum() -> None:
         ordered_transition_ids=["a", "b", "c"],
     )
     assert result["selected_class_id"] == "small"
+
+
+def test_amortized_one_step_manifest_freezes_memory_specific_controls() -> None:
+    rows = [
+        {
+            "condition_name": "F3_deployment_e_field_raw",
+            "state_example_id": f"state-{index:02d}",
+            "state_task_id": f"task-{index % 9}",
+            "state_step_id": index,
+            "audit_stratum": "A",
+            "transition_id": f"transition-{index % 5}",
+        }
+        for index in range(45)
+    ]
+    manifest = build_amortized_one_step_manifest(rows, model_kind="pairmlp")
+    assert manifest["state_count"] == 45
+    assert manifest["condition_count"] == 180
+    assert manifest["student_prompt_contains_raw_transition"] is False
+    for row in manifest["conditions"]:
+        if row["condition_name"] == "P2_pairmlp_transition_shuffle":
+            assert row["program_transition_id"] != row["selector_transition_id"]
+        if row["condition_name"] == "P3_pairmlp_state_shuffle":
+            assert row["program_state_example_id"] != row["state_example_id"]
 
 
 def test_behavior_classification_strong_and_partial() -> None:

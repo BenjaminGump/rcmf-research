@@ -29,6 +29,7 @@ from rcmf.training.deep_residual_amortization_7f import (
     best_visited_checkpoint,
     continue_after_u8,
     differentiable_layer_ratio_projection,
+    revised_u16_runtime_authorization,
 )
 from rcmf.training.oracle_convergence_5fa import (
     ConvergenceObjective,
@@ -260,6 +261,10 @@ def _preflight(
         "phase_b_c_expected_h100_hours_u16": pair_u16_expected
         + evaluation_expected
         + one_step_expected,
+        "pairmlp_training_expected_h100_hours_u8": pair_u8_expected,
+        "pairmlp_training_expected_h100_hours_u16": pair_u16_expected,
+        "pairmlp_final_evaluation_expected_h100_hours": evaluation_expected,
+        "phase_c_one_step_expected_h100_hours": one_step_expected,
         "required_expected_h100_hours_u8": required_u8,
         "required_expected_h100_hours_u16": required_u16,
         "conditional_phase_d_expected_h100_hours_u8": conditional_factor_u8,
@@ -749,6 +754,41 @@ def _train(
         )
         if update_round == 8:
             decision = continue_after_u8({**history[-1], "previous": history[-2]})
+            atomic_write_json(output_dir / "u8_continuation_decision.json", decision)
+            if kind == "pairmlp" and decision["continue_to_u16"]:
+                preflight = _json(output_dir.parent / "runtime_preflight.json")
+                phase_a = _json(
+                    output_dir.parent.parent
+                    / "phase_a_first37_v2"
+                    / "summary.json"
+                )
+                authorization = revised_u16_runtime_authorization(
+                    phase_a_actual_h100_hours=float(phase_a["total_wall_seconds"])
+                    / 3600.0,
+                    pairmlp_elapsed_through_u8_hours=float(entry["elapsed_seconds"])
+                    / 3600.0,
+                    fixed_final_evaluation_hours=float(
+                        preflight["pairmlp_final_evaluation_expected_h100_hours"]
+                    ),
+                    phase_c_one_step_hours=float(
+                        preflight["phase_c_one_step_expected_h100_hours"]
+                    ),
+                    review_threshold_h100_hours=float(
+                        preflight["review_threshold_h100_hours"]
+                    ),
+                )
+                atomic_write_json(output_dir / "u16_runtime_authorization.json", authorization)
+                if not authorization["automatic_u16_authorized"]:
+                    attempt.progress(
+                        status="pairmlp_u16_runtime_review_required",
+                        latest_validated_checkpoint=str(checkpoint),
+                        projected_total_h100_hours=float(
+                            authorization["projected_total_h100_hours_through_u16"]
+                        ),
+                    )
+                    raise RuntimeError(
+                        "EXP-027A u16 continuation exceeds the 18-H100-hour review threshold"
+                    )
             if not decision["continue_to_u16"]:
                 stop_at = 8
                 break

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 import hashlib
+import json
 import math
 from typing import Any
 
@@ -16,6 +17,12 @@ PROGRAM_DIM = 256
 K_TOKENS = 4
 LAYER_INDICES = (7, 14, 21, 28)
 COMPILER_VERSION = "deep_residual_amortized_compiler_7f_v1"
+
+
+def _canonical_sha256(value: Mapping[str, Any]) -> str:
+    return hashlib.sha256(
+        json.dumps(dict(value), sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
 
 
 class SharedDeepResidualDecoder(nn.Module):
@@ -155,6 +162,46 @@ def continue_after_u8(
     }
 
 
+def revised_u16_runtime_authorization(
+    *,
+    phase_a_actual_h100_hours: float,
+    pairmlp_elapsed_through_u8_hours: float,
+    fixed_final_evaluation_hours: float,
+    phase_c_one_step_hours: float,
+    review_threshold_h100_hours: float,
+) -> dict[str, Any]:
+    """Conservatively authorize u16 from measured u8 throughput."""
+
+    values = (
+        phase_a_actual_h100_hours,
+        pairmlp_elapsed_through_u8_hours,
+        fixed_final_evaluation_hours,
+        phase_c_one_step_hours,
+        review_threshold_h100_hours,
+    )
+    if not all(math.isfinite(float(value)) and float(value) >= 0.0 for value in values):
+        raise ValueError("Runtime authorization values must be finite and nonnegative")
+    projected_incremental = float(pairmlp_elapsed_through_u8_hours)
+    projected_total = (
+        float(phase_a_actual_h100_hours)
+        + float(pairmlp_elapsed_through_u8_hours)
+        + projected_incremental
+        + float(fixed_final_evaluation_hours)
+        + float(phase_c_one_step_hours)
+    )
+    return {
+        "phase_a_actual_h100_hours": float(phase_a_actual_h100_hours),
+        "pairmlp_elapsed_through_u8_hours": float(pairmlp_elapsed_through_u8_hours),
+        "projected_incremental_u8_to_u16_hours": projected_incremental,
+        "fixed_final_evaluation_hours": float(fixed_final_evaluation_hours),
+        "phase_c_one_step_hours": float(phase_c_one_step_hours),
+        "projected_total_h100_hours_through_u16": projected_total,
+        "review_threshold_h100_hours": float(review_threshold_h100_hours),
+        "automatic_u16_authorized": projected_total
+        <= float(review_threshold_h100_hours),
+    }
+
+
 def aggregate_and_select_class(
     transition_scores: Sequence[float],
     transition_class_ids: Sequence[str],
@@ -197,6 +244,113 @@ def aggregate_and_select_class(
         "legal_member_transition_ids": sorted(value for value, _ in grouped[selected_class]),
         "class_scores": class_scores,
     }
+
+
+def build_amortized_one_step_manifest(
+    field_selected_rows: Sequence[Mapping[str, Any]],
+    *,
+    model_kind: str,
+    seed: int = GLOBAL_SEED,
+) -> dict[str, Any]:
+    """Freeze correct, state-shuffle, transition-shuffle, and zero conditions."""
+
+    if model_kind not in {"pairmlp", "factorized"}:
+        raise ValueError(f"Unknown amortized one-step model kind: {model_kind}")
+    rows_by_state: dict[str, dict[str, Any]] = {}
+    for source in field_selected_rows:
+        if str(source.get("condition_name")) != "F3_deployment_e_field_raw":
+            continue
+        state_id = str(source["state_example_id"])
+        if state_id in rows_by_state:
+            raise ValueError(f"Duplicate deployment selection for {state_id}")
+        rows_by_state[state_id] = dict(source)
+    if len(rows_by_state) != 45:
+        raise ValueError("Amortized one-step manifest requires exactly 45 F3 states")
+    state_order = sorted(
+        rows_by_state,
+        key=lambda value: hashlib.sha256(
+            f"{seed}:state-shuffle:{value}".encode("utf-8")
+        ).hexdigest(),
+    )
+    shuffled_state = {
+        state_id: state_order[(index + 1) % len(state_order)]
+        for index, state_id in enumerate(state_order)
+    }
+    transition_ids = sorted(
+        {str(row["transition_id"]) for row in rows_by_state.values()}
+    )
+    if len(transition_ids) < 2:
+        raise ValueError("Transition shuffle requires at least two selected transitions")
+    names = (
+        (
+            "P1_pairmlp_correct",
+            "P2_pairmlp_transition_shuffle",
+            "P3_pairmlp_state_shuffle",
+            "P0_zero_program",
+        )
+        if model_kind == "pairmlp"
+        else (
+            "H1_factorized_correct",
+            "H2_factorized_static_only",
+            "H3_factorized_transition_shuffle",
+            "H4_zero_program",
+        )
+    )
+    conditions = []
+    for state_id, source in sorted(rows_by_state.items()):
+        own_transition = str(source["transition_id"])
+        other_transition = min(
+            (value for value in transition_ids if value != own_transition),
+            key=lambda value: hashlib.sha256(
+                f"{seed}:transition-shuffle:{state_id}:{value}".encode("utf-8")
+            ).hexdigest(),
+        )
+        for name in names:
+            state_shuffle = name.endswith("state_shuffle")
+            transition_shuffle = name.endswith("transition_shuffle")
+            condition = {
+                "format": "deep_residual_amortized_one_step_condition_7f_v1",
+                "condition_name": name,
+                "model_kind": model_kind,
+                "state_example_id": state_id,
+                "state_task_id": str(source["state_task_id"]),
+                "state_step_id": int(source["state_step_id"]),
+                "audit_stratum": str(source["audit_stratum"]),
+                "api_documentation_action": bool(
+                    source.get("api_documentation_action", False)
+                ),
+                "procedural_tier": source.get("procedural_tier"),
+                "signature_class_id": source.get("signature_class_id"),
+                "selector_transition_id": own_transition,
+                "program_state_example_id": (
+                    shuffled_state[state_id] if state_shuffle else state_id
+                ),
+                "program_transition_id": (
+                    other_transition if transition_shuffle else own_transition
+                ),
+                "student_prompt_contains_raw_transition": False,
+                "selection_source": "frozen_exp025cr_deployment_e",
+                "selection_uses_qwen_or_appworld_outcomes": False,
+                "valid_for_generation": True,
+            }
+            condition["condition_key"] = _canonical_sha256(condition)
+            conditions.append(condition)
+    manifest = {
+        "format": "deep_residual_amortized_one_step_manifest_7f_v1",
+        "global_seed": int(seed),
+        "model_kind": model_kind,
+        "state_count": len(rows_by_state),
+        "condition_count": len(conditions),
+        "condition_name_counts": {
+            name: sum(row["condition_name"] == name for row in conditions)
+            for name in names
+        },
+        "state_shuffle": shuffled_state,
+        "conditions": conditions,
+        "student_prompt_contains_raw_transition": False,
+    }
+    manifest["manifest_sha256"] = _canonical_sha256(manifest)
+    return manifest
 
 
 def classify_one_step_behavior(
@@ -250,4 +404,3 @@ def classify_one_step_behavior(
             "positive_memory_specific_gap": memory_specific,
         },
     }
-
