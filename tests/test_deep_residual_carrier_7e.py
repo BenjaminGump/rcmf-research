@@ -189,3 +189,9 @@ def test_experiment_script_uses_canonical_position_id_helper() -> None:
     source = Path("scripts/run_deep_residual_carrier_7e.py").read_text(encoding="utf-8")
     assert "from rcmf.injection.base import build_position_ids" in source
     assert "from rcmf.training.oracle_capacity_5e import build_position_ids" not in source
+
+
+def test_checkpointed_backward_runs_inside_residual_hook_context() -> None:
+    source = Path("scripts/run_deep_residual_carrier_7e.py").read_text(encoding="utf-8")
+    assert "Checkpoint recomputation must see the same residual hooks as forward" in source
+    assert "Keep hooks installed through activation-checkpoint recomputation" in source

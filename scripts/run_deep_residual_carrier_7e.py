@@ -584,17 +584,20 @@ def _implementation_validation(
             max_new_tokens=int(validation_cfg["max_new_tokens"]),
         )
         probe = nn.Parameter(torch.full_like(original, 1.0e-3))
-        result = _forward_residual(
-            backend=backend,
-            batch=batch,
-            delta=probe,
+        selected = _selected_indices(batch)
+        with DeepResidualHooks(
+            model=backend.model,
             layer_indices=layers,
-            original_states=original,
-        )
-        kl, _ = _policy_loss(result["target_logits"], teachers[index])
-        kl.backward()
+            selected_token_indices=selected,
+            delta=probe,
+            expected_prefill_length=int(batch["input_ids"].shape[1]),
+        ) as gradient_audit:
+            _, probe_logits = _bare_target_forward(backend=backend, batch=batch)
+            kl, _ = _policy_loss(probe_logits, teachers[index])
+            # Checkpoint recomputation must see the same residual hooks as forward.
+            kl.backward()
         gradient_norms = probe.grad.to(torch.float32).flatten(start_dim=2).norm(dim=2)[0]
-        direct_positions = result["hook_audit"]["directly_modified_positions"]
+        direct_positions = gradient_audit.as_dict()["directly_modified_positions"]
         expected_positions = selected.detach().cpu().tolist()
         row = {
             "pair_id": str(policy_row["pair_id"]),
@@ -904,34 +907,42 @@ def _train(
                 policy_batch = _collate(
                     [policy_rows[index]], device=backend.device, k=K_TOKENS
                 )
-                student = _forward_residual(
-                    backend=backend,
-                    batch=policy_batch,
-                    delta=delta,
+                optimizer.zero_grad(set_to_none=True)
+                with DeepResidualHooks(
+                    model=backend.model,
                     layer_indices=layer_indices,
-                    original_states=original,
-                )
-                kl, terms = _policy_loss(student["target_logits"], teachers[index])
+                    selected_token_indices=_selected_indices(policy_batch),
+                    delta=delta,
+                    expected_prefill_length=int(policy_batch["input_ids"].shape[1]),
+                ):
+                    _, policy_logits = _bare_target_forward(
+                        backend=backend, batch=policy_batch
+                    )
+                    kl, terms = _policy_loss(policy_logits, teachers[index])
+                    policy_loss = (
+                        float(settings["policy_kl_weight"]) * kl
+                        + float(settings["teacher_token_ce_weight"])
+                        * terms["teacher_token_ce"]
+                    )
+                    # Keep hooks installed through activation-checkpoint recomputation.
+                    policy_loss.backward()
                 gt_batch = _collate(
                     [ground_truth[index]], device=backend.device, k=K_TOKENS
                 )
-                gt = _forward_residual(
-                    backend=backend,
-                    batch=gt_batch,
-                    delta=delta,
+                with DeepResidualHooks(
+                    model=backend.model,
                     layer_indices=layer_indices,
-                    original_states=original,
-                )
-                loss = (
-                    float(settings["policy_kl_weight"]) * kl
-                    + float(settings["teacher_token_ce_weight"])
-                    * terms["teacher_token_ce"]
-                    + float(settings["ground_truth_ce_weight"]) * gt["loss"]
-                    + float(settings["ratio_restraint_weight"])
-                    * student["global_ratios"].square().mean()
-                )
-                optimizer.zero_grad(set_to_none=True)
-                loss.backward()
+                    selected_token_indices=_selected_indices(gt_batch),
+                    delta=delta,
+                    expected_prefill_length=int(gt_batch["input_ids"].shape[1]),
+                ):
+                    gt_loss, _ = _bare_target_forward(backend=backend, batch=gt_batch)
+                    (float(settings["ground_truth_ce_weight"]) * gt_loss).backward()
+                _, global_ratios = layer_and_global_ratios(delta, original)
+                (
+                    float(settings["ratio_restraint_weight"])
+                    * global_ratios.square().mean()
+                ).backward()
                 torch.nn.utils.clip_grad_norm_(params, float(settings["max_grad_norm"]))
                 optimizer.step()
                 project_deep_delta_(
