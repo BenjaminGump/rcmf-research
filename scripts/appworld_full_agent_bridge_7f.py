@@ -129,6 +129,9 @@ def main() -> None:
                 completion = float(
                     evaluation.get("aggregate", {}).get("task_goal_completion", 0.0)
                 )
+                evaluation_success = evaluation.get("success")
+                if not isinstance(evaluation_success, bool):
+                    evaluation_success = bool(completion == 100.0)
                 _emit(
                     {
                         "format": PROTOCOL_VERSION,
@@ -137,7 +140,7 @@ def main() -> None:
                         "step_count": step_count,
                         "task_completed": bool(world.task_completed()),
                         "evaluation": evaluation,
-                        "success": bool(completion == 100.0),
+                        "success": evaluation_success,
                         "final_state_fingerprint": state_fingerprint(world),
                         "elapsed_seconds": time.perf_counter() - started,
                     }

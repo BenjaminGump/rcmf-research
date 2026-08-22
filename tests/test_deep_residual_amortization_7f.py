@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import json
 from pathlib import Path
 
 import pytest
@@ -17,6 +18,11 @@ from rcmf.training.deep_residual_amortization_7f import (
     deterministic_mismatch_indices,
     differentiable_layer_ratio_projection,
     revised_u16_runtime_authorization,
+)
+from scripts.run_raw_memory_first37_7f import (
+    RESULT_VERSION,
+    SOURCE_RESULT_VERSION,
+    _promote_v2_task_row,
 )
 
 
@@ -37,6 +43,41 @@ def test_full_agent_uses_original_appworld_evaluation_contract() -> None:
     bridge_source = Path("scripts/appworld_full_agent_bridge_7f.py").read_text(encoding="utf-8")
     assert "load_ground_truth=False" not in bridge_source
     assert "world.evaluate(suppress_errors=True)" in bridge_source
+    assert 'evaluation.get("success")' in bridge_source
+
+
+@pytest.mark.parametrize("success", [False, True])
+def test_v2_phase_a_rows_are_promoted_without_rewriting_source(
+    tmp_path: Path, success: bool
+) -> None:
+    task_id = "task_1"
+    source = tmp_path / "phase_a_first37_v2" / "task_results" / f"{task_id}.json"
+    source.parent.mkdir(parents=True)
+    source_row = {
+        "format": SOURCE_RESULT_VERSION,
+        "status": "complete",
+        "task_id": task_id,
+        "config_sha256": "config",
+        "selector_sha256": "selector",
+        "success": False,
+        "evaluation": {"difficulty": 2, "num_tests": 6, "success": success},
+    }
+    source.write_text(json.dumps(source_row, sort_keys=True), encoding="utf-8")
+    source_bytes = source.read_bytes()
+
+    promoted = _promote_v2_task_row(
+        artifact_dir=tmp_path,
+        task_id=task_id,
+        config_sha256="config",
+        selector_sha256="selector",
+    )
+
+    assert promoted is not None
+    assert promoted["format"] == RESULT_VERSION
+    assert promoted["success"] is success
+    assert promoted["success_source"] == "evaluation.success"
+    assert promoted["source_result"]["format"] == SOURCE_RESULT_VERSION
+    assert source.read_bytes() == source_bytes
 
 
 def test_compiler_backward_remains_inside_deep_residual_hook() -> None:

@@ -44,8 +44,10 @@ from scripts.run_state_conditioned_program_fast_7df import _build_backend
 
 
 PROTOCOL_VERSION = "appworld_full_agent_bridge_7f_v1"
-RESULT_VERSION = "raw_memory_first37_task_result_7f_v2"
-PHASE_A_DIRECTORY = "phase_a_first37_v2"
+SOURCE_RESULT_VERSION = "raw_memory_first37_task_result_7f_v2"
+SOURCE_PHASE_A_DIRECTORY = "phase_a_first37_v2"
+RESULT_VERSION = "raw_memory_first37_task_result_7f_v3"
+PHASE_A_DIRECTORY = "phase_a_first37_v3"
 
 
 def _json(path: Path) -> dict[str, Any]:
@@ -387,6 +389,83 @@ def _task_output_path(root: Path, task_id: str) -> Path:
     return root / PHASE_A_DIRECTORY / "task_results" / f"{task_id}.json"
 
 
+def _source_task_output_path(root: Path, task_id: str) -> Path:
+    return root / SOURCE_PHASE_A_DIRECTORY / "task_results" / f"{task_id}.json"
+
+
+def _validate_task_row(
+    row: Mapping[str, Any],
+    *,
+    task_id: str,
+    expected_format: str,
+    config_sha256: str,
+    selector_sha256: str,
+) -> None:
+    checks = {
+        "format": row.get("format") == expected_format,
+        "task": str(row.get("task_id")) == task_id,
+        "config": str(row.get("config_sha256")) == config_sha256,
+        "selector": str(row.get("selector_sha256")) == selector_sha256,
+        "complete": row.get("status") == "complete",
+    }
+    if not all(checks.values()):
+        raise ValueError(f"Invalid existing first37 task row: {task_id}: {checks}")
+
+
+def _promote_v2_task_row(
+    *,
+    artifact_dir: Path,
+    task_id: str,
+    config_sha256: str,
+    selector_sha256: str,
+) -> dict[str, Any] | None:
+    output = _task_output_path(artifact_dir, task_id)
+    if output.exists():
+        row = _json(output)
+        _validate_task_row(
+            row,
+            task_id=task_id,
+            expected_format=RESULT_VERSION,
+            config_sha256=config_sha256,
+            selector_sha256=selector_sha256,
+        )
+        return row
+    source = _source_task_output_path(artifact_dir, task_id)
+    if not source.exists():
+        return None
+    source_row = _json(source)
+    _validate_task_row(
+        source_row,
+        task_id=task_id,
+        expected_format=SOURCE_RESULT_VERSION,
+        config_sha256=config_sha256,
+        selector_sha256=selector_sha256,
+    )
+    evaluation = source_row.get("evaluation")
+    if not isinstance(evaluation, Mapping) or not isinstance(
+        evaluation.get("success"), bool
+    ):
+        raise ValueError(
+            f"V2 row lacks authoritative AppWorld evaluation.success: {task_id}"
+        )
+    promoted = dict(source_row)
+    promoted.update(
+        {
+            "format": RESULT_VERSION,
+            "success": bool(evaluation["success"]),
+            "success_source": "evaluation.success",
+            "result_derivation": "v2_generation_row_success_label_rectification",
+            "source_result": {
+                "format": SOURCE_RESULT_VERSION,
+                "path": str(source),
+                "sha256": sha256_file(source),
+            },
+        }
+    )
+    atomic_write_json(output, promoted)
+    return promoted
+
+
 def _run_task(
     *,
     task_id: str,
@@ -402,16 +481,13 @@ def _run_task(
     output = _task_output_path(artifact_dir, task_id)
     if output.exists():
         row = _json(output)
-        checks = {
-            "format": row.get("format") == RESULT_VERSION,
-            "task": str(row.get("task_id")) == task_id,
-            "config": str(row.get("config_sha256")) == config_sha256,
-            "selector": str(row.get("selector_sha256"))
-            == str(settings["expected_selector_sha256"]),
-            "complete": row.get("status") == "complete",
-        }
-        if not all(checks.values()):
-            raise ValueError(f"Invalid existing first37 task row: {task_id}: {checks}")
+        _validate_task_row(
+            row,
+            task_id=task_id,
+            expected_format=RESULT_VERSION,
+            config_sha256=config_sha256,
+            selector_sha256=str(settings["expected_selector_sha256"]),
+        )
         return row
     restart = len(list((task_root / "worker_logs").glob(f"{task_id}.*.stderr.log")))
     experiment_name = (
@@ -507,6 +583,7 @@ def _run_task(
         "usage": total_usage,
         "counts": dict(counts),
         "success": bool(final["success"]),
+        "success_source": "evaluation.success",
         "task_completed": bool(final["task_completed"]),
         "evaluation": final["evaluation"],
         "wall_seconds": time.perf_counter() - started,
@@ -538,7 +615,7 @@ def _summary(rows: Sequence[Mapping[str, Any]], baseline: Mapping[str, Mapping[s
     count = len(success)
     band = "STRONG" if count >= 12 else "COMPETITIVE" if count >= 9 else "CLEARLY_WEAK"
     payload = {
-        "format": "raw_memory_first37_summary_7f_v1",
+        "format": "raw_memory_first37_summary_7f_v2",
         "task_count": len(rows),
         "success_count": count,
         "success_ids": sorted(success),
@@ -575,10 +652,6 @@ def main() -> None:
     args.artifact_dir.mkdir(parents=True, exist_ok=True)
     config_sha256 = sha256_file(args.config)
     baseline = _baseline(settings)
-    backend = _build_backend(cfg)
-    if any(parameter.requires_grad for parameter in backend.model.parameters()):
-        raise RuntimeError("Phase A loaded trainable Qwen parameters")
-    selector = FrozenDeploymentSelector(settings=settings, backend=backend)
     task_ids = list(settings["first37"]["task_ids"])
     if args.task_limit is not None:
         task_ids = task_ids[: int(args.task_limit)]
@@ -605,16 +678,40 @@ def main() -> None:
         heartbeat_interval_s=float(settings["heartbeat_interval_seconds"]),
     ) as attempt:
         rows = []
+        backend = None
+        selector = None
+        promoted_rows = 0
+        generated_rows = 0
         for task_id in task_ids:
-            row = _run_task(
-                task_id=str(task_id),
-                settings=settings,
-                backend=backend,
-                selector=selector,
+            row = _promote_v2_task_row(
                 artifact_dir=args.artifact_dir,
+                task_id=str(task_id),
                 config_sha256=config_sha256,
-                attempt_id=args.attempt_id,
+                selector_sha256=str(settings["expected_selector_sha256"]),
             )
+            if row is None:
+                if backend is None:
+                    backend = _build_backend(cfg)
+                    if any(
+                        parameter.requires_grad
+                        for parameter in backend.model.parameters()
+                    ):
+                        raise RuntimeError("Phase A loaded trainable Qwen parameters")
+                    selector = FrozenDeploymentSelector(settings=settings, backend=backend)
+                row = _run_task(
+                    task_id=str(task_id),
+                    settings=settings,
+                    backend=backend,
+                    selector=selector,
+                    artifact_dir=args.artifact_dir,
+                    config_sha256=config_sha256,
+                    attempt_id=args.attempt_id,
+                )
+                generated_rows += 1
+            elif row.get("result_derivation") == (
+                "v2_generation_row_success_label_rectification"
+            ):
+                promoted_rows += 1
             rows.append(row)
             attempt.progress(
                 status="phase_a_raw_memory_first37",
@@ -633,6 +730,9 @@ def main() -> None:
                 "global_seed": GLOBAL_SEED,
                 "selector_sha256": str(settings["expected_selector_sha256"]),
                 "config_sha256": config_sha256,
+                "promoted_v2_rows": promoted_rows,
+                "new_generation_rows": generated_rows,
+                "qwen_loaded": backend is not None,
             }
         )
         path = args.artifact_dir / PHASE_A_DIRECTORY / "summary.json"
@@ -649,6 +749,9 @@ def main() -> None:
                     f"- gained/lost: `{len(summary['gained_success_ids'])}/{len(summary['lost_success_ids'])}`",
                     f"- steps: `{summary['total_steps']}`",
                     f"- wall hours: `{summary['total_wall_seconds'] / 3600.0:.4f}`",
+                    f"- promoted immutable v2 rows: `{summary['promoted_v2_rows']}`",
+                    f"- new generation rows: `{summary['new_generation_rows']}`",
+                    f"- Qwen loaded by v3 finalizer: `{summary['qwen_loaded']}`",
                     "",
                 ]
             ),
