@@ -33,7 +33,7 @@ RCMF, and V4 tagging remain blocked.
 
 - Qwen: frozen `Qwen/Qwen3-8B`.
 - Selector: frozen EXP-025C-R deployment selector,
-  `c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42bb01255a9e623956611f`.
+  `c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f`.
 - Clean replay lineage: unchanged.
 - Prompt: canonical full-demo prompt with all three demonstrations.
 - Deep carrier: layers `[7,14,21,28]`, last four user tokens.
