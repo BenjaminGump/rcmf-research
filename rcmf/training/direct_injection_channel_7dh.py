@@ -201,7 +201,10 @@ def channel_gate(
     execution = "execution_success"
 
     def delta(values: Mapping[str, Any], metric: str) -> float:
-        return float(values[metric]["mean_difference"])
+        result = values[metric]
+        if "difference" in result:
+            return float(result["difference"])
+        return float(result["mean_difference"])
 
     def retention(metric: str) -> float | None:
         denominator = delta(f3_minus_c0, metric)
