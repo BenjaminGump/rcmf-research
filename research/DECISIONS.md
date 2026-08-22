@@ -2025,3 +2025,43 @@ Implementation recovery:
   lifetime. Regression tests cover each fix; no scientific parameter, pair
   update, or generated condition was changed or duplicated.
 
+## 2026-08-22 EXP-027A deep-residual amortization failed
+
+VERIFIED:
+
+- Automatic frozen-selector raw memory reaches `5/37` on the paired first-37
+  audit, versus bare `10/37`.
+- PairMLP teacher-forced fit generalizes across A/B/C/D/E, but the correct
+  compiled program does not beat state or transition shuffle in one-step
+  behavior.
+- P1 retains `25.00%/45.45%` of raw action-signature/semantic-successor gain,
+  reduces execution by `9.38` percentage points, and is positive on `4/9`
+  tasks.
+
+INFERENCE:
+
+- The validated deep carrier is not the bottleneck. Amortization from current
+  observation-excluded representations and objective is the active failure.
+- The validated one-step raw-memory intervention is insufficient to support a
+  multi-step task-success claim under the present automatic selection loop.
+
+UNVERIFIED:
+
+- An AppWorld-enhanced structured compiler, a fixed trained memory-reader
+  adapter, and full-bank compiled behavior.
+
+Decision:
+
+- Record `deep_residual_amortization_failed` and do not run conditional
+  factorized Phase D.
+- Freeze the compiled-program route for submission review. Do not start a new
+  carrier, rank sweep, full bank, p(s,m_transition), Stage C2, end-to-end RCMF,
+  full AppWorld evaluation, or create/move a V4 tag.
+
+Implementation recovery:
+
+- Twelve ledger attempts are closed; three preserve bounded infrastructure
+  failures. A later import-only preflight failed before ledger initialization;
+  commit `8467756c` fixed the internal representation-loader import. Focused
+  tests pass locally and on Lambda, and no scientific row was duplicated.
+

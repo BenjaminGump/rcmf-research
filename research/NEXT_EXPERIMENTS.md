@@ -1190,3 +1190,28 @@ Recommended separately reviewed milestone:
 Still blocked: p(s,m_transition), a production full bank, Stage C2,
 end-to-end RCMF, full AppWorld evaluation, and an RCMF V4 tag.
 
+## EXP-027A Completed - Submission Architecture Review Required
+
+The first-37 selector-plus-raw-memory upper bound is clearly weak (`5/37`
+versus bare `10/37`). The PairMLP deep-residual compiler fits teacher-forced
+utility but is not memory-specific in generated behavior and reaches
+`deep_residual_amortization_failed`.
+
+Recommended next review:
+
+1. Freeze the present compiler and conditional factorized Phase D. Do not run
+   another carrier, controller-rank sweep, or full-bank integration.
+2. Lock submission claims around clean provenance, signature-balanced
+   selection, the positive one-step raw-content causal result, and the bounded
+   negative trajectory/amortization results.
+3. If exactly one additional mechanism is essential, explicitly choose between
+   an AppWorld-enhanced structured compiler and a fixed trained memory-reader
+   adapter. Preregister it as a new milestone with one seed and a direct
+   behavioral gate.
+4. Otherwise move immediately to paper tables, claims, limitations, and the
+   ICLR critical path.
+
+Still blocked: factorized Phase D, full-bank compilation,
+p(s,m_transition), Stage C2, end-to-end compiled RCMF, full AppWorld
+evaluation, and an RCMF V4 tag.
+

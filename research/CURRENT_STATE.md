@@ -1828,3 +1828,25 @@ Decision:
   compiler, PairMLP, factorized program, full bank, Stage C2, end-to-end RCMF,
   full AppWorld evaluation, or V4 tag was created.
 
+### EXP-027A raw-memory end-to-end and deep-residual amortization stop
+
+- The frozen automatic selector plus one raw transition per ReAct turn solves
+  `5/37` first test-normal tasks versus bare Qwen `10/37`, reaching the
+  preregistered `CLEARLY_WEAK` band. It retains 3 bare successes, gains 2, and
+  loses 7.
+- The observation-excluded PairMLP deep-residual compiler selects u8 by
+  A-validation Huber. B/C/D/E Spearman is
+  `0.5724/0.5157/0.5452/0.5834`, with `44.34%/42.26%/43.01%/44.08%` Huber
+  reduction versus zero.
+- All `180/180` PairMLP P1/P2/P3/P0 one-step generations and same-world
+  executions complete with zero exceptions. On 32 primary states P1 action
+  signature/successor is `0.40625/0.59375`, versus C0
+  `0.31250/0.43750` and F3 `0.68750/0.78125`.
+- P1 is worse than transition shuffle on both primary behavioral metrics,
+  equal to state shuffle on successor, lowers execution by `9.38` percentage
+  points, and is positive on only `4/9` tasks.
+- Decision branch: `deep_residual_amortization_failed`. The conditional
+  factorized Phase D was not started. Full-bank compilation, p(s,m_transition),
+  Stage C2, end-to-end compiled RCMF, full AppWorld evaluation, and V4 tagging
+  remain blocked.
+
