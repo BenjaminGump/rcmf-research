@@ -310,6 +310,84 @@ def _preflight(
     return report
 
 
+def _fixed_runtime_hours(
+    *, preflight: Mapping[str, Any], settings: Mapping[str, Any]
+) -> dict[str, float]:
+    runtime = settings["runtime"]
+    final_evaluation = preflight.get(
+        "pairmlp_final_evaluation_expected_h100_hours"
+    )
+    if final_evaluation is None:
+        checkpoint_rows = int(preflight["pairmlp_checkpoint_forward_rows"])
+        final_rows = int(preflight["pairmlp_final_forward_rows_per_control"])
+        controls = int(preflight["pairmlp_final_control_count"])
+        final_evaluation = (
+            (checkpoint_rows + final_rows * controls)
+            * float(runtime["pair_evaluation_seconds_expected"])
+            / 3600.0
+        )
+    one_step = preflight.get("phase_c_one_step_expected_h100_hours")
+    if one_step is None:
+        one_step = (
+            int(preflight["phase_c_generation_count"])
+            * float(runtime["one_step_generation_seconds_expected"])
+            / 3600.0
+        )
+    return {
+        "pairmlp_final_evaluation_expected_h100_hours": float(final_evaluation),
+        "phase_c_one_step_expected_h100_hours": float(one_step),
+    }
+
+
+def _authorize_pairmlp_u16(
+    *,
+    entry: Mapping[str, Any],
+    settings: Mapping[str, Any],
+    output_dir: Path,
+    checkpoint: Path,
+    attempt: AttemptLedger,
+) -> dict[str, Any]:
+    preflight = _json(output_dir.parent / "runtime_preflight.json")
+    phase_a = _json(
+        output_dir.parent.parent / "phase_a_first37_v3" / "summary.json"
+    )
+    fixed = _fixed_runtime_hours(preflight=preflight, settings=settings)
+    authorization = revised_u16_runtime_authorization(
+        phase_a_actual_h100_hours=float(phase_a["total_wall_seconds"]) / 3600.0,
+        pairmlp_elapsed_through_u8_hours=float(entry["elapsed_seconds"]) / 3600.0,
+        fixed_final_evaluation_hours=fixed[
+            "pairmlp_final_evaluation_expected_h100_hours"
+        ],
+        phase_c_one_step_hours=fixed["phase_c_one_step_expected_h100_hours"],
+        review_threshold_h100_hours=float(preflight["review_threshold_h100_hours"]),
+    )
+    authorization.update(
+        {
+            "format": "deep_residual_amortization_u16_runtime_authorization_7f_v1",
+            "source_preflight_format": str(preflight["format"]),
+            "runtime_components": fixed,
+        }
+    )
+    path = output_dir / "u16_runtime_authorization.json"
+    if path.exists():
+        if _json(path) != authorization:
+            raise ValueError("Existing u16 runtime authorization differs")
+    else:
+        atomic_write_json(path, authorization)
+    if not authorization["automatic_u16_authorized"]:
+        attempt.progress(
+            status="pairmlp_u16_runtime_review_required",
+            latest_validated_checkpoint=str(checkpoint),
+            projected_total_h100_hours=float(
+                authorization["projected_total_h100_hours_through_u16"]
+            ),
+        )
+        raise RuntimeError(
+            "EXP-027A u16 continuation exceeds the 18-H100-hour review threshold"
+        )
+    return authorization
+
+
 def _build_model(
     *, kind: str, settings: Mapping[str, Any], view_names: Sequence[str], device: torch.device
 ) -> nn.Module:
@@ -631,6 +709,14 @@ def _train(
         decision = continue_after_u8({**history[-1], "previous": history[-2]})
         if not decision["continue_to_u16"]:
             stop_at = 8
+        elif kind == "pairmlp":
+            _authorize_pairmlp_u16(
+                entry=history[-1],
+                settings=settings,
+                output_dir=output_dir,
+                checkpoint=Path(str(_json(latest)["checkpoint"])),
+                attempt=attempt,
+            )
     for update_round in range(completed + 1, stop_at + 1):
         order = sorted(
             range(len(train_rows)),
@@ -784,39 +870,13 @@ def _train(
             decision = continue_after_u8({**history[-1], "previous": history[-2]})
             atomic_write_json(output_dir / "u8_continuation_decision.json", decision)
             if kind == "pairmlp" and decision["continue_to_u16"]:
-                preflight = _json(output_dir.parent / "runtime_preflight.json")
-                phase_a = _json(
-                    output_dir.parent.parent
-                    / "phase_a_first37_v3"
-                    / "summary.json"
+                _authorize_pairmlp_u16(
+                    entry=entry,
+                    settings=settings,
+                    output_dir=output_dir,
+                    checkpoint=checkpoint,
+                    attempt=attempt,
                 )
-                authorization = revised_u16_runtime_authorization(
-                    phase_a_actual_h100_hours=float(phase_a["total_wall_seconds"])
-                    / 3600.0,
-                    pairmlp_elapsed_through_u8_hours=float(entry["elapsed_seconds"])
-                    / 3600.0,
-                    fixed_final_evaluation_hours=float(
-                        preflight["pairmlp_final_evaluation_expected_h100_hours"]
-                    ),
-                    phase_c_one_step_hours=float(
-                        preflight["phase_c_one_step_expected_h100_hours"]
-                    ),
-                    review_threshold_h100_hours=float(
-                        preflight["review_threshold_h100_hours"]
-                    ),
-                )
-                atomic_write_json(output_dir / "u16_runtime_authorization.json", authorization)
-                if not authorization["automatic_u16_authorized"]:
-                    attempt.progress(
-                        status="pairmlp_u16_runtime_review_required",
-                        latest_validated_checkpoint=str(checkpoint),
-                        projected_total_h100_hours=float(
-                            authorization["projected_total_h100_hours_through_u16"]
-                        ),
-                    )
-                    raise RuntimeError(
-                        "EXP-027A u16 continuation exceeds the 18-H100-hour review threshold"
-                    )
             if not decision["continue_to_u16"]:
                 stop_at = 8
                 break

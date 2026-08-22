@@ -24,6 +24,7 @@ from scripts.run_raw_memory_first37_7f import (
     SOURCE_RESULT_VERSION,
     _promote_v2_task_row,
 )
+from scripts.run_deep_residual_compiler_7f import _fixed_runtime_hours
 
 
 def test_first37_task_ids_are_loaded_as_exact_strings() -> None:
@@ -109,6 +110,29 @@ def test_compiler_runtime_authorization_uses_rectified_phase_a_summary() -> None
     )
     assert 'phase_a_first37_v3"' in source
     assert 'phase_a_first37_v2"' not in source
+
+
+def test_legacy_runtime_preflight_components_are_reconstructed() -> None:
+    fixed = _fixed_runtime_hours(
+        preflight={
+            "pairmlp_checkpoint_forward_rows": 384,
+            "pairmlp_final_forward_rows_per_control": 622,
+            "pairmlp_final_control_count": 5,
+            "phase_c_generation_count": 180,
+        },
+        settings={
+            "runtime": {
+                "pair_evaluation_seconds_expected": 3.7,
+                "one_step_generation_seconds_expected": 7.85,
+            }
+        },
+    )
+    assert fixed["pairmlp_final_evaluation_expected_h100_hours"] == pytest.approx(
+        (384 + 622 * 5) * 3.7 / 3600.0
+    )
+    assert fixed["phase_c_one_step_expected_h100_hours"] == pytest.approx(
+        180 * 7.85 / 3600.0
+    )
 
 
 def test_shared_decoder_has_locked_shape_and_no_bias() -> None:
