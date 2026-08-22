@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 import torch
+import yaml
 
 from rcmf.training.deep_residual_amortization_7f import (
     SharedDeepResidualDecoder,
@@ -11,6 +14,15 @@ from rcmf.training.deep_residual_amortization_7f import (
     continue_after_u8,
     differentiable_layer_ratio_projection,
 )
+
+
+def test_first37_task_ids_are_loaded_as_exact_strings() -> None:
+    config_path = Path("configs/benchmark/stage_c_deep_residual_amortization_7f.yaml")
+    task_ids = yaml.safe_load(config_path.read_text(encoding="utf-8"))["experiment"]["first37"]["task_ids"]
+    assert len(task_ids) == 37
+    assert len(set(task_ids)) == 37
+    assert all(isinstance(task_id, str) for task_id in task_ids)
+    assert task_ids[24:27] == ["8749218_1", "8749218_2", "8749218_3"]
 
 
 def test_shared_decoder_has_locked_shape_and_no_bias() -> None:
