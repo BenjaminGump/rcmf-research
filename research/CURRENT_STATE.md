@@ -1792,3 +1792,20 @@ Decision:
   full-bank compilation, p(s,m_transition), Stage C2, end-to-end RCMF, full
   AppWorld evaluation, and V4 tagging remain blocked.
 
+### EXP-026A direct injection-channel capacity stop
+
+- The exact 32 primary clean states support K4/K8 for `32/32` and K16 for
+  `28/32`; four K16 rows remain explicit feasibility misses.
+- Free per-pair DeltaE tensors remove the decoder, 128D latent, PairMLP, and
+  factorized-program bottlenecks. All `184/184` O4/O8/O16 and shuffled-control
+  generations/executions completed with zero infrastructure exceptions.
+- K4 is the strongest channel: action-signature/successor is
+  `0.50000/0.65625`, versus bare `0.31250/0.43750` and raw F3
+  `0.68750/0.78125`. Raw-gain retention is only `50.00%/63.64%`.
+- K8 retention is `25.00%/54.55%`; K16 retention is `0%/10%`. No K passes the
+  locked 70%/50% behavioral channel gate.
+- Decision branch: `input_embedding_channel_behavioral_capacity_failed`.
+  Conditional widened PairMLP, r64, full-bank integration, p(s,m_transition),
+  Stage C2, end-to-end RCMF, full AppWorld evaluation, and V4 tagging remain
+  blocked.
+

@@ -1943,3 +1943,43 @@ Implementation recovery:
   reset during policy training, while Lambda heartbeat/checkpoint writes
   continued; no run, attempt, or condition was duplicated.
 
+## 2026-08-22 EXP-026A direct injection-channel capacity stop
+
+VERIFIED:
+
+- Free per-pair direct DeltaE interventions at K4/K8/K16 eliminate the shared
+  decoder, 128D latent, PairMLP, and factorized-program bottlenecks.
+- K4 produces a real effect over bare and the cyclic shuffled control, but
+  retains only `50.00%` of raw action-signature gain and `63.64%` of raw
+  semantic-successor gain. K8 and K16 are weaker.
+- No K passes the preregistered 70%/50% channel-capacity gate. All `184/184`
+  one-step conditions complete without infrastructure exceptions.
+
+INFERENCE:
+
+- The additive `last_user_k` embedding channel is now the best-supported
+  bottleneck for compiled episodic behavior on the submission path.
+- Additional r16/r64/PairMLP objective or capacity work is not justified before
+  submission because the free per-pair channel oracle itself fails.
+
+UNVERIFIED:
+
+- Alternative intervention sites, full-trajectory behavior, and a deployable
+  compiled transition field.
+
+Decision:
+
+- Record `input_embedding_channel_behavioral_capacity_failed`.
+- Do not trigger the conditional widened PairMLP, r64, another program
+  objective, or full-bank integration.
+- Freeze the compiled-program route for the submission. Preserve the clean
+  signature-balanced selector and raw-transition one-step causal result as the
+  positive contribution; report the channel result as a bounded negative.
+
+Implementation recovery:
+
+- Four append-only stopped attempts preserve a selector-hash typo, a bounded
+  parent-cache omission, replay-config unwrapping, and a CPU bootstrap result-
+  key mismatch. Regression tests cover the fixes; no scientific parameter,
+  completed training phase, or generated condition changed or duplicated.
+

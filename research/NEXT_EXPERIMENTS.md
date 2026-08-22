@@ -1139,3 +1139,29 @@ Still blocked: r64 or another compiled program, full-bank compilation,
 p(s,m_transition), compiler/injector training, Stage C2, end-to-end RCMF, full
 AppWorld evaluation, and an RCMF V4 tag.
 
+## EXP-026A Completed - Submission Pivot Required
+
+The free per-pair direct embedding oracle fails the locked behavioral channel
+gate for K4, K8, and K16. This is a stronger stop than the prior amortized-
+program failures because it removes decoder, latent, PairMLP, and factorization
+capacity from the diagnosis.
+
+Recommended submission action:
+
+1. Stop r16/r64/PairMLP/program and full-bank compilation work for the ICLR
+   critical path.
+2. Lock the positive contribution around the identity-reconciled corpus,
+   signature-balanced selector, and causally validated selected raw transition.
+3. Report the compiled additive-channel result as a bounded negative: K4 has a
+   measurable effect but retains only `50.00%/63.64%` of raw signature/
+   successor gain and misses the preregistered gate.
+4. If a trajectory-level result is essential, separately preregister a minimal
+   selector-plus-raw-transition partial end-to-end audit. Do not represent it
+   as a compiled-program result and do not start it automatically.
+5. Move immediately to paper claims, tables, ablations, limitations, and the
+   September submission schedule rather than another component search.
+
+Still blocked: widened PairMLP, r64, another compiled program, full-bank
+compilation, p(s,m_transition), Stage C2, end-to-end RCMF, full AppWorld
+evaluation, and an RCMF V4 tag.
+
