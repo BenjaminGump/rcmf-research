@@ -131,6 +131,12 @@ def test_recorded_base_norm_ratio_uses_delta_device_and_shape() -> None:
     assert tuple(global_ratio.shape) == (1,)
     assert layer[0].tolist() == pytest.approx([2**0.5, 2**-0.5])
 
+    unbatched_layer, unbatched_global = ratios_from_recorded_base_norms(
+        delta[0], [4.0, 8.0]
+    )
+    assert torch.equal(unbatched_layer, layer)
+    assert torch.equal(unbatched_global, global_ratio)
+
 
 def test_gate_reuses_locked_retention_and_shuffle_contract() -> None:
     result = deep_residual_gate(

@@ -260,8 +260,13 @@ def ratios_from_recorded_base_norms(
     delta: Tensor, base_norm_values: Sequence[float]
 ) -> tuple[Tensor, Tensor]:
     """Compute audit ratios without assuming recorded norms share DeltaH's device."""
-    if delta.ndim != 4:
-        raise ValueError("DeltaH must have shape [batch, layers, tokens, hidden]")
+    if delta.ndim == 3:
+        delta = delta.unsqueeze(0)
+    elif delta.ndim != 4:
+        raise ValueError(
+            "DeltaH must have shape [layers, tokens, hidden] or "
+            "[batch, layers, tokens, hidden]"
+        )
     if len(base_norm_values) != int(delta.shape[1]):
         raise ValueError("Recorded base norms must contain one value per layer")
     delta32 = delta.detach().to(torch.float32)
