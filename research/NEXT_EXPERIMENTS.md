@@ -1115,3 +1115,27 @@ Still blocked: full-bank program integration, p(s,m_transition), compiler or
 injector training, Stage C2, end-to-end RCMF, full AppWorld evaluation, and an
 RCMF V4 tag.
 
+## EXP-025D-G3 Completed - Submission Scope Lock Required
+
+Both the existing Direct PairMLP and the conditional raw-memory token-policy
+PairMLP fail the one-step behavioral-retention gate. Do not run r64, resume
+r16, or begin another representation study on the submission critical path.
+
+Recommended next review:
+
+1. Freeze the signature-balanced selector plus selected raw-transition
+   one-step causal result as the validated positive V4-candidate contribution.
+2. Record compiled-program behavioral transfer as a bounded negative result:
+   scalar utility and token-policy teacher forcing both improve, but neither
+   preserves enough pair-specific generated behavior.
+3. Lock paper claims, tables, and ablations around clean provenance, selector
+   generalization, raw-content causality, and the compiled-program negative
+   result.
+4. Only if a trajectory-level result is essential to the submission, specify
+   a separate minimal selector-plus-raw-transition partial end-to-end audit.
+   Do not silently substitute this for a validated compiled program.
+
+Still blocked: r64 or another compiled program, full-bank compilation,
+p(s,m_transition), compiler/injector training, Stage C2, end-to-end RCMF, full
+AppWorld evaluation, and an RCMF V4 tag.
+

@@ -1902,3 +1902,44 @@ Implementation recovery:
   only correction removed per-metric bootstrap seed offsets without changing
   training, generations, row metrics, or the scientific branch.
 
+## 2026-08-22 EXP-025D-G3 PairMLP behavioral-retention stop
+
+VERIFIED:
+
+- The immutable Direct PairMLP transfers a positive semantic-successor effect
+  over bare, but retains only `36.36%` of raw selected-transition gain and
+  fails the required 40% gate.
+- The preregistered conditional token-policy pilot improves teacher-forced
+  policy KL over zero in every cell but does not improve action signature,
+  retains only `27.27%` of successor gain, and equals state/transition shuffle
+  controls on both decisive behavior metrics.
+- Both one-step phases complete all `270/270` conditions with zero
+  infrastructure or execution exceptions under one global seed `25101`.
+
+INFERENCE:
+
+- The behavioral-retention failure is not specific to scalar target-NLL
+  utility. Raw-memory response-token distillation also fails to preserve the
+  pair-specific one-step mechanism through the current compiled PairMLP.
+- r64 capacity is not justified by this result because the required PairMLP
+  behavioral upper bound did not pass.
+
+UNVERIFIED:
+
+- Alternative injection/compiler mechanisms, full-bank compilation, and
+  end-to-end AppWorld behavior.
+
+Decision:
+
+- Record `teacher_forced_objective_not_behaviorally_retained` and conditional
+  result `behavioral_policy_distillation_pairmlp_failed`.
+- Do not run r64 or another representation study from this milestone.
+- Freeze the compiled-program route for the submission critical path and
+  preserve the validated clean selector/raw-transition causal result.
+
+Implementation recovery:
+
+- Ten append-only attempts are closed normally. A shell monitoring connection
+  reset during policy training, while Lambda heartbeat/checkpoint writes
+  continued; no run, attempt, or condition was duplicated.
+

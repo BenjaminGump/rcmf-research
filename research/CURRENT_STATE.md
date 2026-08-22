@@ -1772,3 +1772,23 @@ Decision:
   integration, p(s,m_transition), compiler/injector, Stage C2, end-to-end
   RCMF, full AppWorld evaluation, and V4 tagging remain blocked.
 
+### EXP-025D-G3 PairMLP behavior and policy-distillation stop
+
+- The immutable Direct PairMLP u8 checkpoint completed `135/135` P1/P2/P3
+  generations and same-world executions. On the primary 32 states, P1
+  action-signature/successor is `0.34375/0.56250` versus bare
+  `0.31250/0.43750` and raw F3 `0.68750/0.78125`.
+- P1 retains only `8.33%/36.36%` of raw action-signature/successor gain. It is
+  positive on `5/9` tasks but misses the preregistered 40% retention gate.
+- The automatically authorized conditional policy pilot cached `252` raw-
+  memory response/top-64 teacher rows, trained on `128` A pairs for exactly
+  eight updates each, and improved policy KL over zero on A/B/C/D/E.
+- Its second `135/135` one-step audit still fails. Policy P1 has
+  signature/successor `0.31250/0.53125`, retains `0%/27.27%` of raw gain,
+  equals both shuffle controls on the decisive metrics, and is positive on
+  only `3/9` tasks.
+- Decision branch: `teacher_forced_objective_not_behaviorally_retained`;
+  conditional result: `behavioral_policy_distillation_pairmlp_failed`. r64,
+  full-bank compilation, p(s,m_transition), Stage C2, end-to-end RCMF, full
+  AppWorld evaluation, and V4 tagging remain blocked.
+
