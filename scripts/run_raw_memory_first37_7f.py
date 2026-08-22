@@ -127,6 +127,13 @@ class FullAgentBridge:
             )
         response = json.loads(value)
         if response.get("op") == "fatal":
+            try:
+                self.process.wait(timeout=min(self.timeout_seconds, 30.0))
+            except subprocess.TimeoutExpired:
+                self.process.terminate()
+                self.process.wait(timeout=10)
+            if not self._stderr.closed:
+                self._stderr.close()
             raise RuntimeError(f"Full-agent bridge fatal response: {response['fatal']}")
         return response
 
