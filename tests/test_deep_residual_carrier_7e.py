@@ -12,6 +12,7 @@ from rcmf.training.deep_residual_carrier_7e import (
     deep_residual_gate,
     layer_and_global_ratios,
     project_deep_delta_,
+    ratios_from_recorded_base_norms,
     runtime_projection,
     selected_layer_indices,
 )
@@ -119,6 +120,16 @@ def test_projection_enforces_each_layer_and_reports_global_ratio() -> None:
     layer, global_ratio = layer_and_global_ratios(delta, original)
     assert float(layer.max()) == pytest.approx(1.0, abs=1.0e-6)
     assert float(global_ratio.max()) == pytest.approx(1.0, abs=1.0e-6)
+
+
+def test_recorded_base_norm_ratio_uses_delta_device_and_shape() -> None:
+    delta = torch.ones(1, 2, 4, 8)
+    layer, global_ratio = ratios_from_recorded_base_norms(delta, [4.0, 8.0])
+    assert layer.device == delta.device
+    assert global_ratio.device == delta.device
+    assert tuple(layer.shape) == (1, 2)
+    assert tuple(global_ratio.shape) == (1,)
+    assert layer[0].tolist() == pytest.approx([2**0.5, 2**-0.5])
 
 
 def test_gate_reuses_locked_retention_and_shuffle_contract() -> None:

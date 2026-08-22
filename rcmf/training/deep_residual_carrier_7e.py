@@ -256,6 +256,27 @@ def layer_and_global_ratios(delta: Tensor, original_states: Tensor) -> tuple[Ten
     return layer, global_ratio
 
 
+def ratios_from_recorded_base_norms(
+    delta: Tensor, base_norm_values: Sequence[float]
+) -> tuple[Tensor, Tensor]:
+    """Compute audit ratios without assuming recorded norms share DeltaH's device."""
+    if delta.ndim != 4:
+        raise ValueError("DeltaH must have shape [batch, layers, tokens, hidden]")
+    if len(base_norm_values) != int(delta.shape[1]):
+        raise ValueError("Recorded base norms must contain one value per layer")
+    delta32 = delta.detach().to(torch.float32)
+    base_norms = torch.as_tensor(
+        base_norm_values,
+        device=delta32.device,
+        dtype=torch.float32,
+    ).unsqueeze(0)
+    layer = delta32.flatten(start_dim=2).norm(dim=2) / base_norms.clamp_min(1.0e-12)
+    global_ratio = delta32.flatten(start_dim=1).norm(dim=1) / base_norms.square().sum(
+        dim=1
+    ).sqrt().clamp_min(1.0e-12)
+    return layer, global_ratio
+
+
 @torch.no_grad()
 def project_deep_delta_(
     delta: Tensor,

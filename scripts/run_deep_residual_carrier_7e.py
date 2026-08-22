@@ -34,6 +34,7 @@ from rcmf.training.deep_residual_carrier_7e import (
     deep_residual_gate,
     layer_and_global_ratios,
     project_deep_delta_,
+    ratios_from_recorded_base_norms,
     runtime_projection,
     selected_layer_indices,
 )
@@ -260,17 +261,12 @@ def _generate_residual(
     generated = output_ids[0, prompt_length:].tolist()
     text = backend.tokenizer.decode(generated, skip_special_tokens=True)
     hook = audit.as_dict()
-    base_norms = torch.tensor(
-        [[hook["base_norms"][str(index)][0] for index in layer_indices]],
-        dtype=torch.float32,
+    layer_ratios, global_ratios = ratios_from_recorded_base_norms(
+        delta,
+        [hook["base_norms"][str(index)][0] for index in layer_indices],
     )
-    delta_norms = delta.to(torch.float32).flatten(start_dim=2).norm(dim=2)
-    layer_ratios = delta_norms / base_norms.clamp_min(1.0e-12)
-    global_ratio = delta.to(torch.float32).flatten().norm() / torch.tensor(
-        [hook["base_norms"][str(index)][0] for index in layer_indices]
-    ).square().sum().sqrt().clamp_min(1.0e-12)
-    hook["layer_ratios"] = layer_ratios[0].tolist()
-    hook["global_ratio"] = float(global_ratio)
+    hook["layer_ratios"] = layer_ratios[0].detach().cpu().tolist()
+    hook["global_ratio"] = float(global_ratios[0].detach().cpu())
     return (
         GenerateOutput(
             text=text,
