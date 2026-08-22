@@ -44,7 +44,8 @@ from scripts.run_state_conditioned_program_fast_7df import _build_backend
 
 
 PROTOCOL_VERSION = "appworld_full_agent_bridge_7f_v1"
-RESULT_VERSION = "raw_memory_first37_task_result_7f_v1"
+RESULT_VERSION = "raw_memory_first37_task_result_7f_v2"
+PHASE_A_DIRECTORY = "phase_a_first37_v2"
 
 
 def _json(path: Path) -> dict[str, Any]:
@@ -383,7 +384,7 @@ class FrozenDeploymentSelector:
 
 
 def _task_output_path(root: Path, task_id: str) -> Path:
-    return root / "phase_a_first37/task_results" / f"{task_id}.json"
+    return root / PHASE_A_DIRECTORY / "task_results" / f"{task_id}.json"
 
 
 def _run_task(
@@ -397,7 +398,7 @@ def _run_task(
     attempt_id: str,
 ) -> dict[str, Any]:
     app = settings["appworld"]
-    task_root = artifact_dir / "phase_a_first37"
+    task_root = artifact_dir / PHASE_A_DIRECTORY
     output = _task_output_path(artifact_dir, task_id)
     if output.exists():
         row = _json(output)
@@ -634,10 +635,10 @@ def main() -> None:
                 "config_sha256": config_sha256,
             }
         )
-        path = args.artifact_dir / "phase_a_first37/summary.json"
+        path = args.artifact_dir / PHASE_A_DIRECTORY / "summary.json"
         atomic_write_json(path, summary)
         atomic_write_text(
-            args.artifact_dir / "phase_a_first37/report.md",
+            args.artifact_dir / PHASE_A_DIRECTORY / "report.md",
             "\n".join(
                 [
                     "# EXP-027A Phase A raw-memory upper bound",

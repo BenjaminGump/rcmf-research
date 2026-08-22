@@ -29,6 +29,12 @@ def test_first37_task_ids_are_loaded_as_exact_strings() -> None:
     )
 
 
+def test_full_agent_uses_original_appworld_evaluation_contract() -> None:
+    bridge_source = Path("scripts/appworld_full_agent_bridge_7f.py").read_text(encoding="utf-8")
+    assert "load_ground_truth=False" not in bridge_source
+    assert "world.evaluate(suppress_errors=True)" in bridge_source
+
+
 def test_shared_decoder_has_locked_shape_and_no_bias() -> None:
     decoder = SharedDeepResidualDecoder(program_dim=8, model_dim=16)
     output = decoder(torch.ones(2, 8))

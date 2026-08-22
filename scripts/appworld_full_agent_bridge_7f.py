@@ -90,7 +90,6 @@ def main() -> None:
             world = AppWorld(
                 task_id=str(prepare["task_id"]),
                 experiment_name=experiment_name,
-                load_ground_truth=False,
                 random_seed=int(prepare["random_seed"]),
                 max_interactions=int(prepare["max_interactions"]),
                 max_api_calls_per_interaction=int(prepare["max_api_calls_per_interaction"]),
