@@ -56,7 +56,7 @@ from rcmf.utils.serialization import (
     sha256_file,
     sha256_text,
 )
-from scripts.prepare_state_conditioned_program_7d import _context_builder
+from scripts.prepare_state_conditioned_program_7d import _context_builder, _preflight_pair
 from scripts.run_procedural_causal_audit_7b import (
     _examples_by_state,
     _prepare_message,
@@ -78,7 +78,6 @@ from scripts.run_state_conditioned_program_policy_distill_7dg3 import (
     _teacher_policy_row,
     _validate_teacher_row,
 )
-from scripts.run_transition_behavior_6a import _build_tokenized_rows
 
 
 RESULT_FORMAT = "direct_injection_channel_one_step_result_7dh_v1"
@@ -189,6 +188,7 @@ def _teacher_path(paths: Mapping[str, Path], pair_id: str) -> tuple[Path, bool]:
 
 def _preflight(
     *,
+    cfg: Any,
     direct: Mapping[str, Any],
     g3: Mapping[str, Any],
     policy: Mapping[str, Any],
@@ -200,7 +200,6 @@ def _preflight(
         "parent_g3_analysis",
         "parent_policy_analysis",
         "parent_g3_manifest",
-        "direct_teacher_rows",
         "pairs_E",
         "selector",
         "parent_c0_outputs",
@@ -235,25 +234,74 @@ def _preflight(
     if not all(checks.values()):
         raise ValueError(f"EXP-026A immutable input validation failed: {checks}")
 
+    from transformers import AutoTokenizer
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        str(run["expected_model_name"]), trust_remote_code=True
+    )
+    if tokenizer.pad_token_id is None and tokenizer.eos_token is not None:
+        tokenizer.pad_token = tokenizer.eos_token
+    examples = load_decision_examples(paths["decisions"])
+    contexts, _ = _context_builder(
+        tokenizer=tokenizer,
+        examples=examples,
+        prompt_profile=cfg.benchmark.prompt_profile,
+    )
+    transitions = {str(row["transition_id"]): row for row in _rows(paths["transitions"])}
     conditions = _json(paths["parent_g3_manifest"])["conditions"]
     e_pairs = _rows(paths["pairs_E"])
+    e_by_id = {str(row["pair_id"]): row for row in e_pairs}
     last_user_counts = {}
     cached = set()
-    selected_pair_ids = {
-        f"{row['state_example_id']}::transition::{row['program_transition_id']}"
+    selected_conditions = [
+        row
         for row in conditions
         if str(row.get("condition_name")) == "P1_pairmlp_correct"
         and str(row.get("audit_stratum")) in {"A", "B"}
-    }
-    for pair_id in sorted(selected_pair_ids):
-        direct_row = _json(_row_path(paths["direct_teacher_rows"], pair_id))
-        last_user_counts[pair_id] = len(direct_row["last_user_token_indices"])
+    ]
+    candidate_pairs = []
+    context_cache: dict[tuple[str, str], dict[str, Any]] = {}
+    for condition in sorted(selected_conditions, key=lambda row: str(row["state_example_id"])):
+        state_id = str(condition["state_example_id"])
+        transition_id = str(condition["program_transition_id"])
+        pair_id = f"{state_id}::transition::{transition_id}"
+        transition = transitions[transition_id]
+        source = e_by_id.get(pair_id)
+        base = dict(source) if source is not None else {
+            "pair_id": pair_id,
+            "cell": "E",
+            "pair_role": "frozen_selector_top_class",
+            "selection_rule": "frozen_exp025cr_deployment_e",
+            "selection_uses_heldout_labels": False,
+            "state_example_id": state_id,
+            "state_task_id": str(condition["state_task_id"]),
+            "transition_id": transition_id,
+            "transition_parent_id": str(transition["parent_memory_id"]),
+            "transition_parent_task_id": str(transition["parent_task_id"]),
+            "signature_class_id": str(condition["signature_class_id"]),
+            "pair_metadata_source": "reconstructed_from_frozen_condition_and_clean_manifests",
+        }
+        pair = _preflight_pair(
+            row=base,
+            tokenizer=tokenizer,
+            contexts=contexts,
+            transitions=transitions,
+            prompt_profile=cfg.benchmark.prompt_profile,
+            context_limit=int(run["teacher"]["context_limit"]),
+            cache=context_cache,
+        )
+        pair["score_status"] = "over_context" if pair["over_context"] else "scoreable"
+        pair["valid_for_teacher_cache"] = not bool(pair["over_context"])
+        candidate_pairs.append(pair)
+        last_user_counts[pair_id] = len(
+            contexts[state_id]["prompt_metadata"].get("last_user_token_indices", [])
+        )
         parent_teacher = _row_path(paths["parent_policy_teacher_rows"], pair_id)
         if parent_teacher.exists():
             cached.add(pair_id)
     manifest = build_channel_pair_manifest(
         conditions=conditions,
-        e_pairs=e_pairs,
+        e_pairs=candidate_pairs,
         last_user_counts=last_user_counts,
         cached_teacher_pair_ids=cached,
     )
@@ -401,6 +449,47 @@ def _teacher_cache(
     return summary
 
 
+def _ground_truth_tokenized_row(
+    *,
+    backend: HFQwenBackend,
+    context: Mapping[str, Any],
+    pair: Mapping[str, Any],
+    context_limit: int,
+) -> dict[str, Any]:
+    tokenized = backend.tokenize_messages(
+        context["base_messages"], add_generation_prompt=True
+    )
+    prompt_ids = [int(value) for value in tokenized.input_ids[0].cpu().tolist()]
+    target_ids = [int(value) for value in context["target_ids"]]
+    full_ids = prompt_ids + target_ids
+    if len(full_ids) > int(context_limit):
+        raise ValueError(f"Ground-truth row exceeds context: {pair['pair_id']}")
+    rendered = str(tokenized.metadata["text"])
+    if sha256_text(rendered) != str(pair["prompt_sha256"]):
+        raise ValueError(f"Bare ground-truth prompt differs for {pair['pair_id']}")
+    return {
+        "pair_id": str(pair["pair_id"]),
+        "state_example_id": str(pair["state_example_id"]),
+        "state_task_id": str(pair["state_task_id"]),
+        "transition_id": str(pair["transition_id"]),
+        "transition_parent_id": str(pair["transition_parent_id"]),
+        "cell": str(pair["cell"]),
+        "input_ids": full_ids,
+        "labels": [-100] * len(prompt_ids) + target_ids,
+        "pad_token_id": int(backend.tokenizer.pad_token_id),
+        "last_user_token_indices": [
+            int(value) for value in tokenized.metadata["last_user_token_indices"]
+        ],
+        "target_len": len(target_ids),
+        "response_cache": {
+            "target_sha256": str(context["target_sha256"]),
+            "target_token_sha256": str(context["target_token_sha256"]),
+        },
+        "student_prompt_sha256": str(pair["prompt_sha256"]),
+        "student_prompt_contains_raw_transition": False,
+    }
+
+
 def _load_training_data(
     *,
     backend: HFQwenBackend,
@@ -431,17 +520,15 @@ def _load_training_data(
         )
         for pair in manifest["pairs"]
     ]
-    direct_responses = [
-        _json(_row_path(paths["direct_teacher_rows"], str(pair["pair_id"])))
+    ground_truth = [
+        _ground_truth_tokenized_row(
+            backend=backend,
+            context=contexts[str(pair["state_example_id"])],
+            pair=pair,
+            context_limit=int(direct["teacher_cache"]["context_limit"]),
+        )
         for pair in manifest["pairs"]
     ]
-    ground_truth = _build_tokenized_rows(
-        backend=backend,
-        examples=examples,
-        response_rows=direct_responses,
-        prompt_profile=cfg.benchmark.prompt_profile,
-        context_limit=int(direct["teacher_cache"]["context_limit"]),
-    )
     gt_by_id = {str(row["pair_id"]): row for row in ground_truth}
     ground_truth_rows = [gt_by_id[str(row["pair_id"])] for row in policy_rows]
     return manifest, policy_rows, ground_truth_rows, [teachers[str(row["pair_id"])] for row in policy_rows]
@@ -1534,6 +1621,7 @@ def main() -> None:
     ) as attempt:
         if args.phase == "preflight":
             result = _preflight(
+                cfg=cfg,
                 direct=direct,
                 g3=g3,
                 policy=policy,
