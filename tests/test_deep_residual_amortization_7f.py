@@ -103,6 +103,14 @@ def test_compiler_backward_remains_inside_deep_residual_hook() -> None:
     assert any(matching)
 
 
+def test_compiler_runtime_authorization_uses_rectified_phase_a_summary() -> None:
+    source = Path("scripts/run_deep_residual_compiler_7f.py").read_text(
+        encoding="utf-8"
+    )
+    assert 'phase_a_first37_v3"' in source
+    assert 'phase_a_first37_v2"' not in source
+
+
 def test_shared_decoder_has_locked_shape_and_no_bias() -> None:
     decoder = SharedDeepResidualDecoder(program_dim=8, model_dim=16)
     output = decoder(torch.ones(2, 8))

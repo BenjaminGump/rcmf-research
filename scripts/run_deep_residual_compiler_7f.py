@@ -787,7 +787,7 @@ def _train(
                 preflight = _json(output_dir.parent / "runtime_preflight.json")
                 phase_a = _json(
                     output_dir.parent.parent
-                    / "phase_a_first37_v2"
+                    / "phase_a_first37_v3"
                     / "summary.json"
                 )
                 authorization = revised_u16_runtime_authorization(
