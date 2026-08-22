@@ -1,0 +1,146 @@
+include: stage_c_state_conditioned_program_direct_7dg.yaml
+
+experiment:
+  name: stage_c_deep_residual_amortization_7f
+  version: single_seed_e2e_raw_upper_bound_and_deep_residual_amortization_7f_v1
+  seed: 25101
+
+stage_c_7f:
+  run_uuid: deep_residual_amortization_7f_20260822_001
+  artifact_dir: runs/stage_c/deep_residual_amortization_7f_20260822_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  starting_head: f4ec45b2d16ccebc17b481d629a0a3a445d38aa6
+  archive_branch: archive/v4-deep-residual-carrier-validated
+  working_branch: research/v4-deep-residual-amortization
+
+  parent_exp025b: runs/stage_c/replay_clean_rebuild_7b_20260818_001
+  parent_exp025c: runs/stage_c/signature_balanced_field_7c_20260818_001
+  parent_exp025cr: runs/stage_c/signature_balanced_field_7cr_20260818_001
+  parent_exp025d: runs/stage_c/state_conditioned_program_direct_7dg_20260821_001
+  parent_exp026b: runs/stage_c/deep_residual_carrier_capacity_7e_20260822_001
+  reconciled_corpus_dir: runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  baseline_first37_dir: runs/experiments/qwen_appworld_full_prompt_context40_newline_full_20260731_235900/evaluate/test
+  expected_replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+  expected_selector_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42bb01255a9e623956611f
+  expected_model_name: Qwen/Qwen3-8B
+
+  selector:
+    state_views: 10
+    transition_views: 10
+    input_dim: 4096
+    projection_dim: 64
+    interaction_rank: 32
+    context_limit: 40960
+
+  appworld:
+    legacy_python: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    legacy_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+    full_bridge_script: scripts/appworld_full_agent_bridge_7f.py
+    one_step_bridge_script: scripts/appworld_live_one_step_bridge_7b.py
+    prompt_profile: full_demo
+    max_context_turns: 40
+    max_steps: 50
+    max_new_tokens: 512
+    temperature: 0.0
+    top_p: 1.0
+    enable_thinking: false
+    max_api_calls_per_interaction: 100
+    worker_timeout_seconds: 600
+
+  first37:
+    expected_bare_success: 10
+    measured_bare_steps: 792
+    measured_bare_wall_seconds: 2771.5635556100464
+    task_ids:
+      - 0d01c76_1
+      - 0d01c76_2
+      - 0d01c76_3
+      - 21abae1_1
+      - 21abae1_2
+      - 21abae1_3
+      - 29a7b7e_1
+      - 29a7b7e_2
+      - 29a7b7e_3
+      - 2d9f728_1
+      - 2d9f728_2
+      - 2d9f728_3
+      - 325d6ec_1
+      - 325d6ec_2
+      - 325d6ec_3
+      - 3d9a636_1
+      - 3d9a636_2
+      - 3d9a636_3
+      - 634f342_1
+      - 634f342_2
+      - 634f342_3
+      - 6f4b9a5_1
+      - 6f4b9a5_2
+      - 6f4b9a5_3
+      - 8749218_1
+      - 8749218_2
+      - 8749218_3
+      - d18139b_1
+      - d6ac34d_1
+      - d6ac34d_2
+      - d6ac34d_3
+      - fd1f8fa_1
+      - fd1f8fa_2
+      - fd1f8fa_3
+      - ff58e36_1
+      - ff58e36_2
+      - ff58e36_3
+
+  compiler:
+    state_vector_count: 10
+    transition_vector_count: 6
+    representation_dim: 4096
+    program_dim: 256
+    controller_rank: 32
+    hidden_dim: 256
+    dropout: 0.05
+    selected_layer_indices: [7, 14, 21, 28]
+    token_count: 4
+    ratio_budget_per_layer: 1.0
+    program_learning_rate: 0.0001
+    decoder_learning_rate: 0.000001
+    weight_decay: 0.0001
+    checkpoint_updates: [4, 8, 16]
+    maximum_updates_per_pair: 16
+    max_grad_norm: 1.0
+    sequence_huber_delta: 0.1
+    sequence_utility_weight: 1.0
+    sparse_teacher_kl_weight: 0.05
+    target_delta_huber_weight: 0.10
+    neutral_preservation_weight: 0.10
+    harmful_preservation_weight: 0.10
+    preference_weight: 0.10
+    preference_minimum_gap: 0.05
+    preference_margin_cap: 0.25
+    ratio_restraint_weight: 0.001
+
+  expected_pairs:
+    A: 607
+    B: 135
+    C: 112
+    D: 112
+    E: 135
+    A_train: 479
+    A_validation: 128
+
+  runtime:
+    review_threshold_h100_hours: 18.0
+    measured_first37_bare_h100_hours: 0.769878765447235
+    phase_a_multiplier_expected: 2.5
+    phase_a_multiplier_conservative: 4.0
+    deep_backward_seconds_expected: 6.9
+    deep_backward_seconds_conservative: 9.0
+    pair_evaluation_seconds_expected: 3.7
+    pair_evaluation_seconds_conservative: 7.0
+    one_step_generation_seconds_expected: 7.85
+    one_step_generation_seconds_conservative: 12.0
+    projected_bytes_per_checkpoint: 650000000
+    projected_bytes_per_condition: 2359296
+
+  bootstrap_samples: 2000
+  heartbeat_interval_seconds: 240
