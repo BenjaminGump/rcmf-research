@@ -10,6 +10,7 @@ from rcmf.training.direct_injection_channel_7dh import (
     continuation_decision,
     cyclic_derangement,
     require_global_seed,
+    runtime_projection,
 )
 
 
@@ -140,3 +141,18 @@ def test_global_seed_is_locked() -> None:
     require_global_seed(25101)
     with pytest.raises(ValueError):
         require_global_seed(1)
+
+
+def test_runtime_projection_includes_teacher_forced_checkpoint_forwards() -> None:
+    result = runtime_projection(
+        feasible_counts={"4": 1, "8": 1, "16": 1},
+        new_teacher_count=0,
+        rates={
+            name: {"forward": 1.0, "backward": 1.0, "generation": 1.0}
+            for name in ("best", "expected", "conservative")
+        },
+        maximum_updates_per_pair=16,
+    )
+    expected = result["scenarios"]["expected"]
+    assert expected["teacher_forced_evaluation_hours"] == pytest.approx(24 / 3600)
+    assert expected["maximum_h100_hours"] == pytest.approx((192 + 24 + 6) / 3600)
