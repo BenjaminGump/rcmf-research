@@ -1498,6 +1498,23 @@ def main() -> None:
         raise RuntimeError("Persistent filesystem is not mounted")
     paths = _paths(direct, g3, run, args.artifact_dir)
     args.artifact_dir.mkdir(parents=True, exist_ok=True)
+    data_hashes = {
+        name: sha256_file(path)
+        for name, path in {
+            "config": args.config,
+            "replay_config": args.replay_config,
+            "parent_g3_analysis": paths["parent_g3_analysis"],
+            "parent_policy_analysis": paths["parent_policy_analysis"],
+            "parent_g3_manifest": paths["parent_g3_manifest"],
+            "pairs_E": paths["pairs_E"],
+            "selector": paths["selector"],
+            "replay_lineage": paths["replay_lineage"],
+            "decisions": paths["decisions"],
+            "memories": paths["memories"],
+            "transitions": paths["transitions"],
+        }.items()
+        if path.exists()
+    }
     with AttemptLedger(
         args.artifact_dir,
         run_uuid=str(run["run_uuid"]),
@@ -1508,8 +1525,11 @@ def main() -> None:
         github_head=args.github_head,
         lambda_head=args.lambda_head,
         tmux_session=args.tmux_session,
+        config_sha256=sha256_file(args.config),
+        data_manifest_hashes=data_hashes,
         parent_attempt_id=args.parent_attempt_id,
         resume_checkpoint=args.resume_checkpoint,
+        scientific_parameter_changed=False,
         heartbeat_interval_s=float(run["heartbeat_interval_seconds"]),
     ) as attempt:
         if args.phase == "preflight":
