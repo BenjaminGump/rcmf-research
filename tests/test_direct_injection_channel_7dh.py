@@ -137,6 +137,23 @@ def test_channel_gate_requires_retention_shuffle_and_task_coverage() -> None:
     assert failed["passed"] is False
 
 
+def test_channel_gate_accepts_locked_bootstrap_difference_schema() -> None:
+    def comparison(signature: float, successor: float, execution: float = 0.0):
+        return {
+            "canonical_procedural_signature_match": {"difference": signature},
+            "semantic_successor_match": {"difference": successor},
+            "execution_success": {"difference": execution},
+        }
+
+    result = channel_gate(
+        o_minus_c0=comparison(0.28, 0.20, -0.03),
+        o_minus_s=comparison(0.06, 0.00),
+        f3_minus_c0=comparison(0.40, 0.40),
+        positive_task_count=6,
+    )
+    assert result["passed"] is True
+
+
 def test_global_seed_is_locked() -> None:
     require_global_seed(25101)
     with pytest.raises(ValueError):
