@@ -63,7 +63,9 @@ def main() -> None:
         prepare = _read()
         if prepare.get("format") != PROTOCOL_VERSION or prepare.get("op") != "prepare":
             raise ValueError("First full-agent bridge operation must be prepare")
-        expected_python = Path(str(prepare["legacy_python"])).resolve()
+        declared_python = Path(str(prepare["legacy_python"])).absolute()
+        expected_python = declared_python.resolve()
+        legacy_environment_root = declared_python.parent.parent.resolve()
         if Path(sys.executable).resolve() != expected_python:
             raise RuntimeError("Full-agent bridge used the wrong Python executable")
         root = Path(str(prepare["appworld_root"])).resolve()
@@ -77,7 +79,7 @@ def main() -> None:
         module_path = Path(appworld.__file__).resolve()
         if appworld.__version__ != "0.1.0" or str(DB_VERSION) != "0.1.0":
             raise RuntimeError("Full-agent bridge did not load AppWorld 0.1.0")
-        if expected_python.parent.parent not in module_path.parents:
+        if legacy_environment_root not in module_path.parents:
             raise RuntimeError("AppWorld import leaked outside the legacy environment")
         experiment_name = str(prepare["experiment_name"])
         output_path = root / "experiments/outputs" / experiment_name
