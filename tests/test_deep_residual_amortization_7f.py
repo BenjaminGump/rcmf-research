@@ -19,6 +19,7 @@ from rcmf.training.deep_residual_amortization_7f import (
     differentiable_layer_ratio_projection,
     revised_u16_runtime_authorization,
 )
+from scripts.run_deep_residual_amortized_one_step_7f import _load_representations
 from scripts.run_raw_memory_first37_7f import (
     RESULT_VERSION,
     SOURCE_RESULT_VERSION,
@@ -262,3 +263,9 @@ def test_behavior_classification_strong_and_partial() -> None:
         positive_task_count=5,
     )
     assert degraded_other["classification"] == "PARTIAL_POSITIVE"
+
+
+def test_one_step_runner_uses_the_direct_program_representation_loader() -> None:
+    assert _load_representations.__module__ == (
+        "scripts.run_state_conditioned_program_direct_7dg"
+    )

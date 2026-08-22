@@ -42,10 +42,7 @@ from rcmf.training.procedural_causal_audit_7b import (
     build_live_appworld_messages,
     condition_checkpoint_name,
 )
-from rcmf.training.state_conditioned_program_direct_7dg import (
-    _load_representations,
-    seed_everything,
-)
+from rcmf.training.state_conditioned_program_direct_7dg import seed_everything
 from rcmf.training.state_conditioned_transition_6b import AttemptLedger
 from rcmf.utils.serialization import (
     atomic_write_json,
@@ -66,6 +63,7 @@ from scripts.run_state_conditioned_program_fast_one_step_7df import (
     _f3_rows,
     _load_parent_rows,
 )
+from scripts.run_state_conditioned_program_direct_7dg import _load_representations
 
 
 RESULT_FORMAT = "deep_residual_amortized_one_step_result_7f_v1"
