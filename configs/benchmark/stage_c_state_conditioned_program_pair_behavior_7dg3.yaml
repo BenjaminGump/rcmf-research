@@ -1,0 +1,64 @@
+include: stage_c_state_conditioned_program_direct_7dg.yaml
+
+experiment:
+  name: stage_c_state_conditioned_program_pair_behavior_7dg3
+  version: single_seed_direct_pairmlp_one_step_7dg3_v1
+  seed: 25101
+
+stage_c_7dg3:
+  run_uuid: state_conditioned_program_pair_behavior_7dg3_20260822_001
+  artifact_dir: runs/stage_c/state_conditioned_program_pair_behavior_7dg3_20260822_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  starting_head: a7c2fe004ddc1b394c21c37914682a7d7742046a
+  working_branch: research/v4-direct-behavior-program
+
+  parent_direct: runs/stage_c/state_conditioned_program_direct_7dg_20260821_001
+  parent_direct_run_uuid: state_conditioned_program_direct_7dg_20260821_001
+  parent_direct_attempt_id: exp025dg-finalize-001
+  parent_g2: runs/stage_c/state_conditioned_program_direct_extend_7dg2_20260821_001
+  parent_g2_run_uuid: state_conditioned_program_direct_extend_7dg2_20260821_001
+  parent_g2_attempt_id: finalize-seedfix-004
+
+  expected_pairmlp_checkpoint_sha256: 80506a5d9b1c3031b5468fb59c0b6d9e01d7d50ddc1fee49115a88eb8b8b429d
+  expected_pairmlp_model_sha256: 206985ff862506fa14168284e10a7463c981b87fe4da311dc880b6d580be28a7
+  expected_pairmlp_decoder_sha256: 4d4b84970d1c6c9818790cada49e2554fc1c3b58d298175deac4ca70c837a6cd
+  expected_pairmlp_training_summary_sha256: a3a72bca501f0c5a7448f0886c8383c998c3ba4b693e05bd043943b026d45126
+  expected_pairmlp_final_evaluation_sha256: d8b287db58b90071116324c3cfa0e74b4961328ace0768f74c361e400c12b609
+  expected_parent_direct_final_summary_sha256: 9299bb932cb6dd571734b4777bcd32e371ee1098e163edc83d36137e35d99f98
+  expected_parent_g2_final_summary_sha256: 494a208f7d757c91da937c510bd2cd57971660d11537aa0e653175f84df9aed9
+  expected_state_cache_sha256: f594b8f82ccd4c91be909fb16af2b9a198484d7585a10402ba5c9a5dd70cfb70
+  expected_transition_cache_sha256: 00549c7de1ee75e39ab5a2919a1f3c8d713fbec6709255955d0b2805b276cc3b
+  expected_selector_ensemble_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f
+  expected_structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+  expected_replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+  expected_model_name: Qwen/Qwen3-8B
+  expected_prompt_profile: full_demo
+  expected_injection_position: last_user_k
+  expected_injection_k: 4
+
+  one_step:
+    audit_states: 45
+    primary_states: 32
+    conditions_per_state: 3
+    total_conditions: 135
+    material_degradation_tolerance: 0.05
+    positive_task_minimum: 5
+    retention_minimum: 0.40
+
+  conditional:
+    r64_review_threshold_h100_hours: 14.0
+    policy_distillation_review_threshold_h100_hours: 10.0
+
+  runtime:
+    rates:
+      best:
+        generation: 6.0
+      expected:
+        generation: 7.85
+      conservative:
+        generation: 12.0
+    projected_bytes_per_condition: 2359296
+
+  bootstrap_samples: 2000
+  heartbeat_interval_seconds: 240
