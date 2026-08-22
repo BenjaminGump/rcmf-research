@@ -1,0 +1,77 @@
+include: stage_c_state_conditioned_program_pair_behavior_7dg3.yaml
+
+experiment:
+  name: stage_c_state_conditioned_program_policy_distill_7dg3
+  version: single_seed_pairmlp_behavioral_policy_distillation_7dg3_v1
+  seed: 25101
+
+stage_c_7dg3_policy:
+  run_uuid: state_conditioned_program_pair_behavior_7dg3_20260822_001
+  artifact_subdir: policy_distillation
+  global_seed: 25101
+  parent_g3_analysis_sha256: 9fc8ce6d64a6b8eb6d360555a94a9e95b409ad504f2775b92e7c05a7cdc30bec
+  expected_parent_branch: teacher_forced_objective_not_behaviorally_retained
+  expected_pairmlp_checkpoint_sha256: 80506a5d9b1c3031b5468fb59c0b6d9e01d7d50ddc1fee49115a88eb8b8b429d
+  initialization: warm_start_existing_direct_pairmlp_u8_and_private_decoder
+  optimizer_resume: false
+
+  pair_manifest:
+    training_count: 128
+    evaluation_counts:
+      A_validation: 32
+      B: 24
+      C: 24
+      D: 24
+      E: 32
+    require_all_a_train_tasks: true
+
+  teacher:
+    max_new_tokens: 512
+    top_k: 64
+    temperature: 0.0
+    top_p: 1.0
+    do_sample: false
+    enable_thinking: false
+    context_limit: 40960
+
+  training:
+    updates_per_pair: 8
+    program_learning_rate: 0.0001
+    decoder_learning_rate: 0.000001
+    weight_decay: 0.0001
+    max_grad_norm: 1.0
+    policy_kl_weight: 1.0
+    teacher_token_ce_weight: 0.25
+    ground_truth_ce_weight: 0.05
+    memory_swap_weight: 0.10
+    memory_swap_margin: 0.05
+    ratio_restraint_weight: 0.001
+    ratio_budget: 1.0
+
+  evaluation:
+    controls:
+      - correct
+      - state_shuffle
+      - transition_shuffle
+      - zero
+
+  runtime:
+    review_threshold_h100_hours: 10.0
+    teacher_generation_seconds:
+      best: 6.0
+      expected: 7.85
+      conservative: 12.0
+    forward_seconds:
+      best: 1.25
+      expected: 1.85
+      conservative: 3.50
+    backward_seconds:
+      best: 1.90
+      expected: 2.40
+      conservative: 4.00
+    one_step_generation_count: 135
+    projected_bytes_per_teacher_row: 250000
+    projected_bytes_per_checkpoint: 350000000
+    projected_bytes_per_one_step_condition: 2359296
+
+  heartbeat_interval_seconds: 240
