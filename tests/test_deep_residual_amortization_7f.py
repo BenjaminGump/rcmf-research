@@ -14,6 +14,7 @@ from rcmf.training.deep_residual_amortization_7f import (
     build_amortized_one_step_manifest,
     classify_one_step_behavior,
     continue_after_u8,
+    deterministic_mismatch_indices,
     differentiable_layer_ratio_projection,
     revised_u16_runtime_authorization,
 )
@@ -128,6 +129,16 @@ def test_class_selection_uses_mean_not_duplicate_sum() -> None:
         ordered_transition_ids=["a", "b", "c"],
     )
     assert result["selected_class_id"] == "small"
+
+
+def test_control_indices_change_the_actual_entity() -> None:
+    entities = ["state-a", "state-a", "state-b", "state-c"]
+    indices = deterministic_mismatch_indices(
+        entities,
+        ["pair-0", "pair-1", "pair-2", "pair-3"],
+        namespace="test-state-shuffle",
+    )
+    assert all(entities[index] != entities[source] for index, source in enumerate(indices))
 
 
 def test_amortized_one_step_manifest_freezes_memory_specific_controls() -> None:

@@ -25,6 +25,40 @@ def _canonical_sha256(value: Mapping[str, Any]) -> str:
     ).hexdigest()
 
 
+def deterministic_mismatch_indices(
+    entity_ids: Sequence[str],
+    row_keys: Sequence[str],
+    *,
+    namespace: str,
+    seed: int = GLOBAL_SEED,
+) -> list[int]:
+    """Choose deterministic control rows whose entity identity truly differs."""
+
+    if len(entity_ids) != len(row_keys):
+        raise ValueError("Entity IDs and row keys must have matching lengths")
+    output = []
+    for index, entity_id in enumerate(entity_ids):
+        candidates = [
+            candidate
+            for candidate, other_id in enumerate(entity_ids)
+            if str(other_id) != str(entity_id)
+        ]
+        if not candidates:
+            raise ValueError(f"{namespace} control has no mismatched entity")
+        output.append(
+            min(
+                candidates,
+                key=lambda candidate: hashlib.sha256(
+                    (
+                        f"{seed}:{namespace}:{row_keys[index]}:"
+                        f"{row_keys[candidate]}:{entity_ids[candidate]}"
+                    ).encode("utf-8")
+                ).hexdigest(),
+            )
+        )
+    return output
+
+
 class SharedDeepResidualDecoder(nn.Module):
     """Shared no-bias map from a compact program to the locked residual carrier."""
 

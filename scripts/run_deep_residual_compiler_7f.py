@@ -28,6 +28,7 @@ from rcmf.training.deep_residual_amortization_7f import (
     SharedDeepResidualDecoder,
     best_visited_checkpoint,
     continue_after_u8,
+    deterministic_mismatch_indices,
     differentiable_layer_ratio_projection,
     revised_u16_runtime_authorization,
 )
@@ -57,7 +58,6 @@ from rcmf.utils.serialization import (
 from scripts.run_stage_c_oracle_capacity_5e import _collate, _rows_from_logits
 from scripts.run_stage_c_oracle_convergence_5fa import _training_loss
 from scripts.run_state_conditioned_program_direct_7dg import (
-    _derangement,
     _load_manifests,
     _load_representations,
     _pair_indices,
@@ -388,12 +388,20 @@ def _latents(
     states: Tensor,
     transitions: Tensor,
     pair_ids: Sequence[str],
+    state_ids: Sequence[str],
+    transition_ids: Sequence[str],
     control: str,
     device: torch.device,
 ) -> Tensor:
-    state_perm = _derangement(pair_ids, f"7f-{kind}-{control}-state")
-    transition_perm = _derangement(pair_ids, f"7f-{kind}-{control}-transition")
-    swap = list(range(1, len(pair_ids))) + [0] if len(pair_ids) > 1 else [0]
+    state_perm = deterministic_mismatch_indices(
+        state_ids, pair_ids, namespace=f"7f-{kind}-{control}-state"
+    )
+    transition_perm = deterministic_mismatch_indices(
+        transition_ids, pair_ids, namespace=f"7f-{kind}-{control}-transition"
+    )
+    swap = deterministic_mismatch_indices(
+        transition_ids, pair_ids, namespace=f"7f-{kind}-{control}-memory-swap"
+    )
     output = []
     model.eval()
     with torch.no_grad():
@@ -431,6 +439,10 @@ def _evaluate(
     control: str,
 ) -> dict[str, Any]:
     pair_ids = [str(row["pair_id"]) for row in rows]
+    state_ids = [str(row["state_example_id"]) for row in rows]
+    transition_ids = [
+        str(row.get("transition_id", row.get("memory_id"))) for row in rows
+    ]
     state_indices, transition_indices = _pair_indices(rows, representations)
     states = representations["state_values"][state_indices]
     transitions = representations["transition_values"][transition_indices]
@@ -440,6 +452,8 @@ def _evaluate(
         states=states,
         transitions=transitions,
         pair_ids=pair_ids,
+        state_ids=state_ids,
+        transition_ids=transition_ids,
         control=control,
         device=backend.device,
     )
