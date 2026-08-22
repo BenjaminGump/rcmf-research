@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 import torch
 from torch import nn
@@ -164,3 +166,9 @@ def test_runtime_projection_counts_one_backward_per_optimizer_update() -> None:
     assert result["optimizer_backward_calls_minimum"] == 256
     assert result["optimizer_backward_calls_maximum"] == 512
     assert result["generation_count"] == 64
+
+
+def test_experiment_script_uses_canonical_position_id_helper() -> None:
+    source = Path("scripts/run_deep_residual_carrier_7e.py").read_text(encoding="utf-8")
+    assert "from rcmf.injection.base import build_position_ids" in source
+    assert "from rcmf.training.oracle_capacity_5e import build_position_ids" not in source

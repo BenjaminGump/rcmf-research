@@ -20,6 +20,7 @@ from torch import Tensor, nn
 
 from rcmf.benchmarks.appworld.data import extract_code_and_fix_content
 from rcmf.config import load_config
+from rcmf.injection.base import build_position_ids
 from rcmf.model.backends.base import GenerateOutput
 from rcmf.model.backends.hf_qwen import HFQwenBackend
 from rcmf.training.datasets import load_decision_examples, load_memory_records
@@ -40,7 +41,6 @@ from rcmf.training.direct_injection_channel_7dh import (
     cyclic_derangement,
     require_global_seed,
 )
-from rcmf.training.oracle_capacity_5e import build_position_ids
 from rcmf.training.oracle_convergence_5fa import atomic_torch_save, update_count_summary
 from rcmf.training.procedural_causal_analysis_7b import (
     comparison_set,
