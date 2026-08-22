@@ -1,0 +1,78 @@
+include: stage_c_direct_injection_channel_7dh.yaml
+
+experiment:
+  name: stage_c_deep_residual_carrier_7e
+  version: single_seed_free_deep_residual_capacity_7e_v1
+  seed: 25101
+
+stage_c_7e:
+  run_uuid: deep_residual_carrier_capacity_7e_20260822_001
+  artifact_dir: runs/stage_c/deep_residual_carrier_capacity_7e_20260822_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  starting_head: 496b8f868a36b2389b1965878dee1b365c2e4176
+  working_branch: research/v4-deep-residual-carrier
+
+  parent_exp026a: runs/stage_c/direct_injection_channel_capacity_7dh_20260822_001
+  expected_parent_manifest_sha256: 1bccaa02ba5a3ce92a493f0c591c1e81c855cc9c6e34fad35113de441c12fd98
+  expected_parent_preflight_sha256: 150a7a3cc68aca3b8661c4e312741788c4880255c58a1b86efba5612f3213afa
+  expected_parent_teacher_summary_sha256: b629f55d65576e1e8ea74a17b0a566830dc260a8f83b7eb53f157bab7e48cef2
+  expected_parent_training_sha256: 4c3e8f075833b5f54841ecacabf46a5261cef5a6daceb951991cbca51b108ded
+  expected_parent_analysis_sha256: 2f6dfb471220ed838796b4574c48ff4a2f24c2aee1fadb0dc00fbeb617bdcdba
+  expected_parent_branch: input_embedding_channel_behavioral_capacity_failed
+  expected_selector_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f
+  expected_replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+  expected_model_name: Qwen/Qwen3-8B
+
+  carrier:
+    token_count: 4
+    position: last_user_k
+    expected_num_hidden_layers: 36
+    expected_model_dim: 4096
+    expected_layer_indices: [7, 14, 21, 28]
+    ratio_budget_per_layer: 1.0
+    learning_rate: 0.05
+    checkpoint_updates: [4, 8, 16]
+    maximum_updates_per_pair: 16
+    continuation_relative_improvement: 0.05
+    policy_kl_weight: 1.0
+    teacher_token_ce_weight: 0.25
+    ground_truth_ce_weight: 0.05
+    ratio_restraint_weight: 0.001
+    max_grad_norm: 1.0
+
+  implementation_validation:
+    representative_state_count: 4
+    max_new_tokens: 128
+    logits_atol: 0.0
+    nll_atol: 0.0
+    require_exact_generation: true
+
+  gate:
+    retention_primary: 0.70
+    retention_secondary: 0.50
+    material_shuffle_improvement: 0.05
+    material_degradation_tolerance: 0.05
+    execution_degradation_tolerance: 0.05
+    positive_task_minimum: 6
+
+  runtime:
+    review_threshold_h100_hours: 6.0
+    rates:
+      best:
+        forward: 1.25
+        backward: 1.90
+        generation: 6.0
+      expected:
+        forward: 1.85
+        backward: 2.40
+        generation: 7.85
+      conservative:
+        forward: 3.50
+        backward: 4.00
+        generation: 12.0
+    projected_bytes_per_delta_parameter: 4
+    projected_bytes_per_condition: 2359296
+
+  bootstrap_samples: 2000
+  heartbeat_interval_seconds: 240
