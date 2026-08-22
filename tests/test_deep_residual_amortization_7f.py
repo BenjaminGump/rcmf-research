@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 from pathlib import Path
 
 import pytest
@@ -35,6 +36,29 @@ def test_full_agent_uses_original_appworld_evaluation_contract() -> None:
     bridge_source = Path("scripts/appworld_full_agent_bridge_7f.py").read_text(encoding="utf-8")
     assert "load_ground_truth=False" not in bridge_source
     assert "world.evaluate(suppress_errors=True)" in bridge_source
+
+
+def test_compiler_backward_remains_inside_deep_residual_hook() -> None:
+    source = Path("scripts/run_deep_residual_compiler_7f.py").read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    matching = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.With):
+            continue
+        uses_hook = any(
+            isinstance(item.context_expr, ast.Call)
+            and isinstance(item.context_expr.func, ast.Name)
+            and item.context_expr.func.id == "DeepResidualHooks"
+            for item in node.items
+        )
+        has_backward = any(
+            isinstance(child, ast.Call)
+            and isinstance(child.func, ast.Attribute)
+            and child.func.attr == "backward"
+            for child in ast.walk(node)
+        )
+        matching.append(uses_hook and has_backward)
+    assert any(matching)
 
 
 def test_shared_decoder_has_locked_shape_and_no_bias() -> None:
@@ -146,3 +170,11 @@ def test_behavior_classification_strong_and_partial() -> None:
         positive_task_count=4,
     )
     assert partial["classification"] == "PARTIAL_POSITIVE"
+    degraded_other = classify_one_step_behavior(
+        p1_minus_c0={"action_signature": 0.2, "semantic_successor": 0.1},
+        p1_minus_p2={"action_signature": 0.1, "semantic_successor": -0.1},
+        p1_minus_p3={"action_signature": 0.1, "semantic_successor": -0.1},
+        execution_drop=0.0,
+        positive_task_count=5,
+    )
+    assert degraded_other["classification"] == "PARTIAL_POSITIVE"

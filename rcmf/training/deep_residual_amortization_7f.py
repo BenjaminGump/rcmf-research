@@ -366,14 +366,21 @@ def classify_one_step_behavior(
 
     primary = ("action_signature", "semantic_successor")
     improves_bare = any(float(p1_minus_c0[name]) > 0.0 for name in primary)
-    beats_both_on_one = any(
-        float(p1_minus_p2[name]) >= material and float(p1_minus_p3[name]) >= material
+    winning_metrics = [
+        name
         for name in primary
-    )
+        if float(p1_minus_p2[name]) >= material
+        and float(p1_minus_p3[name]) >= material
+    ]
+    beats_both_on_one = bool(winning_metrics)
     other_not_materially_worse = any(
-        float(p1_minus_p2[name]) >= -material
-        and float(p1_minus_p3[name]) >= -material
-        for name in primary
+        all(
+            float(p1_minus_p2[other]) >= -material
+            and float(p1_minus_p3[other]) >= -material
+            for other in primary
+            if other != winner
+        )
+        for winner in winning_metrics
     )
     execution_ok = float(execution_drop) <= material
     strong = bool(

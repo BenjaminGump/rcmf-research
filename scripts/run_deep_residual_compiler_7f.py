@@ -31,6 +31,8 @@ from rcmf.training.deep_residual_amortization_7f import (
     differentiable_layer_ratio_projection,
     revised_u16_runtime_authorization,
 )
+from rcmf.training.deep_residual_carrier_7e import DeepResidualHooks
+from rcmf.training.datasets import load_decision_examples
 from rcmf.training.oracle_convergence_5fa import (
     ConvergenceObjective,
     atomic_torch_save,
@@ -52,7 +54,6 @@ from rcmf.utils.serialization import (
     sha256_file,
     write_jsonl,
 )
-from scripts.run_deep_residual_carrier_7e import _capture_states, _forward_residual
 from scripts.run_stage_c_oracle_capacity_5e import _collate, _rows_from_logits
 from scripts.run_stage_c_oracle_convergence_5fa import _training_loss
 from scripts.run_state_conditioned_program_direct_7dg import (
@@ -66,7 +67,12 @@ from scripts.run_state_conditioned_program_direct_7dg import (
 )
 from scripts.run_state_conditioned_program_fast_7df import _build_backend, _row_file
 from scripts.run_transition_behavior_6a import _build_tokenized_rows
-from rcmf.training.datasets import load_decision_examples
+from scripts.run_deep_residual_carrier_7e import (
+    _bare_target_forward,
+    _capture_states,
+    _forward_residual,
+    _selected_indices,
+)
 
 
 PAIRMLP = "pair_mlp_deep_residual_observation_excluded"
@@ -641,44 +647,52 @@ def _train(
                 base,
                 maximum_ratio=float(settings["compiler"]["ratio_budget_per_layer"]),
             )
-            student = _forward_residual(
-                backend=backend,
-                batch=batch,
-                delta=delta,
-                layer_indices=LAYER_INDICES,
-                original_states=base,
-            )
-            loss, terms = _training_loss(
-                logits=student["target_logits"], batch=batch, objective=objective
-            )
-            utility = float(row["response_cache"]["text_utility"])
-            category = str(row["response_cache"]["utility_category"])
-            preservation = 0.0
-            if category == "neutral":
-                preservation = float(settings["compiler"]["neutral_preservation_weight"])
-            elif utility < 0.0:
-                preservation = float(settings["compiler"]["harmful_preservation_weight"])
-            loss = loss + preservation * terms["student_utility"].pow(2).mean()
-            if index in preference and preference[index][0] in utility_cache:
-                partner, direction, margin = preference[index]
-                partner_value = torch.tensor(
-                    utility_cache[partner],
-                    device=backend.device,
-                    dtype=terms["student_utility"].dtype,
-                )
-                preference_loss = F.relu(
-                    float(margin)
-                    - float(direction)
-                    * (terms["student_utility"].mean() - partner_value)
-                )
-                loss = loss + float(settings["compiler"]["preference_weight"]) * preference_loss
-                preference_terms += 1
-            raw_ratio = ratio["raw_layer_ratio"]
-            loss = loss + float(settings["compiler"]["ratio_restraint_weight"]) * (
-                F.relu(raw_ratio - 1.0).pow(2).mean() + 0.01 * z.pow(2).mean()
-            )
             optimizer.zero_grad(set_to_none=True)
-            loss.backward()
+            with DeepResidualHooks(
+                model=backend.model,
+                layer_indices=LAYER_INDICES,
+                selected_token_indices=_selected_indices(batch),
+                delta=delta,
+                expected_prefill_length=int(batch["input_ids"].shape[1]),
+            ):
+                _, target_logits = _bare_target_forward(backend=backend, batch=batch)
+                loss, terms = _training_loss(
+                    logits=target_logits, batch=batch, objective=objective
+                )
+                utility = float(row["response_cache"]["text_utility"])
+                category = str(row["response_cache"]["utility_category"])
+                preservation = 0.0
+                if category == "neutral":
+                    preservation = float(
+                        settings["compiler"]["neutral_preservation_weight"]
+                    )
+                elif utility < 0.0:
+                    preservation = float(
+                        settings["compiler"]["harmful_preservation_weight"]
+                    )
+                loss = loss + preservation * terms["student_utility"].pow(2).mean()
+                if index in preference and preference[index][0] in utility_cache:
+                    partner, direction, margin = preference[index]
+                    partner_value = torch.tensor(
+                        utility_cache[partner],
+                        device=backend.device,
+                        dtype=terms["student_utility"].dtype,
+                    )
+                    preference_loss = F.relu(
+                        float(margin)
+                        - float(direction)
+                        * (terms["student_utility"].mean() - partner_value)
+                    )
+                    loss = loss + float(
+                        settings["compiler"]["preference_weight"]
+                    ) * preference_loss
+                    preference_terms += 1
+                raw_ratio = ratio["raw_layer_ratio"]
+                loss = loss + float(settings["compiler"]["ratio_restraint_weight"]) * (
+                    F.relu(raw_ratio - 1.0).pow(2).mean() + 0.01 * z.pow(2).mean()
+                )
+                # Hooks must survive activation-checkpoint recomputation in backward.
+                loss.backward()
             trainable = list(model.parameters()) + (
                 [] if decoder_frozen else list(decoder.parameters())
             )
