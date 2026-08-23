@@ -13,6 +13,9 @@ from scripts.run_appworld_train_causal_gate_7hr import (
 from scripts.run_appworld_structured_gated_first37_7hr import _live_state_text
 from scripts.run_appworld_structured_compiler_7hr import _mismatch_manifest
 from scripts.run_appworld_structured_compiler_validation_7hr import _control_manifest
+from scripts.run_appworld_structured_compiler_audit_7hr import (
+    _control_manifest as _audit_control_manifest,
+)
 from rcmf.training.procedural_supervision_6f import state_stage_signature
 from rcmf.training.appworld_structured_rescue_7hr import (
     FeatureSchema,
@@ -375,3 +378,24 @@ def test_compiler_validation_controls_are_frozen_and_outcome_blind() -> None:
         "V3_state_shuffle",
         "V0_zero",
     }
+
+
+def test_locked_audit_controls_are_different_class_and_task() -> None:
+    rows = [
+        {
+            "state_example_id": f"s{index}",
+            "state_task_id": f"t{index}",
+            "state_step_id": index + 1,
+            "transition_id": f"m{index}",
+            "signature_class_id": f"c{index}",
+            "audit_stratum": "primary",
+            "api_documentation_action": False,
+            "procedural_tier": 4,
+        }
+        for index in range(3)
+    ]
+    manifest = _audit_control_manifest(rows, {})
+    assert manifest["condition_count"] == 12
+    assert manifest["selection_uses_behavioral_outcomes"] is False
+    assert all(row["transition_class_differs"] for row in manifest["controls"])
+    assert all(row["state_task_differs"] for row in manifest["controls"])

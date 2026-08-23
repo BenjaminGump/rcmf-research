@@ -426,7 +426,10 @@ class StaticFeatureBank:
 
     def feature(self, state_id: str, transition_id: str) -> list[float]:
         selection = self.selections[state_id]
-        if str(selection["selected_transition_id"]) == transition_id:
+        if (
+            str(selection["selected_transition_id"]) == transition_id
+            and state_id in self.correct
+        ):
             return list(self.correct[state_id]["feature_values"])
         transition = self.transitions[transition_id]
         signature = self.signatures[transition_id]
@@ -469,6 +472,11 @@ class StaticFeatureBank:
         if names != list(self.schema.names):
             raise RuntimeError("Compiler feature order differs")
         return values
+
+    def register_selection(self, state_id: str, selection: Mapping[str, Any]) -> None:
+        if state_id in self.selections and self.selections[state_id] != dict(selection):
+            raise ValueError(f"Structured selection differs for {state_id}")
+        self.selections[state_id] = dict(selection)
 
     @torch.no_grad()
     def gate_probabilities(self, values: Sequence[float]) -> dict[str, Any]:
