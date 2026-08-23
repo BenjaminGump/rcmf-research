@@ -99,7 +99,6 @@ def _paths(settings: Mapping[str, Any], artifact_dir: Path) -> dict[str, Path]:
         "intent_checkpoint": parent_c / "clean_intent_probe/action_intent_probe.pt",
         "selector": parent_c / "selector/ensemble_scores.pt",
         "task_split": Path(str(settings["panel"]["task_split_manifest"])),
-        "parent_checkpoint": parent_g / "compiler/pairmlp/checkpoints/model_u08.pt",
         "parent_training": parent_g / "compiler/pairmlp/training_summary.json",
         "panel": preflight / "initial_panel.json",
         "selections": preflight / "frozen_train_selections.jsonl",
@@ -342,10 +341,13 @@ def main() -> None:
         "intent_checkpoint",
         "selector",
         "task_split",
-        "parent_checkpoint",
         "parent_training",
     )
     _require(paths, required)
+    parent_training = _json(paths["parent_training"])
+    paths["parent_checkpoint"] = Path(str(parent_training["selected_checkpoint"]))
+    _require(paths, ("parent_checkpoint",))
+    required = (*required, "parent_checkpoint")
     source_hashes = {name: sha256_file(paths[name]) for name in required}
     immutable_checks = {
         "selector_sha256": source_hashes["selector"] == str(settings["expected_selector_sha256"]),
@@ -353,7 +355,7 @@ def main() -> None:
         == str(settings["expected_exp027b_checkpoint_sha256"]),
         "replay_lineage": str(_json(paths["replay_lineage"])["lineage_sha256"])
         == str(settings["expected_replay_lineage_sha256"]),
-        "parent_checkpoint_selected": str(_json(paths["parent_training"])["selected_checkpoint_sha256"])
+        "parent_checkpoint_selected": str(parent_training["selected_checkpoint_sha256"])
         == str(settings["expected_exp027b_checkpoint_sha256"]),
     }
     if not all(immutable_checks.values()):
