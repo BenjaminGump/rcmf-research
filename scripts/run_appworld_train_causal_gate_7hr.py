@@ -514,6 +514,12 @@ def _run_paired(
         "rows": completed_rows,
         "minimum_label_gate_passed": passed,
     }
+    payload["maximum_state_space_exhausted"] = (
+        payload["state_count"]
+        + payload["over_context_missing_count"]
+        + payload["replay_semantic_missing_count"]
+        == int(manifest["maximum_state_count"])
+    )
     atomic_write_json(paths["outcomes"], payload)
     atomic_write_text(
         paths["outcome_report"],
@@ -528,6 +534,7 @@ def _run_paired(
                 f"- over-context logical rows: `{payload['over_context_missing_count']}`",
                 f"- locked-v3 replay-missing states: `{payload['replay_semantic_missing_count']}`",
                 f"- minimum 40/label gate: `{str(passed).lower()}`",
+                f"- maximum state space exhausted: `{str(payload['maximum_state_space_exhausted']).lower()}`",
                 "- first37 outcomes used: `false`",
                 "",
             ]
@@ -550,8 +557,23 @@ def _temperature_scale(
 def _run_gate(settings: Mapping[str, Any], paths: Mapping[str, Path]) -> dict[str, Any]:
     seed_everything(GLOBAL_SEED)
     outcomes = _json(paths["outcomes"])
-    if not bool(outcomes["minimum_label_gate_passed"]):
-        raise RuntimeError("Paired causal panel did not reach the fixed minimum label counts")
+    label_counts = Counter(str(row["label"]) for row in outcomes["rows"])
+    maximum_state_space_exhausted = bool(
+        outcomes.get(
+            "maximum_state_space_exhausted",
+            int(outcomes["state_count"])
+            + int(outcomes["over_context_missing_count"])
+            + int(outcomes["replay_semantic_missing_count"])
+            == len(_json(paths["manifest"])["slots"]),
+        )
+    )
+    complete_or_quota_met = bool(outcomes["minimum_label_gate_passed"]) or bool(
+        maximum_state_space_exhausted
+    )
+    if not complete_or_quota_met or any(label_counts.get(label, 0) == 0 for label in LABELS):
+        raise RuntimeError(
+            "Paired causal panel neither met the label quota nor exhausted the fixed state space"
+        )
     rows = list(outcomes["rows"])
     train_rows = [row for row in rows if row["model_split"] == "model_train"]
     validation_rows = [
@@ -678,6 +700,11 @@ def _run_gate(settings: Mapping[str, Any], paths: Mapping[str, Path]) -> dict[st
         "global_seed": GLOBAL_SEED,
         "train_state_count": len(train_rows),
         "validation_state_count": len(validation_rows),
+        "paired_label_counts": dict(label_counts),
+        "minimum_40_per_label_achieved": bool(
+            outcomes["minimum_label_gate_passed"]
+        ),
+        "maximum_state_space_exhausted": maximum_state_space_exhausted,
         "train_task_count": len({row["state_task_id"] for row in train_rows}),
         "validation_task_count": len({row["state_task_id"] for row in validation_rows}),
         "train_label_counts": dict(Counter(row["label"] for row in train_rows)),

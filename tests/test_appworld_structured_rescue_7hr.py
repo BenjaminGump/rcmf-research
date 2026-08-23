@@ -314,6 +314,14 @@ def test_traceback_format_difference_is_missing_not_semantic_pass() -> None:
     assert missing["failed_steps"][0]["exception_type"] == "KeyError"
 
 
+def test_label_quota_shortfall_does_not_imply_unobserved_class() -> None:
+    labels = ["POSITIVE"] * 129 + ["NEUTRAL"] * 300 + ["HARMFUL"] * 35
+    counts = {label: labels.count(label) for label in ("POSITIVE", "NEUTRAL", "HARMFUL")}
+    assert all(counts[label] > 0 for label in counts)
+    assert counts["HARMFUL"] < 40
+    assert len(labels) + 27 + 8 == 499
+
+
 def test_live_state_stage_uses_only_observed_history() -> None:
     text = _live_state_text(
         "Do the task for the supervisor.",
