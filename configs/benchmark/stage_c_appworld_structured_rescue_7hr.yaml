@@ -1,0 +1,133 @@
+include: stage_c_memory_specific_deep_amortization_7g.yaml
+
+experiment:
+  name: stage_c_appworld_structured_rescue_7hr
+  version: train_side_causal_gate_structured_deep_compiler_7hr_v1
+  seed: 25101
+
+stage_c_7hr:
+  run_uuid: appworld_structured_gate_compiler_7hr_20260823_001
+  artifact_dir: runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  starting_head: 78f8e2e674709775b8a2a9b92297d255ec0e73c3
+  archive_branch: archive/v4-generic-memory-specific-amortization-failed
+  working_branch: research/v4-appworld-structured-rescue
+
+  parent_exp025b: runs/stage_c/replay_clean_rebuild_7b_20260818_001
+  parent_exp025c: runs/stage_c/signature_balanced_field_7c_20260818_001
+  parent_exp025cr: runs/stage_c/signature_balanced_field_7cr_20260818_001
+  parent_exp025d: runs/stage_c/state_conditioned_program_direct_7dg_20260821_001
+  parent_exp027b: runs/stage_c/memory_specific_deep_amortization_7g_20260823_001
+  reconciled_corpus_dir: runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  expected_replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+  expected_structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+  expected_selector_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42bb01255a9e623956611f
+  expected_exp027b_checkpoint_sha256: 8af2d1068ee0059c79edf740920f9d506b8a880459ff53656b449f767e5dffda
+  expected_model_name: Qwen/Qwen3-8B
+
+  appworld:
+    legacy_python: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    legacy_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+    full_bridge_script: scripts/appworld_full_agent_bridge_7f.py
+    one_step_bridge_script: scripts/appworld_live_one_step_bridge_7b.py
+    semantic_module: rcmf/training/appworld_replay_clean_rebuild_7b.py
+    prompt_profile: full_demo
+    max_context_turns: 40
+    max_steps: 50
+    max_new_tokens: 512
+    context_limit: 40960
+    temperature: 0.0
+    top_p: 1.0
+    enable_thinking: false
+    max_api_calls_per_interaction: 100
+    worker_timeout_seconds: 600
+
+  panel:
+    initial_state_count: 256
+    maximum_state_count: 499
+    minimum_per_label: 40
+    model_train_task_count: 29
+    heldout_train_validation_task_count: 8
+    task_split_manifest: runs/stage_c/state_conditioned_program_direct_7dg_20260821_001/preflight/a_task_split.json
+    action_strata:
+      - authentication
+      - read_query
+      - write_mutation
+      - api_documentation
+      - completion
+      - python_reasoning
+      - api_other
+    quantile_count: 4
+
+  feature_contract:
+    version: appworld_deployment_structured_features_7hr_v1
+    context_limit: 40960
+    parent_step_buckets: [0, 3, 8]
+    forbidden_fields:
+      - target_action
+      - target_observation
+      - ground_truth_next_app
+      - ground_truth_next_api
+      - procedural_tier
+      - exact_api_match
+      - paired_outcome
+      - task_id
+      - state_id
+      - transition_id
+      - signature_class_id
+      - first37_outcome
+
+  gate:
+    hidden_dim: 64
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    epoch_checkpoints: [50, 100, 200]
+    calibration_temperatures: [0.50, 0.75, 1.00, 1.25, 1.50, 2.00]
+    activation_thresholds: [0.50, 0.60, 0.70, 0.80, 0.90]
+    maximum_harmful_probability: 0.25
+    minimum_activation_rate: 0.05
+    maximum_activation_rate: 0.60
+    maximum_harmful_activation_rate: 0.20
+    minimum_positive_prevalence_lift: 0.10
+    maximum_execution_drop: 0.02
+
+  compiler:
+    selected_layer_indices: [7, 14, 21, 28]
+    token_count: 4
+    program_dim: 256
+    structured_hidden_dim: 128
+    ratio_budget_per_layer: 1.0
+    structured_learning_rate: 0.0001
+    decoder_learning_rate: 0.000001
+    beta_learning_rate: 0.0001
+    weight_decay: 0.0001
+    checkpoint_updates: [2, 4]
+    maximum_updates_per_pair: 4
+    max_grad_norm: 1.0
+    top_k: 64
+    policy_kl_weight: 1.0
+    teacher_token_ce_weight: 0.25
+    ground_truth_ce_weight: 0.05
+    ratio_restraint_weight: 0.001
+
+  first37:
+    matched_bare_success: 8
+    always_on_raw_success: 5
+    matched_bare_summary: runs/stage_c/memory_specific_deep_amortization_7g_20260823_001/phase_a_matched_bare_first37/summary.json
+    always_on_raw_summary: runs/stage_c/deep_residual_amortization_7f_20260822_001/phase_a_first37_v3/summary.json
+
+  runtime:
+    review_threshold_h100_hours: 18.0
+    one_step_generation_seconds_expected: 7.85
+    one_step_generation_seconds_conservative: 12.0
+    policy_forward_seconds_expected: 1.85
+    policy_forward_seconds_conservative: 3.50
+    backward_seconds_expected: 2.40
+    backward_seconds_conservative: 4.00
+    first37_expected_hours: 1.30
+    first37_conservative_hours: 2.20
+    projected_bytes_per_condition: 2359296
+    projected_bytes_per_checkpoint: 650000000
+
+  heartbeat_interval_seconds: 240
