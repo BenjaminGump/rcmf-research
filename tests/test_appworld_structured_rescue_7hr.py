@@ -270,9 +270,9 @@ def test_paired_row_maps_locked_canonical_signature_metric() -> None:
 
 
 def test_traceback_format_difference_is_missing_not_semantic_pass() -> None:
-    expected = "Traceback (most recent call last):\n  File \"<string>\", line 2\nKeyError: 'field'"
+    expected = "Execution failed. Traceback:\n  File \"<string>\", line 2\nKeyError: 'field'"
     actual = (
-        "Traceback (most recent call last):\n"
+        "Execution failed. Traceback:\n"
         "  File \"<string>\", line 2\n"
         "    value = [row['field'] for row in rows]\n"
         "            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"

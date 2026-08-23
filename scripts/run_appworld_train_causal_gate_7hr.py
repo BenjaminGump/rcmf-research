@@ -270,8 +270,8 @@ def _traceback_format_only_replay_missing(
         if (
             not expected_lines
             or not actual_lines
-            or expected_lines[0] != "Traceback (most recent call last):"
-            or actual_lines[0] != "Traceback (most recent call last):"
+            or expected_lines[0] != "Execution failed. Traceback:"
+            or actual_lines[0] != "Execution failed. Traceback:"
             or expected_lines[-1] != actual_lines[-1]
             or ":" not in expected_lines[-1]
         ):
