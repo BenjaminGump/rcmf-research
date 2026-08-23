@@ -394,8 +394,12 @@ def _run_gate(settings: Mapping[str, Any], paths: Mapping[str, Path]) -> dict[st
     if not bool(outcomes["minimum_label_gate_passed"]):
         raise RuntimeError("Paired causal panel did not reach the fixed minimum label counts")
     rows = list(outcomes["rows"])
-    train_rows = [row for row in rows if row["model_split"] == "train"]
-    validation_rows = [row for row in rows if row["model_split"] == "validation"]
+    train_rows = [row for row in rows if row["model_split"] == "model_train"]
+    validation_rows = [
+        row for row in rows if row["model_split"] == "heldout_train_validation"
+    ]
+    if not train_rows or not validation_rows:
+        raise ValueError("The locked 29/8 model-training split is empty or malformed")
     feature_schema = _json(paths["feature_schema"])
     feature_names = list(feature_schema["names"])
     feature_schema_sha256 = sha256_file(paths["feature_schema"])

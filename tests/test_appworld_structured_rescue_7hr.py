@@ -201,7 +201,7 @@ def test_paired_manifest_is_frozen_and_marks_missing_slots() -> None:
             "selected_class_id": "c1",
             "state_task_id": "t1",
             "state_step_id": 1,
-            "model_split": "train",
+            "model_split": "model_train",
         },
         "s2": {
             "scoreable": False,
@@ -209,7 +209,7 @@ def test_paired_manifest_is_frozen_and_marks_missing_slots() -> None:
             "selected_class_id": "c2",
             "state_task_id": "t2",
             "state_step_id": 2,
-            "model_split": "validation",
+            "model_split": "heldout_train_validation",
         },
         "s3": {
             "scoreable": True,
@@ -217,7 +217,7 @@ def test_paired_manifest_is_frozen_and_marks_missing_slots() -> None:
             "selected_class_id": "c3",
             "state_task_id": "t3",
             "state_step_id": 3,
-            "model_split": "train",
+            "model_split": "model_train",
         },
     }
     manifest = _build_manifest(panel, selections)
@@ -248,7 +248,7 @@ def test_paired_row_maps_locked_canonical_signature_metric() -> None:
             "state_example_id": "s",
             "state_task_id": "t",
             "state_step_id": 1,
-            "model_split": "train",
+            "model_split": "model_train",
             "panel_part": "initial",
             "selected_transition_id": "m",
             "selected_class_id": "c",
