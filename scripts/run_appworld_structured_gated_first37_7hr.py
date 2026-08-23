@@ -193,6 +193,7 @@ class StructuredRuntime:
         trajectory: Sequence[Mapping[str, str]],
         step_id: int,
         prompt_profile: str,
+        include_internal: bool = False,
     ) -> dict[str, Any]:
         state = self.selector._state_values(messages)
         scores = self.selector.scores_from_state(state)
@@ -207,7 +208,7 @@ class StructuredRuntime:
                 "selected_signature_class_has_no_context_feasible_raw_member"
             ):
                 raise
-            return {
+            result = {
                 "gate_on": False,
                 "gate_status": "selected_class_over_context",
                 "prompt_messages": list(messages),
@@ -216,6 +217,9 @@ class StructuredRuntime:
                 "feature_values": None,
                 "probabilities": None,
             }
+            if include_internal:
+                result["_state_tensor"] = state
+            return result
         transition_id = str(selection["transition_id"])
         transition = self.selector.transitions[transition_id]
         class_id = str(selection["selected_class_id"])
@@ -269,7 +273,7 @@ class StructuredRuntime:
             probabilities["POSITIVE"] >= self.threshold
             and probabilities["HARMFUL"] <= self.maximum_harmful
         )
-        return {
+        result = {
             "gate_on": bool(gate_on),
             "gate_status": "on" if gate_on else "off",
             "prompt_messages": selection["messages"] if gate_on else list(messages),
@@ -286,6 +290,9 @@ class StructuredRuntime:
             "selector_margin": class_scores[0] - class_scores[1],
             "same_class_substitution": bool(selection["same_class_substitution"]),
         }
+        if include_internal:
+            result["_state_tensor"] = state
+        return result
 
 
 def _task_output(root: Path, task_id: str) -> Path:

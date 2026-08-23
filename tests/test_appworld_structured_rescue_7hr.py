@@ -16,6 +16,9 @@ from scripts.run_appworld_structured_compiler_validation_7hr import _control_man
 from scripts.run_appworld_structured_compiler_audit_7hr import (
     _control_manifest as _audit_control_manifest,
 )
+from scripts.run_appworld_structured_compiled_first37_7hr import (
+    _summary as _compiled_first37_summary,
+)
 from rcmf.training.procedural_supervision_6f import state_stage_signature
 from rcmf.training.appworld_structured_rescue_7hr import (
     FeatureSchema,
@@ -399,3 +402,28 @@ def test_locked_audit_controls_are_different_class_and_task() -> None:
     assert manifest["selection_uses_behavioral_outcomes"] is False
     assert all(row["transition_class_differs"] for row in manifest["controls"])
     assert all(row["state_task_differs"] for row in manifest["controls"])
+
+
+def test_compiled_first37_interpretation_bands() -> None:
+    rows = [
+        {
+            "task_id": f"t{index}",
+            "success": index < 9,
+            "counts": {"gate_on": 1},
+            "step_count": 2,
+            "usage": {"prompt_tokens": 10, "completion_tokens": 2},
+            "wall_seconds": 1.0,
+        }
+        for index in range(37)
+    ]
+    summary = _compiled_first37_summary(
+        rows,
+        {"success_ids": [f"t{index}" for index in range(8)]},
+        {"success_ids": [f"t{index}" for index in range(5)]},
+    )
+    assert summary["interpretation"] == "PRELIMINARY_POSITIVE"
+    assert (
+        summary["decision_branch"]
+        == "appworld_structured_compiled_memory_preliminary_positive"
+    )
+    assert summary["single_seed_descriptive_not_statistical"] is True
