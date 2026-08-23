@@ -1,0 +1,158 @@
+include: stage_c_deep_residual_amortization_7f.yaml
+
+experiment:
+  name: stage_c_memory_specific_deep_amortization_7g
+  version: matched_harness_bare_and_memory_specific_policy_7g_v1
+  seed: 25101
+
+stage_c_7g:
+  run_uuid: memory_specific_deep_amortization_7g_20260823_001
+  artifact_dir: runs/stage_c/memory_specific_deep_amortization_7g_20260823_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  starting_head: 593fe203ab9db05889ae576da59b35124f2014ab
+  archive_branch: archive/v4-deep-residual-amortization-failed
+  working_branch: research/v4-memory-specific-deep-amortization
+
+  parent_exp025b: runs/stage_c/replay_clean_rebuild_7b_20260818_001
+  parent_exp025c: runs/stage_c/signature_balanced_field_7c_20260818_001
+  parent_exp025cr: runs/stage_c/signature_balanced_field_7cr_20260818_001
+  parent_exp025d: runs/stage_c/state_conditioned_program_direct_7dg_20260821_001
+  parent_exp026b: runs/stage_c/deep_residual_carrier_capacity_7e_20260822_001
+  parent_exp027a: runs/stage_c/deep_residual_amortization_7f_20260822_001
+  parent_policy_cache: runs/stage_c/state_conditioned_program_pair_behavior_7dg3_20260822_001/policy_distillation/teacher_cache/rows
+  reconciled_corpus_dir: runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  expected_replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+  expected_structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+  expected_selector_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f
+  expected_model_name: Qwen/Qwen3-8B
+
+  appworld:
+    legacy_python: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    legacy_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+    full_bridge_script: scripts/appworld_full_agent_bridge_7f.py
+    one_step_bridge_script: scripts/appworld_live_one_step_bridge_7b.py
+    prompt_profile: full_demo
+    max_context_turns: 40
+    max_steps: 50
+    max_new_tokens: 512
+    temperature: 0.0
+    top_p: 1.0
+    enable_thinking: false
+    max_api_calls_per_interaction: 100
+    worker_timeout_seconds: 600
+
+  first37:
+    historical_bare_success: 10
+    raw_memory_success: 5
+    raw_memory_summary: runs/stage_c/deep_residual_amortization_7f_20260822_001/phase_a_first37_v3/summary.json
+    task_ids:
+      - "0d01c76_1"
+      - "0d01c76_2"
+      - "0d01c76_3"
+      - "21abae1_1"
+      - "21abae1_2"
+      - "21abae1_3"
+      - "29a7b7e_1"
+      - "29a7b7e_2"
+      - "29a7b7e_3"
+      - "2d9f728_1"
+      - "2d9f728_2"
+      - "2d9f728_3"
+      - "325d6ec_1"
+      - "325d6ec_2"
+      - "325d6ec_3"
+      - "3d9a636_1"
+      - "3d9a636_2"
+      - "3d9a636_3"
+      - "634f342_1"
+      - "634f342_2"
+      - "634f342_3"
+      - "6f4b9a5_1"
+      - "6f4b9a5_2"
+      - "6f4b9a5_3"
+      - "8749218_1"
+      - "8749218_2"
+      - "8749218_3"
+      - "d18139b_1"
+      - "d6ac34d_1"
+      - "d6ac34d_2"
+      - "d6ac34d_3"
+      - "fd1f8fa_1"
+      - "fd1f8fa_2"
+      - "fd1f8fa_3"
+      - "ff58e36_1"
+      - "ff58e36_2"
+      - "ff58e36_3"
+
+  compiler:
+    state_vector_count: 10
+    transition_vector_count: 6
+    representation_dim: 4096
+    program_dim: 256
+    hidden_dim: 256
+    dropout: 0.05
+    selected_layer_indices: [7, 14, 21, 28]
+    token_count: 4
+    ratio_budget_per_layer: 1.0
+    program_learning_rate: 0.0001
+    decoder_learning_rate: 0.000001
+    weight_decay: 0.0001
+    checkpoint_updates: [2, 4, 8]
+    maximum_updates_per_pair: 8
+    max_grad_norm: 1.0
+    sequence_huber_delta: 0.1
+    policy_kl_weight: 1.0
+    teacher_token_ce_weight: 0.25
+    ground_truth_ce_weight: 0.05
+    ratio_restraint_weight: 0.001
+    mismatch_policy_kl_weight: 1.0
+    mismatch_token_ce_weight: 0.25
+    mismatch_utility_weight: 0.10
+
+  teacher:
+    top_k: 64
+    context_limit: 40960
+    max_new_tokens: 512
+    temperature: 0.0
+    top_p: 1.0
+    do_sample: false
+    enable_thinking: false
+
+  selection:
+    score_formula: raw_policy_kl_improvement_minus_mean_mismatch_to_bare_kl
+    require_positive_transition_specificity: true
+    require_positive_state_specificity: true
+    require_finite: true
+    maximum_ratio: 1.0
+
+  expected_pairs:
+    A: 607
+    B: 135
+    C: 112
+    D: 112
+    E: 135
+    unique: 970
+    A_train: 479
+    A_validation: 128
+
+  runtime:
+    review_threshold_h100_hours: 12.0
+    matched_bare_expected_hours: 1.30
+    matched_bare_conservative_hours: 2.20
+    teacher_generation_seconds_expected: 7.85
+    teacher_generation_seconds_conservative: 12.0
+    deep_backward_seconds_expected: 2.40
+    deep_backward_seconds_conservative: 4.00
+    policy_forward_seconds_expected: 1.85
+    policy_forward_seconds_conservative: 3.50
+    ground_truth_forward_seconds_expected: 1.85
+    ground_truth_forward_seconds_conservative: 3.50
+    one_step_generation_seconds_expected: 7.85
+    one_step_generation_seconds_conservative: 12.0
+    projected_bytes_per_teacher_row: 4194304
+    projected_bytes_per_checkpoint: 650000000
+    projected_bytes_per_condition: 2359296
+
+  bootstrap_samples: 2000
+  heartbeat_interval_seconds: 240
