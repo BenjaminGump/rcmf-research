@@ -7,6 +7,7 @@ import torch
 from scripts import prepare_appworld_structured_rescue_7hr as prepare_script
 from scripts.run_appworld_train_causal_gate_7hr import _build_manifest, _paired_row
 from scripts.run_appworld_structured_gated_first37_7hr import _live_state_text
+from scripts.run_appworld_structured_compiler_7hr import _mismatch_manifest
 from rcmf.training.procedural_supervision_6f import state_stage_signature
 from rcmf.training.appworld_structured_rescue_7hr import (
     FeatureSchema,
@@ -277,3 +278,29 @@ def test_live_state_stage_uses_only_observed_history() -> None:
     assert stage["history_step_count"] == 1
     assert stage["future_target_action_accessed"] is False
     assert "target" not in text.lower()
+
+
+def test_structured_mismatches_are_outcome_blind_and_identity_distinct() -> None:
+    rows = [
+        {
+            "model_split": "model_train",
+            "label": "POSITIVE" if index == 0 else "NEUTRAL",
+            "state_example_id": f"s{index}",
+            "state_task_id": f"t{index}",
+            "selected_transition_id": f"m{index}",
+            "selected_class_id": f"c{index}",
+        }
+        for index in range(3)
+    ]
+
+    class Bank:
+        @staticmethod
+        def feature(state_id: str, transition_id: str) -> list[float]:
+            return [float(len(state_id)), float(len(transition_id))]
+
+    manifest = _mismatch_manifest(rows, Bank())
+    assert manifest["positive_training_state_count"] == 1
+    row = manifest["rows"][0]
+    assert row["transition_mismatch_transition_id"] != row["transition_id"]
+    assert row["state_mismatch_state_example_id"] != row["state_example_id"]
+    assert row["behavioral_outcomes_used"] is False
