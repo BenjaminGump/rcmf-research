@@ -1,10 +1,42 @@
 # Next Experiments
 
-The current priority is AppWorld replay-contract recovery. EXP-024A passed its
-signature/condition preflight but exact one-step reconstruction failed all 45
-states before Qwen generation. Behavioral `p(s,m_transition)` remains blocked.
+The current priority is an immediate submission-scope review after EXP-027B.
+Matched-harness bare Qwen reaches `8/37`; automatic raw transition memory
+reaches `5/37`; and the corrected generic PairMLP compiler remains
+behaviorally indistinguishable from both state and transition shuffles.
+Behavioral `p(s,m_transition)` and downstream RCMF stages remain blocked.
 
-## Next: Matched AppWorld 0.1.0 Replay Recovery
+## Next Reviewed Option: AppWorld-Structured Compiler
+
+Goal:
+
+- Decide whether one final single-seed compiler rescue is scientifically and
+  deadline-appropriate.
+- If approved, add only compact deployment-available AppWorld procedural
+  features to the compiler while keeping Qwen, selector, carrier, prompt,
+  clean corpus, and one-step audit fixed.
+
+Requirements:
+
+- Preregister the exact structured features and prove they use no future
+  action, observation, teacher utility, or behavioral outcome.
+- Keep the six observation-excluded transition views and fixed deep-residual
+  carrier as the primary neural path.
+- Use the same A-only split and direct raw-policy plus mismatch objective.
+- Use one seed `25101`; no rank, architecture, or carrier sweep.
+- Require a clear P1 advantage over both state and transition shuffles before
+  any full-bank or end-to-end work.
+
+Stop condition:
+
+- Do not start this option without separate review.
+- If it fails memory-specific one-step behavior, end the compiled-program route
+  for the submission.
+- Do not train a memory-reader adapter first, start `p(s,m_transition)`, Stage
+  C2, full-bank integration, end-to-end RCMF, full AppWorld evaluation, or V4
+  tagging.
+
+## Historical: Matched AppWorld 0.1.0 Replay Recovery
 
 Goal:
 

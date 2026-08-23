@@ -1,6 +1,49 @@
 # Current State
 
-Last updated: 2026-08-17.
+Last updated: 2026-08-23.
+
+## 2026-08-23 EXP-027B Active Submission State
+
+VERIFIED:
+
+- EXP-027B completed on branch
+  `research/v4-memory-specific-deep-amortization` with global seed `25101`.
+- The exact EXP-027A execution harness gives matched bare Qwen `8/37`, while
+  frozen-selector raw transition memory remains `5/37`. The historical
+  different-harness bare `10/37` is secondary only.
+- The corrected policy objective and direct mismatch gradients produce
+  positive teacher-forced state and transition specificity in A validation
+  and B/C/D/E. The A-only rule selected u4.
+- On the primary 32 one-step states, correct PairMLP P1 improves action
+  signature and semantic successor over C0 by `+0.09375` each, but P1 is
+  identical to transition-shuffle P2 and state-shuffle P3 on both metrics.
+- P1 execution is `0.87500`, `6.25` percentage points below C0, and only
+  `4/9` tasks are positive.
+- EXP-027B reached `memory_specific_deep_amortization_failed`.
+- All 180 one-step conditions completed with zero infrastructure exceptions;
+  P0 reproduced C0 on all 45 states.
+
+INFERENCE:
+
+- Policy-space mismatch separation under teacher forcing does not transfer to
+  deterministic memory-specific generation for the current generic
+  observation-excluded PairMLP compiler.
+- The generic PairMLP/program route is not justified for the submission.
+
+UNVERIFIED:
+
+- An AppWorld-structured compiler using deployment-available procedural
+  features.
+
+Current block:
+
+- Do not start generic PairMLP, rank sweeps, factorized models, a memory-reader
+  adapter, full-bank integration, behavioral `p(s,m_transition)`, Stage C2,
+  end-to-end RCMF, full AppWorld evaluation, or V4 tagging.
+- The only compiler rescue eligible for separate review is an AppWorld-
+  structured compiler using deployment-available procedural features.
+- Detailed result:
+  `research/results/stage_c_memory_specific_deep_amortization_7g_20260823_001.md`.
 
 ## VERIFIED
 

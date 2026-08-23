@@ -2065,3 +2065,48 @@ Implementation recovery:
   commit `8467756c` fixed the internal representation-loader import. Focused
   tests pass locally and on Lambda, and no scientific row was duplicated.
 
+## 2026-08-23 EXP-027B memory-specific deep amortization failed
+
+VERIFIED:
+
+- Exact-harness bare Qwen reaches `8/37`; automatic frozen-selector raw memory
+  reaches `5/37`. The old `10/37` bare result is not the primary comparator.
+- Raw-policy supervision plus direct alternating transition/state mismatch
+  gradients produces positive teacher-forced specificity on A validation and
+  B/C/D/E.
+- A-only checkpoint selection chose u4. The correct compiler has lower
+  raw-policy KL than zero across all final cells and stays within the residual
+  ratio budget.
+- In the primary one-step audit, P1 action signature and semantic successor are
+  `0.40625/0.53125`; P2 and P3 are exactly the same on both metrics.
+- P1 improves C0 by `+0.09375/+0.09375`, but execution falls by `6.25` points
+  and only `4/9` tasks are positive.
+
+INFERENCE:
+
+- The corrected objective learns teacher-forced policy separation but not
+  behaviorally memory-specific deterministic generation.
+- More generic PairMLP capacity, rank sweeps, or factorized training is not a
+  defensible submission-critical-path response.
+
+UNVERIFIED:
+
+- A compiler with compact AppWorld procedural features available at deployment.
+
+Decision:
+
+- Record `memory_specific_deep_amortization_failed`.
+- Stop generic PairMLP/program work for the submission.
+- Do not automatically train a memory-reader adapter, rank sweep, factorized
+  model, full bank, `p(s,m_transition)`, Stage C2, end-to-end RCMF, full
+  AppWorld evaluation, or create/move a V4 tag.
+- Permit only a separately reviewed AppWorld-structured compiler rescue, after
+  reviewing submission scope and expected value.
+
+Implementation recovery:
+
+- One append-only one-step preflight attempt failed before generation because
+  the reused 7F estimator required a legacy runtime key. Commit `bcf7682`
+  added a tested fallback to the existing policy-forward estimate. No
+  scientific condition, parameter, checkpoint, or generated row changed.
+
