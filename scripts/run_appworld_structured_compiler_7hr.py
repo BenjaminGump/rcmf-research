@@ -624,6 +624,11 @@ def _train_phase(
     backend = _build_backend_from_generation(replay["causal_audit"]["generation"])
     if any(parameter.requires_grad for parameter in backend.model.parameters()):
         raise RuntimeError("Structured compiler loaded trainable Qwen")
+    # Frozen-Qwen target forwards enable non-reentrant gradient checkpointing.
+    # Keep the model in the same mode through backward recomputation; restoring
+    # eval mode immediately after forward changes the checkpointed graph.
+    if bool(getattr(backend, "_gradient_checkpointing_enabled", False)):
+        backend.model.train()
     outcomes = _json(paths["outcomes"])
     rows = list(outcomes["rows"])
     training_rows = [row for row in rows if row["model_split"] == "model_train"]
