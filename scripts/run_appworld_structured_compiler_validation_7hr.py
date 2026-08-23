@@ -38,7 +38,10 @@ from scripts.run_appworld_structured_compiler_7hr import (
     _policy_loss,
     _program,
 )
-from scripts.run_deep_residual_amortized_one_step_7f import _run_condition
+from scripts.run_deep_residual_amortized_one_step_7f import (
+    LIVE_PROJECTION_MAXIMUM_RATIO,
+    _run_condition,
+)
 from scripts.run_procedural_causal_audit_7b import _examples_by_state, _records_by_task
 from scripts.run_state_conditioned_program_direct_7dg import _load_representations
 
@@ -142,6 +145,7 @@ def _control_manifest(rows: Sequence[Mapping[str, Any]], updates: int) -> dict[s
         "format": "appworld_structured_compiler_validation_manifest_7hr_v1",
         "global_seed": GLOBAL_SEED,
         "updates_per_pair": updates,
+        "runtime_projection_maximum_ratio": LIVE_PROJECTION_MAXIMUM_RATIO,
         "state_count": len(rows),
         "condition_count": len(conditions),
         "conditions": conditions,

@@ -67,6 +67,7 @@ from scripts.run_state_conditioned_program_direct_7dg import _load_representatio
 
 
 RESULT_FORMAT = "deep_residual_amortized_one_step_result_7f_v1"
+LIVE_PROJECTION_MAXIMUM_RATIO = 0.99
 
 
 def _json(path: Path) -> dict[str, Any]:
@@ -327,6 +328,9 @@ def _run_condition(
     semantic_path: Path,
     bridge_script: Path,
 ) -> tuple[dict[str, Any], bool]:
+    live_projection_maximum_ratio = float(
+        manifest.get("runtime_projection_maximum_ratio", 1.0)
+    )
     if output_path.exists():
         row = _json(output_path)
         checks = {
@@ -390,7 +394,9 @@ def _run_condition(
         projected, projection = differentiable_layer_ratio_projection(
             delta.to(backend.device).unsqueeze(0),
             original_states,
-            maximum_ratio=1.0,
+            # Leave a fixed BF16 rounding margin so the injected tensor still
+            # obeys the preregistered <=1.0 live residual budget after casting.
+            maximum_ratio=live_projection_maximum_ratio,
         )
         generation_started = time.perf_counter()
         output, hook = _generate_residual(
@@ -455,6 +461,7 @@ def _run_condition(
         .detach()
         .cpu()
         .tolist(),
+        "runtime_projection_maximum_ratio": live_projection_maximum_ratio,
         "hook_audit": hook,
         "compiler_checkpoint_sha256": checkpoint_sha256,
         "program_deltas_sha256": deltas_sha256,

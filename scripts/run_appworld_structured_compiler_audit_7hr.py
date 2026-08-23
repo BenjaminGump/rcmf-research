@@ -31,7 +31,10 @@ from rcmf.utils.serialization import atomic_write_json, atomic_write_text, read_
 from scripts.prepare_appworld_structured_rescue_7hr import _class_selection
 from scripts.run_appworld_structured_compiler_7hr import StaticFeatureBank, _paths as _compiler_paths
 from scripts.run_appworld_structured_compiler_validation_7hr import _load_models
-from scripts.run_deep_residual_amortized_one_step_7f import _run_condition
+from scripts.run_deep_residual_amortized_one_step_7f import (
+    LIVE_PROJECTION_MAXIMUM_RATIO,
+    _run_condition,
+)
 from scripts.run_direct_injection_channel_7dh import _build_backend_from_generation
 from scripts.run_procedural_causal_audit_7b import _examples_by_state, _records_by_task
 from scripts.run_state_conditioned_program_direct_7dg import _load_representations
@@ -232,6 +235,7 @@ def _control_manifest(
     payload = {
         "format": "appworld_structured_compiler_one_step_manifest_7hr_v1",
         "global_seed": GLOBAL_SEED,
+        "runtime_projection_maximum_ratio": LIVE_PROJECTION_MAXIMUM_RATIO,
         "state_count": len(by_state),
         "condition_count": len(conditions),
         "condition_name_counts": {

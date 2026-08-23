@@ -25,6 +25,9 @@ from scripts.run_appworld_structured_compiler_7hr import _paths as _compiler_pat
 from scripts.run_appworld_structured_compiler_validation_7hr import _load_models
 from scripts.run_appworld_structured_gated_first37_7hr import StructuredRuntime, _json
 from scripts.run_deep_residual_carrier_7e import _generate_residual
+from scripts.run_deep_residual_amortized_one_step_7f import (
+    LIVE_PROJECTION_MAXIMUM_RATIO,
+)
 from scripts.run_raw_memory_first37_7f import FullAgentBridge, PROTOCOL_VERSION
 from scripts.run_state_conditioned_program_direct_7dg import _load_representations
 from scripts.run_state_conditioned_program_fast_7df import _build_backend
@@ -164,7 +167,9 @@ def _generate_compiled(
         position_ids=build_position_ids(tokenized.attention_mask.to(torch.long)),
     ).to(backend.device)
     projected, projection = differentiable_layer_ratio_projection(
-        delta.unsqueeze(0), original, maximum_ratio=1.0
+        delta.unsqueeze(0),
+        original,
+        maximum_ratio=LIVE_PROJECTION_MAXIMUM_RATIO,
     )
     output, hook = _generate_residual(
         backend=backend,
@@ -180,6 +185,7 @@ def _generate_compiled(
         "layer_ratios": hook["layer_ratios"],
         "global_ratio": hook["global_ratio"],
         "raw_layer_ratio": projection["raw_layer_ratio"][0].cpu().tolist(),
+        "runtime_projection_maximum_ratio": LIVE_PROJECTION_MAXIMUM_RATIO,
     }
 
 

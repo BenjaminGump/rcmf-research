@@ -380,6 +380,7 @@ def test_compiler_validation_controls_are_frozen_and_outcome_blind() -> None:
     second = _control_manifest(rows, 2)
     assert first == second
     assert first["condition_count"] == 12
+    assert first["runtime_projection_maximum_ratio"] == 0.99
     assert first["outcomes_used_for_control_selection"] is False
     assert {
         row["condition_name"] for row in first["conditions"]
@@ -407,6 +408,7 @@ def test_locked_audit_controls_are_different_class_and_task() -> None:
     ]
     manifest = _audit_control_manifest(rows, {})
     assert manifest["condition_count"] == 12
+    assert manifest["runtime_projection_maximum_ratio"] == 0.99
     assert manifest["selection_uses_behavioral_outcomes"] is False
     assert all(row["transition_class_differs"] for row in manifest["controls"])
     assert all(row["state_task_differs"] for row in manifest["controls"])
