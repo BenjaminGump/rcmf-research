@@ -5,7 +5,7 @@ from pathlib import Path
 import torch
 
 from scripts import prepare_appworld_structured_rescue_7hr as prepare_script
-from scripts.run_appworld_train_causal_gate_7hr import _build_manifest
+from scripts.run_appworld_train_causal_gate_7hr import _build_manifest, _paired_row
 from rcmf.training.appworld_structured_rescue_7hr import (
     FeatureSchema,
     StructuredLatentComposer,
@@ -225,3 +225,37 @@ def test_paired_manifest_is_frozen_and_marks_missing_slots() -> None:
     assert len(manifest["slots"]) == 3
     assert len(manifest["conditions"]) == 4
     assert manifest["slots"][1]["missing_reason"] == "selected_signature_class_over_context"
+
+
+def test_paired_row_maps_locked_canonical_signature_metric() -> None:
+    metric = {
+        "canonical_procedural_signature_match": True,
+        "semantic_successor_match": False,
+        "execution_success": True,
+    }
+    worker = {"same_world_execution": True}
+    result = {
+        name: {
+            "metrics": metric,
+            "condition_key": name,
+            "prompt_sha256": name,
+            "live_worker": worker,
+        }
+        for name in ("T0_bare", "T1_selected_raw")
+    }
+    row = _paired_row(
+        {
+            "state_example_id": "s",
+            "state_task_id": "t",
+            "state_step_id": 1,
+            "model_split": "train",
+            "panel_part": "initial",
+            "selected_transition_id": "m",
+            "selected_class_id": "c",
+        },
+        result,
+        {"feature_values": [0.0]},
+        "schema",
+    )
+    assert row["bare_metrics"]["action_signature_match"]
+    assert row["label"] == "NEUTRAL"

@@ -185,7 +185,17 @@ def _paired_row(
 ) -> dict[str, Any]:
     bare = result["T0_bare"]
     raw = result["T1_selected_raw"]
-    classified = classify_paired_outcome(bare["metrics"], raw["metrics"])
+    def gate_metrics(row: Mapping[str, Any]) -> dict[str, Any]:
+        return {
+            **dict(row),
+            "action_signature_match": bool(
+                row["canonical_procedural_signature_match"]
+            ),
+        }
+
+    bare_metrics = gate_metrics(bare["metrics"])
+    raw_metrics = gate_metrics(raw["metrics"])
+    classified = classify_paired_outcome(bare_metrics, raw_metrics)
     return {
         "state_example_id": str(slot["state_example_id"]),
         "state_task_id": str(slot["state_task_id"]),
@@ -196,8 +206,8 @@ def _paired_row(
         "selected_class_id": str(slot["selected_class_id"]),
         "label": classified["label"],
         "classification": classified,
-        "bare_metrics": bare["metrics"],
-        "raw_metrics": raw["metrics"],
+        "bare_metrics": bare_metrics,
+        "raw_metrics": raw_metrics,
         "feature_values": list(feature["feature_values"]),
         "feature_schema_sha256": feature_schema_sha256,
         "bare_condition_key": str(bare["condition_key"]),
