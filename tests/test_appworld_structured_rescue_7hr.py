@@ -6,6 +6,8 @@ import torch
 
 from scripts import prepare_appworld_structured_rescue_7hr as prepare_script
 from scripts.run_appworld_train_causal_gate_7hr import _build_manifest, _paired_row
+from scripts.run_appworld_structured_gated_first37_7hr import _live_state_text
+from rcmf.training.procedural_supervision_6f import state_stage_signature
 from rcmf.training.appworld_structured_rescue_7hr import (
     FeatureSchema,
     StructuredLatentComposer,
@@ -259,3 +261,19 @@ def test_paired_row_maps_locked_canonical_signature_metric() -> None:
     )
     assert row["bare_metrics"]["action_signature_match"]
     assert row["label"] == "NEUTRAL"
+
+
+def test_live_state_stage_uses_only_observed_history() -> None:
+    text = _live_state_text(
+        "Do the task for the supervisor.",
+        [
+            {
+                "response": "```python\ntoken = apis.spotify.login(username='u', password='p')\n```",
+                "observation": "'token'",
+            }
+        ],
+    )
+    stage = state_stage_signature(text)
+    assert stage["history_step_count"] == 1
+    assert stage["future_target_action_accessed"] is False
+    assert "target" not in text.lower()

@@ -320,8 +320,7 @@ class FrozenDeploymentSelector:
         )
 
     @torch.no_grad()
-    def scores(self, messages: Sequence[Mapping[str, str]]) -> list[float]:
-        state = self._state_values(messages)
+    def scores_from_state(self, state: torch.Tensor) -> list[float]:
         values = []
         for model, transition, calibration in zip(
             self.models, self.transition_factors, self.calibration, strict=True
@@ -338,10 +337,18 @@ class FrozenDeploymentSelector:
             )
         return torch.stack(values).mean(dim=0).cpu().tolist()
 
-    def select(
-        self, messages: Sequence[Mapping[str, str]], *, prompt_profile: str
+    @torch.no_grad()
+    def scores(self, messages: Sequence[Mapping[str, str]]) -> list[float]:
+        return self.scores_from_state(self._state_values(messages))
+
+    def select_from_scores(
+        self,
+        messages: Sequence[Mapping[str, str]],
+        scores: Sequence[float],
+        *,
+        prompt_profile: str,
     ) -> dict[str, Any]:
-        scores = self.scores(messages)
+
         selected = aggregate_and_select_class(
             scores,
             self.transition_class_ids,
@@ -383,6 +390,24 @@ class FrozenDeploymentSelector:
             "selected_signature_class_has_no_context_feasible_raw_member:"
             f"{selected['selected_class_id']}:{attempts}"
         )
+
+    def select_with_state(
+        self, messages: Sequence[Mapping[str, str]], *, prompt_profile: str
+    ) -> tuple[dict[str, Any], torch.Tensor, list[float]]:
+        state = self._state_values(messages)
+        scores = self.scores_from_state(state)
+        selected = self.select_from_scores(
+            messages, scores, prompt_profile=prompt_profile
+        )
+        return selected, state, scores
+
+    def select(
+        self, messages: Sequence[Mapping[str, str]], *, prompt_profile: str
+    ) -> dict[str, Any]:
+        selected, _, _ = self.select_with_state(
+            messages, prompt_profile=prompt_profile
+        )
+        return selected
 
 
 def _task_output_path(root: Path, task_id: str) -> Path:
