@@ -7,6 +7,10 @@ from rcmf.training.memory_specific_deep_amortization_7g import (
     select_checkpoint,
     selection_diagnostics,
 )
+from scripts.run_deep_residual_amortized_one_step_7f import (
+    _pair_evaluation_seconds,
+    _preflight,
+)
 
 
 def _rows() -> list[dict[str, str]]:
@@ -82,3 +86,15 @@ def test_checkpoint_selection_uses_a_validation_specificity() -> None:
     selected = select_checkpoint(history)
     assert selected["updates_per_pair"] == 4
     assert selected["selection_constraints_passed"] is True
+
+
+def test_one_step_preflight_has_7g_runtime_fallback() -> None:
+    runtime = {
+        "one_step_generation_seconds_expected": 7.85,
+        "policy_forward_seconds_expected": 1.85,
+    }
+    assert _pair_evaluation_seconds(runtime) == pytest.approx(1.85)
+    assert _pair_evaluation_seconds(
+        {**runtime, "pair_evaluation_seconds_expected": 3.7}
+    ) == pytest.approx(3.7)
+    assert callable(_preflight)

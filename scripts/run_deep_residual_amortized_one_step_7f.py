@@ -156,6 +156,15 @@ def _attempt_elapsed_seconds(path: Path) -> float:
     return total
 
 
+def _pair_evaluation_seconds(runtime: Mapping[str, Any]) -> float:
+    return float(
+        runtime.get(
+            "pair_evaluation_seconds_expected",
+            runtime["policy_forward_seconds_expected"],
+        )
+    )
+
+
 def _compile_deltas(
     *,
     kind: str,
@@ -259,11 +268,12 @@ def _preflight(
     deltas = _compile_deltas(
         kind=kind, settings=settings, paths=paths, manifest=manifest
     )
+    pair_evaluation_seconds = _pair_evaluation_seconds(settings["runtime"])
     expected_generation_hours = (
         int(manifest["condition_count"])
         * (
             float(settings["runtime"]["one_step_generation_seconds_expected"])
-            + float(settings["runtime"]["pair_evaluation_seconds_expected"])
+            + pair_evaluation_seconds
         )
         / 3600.0
     )
