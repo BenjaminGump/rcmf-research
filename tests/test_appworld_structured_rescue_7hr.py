@@ -5,9 +5,14 @@ from pathlib import Path
 import torch
 
 from scripts import prepare_appworld_structured_rescue_7hr as prepare_script
-from scripts.run_appworld_train_causal_gate_7hr import _build_manifest, _paired_row
+from scripts.run_appworld_train_causal_gate_7hr import (
+    _build_manifest,
+    _paired_row,
+    _traceback_format_only_replay_missing,
+)
 from scripts.run_appworld_structured_gated_first37_7hr import _live_state_text
 from scripts.run_appworld_structured_compiler_7hr import _mismatch_manifest
+from scripts.run_appworld_structured_compiler_validation_7hr import _control_manifest
 from rcmf.training.procedural_supervision_6f import state_stage_signature
 from rcmf.training.appworld_structured_rescue_7hr import (
     FeatureSchema,
@@ -264,6 +269,45 @@ def test_paired_row_maps_locked_canonical_signature_metric() -> None:
     assert row["label"] == "NEUTRAL"
 
 
+def test_traceback_format_difference_is_missing_not_semantic_pass() -> None:
+    expected = "Traceback (most recent call last):\n  File \"<string>\", line 2\nKeyError: 'field'"
+    actual = (
+        "Traceback (most recent call last):\n"
+        "  File \"<string>\", line 2\n"
+        "    value = [row['field'] for row in rows]\n"
+        "            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"
+        "  File \"<string>\", line 2, in <listcomp>\n"
+        "KeyError: 'field'"
+    )
+    response = {
+        "ready": False,
+        "state_example_id": "s",
+        "task_identity_checks": {"task_id_match": True},
+        "token_validations": [],
+        "history_steps": [
+            {
+                "step_id": 3,
+                "semantic_v3_match": False,
+                "exception": None,
+                "action_sha256": "a" * 64,
+                "state_before": {"sha256": "b" * 64},
+                "state_after": {"sha256": "b" * 64},
+                "expected_raw_observation": expected,
+                "actual_raw_observation": actual,
+                "semantic_comparison": {
+                    "locked_v2": {"non_token_difference_count": 1}
+                },
+            }
+        ],
+    }
+    error = RuntimeError(f"Live bridge did not become ready: {response}")
+    missing = _traceback_format_only_replay_missing(error, state_id="s")
+    assert missing is not None
+    assert missing["valid_for_generation"] is False
+    assert missing["locked_semantic_v3_preserved"] is True
+    assert missing["failed_steps"][0]["exception_type"] == "KeyError"
+
+
 def test_live_state_stage_uses_only_observed_history() -> None:
     text = _live_state_text(
         "Do the task for the supervisor.",
@@ -304,3 +348,30 @@ def test_structured_mismatches_are_outcome_blind_and_identity_distinct() -> None
     assert row["transition_mismatch_transition_id"] != row["transition_id"]
     assert row["state_mismatch_state_example_id"] != row["state_example_id"]
     assert row["behavioral_outcomes_used"] is False
+
+
+def test_compiler_validation_controls_are_frozen_and_outcome_blind() -> None:
+    rows = [
+        {
+            "state_example_id": f"s{index}",
+            "state_task_id": f"t{index}",
+            "state_step_id": index + 1,
+            "selected_transition_id": f"m{index}",
+            "selected_class_id": f"c{index}",
+            "label": "POSITIVE" if index == 0 else "HARMFUL",
+        }
+        for index in range(3)
+    ]
+    first = _control_manifest(rows, 2)
+    second = _control_manifest(rows, 2)
+    assert first == second
+    assert first["condition_count"] == 12
+    assert first["outcomes_used_for_control_selection"] is False
+    assert {
+        row["condition_name"] for row in first["conditions"]
+    } == {
+        "V1_structured_correct",
+        "V2_transition_shuffle",
+        "V3_state_shuffle",
+        "V0_zero",
+    }

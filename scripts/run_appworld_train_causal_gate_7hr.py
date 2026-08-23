@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 from collections import Counter
 from collections.abc import Mapping, Sequence
 import hashlib
@@ -105,6 +106,7 @@ def _paths(settings: Mapping[str, Any], artifact_dir: Path) -> dict[str, Path]:
         "manifest": artifact_dir / "paired_causal/condition_manifest.json",
         "outcomes": artifact_dir / "paired_causal/paired_outcomes.json",
         "outcome_report": artifact_dir / "paired_causal/report.md",
+        "replay_missing_dir": artifact_dir / "paired_causal/replay_missing",
         "gate_checkpoint": artifact_dir / "gate/memory_use_gate.pt",
         "gate_report": artifact_dir / "gate/gate_report.json",
         "gate_markdown": artifact_dir / "gate/report.md",
@@ -221,6 +223,95 @@ def _paired_row(
     }
 
 
+def _traceback_format_only_replay_missing(
+    error: BaseException, *, state_id: str
+) -> dict[str, Any] | None:
+    prefix = "Live bridge did not become ready: "
+    message = str(error)
+    if not isinstance(error, RuntimeError) or not message.startswith(prefix):
+        return None
+    try:
+        response = ast.literal_eval(message[len(prefix) :])
+    except (SyntaxError, ValueError):
+        return None
+    if not isinstance(response, Mapping) or bool(response.get("ready")):
+        return None
+    if str(response.get("state_example_id")) != state_id:
+        return None
+    identity = response.get("task_identity_checks", {})
+    if not identity or not all(bool(value) for value in identity.values()):
+        return None
+    token_validations = list(response.get("token_validations", []))
+    if not all(
+        bool(row.get("actual", {}).get("payload_validator_accepted"))
+        and bool(row.get("actual", {}).get("current_user_validator_accepted"))
+        for row in token_validations
+    ):
+        return None
+    failed_steps = [
+        row
+        for row in response.get("history_steps", [])
+        if not bool(row.get("semantic_v3_match")) or row.get("exception") is not None
+    ]
+    if not failed_steps:
+        return None
+    redacted_steps = []
+    for row in failed_steps:
+        if row.get("exception") is not None:
+            return None
+        before = row.get("state_before", {}).get("sha256")
+        after = row.get("state_after", {}).get("sha256")
+        if not before or before != after:
+            return None
+        expected = str(row.get("expected_raw_observation", ""))
+        actual = str(row.get("actual_raw_observation", ""))
+        expected_lines = expected.splitlines()
+        actual_lines = actual.splitlines()
+        if (
+            not expected_lines
+            or not actual_lines
+            or expected_lines[0] != "Traceback (most recent call last):"
+            or actual_lines[0] != "Traceback (most recent call last):"
+            or expected_lines[-1] != actual_lines[-1]
+            or ":" not in expected_lines[-1]
+        ):
+            return None
+        exception_type = expected_lines[-1].split(":", 1)[0]
+        if not exception_type.endswith("Error"):
+            return None
+        comparison = row.get("semantic_comparison", {})
+        if int(comparison.get("locked_v2", {}).get("non_token_difference_count", 0)) != 1:
+            return None
+        redacted_steps.append(
+            {
+                "step_id": int(row["step_id"]),
+                "action_sha256": str(row["action_sha256"]),
+                "exception_type": exception_type,
+                "terminal_exception_sha256": hashlib.sha256(
+                    expected_lines[-1].encode()
+                ).hexdigest(),
+                "expected_observation_sha256": hashlib.sha256(
+                    expected.encode()
+                ).hexdigest(),
+                "actual_observation_sha256": hashlib.sha256(actual.encode()).hexdigest(),
+                "state_fingerprint_sha256": str(before),
+                "semantic_v3_match": False,
+            }
+        )
+    return {
+        "format": "train_side_replay_missing_7hr_v1",
+        "state_example_id": state_id,
+        "condition_status": "replay_semantic_mismatch_missing",
+        "valid_for_generation": False,
+        "valid_for_gate_training": False,
+        "missing_reason": "python_traceback_format_differs_under_locked_semantic_v3",
+        "locked_semantic_v3_preserved": True,
+        "task_identity_checks": dict(identity),
+        "token_validation_count": len(token_validations),
+        "failed_steps": redacted_steps,
+    }
+
+
 def _run_paired(
     *,
     replay_cfg: Any,
@@ -265,6 +356,7 @@ def _run_paired(
     initial_ids = list(panel["state_ids"])
     all_ids = initial_ids + list(panel["expansion_order"])
     completed_rows: list[dict[str, Any]] = []
+    replay_missing_rows: list[dict[str, Any]] = []
     generated = 0
     reused = 0
     started = time.perf_counter()
@@ -280,32 +372,88 @@ def _run_paired(
             break
         if not bool(slot["scoreable"]):
             continue
+        missing_path = paths["replay_missing_dir"] / (
+            hashlib.sha256(state_id.encode()).hexdigest() + ".json"
+        )
+        if missing_path.exists():
+            missing = _json(missing_path)
+            if (
+                str(missing.get("state_example_id")) != state_id
+                or str(missing.get("condition_status"))
+                != "replay_semantic_mismatch_missing"
+            ):
+                raise ValueError("Existing replay-missing row differs")
+            replay_missing_rows.append(missing)
+            continue
         state_results = {}
         for condition in by_state_conditions[state_id]:
             output_path = output_dir / condition_checkpoint_name(str(condition["condition_key"]))
-            row, was_reused = _run_condition(
-                condition=condition,
-                output_path=output_path,
-                stderr_path=artifact_dir
-                / f"paired_causal/worker_logs/{condition_checkpoint_name(str(condition['condition_key']))}.stderr.log",
-                attempt_id=attempt_id,
-                ordinal=generated + reused + 1,
-                settings=replay,
-                config_sha256=sha256_file(paths["manifest"]),
-                corpus_lineage_sha256=str(settings["expected_replay_lineage_sha256"]),
-                condition_manifest=manifest,
-                example=examples[state_id],
-                record=records[str(slot["state_task_id"])],
-                transitions=transitions,
-                signatures=signatures,
-                raw_utility={},
-                backend=backend,
-                semantic_path=paths["semantic_module"],
-                bridge_script=paths["bridge_script"],
-            )
+            try:
+                row, was_reused = _run_condition(
+                    condition=condition,
+                    output_path=output_path,
+                    stderr_path=artifact_dir
+                    / f"paired_causal/worker_logs/{condition_checkpoint_name(str(condition['condition_key']))}.stderr.log",
+                    attempt_id=attempt_id,
+                    ordinal=generated + reused + 1,
+                    settings=replay,
+                    config_sha256=sha256_file(paths["manifest"]),
+                    corpus_lineage_sha256=str(settings["expected_replay_lineage_sha256"]),
+                    condition_manifest=manifest,
+                    example=examples[state_id],
+                    record=records[str(slot["state_task_id"])],
+                    transitions=transitions,
+                    signatures=signatures,
+                    raw_utility={},
+                    backend=backend,
+                    semantic_path=paths["semantic_module"],
+                    bridge_script=paths["bridge_script"],
+                )
+            except BaseException as error:
+                missing = _traceback_format_only_replay_missing(
+                    error, state_id=state_id
+                )
+                if missing is None:
+                    raise
+                missing.update(
+                    {
+                        "state_task_id": str(slot["state_task_id"]),
+                        "state_step_id": int(slot["state_step_id"]),
+                        "model_split": str(slot["model_split"]),
+                        "panel_part": str(slot["panel_part"]),
+                        "selected_transition_id": str(
+                            slot["selected_transition_id"]
+                        ),
+                        "selected_class_id": str(slot["selected_class_id"]),
+                        "failed_condition_key": str(condition["condition_key"]),
+                    }
+                )
+                atomic_write_json(missing_path, missing)
+                replay_missing_rows.append(missing)
+                attempt.progress(
+                    status="paired_train_causal_replay_missing",
+                    completed_states=len(completed_rows),
+                    completed_conditions=generated + reused,
+                    replay_missing_states=len(replay_missing_rows),
+                    latest_validated_checkpoint=str(missing_path),
+                )
+                print(
+                    json.dumps(
+                        {
+                            "state": state_id,
+                            "condition_status": missing["condition_status"],
+                            "replay_missing_states": len(replay_missing_rows),
+                        },
+                        sort_keys=True,
+                    ),
+                    flush=True,
+                )
+                break
             state_results[str(condition["condition_name"])] = row
             generated += int(not was_reused)
             reused += int(was_reused)
+        if len(state_results) != 2:
+            continue
         completed_rows.append(
             _paired_row(
                 slot,
@@ -346,10 +494,19 @@ def _run_paired(
         "condition_manifest_sha256": str(manifest["manifest_sha256"]),
         "state_count": len(completed_rows),
         "condition_count": 2 * len(completed_rows),
+        "executed_condition_output_count": generated + reused,
         "initial_state_count": len(initial_ids),
-        "expanded_state_count": max(
-            0, len(completed_rows) - int(panel["initial_scoreable_state_count"])
+        "initial_completed_state_count": sum(
+            row["panel_part"] == "initial" for row in completed_rows
         ),
+        "expanded_state_count": sum(
+            row["panel_part"] == "expansion" for row in completed_rows
+        ),
+        "over_context_missing_count": sum(
+            not bool(row["scoreable"]) for row in manifest["slots"]
+        ),
+        "replay_semantic_missing_count": len(replay_missing_rows),
+        "replay_semantic_missing_rows": replay_missing_rows,
         "label_counts": dict(counts),
         "generated_conditions": generated,
         "reused_conditions": reused,
@@ -368,6 +525,8 @@ def _run_paired(
                 f"- paired conditions: `{payload['condition_count']}`",
                 f"- labels: `{json.dumps(payload['label_counts'], sort_keys=True)}`",
                 f"- deterministic expansion: `{payload['expanded_state_count']}`",
+                f"- over-context logical rows: `{payload['over_context_missing_count']}`",
+                f"- locked-v3 replay-missing states: `{payload['replay_semantic_missing_count']}`",
                 f"- minimum 40/label gate: `{str(passed).lower()}`",
                 "- first37 outcomes used: `false`",
                 "",

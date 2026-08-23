@@ -418,6 +418,10 @@ class StaticFeatureBank:
         self.mean = gate["standardizer_mean"]
         self.std = gate["standardizer_std"]
         self.temperature = float(gate["temperature"])
+        self.activation_threshold = float(gate["activation_threshold"])
+        self.maximum_harmful_probability = float(
+            gate["maximum_harmful_probability"]
+        )
         self.label_position = {name: index for index, name in enumerate(gate["labels"])}
 
     def feature(self, state_id: str, transition_id: str) -> list[float]:
@@ -467,12 +471,29 @@ class StaticFeatureBank:
         return values
 
     @torch.no_grad()
-    def gate_probability(self, values: Sequence[float]) -> float:
+    def gate_probabilities(self, values: Sequence[float]) -> dict[str, Any]:
         feature = torch.tensor([values], dtype=torch.float32)
         probability = F.softmax(
             self.gate((feature - self.mean) / self.std) / self.temperature, dim=-1
-        )
-        return float(probability[0, self.label_position["POSITIVE"]])
+        )[0]
+        probabilities = {
+            label: float(probability[index])
+            for label, index in self.label_position.items()
+        }
+        return {
+            "probabilities": probabilities,
+            "positive_probability": probabilities["POSITIVE"],
+            "gate_on": (
+                probabilities["POSITIVE"]
+                >= self.activation_threshold
+                and probabilities["HARMFUL"]
+                <= self.maximum_harmful_probability
+            ),
+        }
+
+    @torch.no_grad()
+    def gate_probability(self, values: Sequence[float]) -> float:
+        return float(self.gate_probabilities(values)["positive_probability"])
 
 
 def _mismatch_manifest(rows: Sequence[Mapping[str, Any]], bank: StaticFeatureBank) -> dict[str, Any]:
