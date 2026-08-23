@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import torch
 
 from scripts import prepare_appworld_structured_rescue_7hr as prepare_script
@@ -20,6 +22,9 @@ from rcmf.training.appworld_structured_rescue_7hr import (
 
 def test_prepare_script_import_contract() -> None:
     assert callable(prepare_script.main)
+    source = prepare_script.__file__
+    assert source is not None
+    assert 'metadata["split"]' not in Path(source).read_text(encoding="utf-8")
 
 
 def _metrics(successor: bool, signature: bool, execution: bool) -> dict[str, bool]:

@@ -379,10 +379,15 @@ def main() -> None:
     ) as attempt:
         started = time.perf_counter()
         examples = load_decision_examples(paths["decisions"])
+        query_signature_rows = _rows(paths["query_signatures"])
+        query_signatures = {
+            str(row["state_example_id"]): row for row in query_signature_rows
+        }
         train_examples = [
             (index, example)
             for index, example in enumerate(examples)
-            if str(example.metadata["split"]) == "train"
+            if str(query_signatures[state_example_id(index, example)]["split"])
+            == "train"
         ]
         if len(train_examples) != 499:
             raise ValueError(f"Expected 499 clean train states, found {len(train_examples)}")
@@ -475,7 +480,7 @@ def main() -> None:
         schema = _feature_schema(intents_list, signatures_list)
         query_stages = {
             str(row["state_example_id"]): row["state_stage_signature"]
-            for row in _rows(paths["query_signatures"])
+            for row in query_signature_rows
         }
         feature_rows = []
         for row in selections:
