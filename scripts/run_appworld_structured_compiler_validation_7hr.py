@@ -40,6 +40,7 @@ from scripts.run_appworld_structured_compiler_7hr import (
 )
 from scripts.run_deep_residual_amortized_one_step_7f import (
     LIVE_PROJECTION_MAXIMUM_RATIO,
+    LIVE_PROJECTION_METHOD,
     _run_condition,
 )
 from scripts.run_procedural_causal_audit_7b import _examples_by_state, _records_by_task
@@ -146,6 +147,7 @@ def _control_manifest(rows: Sequence[Mapping[str, Any]], updates: int) -> dict[s
         "global_seed": GLOBAL_SEED,
         "updates_per_pair": updates,
         "runtime_projection_maximum_ratio": LIVE_PROJECTION_MAXIMUM_RATIO,
+        "runtime_projection_method": LIVE_PROJECTION_METHOD,
         "state_count": len(rows),
         "condition_count": len(conditions),
         "conditions": conditions,

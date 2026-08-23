@@ -59,6 +59,10 @@ class ResidualHookAudit:
     skipped_decode_calls: dict[int, int] = field(default_factory=dict)
     directly_modified_positions: dict[int, list[list[int]]] = field(default_factory=dict)
     base_norms: dict[int, list[float]] = field(default_factory=dict)
+    raw_delta_norms: dict[int, list[float]] = field(default_factory=dict)
+    applied_delta_norms: dict[int, list[float]] = field(default_factory=dict)
+    projection_scales: dict[int, list[float]] = field(default_factory=dict)
+    projection_base_norms: dict[int, list[float]] = field(default_factory=dict)
 
     def as_dict(self) -> dict[str, Any]:
         return {
@@ -73,6 +77,18 @@ class ResidualHookAudit:
                 str(k): v for k, v in self.directly_modified_positions.items()
             },
             "base_norms": {str(k): v for k, v in self.base_norms.items()},
+            "raw_delta_norms": {
+                str(k): v for k, v in self.raw_delta_norms.items()
+            },
+            "applied_delta_norms": {
+                str(k): v for k, v in self.applied_delta_norms.items()
+            },
+            "projection_scales": {
+                str(k): v for k, v in self.projection_scales.items()
+            },
+            "projection_base_norms": {
+                str(k): v for k, v in self.projection_base_norms.items()
+            },
         }
 
 
@@ -87,12 +103,26 @@ class DeepResidualHooks(AbstractContextManager[ResidualHookAudit]):
         selected_token_indices: Tensor,
         delta: Tensor,
         expected_prefill_length: int,
+        maximum_layer_ratio: float | None = None,
+        reference_states: Tensor | None = None,
     ) -> None:
         self.model = model
         self.layer_indices = tuple(int(value) for value in layer_indices)
         self.selected_token_indices = selected_token_indices.to(torch.long)
         self.delta = delta
         self.expected_prefill_length = int(expected_prefill_length)
+        self.maximum_layer_ratio = (
+            None if maximum_layer_ratio is None else float(maximum_layer_ratio)
+        )
+        if self.maximum_layer_ratio is not None and not (
+            0.0 < self.maximum_layer_ratio <= 1.0
+        ):
+            raise ValueError("maximum_layer_ratio must be in (0, 1]")
+        self.reference_states = reference_states
+        if self.reference_states is not None and tuple(self.reference_states.shape) != tuple(
+            delta.shape
+        ):
+            raise ValueError("reference_states must match DeltaH shape")
         validate_delta_shape(
             delta,
             batch_size=int(selected_token_indices.shape[0]),
@@ -137,28 +167,53 @@ class DeepResidualHooks(AbstractContextManager[ResidualHookAudit]):
                 device=hidden.device, dtype=hidden.dtype
             )
             norms: list[float] = []
+            raw_delta_norms: list[float] = []
+            applied_delta_norms: list[float] = []
+            projection_scales: list[float] = []
+            projection_base_norms: list[float] = []
             positions: list[list[int]] = []
             for row_index in range(int(hidden.shape[0])):
                 indices = self.selected_token_indices[row_index].to(hidden.device)
                 positions.append([int(value) for value in indices.detach().cpu()])
-                norms.append(
-                    float(
-                        hidden[row_index, indices]
+                base_norm = hidden[row_index, indices].detach().to(torch.float32).norm()
+                projection_base_norm = base_norm
+                if self.reference_states is not None:
+                    projection_base_norm = (
+                        self.reference_states[row_index, slot]
                         .detach()
                         .to(torch.float32)
-                        .flatten()
                         .norm()
-                        .cpu()
                     )
-                )
+                raw_norm = layer_delta[row_index].detach().to(torch.float32).norm()
+                scale = 1.0
+                if self.maximum_layer_ratio is not None:
+                    scale = min(
+                        1.0,
+                        self.maximum_layer_ratio
+                        * float(projection_base_norm.cpu())
+                        / max(float(raw_norm.cpu()), 1.0e-12),
+                    )
+                applied_delta = layer_delta[row_index] * scale
+                applied_norm = applied_delta.detach().to(torch.float32).norm()
+                norms.append(float(base_norm.cpu()))
+                raw_delta_norms.append(float(raw_norm.cpu()))
+                applied_delta_norms.append(float(applied_norm.cpu()))
+                projection_scales.append(scale)
+                projection_base_norms.append(float(projection_base_norm.cpu()))
                 updated[row_index, indices] = (
-                    updated[row_index, indices] + layer_delta[row_index]
+                    updated[row_index, indices] + applied_delta
                 )
             self.audit.applied_calls[layer_index] = (
                 self.audit.applied_calls.get(layer_index, 0) + 1
             )
             self.audit.directly_modified_positions[layer_index] = positions
             self.audit.base_norms.setdefault(layer_index, norms)
+            self.audit.raw_delta_norms.setdefault(layer_index, raw_delta_norms)
+            self.audit.applied_delta_norms.setdefault(layer_index, applied_delta_norms)
+            self.audit.projection_scales.setdefault(layer_index, projection_scales)
+            self.audit.projection_base_norms.setdefault(
+                layer_index, projection_base_norms
+            )
             if positional:
                 return (updated, *args[1:]), kwargs
             changed = dict(kwargs)
@@ -192,6 +247,7 @@ def capture_original_layer_states(
     selected_token_indices: Tensor,
     layer_indices: Sequence[int],
     position_ids: Tensor | None = None,
+    use_cache: bool = False,
 ) -> Tensor:
     """Capture zero-intervention block inputs at the selected prompt positions."""
     layers = decoder_layers(model)
@@ -231,7 +287,7 @@ def capture_original_layer_states(
                 input_ids=input_ids,
                 attention_mask=attention_mask,
                 position_ids=position_ids,
-                use_cache=False,
+                use_cache=use_cache,
                 return_dict=True,
             )
     finally:

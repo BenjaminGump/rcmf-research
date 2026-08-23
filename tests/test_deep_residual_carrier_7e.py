@@ -113,6 +113,54 @@ def test_generated_token_length_is_not_injected() -> None:
     assert audit.skipped_decode_calls == {1: 1, 4: 1}
 
 
+def test_live_hook_projection_uses_actual_layer_input_norms() -> None:
+    model = ToyModel()
+    hidden = torch.randn(1, 7, 8)
+    indices = torch.tensor([[1, 2, 4, 5]])
+    delta = torch.full((1, 2, 4, 8), 100.0)
+    with DeepResidualHooks(
+        model=model,
+        layer_indices=(1, 4),
+        selected_token_indices=indices,
+        delta=delta,
+        expected_prefill_length=7,
+        maximum_layer_ratio=0.99,
+    ) as audit:
+        model.model(hidden)
+    for layer_index in (1, 4):
+        ratio = (
+            audit.applied_delta_norms[layer_index][0]
+            / audit.base_norms[layer_index][0]
+        )
+        assert ratio <= 0.9901
+        assert audit.projection_scales[layer_index][0] < 1.0
+
+
+def test_live_hook_projection_can_use_bare_reference_states() -> None:
+    model = ToyModel()
+    hidden = torch.randn(1, 7, 8)
+    indices = torch.tensor([[1, 2, 4, 5]])
+    delta = torch.full((1, 2, 4, 8), 100.0)
+    reference = torch.ones_like(delta)
+    with DeepResidualHooks(
+        model=model,
+        layer_indices=(1, 4),
+        selected_token_indices=indices,
+        delta=delta,
+        expected_prefill_length=7,
+        maximum_layer_ratio=0.99,
+        reference_states=reference,
+    ) as audit:
+        model.model(hidden)
+    expected_base_norm = float(reference[0, 0].norm())
+    for layer_index in (1, 4):
+        assert audit.projection_base_norms[layer_index][0] == pytest.approx(
+            expected_base_norm
+        )
+        ratio = audit.applied_delta_norms[layer_index][0] / expected_base_norm
+        assert ratio <= 0.9901
+
+
 def test_projection_enforces_each_layer_and_reports_global_ratio() -> None:
     delta = torch.full((2, 4, 4, 8), 10.0)
     original = torch.ones_like(delta)

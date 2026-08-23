@@ -33,6 +33,7 @@ from scripts.run_appworld_structured_compiler_7hr import StaticFeatureBank, _pat
 from scripts.run_appworld_structured_compiler_validation_7hr import _load_models
 from scripts.run_deep_residual_amortized_one_step_7f import (
     LIVE_PROJECTION_MAXIMUM_RATIO,
+    LIVE_PROJECTION_METHOD,
     _run_condition,
 )
 from scripts.run_direct_injection_channel_7dh import _build_backend_from_generation
@@ -236,6 +237,7 @@ def _control_manifest(
         "format": "appworld_structured_compiler_one_step_manifest_7hr_v1",
         "global_seed": GLOBAL_SEED,
         "runtime_projection_maximum_ratio": LIVE_PROJECTION_MAXIMUM_RATIO,
+        "runtime_projection_method": LIVE_PROJECTION_METHOD,
         "state_count": len(by_state),
         "condition_count": len(conditions),
         "condition_name_counts": {

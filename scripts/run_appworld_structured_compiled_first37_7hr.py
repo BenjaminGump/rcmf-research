@@ -17,7 +17,6 @@ from rcmf.benchmarks.appworld.data import extract_code_and_fix_content
 from rcmf.benchmarks.appworld.prompt import build_appworld_messages, build_task_message
 from rcmf.config import load_config
 from rcmf.injection.base import build_position_ids
-from rcmf.training.deep_residual_amortization_7f import differentiable_layer_ratio_projection
 from rcmf.training.deep_residual_carrier_7e import capture_original_layer_states
 from rcmf.training.state_conditioned_transition_6b import AttemptLedger
 from rcmf.utils.serialization import atomic_write_json, atomic_write_text, sha256_file
@@ -27,6 +26,7 @@ from scripts.run_appworld_structured_gated_first37_7hr import StructuredRuntime,
 from scripts.run_deep_residual_carrier_7e import _generate_residual
 from scripts.run_deep_residual_amortized_one_step_7f import (
     LIVE_PROJECTION_MAXIMUM_RATIO,
+    LIVE_PROJECTION_METHOD,
 )
 from scripts.run_raw_memory_first37_7f import FullAgentBridge, PROTOCOL_VERSION
 from scripts.run_state_conditioned_program_direct_7dg import _load_representations
@@ -165,18 +165,16 @@ def _generate_compiled(
         selected_token_indices=selected,
         layer_indices=list(LAYER_INDICES),
         position_ids=build_position_ids(tokenized.attention_mask.to(torch.long)),
+        use_cache=True,
     ).to(backend.device)
-    projected, projection = differentiable_layer_ratio_projection(
-        delta.unsqueeze(0),
-        original,
-        maximum_ratio=LIVE_PROJECTION_MAXIMUM_RATIO,
-    )
     output, hook = _generate_residual(
         backend=backend,
         messages=messages,
-        delta=projected[0],
+        delta=delta,
         layer_indices=list(LAYER_INDICES),
         max_new_tokens=max_new_tokens,
+        maximum_layer_ratio=LIVE_PROJECTION_MAXIMUM_RATIO,
+        reference_states=original,
     )
     if max(float(value) for value in hook["layer_ratios"]) > 1.0001:
         raise RuntimeError("Compiled first37 residual exceeded the locked ratio")
@@ -184,8 +182,12 @@ def _generate_compiled(
         "selected_token_indices": hook["selected_token_indices"][0],
         "layer_ratios": hook["layer_ratios"],
         "global_ratio": hook["global_ratio"],
-        "raw_layer_ratio": projection["raw_layer_ratio"][0].cpu().tolist(),
+        "raw_layer_ratio": hook["raw_layer_ratios"],
+        "projection_scales": [
+            hook["projection_scales"][str(index)][0] for index in LAYER_INDICES
+        ],
         "runtime_projection_maximum_ratio": LIVE_PROJECTION_MAXIMUM_RATIO,
+        "runtime_projection_method": LIVE_PROJECTION_METHOD,
     }
 
 

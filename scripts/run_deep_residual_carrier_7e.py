@@ -231,6 +231,8 @@ def _generate_residual(
     delta: Tensor,
     layer_indices: Sequence[int],
     max_new_tokens: int,
+    maximum_layer_ratio: float | None = None,
+    reference_states: Tensor | None = None,
 ) -> tuple[GenerateOutput, dict[str, Any]]:
     tokenized = backend.tokenize_messages(list(messages), add_generation_prompt=True)
     user_indices = [int(value) for value in tokenized.metadata["last_user_token_indices"]]
@@ -247,6 +249,8 @@ def _generate_residual(
         selected_token_indices=selected,
         delta=delta.to(backend.device).unsqueeze(0),
         expected_prefill_length=prompt_length,
+        maximum_layer_ratio=maximum_layer_ratio,
+        reference_states=reference_states,
     ) as audit:
         with _attention_context(backend.device):
             output_ids = backend.model.generate(
@@ -261,11 +265,37 @@ def _generate_residual(
     generated = output_ids[0, prompt_length:].tolist()
     text = backend.tokenizer.decode(generated, skip_special_tokens=True)
     hook = audit.as_dict()
-    layer_ratios, global_ratios = ratios_from_recorded_base_norms(
-        delta,
-        [hook["base_norms"][str(index)][0] for index in layer_indices],
+    base_norm_source = (
+        hook["projection_base_norms"]
+        if reference_states is not None
+        else hook["base_norms"]
     )
+    base_norms = torch.tensor(
+        [base_norm_source[str(index)][0] for index in layer_indices],
+        dtype=torch.float32,
+    )
+    if maximum_layer_ratio is None:
+        layer_ratios, global_ratios = ratios_from_recorded_base_norms(
+            delta, base_norms.tolist()
+        )
+        raw_layer_ratios = layer_ratios
+    else:
+        raw_norms = torch.tensor(
+            [hook["raw_delta_norms"][str(index)][0] for index in layer_indices],
+            dtype=torch.float32,
+        )
+        applied_norms = torch.tensor(
+            [hook["applied_delta_norms"][str(index)][0] for index in layer_indices],
+            dtype=torch.float32,
+        )
+        raw_layer_ratios = (raw_norms / base_norms.clamp_min(1.0e-12)).unsqueeze(0)
+        layer_ratios = (applied_norms / base_norms.clamp_min(1.0e-12)).unsqueeze(0)
+        global_ratios = (
+            applied_norms.square().sum().sqrt()
+            / base_norms.square().sum().sqrt().clamp_min(1.0e-12)
+        ).unsqueeze(0)
     hook["layer_ratios"] = layer_ratios[0].detach().cpu().tolist()
+    hook["raw_layer_ratios"] = raw_layer_ratios[0].detach().cpu().tolist()
     hook["global_ratio"] = float(global_ratios[0].detach().cpu())
     return (
         GenerateOutput(

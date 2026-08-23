@@ -27,7 +27,6 @@ from rcmf.training.deep_residual_amortization_7f import (
     LAYER_INDICES,
     build_amortized_one_step_manifest,
     classify_one_step_behavior,
-    differentiable_layer_ratio_projection,
 )
 from rcmf.training.deep_residual_carrier_7e import capture_original_layer_states
 from rcmf.training.oracle_convergence_5fa import atomic_torch_save
@@ -68,6 +67,7 @@ from scripts.run_state_conditioned_program_direct_7dg import _load_representatio
 
 RESULT_FORMAT = "deep_residual_amortized_one_step_result_7f_v1"
 LIVE_PROJECTION_MAXIMUM_RATIO = 0.99
+LIVE_PROJECTION_METHOD = "live_block_input_norm_v1"
 
 
 def _json(path: Path) -> dict[str, Any]:
@@ -390,21 +390,17 @@ def _run_condition(
             selected_token_indices=selected_indices,
             layer_indices=LAYER_INDICES,
             position_ids=build_position_ids(tokenized.attention_mask.to(torch.long)),
+            use_cache=True,
         ).to(backend.device)
-        projected, projection = differentiable_layer_ratio_projection(
-            delta.to(backend.device).unsqueeze(0),
-            original_states,
-            # Leave a fixed BF16 rounding margin so the injected tensor still
-            # obeys the preregistered <=1.0 live residual budget after casting.
-            maximum_ratio=live_projection_maximum_ratio,
-        )
         generation_started = time.perf_counter()
         output, hook = _generate_residual(
             backend=backend,
             messages=messages,
-            delta=projected.squeeze(0),
+            delta=delta.to(backend.device),
             layer_indices=LAYER_INDICES,
             max_new_tokens=min(int(generation["max_new_tokens"]), remaining),
+            maximum_layer_ratio=live_projection_maximum_ratio,
+            reference_states=original_states,
         )
         generation_seconds = time.perf_counter() - generation_started
         if max(float(value) for value in hook["layer_ratios"]) > 1.0001:
@@ -457,11 +453,14 @@ def _run_condition(
         "selected_token_indices": hook["selected_token_indices"][0],
         "layer_ratios": hook["layer_ratios"],
         "global_ratio": hook["global_ratio"],
-        "runtime_projection_raw_layer_ratio": projection["raw_layer_ratio"][0]
-        .detach()
-        .cpu()
-        .tolist(),
+        "runtime_projection_raw_layer_ratio": hook["raw_layer_ratios"],
+        "runtime_projection_scales": [
+            hook["projection_scales"][str(index)][0] for index in LAYER_INDICES
+        ],
         "runtime_projection_maximum_ratio": live_projection_maximum_ratio,
+        "runtime_projection_method": str(
+            manifest.get("runtime_projection_method", LIVE_PROJECTION_METHOD)
+        ),
         "hook_audit": hook,
         "compiler_checkpoint_sha256": checkpoint_sha256,
         "program_deltas_sha256": deltas_sha256,
