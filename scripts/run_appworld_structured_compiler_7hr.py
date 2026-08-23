@@ -767,28 +767,40 @@ def _train_phase(
                     base_states=base,
                     maximum_ratio=float(settings["compiler"]["ratio_budget_per_layer"]),
                 )
-                policy_logits, _, gt_logits = _forward_policy_ground_truth(
-                    backend=backend,
-                    delta=delta,
-                    base=base,
-                    policy_row=policy_row,
-                    ground_truth_row=ground_truth,
+                batch = _collate(
+                    [policy_row, ground_truth], device=backend.device, k=K_TOKENS
                 )
-                kl, terms = _policy_loss(policy_logits, target_teacher)
-                gt_ce = F.cross_entropy(
-                    gt_logits.to(torch.float32), _target_ids(ground_truth, backend.device)
-                )
-                loss = (
-                    float(settings["compiler"]["policy_kl_weight"]) * kl
-                    + float(settings["compiler"]["teacher_token_ce_weight"]) * terms["teacher_token_ce"]
-                    + float(settings["compiler"]["ground_truth_ce_weight"]) * gt_ce
-                    + float(settings["compiler"]["ratio_restraint_weight"])
-                    * (
-                        F.relu(ratios["raw_layer_ratio"] - 1.0).pow(2).mean()
-                        + 0.01 * latent.pow(2).mean()
+                # Gradient-checkpoint recomputation happens during backward, so
+                # the residual hooks must remain installed until it completes.
+                with DeepResidualHooks(
+                    model=backend.model,
+                    layer_indices=LAYER_INDICES,
+                    selected_token_indices=_selected_indices(batch),
+                    delta=delta.repeat(2, 1, 1, 1),
+                    expected_prefill_length=int(batch["input_ids"].shape[1]),
+                ):
+                    _, logits = _bare_target_forward(backend=backend, batch=batch)
+                    policy_length = int(policy_row["target_len"])
+                    policy_logits = logits[:policy_length]
+                    gt_logits = logits[policy_length:]
+                    kl, terms = _policy_loss(policy_logits, target_teacher)
+                    gt_ce = F.cross_entropy(
+                        gt_logits.to(torch.float32),
+                        _target_ids(ground_truth, backend.device),
                     )
-                )
-                loss.backward()
+                    loss = (
+                        float(settings["compiler"]["policy_kl_weight"]) * kl
+                        + float(settings["compiler"]["teacher_token_ce_weight"])
+                        * terms["teacher_token_ce"]
+                        + float(settings["compiler"]["ground_truth_ce_weight"])
+                        * gt_ce
+                        + float(settings["compiler"]["ratio_restraint_weight"])
+                        * (
+                            F.relu(ratios["raw_layer_ratio"] - 1.0).pow(2).mean()
+                            + 0.01 * latent.pow(2).mean()
+                        )
+                    )
+                    loss.backward()
                 torch.nn.utils.clip_grad_norm_(
                     list(composer.parameters()) + list(decoder.parameters()),
                     float(settings["compiler"]["max_grad_norm"]),
