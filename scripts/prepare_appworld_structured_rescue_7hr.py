@@ -175,17 +175,18 @@ def _class_selection(
     class_id = str(selected["selected_class_id"])
     class_row = classes[class_id]
     canonical = str(class_row["canonical_transition_id"])
+    all_members = [str(value) for value in class_row["member_transition_ids"]]
     members = [
         str(value)
-        for value in class_row["member_transition_ids"]
+        for value in all_members
         if str(value) in set(legal_ids)
     ]
-    if canonical not in members:
-        raise ValueError(f"Selected canonical transition is illegal: {class_id}")
+    if not members:
+        raise ValueError(f"Selected class has no legal members: {class_id}")
     median = statistics.median(
-        int(transitions[value]["teacher_section_tokens"]) for value in members
+        int(transitions[value]["teacher_section_tokens"]) for value in all_members
     )
-    ordered_members = [canonical] + sorted(
+    ordered_members = ([canonical] if canonical in members else []) + sorted(
         (value for value in members if value != canonical),
         key=lambda value: (
             abs(int(transitions[value]["teacher_section_tokens"]) - median),
@@ -218,6 +219,10 @@ def _class_selection(
         "selected_class_id": class_id,
         "selected_transition_id": chosen,
         "canonical_transition_id": canonical,
+        "canonical_transition_legal": canonical in members,
+        "canonical_illegal_same_class_substitution": (
+            chosen is not None and canonical not in members
+        ),
         "same_class_substitution": chosen is not None and chosen != canonical,
         "class_score": float(selected["class_score"]),
         "class_margin": ordered_class_scores[0][1] - ordered_class_scores[1][1],

@@ -25,6 +25,9 @@ def test_prepare_script_import_contract() -> None:
     source = prepare_script.__file__
     assert source is not None
     assert 'metadata["split"]' not in Path(source).read_text(encoding="utf-8")
+    assert "canonical_illegal_same_class_substitution" in Path(source).read_text(
+        encoding="utf-8"
+    )
 
 
 def _metrics(successor: bool, signature: bool, execution: bool) -> dict[str, bool]:
