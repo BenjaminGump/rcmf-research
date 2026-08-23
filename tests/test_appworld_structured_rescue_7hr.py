@@ -5,6 +5,7 @@ from pathlib import Path
 import torch
 
 from scripts import prepare_appworld_structured_rescue_7hr as prepare_script
+from scripts.run_appworld_train_causal_gate_7hr import _build_manifest
 from rcmf.training.appworld_structured_rescue_7hr import (
     FeatureSchema,
     StructuredLatentComposer,
@@ -189,3 +190,38 @@ def test_compiler_checkpoint_and_permutation_contracts() -> None:
     assert set(permutation) == {"a", "b", "c"}
     assert set(permutation.values()) == {"a", "b", "c"}
     assert all(source != target for source, target in permutation.items())
+
+
+def test_paired_manifest_is_frozen_and_marks_missing_slots() -> None:
+    panel = {"state_ids": ["s1", "s2"], "expansion_order": ["s3"]}
+    selections = {
+        "s1": {
+            "scoreable": True,
+            "selected_transition_id": "m1",
+            "selected_class_id": "c1",
+            "state_task_id": "t1",
+            "state_step_id": 1,
+            "model_split": "train",
+        },
+        "s2": {
+            "scoreable": False,
+            "selected_transition_id": None,
+            "selected_class_id": "c2",
+            "state_task_id": "t2",
+            "state_step_id": 2,
+            "model_split": "validation",
+        },
+        "s3": {
+            "scoreable": True,
+            "selected_transition_id": "m3",
+            "selected_class_id": "c3",
+            "state_task_id": "t3",
+            "state_step_id": 3,
+            "model_split": "train",
+        },
+    }
+    manifest = _build_manifest(panel, selections)
+    assert manifest["selection_frozen_before_outcomes"]
+    assert len(manifest["slots"]) == 3
+    assert len(manifest["conditions"]) == 4
+    assert manifest["slots"][1]["missing_reason"] == "selected_signature_class_over_context"
