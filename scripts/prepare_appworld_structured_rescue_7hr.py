@@ -16,7 +16,6 @@ import _bootstrap  # noqa: F401
 import torch
 from transformers import AutoTokenizer
 
-from rcmf.benchmarks.appworld.memory import messages_with_transition_memory
 from rcmf.config import load_config
 from rcmf.training.appworld_structured_rescue_7hr import (
     FeatureSchema,
@@ -35,6 +34,7 @@ from rcmf.training.state_conditioned_transition_6b import AttemptLedger
 from rcmf.training.transition_memory_6a import (
     example_task_id,
     is_legal_transition_pair,
+    messages_with_transition_memory,
     state_example_id,
 )
 from rcmf.utils.serialization import (

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import torch
 
+from scripts import prepare_appworld_structured_rescue_7hr as prepare_script
 from rcmf.training.appworld_structured_rescue_7hr import (
     FeatureSchema,
     StructuredLatentComposer,
@@ -15,6 +16,10 @@ from rcmf.training.appworld_structured_rescue_7hr import (
     select_diverse_panel,
     select_gate_threshold,
 )
+
+
+def test_prepare_script_import_contract() -> None:
+    assert callable(prepare_script.main)
 
 
 def _metrics(successor: bool, signature: bool, execution: bool) -> dict[str, bool]:
