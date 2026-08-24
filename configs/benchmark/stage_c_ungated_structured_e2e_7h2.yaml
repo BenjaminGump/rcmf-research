@@ -1,0 +1,40 @@
+include: stage_c_appworld_structured_rescue_7hr.yaml
+
+experiment:
+  name: stage_c_ungated_structured_e2e_audit_7h2
+  version: ungated_structured_compiler_e2e_7h2_v1
+  seed: 25101
+
+stage_c_7h2:
+  run_uuid: ungated_structured_compiler_e2e_7h2_20260824_001
+  artifact_dir: runs/stage_c/ungated_structured_compiler_e2e_7h2_20260824_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  starting_head: 6343f433ba96442d4a6e421ded072cfd85406fb8
+  archive_branch: archive/v4-structured-gate-compiler-partial
+  working_branch: research/v4-ungated-structured-e2e-audit
+  parent_exp028a: runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001
+  parent_exp027b: runs/stage_c/memory_specific_deep_amortization_7g_20260823_001
+  expected_gate_sha256: 7c49ace41b81763df4457c976d8800ccb1af11559b016fb98e04cf851098416d
+  expected_compiler_sha256: 95bc2869df1084eb1166cadeb0edfad584814d5fe0c049b3d7beab59b2c4cab3
+  expected_selector_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f
+  gate_temperature: 2.0
+  gate_threshold: 0.60
+  gate_maximum_harmful_probability: 0.25
+  diagnostic_thresholds: [0.50, 0.60, 0.70, 0.80, 0.90]
+  live_turn_buckets:
+    early_max_step: 10
+    middle_max_step: 25
+  first37:
+    matched_bare_summary: runs/stage_c/memory_specific_deep_amortization_7g_20260823_001/phase_a_matched_bare_first37/summary.json
+    expected_bare_success: 8
+  test_normal_manifest: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root/data/datasets/test_normal.txt
+  historical_full_bare_results: runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test
+  runtime:
+    review_threshold_h100_hours: 8.0
+    u1_expected_hours: 1.45
+    u2_expected_hours: 1.45
+    u1_conservative_hours: 2.20
+    u2_conservative_hours: 2.20
+    expected_artifact_gib: 0.65
+  heartbeat_interval_seconds: 240
