@@ -1893,3 +1893,26 @@ Decision:
   Stage C2, end-to-end compiled RCMF, full AppWorld evaluation, and V4 tagging
   remain blocked.
 
+### EXP-028A train-side causal gate and structured compiler rescue
+
+- The deterministic train-side panel exhausted all `499` clean train states:
+  `464` paired scoreable outcomes, `27` over-context missing rows, and `8`
+  strict semantic-replay missing rows. Labels are `129` POSITIVE, `300`
+  NEUTRAL, and `35` HARMFUL.
+- The `186` structured features are deployment-available and have zero
+  leakage-audit violations. On eight heldout clean-train tasks, the selected
+  threshold `0.60` activates `11/98` states with zero harmful activations and
+  improves successor/signature from `0.4082/0.3980` to `0.4592/0.4694`.
+- Gated raw first37 remains `8/37`, equal to matched bare, because the gate is
+  OFF on all `872` turns. This is not causal task-level evidence.
+- The u4 AppWorld-structured compiler passes train-validation eligibility.
+  In the locked 32-primary-state audit, S1 improves C0 signature/successor by
+  `+0.09375/+0.09375` and both shuffles by `+0.03125/+0.03125`, but is positive
+  on only `2/9` tasks. Classification is `PARTIAL_POSITIVE`.
+- Gated compiled first37 is `8/37` with gate activation `0/873`; it therefore
+  executes bare Qwen throughout and does not validate end-to-end compiled
+  memory.
+- Decision branch: `appworld_structured_compiler_competitive`. Full-bank
+  integration, another compiler, p(s,m_transition), Stage C2, end-to-end RCMF,
+  full AppWorld evaluation, and V4 tagging remain blocked pending a
+  deployment-feature gate-distribution review.

@@ -1,0 +1,43 @@
+{
+  "elapsed_seconds": 10174.056961299386,
+  "format": "appworld_structured_deep_compiler_training_7hr_v1",
+  "global_seed": 25101,
+  "history": [
+    {
+      "beta": 0.040639594197273254,
+      "checkpoint": "/lambda/nfs/rcmf-persist/project/runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/structured_compiler/checkpoints/model_u02.pt",
+      "checkpoint_sha256": "9698d9abfdc8035f9940fc96c75a65dfea5c8eb425da6d2e3b83d5d8525f16d8",
+      "elapsed_seconds": 5601.102296644356,
+      "maximum_ratio": 0.23886966705322266,
+      "round_metrics": {
+        "ground_truth_ce": 0.5903089223043559,
+        "loss": 0.11926064506209638,
+        "policy_kl": 0.06689695622347905,
+        "teacher_token_ce": 0.09137080560195925
+      },
+      "updates_per_pair": 2
+    },
+    {
+      "beta": 0.056362491101026535,
+      "checkpoint": "/lambda/nfs/rcmf-persist/project/runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/structured_compiler/checkpoints/model_u04.pt",
+      "checkpoint_sha256": "95bc2869df1084eb1166cadeb0edfad584814d5fe0c049b3d7beab59b2c4cab3",
+      "elapsed_seconds": 10171.894694156013,
+      "maximum_ratio": 0.3993106782436371,
+      "round_metrics": {
+        "ground_truth_ce": 0.531298242230391,
+        "loss": 0.08055740829476306,
+        "policy_kl": 0.03842180587344088,
+        "teacher_token_ce": 0.062193153128562634
+      },
+      "updates_per_pair": 4
+    }
+  ],
+  "observation_excluded": true,
+  "parent_pairmlp_frozen": true,
+  "passed": true,
+  "positive_train_state_count": 105,
+  "qwen_frozen": true,
+  "student_prompt_contains_raw_transition": false,
+  "train_state_count": 366,
+  "training_unit_count_per_round": 576
+}

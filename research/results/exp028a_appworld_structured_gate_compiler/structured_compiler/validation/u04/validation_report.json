@@ -1,0 +1,49 @@
+{
+  "checkpoint": "/lambda/nfs/rcmf-persist/project/runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/structured_compiler/checkpoints/model_u04.pt",
+  "checkpoint_sha256": "95bc2869df1084eb1166cadeb0edfad584814d5fe0c049b3d7beab59b2c4cab3",
+  "condition_count": 392,
+  "condition_metrics": {
+    "V0_zero": {
+      "canonical_procedural_signature_match": 0.3979591836734694,
+      "execution_success": 0.9285714285714286,
+      "semantic_successor_match": 0.40816326530612246
+    },
+    "V1_structured_correct": {
+      "canonical_procedural_signature_match": 0.4489795918367347,
+      "execution_success": 0.9387755102040817,
+      "semantic_successor_match": 0.45918367346938777
+    },
+    "V2_transition_shuffle": {
+      "canonical_procedural_signature_match": 0.42857142857142855,
+      "execution_success": 0.9285714285714286,
+      "semantic_successor_match": 0.42857142857142855
+    },
+    "V3_state_shuffle": {
+      "canonical_procedural_signature_match": 0.41836734693877553,
+      "execution_success": 0.9387755102040817,
+      "semantic_successor_match": 0.40816326530612246
+    }
+  },
+  "deltas_sha256": "bee7ff4b853d3cd4de70f27fb340796778e056057922152192ed7d667493279d",
+  "elapsed_seconds": 3097.284153054934,
+  "format": "appworld_structured_compiler_train_validation_7hr_v1",
+  "gate_on_state_count": 11,
+  "manifest_sha256": "4a3d085b31cefe103977f086f4b3f3c08c638c8045ee0bf0910e181b49424858",
+  "passed_infrastructure": true,
+  "state_count": 98,
+  "updates_per_pair": 4,
+  "validation_metrics": {
+    "correct_execution": 0.9387755102040817,
+    "correct_signature": 0.4489795918367347,
+    "correct_successor": 0.45918367346938777,
+    "maximum_ratio": 0.9903336763381958,
+    "raw_policy_kl": 0.1086652630306259,
+    "state_shuffle_signature": 0.41836734693877553,
+    "state_shuffle_successor": 0.40816326530612246,
+    "transition_shuffle_signature": 0.42857142857142855,
+    "transition_shuffle_successor": 0.42857142857142855,
+    "zero_execution": 0.9285714285714286,
+    "zero_signature": 0.3979591836734694,
+    "zero_successor": 0.40816326530612246
+  }
+}

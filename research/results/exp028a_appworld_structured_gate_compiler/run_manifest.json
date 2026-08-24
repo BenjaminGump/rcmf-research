@@ -1,0 +1,36 @@
+{
+  "config_sha256": "c43876a1a3fb48f042051f6bc9dc273eb991443bbf4f9c0fccfa48ea7255fbf2",
+  "created_elapsed_seconds": 35.89708276791498,
+  "feature_schema_sha256": "bde02dd299cd5dce88e691fa2b969a9973bf83274d2f59002e8b261a863b725d",
+  "first37_used_for_gate_or_compiler_selection": false,
+  "format": "appworld_structured_gate_compiler_run_manifest_7hr_v1",
+  "global_seed": 25101,
+  "immutable_checks": {
+    "parent_checkpoint_selected": true,
+    "parent_checkpoint_sha256": true,
+    "replay_lineage": true,
+    "selector_sha256": true
+  },
+  "manifest_sha256": "23cc48c4dc9930413dc5a2871d421a2b523bbb9fbde18e9a62eb305b69756749",
+  "panel_manifest_sha256": "480a01395f56cce1bb163e9dcb39bef4eb30899dd9b19436474b2a2428cee26a",
+  "parent_exp027b_preserved": true,
+  "run_uuid": "appworld_structured_gate_compiler_7hr_20260823_001",
+  "runtime_preflight_sha256": "710f255b070c00ee8b18af332394225bdfb3c8a1d4efbf2e5d2d0c57c20147b0",
+  "source_commit": "c4cc4c36339b5f491c96bdb0f6f5de922b5fc7c1",
+  "source_hashes": {
+    "corpus_summary": "0d6600484931a7fdccf69b53166265435e8faeea65d6e8d1b1bd272e4e49f03c",
+    "corpus_validation": "5c4457d1cf9d905b35b4af237d37e885164d9a6d243919cf23556355bb85f4be",
+    "decisions": "7ecd54eab5d1f0cabe226f53e98974138afb513bae858e0f30f99f6595cafa7e",
+    "intent_checkpoint": "208e529a219121e20f48a12611f611f0870510833895b61c0515ddf6aecc548b",
+    "intent_predictions": "a609a3b7e47353102fc43a72287cd46340aa5d0f1b862744886facf0068bdbff",
+    "parent_checkpoint": "8af2d1068ee0059c79edf740920f9d506b8a880459ff53656b449f767e5dffda",
+    "parent_training": "f217103d04a0a791af3b0faa2b4514ee5c78445ba8f3dc689fc5d03ec78f3406",
+    "query_signatures": "aaec2a0ca271fec49b307a9fe98e5f38473d95bb52fb399f4bb5be8650807445",
+    "replay_lineage": "6e6d3b54b1a1c5d69508e5a69f433c9c8a749c64aab95137d0c872cec3cce0a1",
+    "selector": "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f",
+    "signature_classes": "ca81fdbd2d76328c95e01373f6ebefd3d042c3ade1ab46e43af3ce37aa984f17",
+    "task_split": "b2e1efc1ea687dc0e2767f281e31c7405fc63e6c8935a9e853b6d0e40b97ee14",
+    "transition_signatures": "38c617a39f351c9e2855e4bc8bb95b52be1d89ae6e7cfb44bc993b3739808d2b",
+    "transitions": "f25f7ed937776cd8f0f373a16cf7869f766bac2a269083aed2998779de31c623"
+  }
+}

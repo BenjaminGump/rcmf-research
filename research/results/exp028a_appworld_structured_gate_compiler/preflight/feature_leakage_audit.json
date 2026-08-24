@@ -1,0 +1,22 @@
+{
+  "deployment_available": true,
+  "feature_count": 186,
+  "forbidden_fields": [
+    "target_action",
+    "target_observation",
+    "ground_truth_next_app",
+    "ground_truth_next_api",
+    "procedural_tier",
+    "exact_api_match",
+    "paired_outcome",
+    "task_id",
+    "state_id",
+    "transition_id",
+    "signature_class_id",
+    "first37_outcome"
+  ],
+  "free_identity_embeddings": false,
+  "target_or_outcome_features": false,
+  "unique_feature_count": 186,
+  "violations": []
+}

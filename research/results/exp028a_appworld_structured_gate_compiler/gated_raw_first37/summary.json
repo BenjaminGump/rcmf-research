@@ -1,0 +1,61 @@
+{
+  "activation_rate": 0.0,
+  "always_on_raw_success_count": 5,
+  "config_sha256": "c43876a1a3fb48f042051f6bc9dc273eb991443bbf4f9c0fccfa48ea7255fbf2",
+  "format": "appworld_structured_gated_raw_first37_summary_7hr_v1",
+  "gained_vs_always_raw": [
+    "0d01c76_1",
+    "0d01c76_2",
+    "29a7b7e_3",
+    "8749218_1",
+    "8749218_2",
+    "8749218_3",
+    "d6ac34d_2"
+  ],
+  "gained_vs_bare": [],
+  "gate_checkpoint_sha256": "7c49ace41b81763df4457c976d8800ccb1af11559b016fb98e04cf851098416d",
+  "gate_off_count": 872,
+  "gate_on_count": 0,
+  "global_seed": 25101,
+  "lost_vs_always_raw": [
+    "29a7b7e_1",
+    "325d6ec_3",
+    "634f342_1",
+    "634f342_3"
+  ],
+  "lost_vs_bare": [],
+  "matched_bare_success_count": 8,
+  "passed_infrastructure": true,
+  "retained_vs_always_raw": [
+    "325d6ec_1"
+  ],
+  "retained_vs_bare": [
+    "0d01c76_1",
+    "0d01c76_2",
+    "29a7b7e_3",
+    "325d6ec_1",
+    "8749218_1",
+    "8749218_2",
+    "8749218_3",
+    "d6ac34d_2"
+  ],
+  "run_uuid": "appworld_structured_gate_compiler_7hr_20260823_001",
+  "selector_sha256": "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f",
+  "single_seed_descriptive_not_causal": true,
+  "success_count": 8,
+  "success_ids": [
+    "0d01c76_1",
+    "0d01c76_2",
+    "29a7b7e_3",
+    "325d6ec_1",
+    "8749218_1",
+    "8749218_2",
+    "8749218_3",
+    "d6ac34d_2"
+  ],
+  "task_count": 37,
+  "total_generated_tokens": 113635,
+  "total_prompt_tokens": 10519521,
+  "total_steps": 872,
+  "total_wall_seconds": 4107.84982713405
+}

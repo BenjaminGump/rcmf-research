@@ -1,0 +1,18 @@
+{
+  "appworld_reconstruction_execution_count": 180,
+  "automatic_launch_allowed": true,
+  "condition_count": 180,
+  "controls_outcome_blind": true,
+  "deltas_sha256": "f8f9ecd548f4853cd06f8a617efd5c33cfee0a660826a60cdf35c4026c819a32",
+  "expected_h100_hours": 0.3925,
+  "f3_selections_exactly_rebuilt": true,
+  "format": "appworld_structured_compiler_one_step_preflight_7hr_v1",
+  "gate_on_state_count": 7,
+  "manifest_sha256": "a1db75749241e3d215b6300a866712140cbedffe1a7b469e09600b9bf900e00f",
+  "passed": true,
+  "qwen_generation_count": 180,
+  "review_threshold_h100_hours": 18.0,
+  "selected_checkpoint_sha256": "95bc2869df1084eb1166cadeb0edfad584814d5fe0c049b3d7beab59b2c4cab3",
+  "state_count": 45,
+  "student_prompt_contains_raw_transition": false
+}

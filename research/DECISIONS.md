@@ -2110,3 +2110,50 @@ Implementation recovery:
   added a tested fallback to the existing policy-forward estimate. No
   scientific condition, parameter, checkpoint, or generated row changed.
 
+## 2026-08-24 EXP-028A structured compiler competitive, not validated
+
+VERIFIED:
+
+- The deterministic paired panel accounts for every clean train state with
+  `464` labeled, `27` over-context, and `8` strict-replay-missing rows. The
+  observed labels are `129/300/35` POSITIVE/NEUTRAL/HARMFUL.
+- The deployment-available structured gate passes on eight heldout train
+  tasks at threshold `0.60`, with `11/98` activations, zero harmful
+  activations, and positive successor/signature/execution deltas.
+- The structured compiler is `PARTIAL_POSITIVE`: on 32 primary heldout states,
+  S1 improves C0 signature and successor by `+0.09375` each and beats both
+  shuffles by `+0.03125`, but is positive on only `2/9` tasks.
+- Gated raw and gated compiled first37 both score `8/37`, exactly matched bare,
+  with zero gate activation (`0/872` and `0/873` turns).
+
+INFERENCE:
+
+- The gate learns a useful train-side causal subset, but its locked activation
+  distribution does not transfer to the first37 test-normal stream.
+- The small one-step compiler effect is insufficient to justify full-bank
+  integration on the submission critical path.
+
+UNVERIFIED:
+
+- End-to-end compiled-memory benefit, a production full bank, cross-seed
+  robustness, and generalization beyond the AppWorld feature adapter.
+
+Decision:
+
+- Record `appworld_structured_compiler_competitive`.
+- Do not describe first37 gained/lost IDs as causal evidence; there were no
+  memory activations in either gated run.
+- Stop for review. Do not build the full bank, train another compiler,
+  p(s,m_transition), Qwen, Stage C2, end-to-end RCMF, or create/move a V4 tag.
+- The only immediate analysis recommended is a deployment-feature-only gate
+  distribution audit without using test outcomes.
+
+Implementation recovery:
+
+- Eight strict replay rows remain explicit missing measurements; semantic-v3
+  was not relaxed.
+- Two training attempts stopped before u2 until residual hooks were retained
+  through checkpoint backward. Two validation attempts stopped before
+  acceptance until the live projection used same-run bare block-input norms
+  and a fixed versioned `0.99` numerical margin. The scientific ratio budget
+  remained `<=1.0`; stopped attempts produced no accepted scientific rows.

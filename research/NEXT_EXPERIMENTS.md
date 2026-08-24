@@ -1247,3 +1247,27 @@ Still blocked: factorized Phase D, full-bank compilation,
 p(s,m_transition), Stage C2, end-to-end compiled RCMF, full AppWorld
 evaluation, and an RCMF V4 tag.
 
+## EXP-028A Completed - Gate Domain Review Required
+
+The train-side causal memory-use gate passes, and the AppWorld-structured
+compiler has a small `PARTIAL_POSITIVE` one-step effect. It does not yet
+support an end-to-end memory claim: both gated raw and gated compiled first37
+score `8/37` because the locked gate activates on zero test-normal turns.
+
+Recommended 48-hour action:
+
+1. Freeze the gate, compiler, selector, prompt, carrier, and all first37
+   outcomes.
+2. Compare train-validation and first37 distributions of gate probability,
+   intent confidence, selector margin, stage compatibility, and context
+   overhead using deployment-available features only.
+3. Do not use first37 success labels to recalibrate or choose a threshold.
+4. Decide whether the submission reports the validated train-side causal gate
+   plus partial one-step compiler effect, or treats compiled end-to-end memory
+   as a bounded negative result.
+5. Do not start another compiler architecture or a full bank before this
+   claim/scope review.
+
+Still blocked: full-bank integration, p(s,m_transition), another compiler,
+Qwen training, Stage C2, end-to-end RCMF, full AppWorld evaluation, and an
+RCMF V4 tag.

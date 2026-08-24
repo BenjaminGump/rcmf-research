@@ -1,0 +1,38 @@
+{
+  "assumed_positive_training_states": 64,
+  "automatic_launch_allowed": true,
+  "conditional_compiled_first37_task_count": 37,
+  "conservative": {
+    "compiler_training_hours": 1.4177777777777778,
+    "h100_hours": 11.948888888888888,
+    "heldout_one_step_hours": 0.6,
+    "paired_generation_and_policy_hours": 4.064444444444445,
+    "two_first37_hours": 4.4,
+    "validation_one_step_hours": 1.4666666666666666
+  },
+  "expected": {
+    "compiler_training_hours": 0.8506666666666667,
+    "h100_hours": 6.128277777777777,
+    "heldout_one_step_hours": 0.3925,
+    "paired_generation_and_policy_hours": 1.3256666666666665,
+    "two_first37_hours": 2.6,
+    "validation_one_step_hours": 0.9594444444444444
+  },
+  "format": "appworld_structured_rescue_runtime_preflight_7hr_v1",
+  "gate_cpu_training": true,
+  "gated_raw_first37_task_count": 37,
+  "global_seed": 25101,
+  "heldout_one_step_condition_count": 180,
+  "initial_model_train_state_count": 191,
+  "initial_paired_condition_count": 492,
+  "initial_scoreable_state_count": 246,
+  "initial_state_count": 256,
+  "initial_validation_state_count": 55,
+  "maximum_paired_condition_count": 944,
+  "maximum_scoreable_state_count": 472,
+  "projected_artifact_bytes": 3527175424,
+  "review_threshold_h100_hours": 18.0,
+  "run_uuid": "appworld_structured_gate_compiler_7hr_20260823_001",
+  "structured_compiler_backward_count": 1276,
+  "train_validation_one_step_condition_count": 440
+}

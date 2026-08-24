@@ -1,0 +1,14 @@
+{
+  "bare_policy_count": 464,
+  "cache": "/lambda/nfs/rcmf-persist/project/runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/structured_compiler/policy_teacher_cache.pt",
+  "cache_sha256": "145306ce71fe645b0c1b9f9ccdd71e25463c54289855d24dc3e3dea7c012c8d7",
+  "elapsed_seconds": 1294.965983116068,
+  "format": "appworld_structured_policy_teacher_cache_7hr_v1",
+  "passed": true,
+  "qwen_frozen": true,
+  "raw_policy_count": 464,
+  "selected_bare_neutral_harmful_count": 335,
+  "selected_raw_positive_count": 129,
+  "state_count": 464,
+  "student_prompt_contains_raw_transition": false
+}

@@ -1,0 +1,10 @@
+{
+  "condition_count": 180,
+  "elapsed_seconds": 1504.6966795157641,
+  "exception_count": 12,
+  "format": "appworld_structured_compiler_one_step_audit_7hr_v1",
+  "generated_condition_count": 180,
+  "passed": true,
+  "reused_condition_count": 0,
+  "same_world_execution_count": 180
+}
