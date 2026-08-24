@@ -43,6 +43,15 @@ def test_reader_zero_contract_and_fixed_size() -> None:
     assert reader.parameter_count() == 4 * (8 * 3 + 4 * 3 + 3 * 8)
 
 
+def test_reader_accepts_bfloat16_residual_with_float32_parameters() -> None:
+    reader = FixedMemoryReader(model_dim=8, latent_dim=4, bottleneck=3, layer_count=4)
+    hidden = torch.randn(2, 4, 8, dtype=torch.bfloat16)
+    latent = torch.randn(2, 4)
+    delta = reader.layer_delta(0, hidden, latent)
+    assert delta.dtype == torch.bfloat16
+    delta.to(torch.float32).sum().backward()
+    assert reader.layers[0].output.weight.grad is not None
+
 def test_zero_initialized_hooks_reproduce_bare_and_skip_decode() -> None:
     model = _Model()
     reader = FixedMemoryReader(model_dim=8, latent_dim=4, bottleneck=3, layer_count=4)

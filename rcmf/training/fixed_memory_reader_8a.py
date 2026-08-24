@@ -32,9 +32,11 @@ class _LayerReader(nn.Module):
         nn.init.zeros_(self.output.weight)
 
     def forward(self, hidden: Tensor, latent: Tensor) -> Tensor:
-        state = F.silu(self.hidden(self.norm(hidden)))
-        memory = self.latent(latent).unsqueeze(1)
-        return self.output(state * memory)
+        input_dtype = hidden.dtype
+        work_dtype = self.hidden.weight.dtype
+        state = F.silu(self.hidden(self.norm(hidden.to(work_dtype))))
+        memory = self.latent(latent.to(work_dtype)).unsqueeze(1)
+        return self.output(state * memory).to(input_dtype)
 
 
 class FixedMemoryReader(nn.Module):
