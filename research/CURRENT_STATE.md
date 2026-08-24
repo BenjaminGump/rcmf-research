@@ -1916,3 +1916,24 @@ Decision:
   integration, another compiler, p(s,m_transition), Stage C2, end-to-end RCMF,
   full AppWorld evaluation, and V4 tagging remain blocked pending a
   deployment-feature gate-distribution review.
+
+### EXP-028B ungated structured compiler live-specificity failure
+
+- The frozen EXP-028A gate inference contract matches exactly. Heldout-train
+  P(POSITIVE) mean/max is `0.288031/0.943520`, while first37 live mean/max is
+  `1.00525e-8/8.75569e-6`; all locked thresholds activate `0/871` available
+  live rows. Diagnosis: `broad_feature_state_distribution_shift`.
+- A balanced train-vs-live feature classifier reaches heldout AUC `0.997624`;
+  `64/186` features have absolute SMD at least `0.5`. The largest shift is
+  `pair.documentation_compatibility` at `-4.8389`. UNK rates remain zero.
+- Ungated first37 results are U0 matched bare `8/37`, U1 correct structured
+  compiler `0/37`, and U2 transition-shuffled compiler `2/37`. U1 has no
+  retained bare successes and is two tasks below its shuffled control.
+- Decision branch: `structured_compiler_live_specificity_failed`. The curated
+  one-step specificity signal does not survive complete live ReAct
+  trajectories; gate recalibration alone cannot rescue the compiler.
+- All 168 official AppWorld 0.1.0 `test_normal` tasks have historical per-task
+  bare outputs, so the preregistered untouched fresh-37 pool is empty. The
+  manifest records `insufficient_untouched_tasks`; no replacement was made.
+- Structured-compiler work, gate tuning, full-bank integration, Qwen training,
+  Stage C2, end-to-end RCMF, and V4 tagging remain blocked.

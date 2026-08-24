@@ -1,0 +1,10 @@
+{
+  "automatic_launch_allowed": true,
+  "conservative_total_h100_hours": 4.4,
+  "expected_artifact_gib": 0.65,
+  "expected_total_h100_hours": 2.9,
+  "format": "ungated_structured_first37_runtime_preflight_7h2_v1",
+  "review_threshold_h100_hours": 8.0,
+  "u1_projected_h100_hours": 1.45,
+  "u2_projected_h100_hours": 1.45
+}

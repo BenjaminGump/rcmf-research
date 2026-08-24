@@ -1271,3 +1271,27 @@ Recommended 48-hour action:
 Still blocked: full-bank integration, p(s,m_transition), another compiler,
 Qwen training, Stage C2, end-to-end RCMF, full AppWorld evaluation, and an
 RCMF V4 tag.
+
+## EXP-028B Completed - Stop Structured Compiler
+
+The gate-distribution audit finds broad deployment shift, but the decisive
+ungated end-to-end control is negative: U1 correct compilation scores `0/37`,
+below U2 transition shuffle `2/37` and U0 matched bare `8/37`. EXP-028B reaches
+`structured_compiler_live_specificity_failed`.
+
+Recommended next 48-hour action:
+
+1. Freeze the structured compiler, gate, selector, prompt, carrier, and all
+   first37 outcomes.
+2. Lock submission claims around clean provenance, replay validity,
+   signature-balanced selection, oracle raw-transition one-step benefit, free
+   carrier capacity, and the negative live amortization result.
+3. Make one explicit scope decision: run a separately preregistered, tightly
+   bounded fixed memory-reader adapter study, or stop architecture work and
+   focus on paper tables, claims, limitations, and reproducibility.
+4. Treat all AppWorld 0.1.0 `test_normal` tasks as exposed development data;
+   no honest untouched fresh-37 subset remains.
+
+Still blocked: gate recalibration, another structured compiler, full-bank
+integration, p(s,m_transition), Qwen training, Stage C2, end-to-end RCMF, full
+AppWorld evaluation, and an RCMF V4 tag.

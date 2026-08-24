@@ -1,0 +1,599 @@
+{
+  "all_test_normal_count": 168,
+  "exposed_task_count": 168,
+  "exposed_task_manifest_sha256": "c94889a80e22284cf0c805c71586488c57540e30e381c54b9bf36d2da308146c",
+  "exposure_definition": "Any prior per-task test_normal evaluation is exposed; the historical full bare run covers the complete official 0.1.0 test_normal pool.",
+  "exposure_sources": {
+    "024c982_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/024c982_1.json:c10560c776cb003fa1382edcf221713397ee0f40d2e7d33981c2d28a67f3ca39"
+    ],
+    "024c982_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/024c982_2.json:b1676190025b5a20a1a437040d088f4cd5f471d2fcee77e6d43c151c0276db16"
+    ],
+    "024c982_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/024c982_3.json:fdcf36215237f1252d9250c516cd3a8243b5d06a29e843f22ba53085b5842e50"
+    ],
+    "042a9fc_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/042a9fc_1.json:b72e798710bcf492cac1e8e3ed30a9f35aa09cf021b39fff9c97d7faf67c38ef"
+    ],
+    "042a9fc_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/042a9fc_2.json:d2f3bf2841d4e6a8902bfa75fe159f77cba234aeaacdd2ef4cee22c43acf9043"
+    ],
+    "042a9fc_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/042a9fc_3.json:e380c0a97b7aced8a0bb415896a426abab8ae5e61a11bf0c56efdacdc46b09ad"
+    ],
+    "09b0ee6_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/09b0ee6_1.json:2dbc9029b6cdd2670263c8efd3d8005195ea7e11a8a47b58a757ff655efc8df5"
+    ],
+    "09b0ee6_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/09b0ee6_2.json:a42dd6ddea70c3cfa40f370a9c6ff0b68654539e2ce17ac7f2352dc9ec608e32"
+    ],
+    "09b0ee6_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/09b0ee6_3.json:5265c1eb9146d5897848ea98f7c602f9498806502eeaddcdc229d9d6bf5ebdb4"
+    ],
+    "0a9d82a_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/0a9d82a_1.json:6bf17603ff7eee063ebab51d0cd4ccea4780a3797776dcf6b08e35fc22b94ade"
+    ],
+    "0a9d82a_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/0a9d82a_2.json:164f8b27fc448f555e02e08d4138f39820fb9ae51b43707bd3a6bdbbdc83e5d2"
+    ],
+    "0a9d82a_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/0a9d82a_3.json:c8a45ae88f77d902bb1da20b78e7357b77e788f17b0e81d7f807dec19745d4a0"
+    ],
+    "0d01c76_1": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/0d01c76_1.json:d6bf92316de5a0087081178992ac800b641cc9317f433ea9291310f10fdc1043",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/0d01c76_1.json:5c62791acf675b5e1e33ca3c1bf3b06bc46079b9713bab5616a77a58d88494b8",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/0d01c76_1.json:b33bdb5fd2c292ae4680dcdd383dc68420b56d8fc7194e5b80648e3ce5012522"
+    ],
+    "0d01c76_2": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/0d01c76_2.json:6bdc00a3c0ddd0f487ffa6d4d2381955c6664c762fcb91ec5fe62d54fe42f28e",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/0d01c76_2.json:f9f436138540be9092dc5d78810e5b082a8533a4d5a9a7ffb1a1e33b6d947b26",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/0d01c76_2.json:eae42b117fd15656ba3f9a4719e577c06d7d27fc31b846a7e5102b67ba90b7ff"
+    ],
+    "0d01c76_3": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/0d01c76_3.json:b3f773446f735b335f910c62333cec95f63332c61182765f5af564f5127507ba",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/0d01c76_3.json:d200bb231d27ec71dad4ec888eff7b80da87beecc228007eb3db7025d0bb530f",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/0d01c76_3.json:c87d34aebbea025d3cb2e2f33751be941660fcd2e9d24d5952ae3094d2bb81cf"
+    ],
+    "0de03ea_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/0de03ea_1.json:5ca654d9068ed96500573f2ae012baa9e54d889f74713267a7448297ec8badbe"
+    ],
+    "0de03ea_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/0de03ea_2.json:fb4fa624413cd384bdf489a1977a7a043e0d03bc0ec35e4bf6ed9b4ca36331e4"
+    ],
+    "0de03ea_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/0de03ea_3.json:9f811d1bf43f9941ad40da1934353802dc6e09e37ccb443081761de1901eba1d"
+    ],
+    "1150ed6_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/1150ed6_1.json:f61c21a106395f41fcb500262e6906281d6df512a7f915532820b1c4c085e84c"
+    ],
+    "1150ed6_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/1150ed6_2.json:76c595f62f45088e43e562b94ecf63455d184d203cd0f4b9683730903cfd7c7f"
+    ],
+    "1150ed6_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/1150ed6_3.json:fb833b2327a9d89168aa5b3445c10b9945b795846468494ade80688c37f8f8a8"
+    ],
+    "13547f5_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/13547f5_1.json:c7f2cb7104f693ced29d59d642691e4ee97267581aac9c33abf5a09017886ffb"
+    ],
+    "13547f5_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/13547f5_2.json:8a382986ff488e1c1be6f284c0cbe3f69c9fd01bed4270f86ec0375f755e9170"
+    ],
+    "13547f5_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/13547f5_3.json:466784d7637c48515ddcf2c08321586860ade54823b30d4d644074da11d2cb87"
+    ],
+    "166f4ff_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/166f4ff_1.json:bc1eaa31ad1c70fca60333020cd1710ab2a3e9aa4d5e948fbff36dda0fbad035"
+    ],
+    "166f4ff_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/166f4ff_2.json:a69bed9477dbe64c23a402edc03115883be6f4634554e2cb9bb3b49c1af71718"
+    ],
+    "166f4ff_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/166f4ff_3.json:dcd504914734aa7cd85a7693af2306616e3673ca7ba384e09bed285270d90b24"
+    ],
+    "21abae1_1": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/21abae1_1.json:b9b19a56dcfb627bcc202704234b573dfcbf0cabf4ba8c7097cb80059efafe92",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/21abae1_1.json:d127ac21f0b541068d483083d0a75c00bf536c6e300a08ec3f1d3f3e9229819a",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/21abae1_1.json:c647d1888c49022408dbe910db625cfa184559b7f56147d08c70d02311760135"
+    ],
+    "21abae1_2": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/21abae1_2.json:f37ced367513f1f44bb35085a8083e91e8b168e29b59193f0e6aa7680a3cb825",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/21abae1_2.json:8cef8536c42109a705b9850467f46529ed24b213e33a2d3234f18ea519377d2e",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/21abae1_2.json:119cd66c082b861873a771956f4d48c91d19d0433dddbba2f3da979db6d52e4a"
+    ],
+    "21abae1_3": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/21abae1_3.json:0c50a1f6f44f44f404fba123f9d2cfdd0ff7979945df08a9216b1e74cbc7e015",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/21abae1_3.json:c20ef1126cb6a3365a7b8e763aa035302adb2b7af1c58f8ccc96890e6557e43e",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/21abae1_3.json:532f5637869d511a48484f32448427938c750b71e43d029f6e54a5cf57ae94fd"
+    ],
+    "270f1ff_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/270f1ff_1.json:4241d55cf73e998cacea516f4088a7aae2db5418c2c91b943eb67a70e5670105"
+    ],
+    "270f1ff_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/270f1ff_2.json:a966c7fef8b7707fce1aed6f9dccde58746b7aec82ee4304da54eba22cd32852"
+    ],
+    "270f1ff_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/270f1ff_3.json:d12c29a007a79e3964afdd6218a7bd9b8d0e14b9b4d62a759d8599c1c3288515"
+    ],
+    "29a7b7e_1": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/29a7b7e_1.json:d7a88ad7fdf6c95a8782fcfed0e416e833addf1d79d9cb845dc61bc8fec9c81d",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/29a7b7e_1.json:ac3c1435c3abb1df911d120c2206426136ba1cda2e0a1cdfe83d981e7b2c45ab",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/29a7b7e_1.json:88905f0186b9b229481539646e78f12548fe5d3b646abb6b6e29718c1f1cff43"
+    ],
+    "29a7b7e_2": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/29a7b7e_2.json:ca95a73bd695049114bc8650ced97c06c9229407345650425ff97028a12d1869",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/29a7b7e_2.json:de001a88456f46df840f691bc62196513c28152fd87845948250dd1a4bc03026",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/29a7b7e_2.json:22307ca04261dbaa889fc5f3dccd21f40dfd3439915623ee5a9dee8959115bf0"
+    ],
+    "29a7b7e_3": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/29a7b7e_3.json:c65a0aeaae4bf808bc49bb3062fce52996f4bb73fdf7a35226613ace2babc78c",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/29a7b7e_3.json:e152a29ce3d7a7aaa7faecd1d59a5a87bdaca2b0ea68629bed3223cf33992aae",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/29a7b7e_3.json:eb1a7cf314f5df5a274cde993db9249c80747d4e84fd5f557c3657709e6964b0"
+    ],
+    "2c544f9_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/2c544f9_1.json:da0302a2be5719d010ace9e819448750a6e7ecf2e7836f33f0ead47c75451720"
+    ],
+    "2c544f9_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/2c544f9_2.json:f591dd4101fb633f8f2cdf32391c4ad212e81340e9ea318a923f6eb3e969428f"
+    ],
+    "2c544f9_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/2c544f9_3.json:1d7cc867b7dda733956fa3edd1f7a4e74086053f6fe5492c8b24473d9e8290e7"
+    ],
+    "2d9f728_1": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/2d9f728_1.json:fb6ad5fe11d19e66fce4531305fc8b530a2a9d9c0305eeab833de9abd4191c59",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/2d9f728_1.json:5542e8f1e946b069953b052b337d059e3d9d80f344862167e14cf2d2d434e4a8",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/2d9f728_1.json:aecadcc221db94fdfa8b060b63769e1088ee0c9b690b4150c2b97526e3bda25d"
+    ],
+    "2d9f728_2": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/2d9f728_2.json:3b043d110670eb6da6e701ee049c6733326e63439a9d9d2bcf42e381f03f1853",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/2d9f728_2.json:7a5e79d9d16c8cf99e3347dae78fada7253b250762121809482813d71d903b4a",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/2d9f728_2.json:17b775c0aaaf44188dd8daf5ca27effc10310f9131d64196db88cfeec37a1228"
+    ],
+    "2d9f728_3": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/2d9f728_3.json:a78e492c3f5751c53737755fe9634b1c86866a6017098626f3cce2df8b5158b0",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/2d9f728_3.json:e23ca07849056140f7d63f7f23e068d769315855c58b043dfd993aff820bd653",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/2d9f728_3.json:5fc86c791522bd6c95e35e87b5a031a95248c0f7d84abef1285ae147d54d155a"
+    ],
+    "31dc501_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/31dc501_1.json:c2276c35bf9a1c81057c5523ff86cd378d352a7104c37ab2569ad94f7adfe625"
+    ],
+    "31dc501_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/31dc501_2.json:963334cb6c415eb70686e94136ef1fd5b34b9757f905960d5cb97d6397e4159a"
+    ],
+    "31dc501_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/31dc501_3.json:d6591e9c0361ab407bd580d95419b9ae3fb6c62ccd57b821bbf6795dffb985c4"
+    ],
+    "325d6ec_1": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/325d6ec_1.json:8b9ec4a46cc2388358dcbdd4fe0a26a4ffcca2a1eeec2cb60e9b434b2d94f48e",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/325d6ec_1.json:f2ded06c089a0b398ecbf66de3a6b76003af8c33e398f3e195a468a02f06e7fb",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/325d6ec_1.json:86fd85515d774a16b280714955b6243a4b82c4c0e6f554752264751455dffff7"
+    ],
+    "325d6ec_2": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/325d6ec_2.json:439ea8c5c530c25f83b77280892c1a0f08f233312f928b834f8ee17bfdd187a0",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/325d6ec_2.json:cd431cc5affd640ea8099632705e98fbeb40c8fb197bf2efe1e07bacb3286d37",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/325d6ec_2.json:928f7fc1a0c2d6b7ba1190648b3d319d7d84943d312ccb0d5c728144fb4a45a6"
+    ],
+    "325d6ec_3": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/325d6ec_3.json:3a3aa669d99b6b6624352c936a514f7bc910b09d73817acee65d9237b3d67821",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/325d6ec_3.json:c4fe56589f4ad70451cc8f69c401ca1ebf4ad42bada4cef7e6f3bb78b0ff7c22",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/325d6ec_3.json:8b973b9eb98e3b75a478fd7c4c67cab5219f68e4d5b9de82fd3b96b6b35bf951"
+    ],
+    "32616b5_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/32616b5_1.json:a188fcd248df1c8d5ddfe1155980a878a903b4e752b07fd36f24814202b617a3"
+    ],
+    "32616b5_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/32616b5_2.json:5300eb939a6fb5bde334ec217df0f710d1d5264665199503dddef1d75f4ba66f"
+    ],
+    "32616b5_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/32616b5_3.json:aff50ea334c23844bd43d1b18a1108108f15fd92d9482350d8a1e98232f55998"
+    ],
+    "3aa1a22_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/3aa1a22_1.json:ff007e2a28d195b3d93ba33fdd3c3d96d355928d2da0a6f4416a9d46c0cedfb5"
+    ],
+    "3aa1a22_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/3aa1a22_2.json:ebab8dcc4eab10588bc9f6bee31ed0503c3a8b5c95f7ca5a6e1135bfa335686e"
+    ],
+    "3aa1a22_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/3aa1a22_3.json:745be9cb354ff85c4b0915051d385ddec723231b97164cbc86a88bcb4b4c0452"
+    ],
+    "3b8fb7a_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/3b8fb7a_1.json:c6a8a9c73233cb4cdfa140ab3c5617bacd82522c310da1ae19c5db88c2d071b5"
+    ],
+    "3b8fb7a_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/3b8fb7a_2.json:ec2f73c65855286823eab3588d77f11989353ebb4e77fa8cce78daff5cb9eb1a"
+    ],
+    "3b8fb7a_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/3b8fb7a_3.json:24792e3cb2637e0583fb4f90fd6de4f8c236c2f0b4122e654c463214938db287"
+    ],
+    "3d9a636_1": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/3d9a636_1.json:a8de00b5b3f5613bebc1c0eab70e09ccbd35c1cfab37270462a3405fe53730b8",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/3d9a636_1.json:bc0aad2fb014da5d13900f6f8a39be774252c7b128301678fb8caab31d92e390",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/3d9a636_1.json:7f347d9a8e77784ee16a48c1e9e5e92f65c94e856bd79ce5f6a858eec1a56c8e"
+    ],
+    "3d9a636_2": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/3d9a636_2.json:7a991af8e0dcb23fb5a7e744822f2778119d77b0d20a227693b117db61d405be",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/3d9a636_2.json:643109fb98c2c53bd6080d89088d7137bbe9c9c7c77e2d601a5d28717a2bb85b",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/3d9a636_2.json:fe268ae2d0480909a8476e8e768f4ca750a1fee80a81e285f4d29b34684340b5"
+    ],
+    "3d9a636_3": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/3d9a636_3.json:45f65bb891dec46e42299f96d0983560ded0a7b0b156fadcdf9b26f8c4f90bde",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/3d9a636_3.json:16b4135dc24a2999491dfb02e5dccbf82a6ca1ef19ff7d815535e9d0d15dabaf",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/3d9a636_3.json:5e2dfe2965e8493adbd7cf8e21dee7ed6abf8b2f32cc2bc542363128f5edf963"
+    ],
+    "425a494_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/425a494_1.json:6018287b5b9c3309367a99fb812d02e1f16dce188f206bc352f6f308fd58aefd"
+    ],
+    "425a494_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/425a494_2.json:609e24931f88dedddfbcb72e634ebe8605bb5ed986622d30e65c3c8e70d6850a"
+    ],
+    "425a494_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/425a494_3.json:983d0c1952920e096de2ea4d3c3bd0d8bce9a59141ed99e3a91eb1cbd98a5c87"
+    ],
+    "522e5e5_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/522e5e5_1.json:f44ef76f46ece66ff2b534873035ffff38a019a714f1f8f12f4ff3fbdb88d02b"
+    ],
+    "522e5e5_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/522e5e5_2.json:835b0a53099766123ca300c01024e9d6503acc13c2f7b7d1956a23cda025c8d8"
+    ],
+    "522e5e5_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/522e5e5_3.json:68dfcb3eb90468139cb0830652efad72803dcb23bced98b8d08b3eec928266d4"
+    ],
+    "552869a_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/552869a_1.json:816d97af933644d2cc5fdbaa72c1b7b1bedf47da86d24cd026478fad29431f23"
+    ],
+    "552869a_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/552869a_2.json:b7c9c1c73bf7d5a70f8fcb30824f799361630c5199d65fbfb31f8c7b7059a4a4"
+    ],
+    "552869a_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/552869a_3.json:a04f0f3ac3b5b44f64ba38419378a7ad2c917f84acc60eccb9843e17446225fa"
+    ],
+    "59fae45_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/59fae45_1.json:becd15ab8b3bf32eb430af274395a9af0958b4283351f13ffeeeaa33f159577e"
+    ],
+    "59fae45_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/59fae45_2.json:518a0ad6be1d06910a16995abfc6b66823ea8e0302e7795ccb4b1bc748b47bdc"
+    ],
+    "59fae45_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/59fae45_3.json:37b46415346b00814c4412b828a227393be3c18f94a82d5b6032ae9580cf1ed2"
+    ],
+    "5a83b05_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/5a83b05_1.json:2ebe4a62160283d393a88d2ba0d88361f84363977afd8daf9770d75a5acbd405"
+    ],
+    "5a83b05_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/5a83b05_2.json:aaf5d46329a4b2d39ff59e4cf8664223222074d21404e7a2fb5c454760d03122"
+    ],
+    "5a83b05_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/5a83b05_3.json:841f480e1ce218f9b86e293d3179b3cc060f16e63b90a544d88e5cd47a00b229"
+    ],
+    "634f342_1": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/634f342_1.json:a3a7298a6a1e611cea2042a3adde5edbba0912004563b2a12c46d3bed24d38f9",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/634f342_1.json:fc6b2bc11810f43b278241107b0fc3661bdc065eb0b2a98e30e4b3eed063a96d",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/634f342_1.json:0459b933450023a33ef014db0a135669a5601a78178d7620040d546ed29cc6f2"
+    ],
+    "634f342_2": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/634f342_2.json:be97d01f5d8f8fd7aec403d6cc7a6e4b8033927cb3efe9862ee5ec7e3356b332",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/634f342_2.json:79121ecd8e8530eadc4c329b85da56409d7dd12168a65cafc420d379e99e6145",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/634f342_2.json:5c6195021148be64a7b7d794abb80a935d0c03bc68711e2d1a58094e5dfcd9f6"
+    ],
+    "634f342_3": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/634f342_3.json:2b65498ca7abbb8cb3d8ed6a26de0e11168293f3d0c9dfa12b248bc1fd0e4cc1",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/634f342_3.json:bb3cc9ef9af7edc706c689577f33c8a5573f1daa409008195e59ed05d59b955d",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/634f342_3.json:4535bc3d8836c85303628cd7173e39792d3b1460f0bfd441dc76b23395f56a16"
+    ],
+    "652485c_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/652485c_1.json:d896efde0a785ac74744b77b3c4623d69452c6d51fd637a00b0657fbe5124d69"
+    ],
+    "652485c_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/652485c_2.json:70b12a3e6be528c52ce6295016b71449ef6b9cfffa79b2648d011fd2f9f63805"
+    ],
+    "652485c_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/652485c_3.json:aca840580134cbac86bb06ccbd84f37d866a367cddeb02f44e55ada3a4cea9a6"
+    ],
+    "6b6ca61_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/6b6ca61_1.json:bcf0c9344dc8339ce9ba4f48d0cda53952d1e0b25e316617d81e53c982c8ee8c"
+    ],
+    "6b6ca61_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/6b6ca61_2.json:9f09adfd6a87ed8b2c614881219b32e6d8a20b10e569508fbac5a2adc4bf1713"
+    ],
+    "6b6ca61_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/6b6ca61_3.json:61d6854466cc18fb52f9022957b1567543c510577f04fca295d258dfbbe1985c"
+    ],
+    "6f4b9a5_1": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/6f4b9a5_1.json:a55b694e8b84f184cfb32dd97349f3baa5e23f724e414d24777eb44b2cdd0e74",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/6f4b9a5_1.json:6049d6d1a8324ac2b0739d4c09a9676b87e0985e9c2cd9a023cdeb1f423aaba0",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/6f4b9a5_1.json:057fe1ee9a8632a6853665335c0dc1ba406e6fa14bd698780682468b81883e74"
+    ],
+    "6f4b9a5_2": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/6f4b9a5_2.json:a8add75dcc8e72de304b14c015ff655f4e51e51d00cdebf55051fdfcf023b6af",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/6f4b9a5_2.json:26193f2f54fe785b9b6aa19aadc883ee6e7e8dfd9501c9649723995c34b99935",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/6f4b9a5_2.json:d1c760510c79a0ae62d92addd907d1c38e1e9fca3b3b1efd51fd21e731ee44c7"
+    ],
+    "6f4b9a5_3": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/6f4b9a5_3.json:57f6c80f76141fb4012cf2142c42d65a074bc5155dd85b5afa43db447880e60c",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/6f4b9a5_3.json:096846b3a0e819498ade4c6558292ac21f8c6136ff9f504f509a185035ffde0c",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/6f4b9a5_3.json:0511c07c98aacfd77aa3f138782e7a95a803d2d863f4c3358dc72a230b520d12"
+    ],
+    "7847649_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/7847649_1.json:e6d881937c54d982f86f4d734c9d84cdf4b137c43303d867f99383f024e19786"
+    ],
+    "7847649_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/7847649_2.json:4beac2bef6a534478529581146c83a44c293367a761aead9456e00de09dc4ff3"
+    ],
+    "7847649_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/7847649_3.json:b22262a2c3d5981787cf5c07f2d988db8d6c4caab469dd59b17e272406062995"
+    ],
+    "83a7951_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/83a7951_1.json:8d63001873d3b80b4235df245e5d62aa97f72449bbae24503469a8ebed1a74d0"
+    ],
+    "83a7951_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/83a7951_2.json:ed92562454100268e38ac917c4ebe58f6f7bd2314aeb0847a1b1a167d7a26ec0"
+    ],
+    "83a7951_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/83a7951_3.json:e3be38438696d4a26c3bbeaa1d2d465f5e5924545a98afe5a687e3b5a210fdbd"
+    ],
+    "8749218_1": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/8749218_1.json:1a4c33934ef7a059a8d7d0925db20500760a8696eeab88eaaa25ecf75ef85d79",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/8749218_1.json:7cb27ba262b13c4daec10244a97e1b76c16cf6f91f140dc44df43ded1750f651",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/8749218_1.json:6731ce7bfebefaa52fbacf9455d923788c20c1ffcc929d0967c629dcf95b8e12"
+    ],
+    "8749218_2": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/8749218_2.json:9fd57c7c416b11647dec151dcec45b74b13aa8c5d8dc8d4416e4387c952c1361",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/8749218_2.json:1a78aca713e3f2f8ad7da1b6590140e867d29c20fd38db12f373c7d39c082eff",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/8749218_2.json:67b3b2ae621f5f2aff984adacb6c731fea2aa1edd2f901eb0b87ec4d1428d629"
+    ],
+    "8749218_3": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/8749218_3.json:0fce429c7372461c5fe832cf319795707133dc1783b15bc379ff689edbadf959",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/8749218_3.json:1aa60cfd77d87ff2cd9fcd2ed41192768f0889d43dcfba9a2c1d55f89adf1bf0",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/8749218_3.json:d166f5b2a5453ebd01f1814986037e6295303107803793e2400dc163ec299d4f"
+    ],
+    "8ce6779_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/8ce6779_1.json:5dcfca8617757d255b69eb3edaa5ba5321e8973cee0f3f2198b1f6fa5b00ac92"
+    ],
+    "8ce6779_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/8ce6779_2.json:636038ec502eeda757713f61daeeca42518356d49f37a761dcc88d051219cd6f"
+    ],
+    "8ce6779_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/8ce6779_3.json:fb87d9906755aeb6020e75b74b45a61a34196826af986bb4fa744d19f834677c"
+    ],
+    "9016950_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/9016950_1.json:0cb22c08a216ee09dbcd82b2a4b97863cb1031975855536aa6b6e93fc35f10c9"
+    ],
+    "9016950_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/9016950_2.json:727af08cc6c32c5267fb44647813dca504898ec0a232b16e11d387e00a19f226"
+    ],
+    "9016950_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/9016950_3.json:ba375be13df777ffecf53425c68e103485b59ceddb940bd63d90182c291f783a"
+    ],
+    "90adc3f_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/90adc3f_1.json:fa43dcd85e7a2048193c4680e4a4a72896b02a7ced37baeee63e63571a048451"
+    ],
+    "90adc3f_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/90adc3f_2.json:9fe51b420e1fcc9d7e1ae85bebde310ed344ca334cb93b808a065b0b885a1433"
+    ],
+    "90adc3f_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/90adc3f_3.json:c505a1c7f5317f95a89e8e500d71b0127bd1283c558f00ef3fb337e89599f987"
+    ],
+    "986aa4e_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/986aa4e_1.json:6fc6a743c629c0755d4f2788b5716935792795072f1c6fc089e7c92af6a5f93b"
+    ],
+    "986aa4e_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/986aa4e_2.json:5450eeeafdeda9b13bdea009a5fc0ae2ae6409e3019dd647eb394f44a447a349"
+    ],
+    "986aa4e_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/986aa4e_3.json:d44c547028ed50110755f58209ade12a5b561bc3c2d755e048fcf5c4b9b54d27"
+    ],
+    "9dabbc9_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/9dabbc9_1.json:bdc65c890e304c4c3f2ef8e7dc92d3fc4b1e5325a74d8916abd400958fd92892"
+    ],
+    "9dabbc9_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/9dabbc9_2.json:9793d4cf9ee9063d48d94ba1edaff6a4648660936e7d82864b79fd13ab5c8cff"
+    ],
+    "9dabbc9_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/9dabbc9_3.json:ecbfd94a30c2457b147e9234ebe6c26f5958fa07d3078457cc5d742cf82baf17"
+    ],
+    "9ef798c_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/9ef798c_1.json:70f740e39782fb97ba17dc022f913c9eafdc24299d48f43963e18c1dd6c9bf8c"
+    ],
+    "9ef798c_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/9ef798c_2.json:70aecfc2e40f17f99d60ab7625b8e73d8bbc7abe376331c0842c93fe3d654693"
+    ],
+    "9ef798c_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/9ef798c_3.json:fb662227b550c9707e2005a6724869adf99d9536280f0027606614285439362b"
+    ],
+    "a30375d_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/a30375d_1.json:3265be43815413667dfcf3051f12bd17af2c8af2e97ea2482baefd1c3ceee34f"
+    ],
+    "a30375d_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/a30375d_2.json:2743590d1daa73da3a1005a8e84f82f745f90195b2898122f98bb6d9c44bf9e4"
+    ],
+    "a30375d_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/a30375d_3.json:48b91b8c77411921bc260836e9909062856bb1847af69c6177558b12c6f8d50d"
+    ],
+    "afc4005_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/afc4005_1.json:fceb1eeccfb315ae95b8caac081ea26c3f0bb0513de477ef9b8cce3fa58755a5"
+    ],
+    "afc4005_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/afc4005_2.json:9eb33a2ab826237caded5617e59d337f33dcdab8b6463cc9df48c294d462b043"
+    ],
+    "afc4005_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/afc4005_3.json:c6e6c8185b32f67298fe3df6f8f1a1fb3afd2b1397f2de3bf982553067aadfb0"
+    ],
+    "b6d1104_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/b6d1104_1.json:b2e36c3373b68c57478f62211cb3d056ab552740b413241e8b2b583b11f73dd3"
+    ],
+    "b6d1104_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/b6d1104_2.json:c54abf90740e42fa23ccb6443b3932d03eebc26f24ab6b36adb5302838ceb235"
+    ],
+    "b6d1104_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/b6d1104_3.json:48b22226fed99da5b011a83079ddec301d3579b110f3d94132ec3bc4f009702e"
+    ],
+    "b9c5c9a_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/b9c5c9a_1.json:cf9d08ba892488636fe7a3d7c10408fc43ff2ba4bfeaa44c60c39136390a837c"
+    ],
+    "b9c5c9a_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/b9c5c9a_2.json:5a427889b478e1c698c8497d68f47f90a0c3331eab77feb9e3648e60befd4133"
+    ],
+    "b9c5c9a_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/b9c5c9a_3.json:f2e0eb0dba9cbf7d8dd2d364390e113e7797b35b610fe8fc91e548b5d5adb658"
+    ],
+    "bde252e_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/bde252e_1.json:580b7bf32f521d437701aca4c83baa4e7427f68ae4c403bfcb4d1fe45ebb6fe4"
+    ],
+    "bde252e_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/bde252e_2.json:a08730033bb0de79283885d7565ee7d4aa7fa7d53daec786df9147e6bb257701"
+    ],
+    "bde252e_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/bde252e_3.json:3f345ba9fa389468d21e78cf462bb82150e4c61301bca8b617ec75fba927d464"
+    ],
+    "c77c005_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/c77c005_1.json:19772b6d03afe5c8a776473a8001b86c9e87f451ca5e52d8db98926da36ab58d"
+    ],
+    "c77c005_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/c77c005_2.json:08513fbf8310143773d73bcbbab9473d05752bcfbfdf278bcbb1fd5eaa7d8888"
+    ],
+    "c77c005_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/c77c005_3.json:47e13919916c35e705007a20f2550d4fb158ae8360165a1461ac689872a235df"
+    ],
+    "ccf4b82_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/ccf4b82_1.json:58e4298ec7353a9a7913fa2b12ed806e380e61d563da02622f786783277749fe"
+    ],
+    "ccf4b82_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/ccf4b82_2.json:acaaee7d114f75d04d5ed0df99968826aa6314e9df0158264afe1de89a413c54"
+    ],
+    "ccf4b82_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/ccf4b82_3.json:178d21ef42f7906afbbe14c6f9fddb4f37c4031c318a9bf4c090eef8a813eccf"
+    ],
+    "cef9191_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/cef9191_1.json:1b5b894f982431c3eda827e8ac7d5a364138ce5f1307fb2975360f249bab04d8"
+    ],
+    "cef9191_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/cef9191_2.json:7827dfd090847ad3d5d09a9324fd65530999e7bb8d7dbdf945b7e02e39154c46"
+    ],
+    "cef9191_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/cef9191_3.json:b6bb44e40f735a112305c586cfbce430e69d48d31753e88ba135fa41ec7b65fc"
+    ],
+    "d18139b_1": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/d18139b_1.json:2715888d9e14d806827488a2c67b3853874cc9230459a4030939e4ee68bc9904",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/d18139b_1.json:07b69b3662484cb34d74391345db5265c48918a13c138ae7ac1da72015181a51",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/d18139b_1.json:e53e9d72af6a5af2ec622c2bacbcccfc0977699450282204a69d610bdb4e83c1"
+    ],
+    "d18139b_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/d18139b_2.json:3868ec46de1741ef8dcbc958affc7c8016432c84d23686246018d00c26503e32"
+    ],
+    "d18139b_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/d18139b_3.json:ad528c6c2a907cd76da84dfbf9d00d9b6f98941ae63d0f20413837df29718cea"
+    ],
+    "d194965_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/d194965_1.json:7ce1573eaeba5285eb72df7033b7503adf363bd639d88cb5f52a19e3a087c906"
+    ],
+    "d194965_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/d194965_2.json:a0180e82c173cb7738ee6287e174091f53d4cc8d47dfbbc7a0b572dae6eee1dd"
+    ],
+    "d194965_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/d194965_3.json:16c1e6f6fa3738b4b43145ea751add2fa78f4adb6fe3ab535f465707ee2331a9"
+    ],
+    "d6ac34d_1": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/d6ac34d_1.json:e906c1c8e22e76fff9a4e2d162ccb7f6651c598e1c2c4080c3f422971fa84dc6",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/d6ac34d_1.json:3bc3cf1733e82f1c5ad3f016583d32592f20b57186b42d0fbdbc9cd80386471b",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/d6ac34d_1.json:22a8db726fbf5990deffe8df61a1b8331e6f882a77712e11aab7f40b67660f4a"
+    ],
+    "d6ac34d_2": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/d6ac34d_2.json:03e943640a60a0fc48fc8df3784c5f18d08a4d1ff6306ca0093a584e4e715382",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/d6ac34d_2.json:acace19027035d097cdc34068d511e50ac1413bba36cfb7ca4378387b7705983",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/d6ac34d_2.json:2f3698aebc2bda757ad79dfc7af18fdc7c3552915e06c70d1313804034573c6d"
+    ],
+    "d6ac34d_3": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/d6ac34d_3.json:6486b89dbc6a79f23ebeffb847fdeb72927cc8a75aadf52918dd2c066f091507",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/d6ac34d_3.json:380c37b762a6ef695b94f12d371f986bfa2ebfb0b5db9fd0d66ad9b6a99e770e",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/d6ac34d_3.json:babfc98d002c6691d501e1af8e65d3d89eac4ae629995a58ce56d00ec856f4f3"
+    ],
+    "dac78d9_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/dac78d9_1.json:5ff0f8534860e03cad751dd7aafcaded5e52a52cdfbd890b99725857aa90531f"
+    ],
+    "dac78d9_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/dac78d9_2.json:bb9d9ed2a9ff0ac20aeff6b4c39da36053aba87e8b597cce27e81a335d8aac29"
+    ],
+    "dac78d9_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/dac78d9_3.json:b407ff65f7ed24e6eb1aeefe01281633a2bb405e043f52f0974172c43261b4ec"
+    ],
+    "f323bae_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/f323bae_1.json:b69a93acca060eb29d527c590c2314207e1e34a19972d25f9d362b015a834cf5"
+    ],
+    "f323bae_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/f323bae_2.json:562ac48c5e5030633ae9d4307ae6d9b154daa12a4d32b1eec98460d118fd521a"
+    ],
+    "f323bae_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/f323bae_3.json:d1b1ed5997f9dfd2c8dc8a1a4564a4965c36263bd5e2bc75dd3ea35d2e310905"
+    ],
+    "f3f60f0_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/f3f60f0_1.json:d395ef19c0e95f3f5b734788d87271bbf95bdb72bcaac6b93d1975190add2ea7"
+    ],
+    "f3f60f0_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/f3f60f0_2.json:c44e36c558d9679b8de919d1ad8fcca78f8de770a6809ee8aa799778ab55eeed"
+    ],
+    "f3f60f0_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/f3f60f0_3.json:762efcf7ee35643a869b587b12bdeac617b7ad4da92dc392dcaac5100167b1c1"
+    ],
+    "f861c32_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/f861c32_1.json:a2928488b82b591020f0aefab09cc40daee152233a09788bf606a6051018419a"
+    ],
+    "f861c32_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/f861c32_2.json:cf44f9275d14fa47ec5f914bacf0e3b932c5c1c3484e9960fc4cbed27c5263c6"
+    ],
+    "f861c32_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/f861c32_3.json:2fd07b542518dc08462d812c4b5fc35e78c6d55c3050682583ec81d5153243aa"
+    ],
+    "fd1f8fa_1": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/fd1f8fa_1.json:16f14c2a8adfdecab3ac56b328b5c82af34598be52189131b6041ba30dd93556",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/fd1f8fa_1.json:332e0d725b1941513381e99f6e5c8f8cd696de374a986ca1982cf9f927f6dc20",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/fd1f8fa_1.json:da1d3802ec96d07b93dfd45837fa039147bbe818fd866540ad9dee0670a5a05b"
+    ],
+    "fd1f8fa_2": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/fd1f8fa_2.json:94282e6d4f567290d5182ea089e7db1fdfd2c38e294869f2e510386f1c6914bf",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/fd1f8fa_2.json:58213186344bbde00a1a83da73193b5aa04eba89d87d3650114a3a949bb8cb68",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/fd1f8fa_2.json:dac0b42f29939c2136070991c34460c5a1e065c60b0a39a21a8f85448276bede"
+    ],
+    "fd1f8fa_3": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/fd1f8fa_3.json:98350f2fc0ab823308f80f4a815d1ad23634da573b4a4af2af0b86e48b51004d",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/fd1f8fa_3.json:c0c234ae3f9982505a57786aec61851961fc44e6ac2eb12db16110fb1014c6f2",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/fd1f8fa_3.json:cde350028add705db9f71ec59e8419aabb60fa45076a643dd9446b0cc7be4121"
+    ],
+    "ff58e36_1": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/ff58e36_1.json:3c19c9047362d429e3b1976c874a44f97b926986a5045c8b75f657a6724af7f8",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/ff58e36_1.json:bd02a2b2c3b96621ba398e1fdda5bcf961b136cac835901d2149f28f508b2d3c",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/ff58e36_1.json:6447317e6b0558b58aa5764a3f92444d05910ab98a472408935248f01788d932"
+    ],
+    "ff58e36_2": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/ff58e36_2.json:0f6bb538e6220ed6e60d1152832a667879b6f08caeb8c6be2721c7ae4cdef2fd",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/ff58e36_2.json:3782f6b7fdf6ff0868a4844463b7905ca5d7350f9d16cd1c8b8ae4a8c23f16be",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/ff58e36_2.json:cdea79def20f124e065f5cb716faa90412a8ecbc7b40f78d490ac30995efb394"
+    ],
+    "ff58e36_3": [
+      "exp028a_gated_compiled_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_compiled_first37/task_results/ff58e36_3.json:5a97943784823057112d135a9cf781ae2f0aca77d642b604a85ce46929d46441",
+      "exp028a_gated_raw_first37/task_results:runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/gated_raw_first37/task_results/ff58e36_3.json:b4d01393a20ee97aa543c1e5cbe2cc4aaee36c1d59c5e54d55dda279b9bc3ca6",
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/ff58e36_3.json:8baf987dc5786fc2ddc33e878287f23830f628194871557af85dedc07d19fedc"
+    ],
+    "ffe6d5e_1": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/ffe6d5e_1.json:8342d8f3a7d28dfc421bdf7ea829699525957b982902a38e93c5df6bae1b91ca"
+    ],
+    "ffe6d5e_2": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/ffe6d5e_2.json:9742d7bceb04acdac59129748720a004a508ffd7111772507aa953b5f87c2882"
+    ],
+    "ffe6d5e_3": [
+      "historical_full_bare_baseline:runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test/ffe6d5e_3.json:311a7a8528a4f04f79ef30837fa6334a2c129330733484e39fc15c25a5d782a7"
+    ]
+  },
+  "format": "fresh_test37_post_exp028b_manifest_v1",
+  "fresh_tasks_executed": false,
+  "global_seed": 25101,
+  "historical_full_bare_directory": "runs/experiments/qwen_appworld_full_prompt_baseline_full_20260731_094940/evaluate/test",
+  "historical_full_bare_task_count": 168,
+  "manifest_sha256": "a7495b50a5dba9ecb036ae296a3a56335353aa183e7cf837956982b516dc212f",
+  "outcomes_inspected_for_selection": false,
+  "requested_task_count": 37,
+  "selected_task_count": 0,
+  "selection_rule": "ascending_sha256(25101:fresh-final-test:+task_id)",
+  "status": "insufficient_untouched_tasks",
+  "task_ids": [],
+  "untouched_task_count": 0
+}

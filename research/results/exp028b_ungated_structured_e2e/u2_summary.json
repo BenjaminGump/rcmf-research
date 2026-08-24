@@ -1,0 +1,32 @@
+{
+  "compiler_checkpoint_sha256": "95bc2869df1084eb1166cadeb0edfad584814d5fe0c049b3d7beab59b2c4cab3",
+  "condition": "U2",
+  "config_sha256": "0c61a70887c55d935cc28c8adc7d4ee11b27c58a8082c6e1b9bcb4658db2a40f",
+  "counts": {
+    "completion_action": 21,
+    "execution_exception": 0,
+    "gate_would_activate": 0,
+    "premature_completion": 0,
+    "repeated_invalid_code": 0,
+    "selector_raw_class_over_context": 0
+  },
+  "format": "ungated_structured_compiler_first37_summary_7h2_v1",
+  "gate_checkpoint_sha256": "7c49ace41b81763df4457c976d8800ccb1af11559b016fb98e04cf851098416d",
+  "global_seed": 25101,
+  "passed_infrastructure": true,
+  "run_uuid": "ungated_structured_compiler_e2e_7h2_20260824_001",
+  "selector_sha256": "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f",
+  "single_seed_descriptive_not_statistical": true,
+  "student_prompt_contains_raw_transition": false,
+  "success_count": 2,
+  "success_ids": [
+    "0d01c76_2",
+    "325d6ec_1"
+  ],
+  "task_count": 37,
+  "total_generated_tokens": 114660,
+  "total_prompt_tokens": 13957060,
+  "total_steps": 1156,
+  "total_wall_seconds": 5990.844518950209,
+  "transition_shuffle_manifest_sha256": "28e2ab9908f3b37206253e1e9691845412a7ebddd07d92b327be46389c5479ef"
+}

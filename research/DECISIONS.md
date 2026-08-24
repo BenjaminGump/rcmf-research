@@ -2157,3 +2157,51 @@ Implementation recovery:
   acceptance until the live projection used same-run bare block-input norms
   and a fixed versioned `0.99` numerical margin. The scientific ratio budget
   remained `<=1.0`; stopped attempts produced no accepted scientific rows.
+
+## 2026-08-24 EXP-028B ungated live specificity failed
+
+VERIFIED:
+
+- The frozen EXP-028A feature order, vocabulary, missing-value handling,
+  standardizer, gate checkpoint, temperature `2.0`, threshold `0.60`, and
+  inference code match. Recomputed live probabilities differ from saved rows
+  by at most `1.1920929e-7`; there is no implementation mismatch.
+- Heldout-train activation is `11/98`; first37 activation is zero at every
+  preregistered threshold. The live domain has `64/186` features with absolute
+  SMD at least `0.5` and a train-vs-live classifier AUC of `0.997624`.
+- U0/U1/U2 success is `8/37`, `0/37`, and `2/37`. The correct forced-on
+  compiler loses to both bare and its deterministic transition shuffle.
+- The U2 map has 499 rows, no fixed transition IDs, and a different signature
+  class for every row. No task outcome influenced the mapping.
+- All 168 official test-normal tasks are exposed by historical per-task
+  evaluation; no untouched task remains for the requested fresh-37 manifest.
+
+INFERENCE:
+
+- The gate's zero live activation reflects broad feature/state distribution
+  shift, but this is not the primary remaining blocker: forced-on correct
+  compilation is worse than shuffled compilation over full trajectories.
+- The small curated one-step structured-compiler effect is not deployably
+  memory-specific in live ReAct trajectories.
+
+UNVERIFIED:
+
+- Whether a fixed trained memory-reader adapter can retain selected raw-memory
+  behavior, and any statistically reliable task-success claim across seeds.
+
+Decision:
+
+- Record `structured_compiler_live_specificity_failed`.
+- Stop structured-compiler work for the submission. Do not lower/retrain the
+  gate, build the full bank, start another compiler automatically, train Qwen,
+  start Stage C2, or create/move a V4 tag.
+- The next review must choose between one tightly bounded fixed memory-reader
+  adapter study and narrowing the paper scope to the validated positive and
+  negative results already obtained.
+
+Implementation recovery:
+
+- The first U1 attempt stopped when a live state reached 65,267 prompt tokens
+  under the locked 40,960 no-truncation contract. The resumed harness records
+  locked context overflow as a terminal task failure and continues; prompt,
+  context, history, selector, compiler, and evaluation semantics are unchanged.
