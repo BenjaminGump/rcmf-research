@@ -97,6 +97,26 @@ def test_reader_gradients_and_locality() -> None:
     assert all(value == [[1, 2, 3, 4]] for value in hooks.audit.directly_modified_positions.values())
 
 
+def test_hooks_remain_active_through_checkpoint_recomputation() -> None:
+    model = _Model()
+    reader = FixedMemoryReader(model_dim=8, latent_dim=4, bottleneck=3, layer_count=4)
+    hidden = torch.randn(1, 7, 8, requires_grad=True)
+    hooks = FixedMemoryReaderHooks(
+        model=model,
+        reader=reader,
+        layer_indices=(0, 1, 2, 3),
+        selected_token_indices=torch.tensor([[1, 2, 3, 4]]),
+        latent=torch.randn(1, 4),
+        expected_prefill_length=7,
+    )
+    with hooks:
+        output = torch.utils.checkpoint.checkpoint(
+            model, hidden, use_reentrant=False
+        )
+        output.sum().backward()
+    assert all(layer.output.weight.grad is not None for layer in reader.layers)
+    assert all(count >= 2 for count in hooks.audit.applied_calls.values())
+
 def test_stratification_is_deterministic_and_spans_trajectory() -> None:
     selected = stratified_live_steps(list(range(1, 19)), task_id="task")
     assert selected == stratified_live_steps(list(range(1, 19)), task_id="task")

@@ -686,15 +686,15 @@ def _training_units(
     return manifest
 
 
-def _reader_forward(
+def _reader_hooks(
     *,
     backend: Any,
     reader: FixedMemoryReader,
     batch: Mapping[str, Any],
     latent: Tensor,
     maximum_ratio: float,
-) -> tuple[Tensor, Tensor, FixedMemoryReaderHooks]:
-    hooks = FixedMemoryReaderHooks(
+) -> FixedMemoryReaderHooks:
+    return FixedMemoryReaderHooks(
         model=backend.model,
         reader=reader,
         layer_indices=LAYER_INDICES,
@@ -703,10 +703,80 @@ def _reader_forward(
         expected_prefill_length=int(batch["input_ids"].shape[1]),
         maximum_layer_ratio=maximum_ratio,
     )
+
+
+def _reader_forward(
+    *,
+    backend: Any,
+    reader: FixedMemoryReader,
+    batch: Mapping[str, Any],
+    latent: Tensor,
+    maximum_ratio: float,
+) -> tuple[Tensor, Tensor, FixedMemoryReaderHooks]:
+    hooks = _reader_hooks(
+        backend=backend,
+        reader=reader,
+        batch=batch,
+        latent=latent,
+        maximum_ratio=maximum_ratio,
+    )
     with hooks:
         loss, logits = _bare_target_forward(backend=backend, batch=batch)
     return loss, logits, hooks
 
+
+def _reader_backward_unit(
+    *,
+    backend: Any,
+    reader: FixedMemoryReader,
+    batch: Mapping[str, Any],
+    latent: Tensor,
+    maximum_ratio: float,
+    policy_length: int,
+    teacher: Mapping[str, Any],
+    ground_truth_ids: Tensor | None,
+    unit_weight: float,
+    training: Mapping[str, Any],
+) -> dict[str, Any]:
+    hooks = _reader_hooks(
+        backend=backend,
+        reader=reader,
+        batch=batch,
+        latent=latent,
+        maximum_ratio=maximum_ratio,
+    )
+    # Hooks must remain installed through activation-checkpoint recomputation.
+    with hooks:
+        _, logits = _bare_target_forward(backend=backend, batch=batch)
+        policy_kl, terms = _policy_loss(logits[:policy_length], teacher)
+        ground_truth_ce = torch.zeros((), device=backend.device)
+        if ground_truth_ids is not None:
+            ground_truth_ce = F.cross_entropy(
+                logits[policy_length:].to(torch.float32), ground_truth_ids
+            )
+        residual_penalty = torch.stack(
+            [
+                value.to(torch.float32).pow(2).mean()
+                for value in hooks.applied_deltas.values()
+            ]
+        ).mean()
+        loss = float(unit_weight) * (
+            float(training["policy_kl_weight"]) * policy_kl
+            + float(training["teacher_token_ce_weight"])
+            * terms["teacher_token_ce"]
+            + float(training["ground_truth_ce_weight"]) * ground_truth_ce
+            + float(training["residual_norm_weight"]) * residual_penalty
+            + float(training["latent_norm_weight"])
+            * latent.to(torch.float32).pow(2).mean()
+        )
+        loss.backward()
+    return {
+        "loss": loss,
+        "policy_kl": policy_kl,
+        "teacher_token_ce": terms["teacher_token_ce"],
+        "ground_truth_ce": ground_truth_ce,
+        "hooks": hooks,
+    }
 
 def _checkpoint_payload(
     *,
@@ -834,15 +904,18 @@ def _implementation_validation(
         state_tensor.unsqueeze(0).to(backend.device),
         transition_tensor.unsqueeze(0).to(backend.device),
     )
-    _, logits, gradient_hooks = _reader_forward(
+    gradient_hooks = _reader_hooks(
         backend=backend,
         reader=reader,
         batch=batch,
         latent=latent,
         maximum_ratio=float(settings["reader"]["ratio_budget_per_layer"]),
     )
-    loss, _ = _policy_loss(logits, result["policy_teacher"])
-    loss.backward()
+    # Keep hooks active through activation-checkpoint recomputation.
+    with gradient_hooks:
+        _, logits = _bare_target_forward(backend=backend, batch=batch)
+        loss, _ = _policy_loss(logits, result["policy_teacher"])
+        loss.backward()
     output_gradients = [
         float(layer.output.weight.grad.norm().cpu())
         if layer.output.weight.grad is not None
@@ -961,6 +1034,7 @@ def _train(
             gradient_checkpointing_kwargs={"use_reentrant": False}
         )
     backend.model.config.use_cache = False
+    backend.model.train()
     optimizer = torch.optim.AdamW(
         [
             {
@@ -1013,19 +1087,9 @@ def _train(
                 rows.append(tokenized[query_id]["ground_truth"])
             batch = _collate(rows, device=backend.device, k=TOKEN_COUNT)
             optimizer.zero_grad(set_to_none=True)
-            _, logits, hooks = _reader_forward(
-                backend=backend,
-                reader=reader,
-                batch=batch,
-                latent=latent.repeat(len(rows), 1),
-                maximum_ratio=float(settings["reader"]["ratio_budget_per_layer"]),
-            )
-            policy_length = int(policy_row["target_len"])
-            policy_logits = logits[:policy_length]
-            policy_kl, terms = _policy_loss(policy_logits, teacher)
-            ground_truth_ce = torch.zeros((), device=backend.device)
+            ground_truth_ids = None
             if correct:
-                gt_ids = torch.tensor(
+                ground_truth_ids = torch.tensor(
                     [
                         int(value)
                         for value in tokenized[query_id]["ground_truth"]["labels"]
@@ -1034,24 +1098,23 @@ def _train(
                     dtype=torch.long,
                     device=backend.device,
                 )
-                ground_truth_ce = F.cross_entropy(
-                    logits[policy_length:].to(torch.float32), gt_ids
-                )
-            residual_penalty = torch.stack(
-                [value.to(torch.float32).pow(2).mean() for value in hooks.applied_deltas.values()]
-            ).mean()
-            loss = float(unit["weight"]) * (
-                float(settings["training"]["policy_kl_weight"]) * policy_kl
-                + float(settings["training"]["teacher_token_ce_weight"])
-                * terms["teacher_token_ce"]
-                + float(settings["training"]["ground_truth_ce_weight"])
-                * ground_truth_ce
-                + float(settings["training"]["residual_norm_weight"])
-                * residual_penalty
-                + float(settings["training"]["latent_norm_weight"])
-                * latent.to(torch.float32).pow(2).mean()
+            backward = _reader_backward_unit(
+                backend=backend,
+                reader=reader,
+                batch=batch,
+                latent=latent.repeat(len(rows), 1),
+                maximum_ratio=float(settings["reader"]["ratio_budget_per_layer"]),
+                policy_length=int(policy_row["target_len"]),
+                teacher=teacher,
+                ground_truth_ids=ground_truth_ids,
+                unit_weight=float(unit["weight"]),
+                training=settings["training"],
             )
-            loss.backward()
+            loss = backward["loss"]
+            policy_kl = backward["policy_kl"]
+            ground_truth_ce = backward["ground_truth_ce"]
+            hooks = backward["hooks"]
+            terms = {"teacher_token_ce": backward["teacher_token_ce"]}
             nn.utils.clip_grad_norm_(
                 list(model.parameters()) + list(reader.parameters()),
                 float(settings["training"]["max_grad_norm"]),
