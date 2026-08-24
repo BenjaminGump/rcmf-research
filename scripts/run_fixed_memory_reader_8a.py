@@ -759,7 +759,7 @@ def _implementation_validation(
     examples = load_decision_examples(paths["decisions"])
     candidates = []
     for index, example in enumerate(examples):
-        if str(example.split) != "train" or int(example.step_id) != 1:
+        if int(example.step_id) != 1:
             continue
         messages = _appworld_messages_from_example(example, "full_demo")
         tokenized = backend.tokenize_messages(messages, add_generation_prompt=True)
