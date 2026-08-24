@@ -1209,6 +1209,13 @@ def _train(
     return summary
 
 
+def _validation_bridge_identity(
+    *, state_id: str, updates: int, control: str
+) -> tuple[str, str]:
+    bridge_condition = f"8a-u{updates:02d}::{control}"
+    return bridge_condition, f"{state_id}::{bridge_condition}"
+
+
 @torch.no_grad()
 def _generate_reader(
     *,
@@ -1303,7 +1310,9 @@ def _validation_condition(
             raise ValueError(f"Existing reader validation row differs: {checks}")
         return row
     app = settings["appworld"]
-    condition_key = f"8a-u{updates:02d}::{state['state_id']}::{control}"
+    bridge_condition, condition_key = _validation_bridge_identity(
+        state_id=str(state["state_id"]), updates=updates, control=control
+    )
     client = LiveBridgeClient(
         executable=Path(str(app["legacy_python"])),
         bridge_script=paths["one_step_bridge"],
@@ -1315,7 +1324,7 @@ def _validation_condition(
         ready = client.prepare(
             _prepare_on_policy(
                 state=state,
-                condition=condition_key,
+                condition=bridge_condition,
                 settings=settings,
                 paths=paths,
                 attempt_id=attempt_id,

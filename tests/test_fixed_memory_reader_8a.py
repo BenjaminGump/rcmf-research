@@ -3,6 +3,8 @@ from __future__ import annotations
 import torch
 from torch import nn
 
+from scripts.run_fixed_memory_reader_8a import _validation_bridge_identity
+
 from rcmf.training.fixed_memory_reader_8a import (
     FixedMemoryReader,
     FixedMemoryReaderHooks,
@@ -11,6 +13,18 @@ from rcmf.training.fixed_memory_reader_8a import (
     select_reader_checkpoint,
     stratified_live_steps,
 )
+
+
+def test_validation_bridge_identity_contains_state_once() -> None:
+    bridge_condition, condition_key = _validation_bridge_identity(
+        state_id="appworld:onpolicy:task:step:3:hash",
+        updates=1,
+        control="R1_correct",
+    )
+    assert bridge_condition == "8a-u01::R1_correct"
+    assert condition_key == (
+        "appworld:onpolicy:task:step:3:hash::8a-u01::R1_correct"
+    )
 
 
 class _Block(nn.Module):
