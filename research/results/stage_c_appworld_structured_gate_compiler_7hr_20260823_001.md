@@ -32,7 +32,7 @@ or V4 tag was created.
 - Actual attempt-duration accounting: `10.0378` hours, approximately `10.02`
   GPU-attributed process hours
 - End-to-end wall span: `13.8011` hours
-- Git-safe result bundle: `773,936` bytes
+- Git-safe redacted result bundle: `233,107` bytes
 
 The expected work was below the authorized 18-H100-hour threshold.
 
