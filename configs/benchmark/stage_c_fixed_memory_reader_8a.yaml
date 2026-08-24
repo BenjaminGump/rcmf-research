@@ -1,0 +1,134 @@
+include: stage_c_memory_specific_deep_amortization_7g.yaml
+
+experiment:
+  name: stage_c_fixed_memory_reader_8a
+  version: on_policy_fixed_memory_reader_adapter_8a_v1
+  seed: 25101
+
+stage_c_8a:
+  run_uuid: fixed_memory_reader_adapter_8a_20260824_001
+  artifact_dir: runs/stage_c/fixed_memory_reader_adapter_8a_20260824_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  starting_head: be93219b61ff30b50006f0801e93c14c288595d4
+  archive_branch: archive/v4-structured-compiler-live-specificity-failed
+  working_branch: research/v4-fixed-memory-reader
+
+  parent_exp025b: runs/stage_c/replay_clean_rebuild_7b_20260818_001
+  parent_exp025c: runs/stage_c/signature_balanced_field_7c_20260818_001
+  parent_exp025cr: runs/stage_c/signature_balanced_field_7cr_20260818_001
+  parent_exp027b: runs/stage_c/memory_specific_deep_amortization_7g_20260823_001
+  parent_exp028a: runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001
+  parent_exp028b: runs/stage_c/ungated_structured_compiler_e2e_7h2_20260824_001
+  reconciled_corpus_dir: runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  task_split_manifest: runs/stage_c/state_conditioned_program_direct_7dg_20260821_001/preflight/a_task_split.json
+
+  expected_replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+  expected_structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+  expected_selector_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f
+  expected_pairmlp_checkpoint_sha256: 8af2d1068ee0059c79edf740920f9d506b8a880459ff53656b449f767e5dffda
+  expected_model_name: Qwen/Qwen3-8B
+
+  selector:
+    state_views: 10
+    transition_views: 10
+    input_dim: 4096
+    projection_dim: 64
+    interaction_rank: 32
+    context_limit: 40960
+
+  appworld:
+    legacy_python: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    legacy_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+    full_bridge_script: scripts/appworld_full_agent_bridge_7f.py
+    one_step_bridge_script: scripts/appworld_live_one_step_bridge_7b.py
+    semantic_module: rcmf/training/appworld_replay_clean_rebuild_7b.py
+    prompt_profile: full_demo
+    max_context_turns: 40
+    max_steps: 50
+    max_new_tokens: 512
+    context_limit: 40960
+    temperature: 0.0
+    top_p: 1.0
+    enable_thinking: false
+    max_api_calls_per_interaction: 100
+    worker_timeout_seconds: 600
+
+  collection:
+    model_train_task_count: 29
+    heldout_train_validation_task_count: 8
+    maximum_live_states_per_task: 6
+    progress_strata: [early, middle, late]
+    target_alignment: clean_successful_trajectory_step_ordinal
+    require_exception_free_prior_history: true
+    no_test_normal: true
+    minimum_model_train_positive_states: 24
+    augmentation_source: exp028a_clean_positive_expert_states_training_tasks_only
+    freeze_before_paired_outcomes: true
+
+  compiler:
+    state_vector_count: 10
+    transition_vector_count: 6
+    representation_dim: 4096
+    program_dim: 256
+    hidden_dim: 256
+    dropout: 0.05
+    program_learning_rate: 0.0001
+    weight_decay: 0.0001
+
+  reader:
+    version: fixed_memory_reader_8a_v1
+    selected_layer_indices: [7, 14, 21, 28]
+    token_count: 4
+    latent_dim: 256
+    bottleneck_dim: 64
+    ratio_budget_per_layer: 1.0
+    reader_learning_rate: 0.000001
+    output_initialization: zero
+    shared_across_token_positions: true
+    separate_parameters_per_layer: true
+
+  training:
+    checkpoint_updates: [1, 2, 4]
+    maximum_updates_per_pair: 4
+    policy_kl_weight: 1.0
+    teacher_token_ce_weight: 0.25
+    ground_truth_ce_weight: 0.05
+    residual_norm_weight: 0.001
+    latent_norm_weight: 0.0001
+    max_grad_norm: 1.0
+    top_k: 64
+    class_balance_positive_and_bare_preservation: true
+    positive_controls: [transition_mismatch, state_mismatch]
+    checkpoint_selection_split: heldout_train_tasks_only
+
+  validation:
+    controls: [R1_correct, R2_transition_shuffle, R3_state_shuffle, R0_zero]
+    maximum_execution_drop: 0.05
+    minimum_positive_task_fraction: 0.50
+
+  first37:
+    matched_bare_success: 8
+    task_ids_source: stage_c_deep_residual_amortization_7f.first37.task_ids
+    conditions: [D1_correct_reader, D2_transition_shuffle_reader]
+
+  runtime:
+    review_threshold_h100_hours: 18.0
+    collection_task_seconds_expected: 75.0
+    collection_task_seconds_conservative: 150.0
+    paired_condition_seconds_expected: 7.85
+    paired_condition_seconds_conservative: 12.0
+    policy_forward_seconds_expected: 1.85
+    policy_forward_seconds_conservative: 3.50
+    reader_backward_seconds_expected: 2.80
+    reader_backward_seconds_conservative: 4.50
+    validation_condition_seconds_expected: 7.85
+    validation_condition_seconds_conservative: 12.0
+    first37_condition_hours_expected: 1.30
+    first37_condition_hours_conservative: 2.20
+    projected_bytes_per_state: 1048576
+    projected_bytes_per_policy_teacher: 2097152
+    projected_bytes_per_condition: 2359296
+    projected_bytes_per_checkpoint: 450000000
+
+  heartbeat_interval_seconds: 240
