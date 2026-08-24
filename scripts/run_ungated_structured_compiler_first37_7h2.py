@@ -316,6 +316,7 @@ def _run_task(
     usage = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
     counts = Counter()
     previous_invalid_code: str | None = None
+    terminal_error: dict[str, Any] | None = None
     with FullAgentBridge(
         executable=Path(str(app["legacy_python"])),
         script=Path(str(app["full_bridge_script"])),
@@ -350,14 +351,31 @@ def _run_task(
                 prompt_profile=str(app["prompt_profile"]),
                 max_context_turns=int(app["max_context_turns"]),
             )
-            decision = runtime.decide_ungated(
-                condition=condition,
-                messages=messages,
-                task_message=task_message,
-                trajectory=trajectory,
-                step_id=step_id,
-                prompt_profile=str(app["prompt_profile"]),
-            )
+            try:
+                decision = runtime.decide_ungated(
+                    condition=condition,
+                    messages=messages,
+                    task_message=task_message,
+                    trajectory=trajectory,
+                    step_id=step_id,
+                    prompt_profile=str(app["prompt_profile"]),
+                )
+            except ValueError as error:
+                if not (
+                    str(error).startswith("Span source has ")
+                    and "exceeding context 40960; no truncation is allowed" in str(error)
+                ):
+                    raise
+                terminal_error = {
+                    "category": "locked_context_overflow_no_truncation",
+                    "step_id": step_id,
+                    "exception_type": type(error).__name__,
+                    "message": str(error),
+                    "scientific_outcome": "task_failure",
+                    "prompt_or_selector_contract_changed": False,
+                }
+                counts["locked_context_overflow"] += 1
+                break
             delta = decision.pop("_delta")
             prompt_messages = decision.pop("prompt_messages")
             tokenized = backend.tokenize_messages(
@@ -432,6 +450,7 @@ def _run_task(
         "step_count": len(steps),
         "usage": usage,
         "counts": dict(counts),
+        "terminal_error": terminal_error,
         "success": bool(final["success"]),
         "success_source": "evaluation.success",
         "evaluation": final["evaluation"],
