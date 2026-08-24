@@ -1295,3 +1295,27 @@ Recommended next 48-hour action:
 Still blocked: gate recalibration, another structured compiler, full-bank
 integration, p(s,m_transition), Qwen training, Stage C2, end-to-end RCMF, full
 AppWorld evaluation, and an RCMF V4 tag.
+
+## EXP-029A Completed - Stop Neural Compiled Memory
+
+The last bounded reader rescue passes every implementation invariant but fails
+the heldout live behavioral gate at u1, u2, and u4. Correct, transition-shuffle,
+state-shuffle, and zero programs all produce the same action-signature and
+semantic-successor rates. EXP-029A reaches `fixed_memory_reader_failed`.
+
+Recommended next 48-hour action:
+
+1. Freeze EXP-029A and all earlier compiler/carrier artifacts; run no new
+   reader, adapter, rank, objective, or full-bank experiment.
+2. Lock the submission around the identity-reconciled corpus, exact semantic
+   replay, signature-balanced selector, raw-transition one-step causal result,
+   and validated free deep-residual carrier.
+3. Present failed generic, structured, and fixed-reader amortization as a
+   bounded negative result, carefully separated from the positive raw-memory
+   and free-carrier findings.
+4. Finish tables, ablation summaries, limitations, artifact links, and the
+   paper narrative. Treat every AppWorld test-normal task as exposed.
+
+Still blocked: neural compiled-memory architecture work, another reader,
+full-bank integration, p(s,m_transition), Qwen training, Stage C2, end-to-end
+RCMF, full AppWorld evaluation, and an RCMF V4 tag.

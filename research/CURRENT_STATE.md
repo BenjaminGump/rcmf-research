@@ -1937,3 +1937,25 @@ Decision:
   manifest records `insufficient_untouched_tasks`; no replacement was made.
 - Structured-compiler work, gate tuning, full-bank integration, Qwen training,
   Stage C2, end-to-end RCMF, and V4 tagging remain blocked.
+
+### EXP-029A fixed memory-reader heldout failure
+
+- Deterministic bare-Qwen collection froze `222` live states over all 37 clean
+  train tasks: `174` model-training states from 29 tasks and `48` heldout
+  validation states from eight disjoint tasks.
+- All `444/444` paired bare/raw conditions completed. Labels are `5` POSITIVE,
+  `210` NEUTRAL, and `7` HARMFUL; no test-normal state or outcome entered the
+  experiment.
+- The fixed bottleneck-64 reader has `2,162,688` parameters and passes zero
+  equivalence, locality, no-decode-injection, gradient, frozen-Qwen,
+  mixed-precision, checkpoint-recomputation, and no-raw-prompt checks.
+- Training used `243` class-balanced units and `972` backwards. The u4 policy
+  KL improves to `0.038568` and the maximum ratio remains `0.004515`.
+- All `576/576` heldout live R1/R2/R3/R0 conditions completed. At u1/u2/u4,
+  all four controls have action signature `0.1875` and semantic successor
+  `0.1458`; correct-pair positive tasks are `0/8` throughout.
+- No checkpoint reaches PARTIAL. Decision branch: `fixed_memory_reader_failed`.
+  Conditional first37 did not run.
+- Neural compiled-memory architecture work, another reader/adapter, full-bank
+  integration, Qwen training, Stage C2, end-to-end RCMF, and V4 tagging are
+  stopped for the submission.

@@ -2205,3 +2205,49 @@ Implementation recovery:
   under the locked 40,960 no-truncation contract. The resumed harness records
   locked context overflow as a terminal task failure and continues; prompt,
   context, history, selector, compiler, and evaluation semantics are unchanged.
+
+## 2026-08-24 EXP-029A fixed memory reader failed
+
+VERIFIED:
+
+- On-policy collection and paired outcomes cover `222` clean train-task states
+  and `444` T0/T1 conditions, with zero test-normal outcomes used.
+- The observed label distribution is `5/210/7` POSITIVE/NEUTRAL/HARMFUL.
+  Twenty-one immutable EXP-028A positive expert states augment training only;
+  the 48-state heldout split remains purely on-policy.
+- The fixed reader passes all implementation invariants, has `2,162,688`
+  parameters independent of memory count, and leaves all Qwen parameters
+  frozen with zero gradients.
+- Training reaches u4 without instability. Across all three heldout
+  checkpoints, R1, R2, R3, and R0 have identical action-signature and
+  semantic-successor rates (`0.1875/0.1458`). R1 is positive on `0/8` tasks.
+- No checkpoint is eligible; first37 is not run.
+
+INFERENCE:
+
+- The learned reader can reduce teacher-policy loss but does not preserve
+  memory-specific deterministic behavior on heldout live train-task states.
+- Together with the prior generic and structured compiler failures, this is
+  sufficient to stop neural compiled-memory architecture work on the
+  submission critical path.
+
+UNVERIFIED:
+
+- Whether unbounded training, another reader architecture, or multi-seed work
+  could eventually succeed; none is authorized before submission.
+- Reader/compiler end-to-end task success and full-bank operation.
+
+Decision:
+
+- Record `fixed_memory_reader_failed`.
+- Stop another reader/adapter, PairMLP, factorized-field, full-bank, Qwen,
+  Stage C2, end-to-end RCMF, full AppWorld, and V4-tag work for submission.
+- Move the next 48 hours to claim locking, tables, limitations,
+  reproducibility, and paper writing.
+
+Implementation recovery:
+
+- Four append-only attempts preserve bounded pre-result failures involving a
+  DecisionExample field, mixed precision, checkpoint hook lifetime, and live
+  bridge condition identity. Each was fixed with focused regression coverage;
+  no accepted scientific row or frozen parameter changed.

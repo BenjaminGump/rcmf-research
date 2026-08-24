@@ -1,0 +1,123 @@
+{
+  "artifact_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/fixed_memory_reader_adapter_8a_20260824_001",
+  "artifact_size_bytes": 1140767963,
+  "attempts": {
+    "count": 11,
+    "failed": 4,
+    "ids": [
+      "exp029a-preflight-001",
+      "exp029a-collect-001",
+      "exp029a-paired-001",
+      "exp029a-implementation-001",
+      "exp029a-implementation-002",
+      "exp029a-implementation-003",
+      "exp029a-implementation-004",
+      "exp029a-train-001",
+      "exp029a-validate-001",
+      "exp029a-validate-002",
+      "exp029a-select-001"
+    ],
+    "successful": 7
+  },
+  "commits": {
+    "implementation_source": "bb0e036d836dc5acf0afe9cbf5c9e9ab516488a5",
+    "recovery": [
+      "d78f7a548e9368f0b5ac639603fcbb4c67744856",
+      "fcc72a143ed1921eaa1cc6b7ad769fa5c4971e02",
+      "fecfc3f8cfca75d517ecbe96b8ce6d85a95a7c2d",
+      "475e4583058790ef7941b7ab62398a7f02c849ef"
+    ],
+    "starting": "be93219b61ff30b50006f0801e93c14c288595d4"
+  },
+  "decision": {
+    "branch": "fixed_memory_reader_failed",
+    "first37_run": false,
+    "reader_behavior_validated": false,
+    "selected_checkpoint": null
+  },
+  "format": "fixed_memory_reader_github_summary_8a_v1",
+  "global_seed": 25101,
+  "hashes": {
+    "attempts": "889c0f422c7b3df3139b2d178c5a1eb6f9c82382904f59d448be9fbd84cc6396",
+    "checkpoint_selection": "fdbceddf9fdc2537afa5feb7250d7287e972e39f9aa87dc245ffaf88e4ff9996",
+    "implementation_validation": "5fb24917f1cbcba7ed227a61d8f53928e6c64562e8c02adda81b9a243208149a",
+    "on_policy_manifest": "1759e74c57fa694ad108038ad9783352ee665d82dbf9752a0b08335ccbf51f60",
+    "paired_outcomes": "64cb3e31caf344158665869342f0f1d86d4133c4c4190b78c73b648cce072adc",
+    "preflight_contract": "c6163d5ffb8602a69911512ee60020567646f51a84aac31f181db9b38460a24e",
+    "training_summary": "6e51dda0b5418b236b84f1fc0a7ee04403b5049289f3ba6cd5ef6ca61a2220b8",
+    "validation_u1": "c0f1ca72da86a12c7d31567ae1ddc3660b4644694185afabb5e7287794cd24de",
+    "validation_u2": "6b3e8a0b38e06c33c91fdd2d5ff243133e64f31d5bba427bf6774d72754f64b0",
+    "validation_u4": "63117ce2f4f866eaa29202aacfe64e391ca4a48dd328702cf45f60abc254e19c"
+  },
+  "implementation": {
+    "all_reader_layers_receive_gradient": true,
+    "bottleneck": 64,
+    "fixed_size_independent_of_memory_count": true,
+    "layers": [7, 14, 21, 28],
+    "passed": true,
+    "qwen_gradient_count": 0,
+    "qwen_trainable_parameter_count": 0,
+    "reader_parameter_count": 2162688,
+    "student_prompt_contains_raw_transition": false,
+    "token_positions": 4,
+    "z_zero_exact": true
+  },
+  "on_policy": {
+    "heldout_validation_states": 48,
+    "heldout_validation_tasks": 8,
+    "model_train_states": 174,
+    "model_train_tasks": 29,
+    "paired_conditions": 444,
+    "states": 222,
+    "test_normal_outcomes": 0
+  },
+  "paired_labels": {
+    "combined": {"HARMFUL": 7, "NEUTRAL": 210, "POSITIVE": 5},
+    "heldout_validation": {"HARMFUL": 1, "NEUTRAL": 45, "POSITIVE": 2},
+    "model_train": {"HARMFUL": 6, "NEUTRAL": 165, "POSITIVE": 3}
+  },
+  "run_uuid": "fixed_memory_reader_adapter_8a_20260824_001",
+  "runtime": {
+    "accounted_active_attempt_hours": 4.3516466366666675,
+    "expected_required_h100_hours": 4.421388888888888,
+    "wall_span_hours": 7.594324946111111
+  },
+  "training": {
+    "backward_count": 972,
+    "expert_positive_augmentation": 21,
+    "positive_and_bare_total_weight": 121.5,
+    "states": 195,
+    "units": 243,
+    "u1": {"maximum_ratio": 0.00006857200082496418, "policy_kl": 0.039514321188989544},
+    "u2": {"maximum_ratio": 0.00045582722974179407, "policy_kl": 0.039239442696297235},
+    "u4": {"maximum_ratio": 0.004514963599880046, "policy_kl": 0.038568426191730384}
+  },
+  "validation": {
+    "condition_count": 576,
+    "state_count_per_checkpoint": 48,
+    "u1": {
+      "classification": "CLEAR_FAILURE",
+      "positive_tasks": 0,
+      "r0": {"action_signature": 0.1875, "execution": 0.9375, "semantic_successor": 0.14583333333333334},
+      "r1": {"action_signature": 0.1875, "execution": 0.9375, "semantic_successor": 0.14583333333333334},
+      "r2": {"action_signature": 0.1875, "execution": 0.9375, "semantic_successor": 0.14583333333333334},
+      "r3": {"action_signature": 0.1875, "execution": 0.9375, "semantic_successor": 0.14583333333333334}
+    },
+    "u2": {
+      "classification": "CLEAR_FAILURE",
+      "positive_tasks": 0,
+      "r0": {"action_signature": 0.1875, "execution": 0.9375, "semantic_successor": 0.14583333333333334},
+      "r1": {"action_signature": 0.1875, "execution": 0.9166666666666666, "semantic_successor": 0.14583333333333334},
+      "r2": {"action_signature": 0.1875, "execution": 0.9375, "semantic_successor": 0.14583333333333334},
+      "r3": {"action_signature": 0.1875, "execution": 0.9375, "semantic_successor": 0.14583333333333334}
+    },
+    "u4": {
+      "classification": "CLEAR_FAILURE",
+      "positive_tasks": 0,
+      "r0": {"action_signature": 0.1875, "execution": 0.9375, "semantic_successor": 0.14583333333333334},
+      "r1": {"action_signature": 0.1875, "execution": 0.9375, "semantic_successor": 0.14583333333333334},
+      "r2": {"action_signature": 0.1875, "execution": 0.9375, "semantic_successor": 0.14583333333333334},
+      "r3": {"action_signature": 0.1875, "execution": 0.9375, "semantic_successor": 0.14583333333333334}
+    }
+  }
+}
