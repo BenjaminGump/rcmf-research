@@ -108,6 +108,20 @@ def _condition_key(epoch: int, state_id: str, control: str) -> str:
     return f"exp031a-e{epoch:02d}-{digest}"
 
 
+def build_audit_trajectory(
+    *, history_steps: Sequence[Mapping[str, Any]], actual_observations: Sequence[str]
+) -> list[dict[str, str]]:
+    fence = chr(96) * 3
+    return [
+        {
+            "response": f"{fence}python\n{str(step['code'])}\n{fence}",
+            "code": str(step["code"]),
+            "observation": str(observation),
+        }
+        for step, observation in zip(history_steps, actual_observations, strict=True)
+    ]
+
+
 def build_live_manifest(*, outcomes: Sequence[Mapping[str, Any]], state_shuffle: Mapping[str, str]) -> dict[str, Any]:
     heldout = sorted(
         (dict(row) for row in outcomes if str(row["model_split"]) == "heldout_train_validation"),
@@ -460,10 +474,9 @@ def _run_condition(
         metrics["execution_success"] = False
         metrics["exception_category"] = str(executed["execution_exception"].get("type", "exception")).lower()
     metrics["semantic_successor_match"] = bool(executed["target_semantic_match"])
-    trajectory = [
-        {"response": str(step["response"]), "observation": str(observation)}
-        for step, observation in zip(contract["history_steps"], actual_observations, strict=True)
-    ]
+    trajectory = build_audit_trajectory(
+        history_steps=contract["history_steps"], actual_observations=actual_observations
+    )
     static_messages = list(messages[:-1])
     row = {
         "format": LIVE_RESULT_VERSION,

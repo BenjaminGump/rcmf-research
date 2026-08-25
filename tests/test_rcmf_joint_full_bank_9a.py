@@ -30,6 +30,7 @@ from scripts.run_rcmf_joint_full_bank_9a import (
     _state_derangement,
 )
 from scripts.run_rcmf_joint_full_bank_live_9a import (
+    build_audit_trajectory,
     build_live_manifest,
     classify_live_checkpoint,
     select_checkpoint,
@@ -427,6 +428,21 @@ def test_live_manifest_keeps_world_fixed_and_shuffles_only_field_query() -> None
     assert all(row["field_query_state_id"] != row["world_state_id"] for row in state_shuffle_rows)
     assert all(not row["runtime_memory_retrieval"] for row in manifest["conditions"])
     assert all(not row["student_prompt_contains_raw_memory"] for row in manifest["conditions"])
+
+
+def test_live_audit_trajectory_uses_replay_contract_code() -> None:
+    rows = build_audit_trajectory(
+        history_steps=[{"code": "token = apis.spotify.login(username='u', password='p')"}],
+        actual_observations=["jwt-redacted"],
+    )
+    fence = chr(96) * 3
+    assert rows == [
+        {
+            "response": f"{fence}python\ntoken = apis.spotify.login(username='u', password='p')\n{fence}",
+            "code": "token = apis.spotify.login(username='u', password='p')",
+            "observation": "jwt-redacted",
+        }
+    ]
 
 
 def test_live_classification_and_selection_follow_preregistered_score() -> None:
