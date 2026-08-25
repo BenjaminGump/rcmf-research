@@ -20,7 +20,10 @@ from rcmf.training.rcmf_joint_full_bank_9a import (
     rms_norm,
     subtract_task_field,
 )
-from rcmf.training.signature_balanced_field_7c import SignatureBalancedFieldSelector
+from rcmf.training.signature_balanced_field_7c import (
+    SignatureBalancedFieldSelector,
+)
+from scripts.prepare_rcmf_joint_full_bank_9a import _signature_map
 
 
 class _Block(nn.Module):
@@ -213,6 +216,26 @@ def test_arbitrary_insertion_order_and_payload_derangement() -> None:
     permutation = deterministic_payload_permutation(rows)
     assert sorted(permutation) == list(range(len(rows)))
     assert all(index != target for index, target in enumerate(permutation))
+
+
+def test_signature_equivalence_manifest_expands_members() -> None:
+    payload = {
+        "classes": [
+            {
+                "signature_class_id": "signature-a",
+                "member_transition_ids": ["transition-1", "transition-2"],
+            },
+            {
+                "signature_class_id": "signature-b",
+                "member_transition_ids": ["transition-3"],
+            },
+        ]
+    }
+    assert _signature_map(payload) == {
+        "transition-1": "signature-a",
+        "transition-2": "signature-a",
+        "transition-3": "signature-b",
+    }
 
 
 def test_reader_zero_equivalence_decode_access_and_save_load() -> None:

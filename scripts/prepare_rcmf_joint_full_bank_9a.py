@@ -122,7 +122,7 @@ def _paths(settings: Mapping[str, Any], artifact_dir: Path) -> dict[str, Path]:
         "transitions": parent_b
         / "clean_cache_rebuild/transition_preflight/transition_manifest.jsonl",
         "signatures": parent_b
-        / "clean_procedural_audit/clean_transition_signature_manifest.jsonl",
+        / "clean_procedural_audit/clean_signature_equivalence_manifest.json",
         "state_cache": parent_c
         / "representation_cache/multiview/state_multiview.pt",
         "transition_cache": parent_c
@@ -231,14 +231,17 @@ def _section_contract(
     }
 
 
-def _signature_map(rows: Sequence[Mapping[str, Any]]) -> dict[str, str]:
-    output = {}
-    for row in rows:
-        transition_id = str(row["transition_id"])
-        value = row.get("signature_class_id", row.get("class_id"))
-        if value is None:
-            raise KeyError(f"Signature row lacks class identity: {transition_id}")
-        output[transition_id] = str(value)
+def _signature_map(payload: Mapping[str, Any]) -> dict[str, str]:
+    output: dict[str, str] = {}
+    for row in payload["classes"]:
+        signature_class_id = str(row["signature_class_id"])
+        for transition_id_value in row["member_transition_ids"]:
+            transition_id = str(transition_id_value)
+            if transition_id in output:
+                raise ValueError(
+                    f"Transition belongs to duplicate signature classes: {transition_id}"
+                )
+            output[transition_id] = signature_class_id
     return output
 
 
@@ -299,6 +302,8 @@ def _parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--artifact-dir", type=Path, required=True)
     parser.add_argument("--attempt-id", required=True)
+    parser.add_argument("--parent-attempt-id", default="none")
+    parser.add_argument("--resume-checkpoint", default="none")
     parser.add_argument("--local-head", required=True)
     parser.add_argument("--github-head", required=True)
     parser.add_argument("--lambda-head", required=True)
@@ -348,8 +353,8 @@ def main() -> None:
         tmux_session=args.tmux_session,
         config_sha256=sha256_file(args.config),
         data_manifest_hashes=source_hashes,
-        parent_attempt_id="none",
-        resume_checkpoint="none",
+        parent_attempt_id=args.parent_attempt_id,
+        resume_checkpoint=args.resume_checkpoint,
         scientific_parameter_changed=False,
         heartbeat_interval_s=float(settings["runtime"]["heartbeat_interval_seconds"]),
     ) as attempt:
@@ -501,7 +506,11 @@ def main() -> None:
             paths["source_cache"],
         )
 
-        signatures = _signature_map(_rows(paths["signatures"]))
+        signatures = _signature_map(_json(paths["signatures"]))
+        if set(signatures) != set(transition_by_id):
+            raise ValueError(
+                "Signature equivalence map does not cover clean transitions"
+            )
         train_permutation = _permutation_rows(
             transitions, signatures, train_task_set
         )
