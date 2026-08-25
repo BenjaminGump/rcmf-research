@@ -29,6 +29,12 @@ from scripts.run_rcmf_joint_full_bank_9a import (
     _ordered_epoch_units,
     _state_derangement,
 )
+from scripts.run_rcmf_joint_full_bank_live_9a import (
+    build_live_manifest,
+    classify_live_checkpoint,
+    select_checkpoint,
+    selection_score,
+)
 
 
 class _Block(nn.Module):
@@ -277,6 +283,18 @@ def test_reader_zero_equivalence_decode_access_and_save_load() -> None:
         shuffled = model(hidden)
     assert not torch.equal(expected, shuffled)
 
+    # A trained affine memory normalization must not leak through an empty field.
+    for adapter in reader.adapters.values():
+        adapter.memory_norm.bias.data.fill_(0.5)
+    zero_slots = torch.zeros_like(slots)
+    with FieldReaderHooks(model=model, reader=reader, slots=zero_slots) as zero_audit:
+        zero_output = model(hidden)
+    assert torch.equal(zero_output, bare)
+    assert all(
+        all(value == 0.0 for value in values)
+        for values in zero_audit.delta_norms.values()
+    )
+
 
 def test_all_readers_and_writers_receive_full_field_gradients_while_qwen_is_frozen() -> None:
     torch.manual_seed(25101)
@@ -368,3 +386,79 @@ def test_state_derangement_and_training_units_are_frozen_before_outcomes(
         "state_query_shuffle",
         "correct",
     ]
+
+
+def _live_metric_row(state: str, task: str, control: str, signature: bool, successor: bool) -> dict:
+    return {
+        "source_state_id": state,
+        "source_task_id": task,
+        "control": control,
+        "metrics": {
+            "exact_primary_app_api_match": signature,
+            "canonical_procedural_signature_match": signature,
+            "semantic_successor_match": successor,
+            "execution_success": True,
+            "normalized_observation_similarity": float(successor),
+        },
+    }
+
+
+def test_live_manifest_keeps_world_fixed_and_shuffles_only_field_query() -> None:
+    outcomes = []
+    shuffle = {}
+    for index in range(98):
+        state_id = f"state-{index:03d}"
+        outcomes.append(
+            {
+                "model_split": "heldout_train_validation",
+                "state_example_id": state_id,
+                "state_task_id": f"task-{index % 8}",
+                "state_step_id": index + 1,
+            }
+        )
+        shuffle[state_id] = f"state-{(index + 1) % 98:03d}"
+    manifest = build_live_manifest(outcomes=outcomes, state_shuffle=shuffle)
+    assert manifest["condition_count"] == 784
+    assert len({row["condition_key"] for row in manifest["conditions"]}) == 784
+    state_shuffle_rows = [
+        row for row in manifest["conditions"] if row["control"] == "L3_state_query_shuffle"
+    ]
+    assert all(row["world_state_id"] == row["source_state_id"] for row in state_shuffle_rows)
+    assert all(row["field_query_state_id"] != row["world_state_id"] for row in state_shuffle_rows)
+    assert all(not row["runtime_memory_retrieval"] for row in manifest["conditions"])
+    assert all(not row["student_prompt_contains_raw_memory"] for row in manifest["conditions"])
+
+
+def test_live_classification_and_selection_follow_preregistered_score() -> None:
+    rows = []
+    for task_index in range(8):
+        state = f"state-{task_index}"
+        task = f"task-{task_index}"
+        rows.extend(
+            [
+                _live_metric_row(state, task, "L0_zero", False, False),
+                _live_metric_row(state, task, "L1_correct", True, True),
+                _live_metric_row(state, task, "L2_key_payload_shuffle", False, False),
+                _live_metric_row(state, task, "L3_state_query_shuffle", False, False),
+            ]
+        )
+    from scripts.run_rcmf_joint_full_bank_live_9a import summarize_live_controls
+
+    summary = summarize_live_controls(rows)
+    assert classify_live_checkpoint(summary) == "STRONG"
+    assert selection_score(summary) > 0.0
+    live = {
+        "reports": [
+            {"epoch": 1, "classification": "STRONG", "selection_score": 1.0, "stable_generation": True},
+            {"epoch": 2, "classification": "STRONG", "selection_score": 0.5, "stable_generation": True},
+        ]
+    }
+    teacher = {
+        "reports": [
+            {"epoch": 1, "metrics": {"V1_correct": {"policy_kl": 0.2}}},
+            {"epoch": 2, "metrics": {"V1_correct": {"policy_kl": 0.1}}},
+        ]
+    }
+    selected = select_checkpoint(live_summary=live, teacher_summary=teacher)
+    assert selected["selected"]["epoch"] == 1
+    assert selected["heldout_train_only_selection"]

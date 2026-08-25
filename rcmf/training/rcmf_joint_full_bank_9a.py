@@ -594,6 +594,7 @@ class FieldReaderHooks(AbstractContextManager[FieldReaderAudit]):
         self.model = model
         self.reader = reader
         self.slots = slots
+        self.zero_field = bool(torch.count_nonzero(slots.detach()).item() == 0)
         self.audit = FieldReaderAudit()
         self.deltas: dict[int, Tensor] = {}
         self.probabilities: dict[int, Tensor] = {}
@@ -609,9 +610,21 @@ class FieldReaderHooks(AbstractContextManager[FieldReaderAudit]):
         def apply(module: nn.Module, args: tuple[Any, ...], output: Any) -> Any:
             del module, args
             hidden = output[0] if isinstance(output, tuple) else output
-            changed, probabilities, delta = self.reader.adapters[str(layer_index)](
-                hidden, self.slots
-            )
+            adapter = self.reader.adapters[str(layer_index)]
+            if self.zero_field:
+                changed = hidden
+                delta = torch.zeros_like(hidden)
+                probabilities = hidden.new_full(
+                    (
+                        int(hidden.shape[0]),
+                        adapter.heads,
+                        int(hidden.shape[1]),
+                        SLOT_COUNT,
+                    ),
+                    1.0 / SLOT_COUNT,
+                )
+            else:
+                changed, probabilities, delta = adapter(hidden, self.slots)
             self.deltas[layer_index] = delta
             self.probabilities[layer_index] = probabilities
             self.audit.calls[layer_index] = self.audit.calls.get(layer_index, 0) + 1
