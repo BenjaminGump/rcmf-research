@@ -1,0 +1,145 @@
+include: appworld_rcmf_full_prompt.yaml
+
+experiment:
+  name: stage_c_rcmf_joint_full_bank_9a
+  version: rcmf_joint_full_bank_9a_v1
+  seed: 25101
+
+stage_c_9a:
+  run_uuid: rcmf_joint_full_bank_9a_20260826_001
+  artifact_dir: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  starting_head: ebe6cabe8c3c133b40cca80837204f6916edaf7c
+  archive_branch: archive/v4-exp030a-selected-memory-proxy
+  working_branch: research/v5-rcmf-joint-full-bank
+  global_seed: 25101
+
+  parent_exp025b: runs/stage_c/replay_clean_rebuild_7b_20260818_001
+  parent_exp025c: runs/stage_c/signature_balanced_field_7c_20260818_001
+  parent_exp025cr: runs/stage_c/signature_balanced_field_7cr_20260818_001
+  parent_exp028a: runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001
+  reconciled_corpus_dir: runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  task_split_manifest: runs/stage_c/state_conditioned_program_direct_7dg_20260821_001/preflight/a_task_split.json
+
+  expected:
+    structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+    replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+    selector_ensemble_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42bb01255a9e623956611f
+    model_name: Qwen/Qwen3-8B
+    train_task_count: 29
+    heldout_task_count: 8
+    complete_train_memory_count: 401
+    heldout_memory_count: 98
+    scoreable_train_state_count: 366
+    scoreable_heldout_state_count: 98
+
+  memory:
+    source_layer: final_layer
+    source_view_names:
+      - source_task_goal
+      - pre_action_state
+      - complete_action
+      - post_action_observation
+    pooling_rules: [token_mean, final_token]
+    input_dim: 4096
+    writer_hidden_dim: 512
+    payload_dim: 256
+    slot_count: 8
+    pooling_type_embedding: learned_shared_mean_final
+    full_transition_global_excluded: true
+    arbitrary_truncation_allowed: false
+    token_subsampling_allowed: false
+    cache_dtype: float32
+
+  selector:
+    frozen: true
+    seed_directories: [seed_25071, seed_25072, seed_25073]
+    state_views: 10
+    transition_views: 10
+    interaction_rank: 32
+    key_dim: 960
+    equality_atol: 0.00001
+    memory_specific_prior: false
+    mu: 0.0
+    deployment_score_matrix_allowed: false
+    deployment_top_k_allowed: false
+
+  field:
+    version: rcmf_reversible_full_bank_field_9a_v1
+    key_dim: 960
+    slot_count: 8
+    payload_dim: 256
+    A_shape: [960, 8, 256]
+    B_shape: [8, 256]
+    accumulator_dtype: float32
+    parent_weighting: parent_normalized
+    training_same_task_exclusion: direct_task_accumulator_subtraction
+    runtime_memory_scan_allowed: false
+
+  reader:
+    version: rcmf_standard_field_cross_attention_reader_9a_v1
+    insertion_layers: [7, 14, 21, 28]
+    model_dim: 4096
+    payload_dim: 256
+    attention_dim: 512
+    heads: 8
+    head_dim: 64
+    query_projection: trainable_independent
+    key_projection: trainable_independent
+    value_projection: trainable_independent
+    output_projection: trainable_zero_initialized
+    self_attention_kv_append: false
+    slot_causal_mask: false
+
+  training:
+    epochs: [1, 2]
+    writer_learning_rate: 0.0001
+    reader_learning_rate: 0.0001
+    weight_decay: 0.0001
+    max_grad_norm: 1.0
+    raw_or_bare_policy_kl_weight: 1.0
+    teacher_token_ce_weight: 0.25
+    ground_truth_action_ce_weight: 0.05
+    full_vs_zero_nll_weight: 0.10
+    full_vs_shuffle_nll_weight: 0.10
+    reader_residual_norm_weight: 0.001
+    writer_payload_norm_weight: 0.0001
+    positive_bare_class_balance: true
+    gradient_checkpointing: true
+    mixed_precision: bfloat16
+    checkpoint_every_units: 25
+    exact_resume: true
+
+  validation:
+    teacher_forced_controls: [V0_zero, V1_correct, V2_key_payload_shuffle, V3_state_query_shuffle]
+    live_controls: [L0_zero, L1_correct, L2_key_payload_shuffle, L3_state_query_shuffle]
+    checkpoint_selection: heldout_train_tasks_only
+    maximum_execution_drop: 0.05
+    minimum_positive_task_fraction: 0.50
+
+  appworld:
+    legacy_python: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    legacy_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+    one_step_bridge_script: scripts/appworld_live_one_step_bridge_7b.py
+    full_bridge_script: scripts/appworld_full_agent_bridge_7f.py
+    prompt_profile: full_demo
+    max_context_turns: 40
+    max_steps: 50
+    max_api_calls_per_interaction: 100
+    max_new_tokens: 512
+    context_limit: 40960
+    temperature: 0.0
+    top_p: 1.0
+    do_sample: false
+    enable_thinking: false
+
+  audit:
+    git_safe_root: research/audits/rcmf_joint_full_bank_9a_20260826_001
+    lambda_raw_root: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/audits
+    format: detailed_generation_interaction_audit_9a_v1
+
+  runtime:
+    review_threshold_h100_hours: 18.0
+    heartbeat_interval_seconds: 240
+    heartbeat_stale_seconds: 720
+    hardware_required: NVIDIA H100 80GB HBM3
