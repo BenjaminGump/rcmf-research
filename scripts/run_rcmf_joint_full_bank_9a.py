@@ -13,6 +13,8 @@ import sys
 import time
 from typing import Any
 
+os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+
 import _bootstrap  # noqa: F401
 import torch
 from torch import Tensor, nn
@@ -371,6 +373,7 @@ def _load_data(paths: Mapping[str, Path]) -> dict[str, Any]:
     }
 
 def _build_backend(cfg: Any) -> Any:
+    torch.use_deterministic_algorithms(True, warn_only=False)
     backend = build_backend(cfg, load_model=True)
     freeze_module(backend.model)
     if hasattr(backend.model, "gradient_checkpointing_enable"):
