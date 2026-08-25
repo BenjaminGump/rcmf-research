@@ -136,15 +136,37 @@ def _require(paths: Mapping[str, Path], names: Sequence[str]) -> None:
 def _state_derangement(rows: Sequence[Mapping[str, Any]]) -> dict[str, str]:
     if len(rows) < 2:
         raise ValueError("State-query shuffle requires at least two states")
-    ordered = sorted(
-        rows,
-        key=lambda row: (
-            stable_key(GLOBAL_SEED, "9a-state-query-shuffle", row["state_example_id"]),
-            str(row["state_example_id"]),
+    grouped: dict[str, list[Mapping[str, Any]]] = {}
+    for row in rows:
+        grouped.setdefault(str(row["state_task_id"]), []).append(row)
+    ordered_tasks = sorted(
+        grouped,
+        key=lambda task_id: (
+            stable_key(GLOBAL_SEED, "9a-state-query-task", task_id),
+            task_id,
         ),
     )
+    ordered = []
+    for task_id in ordered_tasks:
+        ordered.extend(
+            sorted(
+                grouped[task_id],
+                key=lambda row: (
+                    stable_key(
+                        GLOBAL_SEED,
+                        "9a-state-query-shuffle",
+                        row["state_example_id"],
+                    ),
+                    str(row["state_example_id"]),
+                ),
+            )
+        )
+    maximum_group = max(len(grouped[task_id]) for task_id in grouped)
+    task_by_state = {
+        str(row["state_example_id"]): str(row["state_task_id"]) for row in rows
+    }
     best: tuple[int, int, dict[str, str]] | None = None
-    for offset in range(1, len(ordered)):
+    for offset in range(maximum_group, len(ordered)):
         mapping = {
             str(row["state_example_id"]): str(
                 ordered[(index + offset) % len(ordered)]["state_example_id"]
@@ -152,9 +174,6 @@ def _state_derangement(rows: Sequence[Mapping[str, Any]]) -> dict[str, str]:
             for index, row in enumerate(ordered)
         }
         fixed = sum(source == target for source, target in mapping.items())
-        task_by_state = {
-            str(row["state_example_id"]): str(row["state_task_id"]) for row in rows
-        }
         same_task = sum(
             task_by_state[source] == task_by_state[target]
             for source, target in mapping.items()
@@ -162,12 +181,14 @@ def _state_derangement(rows: Sequence[Mapping[str, Any]]) -> dict[str, str]:
         candidate = (fixed, same_task, mapping)
         if best is None or candidate[:2] < best[:2]:
             best = candidate
+        if fixed == 0 and same_task == 0:
+            break
     assert best is not None
     if best[0]:
         raise RuntimeError("State-query shuffle contains fixed points")
+    if best[1] and maximum_group <= len(rows) - maximum_group:
+        raise RuntimeError("State-query shuffle retained avoidable same-task pairs")
     return best[2]
-
-
 def _build_manifests(
     outcomes: Sequence[Mapping[str, Any]], paths: Mapping[str, Path]
 ) -> tuple[dict[str, Any], dict[str, Any]]:
