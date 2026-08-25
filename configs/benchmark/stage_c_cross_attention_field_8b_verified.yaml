@@ -1,0 +1,6 @@
+include: stage_c_cross_attention_field_8b_runtime.yaml
+
+stage_c_8b:
+  # Verified file SHA256 from the immutable EXP-025C selector summary and file.
+  expected_selector_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f
+
