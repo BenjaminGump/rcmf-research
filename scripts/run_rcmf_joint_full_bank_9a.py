@@ -387,6 +387,9 @@ def _build_backend(cfg: Any) -> Any:
 
 def _build_components(device: torch.device) -> tuple[nn.Module, nn.Module]:
     seed_everything(GLOBAL_SEED)
+    # The shared seeding helper enables warn-only determinism for older runs.
+    # EXP-031A requires nondeterministic CUDA kernels to fail before science.
+    torch.use_deterministic_algorithms(True, warn_only=False)
     writer = AlignedTransitionWriter().to(device=device, dtype=torch.float32)
     reader = StandardFieldCrossAttentionReader().to(device=device, dtype=torch.float32)
     return writer, reader
