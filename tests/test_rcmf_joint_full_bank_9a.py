@@ -24,6 +24,11 @@ from rcmf.training.signature_balanced_field_7c import (
     SignatureBalancedFieldSelector,
 )
 from scripts.prepare_rcmf_joint_full_bank_9a import _signature_map
+from scripts.run_rcmf_joint_full_bank_9a import (
+    _build_manifests,
+    _ordered_epoch_units,
+    _state_derangement,
+)
 
 
 class _Block(nn.Module):
@@ -309,3 +314,57 @@ def test_all_readers_and_writers_receive_full_field_gradients_while_qwen_is_froz
         for parameter in reader.parameters()
     )
     assert all(parameter.grad is None for parameter in model.parameters())
+
+
+def test_state_derangement_and_training_units_are_frozen_before_outcomes(
+    tmp_path,
+) -> None:
+    rows = [
+        {
+            "state_example_id": "state-a",
+            "state_task_id": "task-a",
+            "model_split": "model_train",
+            "label": "POSITIVE",
+        },
+        {
+            "state_example_id": "state-b",
+            "state_task_id": "task-b",
+            "model_split": "model_train",
+            "label": "NEUTRAL",
+        },
+        {
+            "state_example_id": "state-c",
+            "state_task_id": "task-c",
+            "model_split": "heldout_train_validation",
+            "label": "HARMFUL",
+        },
+        {
+            "state_example_id": "state-d",
+            "state_task_id": "task-d",
+            "model_split": "heldout_train_validation",
+            "label": "POSITIVE",
+        },
+    ]
+    mapping = _state_derangement(rows[:2])
+    assert mapping == {"state-a": "state-b", "state-b": "state-a"}
+    paths = {
+        "state_shuffle": tmp_path / "state_shuffle.json",
+        "units": tmp_path / "units.json",
+    }
+    units, shuffle = _build_manifests(rows, paths)
+    assert shuffle["fixed_point_count"] == 0
+    assert shuffle["same_task_count"] == 0
+    assert units["unit_count_per_epoch"] == 4
+    assert units["backward_count"] == 8
+    assert units["balance_group_total_weights"]["positive"] == pytest.approx(2.0)
+    assert units["balance_group_total_weights"]["bare"] == pytest.approx(2.0)
+    positive = [
+        row for row in _ordered_epoch_units(units, 1)
+        if row["state_example_id"] == "state-a"
+    ]
+
+    assert [row["role"] for row in positive] == [
+        "key_payload_shuffle",
+        "state_query_shuffle",
+        "correct",
+    ]
