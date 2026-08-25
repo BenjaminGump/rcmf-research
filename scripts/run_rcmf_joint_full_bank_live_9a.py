@@ -154,20 +154,21 @@ def build_live_manifest(*, outcomes: Sequence[Mapping[str, Any]], state_shuffle:
     return payload
 
 
-def _write_manifest(*, data: Mapping[str, Any], paths: Mapping[str, Path], live: Mapping[str, Path]) -> dict[str, Any]:
+def _resolve_manifest(
+    *, data: Mapping[str, Any], paths: Mapping[str, Path], live: Mapping[str, Path]
+) -> tuple[dict[str, Any], bool]:
     if live["manifest"].exists():
         payload = _json(live["manifest"])
         if payload.get("format") != LIVE_MANIFEST_VERSION:
             raise ValueError("Existing live manifest format differs")
-        return payload
+        return payload, True
     state_shuffle = {
         str(row["query_state_id"]): str(row["shuffled_query_state_id"])
         for row in _json(paths["state_shuffle"])["rows"]
         if str(row["model_split"]) == "heldout_train_validation"
     }
     payload = build_live_manifest(outcomes=data["outcomes"], state_shuffle=state_shuffle)
-    atomic_write_json(live["manifest"], payload)
-    return payload
+    return payload, False
 
 
 def summarize_live_controls(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
@@ -822,9 +823,9 @@ def main() -> None:
     )
     _require(paths, required)
     data = _load_data(paths)
-    manifest = _write_manifest(data=data, paths=paths, live=live)
+    manifest, manifest_exists = _resolve_manifest(data=data, paths=paths, live=live)
     source_hashes = {name: sha256_file(paths[name]) for name in required}
-    source_hashes["live_manifest"] = sha256_file(live["manifest"])
+    source_hashes["live_manifest_content"] = str(manifest["manifest_sha256"])
     source_hashes["replay_config"] = sha256_file(args.replay_config)
     with AttemptLedger(
         args.artifact_dir,
@@ -843,6 +844,8 @@ def main() -> None:
         scientific_parameter_changed=False,
         heartbeat_interval_s=float(settings["runtime"]["heartbeat_interval_seconds"]),
     ) as attempt:
+        if not manifest_exists:
+            atomic_write_json(live["manifest"], manifest)
         if args.phase == "manifest":
             result, latest = manifest, live["manifest"]
         elif args.phase == "teacher-corrected":
