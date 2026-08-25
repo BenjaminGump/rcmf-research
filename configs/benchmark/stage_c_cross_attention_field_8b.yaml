@@ -1,0 +1,124 @@
+include: stage_c_fixed_memory_reader_8a.yaml
+
+experiment:
+  name: stage_c_cross_attention_field_8b
+  version: reversible_cross_attention_field_8b_v1
+  seed: 25101
+
+stage_c_8b:
+  run_uuid: reversible_cross_attention_field_8b_20260825_001
+  artifact_dir: runs/stage_c/reversible_cross_attention_field_8b_20260825_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  starting_head: 02b71fa490e2d0485453cee0739598b990ba4174
+  archive_branch: archive/v4-fixed-memory-reader-failed
+  working_branch: research/v4-cross-attention-field
+
+  parent_exp025b: runs/stage_c/replay_clean_rebuild_7b_20260818_001
+  parent_exp025c: runs/stage_c/signature_balanced_field_7c_20260818_001
+  parent_exp025cr: runs/stage_c/signature_balanced_field_7cr_20260818_001
+  parent_exp028a: runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001
+  parent_exp029a: runs/stage_c/fixed_memory_reader_adapter_8a_20260824_001
+  reconciled_corpus_dir: runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  task_split_manifest: runs/stage_c/state_conditioned_program_direct_7dg_20260821_001/preflight/a_task_split.json
+
+  expected_replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+  expected_structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+  expected_selector_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42bb01255a9e623956611f
+  expected_model_name: Qwen/Qwen3-8B
+
+  appworld:
+    legacy_python: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    legacy_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+    full_bridge_script: scripts/appworld_full_agent_bridge_7f.py
+    one_step_bridge_script: scripts/appworld_live_one_step_bridge_7b.py
+    semantic_module: rcmf/training/appworld_replay_clean_rebuild_7b.py
+    prompt_profile: full_demo
+    max_context_turns: 40
+    max_steps: 50
+    max_new_tokens: 512
+    context_limit: 40960
+    temperature: 0.0
+    top_p: 1.0
+    enable_thinking: false
+    max_api_calls_per_interaction: 100
+    worker_timeout_seconds: 600
+
+  memory:
+    renderer_version: observation_excluded_transition_memory_8b_v1
+    included_views: [source_task_goal, canonical_pre_action_state, complete_action]
+    excluded_views: [complete_post_action_observation, full_transition_global]
+    token_cap_before_sampling: 256
+    slot_count: 16
+    sampling: deterministic_even_stride_over_capped_prefix
+    cache_dtype: bfloat16
+
+  reader:
+    version: tokenmem_style_cross_attention_reader_8b_v1
+    qwen_layer_count: 36
+    model_dim: 4096
+    query_projection: frozen_qwen_q_proj
+    key_projection: frozen_qwen_k_proj
+    value_projection: frozen_qwen_v_proj
+    memory_softmax: separate_no_causal_mask
+    memory_rope: false
+    self_attention_kv_append: false
+    fusion_rank: 16
+    fusion_alpha: 32.0
+    fusion_scaling: alpha_over_rank
+    fusion_dropout: 0.2
+    down_initialization_std: 0.01
+    up_initialization: zero
+    learning_rate: 0.001
+    weight_decay: 0.0
+    max_grad_norm: 1.0
+
+  curriculum:
+    model_train_task_count: 29
+    heldout_train_task_count: 8
+    phase1_max_epochs: 3
+    phase2_max_epochs: 4
+    phase1_checkpoint_metric: heldout_utilization_cross_entropy
+    phase2_policy_kl_weight: 1.0
+    phase2_teacher_token_ce_weight: 0.25
+    phase2_ground_truth_ce_weight: 0.05
+    phase2_residual_norm_weight: 0.001
+    phase2_balance_positive_and_bare: true
+    positive_controls: [transition_mismatch, state_mismatch]
+
+  validation:
+    controls: [X0_no_memory, X1_correct_memory, X2_transition_shuffle, X3_state_shuffle]
+    maximum_execution_drop: 0.05
+    minimum_positive_task_fraction: 0.50
+    no_test_normal_for_selection: true
+
+  field:
+    version: reversible_semantic_slot_field_8b_v1
+    selector_seed_count: 3
+    selector_state_views: 10
+    selector_transition_views: 10
+    selector_rank: 32
+    key_dim: 960
+    layer_count: 36
+    slot_count: 16
+    model_dim: 4096
+    accumulator_dtype: float32
+    parent_weighting: parent_normalized
+    calibration_max_epochs: 2
+
+  runtime:
+    review_threshold_h100_hours: 18.0
+    memory_encode_seconds_expected: 3.0
+    memory_encode_seconds_conservative: 5.0
+    reader_backward_seconds_expected: 6.0
+    reader_backward_seconds_conservative: 9.0
+    policy_forward_seconds_expected: 2.0
+    policy_forward_seconds_conservative: 3.5
+    live_condition_seconds_expected: 8.0
+    live_condition_seconds_conservative: 12.0
+    first37_condition_hours_expected: 1.3
+    first37_condition_hours_conservative: 2.2
+    checkpoint_bytes: 40000000
+    condition_result_bytes: 2359296
+
+  heartbeat_interval_seconds: 240

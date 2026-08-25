@@ -1,0 +1,6 @@
+include: stage_c_cross_attention_field_8b.yaml
+
+stage_c_8b:
+  memory:
+    sampling: deterministic_full_span_cap_then_even_stride
+
