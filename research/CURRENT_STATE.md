@@ -1959,3 +1959,26 @@ Decision:
 - Neural compiled-memory architecture work, another reader/adapter, full-bank
   integration, Qwen training, Stage C2, end-to-end RCMF, and V4 tagging are
   stopped for the submission.
+
+### EXP-030A published-style cross-attention reader policy-gate failure
+
+- The dedicated external-memory reader passes zero/no-memory equivalence,
+  decode access, separate-memory-KV, frozen-Qwen, gradient, memory-specific
+  logit, and exact save/load/resume checks across all 36 Qwen layers.
+- The 499-memory cache has 16 slots per layer and occupies 2.3567 GB. The
+  rank-16 fusion reader has 4,718,592 trainable parameters; Qwen has zero
+  trainable parameters and zero gradients.
+- Phase 1 trained for three epochs on 401 source transitions and selected
+  epoch 1 on 98 heldout-train states at CE `0.597649`. Phase 2 trained four
+  epochs over 366 causal states and 576 units per epoch.
+- On the 24 heldout POSITIVE states, the best epoch has raw-teacher policy KL
+  X0/X1/X2/X3 = `0.583907/0.839403/0.976347/1.770020`. Correct memory beats
+  both shuffles but is worse than zero memory; all four checkpoints fail the
+  mandatory policy gate.
+- Heldout live, reversible-field, whole-bank, and first37 conditions are all
+  zero because no checkpoint is selectable. No test-normal outcome was used.
+- Decision branch: `published_cross_attention_reader_failed_on_appworld`.
+  Stop before the reversible field. Compiled-memory architecture work,
+  another reader, full-bank integration, Qwen training, Stage C2, end-to-end
+  RCMF, full AppWorld evaluation, and V4 tagging remain stopped for the
+  submission.

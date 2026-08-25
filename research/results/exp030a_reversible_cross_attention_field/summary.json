@@ -1,0 +1,100 @@
+{
+  "format": "exp030a_reversible_cross_attention_field_summary_v1",
+  "run_uuid": "reversible_cross_attention_field_8b_20260825_001",
+  "status": "completed_published_cross_attention_reader_failed_on_appworld",
+  "global_seed": 25101,
+  "starting_commit": "02b71fa490e2d0485453cee0739598b990ba4174",
+  "source_commit": "4534c2673f2d0878b76f4ba0650b0b5d030fff25",
+  "branch": "research/v4-cross-attention-field",
+  "archive_branch": "archive/v4-fixed-memory-reader-failed",
+  "archive_sha": "02b71fa490e2d0485453cee0739598b990ba4174",
+  "parent_run": "fixed_memory_reader_adapter_8a_20260824_001",
+  "model": "Qwen/Qwen3-8B",
+  "model_frozen": true,
+  "selector_frozen": true,
+  "qwen_layer_count": 36,
+  "memory_slot_count_per_layer": 16,
+  "model_dim": 4096,
+  "reader_rank": 16,
+  "reader_trainable_parameter_count": 4718592,
+  "student_prompt_contains_raw_memory": false,
+  "memory_slot_cache": {
+    "memory_count": 499,
+    "shape_per_memory": [36, 16, 4096],
+    "bytes": 2356661732,
+    "index_sha256": "9c7f7c2b3760ef7be024a09731c3a09bd3324c91109afda40b14cbdec2e0fc1c"
+  },
+  "implementation_validation": {
+    "passed": true,
+    "representative_state_count": 4,
+    "prompt_tokens": [7319, 10236, 35505, 35608],
+    "zero_logits_nll_generation_exact": true,
+    "decode_tokens_query_memory": true,
+    "memory_slots_in_self_attention_kv": false,
+    "qwen_trainable_parameter_count": 0,
+    "qwen_gradient_count": 0,
+    "all_fusion_layers_receive_posttrain_gradients": true,
+    "save_load_resume_exact": true
+  },
+  "phase1": {
+    "model_train_samples": 401,
+    "heldout_train_samples": 98,
+    "epochs": 3,
+    "selected_epoch": 1,
+    "selected_checkpoint_sha256": "9980c67a7ba81c054c41554ac3fc5b58e228f1de286b78d32ab926c86c40f71f",
+    "heldout_cross_entropy": [0.5976490424565819, 1.142685752898949, 0.8169925767686028]
+  },
+  "phase2": {
+    "model_train_states": 366,
+    "units_per_epoch": 576,
+    "epochs": 4,
+    "backward_count": 2304,
+    "training_policy_kl": [0.9317032577200735, 0.9833659936003742, 1.2777766162911979, 0.8661463082078424]
+  },
+  "policy_gate": {
+    "heldout_train_states": 98,
+    "heldout_positive_states": 24,
+    "checkpoint_count": 4,
+    "eligible_checkpoint_count": 0,
+    "best_diagnostic_epoch": 1,
+    "best_diagnostic_checkpoint_sha256": "cd47f0a79a7ac66550b4f33571539b78ecbe1cfd1a1ba0ff8657ef4aebec92ec",
+    "positive_raw_teacher_policy_kl": {
+      "X0_no_memory": 0.5839071124792099,
+      "X1_correct_memory": 0.8394028558395803,
+      "X2_transition_shuffle": 0.976346641080454,
+      "X3_state_shuffle": 1.7700204270270963
+    },
+    "correct_below_zero": false,
+    "correct_below_transition_shuffle": true,
+    "correct_below_state_shuffle": true,
+    "passed": false
+  },
+  "heldout_live": {
+    "status": "not_run_blocked_by_policy_gate",
+    "condition_count": 0
+  },
+  "reversible_field": {
+    "authorized": false,
+    "built": false,
+    "one_step_condition_count": 0,
+    "first37_condition_count": 0
+  },
+  "decision_branch": "published_cross_attention_reader_failed_on_appworld",
+  "test_normal_outcomes_used": false,
+  "attempts": {
+    "count": 17,
+    "successful": 10,
+    "failed": 7,
+    "all_closed": true,
+    "ledger_sha256": "769222cdd6c32e35ee1189fbc8fc6e346dab2516b91ca4479be74b3ac751d42c"
+  },
+  "runtime": {
+    "active_h100_process_hours": 5.54489,
+    "wall_span_hours": 11.069678,
+    "artifact_size_bytes": 2756202486,
+    "preflight_expected_phase_a_c_h100_hours": 13.033796540873073
+  },
+  "scientific_parameters_changed": false,
+  "v4_tag_created_or_moved": false,
+  "recommended_next_action": "freeze compiled-memory architecture work for the submission and move to claim locking, tables, limitations, reproducibility, and paper writing"
+}

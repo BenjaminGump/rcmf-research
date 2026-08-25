@@ -2251,3 +2251,50 @@ Implementation recovery:
   DecisionExample field, mixed precision, checkpoint hook lifetime, and live
   bridge condition identity. Each was fixed with focused regression coverage;
   no accepted scientific row or frozen parameter changed.
+
+## 2026-08-25 EXP-030A cross-attention reader failed before field
+
+VERIFIED:
+
+- The borrowed dedicated-memory cross-attention pathway is technically valid:
+  zero/no-memory behavior is exact, generated tokens query memory, memory does
+  not enter self-attention KV, all 36 fusion layers train, and Qwen remains
+  frozen with zero gradients.
+- Phase 1 selected epoch 1 on eight heldout train tasks. Phase 2 completed four
+  bounded specificity/compliance epochs without changing the single seed or
+  the frozen scientific contract.
+- At every Phase-2 checkpoint, correct-memory policy KL on heldout POSITIVE
+  states exceeds zero-memory KL. The best row is `0.839403` versus `0.583907`.
+- Correct memory at the best epoch beats transition and state shuffles
+  (`0.976347` and `1.770020`), but the preregistered policy gate requires all
+  three strict comparisons.
+- No checkpoint is eligible. Heldout live, field, whole-bank, and first37
+  conditions did not run. No test-normal outcome was inspected.
+
+INFERENCE:
+
+- The borrowed cross-attention reader can encode memory identity but does not
+  provide a policy-useful selected-memory interface under this bounded
+  AppWorld curriculum.
+- Since the reader gate fails, reversible whole-bank field behavior remains
+  unvalidated and cannot be claimed.
+
+UNVERIFIED:
+
+- Whether another reader, more training, another seed, or a different
+  curriculum would pass. None is authorized on the submission path.
+
+Decision:
+
+- Record `published_cross_attention_reader_failed_on_appworld`.
+- Stop before field construction and do not run the 1,176 live conditions,
+  because live behavior cannot make a policy-ineligible checkpoint selectable.
+- Freeze compiled-memory architecture work for the submission and move to
+  claim locking, tables, limitations, reproducibility, and paper writing.
+
+Implementation recovery:
+
+- Seven failed attempts are preserved append-only. Focused fixes addressed
+  checkpoint hook identity, bounded memory use, runner compatibility, and an
+  immutable policy-row schema adapter without changing scientific parameters
+  or rewriting accepted rows.

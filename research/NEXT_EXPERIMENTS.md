@@ -1319,3 +1319,28 @@ Recommended next 48-hour action:
 Still blocked: neural compiled-memory architecture work, another reader,
 full-bank integration, p(s,m_transition), Qwen training, Stage C2, end-to-end
 RCMF, full AppWorld evaluation, and an RCMF V4 tag.
+
+## EXP-030A Completed - Stop Before Reversible Field
+
+The published-style single-memory cross-attention reader passes its complete
+implementation contract but fails the mandatory heldout policy gate at every
+checkpoint. The best correct-memory KL is `0.839403`, worse than zero memory
+at `0.583907`, despite beating transition and state shuffles. EXP-030A reaches
+`published_cross_attention_reader_failed_on_appworld`.
+
+Recommended next 48-hour action:
+
+1. Freeze EXP-030A and all prior compiler/reader/carrier artifacts.
+2. Do not spend the deadline window on another reader, curriculum, seed,
+   whole-bank field, or end-to-end compiled-memory experiment.
+3. Lock the submission contribution around clean provenance, semantic replay,
+   signature-balanced automatic selection, raw-transition one-step causality,
+   and the validated free-carrier result.
+4. Present generic, structured, fixed-reader, and cross-attention
+   amortization as bounded negative evidence with exact scope limitations.
+5. Complete tables, ablations, artifact links, reproducibility, limitations,
+   and paper writing.
+
+Still blocked: reversible-field construction, another neural reader,
+full-bank integration, p(s,m_transition), Qwen training, Stage C2, end-to-end
+RCMF, full AppWorld evaluation, and an RCMF V4 tag.
