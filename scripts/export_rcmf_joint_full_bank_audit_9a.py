@@ -60,6 +60,38 @@ def sha_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def verify_git_safe_redaction(audit_root: Path) -> dict[str, Any]:
+    """Fail closed if a registered credential observation or raw JWT remains."""
+    text_suffixes = {".json", ".jsonl", ".md", ".txt"}
+    checked_files = 0
+    jwt_match_count = 0
+    leaked_observation_hashes: set[str] = set()
+    for path in sorted(audit_root.rglob("*")):
+        if not path.is_file() or path.suffix.lower() not in text_suffixes:
+            continue
+        if path.name in {"index.json", "verification.json"}:
+            continue
+        checked_files += 1
+        text = path.read_text(encoding="utf-8")
+        jwt_match_count += len(JWT_RE.findall(text))
+        for secret in SENSITIVE_OBSERVATIONS:
+            if secret in text:
+                leaked_observation_hashes.add(sha_text(secret))
+    if jwt_match_count or leaked_observation_hashes:
+        raise RuntimeError(
+            "git-safe audit redaction verification failed: "
+            f"raw_jwts={jwt_match_count}, "
+            f"registered_observation_leaks={len(leaked_observation_hashes)}, "
+            f"leaked_hashes={sorted(leaked_observation_hashes)}"
+        )
+    return {
+        "checked_text_files": checked_files,
+        "registered_sensitive_observation_count": len(SENSITIVE_OBSERVATIONS),
+        "registered_sensitive_observation_leak_count": 0,
+        "raw_jwt_match_count": 0,
+    }
+
+
 def raw_tensor_sha256(value: Tensor) -> str:
     work = value.detach().to(device="cpu").contiguous()
     return sha_bytes(work.view(torch.uint8).numpy().tobytes())
@@ -617,7 +649,9 @@ def export(artifact_root: Path, audit_root: Path) -> dict[str, Any]:
             "rows": contribution_rows,
         },
     )
+    redaction_verification = verify_git_safe_redaction(audit_root)
     verification = {
+        **redaction_verification,
         "format": FORMAT,
         "run_uuid": RUN_UUID,
         "heldout_rows": len(heldout_rows),

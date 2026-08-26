@@ -29,6 +29,7 @@ from scripts.export_rcmf_joint_full_bank_audit_9a import (
     redact,
     redact_string,
     register_sensitive_observation,
+    verify_git_safe_redaction,
 )
 from scripts.run_rcmf_joint_full_bank_9a import (
     _build_manifests,
@@ -558,4 +559,25 @@ def test_git_safe_audit_redacts_printed_password_observation_globally() -> None:
     assert "REDACTED:CREDENTIAL_OBSERVATION:SHA256=" in redact_string(
         "Output: =oskMku"
     )
+    SENSITIVE_OBSERVATIONS.clear()
+
+
+def test_git_safe_redaction_verification_fails_closed(tmp_path) -> None:
+    SENSITIVE_OBSERVATIONS.clear()
+    secret = "registered-secret-value"
+    register_sensitive_observation("print(password)", secret)
+    safe_path = tmp_path / "safe.jsonl"
+    safe_path.write_text(redact_string(f"Output: {secret}"), encoding="utf-8")
+    result = verify_git_safe_redaction(tmp_path)
+    assert result["registered_sensitive_observation_count"] == 1
+    assert result["registered_sensitive_observation_leak_count"] == 0
+    assert result["raw_jwt_match_count"] == 0
+
+    unsafe_path = tmp_path / "unsafe.jsonl"
+    unsafe_path.write_text(f"Output: {secret}", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="redaction verification failed"):
+        verify_git_safe_redaction(tmp_path)
+    unsafe_path.write_text("abcdefgh.ijklmnop.qrstuvwx", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="raw_jwts=1"):
+        verify_git_safe_redaction(tmp_path)
     SENSITIVE_OBSERVATIONS.clear()
