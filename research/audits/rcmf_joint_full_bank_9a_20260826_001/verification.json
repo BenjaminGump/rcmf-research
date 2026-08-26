@@ -1,0 +1,42 @@
+{
+  "behavioral_conclusion_ready": true,
+  "checked_text_files": 180,
+  "compact_tensor_bundle": "/lambda/nfs/rcmf-persist/project/research/audits/rcmf_joint_full_bank_9a_20260826_001/field_tensors/field_queries_and_slots.pt",
+  "compact_tensor_bundle_bytes": 41620341,
+  "compact_tensor_bundle_sha256": "17c86f7085cbaeaed88a208ab65c16f7bfdd326e55c0aaf71633e71f92874d41",
+  "comparison_task_count": 36,
+  "deployment_field_reconstruction_max_abs": 3.814697265625e-06,
+  "deployment_provenance": {
+    "checkpoint": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/joint_training/checkpoints/epoch_02.pt",
+    "checkpoint_sha256": "d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1",
+    "data_manifest": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/full_bank_data_manifest.json",
+    "data_manifest_sha256": "196f9ec57674de202324bd34f0168cf4c0f6c5399fc9828939a8dcc730b214b2",
+    "deployment": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/deployment_field/complete_37_task_field.pt",
+    "deployment_sha256": "5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e",
+    "shuffle_manifest": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/key_payload_shuffle_manifest.json",
+    "shuffle_manifest_sha256": "4e5a4d8551223c420b063b0d8043a966367ac7043a53891ff7723616b7aa2170",
+    "source": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/rcmf_source_cache.pt",
+    "source_sha256": "d9b4a1c6c8e428b12d5681625e2bbefd0c2def9b9836d407a901d0788f8eaedb"
+  },
+  "first37_expected_task_rows": 111,
+  "first37_steps": {
+    "D0": 872,
+    "D1": 924,
+    "D2": 995
+  },
+  "first37_task_rows": 111,
+  "format": "rcmf_joint_full_bank_detailed_audit_9a_v1",
+  "git_safe_copy_redacts_credentials_jwts_only": true,
+  "heldout_expected": 784,
+  "heldout_rows": 784,
+  "offline_contributions": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/first37/offline_memory_contributions.json",
+  "offline_contributions_not_used_by_runtime_model_or_outcome": true,
+  "offline_contributions_sha256": "be4032b28325da6bb803e5556bd94461817f9cb563c0e0a94e9de65abde19153",
+  "raw_jwt_match_count": 0,
+  "raw_lambda_logs_preserved": true,
+  "registered_sensitive_observation_count": 166,
+  "registered_sensitive_observation_leak_count": 0,
+  "run_uuid": "rcmf_joint_full_bank_9a_20260826_001",
+  "shuffled_field_reconstruction_max_abs": 5.245208740234375e-06,
+  "static_asset_count": 92
+}
