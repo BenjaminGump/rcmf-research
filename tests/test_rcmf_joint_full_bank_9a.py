@@ -24,6 +24,7 @@ from rcmf.training.signature_balanced_field_7c import (
     SignatureBalancedFieldSelector,
 )
 from scripts.prepare_rcmf_joint_full_bank_9a import _signature_map
+from scripts.export_rcmf_joint_full_bank_audit_9a import redact, redact_string
 from scripts.run_rcmf_joint_full_bank_9a import (
     _build_manifests,
     _ordered_epoch_units,
@@ -526,3 +527,17 @@ def test_complete_field_runtime_read_has_no_memory_loop_or_retrieval() -> None:
     assert "score_matrix" not in source
     assert "topk" not in source
     assert "read_compiled_field" in source
+
+def test_git_safe_audit_redacts_jwts_and_credentials_with_hashes() -> None:
+    jwt = "abcdefgh.ijklmnop.qrstuvwx"
+    text = redact_string(f"access_token={jwt} password='secret-value'")
+    assert jwt not in text
+    assert "secret-value" not in text
+    assert "REDACTED:JWT:SHA256=" in text
+    assert "REDACTED:CREDENTIAL:SHA256=" in text
+
+
+def test_git_safe_audit_recurses_without_changing_nonsecret_values() -> None:
+    payload = redact({"password": "secret", "nested": [{"value": 7}]})
+    assert payload["password"].startswith("<REDACTED:FIELD:PASSWORD:SHA256=")
+    assert payload["nested"] == [{"value": 7}]
