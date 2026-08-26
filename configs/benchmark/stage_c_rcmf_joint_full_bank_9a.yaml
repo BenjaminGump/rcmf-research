@@ -132,6 +132,20 @@ stage_c_9a:
     top_p: 1.0
     do_sample: false
     enable_thinking: false
+    worker_timeout_seconds: 600
+
+  first37:
+    task_manifest_config: configs/benchmark/stage_c_deep_residual_amortization_7f.yaml
+    task_manifest_section: stage_c_7f.first37.task_ids
+    condition_ids: [D0, D1, D2]
+    expected_task_count: 37
+    expected_condition_count: 111
+    complete_field_memory_count: 499
+    measured_bare_h100_hours: 0.769878765447235
+    correct_field_multiplier_expected: 2.0
+    correct_field_multiplier_conservative: 3.0
+    expected_git_safe_audit_bytes: 1500000000
+    expected_lambda_raw_audit_bytes: 4000000000
 
   audit:
     git_safe_root: research/audits/rcmf_joint_full_bank_9a_20260826_001

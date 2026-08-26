@@ -36,6 +36,12 @@ from scripts.run_rcmf_joint_full_bank_live_9a import (
     select_checkpoint,
     selection_score,
 )
+from scripts.run_rcmf_joint_full_bank_first37_9a import (
+    CompleteFieldRuntime,
+    _compact_tensor,
+    build_first37_manifest,
+    classify_first37,
+)
 
 
 class _Block(nn.Module):
@@ -478,3 +484,45 @@ def test_live_classification_and_selection_follow_preregistered_score() -> None:
     selected = select_checkpoint(live_summary=live, teacher_summary=teacher)
     assert selected["selected"]["epoch"] == 1
     assert selected["heldout_train_only_selection"]
+
+def test_first37_manifest_is_frozen_full_field_without_runtime_retrieval() -> None:
+    tasks = [f"task-{index:02d}" for index in range(37)]
+    manifest = build_first37_manifest(
+        task_ids=tasks, deployment_sha256="a" * 64, memory_count=499
+    )
+    assert manifest["logical_condition_count"] == 111
+    assert len({(row["condition"], row["task_id"]) for row in manifest["rows"]}) == 111
+    assert all(not row["runtime_memory_retrieval"] for row in manifest["rows"])
+    assert all(not row["runtime_per_memory_scoring"] for row in manifest["rows"])
+    assert all(
+        row["memory_count"] == (0 if row["condition"] == "D0" else 499)
+        for row in manifest["rows"]
+    )
+
+
+def test_first37_decision_contract_and_compact_query_audit() -> None:
+    assert classify_first37(8, 10, 7)["decision_branch"] == (
+        "rcmf_full_field_preliminary_positive"
+    )
+    assert classify_first37(10, 8, 7)["decision_branch"] == (
+        "rcmf_field_partial_live_signal"
+    )
+    assert classify_first37(8, 7, 7)["decision_branch"] == (
+        "rcmf_field_not_live_memory_specific"
+    )
+    query = torch.arange(960, dtype=torch.float32)
+    compact = _compact_tensor(query)
+    assert compact["shape"] == [960]
+    assert len(compact["first_values"]) == 8
+    assert len(compact["last_values"]) == 8
+    assert len(compact["sha256"]) == 64
+
+
+def test_complete_field_runtime_read_has_no_memory_loop_or_retrieval() -> None:
+    import inspect
+
+    source = inspect.getsource(CompleteFieldRuntime.read)
+    assert "for " not in source
+    assert "score_matrix" not in source
+    assert "topk" not in source
+    assert "read_compiled_field" in source
