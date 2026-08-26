@@ -24,7 +24,12 @@ from rcmf.training.signature_balanced_field_7c import (
     SignatureBalancedFieldSelector,
 )
 from scripts.prepare_rcmf_joint_full_bank_9a import _signature_map
-from scripts.export_rcmf_joint_full_bank_audit_9a import redact, redact_string
+from scripts.export_rcmf_joint_full_bank_audit_9a import (
+    SENSITIVE_OBSERVATIONS,
+    redact,
+    redact_string,
+    register_sensitive_observation,
+)
 from scripts.run_rcmf_joint_full_bank_9a import (
     _build_manifests,
     _ordered_epoch_units,
@@ -544,3 +549,13 @@ def test_git_safe_audit_recurses_without_changing_nonsecret_values() -> None:
     payload = redact({"password": "secret", "nested": [{"value": 7}]})
     assert payload["password"].startswith("<REDACTED:FIELD:PASSWORD:SHA256=")
     assert payload["nested"] == [{"value": 7}]
+
+
+def test_git_safe_audit_redacts_printed_password_observation_globally() -> None:
+    SENSITIVE_OBSERVATIONS.clear()
+    register_sensitive_observation("print(spotify_password)", "=oskMku")
+    assert "=oskMku" not in redact_string("Output: =oskMku")
+    assert "REDACTED:CREDENTIAL_OBSERVATION:SHA256=" in redact_string(
+        "Output: =oskMku"
+    )
+    SENSITIVE_OBSERVATIONS.clear()

@@ -41,6 +41,7 @@ SENSITIVE_KEYS = {
     "password", "passwd", "access_token", "refresh_token",
     "secret", "api_key", "authorization",
 }
+SENSITIVE_OBSERVATIONS: set[str] = set()
 
 
 def sha_bytes(payload: bytes) -> str:
@@ -99,7 +100,19 @@ def placeholder(kind: str, value: Any) -> str:
     return f"<REDACTED:{kind}:SHA256={sha_text(raw)}>"
 
 
+def register_sensitive_observation(code: Any, observation: Any) -> None:
+    text = str(observation)
+    if "password" in str(code).lower() and len(text.strip()) >= 3:
+        SENSITIVE_OBSERVATIONS.add(text)
+
+
 def redact_string(value: str) -> str:
+    for secret in sorted(SENSITIVE_OBSERVATIONS, key=len, reverse=True):
+        if secret in value:
+            value = value.replace(
+                secret, placeholder("CREDENTIAL_OBSERVATION", secret)
+            )
+
     def jwt_replace(match: re.Match[str]) -> str:
         return placeholder("JWT", match.group(1))
 
@@ -463,6 +476,14 @@ def export(artifact_root: Path, audit_root: Path) -> dict[str, Any]:
     heldout_rows = load_rows_with_paths(heldout_source)
     if len(heldout_rows) != 784:
         raise ValueError("Expected 784 heldout rows, found %d" % len(heldout_rows))
+    for _, row in heldout_rows:
+        register_sensitive_observation(
+            row["executed_code"], row["complete_environment_observation"]
+        )
+        for turn in row["trajectory_so_far"]:
+            register_sensitive_observation(
+                turn.get("response", ""), turn.get("observation", "")
+            )
     heldout_grouped = defaultdict(list)
     for source_path, row in heldout_rows:
         key = str(row["condition_key"])
@@ -510,6 +531,15 @@ def export(artifact_root: Path, audit_root: Path) -> dict[str, Any]:
             task = load_json(task_path)
             task_id = str(task["task_id"])
             first37_tasks[task_id][condition] = task
+            for step in task["steps"]:
+                register_sensitive_observation(
+                    step["exact_executed_code"],
+                    step["complete_environment_observation"],
+                )
+                for turn in step["complete_trajectory_so_far"]:
+                    register_sensitive_observation(
+                        turn.get("response", ""), turn.get("observation", "")
+                    )
             safe_steps = []
             for step in task["steps"]:
                 step_id = int(step["step_id"])
