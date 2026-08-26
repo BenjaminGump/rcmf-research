@@ -1344,3 +1344,28 @@ Recommended next 48-hour action:
 Still blocked: reversible-field construction, another neural reader,
 full-bank integration, p(s,m_transition), Qwen training, Stage C2, end-to-end
 RCMF, full AppWorld evaluation, and an RCMF V4 tag.
+
+## EXP-031A Completed - Review Live-Specificity Boundary
+
+The full reversible RCMF field is now tested directly. It is STRONG on
+heldout-train one-step behavior and correct-vs-shuffled memory-specific on the
+exposed first37, but it ties bare Qwen at `8/37`. The exact result is
+`rcmf_full_field_live_memory_specific_signal`, not preliminary positive.
+
+Recommended next 48-hour action:
+
+1. Freeze the epoch-2 checkpoint, 499-memory deployment field, selector, Qwen,
+   prompts, seed, first37 results, and detailed audit.
+2. Review and explicitly resolve the preregistration's omitted D1==D0/D1>D2
+   decision boundary; lock the claim as live memory specificity without an
+   absolute task-success gain.
+3. Run only non-behavior-changing write/read complexity benchmarks and produce
+   audit-derived divergence, failure, and per-task tables.
+4. Integrate the verified source provenance, heldout result, instant-write
+   evidence, first37 comparison, limitations, and GitHub audit into the paper.
+5. Require a new reviewed contract before any broader evaluation or
+   portability run; do not start another component study or create a V5 tag.
+
+Still blocked pending review: a full statistical AppWorld claim, portability,
+new compiler/reader work, Stage C2, end-to-end expansion beyond the exposed
+development run, and V5 tagging.

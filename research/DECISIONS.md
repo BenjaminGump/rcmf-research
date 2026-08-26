@@ -2298,3 +2298,57 @@ Implementation recovery:
   checkpoint hook identity, bounded memory use, runner compatibility, and an
   immutable policy-row schema adapter without changing scientific parameters
   or rewriting accepted rows.
+
+## 2026-08-26 EXP-031A complete reversible field has live memory specificity
+
+VERIFIED:
+
+- The complete path is raw transition ledger -> four RCMF writers -> reversible
+  full-bank field -> state-conditioned eight-slot read -> four standard
+  cross-attention readers -> frozen Qwen. Every scientific nonzero forward
+  traverses this path.
+- The 401-memory model-training field and 499-memory deployment field have
+  fixed A/B shapes `[960,8,256]` and `[8,256]`. Production reads do not loop
+  over memories; production add scans no existing record.
+- Epoch 2 passes STRONG heldout live validation. L1 correct improves signature
+  and successor over zero and both shuffled controls, with no execution loss
+  and positive behavior on `4/8` tasks.
+- Incremental addition of 98 memories requires no retraining and preserves
+  explicit rebuild/remove/restore agreement within the fixed tolerance.
+- First37 success is D0/D1/D2 = `8/8/5`. D1-D0 is zero; D1-D2 is +3. No runtime
+  retrieval, selected memory, raw memory prompt, or execution exception occurs.
+- The Git-safe detailed audit is complete and hash-valid; the Lambda raw logs
+  remain immutable. All attempts are closed.
+
+INFERENCE:
+
+- The complete fixed-size RCMF field has a live memory-specific causal effect,
+  because correct key-payload association beats a deterministic whole-bank
+  shuffle under an otherwise identical single-seed harness.
+- The current system does not establish an absolute end-to-end improvement over
+  bare Qwen, because D1 equals D0.
+
+UNVERIFIED:
+
+- Multi-seed robustness, significance, second-benchmark portability, and an
+  untouched AppWorld final-test result. The official test-normal pool is
+  already exposed development data.
+
+Decision:
+
+- Record `rcmf_full_field_live_memory_specific_signal` for the omitted
+  D1==D0/D1>D2 boundary. Do not mislabel it as
+  `rcmf_full_field_preliminary_positive`, whose gate requires D1>D0.
+- Freeze the checkpoint and field. Do not start another component study, broad
+  evaluation, portability run, or V5 tag without a separately reviewed
+  preregistration.
+
+Implementation recovery:
+
+- Append-only failures preserve one source-manifest parser issue, one
+  live-history serialization issue, and four post-science audit-export issues.
+  Additional preflight corrections did not alter scientific parameters or
+  completed rows.
+- The Windows `apply_patch` helper failed with `helper_unknown_error` during
+  final audit hardening. Scoped deterministic PowerShell UTF-8 writes were
+  used, reviewed with `git diff`, and validated by 23 focused tests.

@@ -1982,3 +1982,26 @@ Decision:
   another reader, full-bank integration, Qwen training, Stage C2, end-to-end
   RCMF, full AppWorld evaluation, and V4 tagging remain stopped for the
   submission.
+
+### EXP-031A direct joint full-bank RCMF live specificity
+
+- All 499 clean transitions were encoded as eight complete semantic views and
+  compiled through four section writers into a reversible fixed field. Every
+  nonzero scientific forward used the complete task-legal field; no retrieval,
+  selected memory, per-memory runtime score, or raw memory prompt was used.
+- Joint training completed two epochs and 1,152 backwards with frozen Qwen.
+  Epoch 2 was STRONG on 98 heldout-train states: L0/L1/L2/L3 signature is
+  `0.3980/0.4490/0.4184/0.3980`, and successor is
+  `0.4082/0.4286/0.4082/0.3980`; positive task count is `4/8`.
+- Feed-forward addition of 98 heldout memories took `1.005 ms` compilation and
+  `0.0702 ms` field addition per memory on average, with no old-record scan,
+  no retraining, unchanged field shape, and rebuild error `3.8147e-6`.
+- First37 D0/D1/D2 is `8/37`, `8/37`, `5/37`: correct and bare tie, while the
+  correct field beats the key-payload-shuffled field by three tasks. The exact
+  operational branch is `rcmf_full_field_live_memory_specific_signal`; branch
+  G is not reached because D1 does not exceed D0.
+- The committed audit has 183 files, zero index mismatches, zero registered
+  secret leaks, and zero raw JWT matches. All 34 attempts are closed.
+- Freeze the result. The next action is decision-boundary/claim review,
+  complexity measurement, audit-derived analysis, and manuscript integration;
+  no V5 tag or new component study is authorized.
