@@ -635,7 +635,10 @@ def export(artifact_root: Path, audit_root: Path) -> dict[str, Any]:
             "conditions": ["D0", "D1", "D2"],
             "task_rows": 111,
             "steps": first37_counts,
-            "successes": final_summary["successes"],
+            "successes": {
+                condition: summary["success_ids"]
+                for condition, summary in final_summary["summaries"].items()
+            },
         },
         "decision": {
             "interpretation": final_summary["interpretation"],
