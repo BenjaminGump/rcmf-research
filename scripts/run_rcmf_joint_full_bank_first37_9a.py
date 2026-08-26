@@ -1085,6 +1085,10 @@ def main() -> None:
                 flush=True,
             )
         summary = summarize_condition(rows, args.condition)
+        if smoke:
+            summary["passed_infrastructure"] = (
+                len(rows) == 1 and all(row["status"] == "complete" for row in rows)
+            )
         summary.update(
             {
                 "run_uuid": str(settings["run_uuid"]),
