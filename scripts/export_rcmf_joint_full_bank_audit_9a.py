@@ -26,7 +26,6 @@ if str(REPO_ROOT) not in sys.path:
 
 from rcmf.training.rcmf_joint_full_bank_9a import (  # noqa: E402
     AlignedTransitionWriter,
-    tensor_sha256,
 )
 
 RUN_UUID = "rcmf_joint_full_bank_9a_20260826_001"
@@ -58,6 +57,11 @@ def sha_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def raw_tensor_sha256(value: Tensor) -> str:
+    work = value.detach().to(device="cpu").contiguous()
+    return sha_bytes(work.view(torch.uint8).numpy().tobytes())
 
 
 def load_json(path: Path) -> Any:
@@ -466,9 +470,9 @@ def export(artifact_root: Path, audit_root: Path) -> dict[str, Any]:
         slot_payload = torch.load(slot_path, map_location="cpu", weights_only=False)
         query = slot_payload["query"].float()
         slots = slot_payload["slots"].float()
-        if tensor_sha256(query) != str(row["field"]["query_sha256"]):
+        if raw_tensor_sha256(query) != str(row["field"]["query_sha256"]):
             raise ValueError("Heldout query hash differs for " + key)
-        if tensor_sha256(slots) != str(row["field"]["slots_sha256"]):
+        if raw_tensor_sha256(slots) != str(row["field"]["slots_sha256"]):
             raise ValueError("Heldout slot hash differs for " + key)
         tensor_bundle["heldout"][key] = {"query": query, "slots": slots}
         safe = heldout_record(source_path, row, key, static_assets)
