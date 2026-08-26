@@ -95,7 +95,8 @@ def _paths(artifact_dir: Path) -> dict[str, Path]:
     root = artifact_dir / "first37"
     return {
         "root": root,
-        "preflight": root / "runtime_preflight.json",
+        "preflight": root / "runtime_preflight_v2.json",
+        "preflight_v1": root / "runtime_preflight.json",
         "manifest": root / "condition_manifest.json",
         "static_assets": root / "raw_audit/static_prompt_assets.json",
         "deployment": artifact_dir / "deployment_field/complete_37_task_field.pt",
@@ -110,7 +111,7 @@ def _paths(artifact_dir: Path) -> dict[str, Path]:
 
 
 def _condition_root(paths: Mapping[str, Path], condition: str, smoke: bool) -> Path:
-    return paths["root"] / ("smoke" if smoke else "conditions") / condition
+    return paths["root"] / ("smoke_v2" if smoke else "conditions") / condition
 
 
 def _task_ids(settings: Mapping[str, Any]) -> list[str]:
@@ -932,6 +933,9 @@ def _preflight(    settings: Mapping[str, Any], paths: Mapping[str, Path], confi
         "config_sha256": sha256_file(config_path),
         "deployment_field_sha256": deployment_sha,
         "instant_add_report_sha256": sha256_file(paths["instant_add"]),
+        "supersedes_preflight_due_to_verified_selector_sha_typo": (
+            str(paths["preflight_v1"]) if paths["preflight_v1"].exists() else None
+        ),
     }
     if not report["automatic_launch_allowed"]:
         raise RuntimeError(f"First37 runtime requires review: {report}")
