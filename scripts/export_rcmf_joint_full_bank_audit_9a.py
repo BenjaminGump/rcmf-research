@@ -149,10 +149,14 @@ def load_deployment(root: Path) -> dict[str, Any]:
         [float(data_manifest["rho_by_transition_id"][mid]) for mid in ordered],
         dtype=torch.float32,
     )
-    if [str(row["key_transition_id"]) for row in shuffle_rows] != ordered:
-        raise ValueError("Deployment shuffle key order differs")
+    shuffle_by_key = {
+        str(row["key_transition_id"]): str(row["payload_transition_id"])
+        for row in shuffle_rows
+    }
+    if set(shuffle_by_key) != set(ordered):
+        raise ValueError("Deployment shuffle key identities differ")
     permutation = torch.tensor(
-        [index[str(row["payload_transition_id"])] for row in shuffle_rows],
+        [index[shuffle_by_key[memory_id]] for memory_id in ordered],
         dtype=torch.long,
     )
 

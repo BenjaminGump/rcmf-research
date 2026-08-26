@@ -528,6 +528,7 @@ def test_complete_field_runtime_read_has_no_memory_loop_or_retrieval() -> None:
     assert "topk" not in source
     assert "read_compiled_field" in source
 
+
 def test_git_safe_audit_redacts_jwts_and_credentials_with_hashes() -> None:
     jwt = "abcdefgh.ijklmnop.qrstuvwx"
     text = redact_string(f"access_token={jwt} password='secret-value'")
