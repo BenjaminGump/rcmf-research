@@ -462,9 +462,9 @@ def export(artifact_root: Path, audit_root: Path) -> dict[str, Any]:
     heldout_grouped = defaultdict(list)
     for source_path, row in heldout_rows:
         key = str(row["condition_key"])
-        query = torch.tensor(row["field"]["query_values"], dtype=torch.float32)
         slot_path = Path(str(row["field"]["slot_artifact"]))
         slot_payload = torch.load(slot_path, map_location="cpu", weights_only=False)
+        query = slot_payload["query"].float()
         slots = slot_payload["slots"].float()
         if tensor_sha256(query) != str(row["field"]["query_sha256"]):
             raise ValueError("Heldout query hash differs for " + key)
