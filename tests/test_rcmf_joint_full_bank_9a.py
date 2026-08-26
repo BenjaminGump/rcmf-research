@@ -532,8 +532,10 @@ def test_complete_field_runtime_read_has_no_memory_loop_or_retrieval() -> None:
 def test_git_safe_audit_redacts_jwts_and_credentials_with_hashes() -> None:
     jwt = "abcdefgh.ijklmnop.qrstuvwx"
     text = redact_string(f"access_token={jwt} password='secret-value'")
+    json_text = redact_string('\"password\": \"json-secret\"')
     assert jwt not in text
     assert "secret-value" not in text
+    assert "json-secret" not in json_text
     assert "REDACTED:JWT:SHA256=" in text
     assert "REDACTED:CREDENTIAL:SHA256=" in text
 

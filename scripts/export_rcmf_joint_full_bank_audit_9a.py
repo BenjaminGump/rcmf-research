@@ -35,7 +35,7 @@ JWT_RE = re.compile(
     r"(?<![A-Za-z0-9_-])([A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,})(?![A-Za-z0-9_-])"
 )
 ASSIGNMENT_RE = re.compile(
-    r"(?i)(\b(?:password|passwd|access_token|refresh_token|secret|api_key)\b\s*[:=]\s*)(['\"]?)([^'\"\s,}\]]+)(\2)"
+    r"(?i)((?:['\"])?\b(?:password|passwd|access_token|refresh_token|secret|api_key)\b(?:['\"])?\s*[:=]\s*)(['\"]?)([^'\"\s,}\]]+)(\2)"
 )
 SENSITIVE_KEYS = {
     "password", "passwd", "access_token", "refresh_token",
