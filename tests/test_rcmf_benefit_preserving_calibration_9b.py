@@ -443,6 +443,9 @@ def test_gain_loss_audit_git_safe_guard() -> None:
     redacted = git_safe_redact("login(password='synthetic-value')")
     assert "synthetic-value" not in redacted
     git_safe_check({"code": redacted})
+    nested = git_safe_redact({"metadata": {"token": "synthetic-value"}})
+    assert nested["metadata"]["token"].startswith("<REDACTED:")
+    git_safe_check(nested)
 
 def test_gain_loss_audit_attempt_ids(tmp_path) -> None:
     path = tmp_path / "attempts.jsonl"

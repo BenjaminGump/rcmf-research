@@ -2032,3 +2032,7 @@ Decision:
   assignments in inherited redacted trace text. The follow-up source applies
   the established EXP-031A hash-placeholder redaction again to every emitted
   task/action/observation field while retaining exact raw SHA256 identities.
+- Audit attempt `exp031b-gain-loss-audit-002` also failed closed before
+  output because a credential-like metadata field remained. The final recovery
+  applies recursive key-aware redaction to the complete payload and replay
+  manifest, then recomputes their Git-safe hashes.

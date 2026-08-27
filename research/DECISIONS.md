@@ -2430,3 +2430,8 @@ Audit recovery:
   SHA256-placeholder redaction to every emitted task message, trajectory,
   action, and observation, and preserve the exact pre-redaction SHA256 beside
   each Git-safe value. Resume only under a new append-only attempt ID.
+- Attempt `exp031b-gain-loss-audit-002` confirmed that field-local
+  redaction was insufficient for nested metadata. Apply the same deterministic,
+  key-aware redaction recursively to the final payload and replay rows, retain
+  a pre-redaction manifest SHA256, and recompute the emitted Git-safe manifest
+  SHA256. The scanner remains unchanged and fail-closed.

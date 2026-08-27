@@ -23,7 +23,10 @@ from rcmf.utils.serialization import atomic_write_json, sha256_file
 from scripts.prepare_rcmf_benefit_preserving_calibration_9b import (
     validate_immutable_inputs,
 )
-from scripts.export_rcmf_joint_full_bank_audit_9a import redact as git_safe_redact
+from scripts.export_rcmf_joint_full_bank_audit_9a import (
+    placeholder as audit_placeholder,
+    redact_string as exp031a_redact_string,
+)
 
 
 AUDIT_VERSION = "rcmf_benefit_preserving_gain_loss_audit_9b_v1"
@@ -31,6 +34,11 @@ JWT_RE = re.compile(r"(?<![A-Za-z0-9_-])([A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[
 SECRET_ASSIGNMENT_RE = re.compile(
     r"(?i)(?:password|access_token|token)\s*[:=]\s*['\"](?!<REDACTED)[^'\"]{3,}['\"]"
 )
+
+AUDIT_SENSITIVE_KEYS = {
+    "password", "passwd", "access_token", "refresh_token", "token",
+    "secret", "api_key", "authorization",
+}
 
 
 FINDINGS: dict[str, dict[str, str]] = {
@@ -270,6 +278,18 @@ def safe_memory(memory_id: str, provenance: Mapping[str, Any], ledger: Mapping[s
     }
 
 
+def git_safe_redact(value: Any, key: str | None = None) -> Any:
+    if key is not None and key.lower() in AUDIT_SENSITIVE_KEYS and value is not None:
+        return audit_placeholder(f"FIELD:{key.upper()}", value)
+    if isinstance(value, str):
+        return exp031a_redact_string(value)
+    if isinstance(value, Mapping):
+        return {str(name): git_safe_redact(item, str(name)) for name, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [git_safe_redact(item) for item in value]
+    return value
+
+
 def git_safe_check(value: Any) -> None:
     text = json.dumps(value, ensure_ascii=False)
     if JWT_RE.search(text):
@@ -471,8 +491,11 @@ def main() -> None:
                 "E_signed_contribution_ambiguity": {"status": "SUPPORTED", "finding": f"Mixed dominant contribution signs occur in {len(mixed_sign_tasks)}/14 audited D1 trajectories ({', '.join(mixed_sign_tasks)}); sign alone is therefore not a harm gate."},
             },
             "critical_replay_count": len(replay_rows),
-            "critical_replay_manifest_sha256": canonical_hash(replay_rows),
+            "critical_replay_raw_manifest_sha256": canonical_hash(replay_rows),
         }
+        replay_rows = git_safe_redact(replay_rows)
+        payload = git_safe_redact(payload)
+        payload["critical_replay_manifest_sha256"] = canonical_hash(replay_rows)
         git_safe_check(payload)
         git_safe_check(replay_rows)
         atomic_write_json(args.output_json, payload)
