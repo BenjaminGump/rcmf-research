@@ -8,6 +8,7 @@
 - EXP-031B working root: `f8b26bb036463683f833e810e6756b6e87cc82ec`
 - Formal first37 implementation: `49f03a2b758f93069b768e3af79fbf1f6282befd`
 - Strict Git-safe exporter: `6988045d375ec0b5a991aaaab01edd91ee5bd2f8`
+- Result record commit: `80907554516e7d1cb1b4fb30df0c8e94c1c7126b`
 - Branch: `research/v5-rcmf-benefit-preserving-calibration`
 - Scientific decision: `STOP_ROUTE`
 - Decision branch: `benefit_preserving_calibration_stop_route`
