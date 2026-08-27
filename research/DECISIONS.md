@@ -2420,3 +2420,13 @@ Implementation deviation:
   `git diff --check`, and `17` focused tests. An immediately detected
   literal-newline escaping error remained local and uncommitted; it was
   repaired before validation and did not affect any artifact or run.
+
+Audit recovery:
+
+- Attempt `exp031b-gain-loss-audit-001` failed closed before writing either
+  Git-safe report or replay manifest. The inherited audit text contains
+  credential-like assignment values that the stricter 9b scanner rejects.
+- Do not weaken the scanner. Reapply the established EXP-031A deterministic
+  SHA256-placeholder redaction to every emitted task message, trajectory,
+  action, and observation, and preserve the exact pre-redaction SHA256 beside
+  each Git-safe value. Resume only under a new append-only attempt ID.

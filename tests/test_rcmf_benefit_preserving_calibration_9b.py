@@ -34,6 +34,7 @@ from scripts.analyze_rcmf_benefit_preserving_gain_loss_9b import (
     dominant_sign_audit,
     first_text_divergence,
     git_safe_check,
+    git_safe_redact,
 )
 
 
@@ -439,6 +440,9 @@ def test_gain_loss_audit_git_safe_guard() -> None:
         git_safe_check({"code": "password='not-redacted'"})
     with pytest.raises(ValueError, match="JWT"):
         git_safe_check({"observation": "abcdefgh.ijklmnop.qrstuvwx"})
+    redacted = git_safe_redact("login(password='synthetic-value')")
+    assert "synthetic-value" not in redacted
+    git_safe_check({"code": redacted})
 
 def test_gain_loss_audit_attempt_ids(tmp_path) -> None:
     path = tmp_path / "attempts.jsonl"

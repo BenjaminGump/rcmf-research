@@ -23,6 +23,7 @@ from rcmf.utils.serialization import atomic_write_json, sha256_file
 from scripts.prepare_rcmf_benefit_preserving_calibration_9b import (
     validate_immutable_inputs,
 )
+from scripts.export_rcmf_joint_full_bank_audit_9a import redact as git_safe_redact
 
 
 AUDIT_VERSION = "rcmf_benefit_preserving_gain_loss_audit_9b_v1"
@@ -420,7 +421,7 @@ def main() -> None:
                 "raw_lambda_source": str(raw_path),
                 "raw_lambda_source_sha256": critical["raw_lambda_source_sha256"],
                 "raw_step_index_zero_based": int(critical["step_id"]) - 1,
-                "prompt": {"renderer_version": critical["renderer_version"], "prompt_profile": critical["prompt_profile"], "rendered_messages_raw_sha256": critical["rendered_messages_raw_sha256"], "static_prompt_asset_sha256": critical["static_prompt_asset_sha256"], "current_task_message_git_safe": critical["current_task_message"], "complete_trajectory_so_far_git_safe": critical["complete_trajectory_so_far"], "prompt_tokens": critical["prompt_tokens"], "context_limit": critical["context_limit"], "truncation_applied": critical["truncation_applied"]},
+                "prompt": {"renderer_version": critical["renderer_version"], "prompt_profile": critical["prompt_profile"], "rendered_messages_raw_sha256": critical["rendered_messages_raw_sha256"], "static_prompt_asset_sha256": critical["static_prompt_asset_sha256"], "current_task_message_raw_sha256": canonical_hash(critical["current_task_message"]), "current_task_message_git_safe": git_safe_redact(critical["current_task_message"]), "complete_trajectory_so_far_raw_sha256": canonical_hash(critical["complete_trajectory_so_far"]), "complete_trajectory_so_far_git_safe": git_safe_redact(critical["complete_trajectory_so_far"]), "prompt_tokens": critical["prompt_tokens"], "context_limit": critical["context_limit"], "truncation_applied": critical["truncation_applied"]},
                 "world": {"task_snapshot_manifest_sha256": task_manifest_sha, "task_snapshot_file_count": task_file_count, "task_snapshot_bytes": task_bytes, "fresh_isolated_world_required": True, "same_python_namespace_required": True, "prefix_action_count": len(prefix_steps), "raw_prefix_action_sequence_sha256": canonical_hash([row["exact_executed_code"] for row in prefix_steps]), "raw_prefix_observation_sequence_sha256": canonical_hash([row["complete_environment_observation"] for row in prefix_steps]), "reconstruction": "initialize official AppWorld 0.1.0 task, execute the exact raw prefix actions in order in one live Python namespace, verify each raw observation hash, then generate the critical action"},
                 "field": {"deployment_field_sha256": critical["field"]["deployment_field_sha256"], "field_tensor_bundle": str(tensor_bundle_path), "field_tensor_bundle_sha256": sha256_file(tensor_bundle_path), "field_tensor_bundle_key": bundle_key, "query_sha256": critical["field"]["query"]["sha256"], "slots_sha256": critical["field"]["slots"]["sha256"], "normalized_slot_reconstruction_max_abs_error": slot_error},
                 "model_identity": critical["model_identity"],
@@ -433,11 +434,12 @@ def main() -> None:
                 "task_id": task_id,
                 "group": str(locked["group"]),
                 "mechanism": str(locked["mechanism"]),
-                "requirement": critical["current_task_message"],
+                "requirement_raw_sha256": canonical_hash(critical["current_task_message"]),
+                "requirement_git_safe": git_safe_redact(critical["current_task_message"]),
                 "outcomes": outcomes,
                 "first_text_divergence_step": first_text_divergence(rows_by_condition["D0"], rows_by_condition["D1"]),
-                "first_behavioral_divergence": {"d0_step": int(locked["d0_behavior_step"]), "d1_step": int(locked["d1_behavior_step"]), "d0_exact_generated_code_git_safe": d0_behavior["exact_executed_code"], "d0_exact_observation_git_safe": d0_behavior["complete_environment_observation"], "d1_exact_generated_code_git_safe": d1_behavior["exact_executed_code"], "d1_exact_observation_git_safe": d1_behavior["complete_environment_observation"]},
-                "critical_state": {"step_id": int(critical["step_id"]), "exact_generated_code_git_safe": critical["exact_executed_code"], "exact_observation_git_safe": critical["complete_environment_observation"], "raw_pre_rms_field": tensor_summary(raw_field), "query": tensor_summary(query), "normalized_slot_reconstruction_max_abs_error": slot_error, "reader": reader_summary(critical["reader_audit"]), "top_memory_contributions": contributions},
+                "first_behavioral_divergence": {"d0_step": int(locked["d0_behavior_step"]), "d1_step": int(locked["d1_behavior_step"]), "d0_exact_generated_code_raw_sha256": canonical_hash(d0_behavior["exact_executed_code"]), "d0_exact_generated_code_git_safe": git_safe_redact(d0_behavior["exact_executed_code"]), "d0_exact_observation_raw_sha256": canonical_hash(d0_behavior["complete_environment_observation"]), "d0_exact_observation_git_safe": git_safe_redact(d0_behavior["complete_environment_observation"]), "d1_exact_generated_code_raw_sha256": canonical_hash(d1_behavior["exact_executed_code"]), "d1_exact_generated_code_git_safe": git_safe_redact(d1_behavior["exact_executed_code"]), "d1_exact_observation_raw_sha256": canonical_hash(d1_behavior["complete_environment_observation"]), "d1_exact_observation_git_safe": git_safe_redact(d1_behavior["complete_environment_observation"])},
+                "critical_state": {"step_id": int(critical["step_id"]), "exact_generated_code_raw_sha256": canonical_hash(critical["exact_executed_code"]), "exact_generated_code_git_safe": git_safe_redact(critical["exact_executed_code"]), "exact_observation_raw_sha256": canonical_hash(critical["complete_environment_observation"]), "exact_observation_git_safe": git_safe_redact(critical["complete_environment_observation"]), "raw_pre_rms_field": tensor_summary(raw_field), "query": tensor_summary(query), "normalized_slot_reconstruction_max_abs_error": slot_error, "reader": reader_summary(critical["reader_audit"]), "top_memory_contributions": contributions},
                 "dominant_contribution_signs": dominant_sign_audit(rows_by_condition["D1"]),
                 "final_state_invariant": invariant,
                 "verified_findings": FINDINGS[task_id],
