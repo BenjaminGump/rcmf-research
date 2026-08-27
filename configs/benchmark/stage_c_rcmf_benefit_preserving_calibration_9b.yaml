@@ -145,6 +145,15 @@ stage_c_9b:
 
   first37:
     task_count: 37
+    runtime_conservative_multiplier: 1.25
+    sequential_condition_order: [D1, D2]
+    selected_first_candidate: L1
+    preregistered_second_candidate: Q90
+    second_candidate_requires_post_pair_review: true
+    gain_families:
+      cross_app_import: [0d01c76_3]
+      spotify_state_machine: [325d6ec_2, 325d6ec_3]
+      exact_set_migration: [634f342_1, 634f342_2, 634f342_3]
     minimum_correct_success: 10
     minimum_gain_over_bare: 2
     minimum_gain_over_shuffle: 2

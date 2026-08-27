@@ -365,14 +365,17 @@ def _generate(
     max_new_tokens: int,
     reader: Any | None,
     slots: Tensor | None,
+    hook_factory: Any = None,
 ) -> tuple[list[int], str, dict[str, Any]]:
     tokenized = backend.tokenize_messages(list(messages), add_generation_prompt=True)
     prompt_length = int(tokenized.input_ids.shape[1])
-    hooks = (
-        FieldReaderHooks(model=backend.model, reader=reader, slots=slots)
-        if reader is not None and slots is not None
-        else None
-    )
+    hooks = None
+    if reader is not None and slots is not None:
+        hooks = (
+            FieldReaderHooks(model=backend.model, reader=reader, slots=slots)
+            if hook_factory is None
+            else hook_factory(model=backend.model, reader=reader, slots=slots)
+        )
     started = time.perf_counter()
     with torch.no_grad(), torch.autocast(
         device_type="cuda",
@@ -435,13 +438,16 @@ def _run_task(
     config_sha256: str,
     attempt_id: str,
     smoke: bool,
+    hook_factory: Any = None,
+    result_version: str = RESULT_FORMAT,
+    extra_result_fields: Mapping[str, Any] | None = None,
 ) -> tuple[dict[str, Any], bool]:
     output = _task_output(paths, condition, task_id, smoke)
     deployment_sha = sha256_file(paths["deployment"])
     if output.exists():
         row = _json(output)
         checks = {
-            "format": row.get("format") == RESULT_FORMAT,
+            "format": row.get("format") == result_version,
             "task": str(row.get("task_id")) == task_id,
             "condition": str(row.get("condition")) == condition,
             "config": str(row.get("config_sha256")) == config_sha256,
@@ -591,6 +597,7 @@ def _run_task(
                 max_new_tokens=min(int(app["max_new_tokens"]), remaining),
                 reader=reader,
                 slots=slots if reader is not None else None,
+                hook_factory=hook_factory,
             )
             code, fixed = extract_code_and_fix_content(raw_response)
             executed = bridge.execute(
@@ -684,7 +691,7 @@ def _run_task(
         final = bridge.finish(nonce=str(ready["ready_nonce"]))
 
     row = {
-        "format": RESULT_FORMAT,
+        "format": result_version,
         "status": "complete",
         "non_scientific_smoke": smoke,
         "condition": condition,
@@ -713,6 +720,7 @@ def _run_task(
         "evaluation": final["evaluation"],
         "wall_seconds": time.perf_counter() - started,
         "raw_audit_complete": True,
+        **dict(extra_result_fields or {}),
     }
     atomic_write_json(output, row)
     return row, False
