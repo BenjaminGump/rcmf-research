@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import statistics
 import sys
 from collections import defaultdict
@@ -44,6 +45,7 @@ from export_rcmf_joint_full_bank_audit_9a import (  # noqa: E402
     top_contributions,
     verify_git_safe_redaction,
 )
+from rcmf.training.state_conditioned_transition_6b import AttemptLedger  # noqa: E402
 
 RUN_UUID = "rcmf_benefit_preserving_calibration_9b_20260827_001"
 FORMAT = "rcmf_benefit_preserving_detailed_audit_9b_v1"
@@ -457,6 +459,32 @@ def _machine_summary(
     }
 
 
+def _load_attempts(artifact_root: Path) -> list[dict[str, Any]]:
+    return [
+        json.loads(line)
+        for line in (artifact_root / "attempts.jsonl").read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+
+def _refresh_result_attempts(artifact_root: Path, result_root: Path) -> None:
+    attempts = _load_attempts(artifact_root)
+    summary = load_json(result_root / "summary.json")
+    attempt_info = _attempt_summary(attempts)
+    all_times = [
+        _timestamp(str(row.get("start_timestamp_utc", row.get("end_timestamp_utc"))))
+        for row in attempts
+    ]
+    summary["attempts"] = attempt_info
+    summary["wall_span_hours"] = (
+        max(all_times) - min(all_times)
+    ).total_seconds() / 3600.0
+    atomic_jsonl(result_root / "attempts.jsonl", [redact(row) for row in attempts])
+    atomic_json(result_root / "summary.json", summary)
+    verification = verify_git_safe_redaction(result_root)
+    if verification["registered_sensitive_observation_leak_count"] != 0:
+        raise RuntimeError("Refreshed result attempts failed redaction verification")
+
 def export(artifact_root: Path, parent_root: Path, audit_root: Path, result_root: Path) -> dict[str, Any]:
     if audit_root.exists() or result_root.exists():
         raise FileExistsError("Refusing to overwrite an existing EXP-031B audit/result root")
@@ -622,11 +650,7 @@ def export(artifact_root: Path, parent_root: Path, audit_root: Path, result_root
     atomic_torch(tensor_path, tensor_bundle)
     atomic_json(audit_tmp / "static_prompt_assets.json", {"format": FORMAT, "assets": assets})
 
-    attempts = [
-        json.loads(line)
-        for line in (artifact_root / "attempts.jsonl").read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
+    attempts = _load_attempts(artifact_root)
     attempts_safe = [redact(row) for row in attempts]
     stage8a = load_json(artifact_root / "stage_8a/candidate_summary.json")
     stage8b = load_json(artifact_root / "stage_8b_exact_prompt_v2/critical_live_summary.json")
@@ -736,6 +760,13 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--artifact-root", type=Path, required=True)
     parser.add_argument("--parent-root", type=Path, required=True)
+    parser.add_argument("--config", type=Path, required=True)
+    parser.add_argument("--attempt-id", required=True)
+    parser.add_argument("--parent-attempt-id", required=True)
+    parser.add_argument("--local-head", required=True)
+    parser.add_argument("--github-head", required=True)
+    parser.add_argument("--lambda-head", required=True)
+    parser.add_argument("--tmux-session", default="none")
     parser.add_argument(
         "--audit-root",
         type=Path,
@@ -751,7 +782,48 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    index = export(args.artifact_root, args.parent_root, args.audit_root, args.result_root)
+    if os.name != "nt" and not os.path.ismount("/lambda/nfs/rcmf-persist"):
+        raise RuntimeError("Persistent filesystem is not mounted")
+    existing_attempts = {
+        str(row["attempt_id"]) for row in _load_attempts(args.artifact_root)
+    }
+    if args.attempt_id in existing_attempts:
+        raise ValueError(f"Duplicate attempt ID: {args.attempt_id}")
+    data_hashes = {
+        "checkpoint": "d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1",
+        "deployment_field": "5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e",
+        "final_summary": sha_file(
+            args.artifact_root / "stage_8d_first37/L1/final_summary.json"
+        ),
+    }
+    with AttemptLedger(
+        args.artifact_root,
+        run_uuid=RUN_UUID,
+        attempt_id=args.attempt_id,
+        phase="stage_8e_git_safe_audit_export",
+        command=[str(value) for value in sys.argv],
+        local_head=args.local_head,
+        github_head=args.github_head,
+        lambda_head=args.lambda_head,
+        tmux_session=args.tmux_session,
+        config_sha256=sha_file(args.config),
+        data_manifest_hashes=data_hashes,
+        parent_attempt_id=args.parent_attempt_id,
+        resume_checkpoint="none",
+        scientific_parameter_changed=False,
+        heartbeat_interval_s=240.0,
+    ) as attempt:
+        index = export(
+            args.artifact_root,
+            args.parent_root,
+            args.audit_root,
+            args.result_root,
+        )
+        attempt.progress(
+            status="stage_8e_git_safe_audit_export_complete",
+            latest_validated_checkpoint=str(args.audit_root / "index.json"),
+        )
+    _refresh_result_attempts(args.artifact_root, args.result_root)
     print(json.dumps(index["decision"], sort_keys=True))
 
 
