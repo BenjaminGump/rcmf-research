@@ -2391,3 +2391,32 @@ Implementation deviation:
 - Ruff was not installed in `appworld_env` or the base Conda environment;
   repository line-length and whitespace checks plus `py_compile` and pytest
   were used. No environment was modified merely to add a formatter.
+## 2026-08-27 EXP-031B gain/loss audit preregistration
+
+VERIFIED:
+
+- The six EXP-031A gains, two retained successes, and six losses map to exactly
+  14 immutable D1 critical-state rows with fixed D0/D1 behavioral-divergence
+  steps and predeclared mechanism categories.
+- No calibration-candidate result or new first37 outcome has been inspected,
+  and no scientific GPU work has begun.
+- The audit entrypoint rejects duplicate attempt IDs, a missing persistent
+  mount, unequal local/GitHub/Lambda commits, or altered immutable EXP-031A
+  checkpoint, field, ledger, or audit-index hashes.
+
+Decision:
+
+- Commit and synchronize the audit source/config/tests before materializing
+  the 14 exact replay cases on Lambda. Candidate diagnostics remain blocked
+  until the resulting Git-safe mechanism audit and replay manifest validate.
+- Treat the task IDs `8749218_1`, `8749218_2`, and `8749218_3` as quoted YAML
+  strings. The unquoted spelling was parsed numerically; this identity fix was
+  made before any audit attempt or candidate execution.
+
+Implementation deviation:
+
+- The Codex `apply_patch` helper again failed with `helper_unknown_error`.
+  Scoped PowerShell UTF-8 edits were used and checked with `py_compile`,
+  `git diff --check`, and `17` focused tests. An immediately detected
+  literal-newline escaping error remained local and uncommitted; it was
+  repaired before validation and did not affect any artifact or run.

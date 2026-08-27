@@ -28,6 +28,13 @@ from scripts.run_rcmf_benefit_preserving_calibration_9b import (
     critical_benefit_gate,
     derive_unlabeled_calibration,
 )
+from scripts.analyze_rcmf_benefit_preserving_gain_loss_9b import (
+    FINDINGS,
+    attempt_ids,
+    dominant_sign_audit,
+    first_text_divergence,
+    git_safe_check,
+)
 
 
 class _Block(nn.Module):
@@ -389,3 +396,56 @@ def test_attempt_ids_detect_duplicate_append_only_entries(tmp_path) -> None:
         encoding="utf-8",
     )
     assert _attempt_ids(path) == {"attempt-1", "attempt-2"}
+
+def test_gain_loss_audit_locks_exactly_fourteen_critical_states() -> None:
+    from rcmf.config import load_config
+
+    cfg = load_config(
+        "configs/benchmark/"
+        "stage_c_rcmf_benefit_preserving_calibration_9b.yaml"
+    )
+    steps = cfg.raw["stage_c_9b"]["gain_loss_audit"]["critical_steps"]
+    assert len(steps) == 14
+    assert set(steps) == set(FINDINGS)
+    assert sum(row["group"] == "gain" for row in steps.values()) == 6
+    assert sum(row["group"] == "loss" for row in steps.values()) == 6
+    assert sum(row["group"] == "retained" for row in steps.values()) == 2
+    assert all(int(row["d1_critical_step"]) > 0 for row in steps.values())
+
+
+def test_audit_divergence_and_signed_contribution_helpers() -> None:
+    d0 = [{"exact_executed_code": "same"}, {"exact_executed_code": "left"}]
+    d1 = [{"exact_executed_code": "same"}, {"exact_executed_code": "right"}]
+    assert first_text_divergence(d0, d1) == 2
+    rows = [
+        {
+            "step_id": index,
+            "field": {
+                "top_memory_contributions": {
+                    "ranking": [{"signed_address_weight": value}]
+                }
+            },
+        }
+        for index, value in enumerate((-0.4, -0.1, 0.2, -0.3), start=1)
+    ]
+    result = dominant_sign_audit(rows)
+    assert result["has_negative"] and result["has_positive"]
+    assert result["sign_change_count"] == 2
+
+
+def test_gain_loss_audit_git_safe_guard() -> None:
+    git_safe_check({"code": "password='<REDACTED:CREDENTIAL:SHA256=abc>'"})
+    with pytest.raises(ValueError, match="credential"):
+        git_safe_check({"code": "password='not-redacted'"})
+    with pytest.raises(ValueError, match="JWT"):
+        git_safe_check({"observation": "abcdefgh.ijklmnop.qrstuvwx"})
+
+def test_gain_loss_audit_attempt_ids(tmp_path) -> None:
+    path = tmp_path / "attempts.jsonl"
+    assert attempt_ids(path) == set()
+    path.write_text(
+        '{"attempt_id":"audit-1"}\n'
+        '{"attempt_id":"audit-2"}\n',
+        encoding="utf-8",
+    )
+    assert attempt_ids(path) == {"audit-1", "audit-2"}

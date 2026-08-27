@@ -2019,3 +2019,11 @@ Decision:
   gates pass.
 - Current CPU verification: focused 9a/9b suite `35 passed`; complete
   repository suite `639 passed, 1 skipped`.
+- The gain/loss audit now preregisters one exact D1 critical step for each of
+  the six gains, six losses, and two retained successes. These identities were
+  locked before any calibration-candidate outcome or new GPU generation was
+  inspected.
+- YAML task IDs beginning with digits are quoted where needed so all 14 IDs
+  remain strings. This configuration-identity correction occurred before the
+  audit attempt or any candidate execution; the focused 9b suite is now
+  `17 passed` for the pending audit source.

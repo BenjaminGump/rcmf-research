@@ -83,9 +83,31 @@ stage_c_9b:
 
   critical_states:
     gains: [0d01c76_3, 325d6ec_2, 325d6ec_3, 634f342_1, 634f342_2, 634f342_3]
-    retained: [8749218_2, 8749218_3]
-    losses: [0d01c76_1, 0d01c76_2, 29a7b7e_3, 325d6ec_1, 8749218_1, d6ac34d_2]
+    retained: ["8749218_2", "8749218_3"]
+    losses: [0d01c76_1, 0d01c76_2, 29a7b7e_3, 325d6ec_1, "8749218_1", d6ac34d_2]
     exact_replay_count: 14
+
+  gain_loss_audit:
+    source_audit_root: research/audits/rcmf_joint_full_bank_9a_20260826_001
+    task_spec_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root/data/tasks
+    memory_provenance: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/memory_provenance.jsonl
+    transition_ledger: runs/stage_c/replay_clean_rebuild_7b_20260818_001/clean_cache_rebuild/transition_preflight/transition_manifest.jsonl
+    field_tensor_bundle: research/audits/rcmf_joint_full_bank_9a_20260826_001/field_tensors/field_queries_and_slots.pt
+    critical_steps:
+      0d01c76_1: {group: loss, d0_behavior_step: 11, d1_behavior_step: 17, d1_critical_step: 17, mechanism: exact_mapping}
+      0d01c76_2: {group: loss, d0_behavior_step: 7, d1_behavior_step: 24, d1_critical_step: 24, mechanism: procedural_drift}
+      0d01c76_3: {group: gain, d0_behavior_step: 11, d1_behavior_step: 15, d1_critical_step: 15, mechanism: exact_mapping}
+      29a7b7e_3: {group: loss, d0_behavior_step: 11, d1_behavior_step: 11, d1_critical_step: 11, mechanism: argument_construction}
+      325d6ec_1: {group: loss, d0_behavior_step: 7, d1_behavior_step: 8, d1_critical_step: 8, mechanism: stopping_and_direction}
+      325d6ec_2: {group: gain, d0_behavior_step: 13, d1_behavior_step: 7, d1_critical_step: 7, mechanism: state_tracking}
+      325d6ec_3: {group: gain, d0_behavior_step: 9, d1_behavior_step: 9, d1_critical_step: 9, mechanism: state_tracking}
+      634f342_1: {group: gain, d0_behavior_step: 16, d1_behavior_step: 25, d1_critical_step: 25, mechanism: exact_set_bookkeeping}
+      634f342_2: {group: gain, d0_behavior_step: 17, d1_behavior_step: 25, d1_critical_step: 25, mechanism: exact_set_bookkeeping}
+      634f342_3: {group: gain, d0_behavior_step: 18, d1_behavior_step: 19, d1_critical_step: 19, mechanism: exact_set_bookkeeping}
+      "8749218_1": {group: loss, d0_behavior_step: 6, d1_behavior_step: 7, d1_critical_step: 7, mechanism: exact_set_bookkeeping}
+      "8749218_2": {group: retained, d0_behavior_step: 8, d1_behavior_step: 8, d1_critical_step: 8, mechanism: exact_set_bookkeeping}
+      "8749218_3": {group: retained, d0_behavior_step: 8, d1_behavior_step: 10, d1_critical_step: 10, mechanism: exact_set_bookkeeping}
+      d6ac34d_2: {group: loss, d0_behavior_step: 9, d1_behavior_step: 11, d1_critical_step: 11, mechanism: schema_preservation}
 
   benefit_preservation:
     minimum_original_gains: 5
