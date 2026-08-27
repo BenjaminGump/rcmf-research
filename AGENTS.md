@@ -138,6 +138,45 @@ Every run must create `research/audits/<run_uuid>/index.json` plus per-task
 audit files. A behavioral result without a committed audit index is not
 independently verified and cannot be reported as confirmed.
 
+## EXP-031B Benefit-Preserving Calibration Charter v1
+
+EXP-031B freezes the complete verified EXP-031A system and tests only bounded,
+predeclared calibration and read-algebra diagnostics. Its purpose is to retain
+the complete whole-bank field's demonstrated positive behaviors while reducing
+harmful interventions. It is not an architecture search and does not redefine
+RCMF success.
+
+- Qwen, tokenizer, writer, reader, selector, checkpoint, all 499 memories,
+  splits, prompt, renderer, evaluator, generation settings, and seed `25101`
+  remain frozen.
+- The default 9b route must reproduce the 9a correct-field system exactly.
+- Production candidates retain feed-forward independent memory compilation,
+  reversible constant-time add/remove, fixed-size whole-bank state, and a read
+  whose shape and complexity are independent of memory count.
+- Runtime retrieval, top-k, FAISS, selected-memory access, per-memory scoring,
+  raw-memory prompt text, hard or learned memory-use gates, retraining, and
+  optimizer updates are prohibited.
+- Offline per-memory contribution analysis is audit-only and cannot influence
+  runtime generation or post-hoc candidate selection.
+- Candidate formulas and values are locked before first37 outcomes. At most
+  four candidates may reach heldout live evaluation and at most two complete
+  first37 correct/shuffled pairs may run sequentially.
+- Benefit preservation is mandatory: an eligible candidate must retain at
+  least five of six original gains with all three gain families represented,
+  plus both original retained successes.
+- Scientific decisions are `PROCEED`, `STOP ROUTE`, or `INCONCLUSIVE`; a route
+  is not forced to win.
+- Before each scientific GPU stage, record exact identities, measured pilot
+  runtime, expected and conservative runtime, H100 cost, and restart plan. Any
+  single batch that may exceed 18 wall-clock hours requires explicit approval.
+
+Sources of truth:
+
+- `configs/benchmark/stage_c_rcmf_benefit_preserving_calibration_9b.yaml`
+- `rcmf/training/rcmf_benefit_preserving_calibration_9b.py`
+- `scripts/prepare_rcmf_benefit_preserving_calibration_9b.py`
+- `scripts/run_rcmf_benefit_preserving_calibration_9b.py`
+
 ## EXP-025D-Direct Single-Seed Deadline Policy
 
 For EXP-025D-Direct, use exactly `GLOBAL_SEED = 25101` for deterministic

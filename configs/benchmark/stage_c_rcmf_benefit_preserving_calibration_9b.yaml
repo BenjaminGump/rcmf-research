@@ -1,0 +1,114 @@
+include: stage_c_rcmf_joint_full_bank_9a.yaml
+
+experiment:
+  name: stage_c_rcmf_benefit_preserving_calibration_9b
+  version: rcmf_benefit_preserving_calibration_9b_v1
+  seed: 25101
+
+stage_c_9b:
+  run_uuid: rcmf_benefit_preserving_calibration_9b_20260827_001
+  artifact_dir: runs/stage_c/rcmf_benefit_preserving_calibration_9b_20260827_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  source_head: 57d2a3479ff292dd8f89bdd0ea9f9417abc42a48
+  frozen_record_head: f8b26bb036463683f833e810e6756b6e87cc82ec
+  working_branch: research/v5-rcmf-benefit-preserving-calibration
+  global_seed: 25101
+
+  immutable_exp031a:
+    artifact_root: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001
+    archive_root: archives/exp031a_rcmf_joint_full_bank_57d2a347
+    checkpoint: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/joint_training/checkpoints/epoch_02.pt
+    deployment_field: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/deployment_field/complete_37_task_field.pt
+    attempt_ledger: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/attempts.jsonl
+    audit_index: research/audits/rcmf_joint_full_bank_9a_20260826_001/index.json
+    checkpoint_sha256: d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1
+    deployment_field_sha256: 5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e
+    attempt_ledger_sha256: cc1cd9ec3a88d4856c2675c8d7a1c44d21197f8cafb92e6c77f5a2fc97ad8856
+    audit_index_sha256: 6075662dcd3897f3147d26d7067e30f4a05d1ce7b478f9a5fc600af08b0d1109
+    memory_count: 499
+    field_A_shape: [960, 8, 256]
+    field_B_shape: [8, 256]
+    insertion_layers: [7, 14, 21, 28]
+
+  frozen_contract:
+    qwen_weights: true
+    tokenizer_revision: true
+    writer_weights: true
+    reader_weights: true
+    selector_weights: true
+    all_raw_memories: true
+    split_prompt_renderer_evaluator: true
+    temperature: 0.0
+    top_p: 1.0
+    do_sample: false
+    max_new_tokens: 512
+    runtime_retrieval: false
+    runtime_top_k: false
+    runtime_per_memory_scoring: false
+    raw_memory_prompt: false
+    memory_gate: false
+    optimizer_steps: false
+
+  candidates:
+    global_scales:
+      G100: 1.00
+      G075: 0.75
+      G050: 0.50
+      G025: 0.25
+    layer_scales:
+      L1: [1.00, 1.00, 1.00, 0.50]
+      L2: [1.00, 1.00, 0.50, 0.50]
+      L3: [1.00, 0.75, 0.50, 0.25]
+      L4: [0.50, 0.75, 1.00, 1.00]
+    leave_one_layer_out_diagnostics:
+      LOO7: [0.00, 1.00, 1.00, 1.00]
+      LOO14: [1.00, 0.00, 1.00, 1.00]
+      LOO21: [1.00, 1.00, 0.00, 1.00]
+      LOO28: [1.00, 1.00, 1.00, 0.00]
+    cap_quantiles:
+      C50: 0.50
+      C75: 0.75
+      C90: 0.90
+    median_confidence_targets:
+      Q50: 0.50
+      Q75: 0.75
+      Q90: 0.90
+    positive_kernel:
+      candidate_id: E-positive
+      feature: elu_plus_one
+      epsilon: 0.000001
+    maximum_heldout_live_candidates: 4
+    maximum_first37_candidate_pairs: 2
+    maximum_composite_candidates: 1
+
+  critical_states:
+    gains: [0d01c76_3, 325d6ec_2, 325d6ec_3, 634f342_1, 634f342_2, 634f342_3]
+    retained: [8749218_2, 8749218_3]
+    losses: [0d01c76_1, 0d01c76_2, 29a7b7e_3, 325d6ec_1, 8749218_1, d6ac34d_2]
+    exact_replay_count: 14
+
+  benefit_preservation:
+    minimum_original_gains: 5
+    required_gain_families: [cross_app_import, spotify_state_machine, exact_set_migration]
+    minimum_exact_set_gains: 2
+    require_both_retained_successes: true
+
+  heldout:
+    state_count: 98
+    task_count: 8
+    correct_must_exceed_shuffle_metrics: [exact_api, action_signature]
+    maximum_execution_regression_states: 1
+    minimum_positive_tasks: 4
+
+  first37:
+    task_count: 37
+    minimum_correct_success: 10
+    minimum_gain_over_bare: 2
+    minimum_gain_over_shuffle: 2
+    minimum_recovered_losses: 2
+
+  runtime:
+    single_batch_review_threshold_hours: 18.0
+    heartbeat_interval_seconds: 240
+    heartbeat_stale_seconds: 720
+    sequential_first37_pairs: true

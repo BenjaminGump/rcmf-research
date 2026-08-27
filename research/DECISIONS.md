@@ -2352,3 +2352,42 @@ Implementation recovery:
 - The Windows `apply_patch` helper failed with `helper_unknown_error` during
   final audit hardening. Scoped deterministic PowerShell UTF-8 writes were
   used, reviewed with `git diff`, and validated by 23 focused tests.
+
+## 2026-08-27 EXP-031A freeze and EXP-031B calibration preregistration
+
+VERIFIED:
+
+- EXP-031A is frozen at source commit
+  `57d2a3479ff292dd8f89bdd0ea9f9417abc42a48` by an immutable archive
+  branch, annotated archival tag, verified complete Git bundle, independent
+  read-only artifact snapshot, and a fresh-checkout restoration smoke.
+- The selected checkpoint, 499-memory deployment field, append-only attempt
+  ledger, and Git-safe audit index retain their expected hashes.
+- Preexisting untracked material was checksum-inventoried and preserved
+  byte-for-byte outside both repositories before the exact three authorized
+  roots were removed. The formal EXP-031A execution provenance is sufficient;
+  no clean scientific rerun is required.
+- EXP-031B candidates, formulas, benefit-preservation gates, and maximum live
+  candidate counts are predeclared in the versioned 9b config. No candidate
+  outcome has been inspected and no GPU work has started.
+- The default 9b `G100` hook is exactly equal to the original 9a reader path
+  in the focused CPU test. The complete repository suite passes with
+  `639 passed, 1 skipped`.
+
+Decision:
+
+- Continue EXP-031B from the immutable EXP-031A freeze using only bounded
+  no-training calibration and read-algebra routes.
+- Derive C50/C75/C90 and Q50/Q75/Q90 only from the unlabeled 98-state heldout
+  distributions, then lock their numeric values before candidate outcomes.
+- Retain the 18-hour explicit-review threshold for any single GPU run or batch.
+
+Implementation deviation:
+
+- The Codex `apply_patch` helper failed twice before modifying files with
+  `helper_unknown_error`. Scoped deterministic UTF-8 PowerShell writes were
+  used as the fallback, reviewed with `git diff --check`, syntax-checked, and
+  covered by the full regression suite. This changes no scientific parameter.
+- Ruff was not installed in `appworld_env` or the base Conda environment;
+  repository line-length and whitespace checks plus `py_compile` and pytest
+  were used. No environment was modified merely to add a formatter.

@@ -2005,3 +2005,17 @@ Decision:
 - Freeze the result. The next action is decision-boundary/claim review,
   complexity measurement, audit-derived analysis, and manuscript integration;
   no V5 tag or new component study is authorized.
+
+### EXP-031B benefit-preserving calibration active
+
+- Active branch: `research/v5-rcmf-benefit-preserving-calibration`.
+- EXP-031A source and artifacts are immutable and restoration-validated.
+- The versioned 9b charter/config/algebra predeclare exact controls, global and
+  layerwise residual scales, trust-region caps, pre-RMS confidence, and the
+  positive normalized field diagnostic. No model parameter is trainable.
+- Candidate outcomes and first37 outcomes have not been inspected. Scientific
+  GPU work is blocked until the 14-state gain/loss audit, exact replay
+  materialization, immutable-input preparation, and G100/bare equivalence
+  gates pass.
+- Current CPU verification: focused 9a/9b suite `35 passed`; complete
+  repository suite `639 passed, 1 skipped`.
