@@ -2036,3 +2036,6 @@ Decision:
   output because a credential-like metadata field remained. The final recovery
   applies recursive key-aware redaction to the complete payload and replay
   manifest, then recomputes their Git-safe hashes.
+- Audit attempt `exp031b-gain-loss-audit-003` also failed closed. The
+  scanner now reports only the minimal serialized JSON path and match SHA256
+  so the remaining trigger can be fixed without exposing its value.

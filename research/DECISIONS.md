@@ -2435,3 +2435,7 @@ Audit recovery:
   key-aware redaction recursively to the final payload and replay rows, retain
   a pre-redaction manifest SHA256, and recompute the emitted Git-safe manifest
   SHA256. The scanner remains unchanged and fail-closed.
+- Attempt `exp031b-gain-loss-audit-003` remained fail-closed. Add a
+  content-free diagnostic that reports only the minimal serialized JSON path,
+  match type, length, and SHA256. Do not print the matched value and do not
+  relax either credential or JWT detection.

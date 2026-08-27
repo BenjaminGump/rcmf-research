@@ -290,12 +290,62 @@ def git_safe_redact(value: Any, key: str | None = None) -> Any:
     return value
 
 
-def git_safe_check(value: Any) -> None:
+def _serialized_secret_matches(value: Any) -> list[dict[str, Any]]:
     text = json.dumps(value, ensure_ascii=False)
-    if JWT_RE.search(text):
-        raise ValueError("Git-safe audit contains an unredacted JWT")
-    if SECRET_ASSIGNMENT_RE.search(text):
-        raise ValueError("Git-safe audit contains an unredacted credential assignment")
+    matches = [
+        {
+            "kind": "jwt",
+            "match_sha256": hashlib.sha256(match.group(1).encode("utf-8")).hexdigest(),
+            "value_length": len(match.group(1)),
+        }
+        for match in JWT_RE.finditer(text)
+    ]
+    matches.extend(
+        {
+            "kind": "credential_assignment",
+            "match_sha256": hashlib.sha256(match.group(0).encode("utf-8")).hexdigest(),
+            "value_length": len(match.group(0)),
+        }
+        for match in SECRET_ASSIGNMENT_RE.finditer(text)
+    )
+    return matches
+
+
+def git_safe_findings(value: Any, path: str = "$") -> list[dict[str, Any]]:
+    matches = _serialized_secret_matches(value)
+    if not matches:
+        return []
+    if isinstance(value, Mapping):
+        for name, item in value.items():
+            child_path = f"{path}/{name}"
+            findings = git_safe_findings(item, child_path)
+            if findings:
+                return findings
+            pair_matches = _serialized_secret_matches({str(name): item})
+            if pair_matches:
+                return [{"path": child_path, **row} for row in pair_matches]
+    elif isinstance(value, (list, tuple)):
+        for index, item in enumerate(value):
+            findings = git_safe_findings(item, f"{path}/{index}")
+            if findings:
+                return findings
+    return [{"path": path, **row} for row in matches]
+
+
+def git_safe_check(value: Any) -> None:
+    findings = git_safe_findings(value)
+    if not findings:
+        return
+    finding = findings[0]
+    if finding["kind"] == "jwt":
+        raise ValueError(
+            "Git-safe audit contains an unredacted JWT at "
+            f"{finding['path']} (sha256={finding['match_sha256']})"
+        )
+    raise ValueError(
+        "Git-safe audit contains an unredacted credential assignment at "
+        f"{finding['path']} (sha256={finding['match_sha256']})"
+    )
 
 
 def markdown(payload: Mapping[str, Any]) -> str:
