@@ -72,12 +72,18 @@ def test_critical_contract_uses_complete_ordered_prefix() -> None:
                 "complete_environment_observation": f"obs-{step_id}",
                 "raw_model_response": f"```python\nprint({step_id})\n```",
                 "rendered_message_sha256": f"rendered-{step_id}",
+                "exact_model_message_array": [
+                    {"role": "user", "content": f"prompt-{step_id}"}
+                ],
             }
         )
     contract = critical_contract({"steps": steps}, 3)
     assert [row["step_id"] for row in contract["history_steps"]] == [1, 2]
     assert contract["target_code"] == "print(3)"
     assert contract["target_observation"] == "obs-3"
+    assert contract["exact_model_messages"] == [
+        {"role": "user", "content": "prompt-3"}
+    ]
 
 
 def test_benefit_gate_enforces_all_families_and_retained() -> None:

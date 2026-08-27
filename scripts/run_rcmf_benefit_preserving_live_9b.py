@@ -19,7 +19,6 @@ import torch
 from torch import Tensor
 
 from rcmf.benchmarks.appworld.data import extract_code_and_fix_content
-from rcmf.benchmarks.appworld.prompt import build_appworld_messages
 from rcmf.config import load_config
 from rcmf.training.procedural_causal_audit_6h import evaluate_generated_action
 from rcmf.training.procedural_causal_audit_7b import (
@@ -49,12 +48,11 @@ from scripts.run_rcmf_joint_full_bank_9a import (
     assert_frozen_without_gradients,
 )
 from scripts.run_rcmf_joint_full_bank_first37_9a import LiveFieldQueryEncoder
-from scripts.run_rcmf_joint_full_bank_live_9a import build_audit_trajectory
 
 
-LIVE_VERSION = "rcmf_benefit_preserving_critical_live_9b_v1"
-MANIFEST_VERSION = "rcmf_benefit_preserving_critical_manifest_9b_v1"
-SUMMARY_VERSION = "rcmf_benefit_preserving_critical_summary_9b_v1"
+LIVE_VERSION = "rcmf_benefit_preserving_critical_live_9b_v2"
+MANIFEST_VERSION = "rcmf_benefit_preserving_critical_manifest_9b_v2"
+SUMMARY_VERSION = "rcmf_benefit_preserving_critical_summary_9b_v2"
 GLOBAL_SEED = 25101
 SMOKE_CANDIDATES = ("R0-bare", "C50")
 SMOKE_TASK = "8749218_1"
@@ -76,7 +74,9 @@ def _parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--artifact-dir", type=Path, required=True)
     parser.add_argument(
-        "--phase", choices=("manifest", "smoke", "run", "summarize"), required=True
+        "--phase",
+        choices=("manifest", "smoke", "baseline", "run", "summarize"),
+        required=True,
     )
     parser.add_argument("--attempt-id", required=True)
     parser.add_argument("--parent-attempt-id", required=True)
@@ -89,7 +89,7 @@ def _parse_args() -> argparse.Namespace:
 
 
 def _paths(artifact_dir: Path) -> dict[str, Path]:
-    root = artifact_dir / "stage_8b"
+    root = artifact_dir / "stage_8b_exact_prompt_v2"
     return {
         "root": root,
         "manifest": root / "critical_condition_manifest.json",
@@ -108,7 +108,7 @@ def _tensor_sha256(value: Tensor) -> str:
 
 def _condition_key(candidate_id: str, task_id: str, step_id: int) -> str:
     digest = sha256_text(
-        f"25101:exp031b-stage8b:{candidate_id}:{task_id}:{step_id}"
+        f"25101:exp031b-stage8b-exact-prompt-v2:{candidate_id}:{task_id}:{step_id}"
     )[:24]
     return f"exp031b-8b-{candidate_id.lower()}-{digest}"
 
@@ -152,6 +152,8 @@ def build_critical_manifest(settings: Mapping[str, Any]) -> dict[str, Any]:
             "exact_primary_app_api_and_canonical_action_signature_and_execution_"
             "success_and_semantic_successor"
         ),
+        "prompt_contract": "exact_exp031a_stored_model_message_array",
+        "live_observations_used_for_prompt": False,
     }
     if len(conditions) != 308:
         raise ValueError(f"Expected 308 critical live conditions, found {len(conditions)}")
@@ -186,12 +188,18 @@ def critical_contract(task_result: Mapping[str, Any], step_id: int) -> dict[str,
     ]
     target_action = str(target.get("raw_model_response", target["exact_executed_code"]))
     target_observation = str(target["complete_environment_observation"])
+    exact_model_messages = target.get("exact_model_message_array")
+    if not isinstance(exact_model_messages, list) or not exact_model_messages:
+        raise ValueError("Critical D1 step is missing its exact stored model messages")
+    if any(not isinstance(value, Mapping) for value in exact_model_messages):
+        raise ValueError("Critical D1 exact model messages are malformed")
     return {
         "query": query,
         "history_steps": history,
         "target_action": target_action,
         "target_code": str(target["exact_executed_code"]),
         "target_observation": target_observation,
+        "exact_model_messages": [dict(value) for value in exact_model_messages],
         "target_action_sha256": sha256_text(target_action),
         "target_code_sha256": sha256_text(str(target["exact_executed_code"])),
         "target_observation_sha256": sha256_text(target_observation),
@@ -407,19 +415,16 @@ def _run_condition(
     try:
         ready = client.prepare(prepare)
         actual_observations = [str(value) for value in ready["actual_observations"]]
-        trajectory = build_audit_trajectory(
-            history_steps=contract["history_steps"],
-            actual_observations=actual_observations,
-        )
-        messages = build_appworld_messages(
-            task_message=str(contract["query"]),
-            trajectory_so_far=trajectory,
-            prompt_profile=str(settings["appworld"]["prompt_profile"]),
-            max_context_turns=int(settings["appworld"]["max_context_turns"]),
-        )
+        messages = [dict(value) for value in contract["exact_model_messages"]]
         rendered = runtime["backend"].render_messages(
             messages, add_generation_prompt=True
         )
+        rendered_sha256 = sha256_text(rendered)
+        if rendered_sha256 != str(contract["source_rendered_messages_sha256"]):
+            raise RuntimeError(
+                "Exact stored critical prompt does not reproduce its source hash: "
+                f"{key}"
+            )
         tokenized = runtime["backend"].tokenize_messages(
             messages, add_generation_prompt=True
         )
@@ -515,7 +520,10 @@ def _run_condition(
         "target_observation_sha256": contract["target_observation_sha256"],
         "actual_replay_observations": actual_observations,
         "model_messages": [dict(value) for value in messages],
-        "rendered_messages_sha256": sha256_text(rendered),
+        "rendered_messages_sha256": rendered_sha256,
+        "exact_stored_prompt_hash_match": True,
+        "prompt_source": "exact_exp031a_stored_model_message_array",
+        "live_observations_used_for_prompt": False,
         "prompt_tokens": prompt_tokens,
         "context_limit": int(settings["appworld"]["context_limit"]),
         "truncation_applied": False,
@@ -737,6 +745,12 @@ def main() -> None:
                 output_root = paths["smoke_root"] / "condition_outputs"
                 tensor_root = paths["smoke_root"] / "condition_tensors"
                 worker_root = paths["smoke_root"] / "worker_logs"
+            elif args.phase == "baseline":
+                conditions = [
+                    row
+                    for row in conditions
+                    if str(row["candidate_id"]) == "R0-original"
+                ]
             completed = 0
             resumed = 0
             rows = []
@@ -763,7 +777,13 @@ def main() -> None:
                 completed += 1
                 resumed += int(was_reused)
                 attempt.progress(
-                    status="stage_8b_smoke" if non_scientific else "stage_8b_live",
+                    status=(
+                        "stage_8b_smoke"
+                        if non_scientific
+                        else "stage_8b_baseline"
+                        if args.phase == "baseline"
+                        else "stage_8b_live"
+                    ),
                     completed_conditions=completed,
                     total_conditions=len(conditions),
                     resumed_conditions=resumed,
