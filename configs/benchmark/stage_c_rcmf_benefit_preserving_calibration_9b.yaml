@@ -136,6 +136,9 @@ stage_c_9b:
   heldout:
     state_count: 98
     task_count: 8
+    selected_candidates: [L1, Q50, Q90]
+    selected_before_first37_candidate_outcomes: true
+    diagnostic_only_excluded: [LOO21]
     correct_must_exceed_shuffle_metrics: [exact_api, action_signature]
     maximum_execution_regression_states: 1
     minimum_positive_tasks: 4

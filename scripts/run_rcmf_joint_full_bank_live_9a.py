@@ -253,10 +253,14 @@ def selection_score(summary: Mapping[str, Any]) -> float:
         + 0.25 * (float(correct["action_signature"]) - float(zero["action_signature"]))
         - max(0.0, float(zero["execution"]) - float(correct["execution"]))
     )
-def _generate(*, backend: Any, reader: Any, messages: Sequence[Mapping[str, str]], slots: Tensor, max_new_tokens: int) -> tuple[list[int], str, dict[str, Any]]:
+def _generate(*, backend: Any, reader: Any, messages: Sequence[Mapping[str, str]], slots: Tensor, max_new_tokens: int, hook_factory: Any = None) -> tuple[list[int], str, dict[str, Any]]:
     tokenized = backend.tokenize_messages(list(messages), add_generation_prompt=True)
     prompt_length = int(tokenized.input_ids.shape[1])
-    hooks = FieldReaderHooks(model=backend.model, reader=reader, slots=slots)
+    hooks = (
+        FieldReaderHooks(model=backend.model, reader=reader, slots=slots)
+        if hook_factory is None
+        else hook_factory(model=backend.model, reader=reader, slots=slots)
+    )
     with torch.no_grad(), hooks, torch.autocast(
         device_type="cuda", dtype=torch.bfloat16, enabled=backend.device.type == "cuda"
     ), _attention_context(backend.device):
@@ -397,11 +401,13 @@ def _run_condition(
     checkpoint_sha256: str, manifest_sha256: str, config_sha256: str,
     replay: Mapping[str, Any], settings: Mapping[str, Any], examples: Mapping[str, Any],
     records: Mapping[str, Any], backend: Any, reader: Any, attempt_id: str, ordinal: int,
+    hook_factory: Any = None, result_version: str = LIVE_RESULT_VERSION,
+    extra_result_fields: Mapping[str, Any] | None = None,
 ) -> tuple[dict[str, Any], bool]:
     if output_path.exists():
         row = _json(output_path)
         checks = {
-            "format": row.get("format") == LIVE_RESULT_VERSION,
+            "format": row.get("format") == result_version,
             "condition": str(row.get("condition_key")) == str(condition["condition_key"]),
             "manifest": str(row.get("condition_manifest_sha256")) == manifest_sha256,
             "checkpoint": str(row.get("checkpoint_sha256")) == checkpoint_sha256,
@@ -454,7 +460,8 @@ def _run_condition(
         maximum = min(int(settings["appworld"]["max_new_tokens"]), remaining)
         generation_started = time.perf_counter()
         token_ids, text, hook = _generate(
-            backend=backend, reader=reader, messages=messages, slots=slots, max_new_tokens=maximum
+            backend=backend, reader=reader, messages=messages, slots=slots,
+            max_new_tokens=maximum, hook_factory=hook_factory,
         )
         generation_seconds = time.perf_counter() - generation_started
         code, fixed = extract_code_and_fix_content(text)
@@ -479,7 +486,7 @@ def _run_condition(
     )
     static_messages = list(messages[:-1])
     row = {
-        "format": LIVE_RESULT_VERSION,
+        "format": result_version,
         "status": "complete",
         **dict(condition),
         "condition_manifest_sha256": manifest_sha256,
@@ -530,6 +537,7 @@ def _run_condition(
         "memory_slots_in_self_attention_kv": False,
         "generation_elapsed_seconds": generation_seconds,
         "elapsed_seconds": time.perf_counter() - started,
+        **dict(extra_result_fields or {}),
     }
     atomic_write_json(output_path, row)
     return row, False
