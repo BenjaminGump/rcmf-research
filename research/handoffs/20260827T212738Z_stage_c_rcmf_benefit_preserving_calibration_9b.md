@@ -107,6 +107,23 @@ Attempt 002 used recursive strict redaction and pre-publication scans. Final aud
 - raw JWT matches: 0
 - registered leaks: 0
 
+## Final Publication Synchronization
+
+Before the final Lambda fast-forward, the valid attempt-002 export was moved atomically to the read-only synchronization quarantine:
+
+/lambda/nfs/rcmf-persist/quarantine/exp031b_preflight_20260827T013801Z/lambda/pre_final_sync_git_safe_export_002
+
+- audit root: 161 files, 282,102,289 bytes, manifest c04a7affc9fbf3db42abf794173788b0d7c496ae9dd5ee9de09671c2183cc45c
+- result root: 7 files, 2,130,743 bytes, manifest 355043c81fdce97427309af39ddc1cd05d5c9153bc21898209409ee15c0a772
+
+Every Git-tracked audit/result file matches that immutable copy. The only intentionally non-Git payload is ield_tensors/query_and_slots.pt: 40,234,265 bytes, SHA256 dd8fea477d52102d5f0054437c882a20a916b8a469756dd32c5ddaed8128bf4a. It remains preserved in the Lambda quarantine above, the unredacted artifact root, and the ignored local export; the Git-safe index records its path and hash. GitHub safety review rejected publishing this model-derived tensor before any payload transfer, so it was removed from the unpushed local commit and was not added to GitHub history.
+
+Publication commits:
+
+- result record: 80907554516e7d1cb1b4fb30df0c8e94c1c7126b
+- result-identity backfill: 95cde71e8a917e26dadd2aac7897b4746b141f70
+- this handoff finalization: the branch tip containing this section
+
 ## Verification
 
 - Focused local: 44 passed
