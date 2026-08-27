@@ -534,6 +534,12 @@ def test_config_locks_route_d_spread_and_cached_metric_contract() -> None:
         "execution_token_validity",
         "critical_policy_kl",
     }
+    lock = candidates["locked_derived_calibration"]
+    assert lock["calibration_sha256"] == "f1d0b1b8553f008423d4c00a4637e0f9d1c01444820f6652ac519a39710b7a8c"
+    assert lock["outcomes_used"] is False
+    assert lock["route_d_decision"] == "PROCEED"
+    assert lock["C50"][7] == pytest.approx(0.05096155405044556)
+    assert lock["Q90_tau"] == pytest.approx(4.606291029188367)
 
 
 class _MetricTokenizer:

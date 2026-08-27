@@ -2072,3 +2072,14 @@ Decision:
 - Local verification: focused Stage-9b tests `22 passed`; complete repository
   suite `649 passed, 1 skipped`. Scientific GPU work remains gated on source
   commit/push/synchronization and immutable-input revalidation.
+
+### EXP-031B Stage 8A calibration locked
+
+- Exact G100/bare/zero-field equivalence passed under attempt
+  `exp031b-stage8a-equivalence-001` in `22.9771` seconds with zero logit error
+  and exact deterministic token/code identity.
+- The outcome-independent 98-state prompt-token profile completed under
+  `exp031b-stage8a-profile-001` in `171.8282` seconds. Calibration semantic
+  SHA256 is `f1d0b1b8553f008423d4c00a4637e0f9d1c01444820f6652ac519a39710b7a8c`.
+- Raw-field CV `0.803213` and p90/p10 `12.2912` pass the preregistered Route-D
+  spread gate. C/Q values are now committed before candidate diagnostics.

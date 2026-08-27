@@ -2494,3 +2494,13 @@ Implementation deviation:
   PowerShell UTF-8 replacements were reviewed with `git diff --check`,
   syntax-checked, and validated by `22` focused and `649 passed, 1 skipped`
   complete tests.
+
+Calibration-lock decision:
+
+- Attempts `exp031b-stage8a-equivalence-001` and
+  `exp031b-stage8a-profile-001` passed. Freeze calibration semantic SHA256
+  `f1d0b1b8553f008423d4c00a4637e0f9d1c01444820f6652ac519a39710b7a8c`
+  and the exact committed C/Q values before candidate diagnostics.
+- Route D is `PROCEED` because unlabeled raw-RMS CV is `0.803213` and p90/p10
+  is `12.2912`, both above the predeclared thresholds. Do not retune its tau
+  values after candidate outcomes.

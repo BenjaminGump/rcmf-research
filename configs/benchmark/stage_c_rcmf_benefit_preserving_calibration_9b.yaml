@@ -81,6 +81,16 @@ stage_c_9b:
       action_signature_log_probability: mean_target_log_probability_over_all_ordered_apis_app_api_token_spans
       execution_token_validity: python_parse_of_teacher_forced_argmax_token_sequence
       critical_policy_kl: sparse_top64_kl_to_exact_original_D1_policy_on_same_prompt
+    locked_derived_calibration:
+      calibration_sha256: f1d0b1b8553f008423d4c00a4637e0f9d1c01444820f6652ac519a39710b7a8c
+      outcomes_used: false
+      C50: {7: 0.05096155405044556, 14: 0.020794648677110672, 21: 0.025116397067904472, 28: 0.09022285044193268}
+      C75: {7: 0.06951085478067398, 14: 0.02680123783648014, 21: 0.03354936093091965, 28: 0.13563992083072662}
+      C90: {7: 0.10730484127998352, 14: 0.03450235724449158, 21: 0.04833364859223366, 28: 0.1722555160522461}
+      Q50_tau: 41.45661926269531
+      Q75_tau: 13.818873087565104
+      Q90_tau: 4.606291029188367
+      route_d_decision: PROCEED
     positive_kernel:
       candidate_id: E-positive
       feature: elu_plus_one

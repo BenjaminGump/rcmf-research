@@ -1,0 +1,44 @@
+{
+  "calibration_sha256": "f1d0b1b8553f008423d4c00a4637e0f9d1c01444820f6652ac519a39710b7a8c",
+  "caps": {
+    "C50": {
+      "14": 0.020794648677110672,
+      "21": 0.025116397067904472,
+      "28": 0.09022285044193268,
+      "7": 0.05096155405044556
+    },
+    "C75": {
+      "14": 0.02680123783648014,
+      "21": 0.03354936093091965,
+      "28": 0.13563992083072662,
+      "7": 0.06951085478067398
+    },
+    "C90": {
+      "14": 0.03450235724449158,
+      "21": 0.04833364859223366,
+      "28": 0.1722555160522461,
+      "7": 0.10730484127998352
+    }
+  },
+  "critical_teacher_sha256": "cf8bd0c446e8c9e8cf476e8a96391595cd4113ed21d6fbbb9ff078c6ec92dbbc",
+  "format": "rcmf_benefit_preserving_calibration_lock_9b_v1",
+  "heldout_state_count": 98,
+  "locked_before_candidate_outcomes": true,
+  "outcomes_used": false,
+  "ratio_tensor_sha256": "48575167f11093e7bae77ce7462e9eb1948657c12a6605e11e60cee856878f35",
+  "raw_field_rms": {
+    "coefficient_of_variation": 0.8032134175300598,
+    "maximum": 150.24610900878906,
+    "median": 41.45661926269531,
+    "minimum": 3.6592822074890137,
+    "p90_p10_ratio": 12.291200637817383,
+    "standard_deviation": 37.02789306640625
+  },
+  "route_d_decision": "PROCEED",
+  "route_d_viable": true,
+  "taus": {
+    "Q50": 41.45661926269531,
+    "Q75": 13.818873087565104,
+    "Q90": 4.606291029188367
+  }
+}
