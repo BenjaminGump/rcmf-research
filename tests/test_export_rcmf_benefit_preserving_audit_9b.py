@@ -1,6 +1,8 @@
 from scripts.export_rcmf_benefit_preserving_audit_9b import (
     _attempt_summary,
     _first_code_divergence,
+    strict_redact,
+    strict_verify_tree,
 )
 
 
@@ -38,3 +40,23 @@ def test_attempt_summary_requires_closed_pairs():
     assert summary["all_attempts_closed"] is False
     assert summary["duration_seconds_by_attempt"] == {"a": 3.0}
     assert summary["failed_attempt_ids"] == ["b"]
+
+def test_strict_redact_handles_quoted_credential_with_spaces():
+    payload = {"content": 'client.login(password = "alpha beta")'}
+    safe = strict_redact(payload)
+    assert "alpha beta" not in safe["content"]
+    assert "<REDACTED:CREDENTIAL:" in safe["content"]
+
+
+def test_strict_verify_tree_rejects_unredacted_credential(tmp_path):
+    path = tmp_path / "unsafe.json"
+    path.write_text(
+        '{"content": "client.login(password = \\\"alpha beta\\\")"}',
+        encoding="utf-8",
+    )
+    try:
+        strict_verify_tree(tmp_path)
+    except ValueError as error:
+        assert "credential assignment" in str(error)
+    else:
+        raise AssertionError("Strict tree verification accepted an unsafe credential")

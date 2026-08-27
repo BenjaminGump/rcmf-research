@@ -300,7 +300,7 @@ def git_safe_redact(value: Any, key: str | None = None) -> Any:
 
 
 def _serialized_secret_matches(value: Any) -> list[dict[str, Any]]:
-    text = json.dumps(value, ensure_ascii=False)
+    text = value if isinstance(value, str) else json.dumps(value, ensure_ascii=False)
     matches = [
         {
             "kind": "jwt",
@@ -321,9 +321,6 @@ def _serialized_secret_matches(value: Any) -> list[dict[str, Any]]:
 
 
 def git_safe_findings(value: Any, path: str = "$") -> list[dict[str, Any]]:
-    matches = _serialized_secret_matches(value)
-    if not matches:
-        return []
     if isinstance(value, Mapping):
         for name, item in value.items():
             child_path = f"{path}/{name}"
@@ -338,6 +335,9 @@ def git_safe_findings(value: Any, path: str = "$") -> list[dict[str, Any]]:
             findings = git_safe_findings(item, f"{path}/{index}")
             if findings:
                 return findings
+    matches = _serialized_secret_matches(value)
+    if not matches:
+        return []
     return [{"path": path, **row} for row in matches]
 
 

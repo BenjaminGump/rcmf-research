@@ -37,13 +37,17 @@ from export_rcmf_joint_full_bank_audit_9a import (  # noqa: E402
     load_json,
     materialized_step,
     raw_tensor_sha256,
-    redact,
+    redact as legacy_redact,
     register_asset,
     register_sensitive_observation,
     sha_file,
     sha_text,
     top_contributions,
     verify_git_safe_redaction,
+)
+from analyze_rcmf_benefit_preserving_gain_loss_9b import (  # noqa: E402
+    git_safe_check,
+    git_safe_redact,
 )
 from rcmf.training.state_conditioned_transition_6b import AttemptLedger  # noqa: E402
 
@@ -55,6 +59,38 @@ EXPECTED_HELDOUT_ROWS = 882
 EXPECTED_FIRST37_TASKS = 37
 EXPECTED_FIRST37_STEPS = {"D1": 1071, "D2": 923}
 SOURCE_COMMIT = "49f03a2b758f93069b768e3af79fbf1f6282befd"
+
+
+def strict_redact(value: Any) -> Any:
+    """Apply both historical and EXP-031B redaction, then fail closed."""
+    safe = git_safe_redact(legacy_redact(value))
+    git_safe_check(safe)
+    return safe
+
+
+def strict_verify_tree(root: Path) -> dict[str, int]:
+    """Strictly scan every Git-readable artifact before atomic publication."""
+    counts = {"json_files": 0, "jsonl_files": 0, "text_files": 0, "rows": 0}
+    for path in sorted(item for item in root.rglob("*") if item.is_file()):
+        suffix = path.suffix.lower()
+        if suffix == ".json":
+            git_safe_check(json.loads(path.read_text(encoding="utf-8")))
+            counts["json_files"] += 1
+            counts["rows"] += 1
+        elif suffix == ".jsonl":
+            rows = [
+                json.loads(line)
+                for line in path.read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ]
+            for row in rows:
+                git_safe_check(row)
+            counts["jsonl_files"] += 1
+            counts["rows"] += len(rows)
+        elif suffix in {".md", ".txt"}:
+            git_safe_check(path.read_text(encoding="utf-8"))
+            counts["text_files"] += 1
+    return counts
 
 
 def _canonical_sha(value: Any) -> str:
@@ -173,7 +209,7 @@ def _critical_record(
         "not_used_by_model_or_field_read": True,
         "ranking": list(contribution),
     }
-    return redact(
+    return strict_redact(
         {
             "format": FORMAT,
             "audit_scope": "critical_live_one_step",
@@ -239,7 +275,7 @@ def _heldout_record(
     )
     field = dict(row["field"])
     field["top_memory_contributions_offline"] = list(contribution)
-    return redact(
+    return strict_redact(
         {
             "format": FORMAT,
             "audit_scope": "heldout_live_one_step",
@@ -440,8 +476,8 @@ def _machine_summary(
         "family_preservation": final["family_preservation"],
         "recovered_original_d1_losses": final["recovered_original_d1_losses"],
         "equivalent_new_net_gains": final["equivalent_new_net_gains"],
-        "stage8b": redact(stage8b),
-        "stage8c": redact(stage8c),
+        "stage8b": strict_redact(stage8b),
+        "stage8c": strict_redact(stage8c),
         "attempts": attempt_info,
         "accepted_h100_active_hours": accepted_seconds / 3600.0,
         "preserved_invalid_h100_active_hours": invalid_seconds / 3600.0,
@@ -479,9 +515,10 @@ def _refresh_result_attempts(artifact_root: Path, result_root: Path) -> None:
     summary["wall_span_hours"] = (
         max(all_times) - min(all_times)
     ).total_seconds() / 3600.0
-    atomic_jsonl(result_root / "attempts.jsonl", [redact(row) for row in attempts])
+    atomic_jsonl(result_root / "attempts.jsonl", [strict_redact(row) for row in attempts])
     atomic_json(result_root / "summary.json", summary)
     verification = verify_git_safe_redaction(result_root)
+    strict_verify_tree(result_root)
     if verification["registered_sensitive_observation_leak_count"] != 0:
         raise RuntimeError("Refreshed result attempts failed redaction verification")
 
@@ -550,7 +587,7 @@ def export(artifact_root: Path, parent_root: Path, audit_root: Path, result_root
         safe = _critical_record(source_path, row, key, assets, contribution)
         critical_groups[str(row["candidate_id"])].append(safe)
         critical_table.append(
-            redact(
+            strict_redact(
                 {
                     "condition_key": key,
                     "task_id": row["task_id"],
@@ -587,7 +624,7 @@ def export(artifact_root: Path, parent_root: Path, audit_root: Path, result_root
         safe = _heldout_record(source_path, row, key, assets, contribution)
         heldout_groups[(str(row["candidate_id"]), str(row["source_task_id"]))].append(safe)
         heldout_table.append(
-            redact(
+            strict_redact(
                 {
                     "condition_key": key,
                     "task_id": row["source_task_id"],
@@ -631,7 +668,9 @@ def export(artifact_root: Path, parent_root: Path, audit_root: Path, result_root
                     tensor["query"], deployment, shuffled=condition == "D2"
                 )
                 contribution_rows[key] = contribution
-                safe = first37_record(task_path, task, step, key, contribution)
+                safe = strict_redact(
+                    first37_record(task_path, task, step, key, contribution)
+                )
                 safe["format"] = FORMAT
                 safe_steps.append(safe)
                 count += 1
@@ -643,15 +682,20 @@ def export(artifact_root: Path, parent_root: Path, audit_root: Path, result_root
     for task_id, tasks in sorted(first37_tasks.items()):
         if set(tasks) != {"D0", "D1", "D2"}:
             raise ValueError(f"Incomplete comparison task {task_id}: {sorted(tasks)}")
-        comparison = _comparison_payload(task_id, tasks, contribution_rows)
+        comparison = strict_redact(
+            _comparison_payload(task_id, tasks, contribution_rows)
+        )
         atomic_json(audit_tmp / "comparisons" / f"{task_id}.json", comparison)
 
     tensor_path = audit_tmp / "field_tensors/query_and_slots.pt"
     atomic_torch(tensor_path, tensor_bundle)
-    atomic_json(audit_tmp / "static_prompt_assets.json", {"format": FORMAT, "assets": assets})
+    atomic_json(
+        audit_tmp / "static_prompt_assets.json",
+        strict_redact({"format": FORMAT, "assets": assets}),
+    )
 
     attempts = _load_attempts(artifact_root)
-    attempts_safe = [redact(row) for row in attempts]
+    attempts_safe = [strict_redact(row) for row in attempts]
     stage8a = load_json(artifact_root / "stage_8a/candidate_summary.json")
     stage8b = load_json(artifact_root / "stage_8b_exact_prompt_v2/critical_live_summary.json")
     stage8c = load_json(artifact_root / "stage_8c_heldout_live/heldout_live_summary.json")
@@ -660,10 +704,10 @@ def export(artifact_root: Path, parent_root: Path, audit_root: Path, result_root
         raise ValueError("EXP-031B final decision differs from STOP_ROUTE")
 
     atomic_jsonl(result_tmp / "attempts.jsonl", attempts_safe)
-    atomic_json(result_tmp / "candidate_matrix.json", redact(stage8a))
+    atomic_json(result_tmp / "candidate_matrix.json", strict_redact(stage8a))
     atomic_jsonl(result_tmp / "critical_replays.jsonl", critical_table)
     atomic_jsonl(result_tmp / "heldout_per_state.jsonl", heldout_table)
-    atomic_jsonl(result_tmp / "first37_per_task.jsonl", [redact(row) for row in final["per_task"]])
+    atomic_jsonl(result_tmp / "first37_per_task.jsonl", [strict_redact(row) for row in final["per_task"]])
     complexity = {
         "format": "rcmf_benefit_preserving_complexity_9b_v1",
         "memory_count": 499,
@@ -686,6 +730,8 @@ def export(artifact_root: Path, parent_root: Path, audit_root: Path, result_root
 
     redaction_verification = verify_git_safe_redaction(audit_tmp)
     result_redaction_verification = verify_git_safe_redaction(result_tmp)
+    strict_audit_verification = strict_verify_tree(audit_tmp)
+    strict_result_verification = strict_verify_tree(result_tmp)
     verification = {
         "format": FORMAT,
         "run_uuid": RUN_UUID,
@@ -702,6 +748,8 @@ def export(artifact_root: Path, parent_root: Path, audit_root: Path, result_root
         },
         "audit_redaction": redaction_verification,
         "result_redaction": result_redaction_verification,
+        "strict_audit_verification": strict_audit_verification,
+        "strict_result_verification": strict_result_verification,
         "raw_unredacted_lambda_root": str(artifact_root),
         "raw_unredacted_artifacts_preserved": True,
         "runtime_retrieval": False,
@@ -751,6 +799,8 @@ def export(artifact_root: Path, parent_root: Path, audit_root: Path, result_root
         "files": files,
     }
     atomic_json(audit_tmp / "index.json", index)
+    strict_verify_tree(audit_tmp)
+    strict_verify_tree(result_tmp)
     audit_tmp.replace(audit_root)
     result_tmp.replace(result_root)
     return index
