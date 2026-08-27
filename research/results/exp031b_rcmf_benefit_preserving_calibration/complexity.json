@@ -1,0 +1,20 @@
+{
+  "conditions": {
+    "D1": {
+      "mean_field_read_seconds": 0.00021372214316222625,
+      "mean_query_seconds": 0.6535502459852148,
+      "steps": 1071
+    },
+    "D2": {
+      "mean_field_read_seconds": 0.00021809440525904507,
+      "mean_query_seconds": 0.5996191763472446,
+      "steps": 923
+    }
+  },
+  "field_shape_independent_of_memory_count": true,
+  "format": "rcmf_benefit_preserving_complexity_9b_v1",
+  "memory_count": 499,
+  "runtime_per_memory_scoring": false,
+  "runtime_retrieval": false,
+  "write_scans_existing_records": false
+}

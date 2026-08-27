@@ -1,0 +1,49 @@
+{
+  "audit_redaction": {
+    "checked_text_files": 158,
+    "raw_jwt_match_count": 0,
+    "registered_sensitive_observation_count": 134,
+    "registered_sensitive_observation_leak_count": 0
+  },
+  "behavioral_conclusion_ready": true,
+  "comparison_tasks": 37,
+  "critical_rows": 308,
+  "first37_steps": {
+    "D1": 1071,
+    "D2": 923
+  },
+  "first37_task_rows": 74,
+  "format": "rcmf_benefit_preserving_detailed_audit_9b_v1",
+  "hard_memory_gate": false,
+  "heldout_rows": 882,
+  "raw_unredacted_artifacts_preserved": true,
+  "raw_unredacted_lambda_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_benefit_preserving_calibration_9b_20260827_001",
+  "result_redaction": {
+    "checked_text_files": 7,
+    "raw_jwt_match_count": 0,
+    "registered_sensitive_observation_count": 134,
+    "registered_sensitive_observation_leak_count": 0
+  },
+  "run_uuid": "rcmf_benefit_preserving_calibration_9b_20260827_001",
+  "runtime_retrieval": false,
+  "static_asset_count": 106,
+  "strict_audit_verification": {
+    "json_files": 38,
+    "jsonl_files": 120,
+    "rows": 3222,
+    "text_files": 0
+  },
+  "strict_result_verification": {
+    "json_files": 3,
+    "jsonl_files": 4,
+    "rows": 1295,
+    "text_files": 0
+  },
+  "tensor_bundle_bytes": 40234265,
+  "tensor_bundle_counts": {
+    "critical_live": 308,
+    "first37": 1994,
+    "heldout_live": 882
+  },
+  "tensor_bundle_sha256": "dd8fea477d52102d5f0054437c882a20a916b8a469756dd32c5ddaed8128bf4a"
+}

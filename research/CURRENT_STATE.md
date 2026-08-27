@@ -2093,3 +2093,15 @@ Decision:
 - No candidate result was produced or inspected. Remove only the extra
   Flash-only context from cached batched forwards, preserve every scientific
   input and metric, validate on CUDA, and resume under a new attempt ID.
+
+### EXP-031B Completed - Benefit-Preserving Calibration Stops
+
+- Run `rcmf_benefit_preserving_calibration_9b_20260827_001` is complete on `research/v5-rcmf-benefit-preserving-calibration` with seed `25101`.
+- The immutable EXP-031A freeze, independent artifact snapshot, repository bundle, and restoration smoke passed. Scratch provenance is sufficient: 63 scripts and 176 bundles are fully indexed, no EXP-031A scientific semantics are missing from Git, and no clean rerun is required.
+- Stage 8A evaluated 22 outcome-independent candidates over 112 states and 2,464 cached rows. Exact G100/bare and zero/bare equivalence passed; calibration SHA256 is `f1d0b1b8553f008423d4c00a4637e0f9d1c01444820f6652ac519a39710b7a8c`.
+- Stage 8B completed 308/308 corrected critical conditions. Stage 8C completed 882/882 new heldout conditions plus 294 zero reuses. L1 and Q90 were first37-eligible; L1 was selected first.
+- L1 complete first37 is `7/37` correct and `5/37` shuffle, compared with immutable bare `8/37`. The correct field retains only 2/6 original gains, loses all three exact-set-migration gains, and preserves both retained successes.
+- The formal branch is `benefit_preserving_calibration_stop_route`. The old mechanical correct-over-shuffle label remains descriptive but cannot override failed benefit-preservation gates. Q90 was not run.
+- Accepted H100-active time is `8.2973 h`; total accounted H100-active time including preserved invalid attempts is `9.1689 h`. All 33 attempts are closed.
+- The final Git-safe audit passes recursive strict scanning with zero raw JWT matches and zero registered sensitive-observation leaks. The first invalid export is preserved in Lambda quarantine and was never transferred or committed.
+- Freeze EXP-031A/031B. No new calibration candidate, retraining, retrieval, hard gate, broader first37 run, or V5 tag is authorized.

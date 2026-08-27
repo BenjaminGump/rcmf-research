@@ -2514,3 +2514,27 @@ Stage-8A infrastructure recovery:
 - Restore the parent math-SDPA fallback for cached `_forward` only. This is a
   harness correction, not a candidate, metric, data, checkpoint, or numerical
   calibration change. Require a CUDA two-row smoke before formal resume.
+
+## 2026-08-27 EXP-031B final benefit-preservation decision
+
+VERIFIED:
+
+- L1 was the preregistered first complete first37 candidate after passing critical and heldout gates. It scored `7/37` correct versus `8/37` bare and `5/37` shuffle.
+- L1 preserved `0d01c76_3` and `325d6ec_2`, but lost `325d6ec_3` and all three `634f342` exact-set-migration gains. It preserved both retained `8749218` successes and recovered two prior loss tasks.
+- The minimum-success, gain-over-bare, 5/6 benefit-preservation, and all-three-family gates failed. The correct-over-shuffle gate alone passed.
+
+DECISION:
+
+- Record `benefit_preserving_calibration_stop_route` and stop the route. Do not run the preregistered Q90 second pair because the completed, audited L1 pair triggered the stop condition.
+- Retain the mechanical `rcmf_full_field_live_memory_specific_signal` label only as a secondary description of L1 correct versus shuffle. It is not evidence that EXP-031B preserved or improved the original task-level benefit set.
+- Do not modify the field, retrain, retrieve, gate, add candidates, or expand evaluation under this milestone.
+
+AUDIT AND PROVENANCE:
+
+- Preserve the three preexisting untracked roots byte-for-byte in host-separated quarantine. The 63-script/176-bundle audit reached `exp031a_formal_execution_provenance_sufficient`; no EXP-031A rerun is required.
+- Stage-8E export attempt 001 is scientifically unchanged but not Git-safe under the later strict scanner. It was not transferred or committed. Preserve it under `failed_git_safe_export_v1`; use attempt 002 as the only Git-safe published export.
+- Apply recursive strict redaction and per-file strict scans before atomic publication. Do not weaken credential or JWT detection.
+
+IMPLEMENTATION DEVIATION:
+
+- The Windows `apply_patch` helper repeatedly failed with `helper_unknown_error`. Guarded PowerShell UTF-8 edits were used after failed helper attempts. One malformed local intermediate exporter edit was restored exactly from the current Git blob before reapplication; it was never committed or synchronized. The repaired source passed syntax, whitespace, 44 focused local tests, 44 focused Lambda tests, and the complete `671 passed, 1 skipped` suite.

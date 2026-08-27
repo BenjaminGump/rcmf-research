@@ -1389,3 +1389,17 @@ Next actions:
 
 Still blocked: candidate first37 execution, any model retraining, retrieval,
 hard gates, prompt/evaluator changes, Stage C2, and a V5 release tag.
+
+## EXP-031B Completed - Freeze Calibration Route
+
+EXP-031B reached `benefit_preserving_calibration_stop_route`. L1 remained memory-specific versus shuffle (`7/37` versus `5/37`) but fell below bare (`8/37`) and preserved only `2/6` original gains, losing the complete exact-set-migration family.
+
+Recommended next 48-hour action:
+
+1. Freeze the immutable EXP-031A checkpoint/field and all EXP-031B candidate, heldout, first37, audit, and provenance artifacts.
+2. Do not run Q90 or introduce another scale/cap/confidence formula. The sequential stop condition has fired.
+3. Integrate the verified positive and negative boundaries into the manuscript: constant-size reversible field, instant write, heldout specificity, correct-over-shuffle live signal, no absolute task gain, and failed benefit preservation under calibration.
+4. Build paper tables directly from the committed machine-readable audit and per-task results; include the exposed single-seed limitation and the proxy-to-trajectory mismatch.
+5. Use a separately reviewed contract for any future scientific run. Do not create or move a V5 tag.
+
+Still blocked: further calibration, retrieval, hard gating, model retraining, broader AppWorld evaluation, portability claims, Stage C2, and V5 tagging.
