@@ -416,15 +416,21 @@ def _run_condition(
         ready = client.prepare(prepare)
         actual_observations = [str(value) for value in ready["actual_observations"]]
         messages = [dict(value) for value in contract["exact_model_messages"]]
+        source_legacy_rendered = runtime["backend"].tokenizer.apply_chat_template(
+            list(messages), tokenize=False, add_generation_prompt=True
+        )
+        source_legacy_rendered_sha256 = sha256_text(source_legacy_rendered)
+        if source_legacy_rendered_sha256 != str(
+            contract["source_rendered_messages_sha256"]
+        ):
+            raise RuntimeError(
+                "Exact stored critical messages do not reproduce their EXP-031A "
+                f"legacy render hash: {key}"
+            )
         rendered = runtime["backend"].render_messages(
             messages, add_generation_prompt=True
         )
         rendered_sha256 = sha256_text(rendered)
-        if rendered_sha256 != str(contract["source_rendered_messages_sha256"]):
-            raise RuntimeError(
-                "Exact stored critical prompt does not reproduce its source hash: "
-                f"{key}"
-            )
         tokenized = runtime["backend"].tokenize_messages(
             messages, add_generation_prompt=True
         )
@@ -521,6 +527,7 @@ def _run_condition(
         "actual_replay_observations": actual_observations,
         "model_messages": [dict(value) for value in messages],
         "rendered_messages_sha256": rendered_sha256,
+        "source_legacy_rendered_messages_sha256": source_legacy_rendered_sha256,
         "exact_stored_prompt_hash_match": True,
         "prompt_source": "exact_exp031a_stored_model_message_array",
         "live_observations_used_for_prompt": False,
