@@ -2044,3 +2044,13 @@ Decision:
   remained undisclosed; the match SHA256 is recorded. The 9b redactor now
   covers quoted credential values containing whitespace using the scanner's
   exact syntax.
+- Attempt `exp031b-gain-loss-audit-005` completed normally. The audit covers
+  all `14/14` preregistered tasks and emits `14/14` exact replay identities;
+  the Git-safe replay manifest is
+  `cd867357130a31ba073e810dca91099b21e371dd789edd01e7f9f8217d392fb7`.
+- All six gains, six losses, and two retained successes are accounted for.
+  Maximum normalized-slot reconstruction error is `2.81334e-5`; all 14 D1
+  trajectories contain both positive and negative dominant contributions.
+- Hypotheses B-E are supported; hypothesis A is supported with whole-bank
+  attribution limits. No candidate outcome has been inspected. Stage 8A
+  cached diagnostics and exact equivalence gates are next.

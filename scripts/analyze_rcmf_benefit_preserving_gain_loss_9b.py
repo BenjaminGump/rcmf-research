@@ -378,6 +378,60 @@ def markdown(payload: Mapping[str, Any]) -> str:
     lines.extend(["", "## Hypothesis Audit", ""])
     for name, row in payload["hypothesis_audit"].items():
         lines.append(f"- **{name}: {row['status']}** {row['finding']}")
+    lines.extend(["", "## Per-Task Evidence", ""])
+    for task in payload["tasks"]:
+        critical = task["critical_state"]
+        reader = critical["reader"]
+        invariant = task["final_state_invariant"]
+        delta_means = ", ".join(
+            f"L{layer}={values['mean']:.6g}"
+            for layer, values in reader["delta_norms"].items()
+        )
+        entropy_means = ", ".join(
+            f"L{layer}={values['mean']:.6g}"
+            for layer, values in reader["attention_entropy"].items()
+        )
+        lines.extend(
+            [
+                f"### `{task['task_id']}` ({task['group']})",
+                "",
+                f"- **VERIFIED D0:** {task['verified_findings']['d0']}",
+                f"- **VERIFIED D1:** {task['verified_findings']['d1']}",
+                f"- First text divergence: step `{task['first_text_divergence_step']}`; "
+                f"locked D0/D1 behavioral steps: "
+                f"`{task['first_behavioral_divergence']['d0_step']}`/"
+                f"`{task['first_behavioral_divergence']['d1_step']}`; "
+                f"critical D1 step: `{critical['step_id']}`.",
+                f"- Evaluator invariant: {invariant['invariant']}",
+                f"- Critical raw pre-RMS field RMS/norm: "
+                f"`{critical['raw_pre_rms_field']['rms']:.6g}`/"
+                f"`{critical['raw_pre_rms_field']['norm']:.6g}`; "
+                f"slot reconstruction max error: "
+                f"`{critical['normalized_slot_reconstruction_max_abs_error']:.6g}`.",
+                f"- Reader delta-norm means: {delta_means}.",
+                f"- Reader attention-entropy means: {entropy_means}.",
+                f"- Dominant-sign changes: "
+                f"`{task['dominant_contribution_signs']['sign_change_count']}`; "
+                f"negative present: `{task['dominant_contribution_signs']['has_negative']}`; "
+                f"positive present: `{task['dominant_contribution_signs']['has_positive']}`.",
+                "- Offline top contributions (descriptive only):",
+            ]
+        )
+        for contribution in critical["top_memory_contributions"][:3]:
+            lines.append(
+                f"  - weight `{float(contribution['signed_address_weight']):+.6g}`; "
+                f"key {contribution['key_memory']['human_readable_summary']}; "
+                f"payload {contribution['payload_memory']['human_readable_summary']}."
+            )
+        lines.extend(
+            [
+                f"- **INFERENCE:** {task['inference']}",
+                f"- **UNVERIFIED:** {task['unverified']}",
+                "- Exact Git-safe action/observation text and corresponding raw "
+                "SHA256 identities are in the machine-readable JSON.",
+                "",
+            ]
+        )
     lines.extend([
         "",
         "## Evidence Boundaries",

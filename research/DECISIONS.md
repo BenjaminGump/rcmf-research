@@ -2445,3 +2445,17 @@ Audit recovery:
   `919cfa00a6815a630d3904c2f1d3c2080c916b2087ca343123acc21f6ec858e9`.
   The value was not printed or inspected. Extend 9b redaction to quoted
   credential assignments containing whitespace, matching the scanner syntax.
+
+Audit decision:
+
+- Attempt `exp031b-gain-loss-audit-005` completed with 14 tasks and 14 exact
+  replay identities. Preserve attempts 001-004 as failed-closed redaction
+  recoveries; do not rewrite the append-only ledger.
+- Treat cross-app exact mapping, Spotify state-machine tracking, exact-set
+  migration, and the preregistered harm taxonomy as supported by immutable
+  traces. Limit 0d01c76_3 credential/data-type attribution to an inference.
+- Do not interpret negative address sign as a harm gate: every audited D1
+  trajectory contains both positive and negative dominant contributions.
+- Proceed to the predeclared Stage 8A cached/equivalence diagnostics. No live
+  candidate or first37 run is authorized until the benefit-preservation and
+  G100/bare equivalence gates pass.

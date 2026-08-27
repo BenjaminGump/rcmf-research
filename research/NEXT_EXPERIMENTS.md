@@ -1369,3 +1369,23 @@ Recommended next 48-hour action:
 Still blocked pending review: a full statistical AppWorld claim, portability,
 new compiler/reader work, Stage C2, end-to-end expansion beyond the exposed
 development run, and V5 tagging.
+
+## EXP-031B Active - Stage 8A Cached Diagnostics
+
+The immutable 14-task gain/loss audit and exact replay manifest are complete.
+No calibration-candidate outcome has been inspected.
+
+Next actions:
+
+1. Commit and push the Git-safe audit report and machine-readable record.
+2. Run G100, bare, field-shape, reversibility, shuffle, leakage, and exact
+   deterministic-equivalence gates before any candidate comparison.
+3. Derive and lock C50/C75/C90 and Q50/Q75/Q90 only from the unlabeled 98-state
+   heldout distributions.
+4. Run all preregistered candidates on cached 98-state and 14-critical-state
+   diagnostics, retaining every per-state and per-task result.
+5. Advance only candidates that preserve the three gain families and both
+   retained successes; at most four may reach heldout live generation.
+
+Still blocked: candidate first37 execution, any model retraining, retrieval,
+hard gates, prompt/evaluator changes, Stage C2, and a V5 release tag.
