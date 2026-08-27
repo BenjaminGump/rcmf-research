@@ -1,0 +1,44 @@
+{
+  "all_files_git_safe": true,
+  "files": [
+    {
+      "filename": "attempts.jsonl",
+      "git_safe": true,
+      "pattern_hit_counts": {
+        "credential_assignment": 0,
+        "jwt": 0,
+        "private_key": 0
+      },
+      "sensitive_json_paths": [],
+      "sha256": "369ef47a8171db3837ca46a117f9cf6068b41679a49c9a7df20fed4ae6f02899",
+      "size_bytes": 5147
+    },
+    {
+      "filename": "heartbeat.json",
+      "git_safe": true,
+      "pattern_hit_counts": {
+        "credential_assignment": 0,
+        "jwt": 0,
+        "private_key": 0
+      },
+      "sensitive_json_paths": [],
+      "sha256": "2544fe79fd661d0a8ef757cfa0125fb4e6e11daf86b6931dea9d15981a63a784",
+      "size_bytes": 297
+    },
+    {
+      "filename": "run_manifest.json",
+      "git_safe": true,
+      "pattern_hit_counts": {
+        "credential_assignment": 0,
+        "jwt": 0,
+        "private_key": 0
+      },
+      "sensitive_json_paths": [],
+      "sha256": "9dc3fcc4fbf0e6387d5c3b7c6e7759d5c77db5b89f20c41fb1b8f997e2cf8f45",
+      "size_bytes": 1633
+    }
+  ],
+  "raw_archive_parent": "/lambda/nfs/rcmf-persist/quarantine/exp031b_preflight_20260827T013801Z/lambda/raw_roots",
+  "raw_root_bytes_b64": "IFw=",
+  "schema": "exp025dg_preflight_orphaned_evidence_stage_v1"
+}

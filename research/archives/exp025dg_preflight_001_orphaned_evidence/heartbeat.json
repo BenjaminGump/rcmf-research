@@ -1,0 +1,9 @@
+{
+  "attempt_id": "exp025dg-preflight-001",
+  "format": "persistent_experiment_heartbeat_v1",
+  "phase": "cpu_preflight_and_failure_audit",
+  "pid": 361150,
+  "run_uuid": "state_conditioned_program_direct_7dg_20260821_001",
+  "status": "failed",
+  "timestamp_utc": "2026-08-21T01:55:26.328772Z"
+}
