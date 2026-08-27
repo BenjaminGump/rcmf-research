@@ -82,6 +82,20 @@ def validate_immutable_inputs(settings: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
+def _attempt_ids(path: Path) -> set[str]:
+    if not path.exists():
+        return set()
+    return {
+        str(row["attempt_id"])
+        for row in (
+            json.loads(line)
+            for line in path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        )
+        if row.get("attempt_id") is not None
+    }
+
+
 def main() -> None:
     args = _parse_args()
     cfg = load_config(args.config)
@@ -90,6 +104,8 @@ def main() -> None:
     if os.name != "nt" and not os.path.ismount(persistent):
         raise RuntimeError("Persistent filesystem is not mounted")
     args.artifact_dir.mkdir(parents=True, exist_ok=True)
+    if args.attempt_id in _attempt_ids(args.artifact_dir / "attempts.jsonl"):
+        raise ValueError(f"Duplicate attempt ID: {args.attempt_id}")
     with AttemptLedger(
         args.artifact_dir,
         run_uuid=str(settings["run_uuid"]),

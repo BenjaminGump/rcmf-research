@@ -369,3 +369,23 @@ def test_frozen_config_keeps_exp031a_and_prohibits_shortcuts() -> None:
     assert not frozen["raw_memory_prompt"]
     assert not frozen["memory_gate"]
     assert not frozen["optimizer_steps"]
+
+
+def test_attempt_ids_detect_duplicate_append_only_entries(tmp_path) -> None:
+    import json
+
+    from scripts.prepare_rcmf_benefit_preserving_calibration_9b import (
+        _attempt_ids,
+    )
+
+    path = tmp_path / "attempts.jsonl"
+    rows = [
+        {"attempt_id": "attempt-1", "event": "start"},
+        {"attempt_id": "attempt-1", "event": "end"},
+        {"attempt_id": "attempt-2", "event": "start"},
+    ]
+    path.write_text(
+        "".join(json.dumps(row) + "\n" for row in rows),
+        encoding="utf-8",
+    )
+    assert _attempt_ids(path) == {"attempt-1", "attempt-2"}
