@@ -408,6 +408,9 @@ class CalibratedFieldReaderHooks(
         self.probabilities: dict[int, Tensor] = {}
         self.raw_deltas: dict[int, Tensor] = {}
         self.calibrated_deltas: dict[int, Tensor] = {}
+        self.token_hidden_rms: dict[int, Tensor] = {}
+        self.token_delta_rms: dict[int, Tensor] = {}
+        self.token_ratios: dict[int, Tensor] = {}
         layers = decoder_layers(model)
         if max(reader.insertion_layers) >= len(layers):
             raise ValueError("Reader insertion layer exceeds model depth")
@@ -464,6 +467,15 @@ class CalibratedFieldReaderHooks(
             self.raw_deltas[layer_index] = raw_delta
             self.calibrated_deltas[layer_index] = calibrated
             self.probabilities[layer_index] = probabilities
+            self.token_hidden_rms[layer_index] = hidden.detach().to(
+                device="cpu", dtype=torch.float32
+            ).square().mean(dim=-1, keepdim=True).sqrt()
+            self.token_delta_rms[layer_index] = calibrated.detach().to(
+                device="cpu", dtype=torch.float32
+            ).square().mean(dim=-1, keepdim=True).sqrt()
+            self.token_ratios[layer_index] = residual_ratio(
+                calibrated, hidden
+            ).detach().to(device="cpu", dtype=torch.float32)
             self.audit.calls[layer_index] = (
                 self.audit.calls.get(layer_index, 0) + 1
             )

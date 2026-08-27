@@ -73,6 +73,14 @@ stage_c_9b:
       Q50: 0.50
       Q75: 0.75
       Q90: 0.90
+    route_d_spread_gate:
+      minimum_coefficient_of_variation: 0.05
+      minimum_p90_p10_ratio: 1.10
+    cached_metric_contract:
+      exact_target_api_log_probability: mean_target_log_probability_over_primary_apis_app_api_token_span
+      action_signature_log_probability: mean_target_log_probability_over_all_ordered_apis_app_api_token_spans
+      execution_token_validity: python_parse_of_teacher_forced_argmax_token_sequence
+      critical_policy_kl: sparse_top64_kl_to_exact_original_D1_policy_on_same_prompt
     positive_kernel:
       candidate_id: E-positive
       feature: elu_plus_one

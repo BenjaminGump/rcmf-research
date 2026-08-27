@@ -2459,3 +2459,38 @@ Audit decision:
 - Proceed to the predeclared Stage 8A cached/equivalence diagnostics. No live
   candidate or first37 run is authorized until the benefit-preservation and
   G100/bare equivalence gates pass.
+
+## 2026-08-27 EXP-031B Stage 8A cached-diagnostic contract
+
+VERIFIED:
+
+- No new candidate outcome or first37 outcome was inspected while implementing
+  the cached-diagnostic runner.
+- The 98-state Route-C ratio profile is outcome-independent: state membership
+  comes from immutable state IDs and the heldout-task split; only causal prompt
+  positions contribute to cap quantiles. This prevents paired causal labels or
+  different teacher continuations from changing the preregistered caps.
+- C50/C75/C90 use a pooled per-token distribution, not an equal-state
+  approximation. Q50/Q75/Q90 use only unlabeled pre-RMS field magnitude.
+- Exact target-API and action-signature log probabilities, teacher-forced
+  argmax Python validity, and sparse top-64 critical D1 policy KL are locked in
+  config before execution. Critical D1 KL diagnoses policy drift and is not a
+  correctness label for original loss tasks.
+
+Decision:
+
+- Require exact G100/bare/zero-field equivalence before profiling. Run profile
+  and lock C/Q numbers before any candidate diagnostic. Route D proceeds only
+  if raw-RMS coefficient of variation is at least `0.05` and p90/p10 is at
+  least `1.10`; otherwise record `STOP ROUTE` without changing its formula.
+- Each GPU phase remains an independent atomic batch with a measured and
+  conservative runtime preflight. No batch expected to exceed 18 hours may
+  launch without explicit approval.
+
+Implementation deviation:
+
+- The Windows `apply_patch` helper again failed before editing because its
+  sandbox setup refresh returned `helper_unknown_error`. Narrow deterministic
+  PowerShell UTF-8 replacements were reviewed with `git diff --check`,
+  syntax-checked, and validated by `22` focused and `649 passed, 1 skipped`
+  complete tests.

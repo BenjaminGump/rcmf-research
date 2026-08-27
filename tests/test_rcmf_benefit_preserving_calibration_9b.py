@@ -28,6 +28,10 @@ from scripts.run_rcmf_benefit_preserving_calibration_9b import (
     critical_benefit_gate,
     derive_unlabeled_calibration,
 )
+from scripts.run_rcmf_benefit_preserving_cached_9b import (
+    _state_task_id,
+    _target_log_probability_metrics,
+)
 from scripts.analyze_rcmf_benefit_preserving_gain_loss_9b import (
     FINDINGS,
     attempt_ids,
@@ -463,3 +467,102 @@ def test_gain_loss_audit_attempt_ids(tmp_path) -> None:
         encoding="utf-8",
     )
     assert attempt_ids(path) == {"audit-1", "audit-2"}
+
+
+def test_calibration_hook_records_exact_per_token_ratios() -> None:
+    torch.manual_seed(25101)
+    model = _Model()
+    reader = _reader()
+    hidden = torch.randn(1, 5, 8)
+    hooks = CalibratedFieldReaderHooks(
+        model=model,
+        reader=reader,
+        slots=torch.randn(1, SLOT_COUNT, 6),
+    )
+    with hooks:
+        model(hidden)
+    assert set(hooks.token_ratios) == {0, 1, 2, 3}
+    assert set(hooks.token_hidden_rms) == {0, 1, 2, 3}
+    assert set(hooks.token_delta_rms) == {0, 1, 2, 3}
+    assert all(tuple(value.shape) == (1, 5, 1) for value in hooks.token_ratios.values())
+    assert all(tuple(value.shape) == (1, 5, 1) for value in hooks.token_hidden_rms.values())
+    assert all(tuple(value.shape) == (1, 5, 1) for value in hooks.token_delta_rms.values())
+    assert all(bool(torch.isfinite(value).all()) for value in hooks.token_ratios.values())
+
+
+def test_unlabeled_caps_weight_every_token_not_every_state() -> None:
+    settings = {
+        "candidates": {
+            "cap_quantiles": {"C50": 0.5, "C75": 0.75, "C90": 0.9},
+            "median_confidence_targets": {"Q50": 0.5, "Q75": 0.75, "Q90": 0.9},
+        }
+    }
+    rows = [
+        {
+            "outcome_used": False,
+            "raw_field_rms": 1.0,
+            "layers": {
+                str(layer): {"ratio": 100.0, "ratios": [0.0, 0.0, 0.0]}
+                for layer in (7, 14, 21, 28)
+            },
+        },
+        {
+            "outcome_used": False,
+            "raw_field_rms": 2.0,
+            "layers": {
+                str(layer): {"ratio": 100.0, "ratios": [1.0]}
+                for layer in (7, 14, 21, 28)
+            },
+        },
+    ]
+    result = derive_unlabeled_calibration(rows, settings)
+    assert all(value == pytest.approx(0.0) for value in result["caps"]["C50"].values())
+
+
+def test_config_locks_route_d_spread_and_cached_metric_contract() -> None:
+    from rcmf.config import load_config
+
+    cfg = load_config("configs/benchmark/stage_c_rcmf_benefit_preserving_calibration_9b.yaml")
+    candidates = cfg.raw["stage_c_9b"]["candidates"]
+    assert candidates["route_d_spread_gate"] == {
+        "minimum_coefficient_of_variation": 0.05,
+        "minimum_p90_p10_ratio": 1.10,
+    }
+    assert set(candidates["cached_metric_contract"]) == {
+        "exact_target_api_log_probability",
+        "action_signature_log_probability",
+        "execution_token_validity",
+        "critical_policy_kl",
+    }
+
+
+class _MetricTokenizer:
+    def __init__(self, pieces: list[str]) -> None:
+        self.pieces = pieces
+
+    def decode(self, ids, **kwargs) -> str:
+        del kwargs
+        return "".join(self.pieces[int(value)] for value in ids)
+
+
+def test_cached_metric_contract_uses_target_api_spans_and_python_parse() -> None:
+    pieces = ["```python\n", "apis.spotify.login", "()\n", "```"]
+    tokenizer = _MetricTokenizer(pieces)
+    target_ids = [0, 1, 2, 3]
+    logits = torch.full((4, 4), -5.0)
+    for index, target in enumerate(target_ids):
+        logits[index, target] = 5.0
+    result = _target_log_probability_metrics(
+        tokenizer=tokenizer, logits=logits, target_ids=target_ids
+    )
+    assert result["target_api_call_count"] == 1
+    assert result["target_api_token_count"] == 1
+    assert result["action_signature_token_count"] == 1
+    assert result["execution_token_validity"] is True
+    assert result["argmax_target_token_accuracy"] == pytest.approx(1.0)
+
+
+def test_state_task_id_is_strict_and_does_not_consult_outcomes() -> None:
+    assert _state_task_id("appworld:trace:82e2fac_3:step:6:line:16") == "82e2fac_3"
+    with pytest.raises(ValueError, match="Malformed AppWorld state ID"):
+        _state_task_id("not-an-appworld-state")

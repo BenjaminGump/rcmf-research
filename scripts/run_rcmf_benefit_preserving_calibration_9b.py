@@ -36,16 +36,18 @@ def derive_unlabeled_calibration(
         raise ValueError("Unlabeled heldout profile is empty")
     if any(bool(row.get("outcome_used", False)) for row in rows):
         raise ValueError("Calibration profile may not use labels or outcomes")
-    ratio_rows = {
-        layer: torch.tensor(
-            [
-                float(row["layers"][str(layer)]["ratio"])
-                for row in rows
-            ],
-            dtype=torch.float32,
-        )
-        for layer in INSERTION_LAYERS
-    }
+    ratio_rows = {}
+    for layer in INSERTION_LAYERS:
+        values = []
+        for row in rows:
+            layer_row = row["layers"][str(layer)]
+            raw_values = (
+                layer_row["ratios"]
+                if "ratios" in layer_row
+                else [layer_row["ratio"]]
+            )
+            values.extend(float(value) for value in raw_values)
+        ratio_rows[layer] = torch.tensor(values, dtype=torch.float32)
     raw_rms = torch.tensor(
         [float(row["raw_field_rms"]) for row in rows],
         dtype=torch.float32,

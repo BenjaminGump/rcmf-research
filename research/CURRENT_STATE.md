@@ -2054,3 +2054,21 @@ Decision:
 - Hypotheses B-E are supported; hypothesis A is supported with whole-bank
   attribution limits. No candidate outcome has been inspected. Stage 8A
   cached diagnostics and exact equivalence gates are next.
+
+### EXP-031B Stage 8A source checkpoint
+
+- The cached-diagnostics runner is implemented but no scientific GPU phase or
+  calibration candidate has run at this checkpoint.
+- G100 equivalence now covers exact original/calibrated logits, reader
+  attention, generated token IDs, and executed code. The zero-field path also
+  must reproduce bare logits, generated token IDs, and code exactly.
+- Route-C caps use every prompt token from the 98 heldout states with equal
+  token weight. State membership is reconstructed from frozen state IDs and
+  the immutable 29/8 task split; a fixed bare continuation is used only to
+  execute the causal prompt prefix, and continuation positions are excluded.
+  No paired outcome label or success result enters C50/C75/C90 or Q50/Q75/Q90.
+- The exact cached metric definitions and the Route-D raw-RMS spread gate are
+  locked in the versioned config before candidate outcomes.
+- Local verification: focused Stage-9b tests `22 passed`; complete repository
+  suite `649 passed, 1 skipped`. Scientific GPU work remains gated on source
+  commit/push/synchronization and immutable-input revalidation.
