@@ -32,7 +32,7 @@ from scripts.export_rcmf_joint_full_bank_audit_9a import (
 AUDIT_VERSION = "rcmf_benefit_preserving_gain_loss_audit_9b_v1"
 JWT_RE = re.compile(r"(?<![A-Za-z0-9_-])([A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,})(?![A-Za-z0-9_-])")
 SECRET_ASSIGNMENT_RE = re.compile(
-    r"(?i)(?:password|access_token|token)\s*[:=]\s*['\"](?!<REDACTED)[^'\"]{3,}['\"]"
+    r"(?i)((?:password|access_token|token)\s*[:=]\s*)(['\"])((?!<REDACTED)[^'\"]{3,})(\2)"
 )
 
 AUDIT_SENSITIVE_KEYS = {
@@ -282,7 +282,16 @@ def git_safe_redact(value: Any, key: str | None = None) -> Any:
     if key is not None and key.lower() in AUDIT_SENSITIVE_KEYS and value is not None:
         return audit_placeholder(f"FIELD:{key.upper()}", value)
     if isinstance(value, str):
-        return exp031a_redact_string(value)
+        value = exp031a_redact_string(value)
+
+        def replace_assignment(match: re.Match[str]) -> str:
+            prefix, quote, secret, closing = match.groups()
+            return (
+                f"{prefix}{quote}"
+                f"{audit_placeholder('CREDENTIAL', secret)}{closing}"
+            )
+
+        return SECRET_ASSIGNMENT_RE.sub(replace_assignment, value)
     if isinstance(value, Mapping):
         return {str(name): git_safe_redact(item, str(name)) for name, item in value.items()}
     if isinstance(value, (list, tuple)):

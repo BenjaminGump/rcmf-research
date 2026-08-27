@@ -2439,3 +2439,9 @@ Audit recovery:
   content-free diagnostic that reports only the minimal serialized JSON path,
   match type, length, and SHA256. Do not print the matched value and do not
   relax either credential or JWT detection.
+- Attempt `exp031b-gain-loss-audit-004` safely localized the trigger to
+  `$/tasks/3/replay_case/prompt/complete_trajectory_so_far_git_safe/7/response`
+  with match SHA256
+  `919cfa00a6815a630d3904c2f1d3c2080c916b2087ca343123acc21f6ec858e9`.
+  The value was not printed or inspected. Extend 9b redaction to quoted
+  credential assignments containing whitespace, matching the scanner syntax.

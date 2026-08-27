@@ -444,6 +444,9 @@ def test_gain_loss_audit_git_safe_guard() -> None:
     redacted = git_safe_redact("login(password='synthetic-value')")
     assert "synthetic-value" not in redacted
     git_safe_check({"code": redacted})
+    spaced = git_safe_redact("login(password='one two')")
+    assert "one two" not in spaced
+    git_safe_check({"code": spaced})
     assert git_safe_findings({"metadata": "token='synthetic-value'"})[0][
         "path"
     ] == "$/metadata"

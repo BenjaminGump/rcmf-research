@@ -2039,3 +2039,8 @@ Decision:
 - Audit attempt `exp031b-gain-loss-audit-003` also failed closed. The
   scanner now reports only the minimal serialized JSON path and match SHA256
   so the remaining trigger can be fixed without exposing its value.
+- Attempt `exp031b-gain-loss-audit-004` localized the remaining trigger
+  to the `29a7b7e_3` replay trajectory at one response field. Its value
+  remained undisclosed; the match SHA256 is recorded. The 9b redactor now
+  covers quoted credential values containing whitespace using the scanner's
+  exact syntax.
