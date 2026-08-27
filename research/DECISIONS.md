@@ -2504,3 +2504,13 @@ Calibration-lock decision:
 - Route D is `PROCEED` because unlabeled raw-RMS CV is `0.803213` and p90/p10
   is `12.2912`, both above the predeclared thresholds. Do not retune its tau
   values after candidate outcomes.
+
+Stage-8A infrastructure recovery:
+
+- Preserve `exp031b-stage8a-diagnose-001` as a failed infrastructure attempt.
+  It wrote no candidate row. The failure came from an added Flash-only SDPA
+  context on padded teacher-forced batches, unlike the successful immutable
+  EXP-031A validation path.
+- Restore the parent math-SDPA fallback for cached `_forward` only. This is a
+  harness correction, not a candidate, metric, data, checkpoint, or numerical
+  calibration change. Require a CUDA two-row smoke before formal resume.

@@ -72,7 +72,7 @@ def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", type=Path, default=Path("configs/benchmark/stage_c_rcmf_benefit_preserving_calibration_9b.yaml"))
     parser.add_argument("--artifact-dir", type=Path, required=True)
-    parser.add_argument("--phase", choices=("equivalence", "profile", "diagnose"), required=True)
+    parser.add_argument("--phase", choices=("equivalence", "profile", "forward-smoke", "diagnose"), required=True)
     parser.add_argument("--attempt-id", required=True)
     parser.add_argument("--parent-attempt-id", required=True)
     parser.add_argument("--resume-checkpoint", default="none")
@@ -97,6 +97,7 @@ def _paths(settings: Mapping[str, Any], artifact_dir: Path) -> dict[str, Path]:
         "critical_teachers": artifact_dir / "stage_8a/profile/critical_policy_teachers.pt",
         "calibration": artifact_dir / "stage_8a/calibration_lock.json",
         "equivalence": artifact_dir / "stage_8a/equivalence.json",
+        "forward_smoke": artifact_dir / "stage_8a/batched_forward_smoke.json",
         "diagnostic_root": artifact_dir / "stage_8a/candidate_rows",
         "diagnostic_summary": artifact_dir / "stage_8a/candidate_summary.json",
     }
@@ -209,7 +210,7 @@ def _forward(*, backend: Any, reader: Any, slots: Tensor, policy_row: Mapping[st
     rows = [dict(policy_row)] + ([] if ground_truth_row is None else [dict(ground_truth_row)])
     batch = _collate(rows, device=backend.device, k=4)
     hooks = CalibratedFieldReaderHooks(model=backend.model, reader=reader, slots=slots, layer_scales=layer_scales, layer_caps=layer_caps)
-    with torch.no_grad(), hooks, torch.autocast(device_type="cuda", dtype=torch.bfloat16, enabled=backend.device.type == "cuda"), _attention_context(backend.device):
+    with torch.no_grad(), hooks, torch.autocast(device_type="cuda", dtype=torch.bfloat16, enabled=backend.device.type == "cuda"):
         _, logits = _bare_target_forward(backend=backend, batch=batch)
     policy_length = int(policy_row["target_len"])
     policy_logits = logits[:policy_length]
@@ -538,6 +539,31 @@ def _profile(runtime: Mapping[str, Any], settings: Mapping[str, Any], paths: Map
     return summary
 
 
+def _forward_smoke(runtime: Mapping[str, Any]) -> dict[str, Any]:
+    item = _heldout_profile_inputs(runtime)[0]
+    ground_truth = runtime["data"]["teacher"]["ground_truth_rows"][item["state_id"]]
+    slots = torch.zeros(8, 256, device=runtime["backend"].device, dtype=torch.float32)
+    metrics, hooks = _forward(
+        backend=runtime["backend"], reader=runtime["reader"], slots=slots,
+        policy_row=item["policy_row"], ground_truth_row=ground_truth,
+        teacher=item["teacher"], layer_scales=(1.0, 1.0, 1.0, 1.0), layer_caps=None,
+    )
+    numeric = [value for value in metrics.values() if isinstance(value, (int, float))]
+    passed = bool(numeric) and all(torch.isfinite(torch.tensor(value)) for value in numeric)
+    passed = passed and set(hooks.audit.calls) == set(INSERTION_LAYERS)
+    return {
+        "format": RUNNER_VERSION,
+        "state_id_sha256": sha256_text(str(item["state_id"])),
+        "policy_target": "fixed_bare_reference",
+        "policy_target_length": int(item["policy_row"]["target_len"]),
+        "ground_truth_length": int(ground_truth["target_len"]),
+        "different_row_lengths": int(item["policy_row"]["target_len"]) != int(ground_truth["target_len"]),
+        "padded_two_row_forward_completed": True,
+        "metrics_finite": passed,
+        "scientific_metric_values_emitted": False,
+        "passed": passed,
+    }
+
 def _validate_locked_calibration(settings: Mapping[str, Any], calibration: Mapping[str, Any]) -> None:
     locked = settings["candidates"]["locked_derived_calibration"]
     if str(locked["calibration_sha256"]) != str(calibration["calibration_sha256"]):
@@ -712,7 +738,13 @@ def main() -> None:
                 raise RuntimeError("Exact equivalence gate has not passed")
             if not paths["calibration"].exists():
                 raise RuntimeError("Unlabeled calibration lock is missing")
-            payload = _diagnose(runtime, settings, paths, attempt)
+            if args.phase == "forward-smoke":
+                payload = _forward_smoke(runtime)
+                if not payload["passed"]:
+                    raise RuntimeError(f"Padded two-row forward smoke failed: {payload}")
+                atomic_write_json(paths["forward_smoke"], payload)
+            else:
+                payload = _diagnose(runtime, settings, paths, attempt)
         wall = time.perf_counter() - started
         attempt.progress(status="complete", phase=args.phase, wall_seconds=wall)
         print(json.dumps({**payload, "phase": args.phase, "wall_seconds": wall}, sort_keys=True))

@@ -2083,3 +2083,13 @@ Decision:
   SHA256 is `f1d0b1b8553f008423d4c00a4637e0f9d1c01444820f6652ac519a39710b7a8c`.
 - Raw-field CV `0.803213` and p90/p10 `12.2912` pass the preregistered Route-D
   spread gate. C/Q values are now committed before candidate diagnostics.
+
+### EXP-031B Stage 8A diagnostic recovery
+
+- Attempt `exp031b-stage8a-diagnose-001` failed before its first atomic
+  candidate row with `RuntimeError: No available kernel`. A Flash-only SDPA
+  context had been applied to a padded two-row teacher-forced batch; the
+  immutable EXP-031A heldout path permits deterministic math-SDPA fallback.
+- No candidate result was produced or inspected. Remove only the extra
+  Flash-only context from cached batched forwards, preserve every scientific
+  input and metric, validate on CUDA, and resume under a new attempt ID.

@@ -29,6 +29,7 @@ from scripts.run_rcmf_benefit_preserving_calibration_9b import (
     derive_unlabeled_calibration,
 )
 from scripts.run_rcmf_benefit_preserving_cached_9b import (
+    _forward,
     _state_task_id,
     _target_log_probability_metrics,
     _validate_locked_calibration,
@@ -598,3 +599,19 @@ def test_committed_calibration_must_match_atomic_lock_exactly() -> None:
     changed["caps"]["C75"]["21"] += 1.0e-6
     with pytest.raises(ValueError, match="C75 caps differ"):
         _validate_locked_calibration(settings, changed)
+
+
+def test_cached_batched_forward_preserves_parent_math_sdpa_fallback() -> None:
+    source = inspect.getsource(_forward)
+    assert "_attention_context" not in source
+    assert "_bare_target_forward" in source
+
+
+def test_forward_smoke_is_non_scientific_and_fail_closed() -> None:
+    source = inspect.getsource(__import__(
+        "scripts.run_rcmf_benefit_preserving_cached_9b",
+        fromlist=["_forward_smoke"],
+    )._forward_smoke)
+    assert '"scientific_metric_values_emitted": False' in source
+    assert '"padded_two_row_forward_completed": True' in source
+    assert '"passed": passed' in source
