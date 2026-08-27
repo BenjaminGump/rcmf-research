@@ -31,6 +31,7 @@ from scripts.run_rcmf_benefit_preserving_calibration_9b import (
 from scripts.run_rcmf_benefit_preserving_cached_9b import (
     _state_task_id,
     _target_log_probability_metrics,
+    _validate_locked_calibration,
 )
 from scripts.analyze_rcmf_benefit_preserving_gain_loss_9b import (
     FINDINGS,
@@ -572,3 +573,28 @@ def test_state_task_id_is_strict_and_does_not_consult_outcomes() -> None:
     assert _state_task_id("appworld:trace:82e2fac_3:step:6:line:16") == "82e2fac_3"
     with pytest.raises(ValueError, match="Malformed AppWorld state ID"):
         _state_task_id("not-an-appworld-state")
+
+
+def test_committed_calibration_must_match_atomic_lock_exactly() -> None:
+    from rcmf.config import load_config
+
+    cfg = load_config("configs/benchmark/stage_c_rcmf_benefit_preserving_calibration_9b.yaml")
+    settings = cfg.raw["stage_c_9b"]
+    calibration = {
+        "calibration_sha256": "f1d0b1b8553f008423d4c00a4637e0f9d1c01444820f6652ac519a39710b7a8c",
+        "outcomes_used": False,
+        "caps": {
+            name: {str(layer): value for layer, value in settings["candidates"]["locked_derived_calibration"][name].items()}
+            for name in ("C50", "C75", "C90")
+        },
+        "taus": {
+            name: settings["candidates"]["locked_derived_calibration"][f"{name}_tau"]
+            for name in ("Q50", "Q75", "Q90")
+        },
+        "route_d_decision": "PROCEED",
+    }
+    _validate_locked_calibration(settings, calibration)
+    changed = copy.deepcopy(calibration)
+    changed["caps"]["C75"]["21"] += 1.0e-6
+    with pytest.raises(ValueError, match="C75 caps differ"):
+        _validate_locked_calibration(settings, changed)

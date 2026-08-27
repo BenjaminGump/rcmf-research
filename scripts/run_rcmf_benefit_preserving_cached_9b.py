@@ -538,8 +538,27 @@ def _profile(runtime: Mapping[str, Any], settings: Mapping[str, Any], paths: Map
     return summary
 
 
+def _validate_locked_calibration(settings: Mapping[str, Any], calibration: Mapping[str, Any]) -> None:
+    locked = settings["candidates"]["locked_derived_calibration"]
+    if str(locked["calibration_sha256"]) != str(calibration["calibration_sha256"]):
+        raise ValueError("Committed and atomic calibration hashes differ")
+    if bool(locked["outcomes_used"]) or bool(calibration["outcomes_used"]):
+        raise ValueError("Calibration lock unexpectedly uses outcomes")
+    for candidate_id in ("C50", "C75", "C90"):
+        expected = {int(layer): float(value) for layer, value in locked[candidate_id].items()}
+        actual = {int(layer): float(value) for layer, value in calibration["caps"][candidate_id].items()}
+        if expected != actual:
+            raise ValueError(f"Committed and atomic {candidate_id} caps differ")
+    for candidate_id in ("Q50", "Q75", "Q90"):
+        if float(locked[f"{candidate_id}_tau"]) != float(calibration["taus"][candidate_id]):
+            raise ValueError(f"Committed and atomic {candidate_id} tau differ")
+    if str(locked["route_d_decision"]) != str(calibration["route_d_decision"]):
+        raise ValueError("Committed and atomic Route-D decisions differ")
+
+
 def _diagnose(runtime: Mapping[str, Any], settings: Mapping[str, Any], paths: Mapping[str, Path], attempt: AttemptLedger) -> dict[str, Any]:
     calibration = _json(paths["calibration"])
+    _validate_locked_calibration(settings, calibration)
     heldout, critical = _heldout_inputs(runtime), _critical_inputs(runtime, settings, paths)
     critical_teachers = torch.load(paths["critical_teachers"], map_location="cpu", weights_only=False)["teachers"]
     candidates, rows = preregistered_candidates(), []
