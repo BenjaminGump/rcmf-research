@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import copy
+from contextlib import ExitStack
+from types import SimpleNamespace
 
 import pytest
 
@@ -260,6 +262,49 @@ def test_teacher_cache_rejects_changed_source_row(tmp_path) -> None:
     assert _load_unit_cache(path, row)["row_sha256"] == canonical_sha256(row)
     with pytest.raises(ValueError, match="source row differs"):
         _load_unit_cache(path, {"unit_id": "u", "value": 2})
+
+
+def test_gradient_forward_keeps_reader_hooks_active_through_backward(monkeypatch) -> None:
+    import torch
+
+    import scripts.run_rcmf_trajectory_union_training_10a as training
+
+    active = {"count": 0}
+
+    class FakeHooks:
+        def __init__(self, **_: object) -> None:
+            pass
+
+        def __enter__(self) -> object:
+            active["count"] += 1
+            return object()
+
+        def __exit__(self, *_: object) -> None:
+            active["count"] -= 1
+
+    monkeypatch.setattr(training, "FieldReaderHooks", FakeHooks)
+    monkeypatch.setattr(training, "_collate", lambda *_args, **_kwargs: {})
+
+    def fake_forward(**_: object) -> tuple[None, torch.Tensor]:
+        assert active["count"] == 1
+        return None, torch.ones((1, 3), requires_grad=True)
+
+    monkeypatch.setattr(training, "_bare_target_forward", fake_forward)
+    backend = SimpleNamespace(device=torch.device("cpu"), model=object())
+    target = {"target_len": 1}
+    with pytest.raises(ValueError, match="hook lifetime stack"):
+        training._forward_logits(
+            backend=backend, reader=object(), slots=torch.ones(1),
+            target_row=target, grad=True,
+        )
+    with ExitStack() as hook_stack:
+        logits, _ = training._forward_logits(
+            backend=backend, reader=object(), slots=torch.ones(1),
+            target_row=target, grad=True, hook_stack=hook_stack,
+        )
+        assert active["count"] == 1
+        logits.sum().backward()
+    assert active["count"] == 0
 
 
 def test_exact_bank_augmentation_freezes_nearest_quarter() -> None:

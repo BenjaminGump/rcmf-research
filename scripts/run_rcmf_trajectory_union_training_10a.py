@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 from collections.abc import Mapping, Sequence
-from contextlib import nullcontext
+from contextlib import ExitStack, nullcontext
 import hashlib
 import json
 import math
@@ -179,7 +179,8 @@ class StaticTaskFieldBank:
 
 
 def _forward_logits(
-    *, backend: Any, reader: Any | None, slots: Tensor | None, target_row: Mapping[str, Any], grad: bool
+    *, backend: Any, reader: Any | None, slots: Tensor | None, target_row: Mapping[str, Any],
+    grad: bool, hook_stack: ExitStack | None = None
 ) -> tuple[Tensor, FieldReaderHooks | None]:
     batch = _collate([dict(target_row)], device=backend.device, k=4)
     hooks = None if reader is None or slots is None else FieldReaderHooks(
@@ -191,6 +192,11 @@ def _forward_logits(
     )
     with context, autocast:
         if hooks is None:
+            _, logits = _bare_target_forward(backend=backend, batch=batch)
+        elif grad:
+            if hook_stack is None:
+                raise ValueError("Gradient forwards require a hook lifetime stack")
+            hook_stack.enter_context(hooks)
             _, logits = _bare_target_forward(backend=backend, batch=batch)
         else:
             with hooks:
@@ -552,6 +558,7 @@ def _train_epoch(
     for index in range(cursor, len(units)):
         unit = units[index]
         row = unit["row"]
+        hook_stack = ExitStack()
         optimizer.zero_grad(set_to_none=True)
         if unit["kind"] == "imitation":
             cache = _load_unit_cache(
@@ -565,7 +572,7 @@ def _train_epoch(
                 slots = slots_fn(cache=cache, row=row, runtime=runtime, control="correct")
             logits, hooks = _forward_logits(
                 backend=backend, reader=reader, slots=slots,
-                target_row=cache["target_row"], grad=True
+                target_row=cache["target_row"], grad=True, hook_stack=hook_stack
             )
             target_ids = torch.tensor(
                 cache["target_row"]["response_cache"]["target_token_ids"],
@@ -596,7 +603,7 @@ def _train_epoch(
                     )
                 shuffled_logits, _ = _forward_logits(
                     backend=backend, reader=reader, slots=shuffled_slots,
-                    target_row=cache["target_row"], grad=True
+                    target_row=cache["target_row"], grad=True, hook_stack=hook_stack
                 )
                 shuffled_ce = F.cross_entropy(shuffled_logits.float(), target_ids)
                 margin = F.relu(
@@ -634,11 +641,11 @@ def _train_epoch(
                 )
             preferred_logits, _ = _forward_logits(
                 backend=backend, reader=reader, slots=slots,
-                target_row=cache["preferred"], grad=True
+                target_row=cache["preferred"], grad=True, hook_stack=hook_stack
             )
             rejected_logits, _ = _forward_logits(
                 backend=backend, reader=reader, slots=slots,
-                target_row=cache["rejected"], grad=True
+                target_row=cache["rejected"], grad=True, hook_stack=hook_stack
             )
             preferred_ids = torch.tensor(
                 cache["preferred"]["response_cache"]["target_token_ids"],
@@ -679,7 +686,7 @@ def _train_epoch(
                 )
             logits, _ = _forward_logits(
                 backend=backend, reader=reader, slots=slots,
-                target_row=cache["target_row"], grad=True
+                target_row=cache["target_row"], grad=True, hook_stack=hook_stack
             )
             ids = torch.tensor(
                 cache["target_row"]["response_cache"]["target_token_ids"],
@@ -696,7 +703,10 @@ def _train_epoch(
             }
         if not math.isfinite(float(loss.detach().cpu())):
             raise RuntimeError("EXP-032A produced NaN/Inf loss")
-        loss.backward()
+        try:
+            loss.backward()
+        finally:
+            hook_stack.close()
         parameters = [parameter for group in optimizer.param_groups for parameter in group["params"]]
         gradient_norm = torch.nn.utils.clip_grad_norm_(
             parameters, float(settings["training"]["max_grad_norm"])
