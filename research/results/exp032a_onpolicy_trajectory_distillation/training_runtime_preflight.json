@@ -1,0 +1,28 @@
+{
+  "artifact_size_gib": {
+    "conservative": 5.0,
+    "expected": 3.0
+  },
+  "config_sha256": "f467c48da024912482214bf8b1e1771c6b15a34ae6807e2e2d08d167910c84c0",
+  "conservative_remaining_wall_hours": 19.0,
+  "expected_remaining_wall_hours": 13.0,
+  "global_seed": 25101,
+  "hardware": "NVIDIA H100 80GB HBM3",
+  "immutable_exp031a_checkpoint_sha256": "d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1",
+  "measured_basis": {
+    "exp031a_backward_count": 1152,
+    "exp031a_elapsed_seconds": 7372.68471017899,
+    "exp031a_seconds_per_backward": 6.399899921
+  },
+  "purpose": "Build the frozen sparse teacher cache, train the two reader-only epochs, evaluate heldout full trajectories, and retain budget for conditional Stage C and first37 without reducing controls.",
+  "reader_backward_count": 988,
+  "reader_training_conservative_hours": 3.0,
+  "reader_training_expected_hours": 1.8,
+  "run_uuid": "rcmf_onpolicy_trajectory_distillation_10a_20260828_001",
+  "scientific_source_commit": "51e7483a",
+  "teacher_cache_conservative_hours": 1.0,
+  "teacher_cache_expected_hours": 0.5,
+  "teacher_unit_count": 494,
+  "trajectory_union_manifest_sha256": "87833cd3f3c16b93c4894119e5e5e088a1ac5e9fb7732220ee99ab5dd3f10803",
+  "within_approved_24_hour_total": true
+}
