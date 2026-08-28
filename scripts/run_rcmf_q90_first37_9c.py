@@ -123,15 +123,32 @@ def _hashes(settings: dict[str, Any], manifest: Path) -> dict[str, str]:
     return {name: sha256_file(path) for name, path in paths.items()}
 
 
+def task_ids_from_condition_manifest(
+    manifest: dict[str, Any], *, condition: str
+) -> list[str]:
+    task_ids = [
+        str(row["task_id"])
+        for row in manifest.get("rows", [])
+        if str(row.get("condition")) == condition
+    ]
+    if not task_ids:
+        raise ValueError(f"Parent manifest has no rows for condition {condition}")
+    if len(task_ids) != len(set(task_ids)):
+        raise ValueError(f"Parent manifest has duplicate tasks for condition {condition}")
+    return task_ids
+
+
 def validate_reused_controls(settings: dict[str, Any], task_ids: list[str]) -> dict[str, Any]:
     parent_root = Path(str(settings["immutable_exp031a"]["artifact_root"]))
     manifest_path = parent_root / "first37/condition_manifest.json"
     manifest = load_json(manifest_path)
-    if [str(value) for value in manifest["task_ids"]] != task_ids:
+    if task_ids_from_condition_manifest(manifest, condition="D0") != task_ids:
         raise ValueError("Immutable first37 task order differs")
     rows: dict[str, dict[str, dict[str, Any]]] = {}
     condition_hashes = {}
     for condition in ("D0", "D1", "D2"):
+        if task_ids_from_condition_manifest(manifest, condition=condition) != task_ids:
+            raise ValueError(f"Immutable first37 task order differs for {condition}")
         rows[condition] = {}
         for task_id in task_ids:
             path = parent_root / f"first37/conditions/{condition}/task_results/{task_id}.json"

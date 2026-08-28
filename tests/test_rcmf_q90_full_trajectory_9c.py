@@ -22,6 +22,7 @@ from scripts.run_rcmf_q90_heldout_trajectory_9c import (
     first_task_id_from_condition_manifest,
     serializable_field_read,
 )
+from scripts.run_rcmf_q90_first37_9c import task_ids_from_condition_manifest
 from scripts.run_rcmf_q90_trajectory_common_9c import (
     CONDITION_SPECS,
     build_manifest,
@@ -62,6 +63,25 @@ def test_parent_first37_task_is_derived_from_condition_rows() -> None:
     assert first_task_id_from_condition_manifest(manifest, condition="D0") == "task_a"
     with pytest.raises(ValueError, match="no rows for condition D2"):
         first_task_id_from_condition_manifest(manifest, condition="D2")
+
+
+def test_parent_first37_control_order_is_derived_from_condition_rows() -> None:
+    manifest = {
+        "rows": [
+            {"condition": "D0", "task_id": "task_a"},
+            {"condition": "D0", "task_id": "task_b"},
+            {"condition": "D1", "task_id": "task_a"},
+            {"condition": "D1", "task_id": "task_b"},
+        ]
+    }
+    assert task_ids_from_condition_manifest(manifest, condition="D0") == [
+        "task_a",
+        "task_b",
+    ]
+    with pytest.raises(ValueError, match="duplicate tasks"):
+        task_ids_from_condition_manifest(
+            {"rows": manifest["rows"][:1] * 2}, condition="D0"
+        )
 
 
 def test_field_read_audit_omits_runtime_tensors_before_json_output() -> None:
