@@ -1,0 +1,35 @@
+{
+  "artifact_bytes": 3051945601,
+  "artifact_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_onpolicy_trajectory_distillation_10a_20260828_001",
+  "attempt_count": 27,
+  "first37_exposed_development_only": true,
+  "format": "rcmf_onpolicy_trajectory_result_summary_10a_v1",
+  "global_seed": 25101,
+  "open_attempt_ids": [],
+  "run_uuid": "rcmf_onpolicy_trajectory_distillation_10a_20260828_001",
+  "runtime_per_memory_scoring": false,
+  "runtime_retrieval": false,
+  "scope_counts": {
+    "heldout/reader_epoch_01": {
+      "condition_count": 2,
+      "step_count": 760,
+      "task_count": 8
+    },
+    "heldout/reader_epoch_02": {
+      "condition_count": 2,
+      "step_count": 697,
+      "task_count": 8
+    },
+    "heldout/writer_epoch_01": {
+      "condition_count": 2,
+      "step_count": 632,
+      "task_count": 8
+    },
+    "rollouts": {
+      "condition_count": 3,
+      "step_count": 1763,
+      "task_count": 29
+    }
+  },
+  "test_time_online_training": false
+}

@@ -1,0 +1,58 @@
+{
+  "format": "rcmf_onpolicy_trajectory_detailed_audit_10a_v1",
+  "independently_verified": true,
+  "raw_lambda_artifact_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_onpolicy_trajectory_distillation_10a_20260828_001",
+  "run_uuid": "rcmf_onpolicy_trajectory_distillation_10a_20260828_001",
+  "scopes": {
+    "heldout/reader_epoch_01": {
+      "conditions": [
+        "RA",
+        "RS"
+      ],
+      "task_count": 8
+    },
+    "heldout/reader_epoch_02": {
+      "conditions": [
+        "RA",
+        "RS"
+      ],
+      "task_count": 8
+    },
+    "heldout/writer_epoch_01": {
+      "conditions": [
+        "WA",
+        "WS"
+      ],
+      "task_count": 8
+    },
+    "rollouts": {
+      "conditions": [
+        "T0",
+        "T1",
+        "T2"
+      ],
+      "task_count": 29
+    }
+  },
+  "secret_verification": {
+    "checked_text_files": 189,
+    "raw_jwt_match_count": 0,
+    "registered_sensitive_observation_count": 98,
+    "registered_sensitive_observation_leak_count": 0
+  },
+  "static_prompt_assets": "static_prompt_assets.json",
+  "step_tensor_bundle": "field_tensors/query_and_slots.pt",
+  "step_tensor_bundle_sha256": "b5dae044b252df1682b9a9cebca28787d443bdd65e8311a8a332d9c8a88077cb",
+  "strict_audit_tree": {
+    "json_files": 1,
+    "jsonl_files": 135,
+    "rows": 3853,
+    "text_files": 53
+  },
+  "strict_result_tree": {
+    "json_files": 7,
+    "jsonl_files": 7,
+    "rows": 738,
+    "text_files": 0
+  }
+}

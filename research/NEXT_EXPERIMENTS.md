@@ -1417,3 +1417,28 @@ Recommended next 48-hour action:
 5. Require a separately reviewed scientific contract for any future run.
 
 Still blocked: further calibration, model retraining, retrieval, hard gating, broader AppWorld evaluation, portability claims, Stage C2, and V5 tagging.
+
+## EXP-032A Completed - Freeze On-Policy Trajectory Distillation
+
+EXP-032A reached `trajectory_union_distillation_failed_on_heldout`. Neither
+reader-only checkpoint nor the single preauthorized writer-last-layer
+checkpoint retained the immutable EXP-031A `5/8` heldout correct-field
+success set; the writer+reader correct field also lost to shuffle `0/8 vs
+2/8`.
+
+Recommended next action:
+
+1. Freeze the EXP-031A/B/C and EXP-032A checkpoints, fields, rollouts, union,
+   teacher cache, heldout trajectories, and audits.
+2. Do not run EXP-032A first37 because no candidate passed the locked heldout
+   gate.
+3. Review the complete trajectory divergences and failed retention pattern
+   before proposing any new scientific contract.
+4. Keep claims separated: the EXP-031A field has live correct-over-shuffle
+   specificity, while EXP-032A did not convert its union-training objective
+   into heldout task retention.
+5. Do not launch a new architecture, gate, retrieval path, post-hoc
+   calibration, paper-scope change, or V5 tag under the current task.
+
+Still blocked: N1/N2 first37, broader AppWorld evaluation, architecture search,
+retrieval, hard gating, further calibration, Stage C2, and V5 tagging.

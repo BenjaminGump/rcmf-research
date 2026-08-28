@@ -2117,3 +2117,25 @@ Decision:
 - Mechanical correct-over-shuffle label: `LIVE_MEMORY_SPECIFIC_SIGNAL`. Scientific decision: `STOP_ROUTE`.
 - Final Git-safe audit covers 2,689 steps with zero raw JWT matches and zero registered sensitive-observation leaks. The model-derived query/slot tensor bundle remains hash-addressed on Lambda only.
 - Freeze EXP-031A/B/C. No new calibration, retraining, retrieval, hard gate, broader evaluation, portability run, or V5 tag is authorized.
+
+### EXP-032A Completed - Trajectory Union Distillation Fails Heldout
+
+- Run `rcmf_onpolicy_trajectory_distillation_10a_20260828_001` completed with
+  seed `25101`; 27/27 attempts are closed.
+- Complete train-task rollouts produced T0/T1/T2 success counts of `15/29`,
+  `14/29`, and `18/29`, with task classes 7 bare-only, 6 RCMF-only,
+  8 both, and 8 neither.
+- The frozen union contains 483 training rows, 494 units, 109 preservation
+  states, 101 memory-benefit states, 111 auxiliary states, 3 preference pairs,
+  8 strict loop negatives, and exact 124/494 bank augmentation.
+- Reader losses decreased `0.153050 -> 0.113576`, but heldout correct/shuffle
+  was only `0/8 vs 0/8` and `1/8 vs 0/8` against immutable H1 `5/8`.
+- The preauthorized writer+reader epoch reached loss `0.101688` but heldout
+  correct/shuffle was `0/8 vs 2/8`.
+- No candidate was eligible, no final model was selected, and N1/N2 first37
+  was not run.
+- Decision: `trajectory_union_distillation_failed_on_heldout`.
+- Accounted H100-active time was `5.6175 h`; wall span was `7.5167 h`.
+- Freeze EXP-032A and preserve its complete Git-safe audit and Lambda artifact
+  root. No new architecture, gate, retrieval path, calibration, or V5 tag is
+  authorized by this task.

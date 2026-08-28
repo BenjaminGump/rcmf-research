@@ -1,0 +1,11 @@
+{
+  "first37_executed": false,
+  "format": "rcmf_onpolicy_trajectory_complexity_10a_v1",
+  "instant_memory_recompilation_not_applicable": "no_eligible_candidate_selected",
+  "runtime_per_memory_scoring": false,
+  "runtime_retrieval": false,
+  "runtime_top_k": false,
+  "selected_candidate": null,
+  "test_time_online_training": false,
+  "whole_bank_read_shape_memory_count_independent": true
+}

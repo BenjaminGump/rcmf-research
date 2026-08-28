@@ -1,0 +1,18 @@
+{
+  "backward_count": 494,
+  "checkpoint": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_onpolicy_trajectory_distillation_10a_20260828_001/writer_training/checkpoints/epoch_01.pt",
+  "checkpoint_sha256": "d1568e43d2541f1761c1a89fa783f66d48a702ffd30951c8e77bbbe0437a1505",
+  "elapsed_seconds": 1012.6846838817,
+  "epoch": 1,
+  "forbidden_parameters_unchanged": true,
+  "format": "rcmf_trajectory_training_epoch_summary_10a_v1",
+  "mean_loss": 0.10168784661506028,
+  "passed": true,
+  "qwen_frozen_and_unchanged": true,
+  "reader_sha256": "f94f1ade5c895a74712b27aa7f311e451b883a3f5e2b0ea85985a4437b58ccf9",
+  "stage": "writer",
+  "trainable_reader_parameters": 8388608,
+  "trainable_writer_parameters": 525312,
+  "unit_count": 494,
+  "writer_sha256": "acbe95119a6371f2e416294e3be20bc776b518d4da13f15561fae08c99ff0a1a"
+}

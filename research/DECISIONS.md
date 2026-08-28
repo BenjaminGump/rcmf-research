@@ -2577,3 +2577,37 @@ DECISION:
 - Preserve all EXP-031C reports, JSON, audit rows, commits, and historical
   labels unchanged. This clarification does not invalidate or relabel the
   completed first37 execution.
+
+## 2026-08-28 EXP-032A heldout full-trajectory decision
+
+VERIFIED:
+
+- T0/T1/T2 complete train trajectories succeeded on `15/29`, `14/29`,
+  and `18/29` tasks.
+- Reader epoch 1 and epoch 2 lowered training loss to `0.153050` and
+  `0.113576`, but achieved heldout correct/shuffle counts of `0/8 vs 0/8`
+  and `1/8 vs 0/8`.
+- Immutable EXP-031A heldout correct is `5/8`; reader epoch 2 retained only
+  one of those five successes and exceeded the allowed loop count.
+- The preauthorized writer+reader epoch lowered training loss to `0.101688`
+  but achieved `0/8` correct versus `2/8` shuffle.
+- Every accepted checkpoint preserved Qwen and all prohibited parameters.
+- All 27 attempts are closed; the detailed Git-safe audit passes secret scans.
+
+DECISION:
+
+- Record `trajectory_union_distillation_failed_on_heldout`.
+- Select no candidate and stop before N1/N2 first37.
+- Do not interpret declining training loss as heldout behavioral improvement.
+- Freeze this bounded offline-learning route. A separately reviewed contract
+  is required before any new architecture, gate, retrieval system,
+  calibration, broader evaluation, or V5 release decision.
+
+IMPLEMENTATION DEVIATIONS:
+
+- Preserve teacher-cache attempt 008 and reader attempt 010 as failed
+  append-only attempts. Reused teacher rows were hash-verified; reader epoch 1
+  restarted from initialization after the hook-lifetime correction.
+- The Windows `apply_patch` helper failed with `helper_unknown_error`.
+  Guarded exact UTF-8 replacements were used only after failure and verified by
+  focused and full tests.
