@@ -177,6 +177,21 @@ Sources of truth:
 - `scripts/prepare_rcmf_benefit_preserving_calibration_9b.py`
 - `scripts/run_rcmf_benefit_preserving_calibration_9b.py`
 
+## EXP-031C Q90 Full-Trajectory Charter v1
+
+- Q90 is the only scientific candidate allowed in EXP-031C. Its formula,
+  calibration identity, and exact `tau = 4.606291029188367` are immutable.
+- Complete AppWorld agent trajectories replace one-step proxies as the primary
+  decision evidence: heldout-train trajectories run first, followed by the
+  exposed first37 development comparison only when the heldout gate permits it.
+- Retraining, optimizer updates, new calibration, candidate search, retrieval,
+  runtime per-memory scoring, gates, and raw-memory query text are prohibited.
+- The first37 tasks remain exposed development data and cannot support a final
+  statistical generalization claim.
+- Detailed reconstructible per-step audit logs remain mandatory for every
+  heldout and first37 task/condition; a result without a committed Git-safe
+  audit index is not independently verified.
+
 ## EXP-025D-Direct Single-Seed Deadline Policy
 
 For EXP-025D-Direct, use exactly `GLOBAL_SEED = 25101` for deterministic
