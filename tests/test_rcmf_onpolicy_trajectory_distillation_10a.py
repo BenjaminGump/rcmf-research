@@ -198,3 +198,51 @@ def test_first37_locked_decision_contract() -> None:
     )
     failed = dict(base, N1=7, retained_original_gain_count=4)
     assert first37_decision(failed)["decision"] == "trajectory_union_distillation_stop"
+
+
+def test_complete_deployment_permutation_is_exact_and_fixed_point_free() -> None:
+    from scripts.run_rcmf_trajectory_union_first37_10a import _complete_permutation
+
+    ordered = ["a", "b", "c"]
+    manifest = {
+        "complete_deployment_bank": {
+            "rows": [
+                {"key_transition_id": "a", "payload_transition_id": "b"},
+                {"key_transition_id": "b", "payload_transition_id": "c"},
+                {"key_transition_id": "c", "payload_transition_id": "a"},
+            ]
+        }
+    }
+    assert _complete_permutation(
+        shuffle_manifest=manifest, ordered_ids=ordered
+    ).tolist() == [1, 2, 0]
+
+
+def test_heldout_candidate_rank_uses_locked_lexicographic_order() -> None:
+    from scripts.run_rcmf_trajectory_union_heldout_10a import _rank_key
+
+    common = {
+        "correct_success_count": 5,
+        "correct_minus_shuffle": 2,
+        "retained_original_success_count": 4,
+        "no_progress_loop_count": 1,
+        "total_steps": 80,
+        "epoch": 1,
+    }
+    reader = dict(common, stage="reader_only")
+    writer = dict(common, stage="writer_reader")
+    assert _rank_key(reader) < _rank_key(writer)
+
+
+def test_checkpoint_state_hash_is_key_order_invariant() -> None:
+    import torch
+
+    from scripts.run_rcmf_trajectory_union_heldout_10a import (
+        module_state_sha256_from_state,
+    )
+
+    left = {"b": torch.tensor([2.0]), "a": torch.tensor([1.0])}
+    right = {"a": torch.tensor([1.0]), "b": torch.tensor([2.0])}
+    assert module_state_sha256_from_state(left) == module_state_sha256_from_state(
+        right
+    )
