@@ -1,0 +1,465 @@
+{
+  "action_type_distribution": {
+    "authentication": 30,
+    "clean_replay_auxiliary": 111,
+    "completion": 29,
+    "documentation": 53,
+    "python_reasoning": 41,
+    "read_query": 193,
+    "write_mutation": 26
+  },
+  "api_distribution": {
+    "None": 152,
+    "complete_task": 29,
+    "compress_directory": 3,
+    "create_file": 1,
+    "delete_account": 1,
+    "delete_text_message": 9,
+    "delete_voice_message": 9,
+    "follow_artist": 6,
+    "login": 30,
+    "remove_album_from_library": 2,
+    "remove_song_from_library": 2,
+    "search_artists": 4,
+    "search_notes": 6,
+    "search_text_messages": 9,
+    "search_voice_messages": 4,
+    "show_account_passwords": 29,
+    "show_album_library": 3,
+    "show_api_descriptions": 60,
+    "show_api_doc": 53,
+    "show_artist": 2,
+    "show_directory": 3,
+    "show_downloaded_songs": 2,
+    "show_following_artists": 3,
+    "show_liked_albums": 1,
+    "show_liked_songs": 7,
+    "show_note": 6,
+    "show_playlist": 8,
+    "show_playlist_library": 8,
+    "show_recommendations": 9,
+    "show_song": 9,
+    "show_song_library": 5,
+    "unfollow_artist": 2,
+    "update_note": 6
+  },
+  "app_distribution": {
+    "None": 152,
+    "api_docs": 113,
+    "file_system": 10,
+    "phone": 33,
+    "simple_note": 24,
+    "spotify": 93,
+    "supervisor": 58
+  },
+  "augmentation_selection_rule": "nearest_integer_quarter_by_seeded_unit_sha256_order",
+  "augmentation_target_count": 124,
+  "augmentation_unit_count": 124,
+  "auxiliary_expert_row_count": 111,
+  "first37_outcomes_used": false,
+  "format": "rcmf_onpolicy_trajectory_union_10a_v1",
+  "frozen_before_training": true,
+  "global_seed": 25101,
+  "group_total_weights": {
+    "both_success": 0.9999999999999986,
+    "memory_benefit": 1.0000000000000007,
+    "neither_auxiliary": 1.0000000000000013,
+    "preservation": 0.9999999999999971
+  },
+  "loop_negative_rows_sha256": "60257f29ef2bbd372a4f7848292a5aacbfa312c738ad4a05e609d961c4e97737",
+  "manifest_sha256": "87833cd3f3c16b93c4894119e5e5e088a1ac5e9fb7732220ee99ab5dd3f10803",
+  "memory_benefit_state_count": 101,
+  "no_progress_negative_count": 8,
+  "onpolicy_row_count": 372,
+  "passed": true,
+  "preference_pair_count": 3,
+  "preference_rows_sha256": "c856ce310761a2b5959167584cf7816b0a1c88aecd2a8114f900e0d6c5d4c7ff",
+  "preservation_state_count": 109,
+  "prompt_length": {
+    "average": 10746.229813664597,
+    "maximum": 28523,
+    "median": 10414
+  },
+  "source_rollout_sha256": "df1a10c2d396b352e8c7af90684c8ba0ed670d64a4a3f19a40f21d864c3778d6",
+  "task_class_counts": {
+    "bare_only_success": 7,
+    "both_success": 8,
+    "neither_success": 8,
+    "rcmf_only_success": 6
+  },
+  "task_rows": [
+    {
+      "loop_negative_count": 1,
+      "preference_created": false,
+      "selected_trajectories": [],
+      "task_class": "neither_success",
+      "task_id": "07b42fd_1"
+    },
+    {
+      "loop_negative_count": 1,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T1",
+          "role": "both_primary",
+          "weight": 1.0
+        },
+        {
+          "condition": "T0",
+          "role": "both_alternate",
+          "weight": 0.5
+        }
+      ],
+      "task_class": "both_success",
+      "task_id": "07b42fd_2"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T1",
+          "role": "memory_benefit",
+          "weight": 1.0
+        }
+      ],
+      "task_class": "rcmf_only_success",
+      "task_id": "07b42fd_3"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T0",
+          "role": "preservation",
+          "weight": 1.0
+        }
+      ],
+      "task_class": "bare_only_success",
+      "task_id": "229360a_2"
+    },
+    {
+      "loop_negative_count": 1,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T1",
+          "role": "memory_benefit",
+          "weight": 1.0
+        }
+      ],
+      "task_class": "rcmf_only_success",
+      "task_id": "229360a_3"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T0",
+          "role": "preservation",
+          "weight": 1.0
+        }
+      ],
+      "task_class": "bare_only_success",
+      "task_id": "27e1026_2"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T0",
+          "role": "preservation",
+          "weight": 1.0
+        }
+      ],
+      "task_class": "bare_only_success",
+      "task_id": "287e338_1"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T0",
+          "role": "preservation",
+          "weight": 1.0
+        }
+      ],
+      "task_class": "bare_only_success",
+      "task_id": "287e338_2"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T1",
+          "role": "both_primary",
+          "weight": 1.0
+        },
+        {
+          "condition": "T0",
+          "role": "both_alternate",
+          "weight": 0.5
+        }
+      ],
+      "task_class": "both_success",
+      "task_id": "287e338_3"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [],
+      "task_class": "neither_success",
+      "task_id": "34d9492_1"
+    },
+    {
+      "loop_negative_count": 1,
+      "preference_created": false,
+      "selected_trajectories": [],
+      "task_class": "neither_success",
+      "task_id": "34d9492_3"
+    },
+    {
+      "loop_negative_count": 2,
+      "preference_created": false,
+      "selected_trajectories": [],
+      "task_class": "neither_success",
+      "task_id": "3c13f5a_2"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T1",
+          "role": "memory_benefit",
+          "weight": 1.0
+        }
+      ],
+      "task_class": "rcmf_only_success",
+      "task_id": "6104387_3"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [],
+      "task_class": "neither_success",
+      "task_id": "76f2c72_3"
+    },
+    {
+      "loop_negative_count": 1,
+      "preference_created": true,
+      "selected_trajectories": [
+        {
+          "condition": "T0",
+          "role": "preservation",
+          "weight": 1.0
+        }
+      ],
+      "task_class": "bare_only_success",
+      "task_id": "771d8fc_1"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": true,
+      "selected_trajectories": [
+        {
+          "condition": "T1",
+          "role": "memory_benefit",
+          "weight": 1.0
+        }
+      ],
+      "task_class": "rcmf_only_success",
+      "task_id": "771d8fc_2"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T1",
+          "role": "both_primary",
+          "weight": 1.0
+        },
+        {
+          "condition": "T0",
+          "role": "both_alternate",
+          "weight": 0.5
+        }
+      ],
+      "task_class": "both_success",
+      "task_id": "7d7fbf6_3"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T1",
+          "role": "both_primary",
+          "weight": 1.0
+        },
+        {
+          "condition": "T0",
+          "role": "both_alternate",
+          "weight": 0.5
+        }
+      ],
+      "task_class": "both_success",
+      "task_id": "82e2fac_1"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T0",
+          "role": "preservation",
+          "weight": 1.0
+        }
+      ],
+      "task_class": "bare_only_success",
+      "task_id": "aa8502b_1"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T1",
+          "role": "both_primary",
+          "weight": 1.0
+        },
+        {
+          "condition": "T0",
+          "role": "both_alternate",
+          "weight": 0.5
+        }
+      ],
+      "task_class": "both_success",
+      "task_id": "aa8502b_2"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [],
+      "task_class": "neither_success",
+      "task_id": "afc0fce_1"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [],
+      "task_class": "neither_success",
+      "task_id": "afc0fce_3"
+    },
+    {
+      "loop_negative_count": 1,
+      "preference_created": false,
+      "selected_trajectories": [],
+      "task_class": "neither_success",
+      "task_id": "b0a8eae_3"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T0",
+          "role": "preservation",
+          "weight": 1.0
+        }
+      ],
+      "task_class": "bare_only_success",
+      "task_id": "b7a9ee9_1"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": true,
+      "selected_trajectories": [
+        {
+          "condition": "T1",
+          "role": "memory_benefit",
+          "weight": 1.0
+        }
+      ],
+      "task_class": "rcmf_only_success",
+      "task_id": "b7a9ee9_3"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T1",
+          "role": "both_primary",
+          "weight": 1.0
+        },
+        {
+          "condition": "T0",
+          "role": "both_alternate",
+          "weight": 0.5
+        }
+      ],
+      "task_class": "both_success",
+      "task_id": "cf6abd2_1"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T1",
+          "role": "both_primary",
+          "weight": 1.0
+        },
+        {
+          "condition": "T0",
+          "role": "both_alternate",
+          "weight": 0.5
+        }
+      ],
+      "task_class": "both_success",
+      "task_id": "cf6abd2_2"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T0",
+          "role": "both_primary",
+          "weight": 1.0
+        },
+        {
+          "condition": "T1",
+          "role": "both_alternate",
+          "weight": 0.5
+        }
+      ],
+      "task_class": "both_success",
+      "task_id": "cf6abd2_3"
+    },
+    {
+      "loop_negative_count": 0,
+      "preference_created": false,
+      "selected_trajectories": [
+        {
+          "condition": "T1",
+          "role": "memory_benefit",
+          "weight": 1.0
+        }
+      ],
+      "task_class": "rcmf_only_success",
+      "task_id": "e7a10f8_2"
+    }
+  ],
+  "test_normal_used": false,
+  "total_training_unit_count": 494,
+  "training_row_count": 483,
+  "training_rows_sha256": "5082cb19003a6044d2b1577677d376a4c9d99dcf37e8fc94b746b8bace36264c"
+}
