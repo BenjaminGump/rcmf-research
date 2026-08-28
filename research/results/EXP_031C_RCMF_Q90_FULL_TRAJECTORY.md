@@ -44,6 +44,7 @@ No tau, scale, checkpoint, field, selector, prompt, evaluator, memory ledger, or
 - Q1 execution source commit: `e2092480d8f674746372fcba7163025ca42ab94f`
 - Q2 execution source commit: `07fd093a1dc8a69a5af3d1cbb966400634a7f2fc`
 - Q2 result checkpoint: `7c2d1c2a1fce236b11bfec6b62470191f03d4184`
+- Final Git-safe record commit: `f3149a3ba245f537cd9746a4b4bd5a07c709d9de`
 
 ## Validation Gates
 

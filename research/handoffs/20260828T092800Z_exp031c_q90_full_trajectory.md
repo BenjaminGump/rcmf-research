@@ -4,6 +4,7 @@
 
 - Active branch: `research/v5-rcmf-q90-full-trajectory`
 - Starting HEAD: `7207c8adf7df351d3365e956aa8f0f12cf423879`
+- Final Git-safe record commit: `f3149a3ba245f537cd9746a4b4bd5a07c709d9de`
 - Archive branch: `archive/exp031b-benefit-preserving-calibration-7207c8a`
 - Annotated tag: `exp031b-benefit-preserving-calibration-verified-7207c8a`
 - Run UUID: `rcmf_q90_full_trajectory_9c_20260828_001`
