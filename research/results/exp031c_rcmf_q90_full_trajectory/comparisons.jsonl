@@ -1,0 +1,8 @@
+{"conditions": {"H0": false, "H1": false, "H2": false, "H3": true, "H4": false}, "scope": "heldout", "task_id": "76f2c72_1"}
+{"conditions": {"H0": false, "H1": false, "H2": false, "H3": false, "H4": false}, "scope": "heldout", "task_id": "76f2c72_2"}
+{"conditions": {"H0": true, "H1": false, "H2": true, "H3": true, "H4": true}, "scope": "heldout", "task_id": "7d7fbf6_1"}
+{"conditions": {"H0": true, "H1": true, "H2": true, "H3": true, "H4": true}, "scope": "heldout", "task_id": "b7a9ee9_2"}
+{"conditions": {"H0": true, "H1": true, "H2": true, "H3": true, "H4": true}, "scope": "heldout", "task_id": "c901732_1"}
+{"conditions": {"H0": false, "H1": true, "H2": false, "H3": true, "H4": false}, "scope": "heldout", "task_id": "c901732_3"}
+{"conditions": {"H0": false, "H1": true, "H2": false, "H3": true, "H4": true}, "scope": "heldout", "task_id": "e7a10f8_1"}
+{"conditions": {"H0": false, "H1": true, "H2": false, "H3": false, "H4": false}, "scope": "heldout", "task_id": "e7a10f8_3"}

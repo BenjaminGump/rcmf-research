@@ -1,0 +1,17 @@
+{
+  "deployment_memory_count": 499,
+  "field_shape": [
+    960,
+    8,
+    256
+  ],
+  "heldout_memory_count": 401,
+  "production_read_depends_on_memory_count": false,
+  "production_write_scans_existing_bank": false,
+  "runtime_per_memory_scoring": false,
+  "runtime_retrieval": false,
+  "slot_shape": [
+    8,
+    256
+  ]
+}
