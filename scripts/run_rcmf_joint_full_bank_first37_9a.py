@@ -441,9 +441,29 @@ def _run_task(
     hook_factory: Any = None,
     result_version: str = RESULT_FORMAT,
     extra_result_fields: Mapping[str, Any] | None = None,
+    bare_condition: bool | None = None,
+    condition_name: str | None = None,
+    memory_count: int | None = None,
+    field_artifact_path: Path | None = None,
+    field_provenance_path: Path | None = None,
+    max_steps_override: int | None = None,
+    experiment_prefix: str = "exp031a",
 ) -> tuple[dict[str, Any], bool]:
     output = _task_output(paths, condition, task_id, smoke)
-    deployment_sha = sha256_file(paths["deployment"])
+    is_bare = condition == "D0" if bare_condition is None else bool(bare_condition)
+    resolved_memory_count = (
+        0 if is_bare else 499 if memory_count is None else int(memory_count)
+    )
+    active_field_path = (
+        paths["deployment"] if field_artifact_path is None else field_artifact_path
+    )
+    deployment_sha = sha256_file(active_field_path)
+    display_name = CONDITIONS[condition] if condition_name is None else condition_name
+    provenance_path = (
+        paths["instant_add"]
+        if field_provenance_path is None
+        else field_provenance_path
+    )
     if output.exists():
         row = _json(output)
         checks = {
@@ -465,7 +485,7 @@ def _run_task(
     root = _condition_root(paths, condition, smoke)
     restart = len(list((root / "worker_logs").glob(f"{task_id}.*.stderr.log")))
     experiment_name = (
-        f"exp031a_{'smoke_' if smoke else ''}{condition.lower()}_"
+        f"{experiment_prefix}_{'smoke_' if smoke else ''}{condition.lower()}_"
         f"{attempt_id}_{task_id}_r{restart:02d}"
     )
     worker_log = root / "worker_logs" / f"{task_id}.{restart:02d}.stderr.log"
@@ -476,7 +496,11 @@ def _run_task(
     previous_code: str | None = None
     terminal_error: dict[str, Any] | None = None
     model_identity = _model_identity(backend, settings)
-    max_steps = 2 if smoke else int(app["max_steps"])
+    max_steps = (
+        int(max_steps_override)
+        if max_steps_override is not None
+        else 2 if smoke else int(app["max_steps"])
+    )
 
     with FullAgentBridge(
         executable=Path(str(app["legacy_python"])),
@@ -531,7 +555,7 @@ def _run_task(
                 counts["context_overflow"] += 1
                 break
 
-            if condition == "D0":
+            if is_bare:
                 views, query = None, None
                 slots = torch.zeros(8, 256, device=backend.device)
                 field_info = {                    "query_status": "not_computed_bare_condition",
@@ -542,7 +566,7 @@ def _run_task(
                 reader = None
             else:
                 if runtime is None:
-                    raise RuntimeError("D1/D2 require the complete field runtime")
+                    raise RuntimeError("Non-bare conditions require a field runtime")
                 slots, field_info = runtime.read(messages, condition)
                 views = field_info.pop("state_views")
                 query = field_info.pop("query")
@@ -564,7 +588,7 @@ def _run_task(
                     "query": None if query is None else query.detach().cpu(),
                     "slots": slots.detach().cpu(),
                     "deployment_field_sha256": deployment_sha,
-                    "memory_count": 0 if condition == "D0" else 499,
+                    "memory_count": resolved_memory_count,
                 },
                 tensor_path,
             )
@@ -576,20 +600,30 @@ def _run_task(
                 "tensor_artifact": str(tensor_path),
                 "tensor_artifact_sha256": sha256_file(tensor_path),
                 "deployment_field": None
-                if condition == "D0"
-                else str(paths["deployment"]),
+                if is_bare
+                else str(active_field_path),
                 "deployment_field_sha256": None
-                if condition == "D0"
+                if is_bare
                 else deployment_sha,
-                "complete_bank_memory_count": 0 if condition == "D0" else 499,
+                "complete_bank_memory_count": resolved_memory_count,
                 "runtime_memory_retrieval": False,
                 "runtime_per_memory_scoring": False,
                 "top_memory_contributions": {
                     "status": "pending_offline_post_run_audit",
                     "not_used_by_model_or_field_read": True,
                 },
-                "instant_add_report": str(paths["instant_add"]),
-                "instant_add_report_sha256": sha256_file(paths["instant_add"]),
+                "instant_add_report": (
+                    str(paths["instant_add"])
+                    if field_provenance_path is None
+                    else None
+                ),
+                "instant_add_report_sha256": (
+                    sha256_file(paths["instant_add"])
+                    if field_provenance_path is None
+                    else None
+                ),
+                "field_provenance": str(provenance_path),
+                "field_provenance_sha256": sha256_file(provenance_path),
             }
             ids, raw_response, generation = _generate(
                 backend=backend,
@@ -695,14 +729,14 @@ def _run_task(
         "status": "complete",
         "non_scientific_smoke": smoke,
         "condition": condition,
-        "condition_name": CONDITIONS[condition],
+        "condition_name": display_name,
         "task_id": task_id,
         "experiment_name": experiment_name,
         "global_seed": GLOBAL_SEED,
         "config_sha256": config_sha256,
         "condition_manifest_sha256": str(manifest["manifest_sha256"]),
         "deployment_field_sha256": deployment_sha,
-        "complete_bank_memory_count": 0 if condition == "D0" else 499,
+        "complete_bank_memory_count": resolved_memory_count,
         "student_prompt_contains_raw_memory": False,
         "runtime_memory_retrieval": False,
         "runtime_per_memory_scoring": False,
