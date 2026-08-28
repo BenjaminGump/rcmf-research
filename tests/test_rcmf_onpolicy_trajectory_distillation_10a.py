@@ -260,3 +260,26 @@ def test_teacher_cache_rejects_changed_source_row(tmp_path) -> None:
     assert _load_unit_cache(path, row)["row_sha256"] == canonical_sha256(row)
     with pytest.raises(ValueError, match="source row differs"):
         _load_unit_cache(path, {"unit_id": "u", "value": 2})
+
+
+def test_exact_bank_augmentation_freezes_nearest_quarter() -> None:
+    from scripts.build_rcmf_trajectory_union_10a import (
+        _freeze_exact_augmentations,
+    )
+
+    rows = [
+        {"unit_id": f"u-{index}", "source_task_id": f"task-{index % 2}"}
+        for index in range(10)
+    ]
+    target = _freeze_exact_augmentations(
+        row_groups=(rows,),
+        parent_tasks=[f"task-{index}" for index in range(29)],
+        settings={
+            "union": {
+                "bank_augmentation_fraction": 0.25,
+                "unrelated_parent_removal_fraction": 0.10,
+            }
+        },
+    )
+    assert target == 3
+    assert sum(row["bank_augmentation"]["active"] for row in rows) == target

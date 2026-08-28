@@ -3,7 +3,9 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 from collections.abc import Mapping, Sequence
+import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -190,6 +192,43 @@ def _auxiliary_rows(
     return rows
 
 
+def _freeze_exact_augmentations(
+    *,
+    row_groups: Sequence[list[dict[str, Any]]],
+    parent_tasks: Sequence[str],
+    settings: Mapping[str, Any],
+) -> int:
+    units = [row for group in row_groups for row in group]
+    unit_ids = [str(row["unit_id"]) for row in units]
+    if len(unit_ids) != len(set(unit_ids)):
+        raise ValueError("All augmentation unit IDs must be globally unique")
+    fraction = float(settings["union"]["bank_augmentation_fraction"])
+    target = int(math.floor(fraction * len(units) + 0.5))
+    ordered = sorted(
+        unit_ids,
+        key=lambda unit_id: (
+            hashlib.sha256(
+                f"{GLOBAL_SEED}:exact-bank-augmentation:{unit_id}".encode("utf-8")
+            ).hexdigest(),
+            unit_id,
+        ),
+    )
+    selected = set(ordered[:target])
+    for row in units:
+        unit_id = str(row["unit_id"])
+        task_id = str(row.get("source_task_id", row.get("task_id")))
+        row["bank_augmentation"] = deterministic_bank_augmentation(
+            unit_id=unit_id,
+            query_task_id=task_id,
+            parent_task_ids=parent_tasks,
+            fraction=1.0 if unit_id in selected else 0.0,
+            removal_fraction=float(
+                settings["union"]["unrelated_parent_removal_fraction"]
+            ),
+        )
+    return target
+
+
 def build_union(
     *, cfg: Any, settings: Mapping[str, Any], artifact_dir: Path
 ) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
@@ -307,6 +346,11 @@ def build_union(
             settings=settings,
         )
     )
+    augmentation_target = _freeze_exact_augmentations(
+        row_groups=(raw_rows, preference_rows, loop_rows),
+        parent_tasks=parent_tasks,
+        settings=settings,
+    )
     rows = balance_union_rows(raw_rows)
     unit_ids = [str(row["unit_id"]) for row in rows]
     if len(unit_ids) != len(set(unit_ids)):
@@ -345,6 +389,10 @@ def build_union(
         "augmentation_unit_count": sum(
             row["bank_augmentation"]["active"]
             for row in [*rows, *preference_rows, *loop_rows]
+        ),
+        "augmentation_target_count": augmentation_target,
+        "augmentation_selection_rule": (
+            "nearest_integer_quarter_by_seeded_unit_sha256_order"
         ),
         "group_total_weights": group_total_weights,
         "prompt_length": {
