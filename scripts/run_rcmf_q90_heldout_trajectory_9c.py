@@ -193,6 +193,13 @@ def first_task_id_from_condition_manifest(
     return task_ids[0]
 
 
+def serializable_field_read(info: dict[str, Any]) -> dict[str, Any]:
+    return {
+        str(key): value
+        for key, value in info.items()
+        if key not in {"query", "state_views"}
+    }
+
 def run_equivalence(
     args: argparse.Namespace,
     cfg: Any,
@@ -291,7 +298,7 @@ def run_equivalence(
         "parent_D0": str(d0_path),
         "runtime_identity": new_runtime.identity,
         "generation_seconds": generation["generation_seconds"],
-        "q90_read": q90_info,
+        "q90_read": serializable_field_read(q90_info),
     }
     if not result["passed"]:
         raise RuntimeError(f"EXP-031C equivalence failed: {checks}")
@@ -577,7 +584,7 @@ def main() -> None:
             ),
             result=result,
         )
-    print(json.dumps(result, sort_keys=True))
+        print(json.dumps(result, sort_keys=True))
 
 
 if __name__ == "__main__":

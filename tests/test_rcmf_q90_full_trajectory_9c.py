@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import inspect
+import json
 
 import pytest
 import torch
@@ -19,6 +20,7 @@ from rcmf.training.rcmf_q90_full_trajectory_9c import (
 from scripts.run_rcmf_joint_full_bank_first37_9a import _run_task
 from scripts.run_rcmf_q90_heldout_trajectory_9c import (
     first_task_id_from_condition_manifest,
+    serializable_field_read,
 )
 from scripts.run_rcmf_q90_trajectory_common_9c import (
     CONDITION_SPECS,
@@ -61,6 +63,17 @@ def test_parent_first37_task_is_derived_from_condition_rows() -> None:
     with pytest.raises(ValueError, match="no rows for condition D2"):
         first_task_id_from_condition_manifest(manifest, condition="D2")
 
+
+def test_field_read_audit_omits_runtime_tensors_before_json_output() -> None:
+    audit = serializable_field_read(
+        {
+            "query": torch.ones(2),
+            "state_views": torch.ones(1, 2),
+            "q90_confidence": 0.5,
+        }
+    )
+    assert audit == {"q90_confidence": 0.5}
+    json.dumps(audit)
 
 def test_q90_identity_and_lock_are_exact() -> None:
     result = validate_q90_contract(_settings(), _calibration_lock())
