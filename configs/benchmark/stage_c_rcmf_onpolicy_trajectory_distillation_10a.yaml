@@ -1,0 +1,96 @@
+include: stage_c_rcmf_joint_full_bank_9a.yaml
+
+experiment:
+  name: stage_c_rcmf_onpolicy_trajectory_distillation_10a
+  version: rcmf_onpolicy_trajectory_distillation_10a_v1
+  seed: 25101
+
+stage_c_10a:
+  run_uuid: rcmf_onpolicy_trajectory_distillation_10a_20260828_001
+  artifact_dir: runs/stage_c/rcmf_onpolicy_trajectory_distillation_10a_20260828_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  starting_head: a6506b55b07d5708e839be4d04a8cd19e2decb91
+  source_branch: research/v5-rcmf-q90-full-trajectory
+  working_branch: research/v5-rcmf-onpolicy-trajectory-distillation
+  archive_branch: archive/exp031c-q90-full-trajectory-a6506b55
+  archive_tag: exp031c-q90-full-trajectory-verified-a6506b55
+  global_seed: 25101
+
+  immutable_exp031a:
+    source_head: 57d2a3479ff292dd8f89bdd0ea9f9417abc42a48
+    artifact_root: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001
+    checkpoint: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/joint_training/checkpoints/epoch_02.pt
+    checkpoint_sha256: d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1
+    heldout_correct_field: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/heldout_validation/live_full_field/field_artifacts/epoch_02_correct.pt
+    heldout_correct_field_sha256: 63929027dfddea722419024949e492d9477a5fd61a45fe4dbf40a07a3936fa79
+    heldout_shuffle_field: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/heldout_validation/live_full_field/field_artifacts/epoch_02_key_payload_shuffle.pt
+    heldout_shuffle_field_sha256: a50f0f2c415433ebdb9b9a22624ea79f196c74181b6050c96b12235918402331
+    deployment_field: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/deployment_field/complete_37_task_field.pt
+    deployment_field_sha256: 5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e
+    data_manifest: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/full_bank_data_manifest.json
+    source_cache: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/rcmf_source_cache.pt
+    shuffle_manifest: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/key_payload_shuffle_manifest.json
+
+  immutable_exp031b:
+    calibration_lock: runs/stage_c/rcmf_benefit_preserving_calibration_9b_20260827_001/stage_8a/calibration_lock.json
+    calibration_sha256: f1d0b1b8553f008423d4c00a4637e0f9d1c01444820f6652ac519a39710b7a8c
+
+  immutable_exp031c:
+    artifact_root: runs/stage_c/rcmf_q90_full_trajectory_9c_20260828_001
+
+  rollout:
+    conditions: [T0, T1, T2]
+    task_count: 29
+    trajectory_count: 87
+    deterministic_complete_task_count: 1
+
+  union:
+    alternate_success_weight: 0.5
+    neither_auxiliary_weight: 0.25
+    no_progress_negative_weight: 0.05
+    bank_augmentation_fraction: 0.25
+    unrelated_parent_removal_fraction: 0.10
+
+  training:
+    reader_epochs: [1, 2]
+    writer_epochs: [1]
+    reader_learning_rate: 0.0001
+    writer_learning_rate: 0.000025
+    weight_decay: 0.0001
+    max_grad_norm: 1.0
+    sequence_ce_weight: 1.0
+    sparse_teacher_policy_kl_weight: 0.5
+    bare_preservation_kl_weight: 0.5
+    correct_shuffle_margin_weight: 0.25
+    correct_shuffle_margin_nll: 0.10
+    preference_margin_weight: 0.25
+    no_progress_unlikelihood_weight: 0.05
+    reader_anchor_weight: 0.0001
+    gradient_checkpointing: true
+    mixed_precision: bfloat16
+    checkpoint_every_units: 25
+
+  heldout:
+    task_count: 8
+    controls: [V0, V1, V2, RA, RS, WA, WS]
+    original_reference_artifact: runs/stage_c/rcmf_q90_full_trajectory_9c_20260828_001/heldout
+
+  first37:
+    task_manifest_config: configs/benchmark/stage_c_deep_residual_amortization_7f.yaml
+    task_manifest_section: stage_c_7f.first37.task_ids
+    task_count: 37
+    conditions: [N1, N2]
+    immutable_bare_success: 8
+    immutable_correct_success: 8
+    immutable_shuffle_success: 5
+
+  runtime:
+    total_wall_clock_cap_hours: 24.0
+    heartbeat_interval_seconds: 240
+    heartbeat_stale_seconds: 720
+    hardware_required: NVIDIA H100 80GB HBM3
+
+  audit:
+    format: detailed_generation_interaction_audit_10a_v1
+    git_safe_root: research/audits/rcmf_onpolicy_trajectory_distillation_10a_20260828_001
+    lambda_raw_root: runs/stage_c/rcmf_onpolicy_trajectory_distillation_10a_20260828_001/audits

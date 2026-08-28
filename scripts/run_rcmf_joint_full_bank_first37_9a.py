@@ -699,6 +699,8 @@ def _run_task(
                 "task_completed_status": bool(executed["task_completed"]),
                 "same_world_execution": bool(executed["same_world_execution"]),
                 "same_python_namespace": bool(executed["same_python_namespace"]),
+                "state_fingerprint_before": executed.get("state_before"),
+                "state_fingerprint_after": executed.get("state_after"),
                 "field": slot_info,
                 "reader_audit": generation["reader"],
                 "usage": {
