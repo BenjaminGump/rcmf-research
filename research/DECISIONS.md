@@ -2559,3 +2559,21 @@ AUDIT AND PROVENANCE:
 - Publish the 2,689 Git-safe step rows and comparison reports. Keep the 33,382,807-byte model-derived query/slot tensor bundle only on Lambda with SHA256 `dbac5bf33dcac711d115ca19abcf28719f5f38c92667d0b0668a2e8be96194de`.
 - Preserve all three failed schema attempts and the equivalence-002 post-ledger stdout failure. Do not rewrite the append-only ledger.
 - The Windows `apply_patch` helper failed with `helper_unknown_error`; guarded exact UTF-8 replacements were used only after failure and passed `77` focused tests locally and on Lambda.
+
+## 2026-08-28 EXP-032A prospective EXP-031C interpretation clarification
+
+VERIFIED:
+
+- EXP-031C heldout H1 original correct was `5/8` and H3 Q90 correct was
+  `6/8`, a one-task difference on an eight-task set.
+- The approved verbal contract classified a one-item-sensitive heldout result
+  as `INCONCLUSIVE`, even though the committed EXP-031C mechanical label was
+  `PROCEED`.
+- Both `PROCEED` and `INCONCLUSIVE` authorized the completed first37 run.
+
+DECISION:
+
+- Prospectively interpret the EXP-031C heldout gate as `INCONCLUSIVE`.
+- Preserve all EXP-031C reports, JSON, audit rows, commits, and historical
+  labels unchanged. This clarification does not invalidate or relabel the
+  completed first37 execution.

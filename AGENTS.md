@@ -192,6 +192,22 @@ Sources of truth:
   heldout and first37 task/condition; a result without a committed Git-safe
   audit index is not independently verified.
 
+## EXP-032A On-Policy Trajectory Union Distillation Charter v1
+
+- Deployment preserves the EXP-031A architecture: feed-forward reversible
+  memory writes, one fixed-size whole-bank field, and a read whose shape and
+  complexity are independent of memory count.
+- Runtime retrieval, top-k, per-memory scoring, raw-memory prompt text, and
+  hard or learned memory-use gates are prohibited.
+- All rollout comparison, trajectory selection, and distillation are offline;
+  no test-time online training or optimizer update is permitted.
+- The exposed first37 outcomes cannot modify the model, checkpoint selection,
+  losses, data, or thresholds. Model selection uses only the 29 training tasks
+  and the immutable eight heldout train tasks.
+- EXP-032A uses exactly one training seed, `25101`.
+- Detailed reconstructible per-step Git-safe logs are mandatory for every
+  training rollout, heldout trajectory, and conditional first37 condition.
+
 ## EXP-025D-Direct Single-Seed Deadline Policy
 
 For EXP-025D-Direct, use exactly `GLOBAL_SEED = 25101` for deterministic
