@@ -325,6 +325,14 @@ def export(
         result_tmp / "attempts.jsonl", [strict_redact(row) for row in attempts]
     )
     atomic_jsonl(result_tmp / "per_task.jsonl", per_task_rows)
+    atomic_jsonl(
+        result_tmp / "heldout_per_task.jsonl",
+        [row for row in per_task_rows if str(row["scope"]).startswith("heldout/")],
+    )
+    atomic_jsonl(
+        result_tmp / "first37_per_task.jsonl",
+        [row for row in per_task_rows if row["scope"] == "first37"],
+    )
     for name, source in (
         ("rollout_manifest.json", artifact_dir / "rollouts/rollout_manifest.json"),
         (
@@ -389,6 +397,23 @@ def export(
         "first37_exposed_development_only": True,
     }
     atomic_json(result_tmp / "summary.json", summary)
+    if not (result_tmp / "complexity.json").exists():
+        atomic_json(
+            result_tmp / "complexity.json",
+            {
+                "format": "rcmf_onpolicy_trajectory_complexity_10a_v1",
+                "selected_candidate": None,
+                "first37_executed": False,
+                "test_time_online_training": False,
+                "runtime_retrieval": False,
+                "runtime_top_k": False,
+                "runtime_per_memory_scoring": False,
+                "whole_bank_read_shape_memory_count_independent": True,
+                "instant_memory_recompilation_not_applicable": (
+                    "no_eligible_candidate_selected"
+                ),
+            },
+        )
 
     verification = verify_git_safe_redaction(audit_tmp)
     strict_audit = strict_verify_tree(audit_tmp)
