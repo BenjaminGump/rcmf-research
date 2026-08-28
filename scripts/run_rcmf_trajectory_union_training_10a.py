@@ -136,6 +136,13 @@ def _tensor_path(root: Path, kind: str, unit_id: str) -> Path:
     return root / kind / f"{digest}.pt"
 
 
+def _load_unit_cache(path: Path, row: Mapping[str, Any]) -> dict[str, Any]:
+    payload = torch.load(path, map_location="cpu", weights_only=False)
+    if payload["row_sha256"] != canonical_sha256(row):
+        raise ValueError(f"Teacher cache source row differs: {path}")
+    return payload
+
+
 class StaticTaskFieldBank:
     def __init__(self, payload: Mapping[str, Any], device: torch.device) -> None:
         self.device = device
@@ -314,6 +321,7 @@ def _teacher_cache(
                 output,
             )
         else:
+            _load_unit_cache(output, row)
             reused += 1
         completed += 1
     for row in loops:
@@ -335,6 +343,7 @@ def _teacher_cache(
                 output,
             )
         else:
+            _load_unit_cache(output, row)
             reused += 1
         completed += 1
     summary = {
@@ -545,10 +554,9 @@ def _train_epoch(
         row = unit["row"]
         optimizer.zero_grad(set_to_none=True)
         if unit["kind"] == "imitation":
-            cache = torch.load(
+            cache = _load_unit_cache(
                 _tensor_path(p["teacher_root"], "imitation", unit["unit_id"]),
-                map_location="cpu",
-                weights_only=False,
+                row,
             )
             slots_fn = _static_slots if stage == "reader" else _differentiable_slots
             if stage == "reader":
@@ -595,7 +603,9 @@ def _train_epoch(
                     sequence_ce - shuffled_ce
                     + float(settings["training"]["correct_shuffle_margin_nll"])
                 )
-                loss = loss + float(settings["training"]["correct_shuffle_margin_weight"]) * margin
+                loss = loss + float(row["balanced_weight"]) * scale * float(
+                    settings["training"]["correct_shuffle_margin_weight"]
+                ) * margin
             anchor_loss = _anchor_loss(reader, anchor)
             loss = loss + float(settings["training"]["reader_anchor_weight"]) * anchor_loss
             metric = {
@@ -606,9 +616,9 @@ def _train_epoch(
                 "anchor": float(anchor_loss.detach().cpu()),
             }
         elif unit["kind"] == "preference":
-            cache = torch.load(
+            cache = _load_unit_cache(
                 _tensor_path(p["teacher_root"], "preferences", unit["unit_id"]),
-                map_location="cpu", weights_only=False
+                row,
             )
             synthetic = {
                 "source_task_id": str(row["task_id"]),
@@ -651,9 +661,9 @@ def _train_epoch(
                 "rejected_nll": float(rejected_nll.detach().cpu()),
             }
         else:
-            cache = torch.load(
+            cache = _load_unit_cache(
                 _tensor_path(p["teacher_root"], "loops", unit["unit_id"]),
-                map_location="cpu", weights_only=False
+                row,
             )
             synthetic = {
                 "source_task_id": str(row["task_id"]),

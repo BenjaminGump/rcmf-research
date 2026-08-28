@@ -246,3 +246,17 @@ def test_checkpoint_state_hash_is_key_order_invariant() -> None:
     assert module_state_sha256_from_state(left) == module_state_sha256_from_state(
         right
     )
+
+
+def test_teacher_cache_rejects_changed_source_row(tmp_path) -> None:
+    import torch
+
+    from scripts.run_rcmf_trajectory_union_training_10a import _load_unit_cache
+    from rcmf.training.state_conditioned_program_7d import canonical_sha256
+
+    row = {"unit_id": "u", "value": 1}
+    path = tmp_path / "cache.pt"
+    torch.save({"row_sha256": canonical_sha256(row)}, path)
+    assert _load_unit_cache(path, row)["row_sha256"] == canonical_sha256(row)
+    with pytest.raises(ValueError, match="source row differs"):
+        _load_unit_cache(path, {"unit_id": "u", "value": 2})
