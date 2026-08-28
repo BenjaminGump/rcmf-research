@@ -1,0 +1,62 @@
+{
+  "condition_count": 5,
+  "field": {
+    "correct": {
+      "control": "correct",
+      "memory_count": 401,
+      "path": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/heldout_validation/live_full_field/field_artifacts/epoch_02_correct.pt",
+      "sha256": "63929027dfddea722419024949e492d9477a5fd61a45fe4dbf40a07a3936fa79"
+    },
+    "key_payload_shuffle": {
+      "control": "key_payload_shuffle",
+      "memory_count": 401,
+      "path": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/heldout_validation/live_full_field/field_artifacts/epoch_02_key_payload_shuffle.pt",
+      "sha256": "a50f0f2c415433ebdb9b9a22624ea79f196c74181b6050c96b12235918402331"
+    }
+  },
+  "heldout_task_ids": [
+    "76f2c72_1",
+    "76f2c72_2",
+    "7d7fbf6_1",
+    "b7a9ee9_2",
+    "c901732_1",
+    "c901732_3",
+    "e7a10f8_1",
+    "e7a10f8_3"
+  ],
+  "manifest_sha256": "59ab34124e2c81fa02be57722bebde1e20a7abb026191a67fb8c13c8846df06b",
+  "memory_count": 401,
+  "passed": true,
+  "phase": "heldout_manifest",
+  "q90": {
+    "checks": {
+      "calibration_sha": true,
+      "candidate_id": true,
+      "formula": true,
+      "lock_outcomes_unused": true,
+      "lock_tau_exact": true,
+      "no_outcome_recomputation": true,
+      "preregistered_formula": true,
+      "preregistered_target": true,
+      "seed": true,
+      "tau_exact": true
+    },
+    "identity": {
+      "calibration_sha256": "f1d0b1b8553f008423d4c00a4637e0f9d1c01444820f6652ac519a39710b7a8c",
+      "candidate_id": "Q90",
+      "contract_sha256": "794d2c6ff0d58c562a1f31c8498795d102d2a852e738bc5cdebfff02463952a2",
+      "format": "rcmf_q90_full_trajectory_contract_9c_v1",
+      "formula": "pre_rms_confidence",
+      "global_seed": 25101,
+      "optimizer_steps": false,
+      "outcomes_used": false,
+      "raw_memory_prompt": false,
+      "runtime_per_memory_scoring": false,
+      "runtime_retrieval": false,
+      "runtime_top_k": false,
+      "tau": 4.606291029188367
+    },
+    "passed": true
+  },
+  "task_condition_count": 40
+}
