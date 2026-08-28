@@ -56,7 +56,7 @@ def validate_q90_contract(
             str(candidate["calibration_sha256"]) == Q90_CALIBRATION_SHA256
             and str(calibration_lock["calibration_sha256"]) == Q90_CALIBRATION_SHA256
         ),
-        "lock_tau_exact": float(calibration_lock["Q90_tau"]) == Q90_TAU,
+        "lock_tau_exact": float(calibration_lock["taus"]["Q90"]) == Q90_TAU,
         "lock_outcomes_unused": (
             not bool(calibration_lock["outcomes_used"])
             and bool(calibration_lock["locked_before_candidate_outcomes"])

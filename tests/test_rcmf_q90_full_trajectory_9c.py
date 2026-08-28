@@ -27,7 +27,7 @@ from scripts.run_rcmf_q90_trajectory_common_9c import (
 def _calibration_lock() -> dict[str, object]:
     return {
         "calibration_sha256": Q90_CALIBRATION_SHA256,
-        "Q90_tau": Q90_TAU,
+        "taus": {"Q90": Q90_TAU},
         "outcomes_used": False,
         "locked_before_candidate_outcomes": True,
     }
