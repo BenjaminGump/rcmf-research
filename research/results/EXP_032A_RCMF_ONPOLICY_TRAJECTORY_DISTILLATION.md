@@ -211,8 +211,11 @@ reasons are in `attempts.jsonl`.
   `/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_onpolicy_trajectory_distillation_10a_20260828_001`.
 - Git-safe audit: 3,853 step rows across 135 JSONL files and 53 comparison
   reports.
-- Tensor bundle SHA256:
+- The model-derived 46,632,089-byte tensor bundle remains Lambda-only under
+  repository artifact policy. SHA256:
   `b5dae044b252df1682b9a9cebca28787d443bdd65e8311a8a332d9c8a88077cb`.
+- Exact exported tensor path:
+  `/lambda/nfs/rcmf-persist/exports/exp032a_v3/audits/rcmf_onpolicy_trajectory_distillation_10a_20260828_001/field_tensors/query_and_slots.pt`.
 - Secret verification: 189 text files checked, zero raw JWT matches, 98
   registered sensitive observations, zero leaks.
 - The audit result is independently verified because all attempts are closed.

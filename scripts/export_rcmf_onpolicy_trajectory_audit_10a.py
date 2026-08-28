@@ -436,6 +436,13 @@ def export(
         "step_tensor_bundle_sha256": sha256_file(
             audit_tmp / "field_tensors/query_and_slots.pt"
         ),
+        "step_tensor_bundle_git_published": False,
+        "step_tensor_bundle_lambda_path": str(
+            audit_root.resolve() / "field_tensors/query_and_slots.pt"
+        ),
+        "step_tensor_bundle_repository_policy": (
+            "lambda_only_model_derived_tensor_artifact"
+        ),
         "static_prompt_assets": "static_prompt_assets.json",
         "secret_verification": verification,
         "strict_audit_tree": strict_audit,

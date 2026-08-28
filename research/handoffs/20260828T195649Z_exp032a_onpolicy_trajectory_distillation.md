@@ -50,8 +50,9 @@ GPU execution commits:
 - Teacher cache, training, and heldout evaluation:
   `adb62ef39ef711f6680de58f1a9fd483147a1c02`.
 
-The final record commit is the reviewed branch head created after this handoff
-and is reported in the final response.
+The primary record commit is
+`db2968ebc04bf174d0fe0adfda0926aee19185ab`. The final synchronization
+commit is reported in the final response.
 
 ## Tests
 
@@ -182,8 +183,10 @@ Lambda:
 
 `/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_onpolicy_trajectory_distillation_10a_20260828_001`.
 
-The audit contains 3,853 Git-safe step rows, 53 comparisons, and a
-46,632,089-byte tensor bundle with SHA256
+The committed audit contains 3,853 Git-safe step rows and 53 comparisons.
+The model-derived 46,632,089-byte tensor bundle remains Lambda-only at
+`/lambda/nfs/rcmf-persist/exports/exp032a_v3/audits/rcmf_onpolicy_trajectory_distillation_10a_20260828_001/field_tensors/query_and_slots.pt`,
+with SHA256
 `b5dae044b252df1682b9a9cebca28787d443bdd65e8311a8a332d9c8a88077cb`.
 Secret checks found no JWT or sensitive-observation leaks.
 
