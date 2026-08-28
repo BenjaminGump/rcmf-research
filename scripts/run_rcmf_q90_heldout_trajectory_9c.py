@@ -180,6 +180,19 @@ def _forward_logits(
     return logits
 
 
+def first_task_id_from_condition_manifest(
+    manifest: dict[str, Any], *, condition: str
+) -> str:
+    task_ids = [
+        str(row["task_id"])
+        for row in manifest.get("rows", [])
+        if str(row.get("condition")) == condition
+    ]
+    if not task_ids:
+        raise ValueError(f"Parent manifest has no rows for condition {condition}")
+    return task_ids[0]
+
+
 def run_equivalence(
     args: argparse.Namespace,
     cfg: Any,
@@ -189,7 +202,7 @@ def run_equivalence(
     immutable = settings["immutable_exp031a"]
     parent_root = Path(str(immutable["artifact_root"]))
     parent_manifest = load_json(parent_root / "first37/condition_manifest.json")
-    task_id = str(parent_manifest["task_ids"][0])
+    task_id = first_task_id_from_condition_manifest(parent_manifest, condition="D0")
     d1_path = parent_root / f"first37/conditions/D1/task_results/{task_id}.json"
     d0_path = parent_root / f"first37/conditions/D0/task_results/{task_id}.json"
     d1, d0 = load_json(d1_path), load_json(d0_path)
