@@ -1,0 +1,100 @@
+{
+  "automatic_launch_allowed": true,
+  "checkpoint_sha256": "d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1",
+  "condition_order": [
+    "Q1",
+    "Q2"
+  ],
+  "config_sha256": "ee40aeccacfb3075470b6f0b19258b8627ebdbae355108497b2676f71c2ed007",
+  "conservative_h100_hours": 3.8694774913805303,
+  "conservative_wall_hours": 3.8694774913805303,
+  "deployment_field_sha256": "5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e",
+  "expected_artifact_bytes": 674112525,
+  "expected_h100_hours": 2.99597257589779,
+  "expected_wall_hours": 2.99597257589779,
+  "format": "rcmf_q90_first37_runtime_preflight_9c_v1",
+  "hardware": "NVIDIA H100 80GB HBM3",
+  "heldout_decision": "PROCEED",
+  "heldout_task_seconds": [
+    67.45113673619926,
+    58.71987206954509
+  ],
+  "historical_task_seconds": [
+    140.9041536660563,
+    150.59588074562063
+  ],
+  "purpose": "Q90 correct and key-payload-shuffle complete first37 trajectories",
+  "q90_calibration_sha256": "f1d0b1b8553f008423d4c00a4637e0f9d1c01444820f6652ac519a39710b7a8c",
+  "q90_tau": 4.606291029188367,
+  "restart_plan": "atomic per-task outputs; exact validated rows resume without duplication",
+  "reused_controls": {
+    "L1_final": "runs/stage_c/rcmf_benefit_preserving_calibration_9b_20260827_001/stage_8d_first37/L1/final_summary.json",
+    "L1_final_sha256": "6ba5e0e0054ba240de4ff742727fc692d8e40b79a1318f5d8bb2f77c36b7661e",
+    "L1_success_count": {
+      "L1_correct": 7,
+      "L1_shuffle": 5,
+      "original_D0": 8,
+      "original_D1": 8,
+      "original_D2": 5
+    },
+    "condition": {
+      "D0": {
+        "success_count": 8,
+        "summary": "8c370a6cf79ffd732f51673ac509dc3b099516638005957e2df0b3d4fff3d004"
+      },
+      "D1": {
+        "success_count": 8,
+        "summary": "23c603870b611e97f097ff6faa7c6940abfef441ab47d5dae12717203e518697"
+      },
+      "D2": {
+        "success_count": 5,
+        "summary": "d7f62f5cc5f5a8706163497a26419cb8596f30fa04e71cca5093b7c367e6bfc0"
+      }
+    },
+    "parent_manifest": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/first37/condition_manifest.json",
+    "parent_manifest_sha256": "4054e1a433999198ac11d58ef43e715c608f0436fce61964ecc80fb0a4320f1b",
+    "passed": true
+  },
+  "sequential_conditions": true,
+  "source_head": "7207c8adf7df351d3365e956aa8f0f12cf423879",
+  "task_condition_count": 74,
+  "task_ids": [
+    "0d01c76_1",
+    "0d01c76_2",
+    "0d01c76_3",
+    "21abae1_1",
+    "21abae1_2",
+    "21abae1_3",
+    "29a7b7e_1",
+    "29a7b7e_2",
+    "29a7b7e_3",
+    "2d9f728_1",
+    "2d9f728_2",
+    "2d9f728_3",
+    "325d6ec_1",
+    "325d6ec_2",
+    "325d6ec_3",
+    "3d9a636_1",
+    "3d9a636_2",
+    "3d9a636_3",
+    "634f342_1",
+    "634f342_2",
+    "634f342_3",
+    "6f4b9a5_1",
+    "6f4b9a5_2",
+    "6f4b9a5_3",
+    "8749218_1",
+    "8749218_2",
+    "8749218_3",
+    "d18139b_1",
+    "d6ac34d_1",
+    "d6ac34d_2",
+    "d6ac34d_3",
+    "fd1f8fa_1",
+    "fd1f8fa_2",
+    "fd1f8fa_3",
+    "ff58e36_1",
+    "ff58e36_2",
+    "ff58e36_3"
+  ]
+}

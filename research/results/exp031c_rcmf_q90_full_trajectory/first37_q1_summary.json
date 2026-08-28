@@ -1,0 +1,37 @@
+{
+  "condition": "Q1",
+  "condition_manifest_sha256": "bea99f792ccf19a25c805642561eb987bd35de164ac9a51f3d486fda9a9928b9",
+  "condition_name": "q90_correct_499_field",
+  "counts": {
+    "completion_action": 27,
+    "execution_exception": 0,
+    "premature_completion": 0,
+    "repeated_action": 308,
+    "repeated_invalid_action": 0
+  },
+  "exposed_development_only": true,
+  "format": "rcmf_q90_full_trajectory_condition_summary_9c_v1",
+  "mean_field_read_seconds": 0.00037882242357791885,
+  "mean_q90_confidence": 0.8346901719683203,
+  "mean_query_seconds": 0.6502828714999788,
+  "mean_raw_field_rms": 35.441234490480916,
+  "mean_reader_residual_norm": 21.44136910570126,
+  "new_task_count": 37,
+  "passed_infrastructure": true,
+  "resumed_task_count": 0,
+  "run_uuid": "rcmf_q90_full_trajectory_9c_20260828_001",
+  "single_seed_descriptive_not_statistical": true,
+  "success_count": 5,
+  "success_ids": [
+    "325d6ec_2",
+    "325d6ec_3",
+    "634f342_2",
+    "8749218_1",
+    "8749218_2"
+  ],
+  "task_count": 37,
+  "total_generated_tokens": 108308,
+  "total_prompt_tokens": 11876894,
+  "total_steps": 928,
+  "total_wall_seconds": 5409.949991411064
+}
