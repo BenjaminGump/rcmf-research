@@ -1,0 +1,35 @@
+{
+  "condition": "Q2",
+  "condition_manifest_sha256": "bea99f792ccf19a25c805642561eb987bd35de164ac9a51f3d486fda9a9928b9",
+  "condition_name": "q90_key_payload_shuffle_499_field",
+  "counts": {
+    "completion_action": 24,
+    "execution_exception": 0,
+    "premature_completion": 0,
+    "repeated_action": 407,
+    "repeated_invalid_action": 0
+  },
+  "exposed_development_only": true,
+  "format": "rcmf_q90_full_trajectory_condition_summary_9c_v1",
+  "mean_field_read_seconds": 0.0004547587473954619,
+  "mean_q90_confidence": 0.8119543976444012,
+  "mean_query_seconds": 0.6401077846748884,
+  "mean_raw_field_rms": 36.63795393039093,
+  "mean_reader_residual_norm": 20.248385101877318,
+  "new_task_count": 37,
+  "passed_infrastructure": true,
+  "resumed_task_count": 0,
+  "run_uuid": "rcmf_q90_full_trajectory_9c_20260828_001",
+  "single_seed_descriptive_not_statistical": true,
+  "success_count": 3,
+  "success_ids": [
+    "29a7b7e_3",
+    "325d6ec_2",
+    "325d6ec_3"
+  ],
+  "task_count": 37,
+  "total_generated_tokens": 137511,
+  "total_prompt_tokens": 12492589,
+  "total_steps": 993,
+  "total_wall_seconds": 6472.242651558481
+}
