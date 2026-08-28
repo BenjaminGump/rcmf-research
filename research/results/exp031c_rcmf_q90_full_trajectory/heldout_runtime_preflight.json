@@ -1,0 +1,49 @@
+{
+  "automatic_launch_allowed": true,
+  "checkpoint_sha256": "d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1",
+  "conditions": [
+    "H0",
+    "H1",
+    "H2",
+    "H3",
+    "H4"
+  ],
+  "config_sha256": "ee40aeccacfb3075470b6f0b19258b8627ebdbae355108497b2676f71c2ed007",
+  "conservative_h100_hours": 2.0916094548002864,
+  "conservative_wall_hours": 2.0916094548002864,
+  "determinism_passed": true,
+  "equivalence_passed": true,
+  "expected_artifact_bytes": 364385148,
+  "expected_h100_hours": 1.5189805210280876,
+  "expected_wall_hours": 1.5189805210280876,
+  "field_sha256": {
+    "correct": "63929027dfddea722419024949e492d9477a5fd61a45fe4dbf40a07a3936fa79",
+    "key_payload_shuffle": "a50f0f2c415433ebdb9b9a22624ea79f196c74181b6050c96b12235918402331"
+  },
+  "first37_conditional_task_condition_count": 74,
+  "format": "rcmf_q90_heldout_runtime_preflight_9c_v1",
+  "hardware": "NVIDIA H100 80GB HBM3",
+  "historical_condition_task_seconds": [
+    118.62470626590672,
+    140.9041536660563,
+    150.59588074562063
+  ],
+  "measured_complete_task_seconds": 74.08654669811949,
+  "purpose": "five complete trajectory conditions on eight heldout train tasks",
+  "q90_calibration_sha256": "f1d0b1b8553f008423d4c00a4637e0f9d1c01444820f6652ac519a39710b7a8c",
+  "q90_tau": 4.606291029188367,
+  "restart_plan": "atomic per-task results; resume skips only exact validated rows",
+  "sequential_conditions": true,
+  "source_head": "7207c8adf7df351d3365e956aa8f0f12cf423879",
+  "task_condition_count": 40,
+  "task_ids": [
+    "76f2c72_1",
+    "76f2c72_2",
+    "7d7fbf6_1",
+    "b7a9ee9_2",
+    "c901732_1",
+    "c901732_3",
+    "e7a10f8_1",
+    "e7a10f8_3"
+  ]
+}

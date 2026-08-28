@@ -1,0 +1,68 @@
+{
+  "checks": {
+    "no_per_memory_scoring": true,
+    "no_retrieval": true,
+    "no_runtime_scan": true,
+    "original_action_exact": true,
+    "original_fixed_response_exact": true,
+    "original_logits_exact": true,
+    "original_response_exact": true,
+    "original_slots_exact": true,
+    "original_token_ids_exact": true,
+    "q90_confidence_formula_exact": true,
+    "q90_slots_differ_from_g100": true,
+    "qwen_frozen": true,
+    "reader_frozen": true,
+    "same_query": true,
+    "zero_bare_action_exact": true,
+    "zero_bare_fixed_response_exact": true,
+    "zero_bare_response_exact": true,
+    "zero_bare_token_ids_exact": true
+  },
+  "format": "rcmf_q90_equivalence_9c_v1",
+  "generation_seconds": 4.2159160119481385,
+  "parent_D0": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/first37/conditions/D0/task_results/0d01c76_1.json",
+  "parent_D1": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/first37/conditions/D1/task_results/0d01c76_1.json",
+  "passed": true,
+  "q90_read": {
+    "calibration_sha256": "f1d0b1b8553f008423d4c00a4637e0f9d1c01444820f6652ac519a39710b7a8c",
+    "candidate_id": "Q90",
+    "field_candidate": "Q90",
+    "field_control": "correct",
+    "field_read_seconds": 0.0004110722802579403,
+    "formula": "pre_rms_confidence",
+    "outcomes_used": false,
+    "q90_confidence": 0.9734615087509155,
+    "query_seconds": 0.331477589905262,
+    "raw_field_rms": 168.9640655517578,
+    "tau": 4.606291029188367
+  },
+  "runtime_identity": {
+    "checkpoint_sha256": "d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1",
+    "condition_specs": {
+      "G100": {
+        "candidate": "G100",
+        "field_control": "correct"
+      },
+      "Q90": {
+        "candidate": "Q90",
+        "field_control": "correct"
+      }
+    },
+    "field_sha256": {
+      "correct": "5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e",
+      "key_payload_shuffle": "5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e"
+    },
+    "format": "rcmf_q90_trajectory_runtime_identity_9c_v1",
+    "identity_sha256": "491e9b2f5ec06905e2e19decf89021decd163120e2572431c0b7c04898fe5cbe",
+    "memory_count": 499,
+    "q90_calibration_sha256": "f1d0b1b8553f008423d4c00a4637e0f9d1c01444820f6652ac519a39710b7a8c",
+    "q90_tau": 4.606291029188367,
+    "query_encoder_sha256": "5b272ecb036f776add841a87ac9f475657da51bc914e26651d966d4aa3412e80",
+    "reader_sha256": "be670d57942f0711bffc05434fb1c20bb7e76793236499c70f007b1781b78ca3",
+    "runtime_memory_scan": false,
+    "runtime_per_memory_scoring": false,
+    "runtime_retrieval": false
+  },
+  "task_id": "0d01c76_1"
+}

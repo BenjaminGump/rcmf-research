@@ -1,0 +1,36 @@
+{
+  "complete_task_repetitions": 4,
+  "format": "rcmf_q90_complete_task_determinism_9c_v1",
+  "matches": {
+    "76f2c72_1": {
+      "checks": {
+        "code": true,
+        "observations": true,
+        "prompts": true,
+        "step_count": true,
+        "success": true,
+        "task_id": true,
+        "token_ids": true
+      },
+      "passed": true
+    },
+    "e7a10f8_3": {
+      "checks": {
+        "code": true,
+        "observations": true,
+        "prompts": true,
+        "step_count": true,
+        "success": true,
+        "task_id": true,
+        "token_ids": true
+      },
+      "passed": true
+    }
+  },
+  "passed": true,
+  "task_ids": [
+    "76f2c72_1",
+    "e7a10f8_3"
+  ],
+  "wall_seconds": 296.34618679247797
+}
