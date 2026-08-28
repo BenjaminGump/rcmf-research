@@ -1,6 +1,9 @@
 {
-  "first37_conditions": [],
-  "first37_task_count": 0,
+  "first37_conditions": [
+    "Q1",
+    "Q2"
+  ],
+  "first37_task_count": 37,
   "format": "rcmf_q90_detailed_audit_9c_v1",
   "heldout_conditions": [
     "H0",
@@ -15,27 +18,27 @@
   "raw_lambda_artifact_sha256_by_file": "recorded in each Git-safe task step",
   "run_uuid": "rcmf_q90_full_trajectory_9c_20260828_001",
   "secret_verification": {
-    "checked_text_files": 49,
+    "checked_text_files": 160,
     "raw_jwt_match_count": 0,
-    "registered_sensitive_observation_count": 29,
+    "registered_sensitive_observation_count": 135,
     "registered_sensitive_observation_leak_count": 0
   },
   "static_prompt_assets": "static_prompt_assets.json",
-  "step_tensor_bundle": "field_tensors/query_and_slots.pt",
-  "step_tensor_bundle_sha256": "d94a0b745a05b4a4b2412310a38c424e8e41ca932ecfb55de3fd8a70b7d2182d",
+  "step_tensor_bundle": "omitted_from_git_model_derived_binary",
+  "step_tensor_bundle_lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_q90_full_trajectory_9c_20260828_001/git_safe_exports/final/audit/field_tensors/query_and_slots.pt",
+  "step_tensor_bundle_bytes": 33382807,
+  "step_tensor_bundle_git_status": "omitted_per_repository_policy",
+  "step_tensor_bundle_sha256": "dbac5bf33dcac711d115ca19abcf28719f5f38c92667d0b0668a2e8be96194de",
   "strict_audit_tree": {
     "json_files": 1,
-    "jsonl_files": 40,
-    "rows": 768,
-    "text_files": 8
+    "jsonl_files": 114,
+    "rows": 2689,
+    "text_files": 45
   },
   "strict_result_tree": {
     "json_files": 2,
     "jsonl_files": 4,
-    "rows": 76,
+    "rows": 199,
     "text_files": 0
-  },
-  "step_tensor_bundle_git_status": "omitted_model_derived_binary_per_repository_policy",
-  "step_tensor_bundle_lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_q90_full_trajectory_9c_20260828_001/git_safe_exports/heldout/audit/field_tensors/query_and_slots.pt",
-  "step_tensor_bundle_bytes": 9109699
+  }
 }

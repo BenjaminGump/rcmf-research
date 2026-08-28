@@ -1403,3 +1403,17 @@ Recommended next 48-hour action:
 5. Use a separately reviewed contract for any future scientific run. Do not create or move a V5 tag.
 
 Still blocked: further calibration, retrieval, hard gating, model retraining, broader AppWorld evaluation, portability claims, Stage C2, and V5 tagging.
+
+## EXP-031C Completed - Freeze Q90 Calibration Route
+
+EXP-031C reached scientific `STOP_ROUTE`. Q90 remains memory-specific relative to its matched shuffle (`5/37` versus `3/37`) but is below bare/original (`8/37`) and preserves only `3/6` original gains.
+
+Recommended next 48-hour action:
+
+1. Freeze the EXP-031A checkpoint/fields and all EXP-031B/C calibration, heldout, first37, and audit artifacts.
+2. Build manuscript tables directly from the committed per-task and per-step records, separating memory specificity from absolute task benefit.
+3. State the exposed single-seed limitation and the heldout-to-first37 reversal prominently.
+4. Lock claims around reversible constant-size write/read behavior and matched-shuffle specificity; do not claim Q90 benefit preservation or improved full-task success.
+5. Require a separately reviewed scientific contract for any future run.
+
+Still blocked: further calibration, model retraining, retrieval, hard gating, broader AppWorld evaluation, portability claims, Stage C2, and V5 tagging.

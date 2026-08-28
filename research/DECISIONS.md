@@ -2538,3 +2538,24 @@ AUDIT AND PROVENANCE:
 IMPLEMENTATION DEVIATION:
 
 - The Windows `apply_patch` helper repeatedly failed with `helper_unknown_error`. Guarded PowerShell UTF-8 edits were used after failed helper attempts. One malformed local intermediate exporter edit was restored exactly from the current Git blob before reapplication; it was never committed or synchronized. The repaired source passed syntax, whitespace, 44 focused local tests, 44 focused Lambda tests, and the complete `671 passed, 1 skipped` suite.
+
+## 2026-08-28 EXP-031C Q90 complete-trajectory decision
+
+VERIFIED:
+
+- The exact preregistered Q90 candidate used `tau=4.606291029188367` and calibration SHA256 `f1d0b1b8553f008423d4c00a4637e0f9d1c01444820f6652ac519a39710b7a8c`; no outcome-dependent change or optimizer step occurred.
+- Heldout H3 correct is `6/8`, above H1 original correct `5/8`, H4 Q90 shuffle `4/8`, and H0 bare `3/8`, so the locked heldout decision is `PROCEED`.
+- Exposed first37 Q1 correct is `5/37`, Q2 shuffle is `3/37`, and immutable D0/D1 are both `8/37`.
+- Q90 preserves `325d6ec_2`, `325d6ec_3`, and `634f342_2`; it loses `0d01c76_3`, `634f342_1`, and `634f342_3`, eliminates the cross-app gain family, and loses retained success `8749218_3`.
+
+DECISION:
+
+- Preserve `LIVE_MEMORY_SPECIFIC_SIGNAL` as the mechanical Q1-over-Q2 label.
+- Record scientific `STOP_ROUTE` because at least two original gains and one locked retained success were lost. Q90 is not benefit-preserving and does not improve absolute first37 success.
+- Freeze the calibration route. Do not run a new tau, scale, candidate, gate, retrieval method, retraining job, portability study, broader evaluation, or V5 release tag under this milestone.
+
+AUDIT AND PROVENANCE:
+
+- Publish the 2,689 Git-safe step rows and comparison reports. Keep the 33,382,807-byte model-derived query/slot tensor bundle only on Lambda with SHA256 `dbac5bf33dcac711d115ca19abcf28719f5f38c92667d0b0668a2e8be96194de`.
+- Preserve all three failed schema attempts and the equivalence-002 post-ledger stdout failure. Do not rewrite the append-only ledger.
+- The Windows `apply_patch` helper failed with `helper_unknown_error`; guarded exact UTF-8 replacements were used only after failure and passed `77` focused tests locally and on Lambda.

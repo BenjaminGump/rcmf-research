@@ -6,3 +6,40 @@
 {"conditions": {"H0": false, "H1": true, "H2": false, "H3": true, "H4": false}, "scope": "heldout", "task_id": "c901732_3"}
 {"conditions": {"H0": false, "H1": true, "H2": false, "H3": true, "H4": true}, "scope": "heldout", "task_id": "e7a10f8_1"}
 {"conditions": {"H0": false, "H1": true, "H2": false, "H3": false, "H4": false}, "scope": "heldout", "task_id": "e7a10f8_3"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "0d01c76_1"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "0d01c76_2"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "0d01c76_3"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "21abae1_1"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "21abae1_2"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "21abae1_3"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "29a7b7e_1"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "29a7b7e_2"}
+{"conditions": {"Q1": false, "Q2": true}, "scope": "first37", "task_id": "29a7b7e_3"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "2d9f728_1"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "2d9f728_2"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "2d9f728_3"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "325d6ec_1"}
+{"conditions": {"Q1": true, "Q2": true}, "scope": "first37", "task_id": "325d6ec_2"}
+{"conditions": {"Q1": true, "Q2": true}, "scope": "first37", "task_id": "325d6ec_3"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "3d9a636_1"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "3d9a636_2"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "3d9a636_3"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "634f342_1"}
+{"conditions": {"Q1": true, "Q2": false}, "scope": "first37", "task_id": "634f342_2"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "634f342_3"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "6f4b9a5_1"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "6f4b9a5_2"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "6f4b9a5_3"}
+{"conditions": {"Q1": true, "Q2": false}, "scope": "first37", "task_id": "8749218_1"}
+{"conditions": {"Q1": true, "Q2": false}, "scope": "first37", "task_id": "8749218_2"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "8749218_3"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "d18139b_1"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "d6ac34d_1"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "d6ac34d_2"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "d6ac34d_3"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "fd1f8fa_1"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "fd1f8fa_2"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "fd1f8fa_3"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "ff58e36_1"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "ff58e36_2"}
+{"conditions": {"Q1": false, "Q2": false}, "scope": "first37", "task_id": "ff58e36_3"}

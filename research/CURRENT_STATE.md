@@ -2106,3 +2106,14 @@ Decision:
 - Accepted H100-active time is `8.2973 h`; total accounted H100-active time including preserved invalid attempts is `9.1689 h`. All 33 attempts are closed.
 - The final Git-safe audit passes recursive strict scanning with zero raw JWT matches and zero registered sensitive-observation leaks. The first invalid export is preserved in Lambda quarantine and was never transferred or committed.
 - Freeze EXP-031A/031B. No new calibration candidate, retraining, retrieval, hard gate, broader first37 run, or V5 tag is authorized.
+
+### EXP-031C Completed - Q90 Full Trajectories Stop the Route
+
+- Run `rcmf_q90_full_trajectory_9c_20260828_001` is complete on `research/v5-rcmf-q90-full-trajectory` with seed `25101`; all 19 attempts are closed.
+- Exact G100/bare equivalence, Q90 identity, fresh-world determinism, frozen-parameter checks, and constant-size no-retrieval invariants passed.
+- Heldout complete trajectories passed the preregistered continuation gate: H0/H1/H2/H3/H4 is `3/8`, `5/8`, `3/8`, `6/8`, `4/8`.
+- Exposed first37 Q90 correct/shuffle is `5/37` versus `3/37`, while immutable bare/original correct are both `8/37`.
+- Q90 retains only `3/6` original gains, loses the cross-app family and one of two retained successes, and recovers only `8749218_1`.
+- Mechanical correct-over-shuffle label: `LIVE_MEMORY_SPECIFIC_SIGNAL`. Scientific decision: `STOP_ROUTE`.
+- Final Git-safe audit covers 2,689 steps with zero raw JWT matches and zero registered sensitive-observation leaks. The model-derived query/slot tensor bundle remains hash-addressed on Lambda only.
+- Freeze EXP-031A/B/C. No new calibration, retraining, retrieval, hard gate, broader evaluation, portability run, or V5 tag is authorized.
