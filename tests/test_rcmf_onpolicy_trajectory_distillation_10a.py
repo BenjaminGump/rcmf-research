@@ -283,3 +283,20 @@ def test_exact_bank_augmentation_freezes_nearest_quarter() -> None:
     )
     assert target == 3
     assert sum(row["bank_augmentation"]["active"] for row in rows) == target
+
+
+def test_exp032a_audit_discovers_rollout_heldout_and_first37_roots(tmp_path) -> None:
+    from scripts.export_rcmf_onpolicy_trajectory_audit_10a import _task_roots
+
+    expected = [
+        ("rollouts", "T0", tmp_path / "rollouts/conditions/T0/task_results"),
+        (
+            "heldout/reader_epoch_01",
+            "RA",
+            tmp_path / "heldout/reader_epoch_01/conditions/RA/task_results",
+        ),
+        ("first37", "N1", tmp_path / "first37/conditions/N1/task_results"),
+    ]
+    for _, _, root in expected:
+        root.mkdir(parents=True)
+    assert _task_roots(tmp_path) == expected
