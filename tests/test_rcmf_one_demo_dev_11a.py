@@ -25,7 +25,7 @@ from scripts.prepare_rcmf_one_demo_dev_11a import (
     _prompt_manifest,
     _ready_subscript_keys,
 )
-from scripts.run_rcmf_one_demo_dev_11a import CONDITION_ORDER
+from scripts.run_rcmf_one_demo_dev_11a import CONDITION_ORDER, run_determinism
 from scripts.analyze_rcmf_one_demo_dev_11a import (
     exact_mcnemar,
     leave_one_task_out,
@@ -204,6 +204,46 @@ def test_paired_analysis_is_exact_and_seeded() -> None:
     assert first["observed"] == 0.25
     sensitivity = leave_one_task_out(left, right)
     assert len(sensitivity["per_omission"]) == 4
+
+
+def test_determinism_repetitions_use_distinct_world_prefixes(
+    monkeypatch, tmp_path
+) -> None:
+    (tmp_path / "smoke_manifest.json").write_text(
+        json.dumps({"task_ids": ["train_task_1"]}), encoding="utf-8"
+    )
+    prefixes: list[str] = []
+
+    def fake_run_rows(**kwargs):
+        prefixes.append(kwargs["experiment_prefix"])
+        return ([{"task_id": "train_task_1", "wall_seconds": 0.0}], 0)
+
+    monkeypatch.setattr(
+        "scripts.run_rcmf_one_demo_dev_11a._run_rows", fake_run_rows
+    )
+    monkeypatch.setattr(
+        "scripts.run_rcmf_one_demo_dev_11a._scope_paths",
+        lambda *_args, **_kwargs: {},
+    )
+    monkeypatch.setattr(
+        "scripts.run_rcmf_one_demo_dev_11a.deterministic_task_match",
+        lambda _left, _right: {"passed": True},
+    )
+    result = run_determinism(
+        SimpleNamespace(artifact_dir=tmp_path),
+        cfg=object(),
+        settings={"smoke": {"max_steps": 2}},
+        attempt=object(),
+    )
+    assert result["passed"] is True
+    assert prefixes == [
+        "exp033a_repeat_a",
+        "exp033a_repeat_a",
+        "exp033a_repeat_a",
+        "exp033a_repeat_b",
+        "exp033a_repeat_b",
+        "exp033a_repeat_b",
+    ]
 
 
 def test_frozen_state_extractor_uses_explicit_prompt_profile(monkeypatch) -> None:

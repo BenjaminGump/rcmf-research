@@ -199,6 +199,7 @@ def _run_rows(
     attempt: AttemptLedger,
     smoke: bool,
     max_steps_override: int | None,
+    experiment_prefix: str = "exp033a",
 ) -> tuple[list[dict[str, Any]], int]:
     settings_9a = _settings_9a(cfg, settings)
     backend = _load_backend(cfg)
@@ -230,7 +231,7 @@ def _run_rows(
             field_artifact_path=paths["deployment"],
             field_provenance_path=paths["data_manifest"],
             max_steps_override=max_steps_override,
-            experiment_prefix="exp033a",
+            experiment_prefix=experiment_prefix,
         )
         rows.append(row)
         resumed += int(reused)
@@ -445,6 +446,7 @@ def run_determinism(
                 attempt=attempt,
                 smoke=True,
                 max_steps_override=int(settings["smoke"]["max_steps"]),
+                experiment_prefix=f"exp033a_{repetition}",
             )
             results[repetition][condition] = rows
     matches = {
