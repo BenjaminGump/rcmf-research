@@ -678,6 +678,7 @@ def _selections(cfg: Any, settings: Mapping[str, Any], paths: Mapping[str, Path]
         "format": "one_demo_unused_gate_feature_leakage_11b_v1",
         "feature_count": 0, "deployment_available": True,
         "target_action_used": False, "outcome_used": False, "dev_used": False,
+        "violations": [],
     })
     changed = [
         row["state_example_id"] for row in selections

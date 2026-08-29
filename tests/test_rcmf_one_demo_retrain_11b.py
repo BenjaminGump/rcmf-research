@@ -53,6 +53,8 @@ def test_exp034a_inherits_complete_upstream_supervision_contract() -> None:
     assert settings["panel"]["initial_state_count"] == 464
     assert settings["panel"]["maximum_state_count"] == 464
     assert settings["panel"]["minimum_per_label"] == 0
+    source = Path("scripts/prepare_rcmf_one_demo_retrain_11b.py").read_text()
+    assert '"violations": []' in source
 
 
 def test_old_9a_path_defaults_are_unchanged() -> None:
