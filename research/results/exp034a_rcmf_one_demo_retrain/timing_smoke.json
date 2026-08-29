@@ -1,21 +1,21 @@
 {
   "format": "rcmf_one_demo_retrain_early_timing_smoke_11b_v1",
   "hardware": "NVIDIA H100 80GB HBM3",
-  "mean_state_forward_seconds": 0.7128476439975202,
+  "mean_state_forward_seconds": 0.7558139509055763,
   "non_scientific": true,
   "passed": true,
   "prompt_profile": "full_demo_first_only",
   "qwen_frozen": true,
-  "source_commit": "388c9040403cf6fade875dd5ae0e34d544dba9cc",
+  "source_commit": "4047c2f1b23ca27ed248bdfc87806f9ce7317172",
   "state_rows": [
     {
-      "forward_seconds": 0.8482766379602253,
+      "forward_seconds": 0.9301503440365195,
       "prompt_sha256": "c59259115c17450c8337c43a2f4e911e40b1e961a2698f6b764e215d25e4785f",
       "prompt_tokens": 4886,
       "state_example_id": "appworld:trace:b7a9ee9_3:step:7:line:186"
     },
     {
-      "forward_seconds": 0.5774186500348151,
+      "forward_seconds": 0.5814775577746332,
       "prompt_sha256": "24cda2eda3be64cc25e910e55f679b2330f80fde38167a11d5ca582c018f58e6",
       "prompt_tokens": 4485,
       "state_example_id": "appworld:trace:cf6abd2_3:step:7:line:530"
