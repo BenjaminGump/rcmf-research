@@ -1,66 +1,158 @@
 {
   "automatic_launch_allowed": true,
-  "config_sha256": "d10ddc2ffd0dcbfa0e7945d87e0eeac0500566c1cab780e184daed3ca1908d15",
-  "conservative_wall_hours": 12.777874236503267,
-  "dev_new_condition_count": 114,
-  "estimated_cost": {
-    "expected": 7.983610545557975,
-    "provider_currency_rate": "not recorded; no fabricated currency estimate",
-    "unit": "H100 active hours"
-  },
-  "expected_git_safe_audit_bytes": 2400000000,
-  "expected_h100_active_hours": 7.983610545557975,
-  "expected_lambda_raw_audit_bytes": 8000000000,
-  "expected_wall_hours": 9.483610545557976,
-  "format": "rcmf_one_demo_retrain_early_runtime_preflight_11b_v1",
+  "backward_count": 1176,
+  "best_h100_hours": 6.5797060535248875,
+  "checkpoint_plan": "atomic every 25 units and at both epoch boundaries",
+  "conditional_first37_conditions": 111,
+  "conservative_h100_hours": 10.400786829616703,
+  "expected_artifact_bytes": 12000000000,
+  "expected_h100_hours": 8.22463256690611,
+  "field_A_shape": [
+    960,
+    8,
+    256
+  ],
+  "field_B_shape": [
+    8,
+    256
+  ],
+  "field_float32_bytes": 7872512,
+  "format": "rcmf_joint_full_bank_formal_gpu_preflight_9a_v1",
   "global_seed": 25101,
-  "hardware_required": "NVIDIA H100 80GB HBM3",
-  "historical_exact_recipe_seconds": {
-    "dev_n1_n2_seconds": 14165.682888956275,
-    "paired_supervision_seconds": 5556.966708537191,
-    "policy_teacher_seconds": 1294.965983116068,
-    "training_seconds": 7372.68471017899
+  "heldout_labels": {
+    "HARMFUL": 8,
+    "NEUTRAL": 61,
+    "POSITIVE": 29
   },
-  "measured_state_smoke": {
-    "format": "rcmf_one_demo_retrain_early_timing_smoke_11b_v1",
+  "heldout_live_conditions": 784,
+  "heldout_memory_count": 98,
+  "heldout_task_ids": [
+    "76f2c72_1",
+    "76f2c72_2",
+    "7d7fbf6_1",
+    "b7a9ee9_2",
+    "c901732_1",
+    "c901732_3",
+    "e7a10f8_1",
+    "e7a10f8_3"
+  ],
+  "measured_smoke": {
+    "automatic_launch_allowed": true,
+    "complete_legal_bank_memory_count": 393,
+    "conservative_h100_hours": 10.400786829616703,
+    "expected_h100_hours": 8.22463256690611,
+    "field_shape": [
+      960,
+      8,
+      256
+    ],
+    "format": "rcmf_no_science_full_bank_backward_smoke_9a_v1",
+    "full_path": [
+      "eight_complete_transition_views",
+      "four_section_writers",
+      "complete_task_legal_reversible_field",
+      "state_conditioned_eight_slot_read",
+      "four_layer_standard_cross_attention",
+      "frozen_qwen_target_forward_backward"
+    ],
+    "global_seed": 25101,
     "hardware": "NVIDIA H100 80GB HBM3",
-    "mean_state_forward_seconds": 0.7558139509055763,
-    "non_scientific": true,
+    "measured_backward_seconds": 1.141598797403276,
+    "measured_forward_seconds": 0.6134830033406615,
     "passed": true,
-    "prompt_profile": "full_demo_first_only",
-    "qwen_frozen": true,
-    "source_commit": "4047c2f1b23ca27ed248bdfc87806f9ce7317172",
-    "state_rows": [
+    "passes": [
       {
-        "forward_seconds": 0.9301503440365195,
-        "prompt_sha256": "c59259115c17450c8337c43a2f4e911e40b1e961a2698f6b764e215d25e4785f",
-        "prompt_tokens": 4886,
-        "state_example_id": "appworld:trace:b7a9ee9_3:step:7:line:186"
+        "pass": 1,
+        "reader_projection_gradients": {
+          "14": false,
+          "21": false,
+          "28": false,
+          "7": false
+        },
+        "writer_gradients": {
+          "action": true,
+          "goal": true,
+          "observation": true,
+          "pre_state": true
+        }
       },
       {
-        "forward_seconds": 0.5814775577746332,
-        "prompt_sha256": "24cda2eda3be64cc25e910e55f679b2330f80fde38167a11d5ca582c018f58e6",
-        "prompt_tokens": 4485,
-        "state_example_id": "appworld:trace:cf6abd2_3:step:7:line:530"
+        "pass": 2,
+        "reader_projection_gradients": {
+          "14": true,
+          "21": true,
+          "28": true,
+          "7": true
+        },
+        "writer_gradients": {
+          "action": true,
+          "goal": true,
+          "observation": true,
+          "pre_state": true
+        }
       }
-    ]
+    ],
+    "qwen_frozen_and_gradient_free": true,
+    "review_threshold_h100_hours": 18.0,
+    "scientific_result": false,
+    "seconds": [
+      1.4239538591355085,
+      1.141598797403276
+    ],
+    "slot_shape": [
+      8,
+      256
+    ],
+    "state_example_id": "appworld:trace:287e338_1:step:1:line:117"
   },
-  "paired_condition_count": 928,
-  "projected_state_rebuild_seconds": 350.6976732201874,
-  "purpose": "fixed 464-state reconstruction, one-demo supervision, exact two-epoch training, heldout selection, and conditional 57x2 dev",
-  "restart_plan": {
-    "atomic_dev_tasks": true,
-    "atomic_heldout_conditions": true,
-    "atomic_paired_conditions": true,
-    "atomic_state_rows": true,
-    "atomic_teacher_cache": true,
-    "atomic_training_checkpoints_every_units": 25,
-    "epoch_boundaries": [
-      1,
-      2
-    ]
+  "model_training_memory_count": 401,
+  "passed": true,
+  "pending": null,
+  "reader_parameters": 17860608,
+  "restart_plan": "restore writer, reader, AdamW, RNG, epoch cursor, unit cursor, and shuffle NLL cache",
+  "run_uuid": "rcmf_exp031a_one_demo_retrain_11b_20260829_001",
+  "scoreable_heldout_states": 98,
+  "scoreable_train_states": 366,
+  "state_shuffle_fixed_points": 0,
+  "state_shuffle_manifest_sha256": "2dca263a03d808e4a0cc4031caac3f8c09e9cd6f71e398d6f6c1236c80d40095",
+  "teacher_forced_heldout_conditions": 784,
+  "total_trainable_parameters": 26810368,
+  "train_labels": {
+    "HARMFUL": 37,
+    "NEUTRAL": 218,
+    "POSITIVE": 111
   },
-  "review_threshold_hours": 18.0,
-  "source_commit": "4047c2f1b23ca27ed248bdfc87806f9ce7317172",
-  "state_count": 464
+  "train_task_ids": [
+    "07b42fd_1",
+    "07b42fd_2",
+    "07b42fd_3",
+    "229360a_2",
+    "229360a_3",
+    "27e1026_2",
+    "287e338_1",
+    "287e338_2",
+    "287e338_3",
+    "34d9492_1",
+    "34d9492_3",
+    "3c13f5a_2",
+    "6104387_3",
+    "76f2c72_3",
+    "771d8fc_1",
+    "771d8fc_2",
+    "7d7fbf6_3",
+    "82e2fac_1",
+    "aa8502b_1",
+    "aa8502b_2",
+    "afc0fce_1",
+    "afc0fce_3",
+    "b0a8eae_3",
+    "b7a9ee9_1",
+    "b7a9ee9_3",
+    "cf6abd2_1",
+    "cf6abd2_2",
+    "cf6abd2_3",
+    "e7a10f8_2"
+  ],
+  "unit_manifest_sha256": "c0771707cbe215f9ec2e1d4fe105d98b98ed41e48b3a749f06adefe0050739d7",
+  "writer_parameters": 8949760
 }
