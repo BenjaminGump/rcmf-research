@@ -1,0 +1,26 @@
+{
+  "backward_count": 1176,
+  "checkpoints": [
+    {
+      "epoch": 1,
+      "path": "runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001/joint_training/checkpoints/epoch_01.pt",
+      "sha256": "3fe8e2a0b8e8b04574568258fcf34cdaefda2e50447624966b92e55ff93cfb13"
+    },
+    {
+      "epoch": 2,
+      "path": "runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001/joint_training/checkpoints/epoch_02.pt",
+      "sha256": "078dcd0e3b729877a5b9994ed515cb0867601ef72381b7d8b7705dfb66cd56ef"
+    }
+  ],
+  "completed_units": 1176,
+  "elapsed_seconds_this_attempt": 3380.754501651041,
+  "epoch_count": 2,
+  "every_scientific_forward_used_complete_task_legal_field": true,
+  "format": "rcmf_joint_full_bank_training_summary_9a_v1",
+  "global_seed": 25101,
+  "passed": true,
+  "qwen_frozen_and_gradient_free": true,
+  "reader_parameters": 17860608,
+  "runtime_memory_retrieval_used": false,
+  "writer_parameters": 8949760
+}

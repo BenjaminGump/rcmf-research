@@ -1,0 +1,201 @@
+{
+  "checkpoint_lambda_path": "runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001/joint_training/checkpoints/epoch_02.pt",
+  "checkpoint_recent_mean_loss_max": 0.21193377083865925,
+  "checkpoint_recent_mean_loss_mean": 0.11296442191052872,
+  "checkpoint_recent_mean_loss_min": 0.04787186498288065,
+  "checkpoint_sha256": "078dcd0e3b729877a5b9994ed515cb0867601ef72381b7d8b7705dfb66cd56ef",
+  "completed_units": 1176,
+  "elapsed_seconds_at_boundary": 3377.7001419640146,
+  "epoch": 2,
+  "epoch_unit_count": 588,
+  "final_recent_mean_loss": 0.10432755522662773,
+  "format": "rcmf_exp034a_epoch_metadata_v1",
+  "global_seed": 25101,
+  "history": [
+    {
+      "completed_units": 600,
+      "elapsed_seconds_this_attempt": 1710.3770998963155,
+      "epoch": 2,
+      "epoch_units_completed": 12,
+      "recent_mean_loss": 0.0802464959366868
+    },
+    {
+      "completed_units": 625,
+      "elapsed_seconds_this_attempt": 1778.1995025472715,
+      "epoch": 2,
+      "epoch_units_completed": 37,
+      "recent_mean_loss": 0.16375412698835135
+    },
+    {
+      "completed_units": 650,
+      "elapsed_seconds_this_attempt": 1865.845138675999,
+      "epoch": 2,
+      "epoch_units_completed": 62,
+      "recent_mean_loss": 0.11363546286593192
+    },
+    {
+      "completed_units": 675,
+      "elapsed_seconds_this_attempt": 1954.7467048773542,
+      "epoch": 2,
+      "epoch_units_completed": 87,
+      "recent_mean_loss": 0.07058510340750218
+    },
+    {
+      "completed_units": 700,
+      "elapsed_seconds_this_attempt": 2012.4486975730397,
+      "epoch": 2,
+      "epoch_units_completed": 112,
+      "recent_mean_loss": 0.13151025669649244
+    },
+    {
+      "completed_units": 725,
+      "elapsed_seconds_this_attempt": 2098.229445800185,
+      "epoch": 2,
+      "epoch_units_completed": 137,
+      "recent_mean_loss": 0.10125640890095383
+    },
+    {
+      "completed_units": 750,
+      "elapsed_seconds_this_attempt": 2189.2784418193623,
+      "epoch": 2,
+      "epoch_units_completed": 162,
+      "recent_mean_loss": 0.09038236330728978
+    },
+    {
+      "completed_units": 775,
+      "elapsed_seconds_this_attempt": 2260.0475779250264,
+      "epoch": 2,
+      "epoch_units_completed": 187,
+      "recent_mean_loss": 0.10519554422004149
+    },
+    {
+      "completed_units": 800,
+      "elapsed_seconds_this_attempt": 2326.371263441164,
+      "epoch": 2,
+      "epoch_units_completed": 212,
+      "recent_mean_loss": 0.0845270112133585
+    },
+    {
+      "completed_units": 825,
+      "elapsed_seconds_this_attempt": 2373.664912820328,
+      "epoch": 2,
+      "epoch_units_completed": 237,
+      "recent_mean_loss": 0.21193377083865925
+    },
+    {
+      "completed_units": 850,
+      "elapsed_seconds_this_attempt": 2447.3643943541683,
+      "epoch": 2,
+      "epoch_units_completed": 262,
+      "recent_mean_loss": 0.059839342539198696
+    },
+    {
+      "completed_units": 875,
+      "elapsed_seconds_this_attempt": 2505.272314315196,
+      "epoch": 2,
+      "epoch_units_completed": 287,
+      "recent_mean_loss": 0.09708587987348437
+    },
+    {
+      "completed_units": 900,
+      "elapsed_seconds_this_attempt": 2553.7668807543814,
+      "epoch": 2,
+      "epoch_units_completed": 312,
+      "recent_mean_loss": 0.19051451388280838
+    },
+    {
+      "completed_units": 925,
+      "elapsed_seconds_this_attempt": 2646.2996102599427,
+      "epoch": 2,
+      "epoch_units_completed": 337,
+      "recent_mean_loss": 0.11928048437461257
+    },
+    {
+      "completed_units": 950,
+      "elapsed_seconds_this_attempt": 2703.877227394376,
+      "epoch": 2,
+      "epoch_units_completed": 362,
+      "recent_mean_loss": 0.10295992630068213
+    },
+    {
+      "completed_units": 975,
+      "elapsed_seconds_this_attempt": 2749.0191254322417,
+      "epoch": 2,
+      "epoch_units_completed": 387,
+      "recent_mean_loss": 0.10382149217650294
+    },
+    {
+      "completed_units": 1000,
+      "elapsed_seconds_this_attempt": 2799.4623564220965,
+      "epoch": 2,
+      "epoch_units_completed": 412,
+      "recent_mean_loss": 0.1736684525758028
+    },
+    {
+      "completed_units": 1025,
+      "elapsed_seconds_this_attempt": 2913.032465201337,
+      "epoch": 2,
+      "epoch_units_completed": 437,
+      "recent_mean_loss": 0.13758893026504665
+    },
+    {
+      "completed_units": 1050,
+      "elapsed_seconds_this_attempt": 2979.9327474199235,
+      "epoch": 2,
+      "epoch_units_completed": 462,
+      "recent_mean_loss": 0.08974586645141244
+    },
+    {
+      "completed_units": 1075,
+      "elapsed_seconds_this_attempt": 3057.519508086145,
+      "epoch": 2,
+      "epoch_units_completed": 487,
+      "recent_mean_loss": 0.09751951365498826
+    },
+    {
+      "completed_units": 1100,
+      "elapsed_seconds_this_attempt": 3127.616377344355,
+      "epoch": 2,
+      "epoch_units_completed": 512,
+      "recent_mean_loss": 0.04787186498288065
+    },
+    {
+      "completed_units": 1125,
+      "elapsed_seconds_this_attempt": 3210.2066256101243,
+      "epoch": 2,
+      "epoch_units_completed": 537,
+      "recent_mean_loss": 0.06314477073960006
+    },
+    {
+      "completed_units": 1150,
+      "elapsed_seconds_this_attempt": 3281.7946830540895,
+      "epoch": 2,
+      "epoch_units_completed": 562,
+      "recent_mean_loss": 0.17614733655005693
+    },
+    {
+      "completed_units": 1175,
+      "elapsed_seconds_this_attempt": 3373.6172176813707,
+      "epoch": 2,
+      "epoch_units_completed": 587,
+      "recent_mean_loss": 0.10756807379424572
+    },
+    {
+      "completed_units": 1176,
+      "elapsed_seconds_this_attempt": 3377.7001419640146,
+      "epoch": 2,
+      "epoch_units_completed": 588,
+      "recent_mean_loss": 0.10432755522662773
+    }
+  ],
+  "reader_sha256": "0cf8ca38007047bbcdfdfbb6e55ae4f62880607bbd106b4ab20e367203c687b9",
+  "source_hashes": {
+    "data_manifest": "39c0674d03a68700eeb380138a7ec709e2663e03fd2410403b059e0edc5fb158",
+    "source_cache": "b5e91f89bb1bbe3a1f0b156acd1a6fb82e3ba832b8dc56eb4122dffa2adcc093",
+    "state_shuffle": "2dca263a03d808e4a0cc4031caac3f8c09e9cd6f71e398d6f6c1236c80d40095",
+    "teacher": "e8251e0d6699e79a23a8b0d0d30d9e1ab4dbc282d98e1cd6f6b08ec2fcbd71a9",
+    "units": "c0771707cbe215f9ec2e1d4fe105d98b98ed41e48b3a749f06adefe0050739d7",
+    "zero_summary": "0ee557b54568482d00eaa4357c21bad432389847b7289399d65df5ce16c4d0ce"
+  },
+  "writer_sha256": "6786216e54e179d72d976685dbdef277031c65157927c808740725aa9d460581"
+}
