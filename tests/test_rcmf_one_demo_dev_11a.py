@@ -32,6 +32,8 @@ from scripts.analyze_rcmf_one_demo_dev_11a import (
     paired_bootstrap_ci,
 )
 import scripts.run_raw_memory_first37_7f as raw_first37
+import scripts.export_rcmf_one_demo_dev_audit_11a as audit_export
+import scripts.export_rcmf_joint_full_bank_audit_9a as base_audit_export
 
 
 def _messages_sha(messages: list[dict[str, str]]) -> str:
@@ -244,6 +246,48 @@ def test_determinism_repetitions_use_distinct_world_prefixes(
         "exp033a_repeat_b",
         "exp033a_repeat_b",
     ]
+
+
+def test_audit_registers_all_sensitive_observations_before_redaction(
+    tmp_path
+) -> None:
+    secret = "late-registered-sensitive-observation"
+    for task_id, executed_code in (
+        ("task_early", "print('status')"),
+        ("task_late", "password = 'typed-at-runtime'"),
+    ):
+        for condition in audit_export.CONDITIONS:
+            path = (
+                tmp_path
+                / "dev"
+                / "conditions"
+                / condition
+                / "task_results"
+                / f"{task_id}.json"
+            )
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(
+                json.dumps(
+                    {
+                        "steps": [
+                            {
+                                "exact_executed_code": executed_code,
+                                "complete_environment_observation": secret,
+                                "complete_trajectory_so_far": [],
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+    base_audit_export.SENSITIVE_OBSERVATIONS.clear()
+    tasks = audit_export._load_and_register_tasks(
+        tmp_path, ["task_early", "task_late"]
+    )
+    redacted = base_audit_export.redact(tasks["task_early"]["D0"])
+    assert secret not in json.dumps(redacted)
+    assert "<REDACTED:CREDENTIAL_OBSERVATION:SHA256=" in json.dumps(redacted)
+    base_audit_export.SENSITIVE_OBSERVATIONS.clear()
 
 
 def test_frozen_state_extractor_uses_explicit_prompt_profile(monkeypatch) -> None:

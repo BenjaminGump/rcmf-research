@@ -63,6 +63,21 @@ def _register_task_secrets(task: Mapping[str, Any]) -> None:
                 turn.get("response", ""), turn.get("observation", "")
             )
 
+def _load_and_register_tasks(
+    artifact_dir: Path, task_ids: list[str]
+) -> dict[str, dict[str, dict[str, Any]]]:
+    tasks = {
+        task_id: {
+            condition: _json(_task_path(artifact_dir, condition, task_id))
+            for condition in CONDITIONS
+        }
+        for task_id in task_ids
+    }
+    for task_conditions in tasks.values():
+        for task in task_conditions.values():
+            _register_task_secrets(task)
+    return tasks
+
 
 def _safe_step(
     task_path: Path, task: Mapping[str, Any], step: Mapping[str, Any]
@@ -195,16 +210,15 @@ def export(artifact_dir: Path, audit_root: Path, result_root: Path) -> dict[str,
     task_ids = [str(value) for value in final["task_ids"]]
     if len(task_ids) != 57:
         raise ValueError("EXP-033A export requires all 57 official dev tasks")
-    tasks_by_id: dict[str, dict[str, dict[str, Any]]] = {}
+    # Registration is deliberately a complete first pass. A credential-like
+    # observation discovered late must also redact identical text in earlier tasks.
+    tasks_by_id = _load_and_register_tasks(artifact_dir, task_ids)
     per_task_rows = []
     step_count = 0
     for task_id in task_ids:
-        tasks_by_id[task_id] = {}
         for condition in CONDITIONS:
             source = _task_path(artifact_dir, condition, task_id)
-            task = _json(source)
-            _register_task_secrets(task)
-            tasks_by_id[task_id][condition] = task
+            task = tasks_by_id[task_id][condition]
             safe_steps = [_safe_step(source, task, step) for step in task["steps"]]
             step_count += len(safe_steps)
             atomic_jsonl(audit_tmp / condition / f"{task_id}.jsonl", safe_steps)
