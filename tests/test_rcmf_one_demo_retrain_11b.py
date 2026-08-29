@@ -102,6 +102,12 @@ def test_state_cache_source_does_not_access_target_or_future() -> None:
     assert CACHE_FORMAT == "one_demo_state_multiview_11b_v1"
 
 
+def test_exp034a_teacher_preflight_excludes_unused_gate_only_for_11b() -> None:
+    source = Path("scripts/run_appworld_structured_compiler_7hr.py").read_text()
+    assert 'args.phase != "teacher" or "stage_c_11b" not in cfg.raw' in source
+    assert 'if gate_required:' in source
+
+
 def test_exp034a_writes_reused_runner_runtime_preflight_alias() -> None:
     cfg = load_config(NEW_CONFIG)
     artifact = Path("runs/test-exp034a")

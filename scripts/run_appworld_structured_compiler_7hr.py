@@ -901,8 +901,6 @@ def main() -> None:
     paths = _paths(settings, args.artifact_dir)
     required = (
         "outcomes",
-        "gate",
-        "gate_report",
         "features",
         "selections",
         "feature_schema",
@@ -916,10 +914,15 @@ def main() -> None:
         "transition_cache",
         "parent_training",
     )
+    gate_required = (
+        args.phase != "teacher" or "stage_c_11b" not in cfg.raw
+    )
+    if gate_required:
+        required += ("gate", "gate_report")
     missing = {name: str(paths[name]) for name in required if not paths[name].exists()}
     if missing:
         raise FileNotFoundError(f"Missing structured compiler inputs: {missing}")
-    if not bool(_json(paths["gate_report"])["passed"]):
+    if gate_required and not bool(_json(paths["gate_report"])["passed"]):
         raise RuntimeError("Train-side causal gate did not pass")
     source_hashes = {name: sha256_file(paths[name]) for name in required}
     with AttemptLedger(
