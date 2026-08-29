@@ -1,0 +1,203 @@
+include: stage_c_rcmf_one_demo_dev_11a.yaml
+experiment:
+  name: stage_c_rcmf_one_demo_retrain_11b
+  version: rcmf_one_demo_retrain_11b_v1
+  seed: 25101
+benchmark:
+  prompt_profile: full_demo_first_only
+stage_c_7hr:
+  run_uuid: rcmf_exp031a_one_demo_retrain_11b_20260829_001
+  artifact_dir: runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  starting_head: 78f8e2e674709775b8a2a9b92297d255ec0e73c3
+  archive_branch: archive/v4-generic-memory-specific-amortization-failed
+  working_branch: research/v4-appworld-structured-rescue
+  parent_exp025b: runs/stage_c/replay_clean_rebuild_7b_20260818_001
+  parent_exp025c: runs/stage_c/signature_balanced_field_7c_20260818_001
+  parent_exp025cr: runs/stage_c/signature_balanced_field_7cr_20260818_001
+  parent_exp025d: runs/stage_c/state_conditioned_program_direct_7dg_20260821_001
+  parent_exp027b: runs/stage_c/memory_specific_deep_amortization_7g_20260823_001
+  reconciled_corpus_dir: runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  expected_replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+  expected_structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+  expected_selector_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f
+  expected_exp027b_checkpoint_sha256: 8af2d1068ee0059c79edf740920f9d506b8a880459ff53656b449f767e5dffda
+  expected_model_name: Qwen/Qwen3-8B
+  appworld:
+    legacy_python: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    legacy_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+    full_bridge_script: scripts/appworld_full_agent_bridge_7f.py
+    one_step_bridge_script: scripts/appworld_live_one_step_bridge_7b.py
+    semantic_module: rcmf/training/appworld_replay_clean_rebuild_7b.py
+    prompt_profile: full_demo_first_only
+    max_context_turns: 40
+    max_steps: 50
+    max_new_tokens: 512
+    context_limit: 40960
+    temperature: 0.0
+    top_p: 1.0
+    enable_thinking: false
+    max_api_calls_per_interaction: 100
+    worker_timeout_seconds: 600
+  panel:
+    initial_state_count: 464
+    maximum_state_count: 464
+    minimum_per_label: 0
+    model_train_task_count: 29
+    heldout_train_validation_task_count: 8
+    task_split_manifest: runs/stage_c/state_conditioned_program_direct_7dg_20260821_001/preflight/a_task_split.json
+    action_strata:
+    - authentication
+    - read_query
+    - write_mutation
+    - api_documentation
+    - completion
+    - python_reasoning
+    - api_other
+    quantile_count: 4
+  feature_contract:
+    version: appworld_deployment_structured_features_7hr_v1
+    context_limit: 40960
+    parent_step_buckets:
+    - 0
+    - 3
+    - 8
+    forbidden_fields:
+    - target_action
+    - target_observation
+    - ground_truth_next_app
+    - ground_truth_next_api
+    - procedural_tier
+    - exact_api_match
+    - paired_outcome
+    - task_id
+    - state_id
+    - transition_id
+    - signature_class_id
+    - first37_outcome
+  gate:
+    hidden_dim: 64
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    epoch_checkpoints:
+    - 50
+    - 100
+    - 200
+    calibration_temperatures:
+    - 0.5
+    - 0.75
+    - 1.0
+    - 1.25
+    - 1.5
+    - 2.0
+    activation_thresholds:
+    - 0.5
+    - 0.6
+    - 0.7
+    - 0.8
+    - 0.9
+    maximum_harmful_probability: 0.25
+    minimum_activation_rate: 0.05
+    maximum_activation_rate: 0.6
+    maximum_harmful_activation_rate: 0.2
+    minimum_positive_prevalence_lift: 0.1
+    maximum_execution_drop: 0.02
+  compiler:
+    selected_layer_indices:
+    - 7
+    - 14
+    - 21
+    - 28
+    token_count: 4
+    program_dim: 256
+    structured_hidden_dim: 128
+    ratio_budget_per_layer: 1.0
+    structured_learning_rate: 0.0001
+    decoder_learning_rate: 1.0e-06
+    beta_learning_rate: 0.0001
+    weight_decay: 0.0001
+    checkpoint_updates:
+    - 2
+    - 4
+    maximum_updates_per_pair: 4
+    max_grad_norm: 1.0
+    top_k: 64
+    policy_kl_weight: 1.0
+    teacher_token_ce_weight: 0.25
+    ground_truth_ce_weight: 0.05
+    ratio_restraint_weight: 0.001
+  first37:
+    matched_bare_success: 8
+    always_on_raw_success: 5
+    matched_bare_summary: runs/stage_c/memory_specific_deep_amortization_7g_20260823_001/phase_a_matched_bare_first37/summary.json
+    always_on_raw_summary: runs/stage_c/deep_residual_amortization_7f_20260822_001/phase_a_first37_v3/summary.json
+  runtime:
+    review_threshold_h100_hours: 18.0
+    one_step_generation_seconds_expected: 7.85
+    one_step_generation_seconds_conservative: 12.0
+    policy_forward_seconds_expected: 1.85
+    policy_forward_seconds_conservative: 3.5
+    backward_seconds_expected: 2.4
+    backward_seconds_conservative: 4.0
+    first37_expected_hours: 1.3
+    first37_conservative_hours: 2.2
+    projected_bytes_per_condition: 2359296
+    projected_bytes_per_checkpoint: 650000000
+  heartbeat_interval_seconds: 240
+stage_c_9a:
+  run_uuid: rcmf_exp031a_one_demo_retrain_11b_20260829_001
+  artifact_dir: runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001
+  starting_head: a2c41652bfea380cfef89df0bee0e4d919458982
+  working_branch: research/v5-rcmf-one-demo-retrain
+  appworld:
+    prompt_profile: full_demo_first_only
+  selector:
+    require_stored_score_equivalence: false
+  prompt_dependent_inputs:
+    state_cache: runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001/prompt_dependent/state_multiview.pt
+    outcomes: runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001/paired_causal/paired_outcomes.json
+    teacher_cache: runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001/structured_compiler/policy_teacher_cache.pt
+  audit:
+    git_safe_root: research/audits/rcmf_exp031a_one_demo_retrain_11b_20260829_001
+    lambda_raw_root: runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001/audits
+    format: detailed_generation_interaction_audit_11b_v1
+stage_c_11b:
+  run_uuid: rcmf_exp031a_one_demo_retrain_11b_20260829_001
+  artifact_dir: runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  source_head: a2c41652bfea380cfef89df0bee0e4d919458982
+  source_branch: research/v5-rcmf-one-demo-dev-eval
+  working_branch: research/v5-rcmf-one-demo-retrain
+  prompt_profile: full_demo_first_only
+  expected:
+    retained_demo_sha256: 32348a5889682499b1cc17b7dced74dd706db12b6e248c1e6c7dfba5e50ed713
+    initial_prompt_asset_sha256: 90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe
+    structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+    replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+    selector_ensemble_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f
+    old_checkpoint_sha256: d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1
+    old_deployment_field_sha256: 5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e
+    old_dev_audit_sha256: 1616378ab22874c21d4f9bff84db52078ed4d9533b4d86cac79014adb7a09b72
+    train_state_count: 366
+    heldout_state_count: 98
+    memory_count: 499
+    dev_task_count: 57
+    dev_task_list_sha256: c6aad8dca959d9c54537555dd6c3a4ececdd55390029511ab7971550d796e463
+  immutable:
+    exp031a_root: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001
+    old_outcomes: runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/paired_causal/paired_outcomes.json
+    old_state_cache: runs/stage_c/signature_balanced_field_7c_20260818_001/representation_cache/multiview/state_multiview.pt
+    transition_cache: runs/stage_c/signature_balanced_field_7c_20260818_001/representation_cache/multiview/transition_multiview.pt
+    selector_root: runs/stage_c/signature_balanced_field_7c_20260818_001/selector
+    selector_ensemble: runs/stage_c/signature_balanced_field_7c_20260818_001/selector/ensemble_scores.pt
+    exp033a_root: runs/stage_c/rcmf_exp031a_one_demo_dev_11a_20260829_001
+    exp033a_audit_index: research/audits/rcmf_exp031a_one_demo_dev_11a_20260829_001/index.json
+  runtime:
+    review_threshold_hours: 18.0
+    heartbeat_interval_seconds: 240
+    heartbeat_stale_seconds: 720
+    hardware_required: NVIDIA H100 80GB HBM3
+    expected_git_safe_audit_bytes: 2400000000
+    expected_lambda_raw_audit_bytes: 8000000000

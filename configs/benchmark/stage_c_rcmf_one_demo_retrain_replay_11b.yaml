@@ -1,0 +1,11 @@
+include: stage_c_replay_clean_rebuild_7b.yaml
+experiment:
+  name: stage_c_rcmf_one_demo_retrain_replay_11b
+  version: rcmf_one_demo_retrain_replay_11b_v1
+  seed: 25101
+benchmark:
+  prompt_profile: full_demo_first_only
+stage_c_7b:
+  causal_audit:
+    generation:
+      prompt_profile: full_demo_first_only

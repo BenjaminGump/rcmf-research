@@ -103,7 +103,7 @@ def _paths(settings: Mapping[str, Any], artifact_dir: Path) -> dict[str, Path]:
     parent_b = Path(str(settings["parent_exp025b"]))
     parent_a = Path(str(settings["parent_exp028a"]))
     root = artifact_dir / "joint_training"
-    return {
+    paths = {
         "source_cache": artifact_dir / "data/rcmf_source_cache.pt",
         "data_manifest": artifact_dir / "data/full_bank_data_manifest.json",
         "source_audit": artifact_dir / "data/source_representation_audit.json",
@@ -127,6 +127,14 @@ def _paths(settings: Mapping[str, Any], artifact_dir: Path) -> dict[str, Path]:
         "validation_summary": artifact_dir
         / "heldout_validation/teacher_forced_summary.json",
     }
+    overrides = settings.get("prompt_dependent_inputs", {})
+    if overrides:
+        for name in ("outcomes", "teacher_cache"):
+            if name in overrides:
+                paths["teacher" if name == "teacher_cache" else name] = Path(
+                    str(overrides[name])
+                )
+    return paths
 
 
 def _require(paths: Mapping[str, Path], names: Sequence[str]) -> None:

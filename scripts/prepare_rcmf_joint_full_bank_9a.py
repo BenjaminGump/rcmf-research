@@ -117,7 +117,7 @@ def _paths(settings: Mapping[str, Any], artifact_dir: Path) -> dict[str, Path]:
     parent_c = Path(str(settings["parent_exp025c"]))
     parent_a = Path(str(settings["parent_exp028a"]))
     corpus = Path(str(settings["reconciled_corpus_dir"]))
-    return {
+    paths = {
         "replay": parent_b / "replay_validated_corpus_manifest.json",
         "transitions": parent_b
         / "clean_cache_rebuild/transition_preflight/transition_manifest.jsonl",
@@ -147,6 +147,12 @@ def _paths(settings: Mapping[str, Any], artifact_dir: Path) -> dict[str, Path]:
         "runtime_counts": artifact_dir / "runtime/static_counts.json",
         "run_manifest": artifact_dir / "run_manifest.json",
     }
+    overrides = settings.get("prompt_dependent_inputs", {})
+    if overrides:
+        for name in ("state_cache", "outcomes", "teacher_cache"):
+            if name in overrides:
+                paths[name] = Path(str(overrides[name]))
+    return paths
 
 
 def _require(paths: Mapping[str, Path], names: Sequence[str]) -> None:
@@ -470,11 +476,25 @@ def main() -> None:
             "direct_vs_decomposed_max_abs": float(
                 (direct - decomposed).abs().max()
             ),
-            "direct_vs_stored_max_abs": float((direct - stored).abs().max()),
-            "decomposed_vs_stored_max_abs": float(
-                (decomposed - stored).abs().max()
-            ),
         }
+        require_stored = bool(
+            settings["selector"].get("require_stored_score_equivalence", True)
+        )
+        if require_stored:
+            if list(state_cache["ordered_ids"]) != list(
+                ensemble["ordered_state_ids"]
+            ):
+                raise ValueError("Stored selector score identities differ")
+            errors.update(
+                {
+                    "direct_vs_stored_max_abs": float(
+                        (direct - stored).abs().max()
+                    ),
+                    "decomposed_vs_stored_max_abs": float(
+                        (decomposed - stored).abs().max()
+                    ),
+                }
+            )
         tolerance = float(settings["selector"]["equality_atol"])
         if max(errors.values()) > tolerance:
             raise RuntimeError(f"Exact selector decomposition failed: {errors}")
@@ -660,6 +680,8 @@ def main() -> None:
             "passed": max(errors.values()) <= tolerance,
             "deployment_score_matrix_used": False,
             "deployment_top_k_used": False,
+            "stored_score_equivalence_required": require_stored,
+            "state_queries_recomputed_from_frozen_selector": not require_stored,
         }
         atomic_write_json(paths["selector_audit"], selector_audit)
 

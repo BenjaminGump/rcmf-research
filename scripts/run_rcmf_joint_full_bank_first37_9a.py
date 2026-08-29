@@ -454,6 +454,7 @@ def _run_task(
     field_provenance_path: Path | None = None,
     max_steps_override: int | None = None,
     experiment_prefix: str = "exp031a",
+    field_control_condition: str | None = None,
 ) -> tuple[dict[str, Any], bool]:
     output = _task_output(paths, condition, task_id, smoke)
     is_bare = condition == "D0" if bare_condition is None else bool(bare_condition)
@@ -577,7 +578,12 @@ def _run_task(
             else:
                 if runtime is None:
                     raise RuntimeError("Non-bare conditions require a field runtime")
-                slots, field_info = runtime.read(messages, condition)
+                runtime_condition = (
+                    condition
+                    if field_control_condition is None
+                    else field_control_condition
+                )
+                slots, field_info = runtime.read(messages, runtime_condition)
                 views = field_info.pop("state_views")
                 query = field_info.pop("query")
                 reader = runtime.reader
