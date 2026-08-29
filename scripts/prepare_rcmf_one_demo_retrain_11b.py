@@ -126,6 +126,7 @@ def _paths(cfg: Any, artifact_dir: Path) -> dict[str, Path]:
         "state_summary": artifact_dir / "prompt_dependent/one_demo_state_cache_summary.json",
         "timing_smoke": artifact_dir / "runtime/early_timing_smoke.json",
         "early_preflight": artifact_dir / "runtime/early_runtime_preflight.json",
+        "runtime_preflight": artifact_dir / "runtime_preflight.json",
         "selections": artifact_dir / "preflight/frozen_train_selections.jsonl",
         "selection_manifest": artifact_dir / "preflight/selection_manifest.json",
         "panel": artifact_dir / "preflight/initial_panel.json",
@@ -417,6 +418,7 @@ def _timing_smoke(
             "EXP-034A conservative end-to-end estimate may exceed 18 hours"
         )
     atomic_write_json(paths["early_preflight"], report)
+    atomic_write_json(paths["runtime_preflight"], report)
     return report
 
 def _state_cache(cfg: Any, settings: Mapping[str, Any], paths: Mapping[str, Path], attempt: AttemptLedger) -> dict[str, Any]:

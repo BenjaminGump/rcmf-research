@@ -9,6 +9,7 @@ from scripts.prepare_rcmf_joint_full_bank_9a import _paths as prepare_9a_paths
 from scripts.run_rcmf_joint_full_bank_9a import _paths as run_9a_paths
 from scripts.prepare_rcmf_one_demo_retrain_11b import (
     _prompt_checks,
+    _paths as prepare_11b_paths,
     CACHE_FORMAT,
 )
 from scripts.run_rcmf_joint_full_bank_first37_9a import _run_task
@@ -97,6 +98,16 @@ def test_state_cache_source_does_not_access_target_or_future() -> None:
     assert "target_action_accessed" in cache_body
     assert "future_observation_accessed" in cache_body
     assert CACHE_FORMAT == "one_demo_state_multiview_11b_v1"
+
+
+def test_exp034a_writes_reused_runner_runtime_preflight_alias() -> None:
+    cfg = load_config(NEW_CONFIG)
+    artifact = Path("runs/test-exp034a")
+    paths = prepare_11b_paths(cfg, artifact)
+    assert paths["early_preflight"] == (
+        artifact / "runtime/early_runtime_preflight.json"
+    )
+    assert paths["runtime_preflight"] == artifact / "runtime_preflight.json"
 
 
 def test_one_demo_prompt_identity_is_locked() -> None:
