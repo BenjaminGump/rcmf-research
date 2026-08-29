@@ -204,6 +204,9 @@ class FrozenDeploymentSelector:
     def __init__(self, *, settings: Mapping[str, Any], backend: Any) -> None:
         self.settings = settings
         self.backend = backend
+        self.prompt_profile = str(
+            settings.get("appworld", {}).get("prompt_profile", "full_demo")
+        )
         parent_c = Path(str(settings["parent_exp025c"]))
         parent_b = Path(str(settings["parent_exp025b"]))
         self.ensemble_path = parent_c / "selector/ensemble_scores.pt"
@@ -285,7 +288,10 @@ class FrozenDeploymentSelector:
         # The exact initial count is stable and exposed by the frozen renderer metadata.
         from rcmf.benchmarks.appworld.prompt import appworld_renderer_metadata
 
-        initial_count = int(appworld_renderer_metadata("full_demo")["initial_message_count"])
+        prompt_profile = str(getattr(self, "prompt_profile", "full_demo"))
+        initial_count = int(
+            appworld_renderer_metadata(prompt_profile)["initial_message_count"]
+        )
         current = message_spans[initial_count:]
         if not current or current[0]["role"] != "user":
             raise ValueError("Live current-task messages do not start with the query")

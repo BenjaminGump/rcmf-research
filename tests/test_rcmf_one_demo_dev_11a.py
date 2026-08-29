@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+from types import SimpleNamespace
+
+import torch
 
 from prompt import AGENT_SYSTEM_PROMPT_TEMPLATE_AW
 
@@ -28,6 +31,7 @@ from scripts.analyze_rcmf_one_demo_dev_11a import (
     leave_one_task_out,
     paired_bootstrap_ci,
 )
+import scripts.run_raw_memory_first37_7f as raw_first37
 
 
 def _messages_sha(messages: list[dict[str, str]]) -> str:
@@ -200,3 +204,88 @@ def test_paired_analysis_is_exact_and_seeded() -> None:
     assert first["observed"] == 0.25
     sensitivity = leave_one_task_out(left, right)
     assert len(sensitivity["per_omission"]) == 4
+
+
+def test_frozen_state_extractor_uses_explicit_prompt_profile(monkeypatch) -> None:
+    class Tokenizer:
+        def apply_chat_template(self, *_args, **_kwargs):
+            return "rendered"
+
+        def __call__(self, *_args, **_kwargs):
+            return {"offset_mapping": [(0, 1)]}
+
+    captured = []
+
+    def fake_tokenize(_tokenizer, _rendered, spans):
+        captured.append(spans)
+        return torch.ones(1, 1, dtype=torch.long), torch.ones(1, 1), spans
+
+    monkeypatch.setattr(
+        raw_first37,
+        "tokenize_and_validate_char_spans",
+        fake_tokenize,
+    )
+    monkeypatch.setattr(
+        raw_first37,
+        "frozen_qwen_span_readouts",
+        lambda **_kwargs: {
+            "final_layer": {
+                name: torch.zeros(2, 4096) for name in raw_first37.STATE_VIEW_NAMES
+            }
+        },
+    )
+
+    for profile, initial_count in (
+        ("full_demo", 74),
+        (FULL_DEMO_FIRST_ONLY_PROFILE, 20),
+    ):
+        message_spans = [
+            {
+                "role": "assistant" if index % 2 else "user",
+                "message_index": index,
+                "char_start": index * 10,
+                "char_end": index * 10 + 5,
+            }
+            for index in range(initial_count)
+        ]
+        message_spans.extend(
+            [
+                {
+                    "role": "user",
+                    "message_index": initial_count,
+                    "char_start": initial_count * 10,
+                    "char_end": initial_count * 10 + 5,
+                },
+                {
+                    "role": "assistant",
+                    "message_index": initial_count + 1,
+                    "char_start": initial_count * 10 + 10,
+                    "char_end": initial_count * 10 + 15,
+                },
+                {
+                    "role": "user",
+                    "message_index": initial_count + 2,
+                    "char_start": initial_count * 10 + 20,
+                    "char_end": initial_count * 10 + 25,
+                },
+            ]
+        )
+        monkeypatch.setattr(
+            raw_first37,
+            "_ordered_message_content_spans",
+            lambda _rendered, _messages, spans=message_spans: spans,
+        )
+        owner = SimpleNamespace(
+            prompt_profile=profile,
+            backend=SimpleNamespace(
+                tokenizer=Tokenizer(), model=object(), device=torch.device("cpu")
+            ),
+        )
+        output = raw_first37.FrozenDeploymentSelector._state_values(
+            owner, [{} for _ in message_spans]
+        )
+        assert output.shape == (1, 10, 4096)
+        assert captured[-1]["current_task_goal"] == (
+            initial_count * 10,
+            initial_count * 10 + 5,
+        )

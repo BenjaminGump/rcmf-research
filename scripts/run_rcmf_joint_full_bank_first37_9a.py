@@ -184,6 +184,7 @@ class LiveFieldQueryEncoder:
 
     def __init__(self, *, settings: Mapping[str, Any], backend: Any) -> None:
         self.backend = backend
+        self.prompt_profile = str(settings["appworld"]["prompt_profile"])
         parent = Path(str(settings["parent_exp025c"]))
         ensemble_path = parent / "selector/ensemble_scores.pt"
         expected = str(settings["expected"]["selector_ensemble_sha256"])
