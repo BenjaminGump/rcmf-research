@@ -1,0 +1,14 @@
+{
+  "bare_policy_count": 464,
+  "cache": "runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001/structured_compiler/policy_teacher_cache.pt",
+  "cache_sha256": "e8251e0d6699e79a23a8b0d0d30d9e1ab4dbc282d98e1cd6f6b08ec2fcbd71a9",
+  "elapsed_seconds": 995.8911611717194,
+  "format": "appworld_structured_policy_teacher_cache_7hr_v1",
+  "passed": true,
+  "qwen_frozen": true,
+  "raw_policy_count": 464,
+  "selected_bare_neutral_harmful_count": 324,
+  "selected_raw_positive_count": 140,
+  "state_count": 464,
+  "student_prompt_contains_raw_transition": false
+}
