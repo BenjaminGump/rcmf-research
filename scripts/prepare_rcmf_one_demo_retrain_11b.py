@@ -332,7 +332,9 @@ def _timing_smoke(
     historical = {
         "paired_supervision_seconds": float(_json(paths["old_outcomes"])["elapsed_seconds"]),
         "policy_teacher_seconds": float(_json(old_teacher_report)["elapsed_seconds"]),
-        "training_seconds": float(_json(old_training)["elapsed_seconds"]),
+        "training_seconds": float(
+            _json(old_training)["elapsed_seconds_this_attempt"]
+        ),
         "dev_n1_n2_seconds": float(_json(old_d1)["total_wall_seconds"])
         + float(_json(old_d2)["total_wall_seconds"]),
     }
