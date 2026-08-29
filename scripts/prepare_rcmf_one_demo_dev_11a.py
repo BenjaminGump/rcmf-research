@@ -100,7 +100,8 @@ for name in ("train", "dev", "test_normal", "test_challenge"):
         datasets[name] = {"error": type(error).__name__}
 needle = os.environ["RCMF_DEMO_INSTRUCTION"]
 matches = []
-for path in sorted((root / "data/tasks").glob("*/specs.json")):
+spec_paths = sorted((root / "data/tasks").glob("*/specs.json"))
+for path in spec_paths:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if str(payload.get("instruction", "")) == needle:
         matches.append({
@@ -110,7 +111,11 @@ for path in sorted((root / "data/tasks").glob("*/specs.json")):
             "specs_sha256": __import__("hashlib").sha256(path.read_bytes()).hexdigest(),
             "spec_keys": sorted(payload),
         })
-print(json.dumps({"datasets": datasets, "demo_matches": matches}, sort_keys=True))
+print(json.dumps({
+    "datasets": datasets,
+    "demo_matches": matches,
+    "scanned_task_spec_count": len(spec_paths),
+}, sort_keys=True))
 '''
     env = dict(os.environ)
     env["APPWORLD_ROOT"] = str(app["legacy_root"])
@@ -399,16 +404,25 @@ def main() -> None:
     if len(dev_ids) != len(set(dev_ids)):
         raise ValueError("Official AppWorld dev list contains duplicates")
     demo_matches = list(legacy["demo_matches"])
-    if len(demo_matches) != 1:
+    if len(demo_matches) > 1:
         raise RuntimeError(f"Retained demo source identity is not unique: {demo_matches}")
-    demo_task_id = str(demo_matches[0]["task_id"])
-    split_membership = sorted(
-        name
-        for name, values in legacy["datasets"].items()
-        if isinstance(values, list) and demo_task_id in values
+    demo_task_id = str(demo_matches[0]["task_id"]) if demo_matches else None
+    split_membership = (
+        sorted(
+            name
+            for name, values in legacy["datasets"].items()
+            if isinstance(values, list) and demo_task_id in values
+        )
+        if demo_task_id is not None
+        else []
+    )
+    demo_identity_method = (
+        "unique_exact_task_instruction_match"
+        if demo_task_id is not None
+        else "prompt_native_demo_exact_instruction_absent_from_all_legacy_task_specs"
     )
     memory_parent_ids = {str(row["parent_task_id"]) for row in provenance}
-    demo_overlap = demo_task_id in set(dev_ids)
+    demo_overlap = demo_task_id in set(dev_ids) if demo_task_id is not None else False
     memory_overlap = sorted(memory_parent_ids & set(dev_ids))
     if demo_overlap or memory_overlap:
         raise RuntimeError(
@@ -443,9 +457,17 @@ def main() -> None:
         "ground_truth_paths_not_read_by_model_runner": True,
         "target_action_or_solution_not_used": True,
         "demo_task_id": demo_task_id,
+        "demo_identity_method": demo_identity_method,
         "demo_task_split_membership": split_membership,
         "demo_exact_instruction_match_count": len(demo_matches),
-        "demo_specs_sha256": str(demo_matches[0]["specs_sha256"]),
+        "demo_instruction_sha256": sha256_text(
+            str(settings["prompt"]["retained_demo_instruction"])
+        ),
+        "scanned_task_spec_count": int(legacy["scanned_task_spec_count"]),
+        "demo_exact_instruction_absent_from_dev": not demo_overlap,
+        "demo_specs_sha256": (
+            str(demo_matches[0]["specs_sha256"]) if demo_matches else None
+        ),
         "demo_overlaps_dev": demo_overlap,
         "memory_parent_overlaps_dev": memory_overlap,
         "memory_parent_task_count": len(memory_parent_ids),
@@ -467,6 +489,11 @@ def main() -> None:
         "no_subset": True,
         "outcomes_inspected": False,
         "demo_task_id": demo_task_id,
+        "demo_identity_method": demo_identity_method,
+        "demo_instruction_sha256": sha256_text(
+            str(settings["prompt"]["retained_demo_instruction"])
+        ),
+        "scanned_task_spec_count": int(legacy["scanned_task_spec_count"]),
         "demo_not_dev": not demo_overlap,
         "memory_parent_overlap_count": len(memory_overlap),
     }
