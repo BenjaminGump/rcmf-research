@@ -6,7 +6,9 @@ import argparse
 from collections import Counter
 from collections.abc import Mapping
 import json
+import os
 from pathlib import Path
+import shutil
 from typing import Any
 
 import _bootstrap  # noqa: F401
@@ -35,6 +37,42 @@ ALL_CONDITIONS = ("D0", "old_D1", "N1", "N2")
 
 def _json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+def _stage_existing_tree(source: Path, destination: Path) -> None:
+    """Copy committed checkpoint records into the final export staging tree."""
+    if not source.exists():
+        return
+    for path in sorted(source.rglob("*")):
+        if path.is_symlink():
+            raise ValueError(f"Result checkpoint tree contains a symlink: {path}")
+        target = destination / path.relative_to(source)
+        if path.is_dir():
+            target.mkdir(parents=True, exist_ok=True)
+        elif path.is_file():
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, target)
+        else:
+            raise ValueError(f"Unsupported result checkpoint entry: {path}")
+
+
+def _publish_staged_tree(staged: Path, destination: Path) -> None:
+    """Publish staged files atomically while preserving earlier checkpoint files."""
+    if not destination.exists():
+        staged.replace(destination)
+        return
+    for path in sorted(staged.rglob("*")):
+        if path.is_file():
+            target = destination / path.relative_to(staged)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            os.replace(path, target)
+    directories = sorted(
+        (item for item in staged.rglob("*") if item.is_dir()),
+        key=lambda item: len(item.parts),
+        reverse=True,
+    )
+    for path in directories:
+        path.rmdir()
+    staged.rmdir()
 
 
 def _task_path(root: Path, condition: str, task_id: str) -> Path:
@@ -160,7 +198,7 @@ def _paired_outcome_summary(artifact_dir: Path, old_root: Path) -> dict[str, Any
 
 
 def export(artifact_dir: Path, old_root: Path, audit_root: Path, result_root: Path) -> dict[str, Any]:
-    if audit_root.exists() or result_root.exists():
+    if audit_root.exists():
         raise FileExistsError("Refusing to overwrite an EXP-034A Git-safe export")
     audit_tmp = audit_root.with_name(audit_root.name + ".tmp")
     result_tmp = result_root.with_name(result_root.name + ".tmp")
@@ -168,6 +206,7 @@ def export(artifact_dir: Path, old_root: Path, audit_root: Path, result_root: Pa
         raise FileExistsError("Stale EXP-034A export temporary root")
     audit_tmp.mkdir(parents=True)
     result_tmp.mkdir(parents=True)
+    _stage_existing_tree(result_root, result_tmp)
 
     final = _json(artifact_dir / "dev/final_summary.json")
     analysis = _json(artifact_dir / "analysis/paired_analysis.json")
@@ -284,7 +323,9 @@ def export(artifact_dir: Path, old_root: Path, audit_root: Path, result_root: Pa
     atomic_json(audit_tmp / "index.json", index)
     strict_verify_tree(audit_tmp)
     audit_tmp.replace(audit_root)
-    result_tmp.replace(result_root)
+    _publish_staged_tree(result_tmp, result_root)
+    if strict_verify_tree(result_root) != strict_results:
+        raise RuntimeError("Published EXP-034A result tree differs from verified staging")
     return index
 
 

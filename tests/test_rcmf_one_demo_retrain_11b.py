@@ -15,6 +15,10 @@ from scripts.prepare_rcmf_one_demo_retrain_11b import (
 from scripts.run_rcmf_joint_full_bank_first37_9a import _run_task
 from scripts.run_rcmf_one_demo_retrain_dev_11b import FIELD_CONTROLS, CONDITIONS
 from scripts.analyze_rcmf_one_demo_retrain_11b import _paired_sets
+from scripts.export_rcmf_one_demo_retrain_audit_11b import (
+    _publish_staged_tree,
+    _stage_existing_tree,
+)
 
 
 NEW_CONFIG = Path("configs/benchmark/stage_c_rcmf_one_demo_retrain_11b.yaml")
@@ -152,6 +156,20 @@ def test_exp034a_dev_conditions_map_only_to_existing_field_controls() -> None:
     source = Path("scripts/run_rcmf_one_demo_retrain_dev_11b.py").read_text()
     assert "rows, FIELD_CONTROLS[condition]" in source
     assert '"field_control_condition": FIELD_CONTROLS[condition]' in source
+
+def test_exp034a_export_preserves_incremental_checkpoint_records(tmp_path: Path) -> None:
+    result = tmp_path / "result"
+    staged = tmp_path / "result.tmp"
+    result.mkdir()
+    staged.mkdir()
+    (result / "checkpoint.json").write_text("old", encoding="utf-8")
+    _stage_existing_tree(result, staged)
+    (staged / "summary.json").write_text("new", encoding="utf-8")
+    (staged / "checkpoint.json").write_text("updated", encoding="utf-8")
+    _publish_staged_tree(staged, result)
+    assert (result / "checkpoint.json").read_text(encoding="utf-8") == "updated"
+    assert (result / "summary.json").read_text(encoding="utf-8") == "new"
+    assert not staged.exists()
 
 
 def test_exp034a_paired_sets_preserve_exact_task_identities() -> None:
