@@ -1,0 +1,28 @@
+{
+  "authoritative_evaluation_occurs_after_generation": true,
+  "bridge_ready_allowed_apps_ignored_by_model_runner": true,
+  "demo_exact_instruction_absent_from_dev": true,
+  "demo_exact_instruction_match_count": 0,
+  "demo_identity_method": "prompt_native_demo_exact_instruction_absent_from_all_legacy_task_specs",
+  "demo_instruction_sha256": "7f5c6f0873d64024495c56ddccb66b1bfa825ab982b76f6021213a696380025e",
+  "demo_overlaps_dev": false,
+  "demo_specs_sha256": null,
+  "demo_task_id": null,
+  "demo_task_split_membership": [],
+  "dev_ground_truth_model_input_leak_count": 0,
+  "forbidden_ready_keys_used": [],
+  "format": "rcmf_one_demo_dev_leakage_audit_11a_v1",
+  "ground_truth_paths_not_read_by_model_runner": true,
+  "legacy_python": "/home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python",
+  "legacy_root": "/lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root",
+  "memory_parent_overlaps_dev": [],
+  "memory_parent_task_count": 37,
+  "model_visible_ready_keys": [
+    "instruction",
+    "ready_nonce",
+    "supervisor"
+  ],
+  "passed": true,
+  "scanned_task_spec_count": 732,
+  "target_action_or_solution_not_used": true
+}

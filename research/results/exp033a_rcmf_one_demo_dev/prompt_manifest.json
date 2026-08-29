@@ -1,0 +1,190 @@
+{
+  "checks": {
+    "exact_raw_construction": true,
+    "full_demo_non_regression": true,
+    "full_message_count": true,
+    "full_message_sha": true,
+    "full_prompt_sha": true,
+    "one_message_count": true,
+    "one_message_sha": true,
+    "one_prompt_sha": true
+  },
+  "complete_demo_message_ranges": {
+    "demo_1": {
+      "boundary_message_is_clipped_at_separator": true,
+      "end": 18,
+      "start": 0
+    },
+    "demo_2": {
+      "boundary_messages_are_clipped_at_separators": true,
+      "end": 40,
+      "start": 18
+    },
+    "demo_3": {
+      "boundary_messages_are_clipped_at_separators": true,
+      "end": 72,
+      "start": 40
+    },
+    "trailing_key_instructions": {
+      "end": 73,
+      "start": 73
+    }
+  },
+  "format": "rcmf_one_demo_prompt_manifest_11a_v1",
+  "frozen_before_dev_generation": true,
+  "manifest_sha256": "5514941ad0e923ca1025813d80ba4607c5767f43c3ba5c91ab8412891e0026d6",
+  "one_demo_initial_message_count": 20,
+  "one_demo_initial_messages_sha256": "90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe",
+  "one_demo_raw_prompt_sha256": "a0a8d3b2e10f167dba5dcab5ad62fa8f6737629b813d2d0e27af4872bef9e27b",
+  "original_full_prompt_sha256": "dd74c379c97031a062ba79b2b82d3992ec3b38870792f53d86821544f994c4c3",
+  "original_structured_message_count": 74,
+  "original_structured_messages_sha256": "f9a6937120b7da883c60e9b5e9187290bf71d3d68b0182640487b705f4cb3734",
+  "outcomes_used": false,
+  "profile": "full_demo_first_only",
+  "removed_demo_2_sha256": "0a34647714de22cffebd072a933bf3341511cd4145cc8432582715d7d743f52e",
+  "removed_demo_3_sha256": "6c4afd304257d0cc57d135180ba9a0050ae46043397c15837b46efcd764d82d6",
+  "renderer_metadata": {
+    "add_generation_prompt": true,
+    "chat_history_prompt": true,
+    "initial_message_count": 20,
+    "initial_messages_sha256": "90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe",
+    "prompt_profile": "full_demo_first_only",
+    "renderer_version": "appworld_messages_first_complete_demo_v1"
+  },
+  "retained_demo_sha256": "32348a5889682499b1cc17b7dced74dd706db12b6e248c1e6c7dfba5e50ed713",
+  "retained_initial_messages": [
+    {
+      "content_bytes": 2937,
+      "content_sha256": "b827fcf783d32d29a1a63dd8e1016ec838d03a6a5a0e859df979815609270fd6",
+      "index": 0,
+      "role": "user"
+    },
+    {
+      "content_bytes": 328,
+      "content_sha256": "2ced9ff94b023ba2173b6f8e174851f3c16f300fed28a82d3b9e544dc2857606",
+      "index": 1,
+      "role": "assistant"
+    },
+    {
+      "content_bytes": 308,
+      "content_sha256": "f4cc24f87ebba30c956340ef99f2831aa3f9dcabd502aeb5490999e4e7a21136",
+      "index": 2,
+      "role": "user"
+    },
+    {
+      "content_bytes": 243,
+      "content_sha256": "9616f12b5402076c92922997efa2bdcdaec37c6500120d447fa2aa1ac5778a40",
+      "index": 3,
+      "role": "assistant"
+    },
+    {
+      "content_bytes": 407,
+      "content_sha256": "3fe1d4fa53e679919e8651e18c014e09e19cf415a815b4351b998e8c9753f040",
+      "index": 4,
+      "role": "user"
+    },
+    {
+      "content_bytes": 213,
+      "content_sha256": "cf9b2145793c45f95762f6bc00781b8f37c610641754bf2719d3b44d4bfdcf6d",
+      "index": 5,
+      "role": "assistant"
+    },
+    {
+      "content_bytes": 1381,
+      "content_sha256": "797994b26bd4c7941469821c933b6ffd9d8aef8eafa54d5ef49a7a433cae15b0",
+      "index": 6,
+      "role": "user"
+    },
+    {
+      "content_bytes": 158,
+      "content_sha256": "5b86e56f03c4b608d9b84b796a1b95139149eae989c5ca5620992637774ca0ef",
+      "index": 7,
+      "role": "assistant"
+    },
+    {
+      "content_bytes": 132,
+      "content_sha256": "216d390e50118744fe58a6088a69aca0144d57badaffab3ea972961f94475ac0",
+      "index": 8,
+      "role": "user"
+    },
+    {
+      "content_bytes": 287,
+      "content_sha256": "a307393e4957898d97742ff5185f18d18fac304a7027915280004b0001faafee",
+      "index": 9,
+      "role": "assistant"
+    },
+    {
+      "content_bytes": 141,
+      "content_sha256": "be0a6bf3fb833754b8fa38b31d8f214314534c679201a4d7302be20961028617",
+      "index": 10,
+      "role": "user"
+    },
+    {
+      "content_bytes": 357,
+      "content_sha256": "4d55ff2ca5ef6ef4293ca1ac0b16a3d30befe48023112e1b31a9edeaf6d485f6",
+      "index": 11,
+      "role": "assistant"
+    },
+    {
+      "content_bytes": 56,
+      "content_sha256": "418735e5dd4ab0da789bf8f90b0493b932674120ca0e80f13fd94e323c1e032e",
+      "index": 12,
+      "role": "user"
+    },
+    {
+      "content_bytes": 305,
+      "content_sha256": "f3abf7edb2c599340370a322f38961a6607adcb003db5da3b10191b3eaf1ace7",
+      "index": 13,
+      "role": "assistant"
+    },
+    {
+      "content_bytes": 493,
+      "content_sha256": "074b1b408cacbe54939c5235ea9155fbad5c6f17f0f53307cddfb20c76ffbe68",
+      "index": 14,
+      "role": "user"
+    },
+    {
+      "content_bytes": 564,
+      "content_sha256": "b5976b56728ae1eafc3ad31d5c85763ee8604e5f49ed38c1299a914b607819ac",
+      "index": 15,
+      "role": "assistant"
+    },
+    {
+      "content_bytes": 35,
+      "content_sha256": "dbe8209762022cf2d75e4fa7dced815bd3e52772952a735545e81877b555b6d8",
+      "index": 16,
+      "role": "user"
+    },
+    {
+      "content_bytes": 353,
+      "content_sha256": "c0b7c3be7207dc50745968561391c8d7906e959f5358ccf9aee9757dcb8b951d",
+      "index": 17,
+      "role": "assistant"
+    },
+    {
+      "content_bytes": 88,
+      "content_sha256": "9d3253d0233414e36166a475ce1d44c4b80eef5750a3b0a1a82359851e8e7934",
+      "index": 18,
+      "role": "user"
+    },
+    {
+      "content_bytes": 1155,
+      "content_sha256": "b60055dd5a9459d3f857d845fb9945a9441b72181fc69884e887b7bf36754ae3",
+      "index": 19,
+      "role": "user"
+    }
+  ],
+  "section_sha256": {
+    "demo_1_with_instruction_prefix": "32348a5889682499b1cc17b7dced74dd706db12b6e248c1e6c7dfba5e50ed713",
+    "demo_2": "0a34647714de22cffebd072a933bf3341511cd4145cc8432582715d7d743f52e",
+    "demo_3": "6c4afd304257d0cc57d135180ba9a0050ae46043397c15837b46efcd764d82d6",
+    "trailing_key_instructions": "d414132b5da4e69c6e0bb4e01befc6595a4c5d26c7b4de1575daa8d8bbeb8720"
+  },
+  "separator_offsets": [
+    8953,
+    15852,
+    27991
+  ],
+  "system_content_role": "user",
+  "system_content_sha256": "b827fcf783d32d29a1a63dd8e1016ec838d03a6a5a0e859df979815609270fd6"
+}
