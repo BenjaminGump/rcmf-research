@@ -208,6 +208,28 @@ Sources of truth:
 - Detailed reconstructible per-step Git-safe logs are mandatory for every
   training rollout, heldout trajectory, and conditional first37 condition.
 
+## EXP-033A Frozen EXP-031A One-Demo Dev Evaluation Charter v1
+
+- EXP-033A is evaluation-only. The EXP-031A Qwen, tokenizer, selector,
+  writers, readers, epoch-2 checkpoint, 499-memory field, field algebra, and
+  key-payload shuffle are immutable; no optimizer step, retraining, parameter
+  update, calibration, or checkpoint selection is permitted.
+- The complete official AppWorld 0.1.0 `dev` split is the only scientific
+  evaluation split. `train` is allowed only for engineering smoke, while
+  `test_normal`, `test_challenge`, first37, and three-demo dev conditions are
+  prohibited.
+- The one-demo prompt is frozen before dev generation and retains exactly the
+  original system/instruction content plus the original first complete demo.
+  Dev outcomes cannot modify the prompt, model, field, checkpoint, condition
+  manifest, or generation settings.
+- Only matched conditions D0 bare/zero, D1 correct 499-memory whole-bank
+  field, and D2 immutable key-payload-shuffled 499-memory field are allowed.
+- Runtime retrieval, top-k, per-memory scoring, raw-memory prompt text, gates,
+  and task-specific rules remain prohibited. Production write and whole-bank
+  read complexity invariants remain unchanged.
+- Detailed reconstructible per-step logs and a committed Git-safe audit index
+  are mandatory. No training or follow-on experiment starts automatically.
+
 ## EXP-025D-Direct Single-Seed Deadline Policy
 
 For EXP-025D-Direct, use exactly `GLOBAL_SEED = 25101` for deterministic
