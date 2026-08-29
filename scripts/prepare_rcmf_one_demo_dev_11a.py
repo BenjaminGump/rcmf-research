@@ -190,7 +190,8 @@ def _validate_immutable(
         "shuffled_A_shape": tuple(field["shuffled_A"].shape) == (960, 8, 256),
         "shuffled_B_shape": tuple(field["shuffled_B"].shape) == (8, 256),
         "checkpoint_in_field": str(field["checkpoint_sha256"]) == hashes["checkpoint"],
-        "checkpoint_in_instant_add": str(instant["checkpoint_sha256"]) == hashes["checkpoint"],
+        "checkpoint_in_instant_add": str(instant["selected_checkpoint_sha256"])
+        == hashes["checkpoint"],
         "deployment_in_instant_add": str(instant["deployment_field_sha256"])
         == hashes["deployment_field"],
         "provenance_count": len(provenance) == 499,
