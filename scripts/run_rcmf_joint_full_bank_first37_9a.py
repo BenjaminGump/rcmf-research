@@ -333,8 +333,13 @@ def _model_identity(backend: Any, settings: Mapping[str, Any]) -> dict[str, Any]
     }
 
 
-def _register_static_asset(path: Path, messages: Sequence[Mapping[str, str]]) -> str:
-    count = int(appworld_renderer_metadata("full_demo")["initial_message_count"])
+def _register_static_asset(
+    path: Path,
+    messages: Sequence[Mapping[str, str]],
+    *,
+    prompt_profile: str = "full_demo",
+) -> str:
+    count = int(appworld_renderer_metadata(prompt_profile)["initial_message_count"])
     static = [dict(row) for row in messages[:count]]
     identity = sha256_text(
         json.dumps(static, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
@@ -346,8 +351,8 @@ def _register_static_asset(path: Path, messages: Sequence[Mapping[str, str]]) ->
     )
     row = {
         "sha256": identity,
-        "prompt_profile": "full_demo",
-        "renderer_metadata": appworld_renderer_metadata("full_demo"),
+        "prompt_profile": prompt_profile,
+        "renderer_metadata": appworld_renderer_metadata(prompt_profile),
         "messages": static,
     }
     if identity in payload["assets"] and payload["assets"][identity] != row:
@@ -537,7 +542,11 @@ def _run_task(
                 prompt_profile=str(app["prompt_profile"]),
                 max_context_turns=int(app["max_context_turns"]),
             )
-            static_sha = _register_static_asset(paths["static_assets"], messages)
+            static_sha = _register_static_asset(
+                paths["static_assets"],
+                messages,
+                prompt_profile=str(app["prompt_profile"]),
+            )
             rendered = backend.tokenizer.apply_chat_template(
                 list(messages), tokenize=False, add_generation_prompt=True
             )
