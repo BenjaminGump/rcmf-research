@@ -1,0 +1,27 @@
+{
+  "elapsed_seconds": 309.00197100033984,
+  "format": "one_demo_state_cache_summary_11b_v1",
+  "h100_hours": 0.08583388083342773,
+  "heldout_count": 98,
+  "model_train_count": 366,
+  "new_qwen_forward_count": 464,
+  "no_dev": true,
+  "no_future_observation": true,
+  "no_target_action": true,
+  "no_truncation": true,
+  "passed": true,
+  "prompt_identity": {
+    "initial_asset": true,
+    "initial_message_count": true,
+    "profile": true
+  },
+  "prompt_profile": "full_demo_first_only",
+  "resumed_count": 0,
+  "state_cache": "runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001/prompt_dependent/state_multiview.pt",
+  "state_cache_sha256": "200e8037ee953b327d43f2d9d43f9d8725cf7f2ed701759dfa1e913eb1a91483",
+  "state_count": 464,
+  "tensor_sha256": {
+    "final_layer": "bb7636c741484b5c32845285b35a0d87c9daac9d3b21fcf25f72b5ff15dccd27",
+    "mean_final_four_layers": "3535df6762901df7c926f9df4cf1c5b4f5a448dbd083a85a7a41ec2e031dfb96"
+  }
+}
