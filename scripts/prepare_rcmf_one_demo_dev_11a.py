@@ -182,6 +182,7 @@ def _validate_immutable(
     data_manifest = _json(paths["data_manifest"])
     provenance = _jsonl(paths["memory_provenance"])
     shuffle = _json(paths["shuffle_manifest"])
+    deployment_shuffle = shuffle["complete_deployment_bank"]
     selector = torch.load(paths["selector_ensemble"], map_location="cpu", weights_only=False)
     field_checks = {
         "memory_count": int(field["memory_count"]) == int(immutable["memory_count"]) == 499,
@@ -199,8 +200,9 @@ def _validate_immutable(
         == hashes["memory_provenance"],
         "shuffle_hash": str(data_manifest["shuffle_manifest_sha256"])
         == hashes["shuffle_manifest"],
-        "shuffle_count": int(shuffle["memory_count"]) == 499,
-        "shuffle_no_fixed_points": int(shuffle["fixed_point_count"]) == 0,
+        "shuffle_count": int(deployment_shuffle["memory_count"]) == 499,
+        "shuffle_no_fixed_points": int(deployment_shuffle["fixed_point_count"]) == 0,
+        "shuffle_outcomes_unused": not bool(shuffle["selection_uses_outcomes"]),
         "selector_hash": hashes["selector_ensemble"]
         == str(settings_9a["expected"]["selector_ensemble_sha256"]),
         "selector_three_seeds": len(selector["seed_checkpoints"]) == 3,
