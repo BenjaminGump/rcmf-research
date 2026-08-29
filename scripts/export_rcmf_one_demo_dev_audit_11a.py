@@ -186,6 +186,37 @@ def _comparison_markdown(
     )
     return "\n".join(lines)
 
+def _comparison_row(
+    task_id: str, tasks: Mapping[str, Mapping[str, Any]]
+) -> dict[str, Any]:
+    d0 = bool(tasks["D0"]["success"])
+    d1 = bool(tasks["D1"]["success"])
+    d2 = bool(tasks["D2"]["success"])
+    d0_to_d1 = (
+        "retained_success"
+        if d0 and d1
+        else "gained"
+        if d1
+        else "lost"
+        if d0
+        else "both_failed"
+    )
+    d2_to_d1 = (
+        "both_success"
+        if d2 and d1
+        else "D1_only"
+        if d1
+        else "D2_only"
+        if d2
+        else "both_failed"
+    )
+    return {
+        "task_id": task_id,
+        "success": {"D0": d0, "D1": d1, "D2": d2},
+        "D0_to_D1": d0_to_d1,
+        "D2_to_D1": d2_to_d1,
+        "comparison_markdown": f"comparisons/{task_id}.md",
+    }
 
 def _attempt_rows(artifact_dir: Path) -> list[dict[str, Any]]:
     return [
@@ -214,6 +245,7 @@ def export(artifact_dir: Path, audit_root: Path, result_root: Path) -> dict[str,
     # observation discovered late must also redact identical text in earlier tasks.
     tasks_by_id = _load_and_register_tasks(artifact_dir, task_ids)
     per_task_rows = []
+    comparison_rows = []
     step_count = 0
     for task_id in task_ids:
         for condition in CONDITIONS:
@@ -241,6 +273,9 @@ def export(artifact_dir: Path, audit_root: Path, result_root: Path) -> dict[str,
         comparison_path = audit_tmp / "comparisons" / f"{task_id}.md"
         comparison_path.parent.mkdir(parents=True, exist_ok=True)
         comparison_path.write_text(comparison, encoding="utf-8")
+        comparison_rows.append(
+            strict_redact(_comparison_row(task_id, tasks_by_id[task_id]))
+        )
 
     raw_assets = _json(artifact_dir / "raw_audit/static_prompt_assets.json")
     atomic_json(audit_tmp / "static_prompt_assets.json", strict_redact(raw_assets))
@@ -279,6 +314,7 @@ def export(artifact_dir: Path, audit_root: Path, result_root: Path) -> dict[str,
         result_tmp / "trajectory_metrics.json", strict_redact(analysis["trajectory_metrics"])
     )
     atomic_jsonl(result_tmp / "per_task.jsonl", per_task_rows)
+    atomic_jsonl(result_tmp / "comparisons.jsonl", comparison_rows)
     atomic_jsonl(result_tmp / "attempts.jsonl", [strict_redact(row) for row in attempts])
 
     verification = verify_git_safe_redaction(audit_tmp)

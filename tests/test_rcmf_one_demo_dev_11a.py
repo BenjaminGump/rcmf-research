@@ -290,6 +290,19 @@ def test_audit_registers_all_sensitive_observations_before_redaction(
     base_audit_export.SENSITIVE_OBSERVATIONS.clear()
 
 
+def test_audit_comparison_row_uses_paired_task_labels() -> None:
+    row = audit_export._comparison_row(
+        "task_1",
+        {
+            "D0": {"success": True},
+            "D1": {"success": False},
+            "D2": {"success": True},
+        },
+    )
+    assert row["D0_to_D1"] == "lost"
+    assert row["D2_to_D1"] == "D2_only"
+    assert row["comparison_markdown"] == "comparisons/task_1.md"
+
 def test_frozen_state_extractor_uses_explicit_prompt_profile(monkeypatch) -> None:
     class Tokenizer:
         def apply_chat_template(self, *_args, **_kwargs):
