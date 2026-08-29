@@ -230,6 +230,31 @@ Sources of truth:
 - Detailed reconstructible per-step logs and a committed Git-safe audit index
   are mandatory. No training or follow-on experiment starts automatically.
 
+## EXP-034A One-Demo-Consistent EXP-031A Retraining Charter v1
+
+- EXP-034A preserves the EXP-031A problem definition, contribution, production
+  memory complexity contract, architecture, fixed 29/8 task split, and single
+  training seed `25101`.
+- The only scientific change is replacing the original three complete demos
+  with the original first complete demo on every prompt-dependent training,
+  supervision, heldout-validation, and deployment-evaluation path.
+- Prompt-independent raw-ledger, memory, transition-representation, split,
+  provenance, parent-weighting, and shuffle-rule artifacts are reused only
+  after exact hash and semantic validation. Every prompt-dependent state,
+  query, selector choice, paired outcome, label, policy teacher, training unit,
+  and heldout row is rebuilt under `full_demo_first_only`.
+- Qwen and the selector remain frozen. Writers and readers are initialized and
+  trained with the exact two-epoch EXP-031A recipe; architecture, dimensions,
+  losses, learning rates, weight decay, checkpoint selection, field algebra,
+  and runtime mechanisms cannot change.
+- Official AppWorld dev is evaluation-only and cannot influence checkpoint
+  selection, training, manifests, or configuration. `first37`, `test_normal`,
+  and `test_challenge` are prohibited.
+- Runtime retrieval, top-k, per-memory scoring, raw-memory deployment prompt
+  text, gates, and bank-size-dependent production reads remain prohibited.
+- No additional optimization, prompt variant, retraining round, or follow-on
+  experiment starts automatically after EXP-034A.
+
 ## EXP-025D-Direct Single-Seed Deadline Policy
 
 For EXP-025D-Direct, use exactly `GLOBAL_SEED = 25101` for deterministic
