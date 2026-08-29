@@ -1,0 +1,10 @@
+{
+  "created": 464,
+  "elapsed_seconds": 267.89957128604874,
+  "format": "rcmf_zero_field_policy_nll_summary_9a_v1",
+  "mean_policy_nll": 0.19707557336656342,
+  "passed": true,
+  "reused": 0,
+  "state_count": 464,
+  "teacher_cache_sha256": "e8251e0d6699e79a23a8b0d0d30d9e1ab4dbc282d98e1cd6f6b08ec2fcbd71a9"
+}
