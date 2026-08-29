@@ -1,0 +1,66 @@
+{
+  "automatic_launch_allowed": true,
+  "config_sha256": "d10ddc2ffd0dcbfa0e7945d87e0eeac0500566c1cab780e184daed3ca1908d15",
+  "conservative_wall_hours": 12.770398099101266,
+  "dev_new_condition_count": 114,
+  "estimated_cost": {
+    "expected": 7.978072666000937,
+    "provider_currency_rate": "not recorded; no fabricated currency estimate",
+    "unit": "H100 active hours"
+  },
+  "expected_git_safe_audit_bytes": 2400000000,
+  "expected_h100_active_hours": 7.978072666000937,
+  "expected_lambda_raw_audit_bytes": 8000000000,
+  "expected_wall_hours": 9.478072666000937,
+  "format": "rcmf_one_demo_retrain_early_runtime_preflight_11b_v1",
+  "global_seed": 25101,
+  "hardware_required": "NVIDIA H100 80GB HBM3",
+  "historical_exact_recipe_seconds": {
+    "dev_n1_n2_seconds": 14165.682888956275,
+    "paired_supervision_seconds": 5556.966708537191,
+    "policy_teacher_seconds": 1294.965983116068,
+    "training_seconds": 7372.68471017899
+  },
+  "measured_state_smoke": {
+    "format": "rcmf_one_demo_retrain_early_timing_smoke_11b_v1",
+    "hardware": "NVIDIA H100 80GB HBM3",
+    "mean_state_forward_seconds": 0.7128476439975202,
+    "non_scientific": true,
+    "passed": true,
+    "prompt_profile": "full_demo_first_only",
+    "qwen_frozen": true,
+    "source_commit": "388c9040403cf6fade875dd5ae0e34d544dba9cc",
+    "state_rows": [
+      {
+        "forward_seconds": 0.8482766379602253,
+        "prompt_sha256": "c59259115c17450c8337c43a2f4e911e40b1e961a2698f6b764e215d25e4785f",
+        "prompt_tokens": 4886,
+        "state_example_id": "appworld:trace:b7a9ee9_3:step:7:line:186"
+      },
+      {
+        "forward_seconds": 0.5774186500348151,
+        "prompt_sha256": "24cda2eda3be64cc25e910e55f679b2330f80fde38167a11d5ca582c018f58e6",
+        "prompt_tokens": 4485,
+        "state_example_id": "appworld:trace:cf6abd2_3:step:7:line:530"
+      }
+    ]
+  },
+  "paired_condition_count": 928,
+  "projected_state_rebuild_seconds": 330.7613068148494,
+  "purpose": "fixed 464-state reconstruction, one-demo supervision, exact two-epoch training, heldout selection, and conditional 57x2 dev",
+  "restart_plan": {
+    "atomic_dev_tasks": true,
+    "atomic_heldout_conditions": true,
+    "atomic_paired_conditions": true,
+    "atomic_state_rows": true,
+    "atomic_teacher_cache": true,
+    "atomic_training_checkpoints_every_units": 25,
+    "epoch_boundaries": [
+      1,
+      2
+    ]
+  },
+  "review_threshold_hours": 18.0,
+  "source_commit": "388c9040403cf6fade875dd5ae0e34d544dba9cc",
+  "state_count": 464
+}
