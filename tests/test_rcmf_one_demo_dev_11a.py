@@ -17,6 +17,17 @@ from rcmf.benchmarks.appworld.prompt import (
     get_system_prompt,
 )
 from scripts.run_rcmf_joint_full_bank_first37_9a import _register_static_asset
+from scripts.prepare_rcmf_one_demo_dev_11a import (
+    _condition_manifest,
+    _prompt_manifest,
+    _ready_subscript_keys,
+)
+from scripts.run_rcmf_one_demo_dev_11a import CONDITION_ORDER
+from scripts.analyze_rcmf_one_demo_dev_11a import (
+    exact_mcnemar,
+    leave_one_task_out,
+    paired_bootstrap_ci,
+)
 
 
 def _messages_sha(messages: list[dict[str, str]]) -> str:
@@ -117,3 +128,75 @@ def test_static_asset_registration_uses_requested_profile(tmp_path) -> None:
     assert row["prompt_profile"] == FULL_DEMO_FIRST_ONLY_PROFILE
     assert row["renderer_metadata"]["initial_message_count"] == 20
     assert row["messages"] == messages[:20]
+
+def test_prompt_manifest_records_complete_boundaries_and_retained_roles() -> None:
+    settings = {
+        "prompt": {
+            "original_full_prompt_sha256": (
+                "dd74c379c97031a062ba79b2b82d3992ec3b38870792f53d86821544f994c4c3"
+            ),
+            "original_structured_messages_sha256": (
+                "f9a6937120b7da883c60e9b5e9187290bf71d3d68b0182640487b705f4cb3734"
+            ),
+            "one_demo_prompt_sha256": (
+                "a0a8d3b2e10f167dba5dcab5ad62fa8f6737629b813d2d0e27af4872bef9e27b"
+            ),
+            "one_demo_structured_messages_sha256": (
+                "90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe"
+            ),
+            "original_message_count": 74,
+            "one_demo_message_count": 20,
+        }
+    }
+    manifest = _prompt_manifest(settings)
+    assert manifest["checks"]["full_demo_non_regression"]
+    assert manifest["complete_demo_message_ranges"]["demo_1"]["start"] == 0
+    assert manifest["complete_demo_message_ranges"]["demo_3"]["end"] == 72
+    assert len(manifest["retained_initial_messages"]) == 20
+    assert manifest["frozen_before_dev_generation"]
+
+
+def test_condition_manifest_accounts_for_complete_dev_without_shortcuts() -> None:
+    tasks = [f"dev_{index}" for index in range(57)]
+    settings = {
+        "run_uuid": "run",
+        "dev": {
+            "condition_order": list(CONDITION_ORDER),
+            "expected_condition_count": 171,
+        },
+    }
+    immutable = {
+        "hashes": {
+            "deployment_field": "d" * 64,
+            "selector_ensemble": "s" * 64,
+        }
+    }
+    manifest = _condition_manifest(tasks, settings, immutable)
+    assert manifest["logical_condition_count"] == 171
+    assert len({(row["condition"], row["task_id"]) for row in manifest["rows"]}) == 171
+    assert all(not row["runtime_memory_retrieval"] for row in manifest["rows"])
+    assert all(not row["runtime_per_memory_scoring"] for row in manifest["rows"])
+    assert all(not row["student_prompt_contains_raw_memory"] for row in manifest["rows"])
+    assert [row["memory_count"] for row in manifest["rows"][:57]] == [0] * 57
+    assert all(row["memory_count"] == 499 for row in manifest["rows"][57:])
+
+
+def test_dev_model_renderer_uses_no_ground_truth_or_allowed_apps() -> None:
+    assert _ready_subscript_keys() == ["instruction", "ready_nonce", "supervisor"]
+
+def test_paired_analysis_is_exact_and_seeded() -> None:
+    left = [True, True, False, True]
+    right = [True, False, True, False]
+    mcnemar = exact_mcnemar(left, right)
+    assert mcnemar == {
+        "left_only": 2,
+        "right_only": 1,
+        "discordant": 3,
+        "two_sided_exact_p": 1.0,
+    }
+    first = paired_bootstrap_ci(left, right, replicates=200)
+    second = paired_bootstrap_ci(left, right, replicates=200)
+    assert first == second
+    assert first["observed"] == 0.25
+    sensitivity = leave_one_task_out(left, right)
+    assert len(sensitivity["per_omission"]) == 4

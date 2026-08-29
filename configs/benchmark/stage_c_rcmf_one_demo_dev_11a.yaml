@@ -1,0 +1,61 @@
+include: stage_c_rcmf_joint_full_bank_9a.yaml
+
+experiment:
+  name: stage_c_rcmf_one_demo_dev_11a
+  version: rcmf_one_demo_dev_11a_v1
+  seed: 25101
+
+stage_c_11a:
+  run_uuid: rcmf_exp031a_one_demo_dev_11a_20260829_001
+  artifact_dir: runs/stage_c/rcmf_exp031a_one_demo_dev_11a_20260829_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  source_head: b04d49d2ce9af305a004bb8bee2a3fc469e53927
+  source_branch: research/v5-rcmf-onpolicy-trajectory-distillation
+  working_branch: research/v5-rcmf-one-demo-dev-eval
+  exp031a_source_head: 57d2a3479ff292dd8f89bdd0ea9f9417abc42a48
+  global_seed: 25101
+
+  prompt:
+    profile: full_demo_first_only
+    retained_demo_instruction: How many playlists do I have in Spotify?
+    original_full_prompt_sha256: dd74c379c97031a062ba79b2b82d3992ec3b38870792f53d86821544f994c4c3
+    original_structured_messages_sha256: f9a6937120b7da883c60e9b5e9187290bf71d3d68b0182640487b705f4cb3734
+    one_demo_prompt_sha256: a0a8d3b2e10f167dba5dcab5ad62fa8f6737629b813d2d0e27af4872bef9e27b
+    one_demo_structured_messages_sha256: 90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe
+    original_message_count: 74
+    one_demo_message_count: 20
+
+  immutable_exp031a:
+    artifact_root: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001
+    checkpoint: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/joint_training/checkpoints/epoch_02.pt
+    checkpoint_sha256: d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1
+    deployment_field: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/deployment_field/complete_37_task_field.pt
+    deployment_field_sha256: 5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e
+    instant_add_report: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/deployment_field/instant_add_report.json
+    data_manifest: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/full_bank_data_manifest.json
+    memory_provenance: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/memory_provenance.jsonl
+    shuffle_manifest: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/key_payload_shuffle_manifest.json
+    selector_ensemble: runs/stage_c/signature_balanced_field_7c_20260818_001/selector/ensemble_scores.pt
+    selector_ensemble_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f
+    memory_count: 499
+
+  dev:
+    dataset_name: dev
+    expected_task_count: 57
+    condition_order: [D0, D1, D2]
+    expected_condition_count: 171
+    authoritative_success: evaluation.success
+
+  smoke:
+    dataset_name: train
+    task_count: 2
+    max_steps: 2
+
+  runtime:
+    review_threshold_hours: 18.0
+    heartbeat_interval_seconds: 240
+    heartbeat_stale_seconds: 720
+    sequential_conditions: true
+    hardware_required: NVIDIA H100 80GB HBM3
+    expected_git_safe_audit_bytes: 2200000000
+    expected_lambda_raw_audit_bytes: 6500000000
