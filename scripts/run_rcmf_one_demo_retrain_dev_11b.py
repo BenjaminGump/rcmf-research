@@ -272,7 +272,16 @@ def run_condition(args: argparse.Namespace, cfg: Any, settings: Mapping[str, Any
         print(f"{condition} task={task_id} success={row['success']} steps={row['step_count']} reused={reused}", flush=True)
     assert_frozen_without_gradients(backend.model)
     assert_frozen_without_gradients(runtime.reader)
-    summary = summarize_condition(rows, condition, expected_count=len(manifest["task_ids"]))
+    # The shared EXP-033A summarizer validates runtime controls named D1/D2.
+    # EXP-034A keeps those controls unchanged while exposing N1/N2 as result labels.
+    summary = summarize_condition(
+        rows, FIELD_CONTROLS[condition], expected_count=len(manifest["task_ids"])
+    )
+    summary.update({
+        "condition": condition,
+        "condition_name": CONDITION_NAMES[condition],
+        "field_control_condition": FIELD_CONTROLS[condition],
+    })
     summary.update({"run_uuid": RUN_UUID, "new_task_count": len(rows) - resumed, "resumed_task_count": resumed})
     atomic_write_json(_condition_root(paths, condition, False) / "summary.json", summary)
     return summary

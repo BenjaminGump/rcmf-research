@@ -149,6 +149,9 @@ def test_exp034a_fixed_scientific_state_counts_and_no_dev_training() -> None:
 def test_exp034a_dev_conditions_map_only_to_existing_field_controls() -> None:
     assert CONDITIONS == ("N1", "N2")
     assert FIELD_CONTROLS == {"N1": "D1", "N2": "D2"}
+    source = Path("scripts/run_rcmf_one_demo_retrain_dev_11b.py").read_text()
+    assert "rows, FIELD_CONTROLS[condition]" in source
+    assert '"field_control_condition": FIELD_CONTROLS[condition]' in source
 
 
 def test_exp034a_paired_sets_preserve_exact_task_identities() -> None:
