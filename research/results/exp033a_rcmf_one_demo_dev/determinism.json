@@ -1,0 +1,45 @@
+{
+  "condition_repetitions": 6,
+  "format": "rcmf_one_demo_fresh_world_determinism_11a_v1",
+  "matches": {
+    "D0": {
+      "checks": {
+        "code": true,
+        "observations": true,
+        "prompts": true,
+        "step_count": true,
+        "success": true,
+        "task_id": true,
+        "token_ids": true
+      },
+      "passed": true
+    },
+    "D1": {
+      "checks": {
+        "code": true,
+        "observations": true,
+        "prompts": true,
+        "step_count": true,
+        "success": true,
+        "task_id": true,
+        "token_ids": true
+      },
+      "passed": true
+    },
+    "D2": {
+      "checks": {
+        "code": true,
+        "observations": true,
+        "prompts": true,
+        "step_count": true,
+        "success": true,
+        "task_id": true,
+        "token_ids": true
+      },
+      "passed": true
+    }
+  },
+  "passed": true,
+  "task_id": "82e2fac_1",
+  "wall_seconds": 77.29328517103568
+}

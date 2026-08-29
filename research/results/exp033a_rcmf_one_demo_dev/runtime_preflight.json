@@ -1,0 +1,41 @@
+{
+  "automatic_launch_allowed": true,
+  "checkpoint_restart_plan": {
+    "append_only_attempts": true,
+    "atomic_step_outputs": true,
+    "atomic_task_outputs": true,
+    "hash_valid_complete_rows_reused": true,
+    "incomplete_task_restarts_in_fresh_world": true,
+    "no_success_based_early_stopping": true,
+    "sequential_conditions": true
+  },
+  "conservative_h100_active_hours": 8.766416331983352,
+  "conservative_wall_hours": 8.766416331983352,
+  "determinism_passed": true,
+  "dev_task_count": 57,
+  "estimated_cost": {
+    "conservative": 8.766416331983352,
+    "expected": 6.493641727395075,
+    "provider_currency_rate": "not recorded; no fabricated currency estimate",
+    "unit": "H100 active hours"
+  },
+  "expected_git_safe_audit_bytes": 2200000000,
+  "expected_h100_active_hours": 6.493641727395075,
+  "expected_lambda_raw_artifact_bytes": 6500000000,
+  "expected_wall_hours": 6.493641727395075,
+  "formal_condition_count": 171,
+  "format": "rcmf_one_demo_dev_runtime_preflight_11a_v1",
+  "hardware": "NVIDIA H100 80GB HBM3",
+  "hardware_required": "NVIDIA H100 80GB HBM3",
+  "historical_full_trajectory_seconds_per_task": {
+    "D0": 118.62470626590672,
+    "D1": 140.9041536660563,
+    "D2": 150.59588074562063
+  },
+  "measured_smoke_and_determinism_seconds": 151.42792795831338,
+  "purpose": "complete official AppWorld dev under one-demo D0/D1/D2",
+  "review_threshold_hours": 18.0,
+  "smoke_condition_count": 6,
+  "smoke_passed": true,
+  "smoke_task_count": 2
+}

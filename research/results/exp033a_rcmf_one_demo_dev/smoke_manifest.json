@@ -1,0 +1,17 @@
+{
+  "conditions": [
+    "D0",
+    "D1",
+    "D2"
+  ],
+  "dataset_name": "train",
+  "format": "rcmf_one_demo_train_smoke_manifest_11a_v1",
+  "manifest_sha256": "5b4c109c8e59ec56acce34d1264d08c0bf2d94737fc87dfcabdaa5120fc00114",
+  "non_scientific": true,
+  "outcomes_cannot_modify_science": true,
+  "task_count": 2,
+  "task_ids": [
+    "82e2fac_1",
+    "82e2fac_2"
+  ]
+}

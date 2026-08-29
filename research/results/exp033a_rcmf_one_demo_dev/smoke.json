@@ -1,0 +1,24 @@
+{
+  "checks": {
+    "D0_no_reader": true,
+    "D1_correct_field": true,
+    "D2_shuffle_field": true,
+    "all_complete": true,
+    "eight_slots": true,
+    "no_raw_memory_prompt": true,
+    "no_runtime_retrieval": true,
+    "no_truncation": true,
+    "one_demo_profile": true
+  },
+  "format": "rcmf_one_demo_train_smoke_11a_v1",
+  "max_steps": 2,
+  "non_scientific_train_smoke": true,
+  "outcomes_used_to_modify_science": false,
+  "passed": true,
+  "task_condition_count": 6,
+  "task_ids": [
+    "82e2fac_1",
+    "82e2fac_2"
+  ],
+  "wall_seconds": 74.1346427872777
+}
