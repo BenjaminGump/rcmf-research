@@ -172,7 +172,10 @@ def _attempt_rows(artifact_dir: Path) -> list[dict[str, Any]]:
 
 
 def _paired_outcome_summary(artifact_dir: Path, old_root: Path) -> dict[str, Any]:
-    new = _json(artifact_dir / "paired_causal/paired_outcomes.json")["rows"]
+    paired_outcomes_path = artifact_dir / "paired_causal/paired_outcomes.json"
+    condition_manifest_path = artifact_dir / "paired_causal/condition_manifest.json"
+    new_payload = _json(paired_outcomes_path)
+    new = new_payload["rows"]
     old = _json(old_root / "../appworld_structured_gate_compiler_7hr_20260823_001/paired_causal/paired_outcomes.json")["rows"]
     old_by_id = {str(row["state_example_id"]): row for row in old}
     changed = [
@@ -193,6 +196,9 @@ def _paired_outcome_summary(artifact_dir: Path, old_root: Path) -> dict[str, Any
         },
         "changed_label_count": len(changed),
         "changed_state_ids": changed,
+        "condition_manifest_sha256": sha256_file(condition_manifest_path),
+        "elapsed_seconds": float(new_payload["elapsed_seconds"]),
+        "paired_outcomes_sha256": sha256_file(paired_outcomes_path),
         "dev_used": False,
     }
 

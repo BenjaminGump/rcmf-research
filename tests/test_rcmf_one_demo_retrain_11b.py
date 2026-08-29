@@ -170,6 +170,10 @@ def test_exp034a_export_preserves_incremental_checkpoint_records(tmp_path: Path)
     assert (result / "checkpoint.json").read_text(encoding="utf-8") == "updated"
     assert (result / "summary.json").read_text(encoding="utf-8") == "new"
     assert not staged.exists()
+    source = Path("scripts/export_rcmf_one_demo_retrain_audit_11b.py").read_text()
+    assert '"condition_manifest_sha256": sha256_file(condition_manifest_path)' in source
+    assert '"elapsed_seconds": float(new_payload["elapsed_seconds"])' in source
+    assert '"paired_outcomes_sha256": sha256_file(paired_outcomes_path)' in source
 
 
 def test_exp034a_paired_sets_preserve_exact_task_identities() -> None:
