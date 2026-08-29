@@ -2611,3 +2611,27 @@ IMPLEMENTATION DEVIATIONS:
 - The Windows `apply_patch` helper failed with `helper_unknown_error`.
   Guarded exact UTF-8 replacements were used only after failure and verified by
   focused and full tests.
+
+## 2026-08-29 EXP-033A one-demo dev evaluation decision
+
+VERIFIED:
+
+- EXP-031A remained immutable. The formal run used the epoch-2 checkpoint, correct and matched-shuffle 499-memory fields, frozen selector, eight-slot read, reader layers `[7,14,21,28]`, and deterministic seed `25101`.
+- `full_demo_first_only` retains the original first complete demonstration without rewriting it. The complete legacy AppWorld dev list has 57 tasks; retained-demo/dev overlap, memory-parent/dev overlap, and model-input ground-truth leak counts are all zero.
+- Complete official-dev success is D0 `12/57`, D1 `17/57`, and D2 `12/57`.
+- D1 gains five tasks over D0 and five over D2. Both effects remain positive under leave-one-task-out deletion, but both paired bootstrap confidence intervals include zero and exact McNemar tests are not significant.
+- The Git-safe audit is independently verified and covers all 171 task conditions and 4,411 generated steps.
+
+DECISION:
+
+- Record the descriptive pattern `absolute_improvement_and_matched_shuffle_specificity`.
+- Do not convert this single-seed exposed-dev result into a final statistical generalization claim.
+- Do not interpret EXP-033A as evidence that one demonstration is better than three; no three-demo dev comparator ran.
+- Stop after reporting. Do not automatically retrain, alter the field or addressing, run first37/test tasks, test another prompt, or launch another experiment.
+
+IMPLEMENTATION DEVIATIONS:
+
+- The initial smoke exposed a hardcoded 74-message query boundary inherited from the full-demo path. The repair made the boundary prompt-profile-aware while preserving byte-identical default `full_demo` behavior.
+- The initial determinism run exposed reuse of an AppWorld experiment name. Deterministic repeat-specific world prefixes restored isolated fresh worlds without changing generation semantics.
+- The first audit export failed closed because sensitive-observation registration depended on traversal order. The final exporter registers the complete corpus before serialization; the unsafe export was never committed.
+- The Windows process helper intermittently returned `helper_unknown_error`. Scientific work continued through explicit reviewed commands; all intended source passed 713 local tests plus one skip and 714 Lambda tests.

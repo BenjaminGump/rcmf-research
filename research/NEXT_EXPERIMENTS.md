@@ -1442,3 +1442,17 @@ Recommended next action:
 
 Still blocked: N1/N2 first37, broader AppWorld evaluation, architecture search,
 retrieval, hard gating, further calibration, Stage C2, and V5 tagging.
+
+## EXP-033A Completed - Stop After One-Demo Dev Evaluation
+
+EXP-033A completed the frozen, evaluation-only 57-task AppWorld dev manifest. D1 correct field is `17/57`, compared with D0 bare `12/57` and D2 matched shuffle `12/57`.
+
+Recommended next review action:
+
+1. Review the committed per-task and per-step records with ChatGPT, using the GitHub report, handoff, paired analysis, and audit index as sources of truth.
+2. Treat the positive D1-D0 and D1-D2 point estimates as descriptive evidence; retain the paired confidence intervals, exact McNemar results, and exposed-dev limitation alongside them.
+3. Keep the interpretation narrow: frozen EXP-031A was useful and memory-specific under this one-demo deployment prompt in point estimates, but EXP-033A did not compare one demo against three demos.
+4. Preserve the frozen checkpoint, fields, prompt manifest, dev manifest, condition manifest, raw Lambda artifacts, and Git-safe audit.
+5. Require a separately reviewed contract for any future evaluation or training.
+
+Still blocked under EXP-033A: retraining EXP-031A, training a one-demo model, addressing or field changes, first37, `test_normal`, `test_challenge`, another prompt variant, calibration, retrieval, a hard gate, multi-seed evaluation, or automatic follow-on work.

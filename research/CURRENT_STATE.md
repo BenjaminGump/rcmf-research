@@ -2139,3 +2139,18 @@ Decision:
 - Freeze EXP-032A and preserve its complete Git-safe audit and Lambda artifact
   root. No new architecture, gate, retrieval path, calibration, or V5 tag is
   authorized by this task.
+
+### EXP-033A Completed - Frozen EXP-031A One-Demo Dev Evaluation
+
+- Run `rcmf_exp031a_one_demo_dev_11a_20260829_001` completed on `research/v5-rcmf-one-demo-dev-eval` with seed `25101`; no optimizer or backward pass ran.
+- The exact official AppWorld 0.1.0 dev split contains 57 tasks (ordered-list SHA256 `c6aad8dca959d9c54537555dd6c3a4ececdd55390029511ab7971550d796e463`). Demo/dev and memory-parent/dev overlap checks passed, and model-input ground-truth leak count is zero.
+- The new `full_demo_first_only` profile retains the original first complete demonstration exactly. Existing `full_demo` behavior remains byte-for-byte unchanged.
+- Frozen identities passed: EXP-031A checkpoint `d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1`, correct 499-memory field `5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e`, selector `c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f`, and shuffle manifest `4e5a4d8551223c420b063b0d8043a966367ac7043a53891ff7723616b7aa2170`.
+- Complete dev outcomes are D0 bare `12/57`, D1 correct field `17/57`, and D2 matched shuffle `12/57`.
+- D1-D0 is `+5/57` with 11 gains and 6 losses; paired bootstrap 95% CI `[-0.05263, 0.22807]`; exact McNemar `p=0.33231`.
+- D1-D2 is `+5/57` with 7 D1-only and 2 D2-only successes; paired bootstrap 95% CI `[-0.01754, 0.19298]`; exact McNemar `p=0.17969`.
+- Both leave-one-task-out effects remain positive (`[0.07143, 0.10714]`). D1-D0 gains span eight task families; D1-D2 wins span six.
+- The descriptive result is `absolute_improvement_and_matched_shuffle_specificity`. Confidence intervals include zero, dev is exposed, and this is not a one-demo-versus-three-demo causal comparison.
+- Formal task wall sum is `5.5988 h`; accounted GPU-phase attempt wall is `5.6783 h`. The ledger has 10 attempts, 2 failed, and 0 open.
+- The committed Git-safe audit contains 171 condition traces, 4,411 step rows, and 57 task comparisons. Audit-index SHA256 is `1616378ab22874c21d4f9bff84db52078ed4d9533b4d86cac79014adb7a09b72`; secret verification found zero leaks and zero raw JWTs.
+- EXP-033A stops here. No training, first37/test run, prompt variant, calibration, gate, addressing change, or follow-on experiment was launched.
