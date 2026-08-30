@@ -38,7 +38,7 @@ stage_c_12a:
       source_commit: 57d2a3479ff292dd8f89bdd0ea9f9417abc42a48
       archive_identity: a2c41652bfea380cfef89df0bee0e4d919458982
       root: runs/stage_c/signature_balanced_field_7c_20260818_001
-      ensemble_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42bb01255a9e623956611f
+      ensemble_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f
       member_sha256:
         - bef5944417ddb41a230b7434393e0c3d3ca75316720c3c6bcc2e34a6a2238494
         - c95e166ee32f9ba1740a097ae32119b9cf91954f51f469e66177e43218e6da9c

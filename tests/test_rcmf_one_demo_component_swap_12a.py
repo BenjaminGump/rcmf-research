@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 import torch
 
+from rcmf.config import load_config
 from rcmf.training.rcmf_joint_full_bank_9a import (
     AlignedTransitionWriter,
     StandardFieldCrossAttentionReader,
@@ -25,6 +26,15 @@ from rcmf.training.rcmf_one_demo_component_swap_12a import (
 
 def file_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def test_locked_old_selector_sha_is_exact_sha256() -> None:
+    config = load_config(
+        Path("configs/benchmark/stage_c_rcmf_one_demo_component_swap_12a.yaml")
+    )
+    actual = config.raw["stage_c_12a"]["selectors"]["old"]["ensemble_sha256"]
+    assert actual == "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f"
+    assert len(actual) == 64
 
 
 def test_condition_cells_and_counterbalanced_order() -> None:
