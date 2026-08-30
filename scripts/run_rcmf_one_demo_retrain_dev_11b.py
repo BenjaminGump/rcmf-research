@@ -33,6 +33,7 @@ from scripts.run_rcmf_one_demo_dev_11a import summarize_condition
 
 GLOBAL_SEED = 25101
 RUN_UUID = "rcmf_exp031a_one_demo_retrain_11b_20260829_001"
+EXPERIMENT_PREFIX = "exp034a"
 CONDITIONS = ("N1", "N2")
 FIELD_CONTROLS = {"N1": "D1", "N2": "D2"}
 CONDITION_NAMES = {
@@ -260,12 +261,13 @@ def run_condition(args: argparse.Namespace, cfg: Any, settings: Mapping[str, Any
             bare_condition=False, condition_name=CONDITION_NAMES[condition],
             memory_count=499, field_artifact_path=paths["deployment"],
             field_provenance_path=paths["data_manifest"],
-            experiment_prefix="exp034a", field_control_condition=FIELD_CONTROLS[condition],
+            experiment_prefix=EXPERIMENT_PREFIX,
+            field_control_condition=FIELD_CONTROLS[condition],
         )
         rows.append(row)
         resumed += int(reused)
         attempt.progress(
-            status=f"exp034a_dev_{condition.lower()}", completed_tasks=len(rows),
+            status=f"{EXPERIMENT_PREFIX}_dev_{condition.lower()}", completed_tasks=len(rows),
             total_tasks=len(manifest["task_ids"]), resumed_tasks=resumed,
             latest_validated_checkpoint=str(_task_output(paths, condition, str(task_id), False)),
         )
@@ -332,7 +334,8 @@ def main() -> None:
     hashes = {"config": sha256_file(args.config)}
     with AttemptLedger(
         args.artifact_dir, run_uuid=RUN_UUID, attempt_id=args.attempt_id,
-        phase=f"exp034a_dev_{args.phase}" + (f"_{args.condition.lower()}" if args.condition else ""),
+        phase=f"{EXPERIMENT_PREFIX}_dev_{args.phase}"
+        + (f"_{args.condition.lower()}" if args.condition else ""),
         command=[str(value) for value in sys.argv], local_head=args.local_head,
         github_head=args.github_head, lambda_head=args.lambda_head,
         tmux_session=args.tmux_session, config_sha256=sha256_file(args.config),
@@ -348,7 +351,9 @@ def main() -> None:
             result = run_condition(args, cfg, settings, paths, attempt)
         else:
             result = finalize(paths)
-        attempt.progress(status=f"exp034a_dev_{args.phase}_complete", result=result)
+        attempt.progress(
+            status=f"{EXPERIMENT_PREFIX}_dev_{args.phase}_complete", result=result
+        )
     print(json.dumps(result, sort_keys=True))
 
 

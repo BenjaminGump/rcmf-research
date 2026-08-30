@@ -19,6 +19,7 @@ from rcmf.training.signature_balanced_field_7c import (
 )
 from rcmf.training.oracle_convergence_5fb import tensor_state_sha256
 from scripts import prepare_rcmf_one_demo_selector_retrain_11c as prepare
+from scripts import run_rcmf_one_demo_retrain_dev_11b as dev_11b
 
 
 CONFIG = Path(
@@ -166,3 +167,19 @@ def test_exp034b_configs_prohibit_scientific_split_substitution() -> None:
     assert "test_normal" not in text
     assert "first37" not in text
     assert "test_challenge" not in text
+
+
+def test_exp034b_dev_wrapper_changes_identity_not_scientific_conditions() -> None:
+    source = Path(
+        "scripts/run_rcmf_one_demo_selector_retrain_dev_11c.py"
+    ).read_text(encoding="utf-8")
+    assert dev_11b.EXPERIMENT_PREFIX == "exp034a"
+    assert dev_11b.RUN_UUID == "rcmf_exp031a_one_demo_retrain_11b_20260829_001"
+    assert 'runner.EXPERIMENT_PREFIX = "exp034b"' in source
+    assert (
+        'runner.RUN_UUID = "rcmf_one_demo_selector_retrain_11c_20260830_001"'
+        in source
+    )
+    assert "runner.main()" in source
+    assert dev_11b.CONDITIONS == ("N1", "N2")
+    assert dev_11b.FIELD_CONTROLS == {"N1": "D1", "N2": "D2"}
