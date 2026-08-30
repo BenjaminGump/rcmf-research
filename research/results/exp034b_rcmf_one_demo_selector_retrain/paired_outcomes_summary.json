@@ -1,0 +1,45 @@
+{
+  "changed_label_count": 24,
+  "changed_state_ids": [
+    "appworld:trace:287e338_3:step:8:line:141",
+    "appworld:trace:c901732_3:step:5:line:580",
+    "appworld:trace:771d8fc_2:step:3:line:431",
+    "appworld:trace:aa8502b_2:step:13:line:623",
+    "appworld:trace:7d7fbf6_1:step:3:line:386",
+    "appworld:trace:287e338_3:step:3:line:136",
+    "appworld:trace:b7a9ee9_2:step:6:line:171",
+    "appworld:trace:82e2fac_1:step:3:line:3",
+    "appworld:trace:c901732_1:step:5:line:567",
+    "appworld:trace:3c13f5a_2:step:6:line:486",
+    "appworld:trace:c901732_3:step:10:line:585",
+    "appworld:trace:7d7fbf6_3:step:9:line:411",
+    "appworld:trace:e7a10f8_3:step:7:line:558",
+    "appworld:trace:287e338_1:step:3:line:119",
+    "appworld:trace:b7a9ee9_3:step:6:line:185",
+    "appworld:trace:e7a10f8_1:step:5:line:538",
+    "appworld:trace:6104387_3:step:11:line:51",
+    "appworld:trace:34d9492_3:step:8:line:247",
+    "appworld:trace:3c13f5a_2:step:8:line:488",
+    "appworld:trace:771d8fc_2:step:10:line:438",
+    "appworld:trace:229360a_3:step:22:line:377",
+    "appworld:trace:aa8502b_2:step:14:line:624",
+    "appworld:trace:07b42fd_1:step:4:line:458",
+    "appworld:trace:229360a_3:step:5:line:360"
+  ],
+  "condition_manifest_sha256": "e7376a317e7517aa0937e63f52838d5bf70a9439029365beff077f6bb2ff962a",
+  "dev_used": false,
+  "exp034a_labels": {
+    "HARMFUL": 45,
+    "NEUTRAL": 279,
+    "POSITIVE": 140
+  },
+  "exp034a_paired_outcomes_sha256": "24f2db33d33780a0eb757b24e7751fe718d11bdb2425c629f5190646cf986164",
+  "format": "rcmf_one_demo_selector_retrain_paired_outcome_summary_11c_v1",
+  "labels": {
+    "HARMFUL": 49,
+    "NEUTRAL": 281,
+    "POSITIVE": 134
+  },
+  "paired_outcomes_sha256": "a8f422658cd8f14acf7cf11ec630b37c3f14b10f0879e46655ee9b57bf5532f1",
+  "state_count": 464
+}
