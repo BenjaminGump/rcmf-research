@@ -1,0 +1,41 @@
+{
+  "computed_new_count": 174,
+  "downstream_model_split_counts": {
+    "heldout_train_validation": 98,
+    "model_train": 366
+  },
+  "downstream_state_cache": "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/prompt_dependent/state_multiview.pt",
+  "downstream_state_cache_sha256": "c4f8fadffea5790c42faa639f84c0b732cfc0d0bdd0de2f36a3387067428b211",
+  "downstream_state_count": 464,
+  "elapsed_seconds": 175.46048994502053,
+  "expected_new_count": 174,
+  "format": "one_demo_selector_state_cache_summary_11c_v1",
+  "h100_hours": 0.04873902498472792,
+  "no_dev": true,
+  "no_future_observation": true,
+  "no_target_action": true,
+  "no_three_demo_state_representations": true,
+  "no_truncation": true,
+  "passed": true,
+  "prompt_identity": {
+    "initial_message_count": 20,
+    "initial_messages_sha256": "90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe",
+    "passed": true,
+    "prompt_profile": "full_demo_first_only",
+    "retained_demo_sha256": "32348a5889682499b1cc17b7dced74dd706db12b6e248c1e6c7dfba5e50ed713"
+  },
+  "resumed_new_count": 0,
+  "reused_exp034a_count": 464,
+  "run_uuid": "rcmf_one_demo_selector_retrain_11c_20260830_001",
+  "selector_split_counts": {
+    "train": 499,
+    "validation": 139
+  },
+  "selector_state_cache": "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/representation_cache/multiview/state_multiview.pt",
+  "selector_state_cache_sha256": "8d73ab722f5e5a9a987a049c549ed5bae38e4fe7fd0714aa9332647ea3f2326a",
+  "selector_state_count": 638,
+  "summary_sha256": "0ad02605e62e2c81e2b02311587fc659b587efc25c0911752b3582432dc3e6a4",
+  "transition_cache": "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/representation_cache/multiview/transition_multiview.pt",
+  "transition_cache_exact_copy": true,
+  "transition_cache_sha256": "00549c7de1ee75e39ab5a2919a1f3c8d713fbec6709255955d0b2805b276cc3b"
+}
