@@ -49,6 +49,13 @@ def test_exp034b_locked_recipe_and_single_global_seed() -> None:
     assert seeds == prepare._member_seeds(3)
 
 
+def test_exp034b_runtime_requires_fresh_selector_identity() -> None:
+    cfg = load_config(CONFIG)
+    assert cfg.raw["stage_c_9a"]["expected"]["selector_ensemble_sha256"] == (
+        "c6e4e2dd533a593730550d2580054da4fc2ac701cefd0d2def1c4a771b4d6300"
+    )
+
+
 def test_exp034b_selector_architecture_is_historical_structure() -> None:
     cfg = load_config(CONFIG)
     selector = cfg.raw["stage_c_11c"]["selector"]

@@ -16,6 +16,8 @@ stage_c_9a:
   starting_head: 0d8da7a5073a2c33b5447e1eabf95c2abf56619a
   working_branch: research/v5-rcmf-one-demo-selector-retrain
   parent_exp025c: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001
+  expected:
+    selector_ensemble_sha256: c6e4e2dd533a593730550d2580054da4fc2ac701cefd0d2def1c4a771b4d6300
   prompt_dependent_inputs:
     state_cache: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/prompt_dependent/state_multiview.pt
     outcomes: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/paired_causal/paired_outcomes.json
