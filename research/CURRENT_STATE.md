@@ -1,6 +1,24 @@
 # Current State
 
-Last updated: 2026-08-23.
+## 2026-08-30 EXP-034A Current State
+
+VERIFIED:
+
+- One-demo-consistent retraining completed with the exact EXP-031A architecture, 29/8 split, 366/98 fixed states, and seed `25101`.
+- The original heldout-only rule selected epoch 2 (`078dcd0...`) as `STRONG`; the 499-memory field is `f24b16e4...`.
+- Official dev results are D0 `12/57`, old D1 `17/57`, new N1 `16/57`, and new N2 `16/57`.
+- N1 is `+4/57` over bare but `0/57` over matched shuffle and `-1/57` versus old D1. All paired 95% intervals include zero.
+- The Git-safe audit covers 114 new conditions and 2,801 steps with zero JWT or registered sensitive-observation leaks.
+
+INFERENCE:
+
+- Prompt-consistent retraining may improve absolute performance over bare, but does not validate a memory-specific dev gain because N1 and N2 tie.
+
+CURRENT BLOCK:
+
+- Stop after EXP-034A review. Do not start further retraining, calibration, architecture changes, first37, test-normal, test-challenge, or another prompt variant automatically.
+- Full report: `research/results/EXP_034A_RCMF_ONE_DEMO_RETRAIN.md`.
+Last updated: 2026-08-30.
 
 ## 2026-08-23 EXP-027B Active Submission State
 

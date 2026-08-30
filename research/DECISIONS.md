@@ -2635,3 +2635,24 @@ IMPLEMENTATION DEVIATIONS:
 - The initial determinism run exposed reuse of an AppWorld experiment name. Deterministic repeat-specific world prefixes restored isolated fresh worlds without changing generation semantics.
 - The first audit export failed closed because sensitive-observation registration depended on traversal order. The final exporter registers the complete corpus before serialization; the unsafe export was never committed.
 - The Windows process helper intermittently returned `helper_unknown_error`. Scientific work continued through explicit reviewed commands; all intended source passed 713 local tests plus one skip and 714 Lambda tests.
+## 2026-08-30 EXP-034A one-demo-consistent retraining decision
+
+VERIFIED:
+
+- Epoch 2 passed the immutable EXP-031A heldout selection contract and was frozen before dev.
+- D0/old D1/N1/N2 are `12/57`, `17/57`, `16/57`, and `16/57`.
+- N1 gains seven and loses three versus D0, but N1 and N2 each have two exclusive successes and tie in aggregate.
+- N1 retains 5/11 old D1 gains and recovers 3/6 old D1 losses.
+- All paired bootstrap intervals include zero; N1-N2 is one-task direction-sensitive.
+
+DECISION:
+
+- Record only the preregistered descriptive classification: N1 exceeds D0 in point estimate; N1 does not exceed N2; N1 does not improve old D1.
+- Do not claim a memory-specific benefit for one-demo-consistent retraining.
+- Stop with no automatic optimization, architecture decision, first37, test split, or follow-on experiment.
+
+IMPLEMENTATION DEVIATIONS:
+
+- Three compatibility attempts failed before scientific rows. N1's initial run failed only after all 57 rows, during shared summary labeling; the resume reused every row and generated none.
+- The first uncommitted audit export omitted three compact provenance fields and was quarantined before the final strict export.
+- Windows `apply_patch` and pytest default temp-directory helpers failed; guarded exact edits and isolated basetemp were used. Final suites passed locally and on Lambda.

@@ -1,5 +1,10 @@
 # Next Experiments
 
+## EXP-034A Review Stop
+
+EXP-034A is complete. New N1 is `16/57`, above bare D0 `12/57`, but tied with matched-shuffle N2 `16/57` and below old D1 `17/57`. No follow-on experiment is authorized in this task.
+
+Before any future work, the user and ChatGPT should review the full task-level audit, especially the missing matched-shuffle specificity, retained 5/11 old gains, recovered 3/6 old losses, increased N1 loops, and confidence intervals containing zero. Do not start retraining, calibration, another prompt, first37, test tasks, or architecture work automatically.
 The current priority is an immediate submission-scope review after EXP-027B.
 Matched-harness bare Qwen reaches `8/37`; automatic raw transition memory
 reaches `5/37`; and the corrected generic PairMLP compiler remains
