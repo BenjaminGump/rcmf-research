@@ -255,6 +255,31 @@ Sources of truth:
 - No additional optimization, prompt variant, retraining round, or follow-on
   experiment starts automatically after EXP-034A.
 
+## EXP-034B Fresh One-Demo Selector Retraining Charter v1
+
+- The RCMF problem definition and production memory complexity contract are
+  unchanged. The official 499-memory ledger, complete-transition semantics,
+  transition representation semantics, parent-normalized weighting, fixed-size
+  field algebra, and deployment read contract remain unchanged.
+- The prompt remains the exact EXP-033A/EXP-034A `full_demo_first_only`
+  profile, and Qwen remains frozen. The selector architecture and locked
+  historical training method are unchanged; only selector parameters are
+  freshly initialized and trained from scratch on one-demo state
+  representations.
+- No selector architecture, objective, hyperparameter, candidate, seed, or
+  calibration search is permitted. The fixed deployed three-member method is
+  reproduced deterministically from global seed `25101` and member index.
+- Every downstream artifact that depends on selector outputs must be rebuilt.
+  Writers and readers are then initialized and trained from scratch using the
+  unchanged EXP-031A/EXP-034A two-epoch recipe while Qwen and the new selector
+  remain frozen.
+- Official AppWorld dev is evaluation-only. D0 may be reused only after exact
+  identity verification. Dev outcomes cannot modify the selector, downstream
+  supervision, writer/reader checkpoint, field, or configuration.
+- First37, `test_normal`, `test_challenge`, retrieval, top-k, per-memory runtime
+  scoring, gates, raw-memory deployment prompt text, and automatic follow-on
+  optimization are prohibited.
+
 ## EXP-025D-Direct Single-Seed Deadline Policy
 
 For EXP-025D-Direct, use exactly `GLOBAL_SEED = 25101` for deterministic
