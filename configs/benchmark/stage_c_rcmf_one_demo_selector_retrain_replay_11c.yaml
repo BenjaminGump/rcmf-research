@@ -1,0 +1,6 @@
+include: stage_c_rcmf_one_demo_retrain_replay_11b.yaml
+
+experiment:
+  name: stage_c_rcmf_one_demo_selector_retrain_replay_11c
+  version: rcmf_one_demo_selector_retrain_replay_11c_v1
+  seed: 25101

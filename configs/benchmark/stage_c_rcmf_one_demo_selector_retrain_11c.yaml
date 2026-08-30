@@ -1,0 +1,91 @@
+include: stage_c_rcmf_one_demo_retrain_11b.yaml
+
+experiment:
+  name: stage_c_rcmf_one_demo_selector_retrain_11c
+  version: rcmf_one_demo_selector_retrain_11c_v1
+  seed: 25101
+
+stage_c_7hr:
+  run_uuid: rcmf_one_demo_selector_retrain_11c_20260830_001
+  artifact_dir: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001
+  parent_exp025c: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001
+
+stage_c_9a:
+  run_uuid: rcmf_one_demo_selector_retrain_11c_20260830_001
+  artifact_dir: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001
+  starting_head: 0d8da7a5073a2c33b5447e1eabf95c2abf56619a
+  working_branch: research/v5-rcmf-one-demo-selector-retrain
+  parent_exp025c: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001
+  prompt_dependent_inputs:
+    state_cache: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/prompt_dependent/state_multiview.pt
+    outcomes: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/paired_causal/paired_outcomes.json
+    teacher_cache: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/structured_compiler/policy_teacher_cache.pt
+
+stage_c_11b:
+  run_uuid: rcmf_one_demo_selector_retrain_11c_20260830_001
+  artifact_dir: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001
+  source_head: 0d8da7a5073a2c33b5447e1eabf95c2abf56619a
+  source_branch: research/v5-rcmf-one-demo-retrain
+  working_branch: research/v5-rcmf-one-demo-selector-retrain
+  immutable:
+    selector_root: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/selector
+    selector_ensemble: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/selector/ensemble_scores.pt
+
+stage_c_11c:
+  run_uuid: rcmf_one_demo_selector_retrain_11c_20260830_001
+  artifact_dir: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  starting_head: 0d8da7a5073a2c33b5447e1eabf95c2abf56619a
+  starting_branch: research/v5-rcmf-one-demo-retrain
+  working_branch: research/v5-rcmf-one-demo-selector-retrain
+  prompt_profile: full_demo_first_only
+  parent_exp025c: runs/stage_c/signature_balanced_field_7c_20260818_001
+  parent_exp034a: runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001
+  expected:
+    historical_selector_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42bb01255a9e623956611f
+    retained_demo_sha256: 32348a5889682499b1cc17b7dced74dd706db12b6e248c1e6c7dfba5e50ed713
+    initial_prompt_asset_sha256: 90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe
+    structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+    selector_state_count: 638
+    selector_train_state_count: 499
+    selector_validation_state_count: 139
+    downstream_train_state_count: 366
+    downstream_heldout_state_count: 98
+    transition_count: 499
+    dev_task_count: 57
+    dev_task_list_sha256: c6aad8dca959d9c54537555dd6c3a4ececdd55390029511ab7971550d796e463
+  selector:
+    candidate_name: hard_lr3e4_e120_t075
+    layer: final_layer
+    state_views: 10
+    transition_views: 10
+    input_dim: 4096
+    projection_dim: 64
+    interaction_rank: 32
+    member_count: 3
+    batch_states: 8
+    maximum_pair_samples_per_state: 256
+    maximum_hard_samples_per_state: 128
+    learning_rate: 0.0003
+    epochs: 120
+    temperature: 0.75
+    listwise_weight: 1.0
+    pairwise_weight: 0.75
+    hard_negative_weight: 0.75
+    exact_api_weight: 0.1
+    stage_weight: 0.1
+    weight_decay: 0.0001
+    checkpoint_interval_epochs: 10
+    equality_atol: 0.0001
+    bootstrap_samples: 10000
+    bootstrap_seed: 25101
+  runtime:
+    review_threshold_hours: 18.0
+    heartbeat_interval_seconds: 240
+    heartbeat_stale_seconds: 720
+    hardware_required: NVIDIA H100 80GB HBM3
+    selector_state_seconds_expected: 0.7
+    selector_state_seconds_conservative: 1.5
+    selector_training_hours_expected: 2.3
+    selector_training_hours_conservative: 3.5
