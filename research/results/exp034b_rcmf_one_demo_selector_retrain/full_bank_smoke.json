@@ -1,0 +1,69 @@
+{
+  "automatic_launch_allowed": true,
+  "complete_legal_bank_memory_count": 393,
+  "conservative_h100_hours": 10.424367103354212,
+  "expected_h100_hours": 8.243496785896118,
+  "field_shape": [
+    960,
+    8,
+    256
+  ],
+  "format": "rcmf_no_science_full_bank_backward_smoke_9a_v1",
+  "full_path": [
+    "eight_complete_transition_views",
+    "four_section_writers",
+    "complete_task_legal_reversible_field",
+    "state_conditioned_eight_slot_read",
+    "four_layer_standard_cross_attention",
+    "frozen_qwen_target_forward_backward"
+  ],
+  "global_seed": 25101,
+  "hardware": "NVIDIA H100 80GB HBM3",
+  "measured_backward_seconds": 1.1769582238048315,
+  "measured_forward_seconds": 0.6352595491334796,
+  "passed": true,
+  "passes": [
+    {
+      "pass": 1,
+      "reader_projection_gradients": {
+        "14": false,
+        "21": false,
+        "28": false,
+        "7": false
+      },
+      "writer_gradients": {
+        "action": true,
+        "goal": true,
+        "observation": true,
+        "pre_state": true
+      }
+    },
+    {
+      "pass": 2,
+      "reader_projection_gradients": {
+        "14": true,
+        "21": true,
+        "28": true,
+        "7": true
+      },
+      "writer_gradients": {
+        "action": true,
+        "goal": true,
+        "observation": true,
+        "pre_state": true
+      }
+    }
+  ],
+  "qwen_frozen_and_gradient_free": true,
+  "review_threshold_h100_hours": 18.0,
+  "scientific_result": false,
+  "seconds": [
+    1.4635327099822462,
+    1.1769582238048315
+  ],
+  "slot_shape": [
+    8,
+    256
+  ],
+  "state_example_id": "appworld:trace:287e338_1:step:1:line:117"
+}
