@@ -1,0 +1,18 @@
+{
+  "copies": [
+    {
+      "destination": "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/clean_query_signature_manifest.jsonl",
+      "sha256": "aaec2a0ca271fec49b307a9fe98e5f38473d95bb52fb399f4bb5be8650807445",
+      "source": "runs/stage_c/signature_balanced_field_7c_20260818_001/clean_query_signature_manifest.jsonl"
+    },
+    {
+      "destination": "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/clean_intent_probe/calibrated_predictions.jsonl",
+      "sha256": "a609a3b7e47353102fc43a72287cd46340aa5d0f1b862744886facf0068bdbff",
+      "source": "runs/stage_c/signature_balanced_field_7c_20260818_001/clean_intent_probe/calibrated_predictions.jsonl"
+    }
+  ],
+  "failed_preflight_attempt": "exp034b-teacher-001",
+  "format": "exp034b_immutable_structural_input_materialization_v1",
+  "reason": "The 11c parent_exp025c path points at the new prompt-dependent cache root; the unchanged query-stage and intent-probe inputs therefore required exact materialization from their immutable EXP-025C source.",
+  "scientific_values_changed": false
+}
