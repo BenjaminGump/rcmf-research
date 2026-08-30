@@ -190,3 +190,18 @@ def test_exp034b_dev_wrapper_changes_identity_not_scientific_conditions() -> Non
     assert "runner.main()" in source
     assert dev_11b.CONDITIONS == ("N1", "N2")
     assert dev_11b.FIELD_CONTROLS == {"N1": "D1", "N2": "D2"}
+
+
+def test_exp034b_analysis_and_export_reuse_locked_11b_implementations() -> None:
+    analysis = Path(
+        "scripts/analyze_rcmf_one_demo_selector_retrain_11c.py"
+    ).read_text(encoding="utf-8")
+    export = Path(
+        "scripts/export_rcmf_one_demo_selector_retrain_audit_11c.py"
+    ).read_text(encoding="utf-8")
+    assert "base.analyze(" in analysis
+    assert "base._comparison(" in analysis
+    assert "joint absolute and matched-shuffle direction" in analysis
+    assert "base.export(" in export
+    assert "base._comparison_markdown = _comparison_markdown" in export
+    assert "exp034a_paired_outcomes_sha256" in export

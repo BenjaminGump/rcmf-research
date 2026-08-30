@@ -31,6 +31,7 @@ from scripts.run_rcmf_q90_trajectory_common_9c import first_divergence
 
 RUN_UUID = "rcmf_exp031a_one_demo_retrain_11b_20260829_001"
 FORMAT = "rcmf_one_demo_retrain_detailed_audit_11b_v1"
+SINGLE_SCIENTIFIC_CHANGE = "training_prompt_full_demo_to_full_demo_first_only"
 NEW_CONDITIONS = ("N1", "N2")
 ALL_CONDITIONS = ("D0", "old_D1", "N1", "N2")
 
@@ -283,7 +284,7 @@ def export(artifact_dir: Path, old_root: Path, audit_root: Path, result_root: Pa
         "open_attempt_ids": open_attempts,
         "artifact_root": str(artifact_dir.resolve()),
         "artifact_bytes": sum(path.stat().st_size for path in artifact_dir.rglob("*") if path.is_file()),
-        "single_scientific_change": "training_prompt_full_demo_to_full_demo_first_only",
+        "single_scientific_change": SINGLE_SCIENTIFIC_CHANGE,
     }
     atomic_json(result_tmp / "summary.json", summary)
     source_files = {
