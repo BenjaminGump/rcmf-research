@@ -30,6 +30,7 @@ stage_c_12a:
     shuffle_manifest_sha256: 4e5a4d8551223c420b063b0d8043a966367ac7043a53891ff7723616b7aa2170
     model_training_shuffle_sha256: 9bef7ed7dcbdf720a5a8d50cf996c35e3ddf8afed236ef716a492503457d3ea4
     fresh_shuffle_manifest: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/data/key_payload_shuffle_manifest.json
+    heldout_state_rows_root: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/heldout_validation/live_full_field
     field_memory_count: 401
     heldout_task_count: 8
   selectors:

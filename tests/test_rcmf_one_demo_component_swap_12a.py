@@ -22,6 +22,7 @@ from rcmf.training.rcmf_one_demo_component_swap_12a import (
     remove_restore_error,
     select_leakage_safe_memory_ids,
 )
+from scripts.run_rcmf_one_demo_component_swap_diagnostics_12a import spearman
 
 
 def file_sha256(path: Path) -> str:
@@ -35,6 +36,12 @@ def test_locked_old_selector_sha_is_exact_sha256() -> None:
     actual = config.raw["stage_c_12a"]["selectors"]["old"]["ensemble_sha256"]
     assert actual == "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f"
     assert len(actual) == 64
+
+
+def test_no_generation_selector_spearman_tracks_rank_order() -> None:
+    left = torch.tensor([0.1, 0.4, 0.2, 0.3])
+    assert spearman(left, left) == pytest.approx(1.0)
+    assert spearman(left, -left) == pytest.approx(-1.0)
 
 
 def test_condition_cells_and_counterbalanced_order() -> None:
