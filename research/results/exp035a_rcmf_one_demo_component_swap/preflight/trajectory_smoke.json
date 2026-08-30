@@ -1,0 +1,80 @@
+{
+  "automatic_launch_allowed": true,
+  "complete_trajectory_count": 8,
+  "condition_count": 8,
+  "condition_wall_seconds": {
+    "FF-C": 90.16730363713577,
+    "FF-S": 149.0955134946853,
+    "FO-C": 74.18256016401574,
+    "FO-S": 70.62831359915435,
+    "OF-C": 81.38507844088599,
+    "OF-S": 283.70079112192616,
+    "OO-C": 68.84385501686484,
+    "OO-S": 248.3888443321921
+  },
+  "conservative_full_wall_hours": 6.304462024931692,
+  "conservative_h100_hours": 6.304462024931692,
+  "determinism": {
+    "FF-C": {
+      "checks": {
+        "code": true,
+        "observations": true,
+        "prompts": true,
+        "step_count": true,
+        "success": true,
+        "task_id": true,
+        "token_ids": true
+      },
+      "passed": true
+    },
+    "FF-S": {
+      "checks": {
+        "code": true,
+        "observations": true,
+        "prompts": true,
+        "step_count": true,
+        "success": true,
+        "task_id": true,
+        "token_ids": true
+      },
+      "passed": true
+    },
+    "OO-C": {
+      "checks": {
+        "code": true,
+        "observations": true,
+        "prompts": true,
+        "step_count": true,
+        "success": true,
+        "task_id": true,
+        "token_ids": true
+      },
+      "passed": true
+    },
+    "OO-S": {
+      "checks": {
+        "code": true,
+        "observations": true,
+        "prompts": true,
+        "step_count": true,
+        "success": true,
+        "task_id": true,
+        "token_ids": true
+      },
+      "passed": true
+    }
+  },
+  "deterministic": true,
+  "evaluation_seeds": [
+    25101
+  ],
+  "expected_full_wall_hours": 2.369760577348578,
+  "expected_h100_hours": 2.369760577348578,
+  "format": "rcmf_one_demo_component_swap_smoke_12a_v1",
+  "infrastructure_exception_count": 0,
+  "mean_condition_wall_seconds": 133.29903247585753,
+  "passed": true,
+  "report_sha256": "1531e905af96f42fb7f0509e641b70ec27707c8f81c2cb469ec373851b4dedf9",
+  "restart_plan": "atomic task-condition JSON; resume validates config, manifest, field, status, and smoke flag",
+  "task_id": "76f2c72_1"
+}
