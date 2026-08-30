@@ -298,3 +298,24 @@ sweeps, or ensemble training unless the user explicitly changes this policy.
 - Long-running Lambda training and evaluation should write explicit logs under
   `/lambda/nfs/rcmf-persist/runs/logs/` and should be monitored before source
   changes are synchronized.
+
+## EXP-035A One-Demo Component-Swap Attribution Charter v1
+
+- EXP-035A is evaluation-only and diagnostic-only. Optimizer steps, parameter
+  updates, retraining, fine-tuning, calibration, hyperparameter search, and
+  outcome-driven component changes are prohibited.
+- The only scientific variable is the frozen selector package crossed with
+  the frozen writer/reader package in the preregistered `OO`, `OF`, `FO`, and
+  `FF` cells. Every cell uses matched correct and frozen key-payload-shuffle
+  bindings under the identical `full_demo_first_only` prompt.
+- Scientific trajectories use only the original immutable eight heldout-train
+  tasks. Their fields contain exactly the 401 model-training memories and no
+  heldout-parent memory; the 499-memory deployment fields are checksum-only
+  native reconstruction anchors and are not scientific heldout fields.
+- Official dev, first37, `test_normal`, and `test_challenge` are prohibited.
+  Runtime retrieval, top-k, FAISS, per-memory runtime scoring, raw-memory
+  prompt text, and hard or learned gates remain prohibited.
+- The RCMF problem definition, production complexity contract, contribution,
+  evaluation contract, and success criteria remain unchanged. EXP-035A stops
+  after the four-cell diagnosis and its audit; prompt transport, EXP-035B, and
+  every follow-on optimization require new user approval.

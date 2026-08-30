@@ -1,5 +1,31 @@
 # Current State
 
+## 2026-08-31 EXP-035A Active Diagnostic State
+
+VERIFIED:
+
+- EXP-034B completed and reached `STOP`: fresh-selector correct field was
+  `10/57`, below bare `12/57` and matched shuffle `15/57` on official dev.
+- The user has now approved EXP-035A, an evaluation-only four-cell swap of
+  frozen old/fresh selector and frozen old/fresh writer/reader packages.
+- EXP-035A starts from `4f5f1d3a74f196581fc570afc5f8eca75e663f4b`
+  and uses only the immutable eight heldout-train tasks with leakage-safe
+  401-memory fields.
+
+CURRENT WORK:
+
+- Audit exact component boundaries and immutable package identities before
+  constructing `OO`, `OF`, `FO`, and `FF` correct/shuffle fields.
+- No training, calibration, prompt transport, official dev, first37,
+  `test_normal`, or `test_challenge` is authorized.
+
+CURRENT BLOCK:
+
+- Do not begin EXP-035B or any optimization after this diagnostic. Stop after
+  the four-cell complete-trajectory report and user review.
+
+Last updated: 2026-08-31.
+
 ## 2026-08-30 EXP-034A Current State
 
 VERIFIED:
