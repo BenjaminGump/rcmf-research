@@ -1,0 +1,30 @@
+{
+  "compatibility_adapter": false,
+  "cross_cell_path": [
+    "selector S computes all memory keys",
+    "writer W compiles payloads from the same raw transitions",
+    "401-memory field is rebuilt from scratch",
+    "runtime query uses selector S",
+    "field read injection uses reader W"
+  ],
+  "format": "rcmf_one_demo_component_dependency_graph_12a_v1",
+  "graph_sha256": "39fe14303a7f72784a0eab8690400ff5f6162267797b4185da7617916c5ba21b",
+  "manual_renormalization": false,
+  "scale_change": false,
+  "selector_package": [
+    "state 10-view representation -> frozen selector state factors -> q(s)",
+    "transition 10-view representation -> frozen selector transition factors -> k(i)",
+    "three-member calibration/ensemble -> exact 960D q/k decomposition"
+  ],
+  "shared_infrastructure": [
+    "raw 499-memory ledger and 401-memory train subset",
+    "one-demo prompt renderer",
+    "parent-normalized rho",
+    "reversible whole-bank field algebra",
+    "AppWorld 0.1.0 runner/evaluator and frozen generation configuration"
+  ],
+  "writer_reader_package": [
+    "shared raw transition 8-view tensor -> frozen writer -> 8x256 payload",
+    "fixed field read -> frozen reader layers [7,14,21,28] -> frozen Qwen"
+  ]
+}

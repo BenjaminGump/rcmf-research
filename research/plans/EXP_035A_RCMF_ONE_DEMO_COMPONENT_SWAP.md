@@ -50,6 +50,40 @@ their interaction, 100,000 task-grouped bootstrap replicates, exact McNemar
 tests, and leave-one-task-out sensitivity. No fixed effect threshold or p-value
 alone determines the diagnosis.
 
+## Audited Dependency Graph
+
+```mermaid
+flowchart LR
+  Ledger[Raw 401-memory ledger] --> Views[Shared complete-transition views]
+  Views --> OS[Old selector] --> OK[Old keys]
+  Views --> FS[Fresh selector] --> FK[Fresh keys]
+  Views --> OW[Old writer] --> OP[Old payloads]
+  Views --> FW[Fresh writer] --> FP[Fresh payloads]
+  OK --> OO[OO field]
+  OP --> OO
+  OK --> OF[OF field]
+  FP --> OF
+  FK --> FO[FO field]
+  OP --> FO
+  FK --> FF[FF field]
+  FP --> FF
+  State[One-demo live state] --> OS
+  State --> FS
+  OO --> OR[Old reader]
+  FO --> OR
+  OF --> FR[Fresh reader]
+  FF --> FR
+  OR --> Qwen[Frozen Qwen3-8B]
+  FR --> Qwen
+```
+
+Each field is rebuilt from the same ordered raw ledger with parent-normalized
+weights. Runtime queries use the selector named by the first cell letter;
+field-to-Qwen injection uses the reader named by the second. No compatibility
+adapter, alignment, rescaling, retrieval, or runtime memory scan is present.
+The machine-readable graph and exact package identities are frozen in the
+result manifest before trajectory smoke.
+
 ## Stop Contract
 
 The experiment ends after component identity validation, native and cross-cell

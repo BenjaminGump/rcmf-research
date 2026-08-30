@@ -1,0 +1,345 @@
+{
+  "common_shuffle_exact_match": true,
+  "condition_count": 8,
+  "cross_shapes_compatible": true,
+  "elapsed_seconds": 5.3066384620033205,
+  "field_rows": {
+    "FF": {
+      "historical_401_rebuild_max_abs": {
+        "correct_A": 0.0,
+        "correct_B": 0.0,
+        "shuffle_A": 0.0,
+        "shuffle_B": 0.0
+      },
+      "memory_count": 401,
+      "path": "runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/fields/FF.pt",
+      "remove_restore_max_abs": {
+        "B": 0.0,
+        "correct_A": 1.1920928955078125e-07,
+        "shuffle_A": 1.1920928955078125e-07,
+        "shuffle_B": 0.0
+      },
+      "selector_package": "fresh",
+      "sha256": "87d41ad4eab25fcec963e7e02934b4e9256f28374775b41bcaff64a98460cfe5",
+      "tensors": {
+        "A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 2.3461108207702637,
+          "minimum": -2.2611258029937744,
+          "norm": 268.48858642578125,
+          "rms": 0.1914973258972168,
+          "sha256": "bfc6abc1482987e2d024c04e34be6d415554b4ea1a15b32f95047b972b920e60",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        },
+        "shuffled_A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 2.3373656272888184,
+          "minimum": -2.2643589973449707,
+          "norm": 266.1444396972656,
+          "rms": 0.18982547521591187,
+          "sha256": "7cc4208f762280653bd030a1fbfd4e577b0a5ef04988fd7d6e38b5e592e1caa9",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "shuffled_B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        }
+      },
+      "writer_reader_package": "fresh"
+    },
+    "FO": {
+      "memory_count": 401,
+      "path": "runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/fields/FO.pt",
+      "remove_restore_max_abs": {
+        "B": 0.0,
+        "correct_A": 2.384185791015625e-07,
+        "shuffle_A": 2.384185791015625e-07,
+        "shuffle_B": 0.0
+      },
+      "selector_package": "fresh",
+      "sha256": "9ec7bdd1fac3074a2274ac93a2b5af2a20d48f574697d0e1684b3f3c09386b7a",
+      "tensors": {
+        "A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 3.207568407058716,
+          "minimum": -3.041483163833618,
+          "norm": 366.2255859375,
+          "rms": 0.2612062990665436,
+          "sha256": "8f0ee2245fa6fbdbbf35c96abd38cd8e1779d5d33abcf0b4830eb1c84c195f00",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        },
+        "shuffled_A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 3.173299551010132,
+          "minimum": -2.9948840141296387,
+          "norm": 360.1117858886719,
+          "rms": 0.2568460702896118,
+          "sha256": "7a8b198bce86d86061bb5c72d7dc0feb67a25cc69c24bdfc1dbf030b56290828",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "shuffled_B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        }
+      },
+      "writer_reader_package": "old"
+    },
+    "OF": {
+      "memory_count": 401,
+      "path": "runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/fields/OF.pt",
+      "remove_restore_max_abs": {
+        "B": 0.0,
+        "correct_A": 1.1920928955078125e-07,
+        "shuffle_A": 1.1920928955078125e-07,
+        "shuffle_B": 0.0
+      },
+      "selector_package": "old",
+      "sha256": "b25b6b5bb22174edbc2515224e7281bac28502b9041dbf3d850447cbd5055bb1",
+      "tensors": {
+        "A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 3.3508312702178955,
+          "minimum": -3.2273635864257812,
+          "norm": 275.82513427734375,
+          "rms": 0.1967301368713379,
+          "sha256": "dbacce2693112a33a97c0e03149fbe1cc084081775ee13b88df49675dd20437a",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        },
+        "shuffled_A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 3.3169167041778564,
+          "minimum": -3.216550827026367,
+          "norm": 273.5090637207031,
+          "rms": 0.19507776200771332,
+          "sha256": "c0e68336ed4c7399806927b3177557a057e65c7fb50ccdf3c881d871cb3d8217",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "shuffled_B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        }
+      },
+      "writer_reader_package": "fresh"
+    },
+    "OO": {
+      "historical_401_rebuild_max_abs": {
+        "correct_A": 0.0,
+        "correct_B": 0.0,
+        "shuffle_A": 0.0,
+        "shuffle_B": 0.0
+      },
+      "memory_count": 401,
+      "path": "runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/fields/OO.pt",
+      "remove_restore_max_abs": {
+        "B": 0.0,
+        "correct_A": 1.1920928955078125e-07,
+        "shuffle_A": 2.384185791015625e-07,
+        "shuffle_B": 0.0
+      },
+      "selector_package": "old",
+      "sha256": "ee3049f58b036ad8f1e82600fc775a2890b2b4cb788d6db637a93d9d74de346d",
+      "tensors": {
+        "A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 4.651630878448486,
+          "minimum": -4.3261332511901855,
+          "norm": 376.0727233886719,
+          "rms": 0.26823103427886963,
+          "sha256": "047b4a39a2c4bab40f27ed4f68657152db3bb1a9f54ce5b064f935b627d90d8a",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        },
+        "shuffled_A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 4.517538547515869,
+          "minimum": -4.2390241622924805,
+          "norm": 370.09429931640625,
+          "rms": 0.26396578550338745,
+          "sha256": "4271ed62373f532721005601f4f82cddf378bb66df580e0281e4f891b5816064",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "shuffled_B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        }
+      },
+      "writer_reader_package": "old"
+    }
+  },
+  "format": "rcmf_one_demo_component_swap_preparation_12a_v1",
+  "hardware": "NVIDIA H100 80GB HBM3",
+  "memory_count": 401,
+  "native_reconstruction_passed": true,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "passed": true,
+  "preflight_sha256": "4025188c8ef10bbbfc406161193383c99c5a6f9886ec9b2cd760fd44b6aabc10",
+  "prompt_identity_passed": true,
+  "run_uuid": "rcmf_one_demo_component_swap_12a_20260831_001",
+  "selector_key_rebuild_max_abs": {
+    "fresh": 1.1175870895385742e-08,
+    "old": 7.450580596923828e-09
+  },
+  "selector_score_errors": {
+    "fresh": {
+      "centered_direct_vs_qk_max_abs": 2.86102294921875e-06,
+      "centered_direct_vs_qk_mean_abs": 1.985859370279286e-07,
+      "direct_vs_qk_plus_intercept_max_abs": 2.86102294921875e-06,
+      "direct_vs_qk_plus_intercept_mean_abs": 1.9879293233771023e-07,
+      "stored_vs_direct_max_abs": 2.384185791015625e-06,
+      "stored_vs_direct_mean_abs": 1.7065812585315143e-07
+    },
+    "old": {
+      "decomposed_vs_stored_max_abs": 2.6226043701171875e-06,
+      "direct_vs_decomposed_max_abs": 2.86102294921875e-06,
+      "direct_vs_stored_max_abs": 2.384185791015625e-06
+    }
+  },
+  "source_head": "5754eb12f652cba745aab1683e83be7f680a42e7",
+  "task_count": 8,
+  "task_memory_leak_count": 0,
+  "trajectory_count": 64
+}
