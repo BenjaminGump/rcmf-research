@@ -1,0 +1,38 @@
+{
+  "format": "rcmf_one_demo_retrain_detailed_audit_11b_v1",
+  "immutable_exp033a_audit_index": "/lambda/nfs/rcmf-persist/project/research/audits/rcmf_exp031a_one_demo_dev_11a_20260829_001/index.json",
+  "immutable_exp033a_reference_conditions": [
+    "D0",
+    "D1"
+  ],
+  "independently_verified": true,
+  "lambda_only_tensors_recorded_per_step_by_path_sha_shape_dtype": true,
+  "new_conditions": [
+    "N1",
+    "N2"
+  ],
+  "new_step_row_count": 2801,
+  "new_task_condition_count": 114,
+  "raw_lambda_artifact_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001",
+  "run_uuid": "rcmf_exp031a_one_demo_retrain_11b_20260829_001",
+  "secret_verification": {
+    "checked_text_files": 172,
+    "raw_jwt_match_count": 0,
+    "registered_sensitive_observation_count": 199,
+    "registered_sensitive_observation_leak_count": 0
+  },
+  "static_prompt_assets": "static_prompt_assets.json",
+  "strict_audit_tree": {
+    "json_files": 1,
+    "jsonl_files": 114,
+    "rows": 2802,
+    "text_files": 57
+  },
+  "strict_result_tree": {
+    "json_files": 28,
+    "jsonl_files": 4,
+    "rows": 831,
+    "text_files": 0
+  },
+  "task_count": 57
+}
