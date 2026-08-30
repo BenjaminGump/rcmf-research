@@ -2172,3 +2172,16 @@ Decision:
 - Formal task wall sum is `5.5988 h`; accounted GPU-phase attempt wall is `5.6783 h`. The ledger has 10 attempts, 2 failed, and 0 open.
 - The committed Git-safe audit contains 171 condition traces, 4,411 step rows, and 57 task comparisons. Audit-index SHA256 is `1616378ab22874c21d4f9bff84db52078ed4d9533b4d86cac79014adb7a09b72`; secret verification found zero leaks and zero raw JWTs.
 - EXP-033A stops here. No training, first37/test run, prompt variant, calibration, gate, addressing change, or follow-on experiment was launched.
+
+### EXP-034B Completed - Fresh One-Demo Selector Does Not Rescue Dev
+
+- Run `rcmf_one_demo_selector_retrain_11c_20260830_001` completed on `research/v5-rcmf-one-demo-selector-retrain` with seed `25101`.
+- A fresh three-member selector was trained from the exact locked EXP-025C recipe on 638 one-demo states and 499 unchanged transitions. Its ensemble SHA256 is `c6e4e2dd533a593730550d2580054da4fc2ac701cefd0d2def1c4a771b4d6300`.
+- Selector diagnostics remained strong and shuffle-sensitive: B/E NDCG@4 is `0.783678/0.785296`, versus transition-shuffle `0.081675/0.083958`.
+- The fresh selector changed 111/464 downstream selections. Recomputed labels are 134 POSITIVE, 281 NEUTRAL, and 49 HARMFUL.
+- The unchanged downstream recipe selected epoch 1 on heldout train. Checkpoint SHA256 is `357491a6c69d141e4ed476b9810a3c8d11bb29ec27e80491db69355b4956d764`; deployment field SHA256 is `f7fb2f873425cb3792a12dd84bda0d6d1008061f8235d95df687a78dd2cab169`.
+- Complete official-dev outcomes are D0 bare `12/57`, N1 correct `10/57`, and N2 matched shuffle `15/57`.
+- N1-D0 is `-2/57`, CI `[-0.140351,0.070175]`; N1-N2 is `-5/57`, CI `[-0.192982,0.017544]`. Both directions remain negative under every leave-one-task-out deletion.
+- Scientific decision: `STOP`. Fresh one-demo selector retraining does not rescue complete-trajectory memory-specific behavior under the frozen pipeline.
+- The independently verified Git-safe audit contains 114 task-condition traces and 3,132 step rows. Index SHA256 is `c4bea6d3fb4c7ab2fef2f489bb626b8b5a0fee75f1dca06d24ff59a744daa802`; secret leaks are zero.
+- No follow-on selector, calibration, architecture, retrieval, first37/test run, or V5 tag was started.

@@ -1461,3 +1461,17 @@ Recommended next review action:
 5. Require a separately reviewed contract for any future evaluation or training.
 
 Still blocked under EXP-033A: retraining EXP-031A, training a one-demo model, addressing or field changes, first37, `test_normal`, `test_challenge`, another prompt variant, calibration, retrieval, a hard gate, multi-seed evaluation, or automatic follow-on work.
+
+## EXP-034B Completed - Stop Fresh Selector Route
+
+EXP-034B completed the exact 57-task N1/N2 dev manifest. Fresh-selector correct N1 is `10/57`, below bare D0 `12/57` and matched-shuffle N2 `15/57`.
+
+Recommended next review action:
+
+1. Freeze the fresh selector, selected epoch-1 writer/reader checkpoint, deployment field, complete dev trajectories, and Git-safe audit.
+2. Build the paper-facing comparison across EXP-033A, EXP-034A, and EXP-034B, emphasizing that selector and heldout one-step proxies did not predict complete-trajectory direction.
+3. Keep the interpretation narrow: EXP-034B rejects this bounded selector-retraining rescue, not every possible memory architecture or benchmark setting.
+4. Use the committed per-task comparisons to characterize repeated-action and context-termination regressions without post-hoc model changes.
+5. Require a new reviewed scientific contract for any future run.
+
+Still blocked: another selector or architecture search, calibration, retrieval, hard gating, first37, `test_normal`, `test_challenge`, another prompt variant, broader evaluation, Stage C2, and V5 tagging.

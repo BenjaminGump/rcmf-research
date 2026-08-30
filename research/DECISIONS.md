@@ -2656,3 +2656,28 @@ IMPLEMENTATION DEVIATIONS:
 - Three compatibility attempts failed before scientific rows. N1's initial run failed only after all 57 rows, during shared summary labeling; the resume reused every row and generated none.
 - The first uncommitted audit export omitted three compact provenance fields and was quarantined before the final strict export.
 - Windows `apply_patch` and pytest default temp-directory helpers failed; guarded exact edits and isolated basetemp were used. Final suites passed locally and on Lambda.
+
+## 2026-08-30 EXP-034B fresh one-demo selector decision
+
+VERIFIED:
+
+- The fresh selector used the exact locked historical recipe, not historical weights, scores, calibration, q(s), or k(i).
+- Selector B/E NDCG@4 is `0.783678/0.785296`; state and transition shuffles are much lower.
+- The unchanged writer/reader recipe selected epoch 1 on heldout train and preserved the constant-size reversible 499-memory field contract.
+- Complete official-dev success is D0 `12/57`, N1 correct `10/57`, and N2 matched shuffle `15/57`.
+- N1 is below both comparators, and both negative directions survive every leave-one-task-out deletion.
+
+DECISION:
+
+- Record scientific `STOP` for the fresh one-demo selector route.
+- Do not treat strong selector proxy metrics or heldout one-step eligibility as evidence of complete-trajectory benefit.
+- Do not claim that selector geometry was the sole cause of EXP-033A's positive point estimate.
+- Stop with no automatic selector iteration, downstream retraining, architecture search, calibration, retrieval, first37/test evaluation, or V5 tag.
+
+IMPLEMENTATION DEVIATIONS:
+
+- Correct the user-supplied historical selector SHA transcription using immutable source evidence; do not use historical parameters for initialization.
+- Preserve two attempt-command source-suffix corrections as provenance-only rows.
+- Preserve the diagnostic-created single-space Lambda file in quarantine; delete no unique material.
+- Restore only exact hash-validated immutable teacher sources after the first teacher attempt stopped before generation.
+- Correct the inherited N1 runtime identity check from the historical selector to the fresh ensemble. The failed attempt produced no task row and every other frozen preflight artifact remained byte-identical.
