@@ -23,6 +23,7 @@ from rcmf.training.rcmf_one_demo_component_swap_12a import (
     select_leakage_safe_memory_ids,
 )
 from scripts.run_rcmf_one_demo_component_swap_diagnostics_12a import spearman
+from scripts.run_rcmf_one_demo_component_swap_12a import parse_args
 
 
 def file_sha256(path: Path) -> str:
@@ -42,6 +43,30 @@ def test_no_generation_selector_spearman_tracks_rank_order() -> None:
     left = torch.tensor([0.1, 0.4, 0.2, 0.3])
     assert spearman(left, left) == pytest.approx(1.0)
     assert spearman(left, -left) == pytest.approx(-1.0)
+
+
+def test_runner_exposes_separate_manifest_and_execution_heads(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "runner",
+            "--artifact-dir",
+            "artifacts",
+            "--phase",
+            "smoke",
+            "--attempt-id",
+            "attempt",
+            "--source-head",
+            "execution",
+            "--manifest-source-head",
+            "manifest",
+        ],
+    )
+    arguments = parse_args()
+    assert arguments.source_head == "execution"
+    assert arguments.manifest_source_head == "manifest"
 
 
 def test_condition_cells_and_counterbalanced_order() -> None:

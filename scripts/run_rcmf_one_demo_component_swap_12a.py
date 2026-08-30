@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import statistics
+import subprocess
 import time
 from typing import Any
 
@@ -55,6 +56,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--attempt-id", required=True)
     parser.add_argument("--source-head", required=True)
+    parser.add_argument("--manifest-source-head")
     return parser.parse_args()
 
 
@@ -76,6 +78,10 @@ def require_unique_attempt(path: Path, attempt_id: str) -> None:
     for line in path.read_text(encoding="utf-8").splitlines():
         if line and str(json.loads(line).get("attempt_id")) == attempt_id:
             raise ValueError(f"Duplicate attempt ID: {attempt_id}")
+
+
+def git_head() -> str:
+    return subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
 
 
 def paths(artifact_dir: Path) -> dict[str, Path]:
@@ -556,8 +562,14 @@ def main() -> None:
     if not manifest_path.exists() or not package_path.exists():
         raise RuntimeError("EXP-035A frozen preparation artifacts are missing")
     manifest = read_json(manifest_path)
-    if str(manifest["source_head"]) != args.source_head:
+    package = read_json(package_path)
+    manifest_source_head = args.manifest_source_head or args.source_head
+    if str(manifest["source_head"]) != manifest_source_head:
         raise ValueError("EXP-035A manifest source HEAD differs")
+    if str(package["source_head"]) != manifest_source_head:
+        raise ValueError("EXP-035A component package source HEAD differs")
+    if git_head() != args.source_head:
+        raise ValueError("EXP-035A execution source HEAD differs from the checkout")
     run_paths = paths(args.artifact_dir)
     require_unique_attempt(args.artifact_dir / "attempts.jsonl", args.attempt_id)
     with AttemptLedger(
