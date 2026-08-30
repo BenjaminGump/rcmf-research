@@ -371,7 +371,11 @@ def main() -> None:
 
                 handles.append(layers[layer_index].register_forward_hook(capture))
             base_model = getattr(backend.model, "model", backend.model)
-            with torch.inference_mode():
+            with torch.inference_mode(), torch.autocast(
+                device_type="cuda",
+                dtype=torch.bfloat16,
+                enabled=backend.device.type == "cuda",
+            ):
                 base_model(
                     input_ids=tokenized.input_ids,
                     attention_mask=tokenized.attention_mask,
@@ -392,7 +396,11 @@ def main() -> None:
                 per_layer = {}
                 for layer_index in insertion_layers:
                     adapter = runtime.readers[writer_reader_name].adapters[str(layer_index)]
-                    with torch.inference_mode():
+                    with torch.inference_mode(), torch.autocast(
+                        device_type="cuda",
+                        dtype=torch.bfloat16,
+                        enabled=backend.device.type == "cuda",
+                    ):
                         _, probabilities, delta = adapter(captured[layer_index], slots)
                     work = probabilities.to(torch.float32).clamp_min(1.0e-12)
                     per_layer[str(layer_index)] = {
