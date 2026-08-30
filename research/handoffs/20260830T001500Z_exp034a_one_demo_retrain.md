@@ -9,7 +9,7 @@ Timestamp: `2026-08-30T00:15:00Z`
 - Archive verification: `archive/exp033a-one-demo-dev-eval-a2c41652` -> exact starting SHA
 - Run UUID: `rcmf_exp031a_one_demo_retrain_11b_20260829_001`
 - Seed: `25101`
-- Final record commit: `FINAL_RECORD_COMMIT_PENDING`
+- Final record commit: `08e5ae7fee0e78842f8bd519dd59b4ccbcd1b7d0`
 
 ## What Changed
 

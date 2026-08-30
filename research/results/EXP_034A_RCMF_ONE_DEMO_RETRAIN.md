@@ -12,7 +12,7 @@
 - Selected checkpoint: epoch 2
 - Formal dev evaluation: complete, `57/57` tasks for N1 and N2
 - Final descriptive result: N1 exceeds D0 in point estimate, equals N2, and is one task below old D1
-- Final record commit: `FINAL_RECORD_COMMIT_PENDING`
+- Final record commit: `08e5ae7fee0e78842f8bd519dd59b4ccbcd1b7d0`
 
 ## Frozen Identities
 
