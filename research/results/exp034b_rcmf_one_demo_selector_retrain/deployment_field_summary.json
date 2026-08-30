@@ -1,0 +1,47 @@
+{
+  "audit_rebuild_max_abs": 3.0994415283203125e-06,
+  "complete_shuffle_fixed_points": 0,
+  "deployment_field": "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/deployment_field/complete_37_task_field.pt",
+  "deployment_field_sha256": "f7fb2f873425cb3792a12dd84bda0d6d1008061f8235d95df687a78dd2cab169",
+  "field_memory_count_after": 499,
+  "field_memory_count_before": 401,
+  "field_shape_after": {
+    "A": [
+      960,
+      8,
+      256
+    ],
+    "B": [
+      8,
+      256
+    ]
+  },
+  "field_shape_before": {
+    "A": [
+      960,
+      8,
+      256
+    ],
+    "B": [
+      8,
+      256
+    ]
+  },
+  "format": "rcmf_instant_heldout_memory_addition_9a_v1",
+  "global_seed": 25101,
+  "max_add_seconds_per_memory": 0.00011990591883659363,
+  "max_compile_seconds_per_memory": 0.0023676366545259953,
+  "mean_add_seconds_per_memory": 7.47326067743861e-05,
+  "mean_compile_seconds_per_memory": 0.0010308789859088709,
+  "new_memory_count": 98,
+  "no_retraining_or_optimizer_step": true,
+  "passed": true,
+  "peak_cuda_memory_bytes": 552786944,
+  "production_add_scans_existing_records": false,
+  "remove_restore_max_abs": 7.152557373046875e-07,
+  "removed_parent_id": "55bcdd03-fa90-5f8d-b91c-5cc64a64d46f",
+  "removed_parent_memory_count": 13,
+  "selected_checkpoint": "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/joint_training/checkpoints/epoch_01.pt",
+  "selected_checkpoint_sha256": "357491a6c69d141e4ed476b9810a3c8d11bb29ec27e80491db69355b4956d764",
+  "total_heldout_compile_add_seconds": 0.11408715276047587
+}
