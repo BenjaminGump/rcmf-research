@@ -1,0 +1,94 @@
+include: stage_c_rcmf_one_demo_selector_retrain_11c.yaml
+
+experiment:
+  name: stage_c_rcmf_one_demo_component_swap_12a
+  version: rcmf_one_demo_component_swap_12a_v1
+  seed: 25101
+
+stage_c_12a:
+  run_uuid: rcmf_one_demo_component_swap_12a_20260831_001
+  artifact_dir: runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  starting_head: 4f5f1d3a74f196581fc570afc5f8eca75e663f4b
+  starting_branch: research/v5-rcmf-one-demo-selector-retrain
+  working_branch: research/v5-rcmf-one-demo-component-swap
+  prompt_profile: full_demo_first_only
+  prompt:
+    initial_messages_sha256: 90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe
+    retained_demo_sha256: 32348a5889682499b1cc17b7dced74dd706db12b6e248c1e6c7dfba5e50ed713
+  shared:
+    transition_cache: runs/stage_c/signature_balanced_field_7c_20260818_001/representation_cache/multiview/transition_multiview.pt
+    transition_cache_sha256: 00549c7de1ee75e39ab5a2919a1f3c8d713fbec6709255955d0b2805b276cc3b
+    memory_view_sha256: 379d3c93b655701f4f0feb5811f3d0ecf618cfcc9c28523f0b2e6c91167cdd76
+    old_data_manifest: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/full_bank_data_manifest.json
+    fresh_data_manifest: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/data/full_bank_data_manifest.json
+    old_source_cache: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/rcmf_source_cache.pt
+    fresh_source_cache: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/data/rcmf_source_cache.pt
+    memory_provenance: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/memory_provenance.jsonl
+    shuffle_manifest: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/key_payload_shuffle_manifest.json
+    shuffle_manifest_sha256: 4e5a4d8551223c420b063b0d8043a966367ac7043a53891ff7723616b7aa2170
+    model_training_shuffle_sha256: 9bef7ed7dcbdf720a5a8d50cf996c35e3ddf8afed236ef716a492503457d3ea4
+    fresh_shuffle_manifest: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/data/key_payload_shuffle_manifest.json
+    field_memory_count: 401
+    heldout_task_count: 8
+  selectors:
+    old:
+      source_run: signature_balanced_field_7c_20260818_001
+      source_commit: 57d2a3479ff292dd8f89bdd0ea9f9417abc42a48
+      archive_identity: a2c41652bfea380cfef89df0bee0e4d919458982
+      root: runs/stage_c/signature_balanced_field_7c_20260818_001
+      ensemble_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42bb01255a9e623956611f
+      member_sha256:
+        - bef5944417ddb41a230b7434393e0c3d3ca75316720c3c6bcc2e34a6a2238494
+        - c95e166ee32f9ba1740a097ae32119b9cf91954f51f469e66177e43218e6da9c
+        - 71830292e1a8ca170fe6bdacaeeafdcffc208f2acd21f0f406158a0bda3cdaf3
+      memory_key_sha256: 62922b3c606d0eca7d1820351eaa95cbe50ba739f85156441ac902a6129bfd3b
+    fresh:
+      source_run: rcmf_one_demo_selector_retrain_11c_20260830_001
+      source_commit: 4f5f1d3a74f196581fc570afc5f8eca75e663f4b
+      archive_identity: 4f5f1d3a74f196581fc570afc5f8eca75e663f4b
+      root: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001
+      ensemble_sha256: c6e4e2dd533a593730550d2580054da4fc2ac701cefd0d2def1c4a771b4d6300
+      member_sha256:
+        - b129135bbe88c0bbabbe1e2bfb22f8be94d42197d86a858c75c92b6e96c079a0
+        - c1e02a9877c46c4267aa48e5012d1e1c5a90b7b90af155cdd9c710a993d47651
+        - 3d19352b2d301d221e16ec32bb734ed32e08802a9f729ae608dbcac2a47899c8
+      factor_path: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/selector/selector_factors.pt
+      factor_sha256: e9da348165c43b3bc04048b8334d855637bab78a25c01bf97c0f62f7199817ad
+      state_query_sha256: 1ff7f69c12cf11407387679f795510586cb91601637d8c5b4123584a096ce4c2
+      memory_key_sha256: dad9590a0a62adef6db620bbf2c1d2faa35f30100b5cc495294c4a9d50cbfa15
+  writer_readers:
+    old:
+      source_run: rcmf_joint_full_bank_9a_20260826_001
+      source_commit: 57d2a3479ff292dd8f89bdd0ea9f9417abc42a48
+      archive_identity: a2c41652bfea380cfef89df0bee0e4d919458982
+      checkpoint: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/joint_training/checkpoints/epoch_02.pt
+      checkpoint_sha256: d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1
+      selected_epoch: 2
+      native_deployment_field: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/deployment_field/complete_37_task_field.pt
+      native_deployment_field_sha256: 5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e
+      heldout_correct_field: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/heldout_validation/live_full_field/field_artifacts/epoch_02_correct.pt
+      heldout_correct_field_sha256: 63929027dfddea722419024949e492d9477a5fd61a45fe4dbf40a07a3936fa79
+      heldout_shuffle_field: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/heldout_validation/live_full_field/field_artifacts/epoch_02_key_payload_shuffle.pt
+      heldout_shuffle_field_sha256: a50f0f2c415433ebdb9b9a22624ea79f196c74181b6050c96b12235918402331
+    fresh:
+      source_run: rcmf_one_demo_selector_retrain_11c_20260830_001
+      source_commit: 4f5f1d3a74f196581fc570afc5f8eca75e663f4b
+      archive_identity: 4f5f1d3a74f196581fc570afc5f8eca75e663f4b
+      checkpoint: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/joint_training/checkpoints/epoch_01.pt
+      checkpoint_sha256: 357491a6c69d141e4ed476b9810a3c8d11bb29ec27e80491db69355b4956d764
+      forbidden_epoch_02_sha256: d8c82a331e66cb8d7a4fe9504dc34dd75cb3534c518e63dc3e08f1fc3a3fa4f1
+      selected_epoch: 1
+      native_deployment_field: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/deployment_field/complete_37_task_field.pt
+      native_deployment_field_sha256: f7fb2f873425cb3792a12dd84bda0d6d1008061f8235d95df687a78dd2cab169
+      heldout_correct_field: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/heldout_validation/live_full_field/field_artifacts/epoch_01_correct.pt
+      heldout_correct_field_sha256: 33433d872a5b3a25690d32be691cf5d25a9048caed8ec95c0ac020775823e242
+      heldout_shuffle_field: runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/heldout_validation/live_full_field/field_artifacts/epoch_01_key_payload_shuffle.pt
+      heldout_shuffle_field_sha256: 9b5ae455113ba3555c2c35d7e80dd5164bab69270fa34aa0a7a0713663696c83
+  runtime:
+    hardware_required: NVIDIA H100 80GB HBM3
+    review_threshold_hours: 18.0
+    heartbeat_stale_seconds: 720
+    bootstrap_samples: 100000
+    analysis_seed: 25101
