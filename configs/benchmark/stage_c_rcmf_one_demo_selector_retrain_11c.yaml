@@ -43,7 +43,7 @@ stage_c_11c:
   parent_exp025c: runs/stage_c/signature_balanced_field_7c_20260818_001
   parent_exp034a: runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001
   expected:
-    historical_selector_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42bb01255a9e623956611f
+    historical_selector_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f
     retained_demo_sha256: 32348a5889682499b1cc17b7dced74dd706db12b6e248c1e6c7dfba5e50ed713
     initial_prompt_asset_sha256: 90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe
     structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
