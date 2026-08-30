@@ -204,4 +204,6 @@ def test_exp034b_analysis_and_export_reuse_locked_11b_implementations() -> None:
     assert "joint absolute and matched-shuffle direction" in analysis
     assert "base.export(" in export
     assert "base._comparison_markdown = _comparison_markdown" in export
+    assert "base._result_source_files = _result_source_files" in export
+    assert '"selector_state_manifest.json"' in export
     assert "exp034a_paired_outcomes_sha256" in export

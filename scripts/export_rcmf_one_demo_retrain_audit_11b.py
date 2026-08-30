@@ -204,6 +204,20 @@ def _paired_outcome_summary(artifact_dir: Path, old_root: Path) -> dict[str, Any
     }
 
 
+def _result_source_files(artifact_dir: Path) -> dict[str, Path]:
+    return {
+        "dependency_manifest.json": artifact_dir / "dependency_manifest.json",
+        "one_demo_state_cache_summary.json": artifact_dir / "prompt_dependent/one_demo_state_cache_summary.json",
+        "training_unit_manifest.json": artifact_dir / "joint_training/training_unit_manifest.json",
+        "training_summary.json": artifact_dir / "joint_training/training_summary.json",
+        "heldout_selection.json": artifact_dir / "heldout_validation/live_full_field/checkpoint_selection.json",
+        "deployment_field_summary.json": artifact_dir / "deployment_field/instant_add_report.json",
+        "paired_analysis.json": artifact_dir / "analysis/paired_analysis.json",
+        "trajectory_metrics.json": artifact_dir / "analysis/trajectory_metrics.json",
+        "runtime_preflight.json": artifact_dir / "runtime/formal_gpu_preflight.json",
+    }
+
+
 def export(artifact_dir: Path, old_root: Path, audit_root: Path, result_root: Path) -> dict[str, Any]:
     if audit_root.exists():
         raise FileExistsError("Refusing to overwrite an EXP-034A Git-safe export")
@@ -287,17 +301,7 @@ def export(artifact_dir: Path, old_root: Path, audit_root: Path, result_root: Pa
         "single_scientific_change": SINGLE_SCIENTIFIC_CHANGE,
     }
     atomic_json(result_tmp / "summary.json", summary)
-    source_files = {
-        "dependency_manifest.json": artifact_dir / "dependency_manifest.json",
-        "one_demo_state_cache_summary.json": artifact_dir / "prompt_dependent/one_demo_state_cache_summary.json",
-        "training_unit_manifest.json": artifact_dir / "joint_training/training_unit_manifest.json",
-        "training_summary.json": artifact_dir / "joint_training/training_summary.json",
-        "heldout_selection.json": artifact_dir / "heldout_validation/live_full_field/checkpoint_selection.json",
-        "deployment_field_summary.json": artifact_dir / "deployment_field/instant_add_report.json",
-        "paired_analysis.json": artifact_dir / "analysis/paired_analysis.json",
-        "trajectory_metrics.json": artifact_dir / "analysis/trajectory_metrics.json",
-        "runtime_preflight.json": artifact_dir / "runtime/formal_gpu_preflight.json",
-    }
+    source_files = _result_source_files(artifact_dir)
     for name, source in source_files.items():
         atomic_json(result_tmp / name, strict_redact(_json(source)))
     atomic_json(result_tmp / "paired_outcomes_summary.json", strict_redact(_paired_outcome_summary(artifact_dir, old_root)))

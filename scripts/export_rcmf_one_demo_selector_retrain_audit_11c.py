@@ -70,6 +70,33 @@ def _paired_outcome_summary(
     }
 
 
+def _result_source_files(artifact_dir: Path) -> dict[str, Path]:
+    return {
+        "dependency_manifest.json": artifact_dir / "dependency_manifest.json",
+        "selector_state_manifest.json": artifact_dir / "selector_state_manifest.json",
+        "selector_recipe.json": artifact_dir / "selector/locked_recipe.json",
+        "selector_training.json": artifact_dir / "selector/selector_training.json",
+        "selector_diagnostics.json": artifact_dir / "selector/selector_diagnostics.json",
+        "selector_factor_summary.json": artifact_dir / "selector/selector_factor_summary.json",
+        "selection_manifest.json": artifact_dir / "preflight/selection_manifest.json",
+        "selection_comparison.json": artifact_dir / "preflight/selection_comparison.json",
+        "training_unit_manifest.json": artifact_dir / "joint_training/training_unit_manifest.json",
+        "training_summary.json": artifact_dir / "joint_training/training_summary.json",
+        "heldout_live_summary.json": artifact_dir / "heldout_validation/live_full_field/validation_summary.json",
+        "heldout_selection.json": artifact_dir / "heldout_validation/live_full_field/checkpoint_selection.json",
+        "deployment_field_summary.json": artifact_dir / "deployment_field/instant_add_report.json",
+        "dev_condition_manifest.json": artifact_dir / "dev/condition_manifest.json",
+        "dev_runtime_preflight.json": artifact_dir / "runtime/dev_runtime_preflight.json",
+        "d0_reuse_proof.json": artifact_dir / "dev/d0_reuse_proof.json",
+        "dev_final_summary.json": artifact_dir / "dev/final_summary.json",
+        "n1_summary.json": artifact_dir / "dev/conditions/N1/summary.json",
+        "n2_summary.json": artifact_dir / "dev/conditions/N2/summary.json",
+        "paired_analysis.json": artifact_dir / "analysis/paired_analysis.json",
+        "trajectory_metrics.json": artifact_dir / "analysis/trajectory_metrics.json",
+        "runtime_preflight.json": artifact_dir / "runtime/formal_gpu_preflight.json",
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--artifact-dir", type=Path, required=True)
@@ -85,6 +112,7 @@ def main() -> None:
         "fresh_same_recipe_selector_parameters_trained_on_one_demo_states"
     )
     base._comparison_markdown = _comparison_markdown
+    base._result_source_files = _result_source_files
     base._paired_outcome_summary = (
         lambda artifact_dir, _old_root: _paired_outcome_summary(
             artifact_dir, args.exp034a_artifact_dir
