@@ -1,0 +1,97 @@
+{
+  "checkpoint_selection_permitted": false,
+  "format": "rcmf_teacher_forced_heldout_summary_9a_v1",
+  "global_seed": 25101,
+  "passed_infrastructure": true,
+  "reason": "live heldout L0/L1/L2/L3 remains required",
+  "reports": [
+    {
+      "checkpoint": "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/joint_training/checkpoints/epoch_01.pt",
+      "checkpoint_sha256": "357491a6c69d141e4ed476b9810a3c8d11bb29ec27e80491db69355b4956d764",
+      "condition_count": 392,
+      "correct_minus_shuffle_target_nll": 0.0018437160517573714,
+      "correct_minus_zero_target_nll": 0.057219139685893955,
+      "epoch": 1,
+      "metrics": {
+        "V0_zero": {
+          "action_token_top1": 0.9752975860420539,
+          "attention_entropy": 2.079441866096185,
+          "field_slot_norm": 0.0,
+          "ground_truth_ce": 0.7542026387332879,
+          "policy_kl": 0.14495160082964698,
+          "target_nll": 0.17603282033946832
+        },
+        "V1_correct": {
+          "action_token_top1": 0.96652304031411,
+          "attention_entropy": 1.6547966412439639,
+          "field_slot_norm": 45.25483092483209,
+          "ground_truth_ce": 0.2450167995126804,
+          "policy_kl": 0.07972415322818015,
+          "target_nll": 0.11881368065357437
+        },
+        "V2_key_payload_shuffle": {
+          "action_token_top1": 0.9661135606619776,
+          "attention_entropy": 1.6480054440242904,
+          "field_slot_norm": 45.25482913425991,
+          "ground_truth_ce": 0.2653421549137197,
+          "policy_kl": 0.08154961396761866,
+          "target_nll": 0.12065739670533174
+        },
+        "V3_state_query_shuffle": {
+          "action_token_top1": 0.9638859149144621,
+          "attention_entropy": 1.6545859689311104,
+          "field_slot_norm": 45.25483092483209,
+          "ground_truth_ce": 0.2742075026296649,
+          "policy_kl": 0.09051412022767627,
+          "target_nll": 0.1302708773327307
+        }
+      },
+      "state_count": 98
+    },
+    {
+      "checkpoint": "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/joint_training/checkpoints/epoch_02.pt",
+      "checkpoint_sha256": "d8c82a331e66cb8d7a4fe9504dc34dd75cb3534c518e63dc3e08f1fc3a3fa4f1",
+      "condition_count": 392,
+      "correct_minus_shuffle_target_nll": 0.0037187337852350455,
+      "correct_minus_zero_target_nll": 0.06606653539605462,
+      "epoch": 2,
+      "metrics": {
+        "V0_zero": {
+          "action_token_top1": 0.9752975860420539,
+          "attention_entropy": 2.079441866096185,
+          "field_slot_norm": 0.0,
+          "ground_truth_ce": 0.7542026387332879,
+          "policy_kl": 0.14495160082964698,
+          "target_nll": 0.17603282033946832
+        },
+        "V1_correct": {
+          "action_token_top1": 0.9671683706799332,
+          "attention_entropy": 1.6397496399526694,
+          "field_slot_norm": 45.25483193689463,
+          "ground_truth_ce": 0.23100886734584714,
+          "policy_kl": 0.07741330643018175,
+          "target_nll": 0.1099662849434137
+        },
+        "V2_key_payload_shuffle": {
+          "action_token_top1": 0.9666628855831769,
+          "attention_entropy": 1.6266735109443566,
+          "field_slot_norm": 45.25483065235372,
+          "ground_truth_ce": 0.24193746286173523,
+          "policy_kl": 0.0791884470381774,
+          "target_nll": 0.11368501872864875
+        },
+        "V3_state_query_shuffle": {
+          "action_token_top1": 0.9644771181807226,
+          "attention_entropy": 1.6396436349165684,
+          "field_slot_norm": 45.25483193689463,
+          "ground_truth_ce": 0.26023405488777657,
+          "policy_kl": 0.08129294759864748,
+          "target_nll": 0.11574064742961461
+        }
+      },
+      "state_count": 98
+    }
+  ],
+  "supersedes_for_zero_control_only": "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/heldout_validation/teacher_forced_summary.json",
+  "zero_field_bypass_version": "trained_affine_memory_norm_zero_bypass_9a_v1"
+}
