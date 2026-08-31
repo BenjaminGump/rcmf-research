@@ -355,3 +355,33 @@ sweeps, or ensemble training unless the user explicitly changes this policy.
   numerical reversibility checks, analysis, records, and handoff. No follow-up
   experiment, retraining, portability study, or paper automation starts
   automatically.
+
+## EXP-036B Deterministic Test-Normal Evaluation Charter v1
+
+- EXP-036A remains immutable and stopped before formal evaluation. EXP-036B is
+  a new append-only, evaluation-only run and cannot rewrite or reuse EXP-036A
+  scientific rows as formal EXP-036B results.
+- No parameter, model, field, prompt, task, evaluator, checkpoint, condition,
+  or generation setting may change. The only permitted harness repair is
+  deterministic serialization of semantically unordered Python-set
+  observations.
+- Process-level hash determinism with `PYTHONHASHSEED=25101` before interpreter
+  startup must be attempted first. Set canonicalization is permitted only if
+  hash seeding alone is insufficient and the remaining divergence is proven to
+  be set-rendering order only.
+- Lists, ordered sequences, ordinary text, source code, and evaluator state may
+  not be canonicalized. Raw observations and exact model-visible observations
+  must both be preserved in the generation audit.
+- All five frozen conditions (`B0`, `BEST-C`, `BEST-S`, `FULL1D-C`, and
+  `FULL1D-S`) and all 168 ordered Test-Normal tasks must complete. No result
+  prefix may stop or alter the run; `BEST` remains primary and `FULL1D` remains
+  the secondary frozen configuration.
+- Test-Normal was partially exposed during exploratory development, so this is
+  a final development benchmark rather than untouched confirmatory evidence.
+  Efficiency and numerical reversibility are analytically separate from formal
+  task timing.
+- The user explicitly authorizes at most 42 total wall-clock hours for the
+  complete frozen milestone. A conservative estimate above that cap requires
+  review without workload reduction.
+- No follow-on experiment, retraining, calibration, portability study, or
+  paper automation starts automatically after EXP-036B.

@@ -1,5 +1,32 @@
 # Current State
 
+## 2026-08-31 EXP-036B Deterministic Test-Normal Evaluation Active
+
+VERIFIED:
+
+- EXP-036A remains immutable at
+  `69a218a212f05709ca4c278f1ae14a89b44031a4`, with formal Test-Normal still
+  `0/840` and `STOPPED_BEFORE_FORMAL`.
+- The user approved a new append-only EXP-036B run whose only allowed harness
+  repair is deterministic rendering of semantically unordered Python-set
+  observations.
+- Local, GitHub, and Lambda all started from the exact EXP-036A final commit;
+  the frozen BEST/FULL1D packages, fields, shuffle, one-demo prompt, and ordered
+  168-task manifest passed identity preflight.
+- EXP-036A archive branch `archive/exp036a-determinism-stop-69a218a2` and
+  annotated tag `exp036a-determinism-stop-verified-69a218a2` were created at
+  the immutable stop commit.
+
+CURRENT WORK:
+
+- Verify the two archived set-order divergences from raw Lambda evidence, then
+  test process-start `PYTHONHASHSEED=25101` before considering any set-only
+  canonicalizer.
+- No EXP-036B GPU science, formal trajectory, efficiency benchmark, or
+  reversibility measurement has started.
+
+Last updated: 2026-08-31.
+
 ## 2026-08-31 EXP-036A Stopped Before Formal Evaluation
 
 VERIFIED:
