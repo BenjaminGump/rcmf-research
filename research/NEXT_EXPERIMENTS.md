@@ -1,5 +1,17 @@
 # Next Experiments
 
+## EXP-035A Review Stop
+
+EXP-035A is complete and reaches `INCONCLUSIVE`. The LOO-stable interaction
+does not satisfy the co-adaptation branch because the native OO cell has zero
+aggregate correct-minus-shuffle specificity. Selector and writer/reader
+marginal directions reverse across the other component.
+
+No next experiment is authorized. Review the full eight-task trace evidence,
+especially the fresh-selector documentation-call concentration, before any
+new proposal. Do not start prompt transport, EXP-035B, retraining, calibration,
+scale changes, adapters, official dev, first37, or test-split work automatically.
+
 ## EXP-034A Review Stop
 
 EXP-034A is complete. New N1 is `16/57`, above bare D0 `12/57`, but tied with matched-shuffle N2 `16/57` and below old D1 `17/57`. No follow-on experiment is authorized in this task.

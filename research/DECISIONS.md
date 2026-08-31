@@ -2681,3 +2681,38 @@ IMPLEMENTATION DEVIATIONS:
 - Preserve the diagnostic-created single-space Lambda file in quarantine; delete no unique material.
 - Restore only exact hash-validated immutable teacher sources after the first teacher attempt stopped before generation.
 - Correct the inherited N1 runtime identity check from the historical selector to the fresh ensemble. The failed attempt produced no task row and every other frozen preflight artifact remained byte-identical.
+
+## 2026-08-31 EXP-035A component-swap attribution decision
+
+VERIFIED:
+
+- All 64 preregistered heldout trajectories completed under frozen one-demo
+  OO/OF/FO/FF correct and common-shuffle conditions.
+- Correct/shuffle successes are OO `5/5`, OF `4/6`, FO `2/5`, FF `3/4`.
+- `M_selector = 0.125`, `M_WR = 0.000`, and interaction `I = 0.500`.
+- Interaction LOO is `[0.286, 0.571]`, but native `Delta_OO = 0` and both
+  component marginal diagnostics reverse direction across the other component.
+- Fresh-selector correct conditions have directly observed documentation-call
+  excesses and FO-C has 51 invalid-API steps; no wrong-app-family or premature
+  completion event was observed.
+
+DECISION:
+
+- Record `INCONCLUSIVE`.
+- Do not elevate the stable interaction to co-adaptation because the required
+  native OO specificity anchor is absent.
+- Treat documentation-attractor language as an inference, not a verified
+  causal mechanism.
+- Stop. Do not launch prompt transport, EXP-035B, retraining, calibration,
+  adapters, official dev, first37, or any test split.
+
+IMPLEMENTATION DEVIATIONS:
+
+- Preserve failed preflight SHA-typo and diagnostic BF16 attempts in the
+  append-only ledger; neither produced scientific behavior.
+- Preserve the pre-ledger smoke identity rejection and the watcher disconnect;
+  neither started or interrupted a scientific condition.
+- Add a tested final-analysis guard requiring positive native OO specificity
+  before the co-adaptation branch can be reached.
+- The Windows sandboxed `apply_patch` helper failed; the Codex apply-patch
+  backend was used and final suites passed locally and on Lambda.

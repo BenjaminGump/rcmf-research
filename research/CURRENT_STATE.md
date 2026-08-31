@@ -1,6 +1,6 @@
 # Current State
 
-## 2026-08-31 EXP-035A Active Diagnostic State
+## 2026-08-31 EXP-035A Completed Diagnostic State
 
 VERIFIED:
 
@@ -11,18 +11,27 @@ VERIFIED:
 - EXP-035A starts from `4f5f1d3a74f196581fc570afc5f8eca75e663f4b`
   and uses only the immutable eight heldout-train tasks with leakage-safe
   401-memory fields.
+- All 64 frozen component/binding trajectories completed with zero
+  infrastructure exception, optimizer step, or parameter update.
+- Correct/shuffle successes are OO `5/5`, OF `4/6`, FO `2/5`, and FF `3/4`.
+- `M_selector = 0.125`, `M_WR = 0.000`, and interaction `I = 0.500`.
+- The interaction is LOO-stable, but native OO has `Delta_OO = 0`; selector
+  and writer/reader marginal directions are mixed.
+- Final decision: `INCONCLUSIVE`.
 
-CURRENT WORK:
+VERIFIED MECHANISM EVIDENCE:
 
-- Audit exact component boundaries and immutable package identities before
-  constructing `OO`, `OF`, `FO`, and `FF` correct/shuffle fields.
-- No training, calibration, prompt transport, official dev, first37,
-  `test_normal`, or `test_challenge` is authorized.
+- Fresh-selector correct conditions have documentation-call C-S gaps of `+31`
+  (FO) and `+106` (FF); FO-C contains 51 invalid-API steps.
+- No wrong-app-family step or premature completion was observed.
+- These counts are trace facts; the documentation-attractor explanation is an
+  inference and does not overcome the mixed success marginals.
 
 CURRENT BLOCK:
 
 - Do not begin EXP-035B or any optimization after this diagnostic. Stop after
-  the four-cell complete-trajectory report and user review.
+  the four-cell complete-trajectory report and user review. The report is
+  `research/results/EXP_035A_RCMF_ONE_DEMO_COMPONENT_SWAP.md`.
 
 Last updated: 2026-08-31.
 
