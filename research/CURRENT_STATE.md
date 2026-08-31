@@ -1,6 +1,6 @@
 # Current State
 
-## 2026-08-31 EXP-036B Deterministic Test-Normal Evaluation Active
+## 2026-08-31 EXP-036B Stopped At Runtime Authorization Gate
 
 VERIFIED:
 
@@ -16,14 +16,30 @@ VERIFIED:
 - EXP-036A archive branch `archive/exp036a-determinism-stop-69a218a2` and
   annotated tag `exp036a-determinism-stop-verified-69a218a2` were created at
   the immutable stop commit.
+- The exact EXP-036A set-order root cause was verified from raw Lambda rows.
+- Process-start `PYTHONHASHSEED=25101` passed the B0 and FULL1D-S
+  fresh-process probes. The final mode is `hash_seed_only`; no canonicalizer
+  was implemented or enabled.
+- The final complete-path smoke ran 15 trajectories in 15 fresh Python
+  processes. All five repeated conditions matched exactly across prompts,
+  token IDs, responses, code, observations, world state, field/query
+  identities, steps, and outcome.
+- Final local tests passed `778` with `2` skipped; final Lambda tests passed
+  `780`.
+- Expected complete runtime was `32.8593h`, but the conservative estimate was
+  `50.3493h`, above the approved `42h` cap.
+- Formal Test-Normal remains `0/840`; performance, efficiency/scaling, TTFT,
+  serving-state, and reversibility results are `NOT_RUN`.
+- Full report:
+  `research/results/EXP_036B_APPWORLD_TESTNORMAL_FINAL.md`.
 
-CURRENT WORK:
+CURRENT BLOCK:
 
-- Verify the two archived set-order divergences from raw Lambda evidence, then
-  test process-start `PYTHONHASHSEED=25101` before considering any set-only
-  canonicalizer.
-- No EXP-036B GPU science, formal trajectory, efficiency benchmark, or
-  reversibility measurement has started.
+- Do not launch the frozen 840-row manifest without explicit approval for a
+  conservative runtime above 42 hours.
+- Do not reduce tasks, conditions, max steps, logging, efficiency coverage, or
+  reversibility coverage to fit the old cap.
+- No follow-on experiment is authorized.
 
 Last updated: 2026-08-31.
 

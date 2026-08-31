@@ -1,5 +1,42 @@
 # Decisions and Deviations
 
+## 2026-08-31 EXP-036B hash-seed repair and runtime stop
+
+VERIFIED:
+
+- EXP-036A's observation difference was limited to rendering order of equal
+  Python sets after identical prompts, generated tokens, responses, and code.
+- Starting every interpreter with `PYTHONHASHSEED=25101` passed both targeted
+  cross-process probes and all five final complete-path smoke repeats.
+- The final determinism mode is `hash_seed_only`; raw observations remain
+  model-visible and evaluator state remains unchanged.
+- The frozen formal manifest contains 168 tasks and five conditions, but no
+  formal row was launched.
+- Expected complete runtime is `32.8593h`; conservative complete runtime is
+  `50.3493h`, above the approved `42h`.
+
+Decision:
+
+- Stop at `STOPPED_BEFORE_FORMAL` under the runtime authorization rule.
+- Leave formal performance, efficiency/scaling, TTFT, serving state, and
+  numerical reversibility as `NOT_RUN`.
+- Require new user approval before resuming the already frozen formal
+  manifest. Do not shrink scientific coverage.
+
+Implementation deviations:
+
+- The inherited EXP-036A smoke repeated conditions within one Python process.
+  EXP-036B added a dedicated runner that launches every one of the 15 smoke
+  trajectories in a fresh process, as required by the approved protocol.
+- The first local full-test invocation could not resolve `conda` from PATH;
+  the second lacked the temporary parent and pre-interpreter hash variable.
+  The exact suite then passed under the verified Conda Python and hash-seed
+  launcher. No scientific source or setting changed.
+- The base EXP-036A implementation retains historical `exp036a` phase labels
+  internally. EXP-036B records separate run, format, determinism, process, and
+  formal-manifest identities; this naming inheritance does not change
+  scientific semantics.
+
 ## 2026-08-31 EXP-036A determinism stop
 
 VERIFIED:

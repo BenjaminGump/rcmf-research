@@ -1,5 +1,18 @@
 # Next Experiments
 
+## EXP-036B Runtime Authorization Review Stop
+
+EXP-036B has a valid deterministic harness and a frozen 168-task,
+five-condition formal manifest, but formal evaluation remains `0/840`.
+Expected total runtime is `32.8593h`; the preregistered conservative estimate
+is `50.3493h`, above the approved `42h` cap.
+
+No next experiment is authorized. A future review may explicitly authorize
+the existing frozen manifest above 42 hours. It must not change the
+determinism mode, task list, conditions, prompt, fields, checkpoints, shuffle,
+generation settings, logs, efficiency grid, or reversibility coverage, and it
+must not silently reduce work to fit the expired authorization.
+
 ## EXP-036A Reproducibility Review Stop
 
 EXP-036A generated no formal performance result. It stopped because the

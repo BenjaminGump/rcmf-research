@@ -1,0 +1,97 @@
+{
+  "approved_wall_hours": 42.0,
+  "attempt_count": 22,
+  "attempt_ids": [
+    "exp036b-prepare-001",
+    "exp036b-probe-b0-a-001",
+    "exp036b-probe-b0-b-001",
+    "exp036b-probe-finalize-001",
+    "exp036b-probe-full1d-s-a-001",
+    "exp036b-probe-full1d-s-b-001",
+    "exp036b-smoke-finalize-001",
+    "exp036b-smoke-primary-0-b0-001",
+    "exp036b-smoke-primary-0-best-c-001",
+    "exp036b-smoke-primary-0-best-s-001",
+    "exp036b-smoke-primary-0-full1d-c-001",
+    "exp036b-smoke-primary-0-full1d-s-001",
+    "exp036b-smoke-primary-1-b0-001",
+    "exp036b-smoke-primary-1-best-c-001",
+    "exp036b-smoke-primary-1-best-s-001",
+    "exp036b-smoke-primary-1-full1d-c-001",
+    "exp036b-smoke-primary-1-full1d-s-001",
+    "exp036b-smoke-repeat-0-b0-001",
+    "exp036b-smoke-repeat-0-best-c-001",
+    "exp036b-smoke-repeat-0-best-s-001",
+    "exp036b-smoke-repeat-0-full1d-c-001",
+    "exp036b-smoke-repeat-0-full1d-s-001"
+  ],
+  "canonicalizer": "disabled",
+  "conservative_total_wall_hours": 50.34926502514475,
+  "determinism_mode": "hash_seed_only",
+  "efficiency": "NOT_RUN",
+  "evaluation_seed": 25101,
+  "expected_total_wall_hours": 32.859305854430424,
+  "failed_attempt_ids": [
+    "exp036b-smoke-finalize-001"
+  ],
+  "formal_expected_trajectory_count": 840,
+  "formal_metrics": "NOT_RUN",
+  "formal_trajectory_count": 0,
+  "format": "rcmf_appworld_testnormal_stopped_summary_13b_v1",
+  "lambda_artifact_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001",
+  "manifests": {
+    "condition_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001/manifests/condition_manifest.json",
+      "sha256": "bd4e00c8c03a8469800bd15123b54904695e4e8e41666ffd7d92f23ee4fb2780"
+    },
+    "determinism_mode.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001/manifests/determinism_mode.json",
+      "sha256": "4fb613da285cbe57a9672629b04c46378919c971e304e7af7cc80f9028c16404"
+    },
+    "determinism_policy.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001/manifests/determinism_policy.json",
+      "sha256": "e0abbc442eeb9d173b4f1b3685e697382939c22090ddc4eb2f778a0cec3721ba"
+    },
+    "exp036b_run_identity.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001/manifests/exp036b_run_identity.json",
+      "sha256": "968d529f04bcb0316eb5ace52ce29bc759ec243c5c2803220ddd7bdb6dbba3ac"
+    },
+    "formal_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001/manifests/formal_manifest.json",
+      "sha256": "75177ab070fcf804887a5600d61ab89b8345a7d6d7fccd4117cd798b072e277d"
+    },
+    "leakage_audit.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001/manifests/leakage_audit.json",
+      "sha256": "96ef2d7fe6048cf9f2d38438d61f5a2fd319fabf187eadd6255535f0214162f5"
+    },
+    "package_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001/manifests/package_manifest.json",
+      "sha256": "62899c93722f436e87d98f505cee0c1fed00ff5f5cee94b17465623845d3ea2b"
+    },
+    "prompt_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001/manifests/prompt_manifest.json",
+      "sha256": "e42a229f6fc008f280fbe66e94216ee6323ed2730a4c86a6167746f2981dadf3"
+    },
+    "smoke_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001/manifests/smoke_manifest.json",
+      "sha256": "62f09361b5762d6bf4092d1f768ebf25e4133b60bc229a63378bf475abd918bc"
+    },
+    "test_normal_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001/manifests/test_normal_manifest.json",
+      "sha256": "049cd6a50477fbe0167c7dffe6acf135ec76c26b6e5619f3c5d1d4405e16655d"
+    }
+  },
+  "model_or_component_changed": false,
+  "open_attempt_ids": [],
+  "reversibility": "NOT_RUN",
+  "run_end_timestamp_utc": "2026-08-31T09:52:41.767849Z",
+  "run_start_timestamp_utc": "2026-08-31T08:29:18.611397Z",
+  "run_uuid": "rcmf_appworld_testnormal_final_13b_20260831_001",
+  "smoke_determinism_passed": true,
+  "smoke_is_scientific_evidence": false,
+  "smoke_trajectory_count": 15,
+  "status": "STOPPED_BEFORE_FORMAL",
+  "stop_gate": "runtime_preflight_42_hour_cap",
+  "stop_reason": "conservative complete total exceeds approved 42 hours",
+  "summary_sha256": "c57048837cf38801228ce23b2b37c11b9836bc5172f355cb6e0f52834cdace0c"
+}

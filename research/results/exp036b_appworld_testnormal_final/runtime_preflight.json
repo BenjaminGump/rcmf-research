@@ -1,0 +1,222 @@
+{
+  "approved_wall_hours": 42.0,
+  "audit_finalization_estimate": {
+    "conservative_wall_hours": 1.0,
+    "expected_wall_hours": 0.5
+  },
+  "automatic_launch_allowed": false,
+  "conservative_formal_wall_hours": 45.09926502514475,
+  "conservative_total_wall_hours": 50.34926502514475,
+  "determinism": {
+    "B0": {
+      "checks": {
+        "automatically_repaired_code": true,
+        "automatically_repaired_response": true,
+        "completion_status": true,
+        "executed_code": true,
+        "extracted_code": true,
+        "generated_token_ids": true,
+        "model_package_identities": true,
+        "model_visible_observations": true,
+        "prompt_token_ids": true,
+        "prompts": true,
+        "query_field_identities": true,
+        "raw_canonical_semantic_hashes": true,
+        "raw_observations": true,
+        "raw_responses": true,
+        "raw_world_initialization": true,
+        "reader_diagnostics": true,
+        "state_fingerprints": true,
+        "step_count": true,
+        "success": true
+      },
+      "passed": true
+    },
+    "BEST-C": {
+      "checks": {
+        "automatically_repaired_code": true,
+        "automatically_repaired_response": true,
+        "completion_status": true,
+        "executed_code": true,
+        "extracted_code": true,
+        "generated_token_ids": true,
+        "model_package_identities": true,
+        "model_visible_observations": true,
+        "prompt_token_ids": true,
+        "prompts": true,
+        "query_field_identities": true,
+        "raw_canonical_semantic_hashes": true,
+        "raw_observations": true,
+        "raw_responses": true,
+        "raw_world_initialization": true,
+        "reader_diagnostics": true,
+        "state_fingerprints": true,
+        "step_count": true,
+        "success": true
+      },
+      "passed": true
+    },
+    "BEST-S": {
+      "checks": {
+        "automatically_repaired_code": true,
+        "automatically_repaired_response": true,
+        "completion_status": true,
+        "executed_code": true,
+        "extracted_code": true,
+        "generated_token_ids": true,
+        "model_package_identities": true,
+        "model_visible_observations": true,
+        "prompt_token_ids": true,
+        "prompts": true,
+        "query_field_identities": true,
+        "raw_canonical_semantic_hashes": true,
+        "raw_observations": true,
+        "raw_responses": true,
+        "raw_world_initialization": true,
+        "reader_diagnostics": true,
+        "state_fingerprints": true,
+        "step_count": true,
+        "success": true
+      },
+      "passed": true
+    },
+    "FULL1D-C": {
+      "checks": {
+        "automatically_repaired_code": true,
+        "automatically_repaired_response": true,
+        "completion_status": true,
+        "executed_code": true,
+        "extracted_code": true,
+        "generated_token_ids": true,
+        "model_package_identities": true,
+        "model_visible_observations": true,
+        "prompt_token_ids": true,
+        "prompts": true,
+        "query_field_identities": true,
+        "raw_canonical_semantic_hashes": true,
+        "raw_observations": true,
+        "raw_responses": true,
+        "raw_world_initialization": true,
+        "reader_diagnostics": true,
+        "state_fingerprints": true,
+        "step_count": true,
+        "success": true
+      },
+      "passed": true
+    },
+    "FULL1D-S": {
+      "checks": {
+        "automatically_repaired_code": true,
+        "automatically_repaired_response": true,
+        "completion_status": true,
+        "executed_code": true,
+        "extracted_code": true,
+        "generated_token_ids": true,
+        "model_package_identities": true,
+        "model_visible_observations": true,
+        "prompt_token_ids": true,
+        "prompts": true,
+        "query_field_identities": true,
+        "raw_canonical_semantic_hashes": true,
+        "raw_observations": true,
+        "raw_responses": true,
+        "raw_world_initialization": true,
+        "reader_diagnostics": true,
+        "state_fingerprints": true,
+        "step_count": true,
+        "success": true
+      },
+      "passed": true
+    }
+  },
+  "determinism_mode": "hash_seed_only",
+  "determinism_mode_sha256": "d43d46e46ce8beef7c2b5946c1657b84e94d4a0783b4180f45186beedfc9eb5c",
+  "deterministic": true,
+  "efficiency_microbenchmark_estimate": {
+    "basis": "bounded 499-record frozen-Qwen ingestion plus fixed-grid read/TTFT repeats and algebra-only reversibility",
+    "conservative_wall_hours": 4.0,
+    "expected_wall_hours": 2.5,
+    "scheduled_after_formal": true
+  },
+  "estimated_cost": "NOT_AVAILABLE",
+  "evaluation_seeds": [
+    25101
+  ],
+  "expected_formal_wall_hours": 29.759305854430423,
+  "expected_h100_active_hours": 32.359305854430424,
+  "expected_total_wall_hours": 32.859305854430424,
+  "formal_condition_count": 840,
+  "formal_task_count": 168,
+  "format": "rcmf_appworld_testnormal_runtime_preflight_13b_v1",
+  "lambda_hourly_rate": "NOT_AVAILABLE",
+  "maximum_task_condition_wall_seconds": 195.5775108980015,
+  "mean_task_condition_wall_seconds": 127.53988223327323,
+  "numerical_reversibility_estimate": {
+    "conservative_wall_hours": 0.25,
+    "expected_wall_hours": 0.1,
+    "scheduled_after_formal": true
+  },
+  "passed": true,
+  "per_condition_wall_time": {
+    "B0": {
+      "conservative_168_hours": 11.408688135716753,
+      "expected_168_hours": 6.376899228086695,
+      "maximum_seconds": 195.5775108980015,
+      "mean_seconds": 136.64784060185775,
+      "measured_seconds": [
+        195.5775108980015,
+        77.71817030571401
+      ]
+    },
+    "BEST-C": {
+      "conservative_168_hours": 11.038398434419651,
+      "expected_168_hours": 6.30798999602596,
+      "maximum_seconds": 189.229687447194,
+      "mean_seconds": 135.17121420055628,
+      "measured_seconds": [
+        189.229687447194,
+        81.11274095391855
+      ]
+    },
+    "BEST-S": {
+      "conservative_168_hours": 10.501638395777748,
+      "expected_168_hours": 8.375768022011034,
+      "maximum_seconds": 180.0280867847614,
+      "mean_seconds": 179.48074332880788,
+      "measured_seconds": [
+        178.93339987285435,
+        180.0280867847614
+      ]
+    },
+    "FULL1D-C": {
+      "conservative_168_hours": 6.1467731732099,
+      "expected_168_hours": 4.889895421038382,
+      "maximum_seconds": 105.37325439788401,
+      "mean_seconds": 104.78347330796532,
+      "measured_seconds": [
+        104.19369221804664,
+        105.37325439788401
+      ]
+    },
+    "FULL1D-S": {
+      "conservative_168_hours": 6.0037668860207,
+      "expected_168_hours": 3.8087531872683513,
+      "maximum_seconds": 102.92171804606915,
+      "mean_seconds": 81.61613972717896,
+      "measured_seconds": [
+        102.92171804606915,
+        60.31056140828878
+      ]
+    }
+  },
+  "projected_git_safe_artifact_bytes": 2170106635,
+  "projected_lambda_raw_artifact_bytes": 10850533176,
+  "report_sha256": "21764b0b7f146552c7204e3cf7b931f7e791434a30bb3e92c6db4ef569bd96db",
+  "restart_plan": "one atomic task-condition JSON plus raw per-step rows/tensors; resume validates result, config, formal manifest, mode, field, and completion",
+  "smoke_raw_artifact_bytes": 193759521,
+  "smoke_task_ids": [
+    "3d9a636_1",
+    "3d9a636_2"
+  ],
+  "smoke_trajectory_count": 15
+}

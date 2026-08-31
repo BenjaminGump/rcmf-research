@@ -1,0 +1,17 @@
+{
+  "authoritative_evaluation_after_generation": true,
+  "demo_exact_instruction_match_count": 0,
+  "demo_overlaps_test_normal": false,
+  "demo_task_id": null,
+  "dev_ground_truth_model_input_leak_count": 0,
+  "forbidden_ready_keys_used": [],
+  "format": "rcmf_appworld_testnormal_leakage_audit_13a_v1",
+  "memory_parent_overlaps_test_normal": [],
+  "model_visible_ready_keys": [
+    "instruction",
+    "ready_nonce",
+    "supervisor"
+  ],
+  "passed": true,
+  "test_ground_truth_model_input_leak_count": 0
+}

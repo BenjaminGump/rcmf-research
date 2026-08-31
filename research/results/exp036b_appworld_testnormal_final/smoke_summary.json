@@ -1,0 +1,139 @@
+{
+  "determinism": {
+    "B0": {
+      "checks": {
+        "automatically_repaired_code": true,
+        "automatically_repaired_response": true,
+        "completion_status": true,
+        "executed_code": true,
+        "extracted_code": true,
+        "generated_token_ids": true,
+        "model_package_identities": true,
+        "model_visible_observations": true,
+        "prompt_token_ids": true,
+        "prompts": true,
+        "query_field_identities": true,
+        "raw_canonical_semantic_hashes": true,
+        "raw_observations": true,
+        "raw_responses": true,
+        "raw_world_initialization": true,
+        "reader_diagnostics": true,
+        "state_fingerprints": true,
+        "step_count": true,
+        "success": true
+      },
+      "passed": true
+    },
+    "BEST-C": {
+      "checks": {
+        "automatically_repaired_code": true,
+        "automatically_repaired_response": true,
+        "completion_status": true,
+        "executed_code": true,
+        "extracted_code": true,
+        "generated_token_ids": true,
+        "model_package_identities": true,
+        "model_visible_observations": true,
+        "prompt_token_ids": true,
+        "prompts": true,
+        "query_field_identities": true,
+        "raw_canonical_semantic_hashes": true,
+        "raw_observations": true,
+        "raw_responses": true,
+        "raw_world_initialization": true,
+        "reader_diagnostics": true,
+        "state_fingerprints": true,
+        "step_count": true,
+        "success": true
+      },
+      "passed": true
+    },
+    "BEST-S": {
+      "checks": {
+        "automatically_repaired_code": true,
+        "automatically_repaired_response": true,
+        "completion_status": true,
+        "executed_code": true,
+        "extracted_code": true,
+        "generated_token_ids": true,
+        "model_package_identities": true,
+        "model_visible_observations": true,
+        "prompt_token_ids": true,
+        "prompts": true,
+        "query_field_identities": true,
+        "raw_canonical_semantic_hashes": true,
+        "raw_observations": true,
+        "raw_responses": true,
+        "raw_world_initialization": true,
+        "reader_diagnostics": true,
+        "state_fingerprints": true,
+        "step_count": true,
+        "success": true
+      },
+      "passed": true
+    },
+    "FULL1D-C": {
+      "checks": {
+        "automatically_repaired_code": true,
+        "automatically_repaired_response": true,
+        "completion_status": true,
+        "executed_code": true,
+        "extracted_code": true,
+        "generated_token_ids": true,
+        "model_package_identities": true,
+        "model_visible_observations": true,
+        "prompt_token_ids": true,
+        "prompts": true,
+        "query_field_identities": true,
+        "raw_canonical_semantic_hashes": true,
+        "raw_observations": true,
+        "raw_responses": true,
+        "raw_world_initialization": true,
+        "reader_diagnostics": true,
+        "state_fingerprints": true,
+        "step_count": true,
+        "success": true
+      },
+      "passed": true
+    },
+    "FULL1D-S": {
+      "checks": {
+        "automatically_repaired_code": true,
+        "automatically_repaired_response": true,
+        "completion_status": true,
+        "executed_code": true,
+        "extracted_code": true,
+        "generated_token_ids": true,
+        "model_package_identities": true,
+        "model_visible_observations": true,
+        "prompt_token_ids": true,
+        "prompts": true,
+        "query_field_identities": true,
+        "raw_canonical_semantic_hashes": true,
+        "raw_observations": true,
+        "raw_responses": true,
+        "raw_world_initialization": true,
+        "reader_diagnostics": true,
+        "state_fingerprints": true,
+        "step_count": true,
+        "success": true
+      },
+      "passed": true
+    }
+  },
+  "determinism_mode": "hash_seed_only",
+  "determinism_mode_sha256": "d43d46e46ce8beef7c2b5946c1657b84e94d4a0783b4180f45186beedfc9eb5c",
+  "deterministic": true,
+  "formal_manifest_sha256": "da8313aed89a9a6349555312af57f72bd8c72f2a1b78d2e43a52ae00c328775e",
+  "format": "rcmf_appworld_testnormal_final_smoke_13b_v1",
+  "fresh_process_per_trajectory": true,
+  "passed": true,
+  "process_count": 15,
+  "runtime_preflight_sha256": "21764b0b7f146552c7204e3cf7b931f7e791434a30bb3e92c6db4ef569bd96db",
+  "summary_sha256": "1c8cd1d8035c471e755c90485447104f1fa7dfcd24b3a332e6e28db27b094bc1",
+  "task_ids": [
+    "3d9a636_1",
+    "3d9a636_2"
+  ],
+  "trajectory_count": 15
+}
