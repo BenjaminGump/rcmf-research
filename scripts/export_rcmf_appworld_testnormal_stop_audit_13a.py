@@ -41,6 +41,14 @@ def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def read_jsonl(path: Path) -> list[dict[str, Any]]:
+    return [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+
 def set_repr_order_only(left: str, right: str) -> bool:
     """Return true when matching labelled lines differ only by set ordering."""
     left_lines = left.splitlines()
@@ -161,6 +169,18 @@ def main() -> None:
     write_jsonl(args.result_root / "smoke_determinism.jsonl", comparisons)
     write_jsonl(args.result_root / "smoke_rows.jsonl", row_index)
 
+    attempts = [
+        strict_redact(row)
+        for row in read_jsonl(args.artifact_dir / "attempts.jsonl")
+    ]
+    write_jsonl(args.result_root / "attempts.jsonl", attempts)
+    attempt_ids = sorted({str(row["attempt_id"]) for row in attempts})
+    ended_attempt_ids = {
+        str(row["attempt_id"])
+        for row in attempts
+        if row.get("event") == "end"
+    }
+
     manifest_paths = sorted((args.artifact_dir / "manifests").glob("*.json"))
     manifest_index = {
         path.name: {
@@ -182,6 +202,9 @@ def main() -> None:
         "reversibility": "NOT_RUN",
         "smoke_trajectory_count": len(task_paths),
         "smoke_is_scientific_evidence": False,
+        "attempt_count": len(attempt_ids),
+        "attempt_ids": attempt_ids,
+        "open_attempt_ids": sorted(set(attempt_ids) - ended_attempt_ids),
         "determinism": comparisons,
         "model_or_component_changed": False,
         "evaluation_seed": 25101,
