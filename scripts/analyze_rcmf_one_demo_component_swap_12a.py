@@ -8,6 +8,7 @@ import json
 import math
 from pathlib import Path
 import random
+import re
 import statistics
 from typing import Any
 
@@ -21,6 +22,7 @@ from scripts.run_rcmf_q90_trajectory_common_9c import first_divergence
 
 BOOTSTRAP_SAMPLES = 100_000
 ANALYSIS_SEED = 25101
+API_CALL_PATTERN = re.compile(r"\bapis\.([A-Za-z0-9_]+)\.([A-Za-z0-9_]+)")
 
 
 def parse_args() -> argparse.Namespace:
@@ -140,6 +142,43 @@ def loop_count(row: Mapping[str, Any]) -> int:
     return int(counts.get("repeated_action", 0)) + int(counts.get("repeated_invalid_action", 0))
 
 
+def expected_app_from_task_message(message: str) -> str | None:
+    lowered = message.lower()
+    if "spotify" in lowered:
+        return "spotify"
+    if "file system" in lowered or "~/" in lowered:
+        return "file_system"
+    return None
+
+
+def trace_mechanism_counts(row: Mapping[str, Any]) -> dict[str, int]:
+    steps = row.get("steps", [])
+    task_message = str(steps[0].get("current_task_message", "")) if steps else ""
+    expected_app = expected_app_from_task_message(task_message)
+    counts = {
+        "documentation_call_steps": 0,
+        "invalid_api_steps": 0,
+        "wrong_app_family_steps": 0,
+        "executed_completion_steps": 0,
+    }
+    for step in steps:
+        code = str(step.get("exact_executed_code") or "")
+        observation = str(step.get("complete_environment_observation") or "")
+        calls = API_CALL_PATTERN.findall(code)
+        apps = {app for app, _api in calls}
+        if "api_docs" in apps:
+            counts["documentation_call_steps"] += 1
+        if "No API named" in observation:
+            counts["invalid_api_steps"] += 1
+        if expected_app and any(
+            app not in {expected_app, "api_docs", "supervisor"} for app in apps
+        ):
+            counts["wrong_app_family_steps"] += 1
+        if any(app == "supervisor" and api == "complete_task" for app, api in calls):
+            counts["executed_completion_steps"] += 1
+    return counts
+
+
 def classify(point: Mapping[str, float], loo: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
     selector_consistent = point["selector_old_WR"] > 0 and point["selector_fresh_WR"] > 0
     wr_consistent = point["WR_old_selector"] > 0 and point["WR_fresh_selector"] > 0
@@ -238,6 +277,7 @@ def main() -> None:
     condition_metrics = {}
     for condition in CONDITIONS:
         condition_rows = [rows[condition][task_id] for task_id in task_ids]
+        trace_counts = [trace_mechanism_counts(row) for row in condition_rows]
         condition_metrics[condition] = {
             "success_count": sum(bool(row["success"]) for row in condition_rows),
             "total_steps": sum(int(row["step_count"]) for row in condition_rows),
@@ -255,6 +295,16 @@ def main() -> None:
             ),
             "execution_exception_count": sum(
                 int(row["counts"].get("execution_exception", 0)) for row in condition_rows
+            ),
+            "documentation_call_steps": sum(
+                value["documentation_call_steps"] for value in trace_counts
+            ),
+            "invalid_api_steps": sum(value["invalid_api_steps"] for value in trace_counts),
+            "wrong_app_family_steps": sum(
+                value["wrong_app_family_steps"] for value in trace_counts
+            ),
+            "executed_completion_steps": sum(
+                value["executed_completion_steps"] for value in trace_counts
             ),
             "prompt_tokens": sum(int(row["usage"].get("prompt_tokens", 0)) for row in condition_rows),
             "generated_tokens": sum(
@@ -291,6 +341,56 @@ def main() -> None:
             for cell in CELL_NAMES
         }
 
+    per_task_by_id = {row["task_id"]: row for row in per_task}
+    only_old_selector = []
+    only_old_writer_reader = []
+    only_oo = []
+    correct_loops_worse_in_all_cells = []
+    for task_id, row in per_task_by_id.items():
+        specificity = row["specificity"]
+        old_selector_positive = specificity["OO"] > 0 or specificity["OF"] > 0
+        fresh_selector_positive = specificity["FO"] > 0 or specificity["FF"] > 0
+        old_writer_reader_positive = specificity["OO"] > 0 or specificity["FO"] > 0
+        fresh_writer_reader_positive = specificity["OF"] > 0 or specificity["FF"] > 0
+        if old_selector_positive and not fresh_selector_positive:
+            only_old_selector.append(task_id)
+        if old_writer_reader_positive and not fresh_writer_reader_positive:
+            only_old_writer_reader.append(task_id)
+        if specificity["OO"] > 0 and all(
+            specificity[cell] <= 0 for cell in ("OF", "FO", "FF")
+        ):
+            only_oo.append(task_id)
+        if all(row["loops"][f"{cell}-C"] > row["loops"][f"{cell}-S"] for cell in CELL_NAMES):
+            correct_loops_worse_in_all_cells.append(task_id)
+
+    documentation_gap = {
+        cell: condition_metrics[f"{cell}-C"]["documentation_call_steps"]
+        - condition_metrics[f"{cell}-S"]["documentation_call_steps"]
+        for cell in CELL_NAMES
+    }
+    mechanism_summary = {
+        "only_old_selector_specificity_task_ids": only_old_selector,
+        "only_old_writer_reader_specificity_task_ids": only_old_writer_reader,
+        "only_OO_specificity_task_ids": only_oo,
+        "correct_fields_loop_worse_in_all_cells_task_ids": correct_loops_worse_in_all_cells,
+        "documentation_call_correct_minus_shuffle_by_cell": documentation_gap,
+        "verified_wrong_app_family_step_count": sum(
+            value["wrong_app_family_steps"] for value in condition_metrics.values()
+        ),
+        "verified_invalid_api_step_count": sum(
+            value["invalid_api_steps"] for value in condition_metrics.values()
+        ),
+        "verified_premature_completion_count": sum(
+            value["premature_completion_count"] for value in condition_metrics.values()
+        ),
+        "claim_status": {
+            "executed_api_and_loop_counts": "VERIFIED",
+            "api_documentation_attractor": "INFERENCE from executed api_docs call-step counts",
+            "wrong_procedural_family": "VERIFIED only for wrong-app calls; finer procedural-family explanations remain INFERENCE",
+            "global_bookkeeping_failure": "UNVERIFIED",
+        },
+    }
+
     decision = classify(point, loo)
     analysis = {
         "format": "rcmf_one_demo_component_swap_analysis_12a_v1",
@@ -319,6 +419,7 @@ def main() -> None:
             )
         },
         "condition_metrics": condition_metrics,
+        "mechanism_summary": mechanism_summary,
         "per_task": per_task,
         "first_divergence": comparisons,
         "decision": decision,

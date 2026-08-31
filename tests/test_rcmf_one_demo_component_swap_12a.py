@@ -22,7 +22,11 @@ from rcmf.training.rcmf_one_demo_component_swap_12a import (
     remove_restore_error,
     select_leakage_safe_memory_ids,
 )
-from scripts.analyze_rcmf_one_demo_component_swap_12a import classify
+from scripts.analyze_rcmf_one_demo_component_swap_12a import (
+    classify,
+    expected_app_from_task_message,
+    trace_mechanism_counts,
+)
 from scripts.run_rcmf_one_demo_component_swap_diagnostics_12a import spearman
 from scripts.run_rcmf_one_demo_component_swap_12a import parse_args
 
@@ -98,6 +102,36 @@ def test_coadaptation_requires_positive_native_specificity() -> None:
     assert result["decision"] == "INCONCLUSIVE"
     assert result["interaction_loo_stable"] is True
     assert result["native_oo_specificity_retained"] is False
+
+
+def test_trace_mechanism_counts_are_grounded_in_executed_steps() -> None:
+    row = {
+        "steps": [
+            {
+                "current_task_message": "Play a song on Spotify.",
+                "exact_executed_code": "apis.api_docs.show_api_doc(app_name='spotify')",
+                "complete_environment_observation": "ok",
+            },
+            {
+                "current_task_message": "Play a song on Spotify.",
+                "exact_executed_code": "apis.file_system.show(path='x')",
+                "complete_environment_observation": "No API named 'show' found",
+            },
+            {
+                "current_task_message": "Play a song on Spotify.",
+                "exact_executed_code": "apis.supervisor.complete_task()",
+                "complete_environment_observation": "done",
+            },
+        ]
+    }
+
+    assert expected_app_from_task_message("Use my Spotify playlists") == "spotify"
+    assert trace_mechanism_counts(row) == {
+        "documentation_call_steps": 1,
+        "invalid_api_steps": 1,
+        "wrong_app_family_steps": 1,
+        "executed_completion_steps": 1,
+    }
 
 
 def test_condition_cells_and_counterbalanced_order() -> None:
