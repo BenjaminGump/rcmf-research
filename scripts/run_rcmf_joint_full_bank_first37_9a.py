@@ -455,6 +455,7 @@ def _run_task(
     max_steps_override: int | None = None,
     experiment_prefix: str = "exp031a",
     field_control_condition: str | None = None,
+    collect_resource_metrics: bool = False,
 ) -> tuple[dict[str, Any], bool]:
     output = _task_output(paths, condition, task_id, smoke)
     is_bare = condition == "D0" if bare_condition is None else bool(bare_condition)
@@ -508,6 +509,14 @@ def _run_task(
         if max_steps_override is not None
         else 2 if smoke else int(app["max_steps"])
     )
+    gpu_memory_start: dict[str, int] | None = None
+    if collect_resource_metrics and backend.device.type == "cuda":
+        torch.cuda.synchronize(backend.device)
+        torch.cuda.reset_peak_memory_stats(backend.device)
+        gpu_memory_start = {
+            "allocated_bytes": int(torch.cuda.memory_allocated(backend.device)),
+            "reserved_bytes": int(torch.cuda.memory_reserved(backend.device)),
+        }
 
     with FullAgentBridge(
         executable=Path(str(app["legacy_python"])),
@@ -650,9 +659,11 @@ def _run_task(
                 hook_factory=hook_factory,
             )
             code, fixed = extract_code_and_fix_content(raw_response)
+            execution_started = time.perf_counter()
             executed = bridge.execute(
                 nonce=str(ready["ready_nonce"]), step_id=step_id, code=code
             )
+            execution_seconds = time.perf_counter() - execution_started
             observation = str(executed["raw_observation"])
             trajectory.append({"response": fixed, "observation": observation})
             usage.update(
@@ -730,6 +741,8 @@ def _run_task(
                 if bool(executed["task_completed"])
                 else "continue",
             }
+            if collect_resource_metrics:
+                step_row["environment_execution_seconds"] = execution_seconds
             atomic_write_json(
                 root
                 / "raw_steps"
@@ -740,7 +753,39 @@ def _run_task(
             steps.append(step_row)
             if bool(executed["task_completed"]):
                 break
+        evaluator_started = time.perf_counter()
         final = bridge.finish(nonce=str(ready["ready_nonce"]))
+        evaluator_seconds = time.perf_counter() - evaluator_started
+
+    resource_metrics: dict[str, Any] | None = None
+    if collect_resource_metrics:
+        if backend.device.type == "cuda":
+            torch.cuda.synchronize(backend.device)
+            resource_metrics = {
+                "device": str(backend.device),
+                "initial_allocated_bytes": int(gpu_memory_start["allocated_bytes"]),
+                "initial_reserved_bytes": int(gpu_memory_start["reserved_bytes"]),
+                "peak_allocated_bytes": int(
+                    torch.cuda.max_memory_allocated(backend.device)
+                ),
+                "peak_reserved_bytes": int(
+                    torch.cuda.max_memory_reserved(backend.device)
+                ),
+                "final_allocated_bytes": int(torch.cuda.memory_allocated(backend.device)),
+                "final_reserved_bytes": int(torch.cuda.memory_reserved(backend.device)),
+                "evaluator_seconds": evaluator_seconds,
+            }
+        else:
+            resource_metrics = {
+                "device": str(backend.device),
+                "initial_allocated_bytes": 0,
+                "initial_reserved_bytes": 0,
+                "peak_allocated_bytes": 0,
+                "peak_reserved_bytes": 0,
+                "final_allocated_bytes": 0,
+                "final_reserved_bytes": 0,
+                "evaluator_seconds": evaluator_seconds,
+            }
 
     row = {
         "format": result_version,
@@ -774,6 +819,8 @@ def _run_task(
         "raw_audit_complete": True,
         **dict(extra_result_fields or {}),
     }
+    if resource_metrics is not None:
+        row["resource_metrics"] = resource_metrics
     atomic_write_json(output, row)
     return row, False
 
