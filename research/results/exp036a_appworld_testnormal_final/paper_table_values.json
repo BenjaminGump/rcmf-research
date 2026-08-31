@@ -1,0 +1,5 @@
+{
+  "artifact": "paper_table_values",
+  "reason": "complete_path_smoke_determinism_failed",
+  "status": "NOT_RUN"
+}

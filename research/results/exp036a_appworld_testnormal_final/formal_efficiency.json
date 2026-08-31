@@ -1,0 +1,5 @@
+{
+  "artifact": "formal_efficiency",
+  "reason": "complete_path_smoke_determinism_failed",
+  "status": "NOT_RUN"
+}

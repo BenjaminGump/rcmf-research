@@ -1,5 +1,30 @@
 # Decisions and Deviations
 
+## 2026-08-31 EXP-036A determinism stop
+
+VERIFIED:
+
+- EXP-036A's complete-path smoke failed exact fresh-world determinism in B0
+  and FULL1D-S before any formal Test-Normal trajectory was launched.
+- The first differences were environment observation strings whose labelled
+  values parsed to equal Python sets with different element order. Model
+  output and executed code matched at the divergence step.
+
+Decision:
+
+- Enforce the preregistered `STOP` rule. Formal Test-Normal, deployment
+  efficiency/scaling, and numerical reversibility remain `NOT_RUN`.
+- Do not normalize observations, add a new `PYTHONHASHSEED`, use another seed,
+  or exempt conditions post hoc. Any such change requires a new protocol.
+
+Implementation deviations:
+
+- Corrected an extra-character BEST selector SHA transcription.
+- Preserved and superseded an `_001` run in which an efficiency pilot was
+  incorrectly launched before formal execution. It produced no task result.
+- Kept historical-cache BF16 drift as a diagnostic after raw-text,
+  tokenization, and provenance identity passed; no frozen artifact changed.
+
 ## 2026-08-04 workflow setup
 
 VERIFIED:

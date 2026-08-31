@@ -1,0 +1,10 @@
+{
+  "artifact": "formal_runtime_preflight",
+  "reason": "complete_path_smoke_determinism_failed",
+  "smoke_completed_trajectory_count": 15,
+  "smoke_task_ids": [
+    "3d9a636_1",
+    "3d9a636_2"
+  ],
+  "status": "NOT_RUN"
+}

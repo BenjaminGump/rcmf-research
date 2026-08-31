@@ -1,0 +1,183 @@
+{
+  "attempt_count": 3,
+  "attempt_ids": [
+    "exp036a-prepare-001",
+    "exp036a-smoke-001",
+    "exp036a-stop-export-001"
+  ],
+  "determinism": [
+    {
+      "condition": "B0",
+      "determinism": {
+        "checks": {
+          "code": true,
+          "observations": false,
+          "prompts": false,
+          "step_count": true,
+          "success": true,
+          "task_id": true,
+          "token_ids": false
+        },
+        "passed": false
+      },
+      "first_divergence": {
+        "fields": [
+          "complete_environment_observation"
+        ],
+        "reason": "step_content",
+        "step_id": 18
+      },
+      "left_step_count": 50,
+      "left_success": false,
+      "mechanism": {
+        "first_divergent_observation_left_sha256": "43263e605ca3bf2328506060d744a6ddca2b98edb215480fb3898b0018fa2c2d",
+        "first_divergent_observation_right_sha256": "c6f815d82b9153e7aac68724d19990f6d36058bdce23ea1a30de58ac398c9c4c",
+        "python_set_repr_order_only": true
+      },
+      "right_step_count": 50,
+      "right_success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "BEST-C",
+      "determinism": {
+        "checks": {
+          "code": true,
+          "observations": true,
+          "prompts": true,
+          "step_count": true,
+          "success": true,
+          "task_id": true,
+          "token_ids": true
+        },
+        "passed": true
+      },
+      "first_divergence": null,
+      "left_step_count": 50,
+      "left_success": false,
+      "mechanism": null,
+      "right_step_count": 50,
+      "right_success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "BEST-S",
+      "determinism": {
+        "checks": {
+          "code": true,
+          "observations": true,
+          "prompts": true,
+          "step_count": true,
+          "success": true,
+          "task_id": true,
+          "token_ids": true
+        },
+        "passed": true
+      },
+      "first_divergence": null,
+      "left_step_count": 50,
+      "left_success": false,
+      "mechanism": null,
+      "right_step_count": 50,
+      "right_success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "FULL1D-C",
+      "determinism": {
+        "checks": {
+          "code": true,
+          "observations": true,
+          "prompts": true,
+          "step_count": true,
+          "success": true,
+          "task_id": true,
+          "token_ids": true
+        },
+        "passed": true
+      },
+      "first_divergence": null,
+      "left_step_count": 29,
+      "left_success": false,
+      "mechanism": null,
+      "right_step_count": 29,
+      "right_success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "FULL1D-S",
+      "determinism": {
+        "checks": {
+          "code": true,
+          "observations": false,
+          "prompts": false,
+          "step_count": true,
+          "success": true,
+          "task_id": true,
+          "token_ids": false
+        },
+        "passed": false
+      },
+      "first_divergence": {
+        "fields": [
+          "complete_environment_observation"
+        ],
+        "reason": "step_content",
+        "step_id": 19
+      },
+      "left_step_count": 50,
+      "left_success": false,
+      "mechanism": {
+        "first_divergent_observation_left_sha256": "c64fa7824a3ad5e8a04bfb40e4435d5607bcee7cfa11848d3694f0f4285b0bd6",
+        "first_divergent_observation_right_sha256": "74e6624d7a67c72f7c8cd6925bf15311a1404e272a664217d21322c308b79692",
+        "python_set_repr_order_only": true
+      },
+      "right_step_count": 50,
+      "right_success": false,
+      "task_id": "3d9a636_1"
+    }
+  ],
+  "efficiency": "NOT_RUN",
+  "evaluation_seed": 25101,
+  "formal_expected_trajectory_count": 840,
+  "formal_metrics": "NOT_RUN",
+  "formal_trajectory_count": 0,
+  "format": "rcmf_appworld_testnormal_stopped_summary_13a_v1",
+  "lambda_artifact_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002",
+  "manifests": {
+    "condition_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/manifests/condition_manifest.json",
+      "sha256": "09cf51ca1c0d516d70faf84d7a63a9c63274336ce7e2cefa3543d578dbf5de5c"
+    },
+    "leakage_audit.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/manifests/leakage_audit.json",
+      "sha256": "96ef2d7fe6048cf9f2d38438d61f5a2fd319fabf187eadd6255535f0214162f5"
+    },
+    "package_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/manifests/package_manifest.json",
+      "sha256": "62899c93722f436e87d98f505cee0c1fed00ff5f5cee94b17465623845d3ea2b"
+    },
+    "prompt_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/manifests/prompt_manifest.json",
+      "sha256": "e42a229f6fc008f280fbe66e94216ee6323ed2730a4c86a6167746f2981dadf3"
+    },
+    "smoke_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/manifests/smoke_manifest.json",
+      "sha256": "62f09361b5762d6bf4092d1f768ebf25e4133b60bc229a63378bf475abd918bc"
+    },
+    "test_normal_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/manifests/test_normal_manifest.json",
+      "sha256": "049cd6a50477fbe0167c7dffe6acf135ec76c26b6e5619f3c5d1d4405e16655d"
+    }
+  },
+  "model_or_component_changed": false,
+  "open_attempt_ids": [],
+  "reversibility": "NOT_RUN",
+  "run_uuid": "rcmf_appworld_testnormal_final_13a_20260831_002",
+  "smoke_is_scientific_evidence": false,
+  "smoke_trajectory_count": 15,
+  "status": "STOPPED_BEFORE_FORMAL",
+  "stop_gate": "complete_path_smoke_determinism",
+  "stop_reason": "AppWorld executed Python set repr order varied across fresh identical worlds",
+  "summary_sha256": "046cb9478b2720c7cabde01c61e84a9c19bc848c3086242c71325f53a973512a"
+}

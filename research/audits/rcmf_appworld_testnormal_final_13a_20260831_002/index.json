@@ -1,0 +1,323 @@
+{
+  "comparisons": [
+    {
+      "condition": "B0",
+      "determinism": {
+        "checks": {
+          "code": true,
+          "observations": false,
+          "prompts": false,
+          "step_count": true,
+          "success": true,
+          "task_id": true,
+          "token_ids": false
+        },
+        "passed": false
+      },
+      "first_divergence": {
+        "fields": [
+          "complete_environment_observation"
+        ],
+        "reason": "step_content",
+        "step_id": 18
+      },
+      "left_step_count": 50,
+      "left_success": false,
+      "mechanism": {
+        "first_divergent_observation_left_sha256": "43263e605ca3bf2328506060d744a6ddca2b98edb215480fb3898b0018fa2c2d",
+        "first_divergent_observation_right_sha256": "c6f815d82b9153e7aac68724d19990f6d36058bdce23ea1a30de58ac398c9c4c",
+        "python_set_repr_order_only": true
+      },
+      "right_step_count": 50,
+      "right_success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "BEST-C",
+      "determinism": {
+        "checks": {
+          "code": true,
+          "observations": true,
+          "prompts": true,
+          "step_count": true,
+          "success": true,
+          "task_id": true,
+          "token_ids": true
+        },
+        "passed": true
+      },
+      "first_divergence": null,
+      "left_step_count": 50,
+      "left_success": false,
+      "mechanism": null,
+      "right_step_count": 50,
+      "right_success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "BEST-S",
+      "determinism": {
+        "checks": {
+          "code": true,
+          "observations": true,
+          "prompts": true,
+          "step_count": true,
+          "success": true,
+          "task_id": true,
+          "token_ids": true
+        },
+        "passed": true
+      },
+      "first_divergence": null,
+      "left_step_count": 50,
+      "left_success": false,
+      "mechanism": null,
+      "right_step_count": 50,
+      "right_success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "FULL1D-C",
+      "determinism": {
+        "checks": {
+          "code": true,
+          "observations": true,
+          "prompts": true,
+          "step_count": true,
+          "success": true,
+          "task_id": true,
+          "token_ids": true
+        },
+        "passed": true
+      },
+      "first_divergence": null,
+      "left_step_count": 29,
+      "left_success": false,
+      "mechanism": null,
+      "right_step_count": 29,
+      "right_success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "FULL1D-S",
+      "determinism": {
+        "checks": {
+          "code": true,
+          "observations": false,
+          "prompts": false,
+          "step_count": true,
+          "success": true,
+          "task_id": true,
+          "token_ids": false
+        },
+        "passed": false
+      },
+      "first_divergence": {
+        "fields": [
+          "complete_environment_observation"
+        ],
+        "reason": "step_content",
+        "step_id": 19
+      },
+      "left_step_count": 50,
+      "left_success": false,
+      "mechanism": {
+        "first_divergent_observation_left_sha256": "c64fa7824a3ad5e8a04bfb40e4435d5607bcee7cfa11848d3694f0f4285b0bd6",
+        "first_divergent_observation_right_sha256": "74e6624d7a67c72f7c8cd6925bf15311a1404e272a664217d21322c308b79692",
+        "python_set_repr_order_only": true
+      },
+      "right_step_count": 50,
+      "right_success": false,
+      "task_id": "3d9a636_1"
+    }
+  ],
+  "formal_status": "NOT_RUN",
+  "format": "rcmf_appworld_testnormal_stopped_audit_index_13a_v1",
+  "git_safe_smoke_step_count": 624,
+  "git_safe_smoke_trace_count": 15,
+  "hidden_chain_of_thought_collected": false,
+  "independently_verified_formal_result": false,
+  "index_sha256": "baf69569c33af53c201cb2ce83b6e9dec8d6312f0eeaa4de2d90b05e540db9ef",
+  "manifests": {
+    "condition_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/manifests/condition_manifest.json",
+      "sha256": "09cf51ca1c0d516d70faf84d7a63a9c63274336ce7e2cefa3543d578dbf5de5c"
+    },
+    "leakage_audit.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/manifests/leakage_audit.json",
+      "sha256": "96ef2d7fe6048cf9f2d38438d61f5a2fd319fabf187eadd6255535f0214162f5"
+    },
+    "package_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/manifests/package_manifest.json",
+      "sha256": "62899c93722f436e87d98f505cee0c1fed00ff5f5cee94b17465623845d3ea2b"
+    },
+    "prompt_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/manifests/prompt_manifest.json",
+      "sha256": "e42a229f6fc008f280fbe66e94216ee6323ed2730a4c86a6167746f2981dadf3"
+    },
+    "smoke_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/manifests/smoke_manifest.json",
+      "sha256": "62f09361b5762d6bf4092d1f768ebf25e4133b60bc229a63378bf475abd918bc"
+    },
+    "test_normal_manifest.json": {
+      "lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/manifests/test_normal_manifest.json",
+      "sha256": "049cd6a50477fbe0167c7dffe6acf135ec76c26b6e5619f3c5d1d4405e16655d"
+    }
+  },
+  "raw_lambda_artifact_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002",
+  "row_index": [
+    {
+      "condition": "B0",
+      "git_safe_trace": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/git_safe_stop_export_v3/research/audits/rcmf_appworld_testnormal_final_13a_20260831_002/smoke/B0/3d9a636_1.jsonl",
+      "raw_task_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2/B0/task_results/3d9a636_1.json",
+      "raw_task_sha256": "e326c05060625db3fda9359b45e55797c2bc34f56c423f66c5426df29b59db24",
+      "status": "complete",
+      "step_count": 50,
+      "success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "B0",
+      "git_safe_trace": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/git_safe_stop_export_v3/research/audits/rcmf_appworld_testnormal_final_13a_20260831_002/smoke/B0/3d9a636_2.jsonl",
+      "raw_task_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2/B0/task_results/3d9a636_2.json",
+      "raw_task_sha256": "fa5b470a4b08ec731a3c8f07efe090c9627c350c0d2224f73cbebaa881e49068",
+      "status": "complete",
+      "step_count": 25,
+      "success": false,
+      "task_id": "3d9a636_2"
+    },
+    {
+      "condition": "B0-REPEAT",
+      "git_safe_trace": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/git_safe_stop_export_v3/research/audits/rcmf_appworld_testnormal_final_13a_20260831_002/smoke/B0-REPEAT/3d9a636_1.jsonl",
+      "raw_task_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2/B0-REPEAT/task_results/3d9a636_1.json",
+      "raw_task_sha256": "f9963fd4a145f5c5d86a9e6e50c632355cffa2d284895fb76e8fe4a123d4ba42",
+      "status": "complete",
+      "step_count": 50,
+      "success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "BEST-C",
+      "git_safe_trace": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/git_safe_stop_export_v3/research/audits/rcmf_appworld_testnormal_final_13a_20260831_002/smoke/BEST-C/3d9a636_1.jsonl",
+      "raw_task_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2/BEST-C/task_results/3d9a636_1.json",
+      "raw_task_sha256": "638763e0a5cb0c639ecf38c60eb207cf9ed5de3031fd95772d71812525d28e7f",
+      "status": "complete",
+      "step_count": 50,
+      "success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "BEST-C",
+      "git_safe_trace": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/git_safe_stop_export_v3/research/audits/rcmf_appworld_testnormal_final_13a_20260831_002/smoke/BEST-C/3d9a636_2.jsonl",
+      "raw_task_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2/BEST-C/task_results/3d9a636_2.json",
+      "raw_task_sha256": "155065222c550b3d3710c53b9bf16af916f30fa2de6a222daaa509320386efe4",
+      "status": "complete",
+      "step_count": 24,
+      "success": false,
+      "task_id": "3d9a636_2"
+    },
+    {
+      "condition": "BEST-C-REPEAT",
+      "git_safe_trace": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/git_safe_stop_export_v3/research/audits/rcmf_appworld_testnormal_final_13a_20260831_002/smoke/BEST-C-REPEAT/3d9a636_1.jsonl",
+      "raw_task_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2/BEST-C-REPEAT/task_results/3d9a636_1.json",
+      "raw_task_sha256": "fc018f23e8f55551ec0425271c1f302861495689b248ccfe516949724b121252",
+      "status": "complete",
+      "step_count": 50,
+      "success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "BEST-S",
+      "git_safe_trace": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/git_safe_stop_export_v3/research/audits/rcmf_appworld_testnormal_final_13a_20260831_002/smoke/BEST-S/3d9a636_1.jsonl",
+      "raw_task_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2/BEST-S/task_results/3d9a636_1.json",
+      "raw_task_sha256": "b57388550592cf444acff82e8d415b92ccfa97783c5002842ba1ea4056700745",
+      "status": "complete",
+      "step_count": 50,
+      "success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "BEST-S",
+      "git_safe_trace": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/git_safe_stop_export_v3/research/audits/rcmf_appworld_testnormal_final_13a_20260831_002/smoke/BEST-S/3d9a636_2.jsonl",
+      "raw_task_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2/BEST-S/task_results/3d9a636_2.json",
+      "raw_task_sha256": "d58de14367b372974f292b57c1d682e4fab25715e1f533704376e25a63c6471e",
+      "status": "complete",
+      "step_count": 50,
+      "success": false,
+      "task_id": "3d9a636_2"
+    },
+    {
+      "condition": "BEST-S-REPEAT",
+      "git_safe_trace": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/git_safe_stop_export_v3/research/audits/rcmf_appworld_testnormal_final_13a_20260831_002/smoke/BEST-S-REPEAT/3d9a636_1.jsonl",
+      "raw_task_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2/BEST-S-REPEAT/task_results/3d9a636_1.json",
+      "raw_task_sha256": "484ea63d334d1c37e67fc9e5a1474c4a90bfbfdd884ce82ffe150c01a1e74091",
+      "status": "complete",
+      "step_count": 50,
+      "success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "FULL1D-C",
+      "git_safe_trace": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/git_safe_stop_export_v3/research/audits/rcmf_appworld_testnormal_final_13a_20260831_002/smoke/FULL1D-C/3d9a636_1.jsonl",
+      "raw_task_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2/FULL1D-C/task_results/3d9a636_1.json",
+      "raw_task_sha256": "b639e803fb9d453ffb84b3f465167bee231a955b669552165bc4d1128feb5a76",
+      "status": "complete",
+      "step_count": 29,
+      "success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "FULL1D-C",
+      "git_safe_trace": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/git_safe_stop_export_v3/research/audits/rcmf_appworld_testnormal_final_13a_20260831_002/smoke/FULL1D-C/3d9a636_2.jsonl",
+      "raw_task_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2/FULL1D-C/task_results/3d9a636_2.json",
+      "raw_task_sha256": "6890d068fafe06a40747fdb06b8db1ba5dad5a48744e8471320dd2b8910489e8",
+      "status": "complete",
+      "step_count": 50,
+      "success": false,
+      "task_id": "3d9a636_2"
+    },
+    {
+      "condition": "FULL1D-C-REPEAT",
+      "git_safe_trace": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/git_safe_stop_export_v3/research/audits/rcmf_appworld_testnormal_final_13a_20260831_002/smoke/FULL1D-C-REPEAT/3d9a636_1.jsonl",
+      "raw_task_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2/FULL1D-C-REPEAT/task_results/3d9a636_1.json",
+      "raw_task_sha256": "95443c9f01a286bd56f2f57b4cb2789df9c32ec0e1614b5df675e21a0baad113",
+      "status": "complete",
+      "step_count": 29,
+      "success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "FULL1D-S",
+      "git_safe_trace": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/git_safe_stop_export_v3/research/audits/rcmf_appworld_testnormal_final_13a_20260831_002/smoke/FULL1D-S/3d9a636_1.jsonl",
+      "raw_task_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2/FULL1D-S/task_results/3d9a636_1.json",
+      "raw_task_sha256": "80a1c2b7a5acfed5e520fceec202322e4b3da07abaf6cd95adae01b361da5bd3",
+      "status": "complete",
+      "step_count": 50,
+      "success": false,
+      "task_id": "3d9a636_1"
+    },
+    {
+      "condition": "FULL1D-S",
+      "git_safe_trace": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/git_safe_stop_export_v3/research/audits/rcmf_appworld_testnormal_final_13a_20260831_002/smoke/FULL1D-S/3d9a636_2.jsonl",
+      "raw_task_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2/FULL1D-S/task_results/3d9a636_2.json",
+      "raw_task_sha256": "8f3005992af3385c70cf0376a06b870b2846338eaae81d94918033c3da32e960",
+      "status": "complete",
+      "step_count": 17,
+      "success": false,
+      "task_id": "3d9a636_2"
+    },
+    {
+      "condition": "FULL1D-S-REPEAT",
+      "git_safe_trace": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/git_safe_stop_export_v3/research/audits/rcmf_appworld_testnormal_final_13a_20260831_002/smoke/FULL1D-S-REPEAT/3d9a636_1.jsonl",
+      "raw_task_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2/FULL1D-S-REPEAT/task_results/3d9a636_1.json",
+      "raw_task_sha256": "a5a2fa84b04037765d024fc87b2f8070c352ef86e6b1355c84d9c7f72f4ce3c3",
+      "status": "complete",
+      "step_count": 50,
+      "success": false,
+      "task_id": "3d9a636_1"
+    }
+  ],
+  "run_uuid": "rcmf_appworld_testnormal_final_13a_20260831_002",
+  "smoke_gate_status": "FAILED_DETERMINISM",
+  "typed_redaction": true
+}

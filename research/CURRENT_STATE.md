@@ -1,30 +1,31 @@
 # Current State
 
-## 2026-08-31 EXP-036A Active Frozen Evaluation State
+## 2026-08-31 EXP-036A Stopped Before Formal Evaluation
 
 VERIFIED:
 
-- EXP-035A completed at `4aa0fd89b2b63d5a9bcbf1e6b18395e0a14e847b`
-  with the preregistered diagnostic decision `INCONCLUSIVE`.
-- The user has explicitly approved EXP-036A, an evaluation-only complete
-  AppWorld 0.1.0 `test_normal` comparison of shared bare `B0`, primary frozen
-  `BEST-C/BEST-S`, and secondary frozen `FULL1D-C/FULL1D-S`.
-- Local, GitHub, and Lambda start at the exact EXP-035A SHA with clean tracked
-  and untracked state. The Lambda NFS is mounted, storage is healthy, and the
-  H100 has no active compute process.
-- All frozen selector, writer/reader, 499-memory field, shuffle, prompt, and
-  transition-cache hashes required by the EXP-036A contract match their
-  immutable Lambda artifacts.
+- All frozen BEST/FULL1D package, field, shuffle, prompt, and ordered 168-task
+  Test-Normal identities passed preflight under seed `25101`.
+- The complete-path smoke completed 15 trajectories and 624 steps on the first
+  two frozen Test-Normal tasks.
+- Fresh-world repeats passed for BEST-C, BEST-S, and FULL1D-C but failed exact
+  determinism for B0 at step 18 and FULL1D-S at step 19.
+- At both first divergences, model output and executed code matched while the
+  environment observation differed only in Python set representation order.
+- The preregistered contract required exact observation, prompt, and token
+  equality. EXP-036A therefore stopped before formal generation.
+- Formal Test-Normal is `0/840` and `NOT_RUN`; efficiency/scaling and numerical
+  reversibility are also `NOT_RUN`.
+- No optimizer, backward pass, model change, field change, prompt change, or
+  follow-up experiment occurred.
 
-ACTIVE CONTRACT:
+CURRENT BLOCK:
 
-- Freeze the ordered 168-task `test_normal` manifest before generation and run
-  exactly 840 complete trajectories under seed `25101` with no success-based
-  stopping or outcome-led configuration change.
-- Complete formal audits before separate deployment-efficiency, bank-scaling,
-  active-serving-state, and numerical-reversibility measurements.
-- Do not train, calibrate, retrieve, gate, rescale, change the one-demo prompt,
-  or start any follow-up experiment.
+- Do not rerun under a new seed, add observation normalization, pin a new hash
+  seed, or launch any EXP-036A formal phase without a new user-reviewed
+  reproducibility protocol.
+- Full report:
+  `research/results/EXP_036A_APPWORLD_TESTNORMAL_FINAL.md`.
 
 Last updated: 2026-08-31.
 

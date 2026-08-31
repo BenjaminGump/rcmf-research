@@ -1,5 +1,18 @@
 # Next Experiments
 
+## EXP-036A Reproducibility Review Stop
+
+EXP-036A generated no formal performance result. It stopped because the
+complete-path fresh-world smoke was not exactly deterministic: B0 and
+FULL1D-S produced equal-set observations with different textual element order,
+which later changed prompts and tokens.
+
+No next experiment is authorized. A future reviewed protocol would first need
+to decide whether to pin process hash state or canonicalize environment
+observations, then refreeze and rerun the complete smoke before any formal
+Test-Normal work. Do not make that change or launch formal, efficiency,
+reversibility, portability, retraining, or paper automation automatically.
+
 ## EXP-035A Review Stop
 
 EXP-035A is complete and reaches `INCONCLUSIVE`. The LOO-stable interaction
