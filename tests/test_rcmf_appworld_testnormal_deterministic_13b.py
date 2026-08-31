@@ -375,3 +375,15 @@ def test_smoke_runner_requires_fifteen_fresh_process_rows() -> None:
     assert '"process_count": 15' in source
     assert '"fresh_process_per_trajectory": True' in source
     assert "compare_complete_smoke_rows" in source
+
+
+def test_stop_exporter_preserves_runtime_gate_and_redaction_contract() -> None:
+    source = Path(
+        "scripts/export_rcmf_appworld_testnormal_stop_audit_13b.py"
+    ).read_text(encoding="utf-8")
+    assert "STOPPED_BEFORE_FORMAL" in source
+    assert "runtime_preflight_42_hour_cap" in source
+    assert "compare_complete_smoke_rows" in source
+    assert "strict_verify_tree(args.audit_root)" in source
+    assert "strict_verify_tree(args.result_root)" in source
+    assert "formal_expected_trajectory_count" in source
