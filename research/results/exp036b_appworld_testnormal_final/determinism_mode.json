@@ -1,0 +1,84 @@
+{
+  "canonicalizer": {
+    "enabled": false,
+    "identity": "disabled"
+  },
+  "evaluator_state_modified": false,
+  "format": "rcmf_exp036b_determinism_mode_v1",
+  "launcher": {
+    "path": "scripts/launch_rcmf_appworld_testnormal_deterministic_13b.sh",
+    "sha256": "a9be5e359976d922f051361a39d8576c015c74cc7d28c746866bf4d1b87c670f"
+  },
+  "manifest_sha256": "d43d46e46ce8beef7c2b5946c1657b84e94d4a0783b4180f45186beedfc9eb5c",
+  "mode": "hash_seed_only",
+  "model_visible_observation_contract": "exact raw observation string",
+  "raw_observation_preserved": true,
+  "required_python_hash_seed": "25101",
+  "root_cause": {
+    "path": "research/results/exp036b_appworld_testnormal_final/determinism_root_cause.json",
+    "sha256": "5b1d59ad5551cb7ad9da80ef088d8bcede0e065188d93cae7c23906fa37035d6"
+  },
+  "selection_uses_task_success": false,
+  "stage1_comparisons": {
+    "B0": {
+      "checks": {
+        "completion_status": true,
+        "executed_code": true,
+        "generated_token_ids": true,
+        "prompt_token_ids": true,
+        "prompts": true,
+        "raw_observations": true,
+        "raw_responses": true,
+        "raw_world_initialization": true,
+        "state_fingerprints": true,
+        "step_count": true,
+        "success": true
+      },
+      "passed": true
+    },
+    "FULL1D-S": {
+      "checks": {
+        "completion_status": true,
+        "executed_code": true,
+        "generated_token_ids": true,
+        "prompt_token_ids": true,
+        "prompts": true,
+        "raw_observations": true,
+        "raw_responses": true,
+        "raw_world_initialization": true,
+        "state_fingerprints": true,
+        "step_count": true,
+        "success": true
+      },
+      "passed": true
+    }
+  },
+  "stage1_probe_conditions": [
+    "B0",
+    "FULL1D-S"
+  ],
+  "stage1_probe_passed": true,
+  "stage1_probe_task_id": "3d9a636_1",
+  "stage1_rows": {
+    "B0": {
+      "A": {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001/determinism_probe/process_A/conditions/B0/task_results/3d9a636_1.json",
+        "sha256": "086594e3371ef6bd1f6b6fa7805f2bd8a90a1374cd1cb7258ed45e0ab26f0747"
+      },
+      "B": {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001/determinism_probe/process_B/conditions/B0/task_results/3d9a636_1.json",
+        "sha256": "5685ea390ba495c82cac19f35701cd010eb3751957f6a71ed27026b11156717a"
+      }
+    },
+    "FULL1D-S": {
+      "A": {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001/determinism_probe/process_A/conditions/FULL1D-S/task_results/3d9a636_1.json",
+        "sha256": "e01113fdcec8b4721313065fd8c0087dbd0ea3c867b9a73a0c788e6405e4755c"
+      },
+      "B": {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001/determinism_probe/process_B/conditions/FULL1D-S/task_results/3d9a636_1.json",
+        "sha256": "2e571624ea67de93a61acb6814970148e116dcaa1469539e96fa87b79e43b5da"
+      }
+    }
+  }
+}
