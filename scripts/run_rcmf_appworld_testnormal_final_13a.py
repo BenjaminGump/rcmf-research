@@ -399,16 +399,21 @@ def smoke(
     wall = [float(row["wall_seconds"]) for row in primary_rows]
     expected_formal = statistics.fmean(wall) * 840
     conservative_formal = max(wall) * 840 * 1.25
-    efficiency_pilot_path = args.artifact_dir / "preflight/efficiency_pilot.json"
-    if not efficiency_pilot_path.exists():
-        raise RuntimeError("Measured EXP-036A efficiency pilot is missing")
-    efficiency_pilot = read_json(efficiency_pilot_path)
-    if not bool(efficiency_pilot.get("passed")):
-        raise RuntimeError("Measured EXP-036A efficiency pilot did not pass")
-    auxiliary_expected = float(efficiency_pilot["expected_auxiliary_wall_seconds"])
-    auxiliary_conservative = float(
-        efficiency_pilot["conservative_auxiliary_wall_seconds"]
+    auxiliary = settings["runtime"]["auxiliary_estimate"]
+    if not bool(auxiliary["phase_b_runs_after_formal"]):
+        raise RuntimeError("EXP-036A requires Phase B to run after formal evaluation")
+    efficiency_expected = float(auxiliary["efficiency_expected_hours"]) * 3600.0
+    efficiency_conservative = (
+        float(auxiliary["efficiency_conservative_hours"]) * 3600.0
     )
+    reversibility_expected = (
+        float(auxiliary["reversibility_expected_hours"]) * 3600.0
+    )
+    reversibility_conservative = (
+        float(auxiliary["reversibility_conservative_hours"]) * 3600.0
+    )
+    auxiliary_expected = efficiency_expected + reversibility_expected
+    auxiliary_conservative = efficiency_conservative + reversibility_conservative
     expected_total = expected_formal + auxiliary_expected
     conservative_total = conservative_formal + auxiliary_conservative
     smoke_bytes = sum(
@@ -431,7 +436,17 @@ def smoke(
         "conservative_formal_wall_hours": conservative_formal / 3600.0,
         "expected_auxiliary_wall_hours": auxiliary_expected / 3600.0,
         "conservative_auxiliary_wall_hours": auxiliary_conservative / 3600.0,
-        "efficiency_pilot_sha256": sha256_file(efficiency_pilot_path),
+        "efficiency_microbenchmark_estimate": {
+            "expected_wall_hours": efficiency_expected / 3600.0,
+            "conservative_wall_hours": efficiency_conservative / 3600.0,
+            "basis": str(auxiliary["basis"]),
+            "scheduled_after_formal": True,
+        },
+        "numerical_reversibility_estimate": {
+            "expected_wall_hours": reversibility_expected / 3600.0,
+            "conservative_wall_hours": reversibility_conservative / 3600.0,
+            "scheduled_after_formal": True,
+        },
         "expected_total_wall_hours": expected_total / 3600.0,
         "conservative_total_wall_hours": conservative_total / 3600.0,
         "expected_h100_active_hours": expected_total / 3600.0,

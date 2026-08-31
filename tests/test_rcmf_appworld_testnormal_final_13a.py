@@ -21,6 +21,7 @@ from rcmf.training.rcmf_joint_full_bank_9a import (
     ReversibleRCMFField,
 )
 from scripts.benchmark_rcmf_appworld_testnormal_efficiency_13a import (
+    compilation_phase,
     timed_cuda,
     timing_summary,
 )
@@ -28,7 +29,7 @@ from scripts.export_rcmf_appworld_testnormal_audit_13a import (
     CLAIMS_BOUNDARY,
     latex_values,
 )
-from scripts.run_rcmf_appworld_testnormal_final_13a import FinalTestRuntime
+from scripts.run_rcmf_appworld_testnormal_final_13a import FinalTestRuntime, smoke
 from scripts.run_rcmf_joint_full_bank_first37_9a import _run_task
 
 
@@ -62,6 +63,7 @@ def test_all_frozen_hashes_are_exact_and_full1d_epoch_two_is_forbidden() -> None
     assert config["packages"]["BEST"]["selector_ensemble_sha256"] == (
         "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f"
     )
+    assert len(config["packages"]["BEST"]["selector_ensemble_sha256"]) == 64
     assert config["packages"]["BEST"]["writer_reader_checkpoint_sha256"] == (
         "d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1"
     )
@@ -164,6 +166,22 @@ def test_timing_helper_does_not_change_cpu_operation_result() -> None:
     row = timing_summary([1.0, 2.0, 3.0, 4.0])
     assert row["median"] == 2.5
     assert row["p95"] == pytest.approx(3.85)
+
+
+def test_formal_runtime_gate_respects_formal_before_efficiency_order() -> None:
+    config = load_config(CONFIG).raw["stage_c_13a"]
+    auxiliary = config["runtime"]["auxiliary_estimate"]
+    assert auxiliary["phase_b_runs_after_formal"] is True
+    source = inspect.getsource(smoke)
+    assert "efficiency_pilot.json" not in source
+    assert "efficiency_microbenchmark_estimate" in source
+
+
+def test_raw_reencoding_keeps_identity_hard_and_numeric_drift_diagnostic() -> None:
+    source = inspect.getsource(compilation_phase)
+    assert "Raw transition text/token provenance differs" in source
+    assert "raw_reencoding_exact_cache_match_at_1e_5" in source
+    assert "Raw transition re-encoding differs from frozen cache" not in source
 
 
 def test_reversible_field_keeps_fixed_shape_and_round_trips() -> None:

@@ -6,8 +6,8 @@ experiment:
   seed: 25101
 
 stage_c_13a:
-  run_uuid: rcmf_appworld_testnormal_final_13a_20260831_001
-  artifact_dir: runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_001
+  run_uuid: rcmf_appworld_testnormal_final_13a_20260831_002
+  artifact_dir: runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002
   persistent_root: /lambda/nfs/rcmf-persist
   starting_head: 4aa0fd89b2b63d5a9bcbf1e6b18395e0a14e847b
   working_branch: research/v5-rcmf-appworld-testnormal-final
@@ -95,6 +95,13 @@ stage_c_13a:
 
   runtime:
     approved_wall_hours: 42.0
+    auxiliary_estimate:
+      phase_b_runs_after_formal: true
+      efficiency_expected_hours: 2.5
+      efficiency_conservative_hours: 4.0
+      reversibility_expected_hours: 0.1
+      reversibility_conservative_hours: 0.25
+      basis: bounded 499-record frozen-Qwen ingestion plus fixed-grid read/TTFT repeats and algebra-only reversibility
     heartbeat_interval_seconds: 240
     heartbeat_stale_seconds: 720
     hardware_required: NVIDIA H100 80GB HBM3

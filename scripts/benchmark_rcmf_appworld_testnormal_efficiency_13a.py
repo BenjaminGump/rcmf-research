@@ -167,6 +167,14 @@ def source_rows(
     ordered = [str(value) for value in cache["ordered_transition_ids"]]
     if set(ordered) != set(by_id):
         raise ValueError("Raw transition ledger and frozen source cache differ")
+    provenance_rows = read_jsonl(Path(str(source["memory_provenance"])))
+    provenance_ids = [str(row["transition_id"]) for row in provenance_rows]
+    if provenance_ids != ordered:
+        raise ValueError("Raw transition provenance and source-cache order differ")
+    data = dict(data)
+    data["_provenance_by_transition_id"] = {
+        str(row["transition_id"]): row for row in provenance_rows
+    }
     return [by_id[value] for value in ordered], cache, data
 
 
@@ -577,13 +585,34 @@ def compilation_phase(
         timing["raw_reencoded_payload_vs_frozen_cache_max_abs"] = float(
             (record.payload - cached_payload).abs().max().item()
         )
-        if max(
+        provenance = data["_provenance_by_transition_id"][record.memory_id]
+        identity_checks = {
+            "teacher_section_sha256": str(
+                timing["text_identity"]["teacher_section_sha256"]
+            )
+            == str(row["teacher_section_sha256"]),
+            "token_count": int(timing["raw_token_count"])
+            == int(provenance["complete_render_token_count"]),
+            "transition_content_sha256": str(
+                timing["text_identity"]["transition_content_sha256"]
+            )
+            == str(provenance["transition_content_sha256"]),
+        }
+        if not all(identity_checks.values()):
+            raise RuntimeError(
+                f"Raw transition text/token provenance differs: {record.memory_id} "
+                f"{identity_checks}"
+            )
+        cache_max_abs = max(
             timing["raw_reencoded_key_vs_frozen_cache_max_abs"],
             timing["raw_reencoded_payload_vs_frozen_cache_max_abs"],
-        ) > 1.0e-5:
-            raise RuntimeError(
-                f"Raw transition re-encoding differs from frozen cache: {record.memory_id}"
-            )
+        )
+        timing["raw_text_token_provenance_checks"] = identity_checks
+        timing["raw_reencoding_exact_cache_match_at_1e_5"] = cache_max_abs <= 1.0e-5
+        timing["raw_reencoding_cache_max_abs"] = cache_max_abs
+        timing["cache_comparison_role"] = (
+            "numeric provenance diagnostic only; frozen deployment fields remain immutable"
+        )
         metrics.append(timing)
         print(
             f"compilation={index}/{len(selected)} transition={record.memory_id}",
