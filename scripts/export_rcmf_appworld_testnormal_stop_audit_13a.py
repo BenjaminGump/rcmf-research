@@ -78,6 +78,14 @@ def observation_sha(value: Any) -> str:
     return hashlib.sha256(str(value).encode("utf-8")).hexdigest()
 
 
+def not_run_record(artifact: str) -> dict[str, Any]:
+    return {
+        "artifact": artifact,
+        "reason": "complete_path_smoke_determinism_failed",
+        "status": "NOT_RUN",
+    }
+
+
 def comparison(
     condition: str, left: Mapping[str, Any], right: Mapping[str, Any]
 ) -> dict[str, Any]:
@@ -180,6 +188,78 @@ def main() -> None:
         for row in attempts
         if row.get("event") == "end"
     }
+
+    manifest_copies = {
+        "condition_manifest.json": "condition_manifest.json",
+        "package_manifest.json": "frozen_model_manifest.json",
+        "prompt_manifest.json": "prompt_manifest.json",
+        "test_normal_manifest.json": "test_normal_manifest.json",
+    }
+    for source_name, output_name in manifest_copies.items():
+        write_json(
+            args.result_root / output_name,
+            strict_redact(read_json(args.artifact_dir / "manifests" / source_name)),
+        )
+
+    write_jsonl(
+        args.result_root / "per_task.jsonl",
+        [
+            {
+                **not_run_record("formal_per_task_results"),
+                "completed_rows": 0,
+                "expected_rows": 840,
+            }
+        ],
+    )
+    for name in (
+        "paired_analysis",
+        "trajectory_metrics",
+        "formal_efficiency",
+        "scaling_results",
+        "compilation_results",
+        "ttft_results",
+        "serving_state_results",
+        "reversibility_results",
+        "paper_table_values",
+    ):
+        write_json(args.result_root / f"{name}.json", not_run_record(name))
+    write_json(
+        args.result_root / "runtime_preflight.json",
+        {
+            **not_run_record("formal_runtime_preflight"),
+            "smoke_completed_trajectory_count": len(task_paths),
+            "smoke_task_ids": sorted({str(row["task_id"]) for row in row_index}),
+        },
+    )
+    (args.result_root / "paper_table_values.tex").write_text(
+        "% EXP-036A stopped before formal evaluation.\n"
+        "\\newcommand{\\EXPThirtySixAppWorldBare}{NOT\\_RUN}\n"
+        "\\newcommand{\\EXPThirtySixAppWorldBest}{NOT\\_RUN}\n"
+        "\\newcommand{\\EXPThirtySixAppWorldBestShuffle}{NOT\\_RUN}\n"
+        "\\newcommand{\\EXPThirtySixAppWorldFullOneDemo}{NOT\\_RUN}\n"
+        "\\newcommand{\\EXPThirtySixAppWorldFullOneDemoShuffle}{NOT\\_RUN}\n"
+        "\\newcommand{\\EXPThirtySixScaling}{NOT\\_RUN}\n"
+        "\\newcommand{\\EXPThirtySixReversibility}{NOT\\_RUN}\n",
+        encoding="utf-8",
+    )
+    (args.result_root / "claims_boundary.md").write_text(
+        "# EXP-036A Claims Boundary\n\n"
+        "EXP-036A stopped at the complete-path determinism gate before formal "
+        "Test-Normal generation. No performance, scaling, serving-efficiency, "
+        "or numerical-reversibility result was produced.\n\n"
+        "- Final AppWorld deployment was configured for the original first "
+        "complete demonstration, not the historical multi-demo prompt.\n"
+        "- BEST uses one-demo deployment with components trained in EXP-031A.\n"
+        "- FULL1D is the fully one-demo-trained secondary configuration.\n"
+        "- Q90 is not part of the final primary method.\n"
+        "- Test-Normal was partially exposed during exploratory development.\n"
+        "- Active field state is constant in memory count; ledger and exact-"
+        "deletion provenance storage are linear in memory count. This claim "
+        "was not benchmarked in EXP-036A.\n"
+        "- ALFWorld, WebShop, textual-memory baselines, LoRA baselines, section "
+        "ablations, and behavioral deletion were not run.\n",
+        encoding="utf-8",
+    )
 
     manifest_paths = sorted((args.artifact_dir / "manifests").glob("*.json"))
     manifest_index = {
