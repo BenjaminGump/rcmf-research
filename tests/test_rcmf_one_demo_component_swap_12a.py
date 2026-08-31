@@ -22,6 +22,7 @@ from rcmf.training.rcmf_one_demo_component_swap_12a import (
     remove_restore_error,
     select_leakage_safe_memory_ids,
 )
+from scripts.analyze_rcmf_one_demo_component_swap_12a import classify
 from scripts.run_rcmf_one_demo_component_swap_diagnostics_12a import spearman
 from scripts.run_rcmf_one_demo_component_swap_12a import parse_args
 
@@ -67,6 +68,36 @@ def test_runner_exposes_separate_manifest_and_execution_heads(
     arguments = parse_args()
     assert arguments.source_head == "execution"
     assert arguments.manifest_source_head == "manifest"
+
+
+def test_coadaptation_requires_positive_native_specificity() -> None:
+    point = {
+        "selector_old_WR": 0.375,
+        "selector_fresh_WR": -0.125,
+        "M_selector": 0.125,
+        "WR_old_selector": 0.25,
+        "WR_fresh_selector": -0.25,
+        "M_WR": 0.0,
+        "interaction": 0.5,
+        "Delta_OO": 0.0,
+        "Delta_OF": -0.25,
+        "Delta_FO": -0.375,
+        "Delta_FF": -0.125,
+    }
+    loo = {
+        key: {"deleting_one_task_changes_direction": value}
+        for key, value in {
+            "M_selector": True,
+            "M_WR": True,
+            "interaction": False,
+        }.items()
+    }
+
+    result = classify(point, loo)
+
+    assert result["decision"] == "INCONCLUSIVE"
+    assert result["interaction_loo_stable"] is True
+    assert result["native_oo_specificity_retained"] is False
 
 
 def test_condition_cells_and_counterbalanced_order() -> None:

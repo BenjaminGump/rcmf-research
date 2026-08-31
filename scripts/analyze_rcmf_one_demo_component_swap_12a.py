@@ -150,6 +150,7 @@ def classify(point: Mapping[str, float], loo: Mapping[str, Mapping[str, Any]]) -
     interaction_stable = point["interaction"] != 0 and not loo["interaction"][
         "deleting_one_task_changes_direction"
     ]
+    native_specificity_retained = point["Delta_OO"] > 0
     if selector_stable and point["M_selector"] > abs(point["M_WR"]):
         decision = "PROCEED_SELECTOR_HYPOTHESIS"
     elif wr_stable and point["M_WR"] > abs(point["M_selector"]):
@@ -158,6 +159,7 @@ def classify(point: Mapping[str, float], loo: Mapping[str, Mapping[str, Any]]) -
         interaction_stable
         and not selector_stable
         and not wr_stable
+        and native_specificity_retained
         and point["Delta_OO"] > min(point["Delta_OF"], point["Delta_FO"])
     ):
         decision = "PROCEED_COADAPTATION_HYPOTHESIS"
@@ -170,6 +172,7 @@ def classify(point: Mapping[str, float], loo: Mapping[str, Mapping[str, Any]]) -
         "writer_reader_contrasts_directionally_consistent": wr_consistent,
         "writer_reader_loo_stable": wr_stable,
         "interaction_loo_stable": interaction_stable,
+        "native_oo_specificity_retained": native_specificity_retained,
         "heldout_diagnostic_not_confirmatory": True,
     }
 
