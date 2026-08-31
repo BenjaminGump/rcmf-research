@@ -1,0 +1,111 @@
+{
+  "format": "rcmf_exp036b_determinism_root_cause_v1",
+  "run_uuid": "rcmf_appworld_testnormal_final_13b_20260831_001",
+  "source_run_uuid": "rcmf_appworld_testnormal_final_13a_20260831_002",
+  "source_run_decision": "STOPPED_BEFORE_FORMAL",
+  "task_id": "3d9a636_1",
+  "lambda_source_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13a_20260831_002/formal/smoke_v2",
+  "method": {
+    "literal_parser": "ast.literal_eval on quote-aware balanced outer brace spans",
+    "secret_handling": "set values omitted; type-tagged member representations are SHA256 hashed",
+    "non_set_check": "all detected set spans replaced with indexed sentinels before byte comparison"
+  },
+  "divergences": [
+    {
+      "condition": "B0",
+      "repeat_condition": "B0-REPEAT",
+      "first_divergence_step": 18,
+      "left_row_sha256": "e326c05060625db3fda9359b45e55797c2bc34f56c423f66c5426df29b59db24",
+      "right_row_sha256": "f9963fd4a145f5c5d86a9e6e50c632355cffa2d284895fb76e8fe4a123d4ba42",
+      "left_observation_sha256": "43263e605ca3bf2328506060d744a6ddca2b98edb215480fb3898b0018fa2c2d",
+      "right_observation_sha256": "c6f815d82b9153e7aac68724d19990f6d36058bdce23ea1a30de58ac398c9c4c",
+      "observation_byte_lengths": [233, 233],
+      "non_set_skeleton_sha256": "74e5323a4942538ca6229309c3d7965bf1f38aaa783ab182bcd4279f80444872",
+      "set_literals": [
+        {
+          "member_count": 4,
+          "member_types": ["str"],
+          "semantic_sha256": "5c440e9e39f6d3d18b1b7d1ab4dd9c132e17705aac9d731e756d10e23d7676b2",
+          "rendering_order_differs": true
+        },
+        {
+          "member_count": 4,
+          "member_types": ["str"],
+          "semantic_sha256": "dff1ae009a7a3cce756e8a3dad1842530733e87682628bfc319189c819363ddf",
+          "rendering_order_differs": true
+        }
+      ],
+      "prior_prompts_equal": true,
+      "prior_generated_token_ids_equal": true,
+      "prior_raw_responses_equal": true,
+      "prior_executed_code_equal": true,
+      "divergence_step_prompt_equal": true,
+      "divergence_step_generated_token_ids_equal": true,
+      "divergence_step_raw_response_equal": true,
+      "divergence_step_extracted_repaired_executed_code_equal": true,
+      "world_action_equal": true,
+      "state_fingerprint_before_equal": true,
+      "state_fingerprint_after_equal": true,
+      "task_completed_status_equal": true,
+      "authoritative_evaluation_equal": true,
+      "non_set_observation_text_equal": true,
+      "parsed_set_content_equal": true
+    },
+    {
+      "condition": "FULL1D-S",
+      "repeat_condition": "FULL1D-S-REPEAT",
+      "first_divergence_step": 19,
+      "left_row_sha256": "80a1c2b7a5acfed5e520fceec202322e4b3da07abaf6cd95adae01b361da5bd3",
+      "right_row_sha256": "a5a2fa84b04037765d024fc87b2f8070c352ef86e6b1355c84d9c7f72f4ce3c3",
+      "left_observation_sha256": "c64fa7824a3ad5e8a04bfb40e4435d5607bcee7cfa11848d3694f0f4285b0bd6",
+      "right_observation_sha256": "74e6624d7a67c72f7c8cd6925bf15311a1404e272a664217d21322c308b79692",
+      "observation_byte_lengths": [273, 273],
+      "non_set_skeleton_sha256": "df2afbb705ce934d11e5085e6abfc313e6959653ae4b861ac3b7d006d33c536f",
+      "set_literals": [
+        {
+          "member_count": 6,
+          "member_types": ["str"],
+          "semantic_sha256": "8c0aecc60aae1612eb90b989250262d3f90dea8b6b8e8b2363bc6147f5405b7c",
+          "rendering_order_differs": true
+        },
+        {
+          "member_count": 4,
+          "member_types": ["str"],
+          "semantic_sha256": "b25f7009c2a49a218223a895c53c6fde7270639289c30af762f249daa46d2c23",
+          "rendering_order_differs": true
+        }
+      ],
+      "prior_prompts_equal": true,
+      "prior_generated_token_ids_equal": true,
+      "prior_raw_responses_equal": true,
+      "prior_executed_code_equal": true,
+      "divergence_step_prompt_equal": true,
+      "divergence_step_generated_token_ids_equal": true,
+      "divergence_step_raw_response_equal": true,
+      "divergence_step_extracted_repaired_executed_code_equal": true,
+      "world_action_equal": true,
+      "state_fingerprint_before_equal": true,
+      "state_fingerprint_after_equal": true,
+      "task_completed_status_equal": true,
+      "authoritative_evaluation_equal": true,
+      "non_set_observation_text_equal": true,
+      "parsed_set_content_equal": true
+    }
+  ],
+  "claims": {
+    "VERIFIED": [
+      "The first differing bytes in both archived repeat pairs occur only inside safely parsed Python set literals.",
+      "The parsed sets are semantically equal and all non-set observation text is byte-identical.",
+      "All prior prompts, generated tokens, responses, and executed code are identical.",
+      "At each divergence step the prompt, output, action, world fingerprints, completion status, and evaluator state remain equal."
+    ],
+    "INFERENCE": [
+      "Process-level Python hash randomization is the likely cause of the set representation order difference."
+    ],
+    "UNVERIFIED": [
+      "PYTHONHASHSEED=25101 alone is sufficient for complete cross-process trajectory equality; this requires the preregistered Stage 1 probe."
+    ]
+  },
+  "repair_scope_authorized": "process-level hash determinism first; set-only canonicalization only if Stage 1 fails with the same proven set-order-only cause",
+  "non_set_semantic_difference_found": false
+}
