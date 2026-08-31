@@ -1,0 +1,11 @@
+{
+  "complete": true,
+  "execution_sha256": "c21c0e3f7b93e828e022c6c35fea05e43778c4f3da5630da6ece89a8b2cc69d6",
+  "format": "rcmf_one_demo_component_swap_execution_12a_v1",
+  "new_count": 64,
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "resumed_count": 0,
+  "run_uuid": "rcmf_one_demo_component_swap_12a_20260831_001",
+  "task_condition_count": 64
+}

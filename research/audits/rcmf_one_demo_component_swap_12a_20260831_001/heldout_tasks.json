@@ -1,0 +1,26 @@
+{
+  "dev_used": false,
+  "first37_used": false,
+  "format": "rcmf_one_demo_component_swap_tasks_12a_v1",
+  "frozen_before_generation": true,
+  "global_seed": 25101,
+  "heldout_parent_memory_count": 0,
+  "model_training_memory_count": 401,
+  "run_uuid": "rcmf_one_demo_component_swap_12a_20260831_001",
+  "source_data_manifest": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/full_bank_data_manifest.json",
+  "source_data_manifest_sha256": "196f9ec57674de202324bd34f0168cf4c0f6c5399fc9828939a8dcc730b214b2",
+  "task_count": 8,
+  "task_ids": [
+    "76f2c72_1",
+    "76f2c72_2",
+    "7d7fbf6_1",
+    "b7a9ee9_2",
+    "c901732_1",
+    "c901732_3",
+    "e7a10f8_1",
+    "e7a10f8_3"
+  ],
+  "task_list_sha256": "2f6cd62aeb004156b3d7e418aa27d98586a0e83afa82c894b345f509a9d718e8",
+  "test_challenge_used": false,
+  "test_normal_used": false
+}

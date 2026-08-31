@@ -1,0 +1,264 @@
+{
+  "76f2c72_1": {
+    "FF": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "FO": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 3
+    },
+    "OF": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "OO": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 3
+    }
+  },
+  "76f2c72_2": {
+    "FF": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "FO": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "OF": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 2
+    },
+    "OO": {
+      "fields": [
+        "generated_token_ids",
+        "exact_executed_code",
+        "complete_environment_observation"
+      ],
+      "reason": "step_content",
+      "step_id": 2
+    }
+  },
+  "7d7fbf6_1": {
+    "FF": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "FO": {
+      "fields": [
+        "generated_token_ids",
+        "exact_executed_code",
+        "complete_environment_observation"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "OF": {
+      "fields": [
+        "generated_token_ids",
+        "exact_executed_code",
+        "complete_environment_observation"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "OO": {
+      "fields": [
+        "generated_token_ids",
+        "exact_executed_code",
+        "complete_environment_observation"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    }
+  },
+  "b7a9ee9_2": {
+    "FF": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 2
+    },
+    "FO": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 2
+    },
+    "OF": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "OO": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    }
+  },
+  "c901732_1": {
+    "FF": {
+      "fields": [
+        "generated_token_ids",
+        "exact_executed_code",
+        "complete_environment_observation"
+      ],
+      "reason": "step_content",
+      "step_id": 2
+    },
+    "FO": {
+      "fields": [
+        "generated_token_ids",
+        "exact_executed_code",
+        "complete_environment_observation"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "OF": {
+      "fields": [
+        "generated_token_ids",
+        "exact_executed_code",
+        "complete_environment_observation"
+      ],
+      "reason": "step_content",
+      "step_id": 3
+    },
+    "OO": {
+      "fields": [
+        "generated_token_ids",
+        "exact_executed_code",
+        "complete_environment_observation"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    }
+  },
+  "c901732_3": {
+    "FF": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "FO": {
+      "fields": [
+        "generated_token_ids",
+        "exact_executed_code",
+        "complete_environment_observation"
+      ],
+      "reason": "step_content",
+      "step_id": 2
+    },
+    "OF": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "OO": {
+      "fields": [
+        "generated_token_ids",
+        "exact_executed_code",
+        "complete_environment_observation"
+      ],
+      "reason": "step_content",
+      "step_id": 2
+    }
+  },
+  "e7a10f8_1": {
+    "FF": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "FO": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "OF": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "OO": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    }
+  },
+  "e7a10f8_3": {
+    "FF": {
+      "fields": [
+        "generated_token_ids",
+        "exact_executed_code",
+        "complete_environment_observation"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "FO": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "OF": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    },
+    "OO": {
+      "fields": [
+        "generated_token_ids"
+      ],
+      "reason": "step_content",
+      "step_id": 1
+    }
+  }
+}

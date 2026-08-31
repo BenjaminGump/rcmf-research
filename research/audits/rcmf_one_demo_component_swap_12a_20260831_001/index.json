@@ -1,0 +1,640 @@
+{
+  "conditions": [
+    "OO-C",
+    "OO-S",
+    "OF-C",
+    "OF-S",
+    "FO-C",
+    "FO-S",
+    "FF-C",
+    "FF-S"
+  ],
+  "exact_tensors_lambda_only": true,
+  "files": [
+    {
+      "condition": "OO-C",
+      "path": "heldout/OO-C/76f2c72_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-C/task_results/76f2c72_1.json",
+      "raw_sha256": "c656c58900bbd8ccd873afefb8a255e6324696df40328acff57bcfe707edfe59",
+      "sha256": "6ba41dfc2dff360e77f1f102d620cf2e82c767ff807d3e50b432e88355ed1057",
+      "task_id": "76f2c72_1"
+    },
+    {
+      "condition": "OO-S",
+      "path": "heldout/OO-S/76f2c72_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-S/task_results/76f2c72_1.json",
+      "raw_sha256": "7abdbee3bbbc64eb8302702ef0709a674e3f98dce7b8fe4ae641a8dc62e69908",
+      "sha256": "dd074b6ec956c0d6b1dad4eedc3dd46b8571ba24fbb2b7d275126e8743e2812a",
+      "task_id": "76f2c72_1"
+    },
+    {
+      "condition": "OF-C",
+      "path": "heldout/OF-C/76f2c72_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-C/task_results/76f2c72_1.json",
+      "raw_sha256": "e92c689ed9b80a6a1ec96d48ea9dd455787b1d543934fc76920ae4f1eb347f90",
+      "sha256": "83ef18b5f89f37f10061a20ef3e3a5c36f823b9b34112e1495e5503b73a3f5af",
+      "task_id": "76f2c72_1"
+    },
+    {
+      "condition": "OF-S",
+      "path": "heldout/OF-S/76f2c72_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-S/task_results/76f2c72_1.json",
+      "raw_sha256": "296e657794f214b66cfa7b0009bb4421a926a01c1e33986ab9c77b4c67fff8ed",
+      "sha256": "58ea29cac1b809aa2bc6fdc4fe5959617ee227b87eed287e49d4433dbe1747a6",
+      "task_id": "76f2c72_1"
+    },
+    {
+      "condition": "FO-C",
+      "path": "heldout/FO-C/76f2c72_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-C/task_results/76f2c72_1.json",
+      "raw_sha256": "7ff05319b7a4f769b2fe7a9aca0768299513f42a789c0640ecdc9db6c205baa7",
+      "sha256": "d1ff74c7e9fb78fef24347219fe9f3133b71c60738b8a765a02f701806a4ac79",
+      "task_id": "76f2c72_1"
+    },
+    {
+      "condition": "FO-S",
+      "path": "heldout/FO-S/76f2c72_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-S/task_results/76f2c72_1.json",
+      "raw_sha256": "8a317210b8e7d12b55b814d90237ce570ba54f587b522c449f901ca3d13791b5",
+      "sha256": "1c7c2fd052774e325c2b1e98ab4d740ec9986a2fb25bc8b6be6d6c073e2d12bc",
+      "task_id": "76f2c72_1"
+    },
+    {
+      "condition": "FF-C",
+      "path": "heldout/FF-C/76f2c72_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-C/task_results/76f2c72_1.json",
+      "raw_sha256": "01caa844db06a03d1dbdefeb9fe6dc5bd7fbd57d0b6a64d254642266b14ee1fd",
+      "sha256": "5ee1676fe30fdb5ea8ef60637100b390a52a01ec7a10d97da852e2c9f8920942",
+      "task_id": "76f2c72_1"
+    },
+    {
+      "condition": "FF-S",
+      "path": "heldout/FF-S/76f2c72_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-S/task_results/76f2c72_1.json",
+      "raw_sha256": "54c2380b2b33b24ba6d033f799cbcb809ea814bacd6c8af1e382cf9f4e31407c",
+      "sha256": "52c72f2fba99771515aa4b4b97379faea0512d3acbae3141cb2ee9a820823e14",
+      "task_id": "76f2c72_1"
+    },
+    {
+      "kind": "comparison",
+      "path": "comparisons/76f2c72_1.md",
+      "sha256": "80e5962129c35c0049168a8d916f39831f8d2c9eb7eab307e398e5d4d03f222b",
+      "task_id": "76f2c72_1"
+    },
+    {
+      "condition": "OO-C",
+      "path": "heldout/OO-C/76f2c72_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-C/task_results/76f2c72_2.json",
+      "raw_sha256": "5b81217cdc8ae93219bd778d993c85aa991bcd63dca50c44ed8611c0d8881922",
+      "sha256": "5abd92a322506a8726368bb01c3399a1bb5b7cd50149acc19a28b3579dd42c1a",
+      "task_id": "76f2c72_2"
+    },
+    {
+      "condition": "OO-S",
+      "path": "heldout/OO-S/76f2c72_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-S/task_results/76f2c72_2.json",
+      "raw_sha256": "c696f7a82fd73ba90e8eb01015cb35c93e7eeeca61befe9223fc1aa4d5adabf1",
+      "sha256": "694594fa9aa6a5c2aa0d2167061a20b584c0bae16bcdf4d549daa652c4974e94",
+      "task_id": "76f2c72_2"
+    },
+    {
+      "condition": "OF-C",
+      "path": "heldout/OF-C/76f2c72_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-C/task_results/76f2c72_2.json",
+      "raw_sha256": "e0e6176d0b7f2831d6e13c841eb5d8af15b8fe6e7dee77b985234c95908b3405",
+      "sha256": "7757827e61cfba7e16d144fb223791233d5d38d6b2a563ec9d92630a255da80b",
+      "task_id": "76f2c72_2"
+    },
+    {
+      "condition": "OF-S",
+      "path": "heldout/OF-S/76f2c72_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-S/task_results/76f2c72_2.json",
+      "raw_sha256": "25c778d421f83066539169fe41878f1f6058e6c9f3cdac67b87198b7e50fa9c0",
+      "sha256": "713764e074c37a7908d5fbf9386be27e09e16d7370e1be521612fb82dfc788f7",
+      "task_id": "76f2c72_2"
+    },
+    {
+      "condition": "FO-C",
+      "path": "heldout/FO-C/76f2c72_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-C/task_results/76f2c72_2.json",
+      "raw_sha256": "bc02773da21e468aa748275a71a2c9d09e00dae09e8678b02ad80f563e337dad",
+      "sha256": "b2bca9dcec92834d3cd4694194d4f7ef1bed7d5ecbbf861396adfa84ac5d16e4",
+      "task_id": "76f2c72_2"
+    },
+    {
+      "condition": "FO-S",
+      "path": "heldout/FO-S/76f2c72_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-S/task_results/76f2c72_2.json",
+      "raw_sha256": "2e85a5ed81d70c3f915bdc9480e2e425798dc86abe3372be79c7a78e51c2f341",
+      "sha256": "3a25ae00e4cc0cedd62cffdaa4d06c428b7e14df4c4a30a3459ed0b3429f124b",
+      "task_id": "76f2c72_2"
+    },
+    {
+      "condition": "FF-C",
+      "path": "heldout/FF-C/76f2c72_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-C/task_results/76f2c72_2.json",
+      "raw_sha256": "26b2c393d354b78cffb1c3321dd66089ff80111f7253442ef9337b1bccbfab17",
+      "sha256": "8bdbab129d044aeb590aeec82b66e30671d52d34cf35a10786a51333cab0a811",
+      "task_id": "76f2c72_2"
+    },
+    {
+      "condition": "FF-S",
+      "path": "heldout/FF-S/76f2c72_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-S/task_results/76f2c72_2.json",
+      "raw_sha256": "c5fda02a269242a3ccaaf39ec841813e41ee00f3eea63ef0a8a3ce46058fb145",
+      "sha256": "1185525d7d9c76877131c1f0bef79a2f8358e07be0d2ed439ef2fa8aa08f910a",
+      "task_id": "76f2c72_2"
+    },
+    {
+      "kind": "comparison",
+      "path": "comparisons/76f2c72_2.md",
+      "sha256": "9933748a772f0d3599f9661f39a5f2d91c5121876efbdc482f3b398c3d4ad3f0",
+      "task_id": "76f2c72_2"
+    },
+    {
+      "condition": "OO-C",
+      "path": "heldout/OO-C/7d7fbf6_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-C/task_results/7d7fbf6_1.json",
+      "raw_sha256": "b9d1a77eb861ea927841a2d764dc86294d67bef7f5ef46e789daab033a7efe96",
+      "sha256": "bb43f65b9e2e3c84acc2b97f425622d79668ec9ba565c6db45f2df3defbe5c79",
+      "task_id": "7d7fbf6_1"
+    },
+    {
+      "condition": "OO-S",
+      "path": "heldout/OO-S/7d7fbf6_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-S/task_results/7d7fbf6_1.json",
+      "raw_sha256": "ec73fd31c6b55e4a7f3b5a097b10e69959b03dee44db02399d29d233752d9276",
+      "sha256": "bec866921491352d12d8bb7350fab951cd3c5ee05ab6c06925fd530381060dd6",
+      "task_id": "7d7fbf6_1"
+    },
+    {
+      "condition": "OF-C",
+      "path": "heldout/OF-C/7d7fbf6_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-C/task_results/7d7fbf6_1.json",
+      "raw_sha256": "72f83a1b24c4af016665471899cbb3df1d6f352caca4fdbe7e75d0d07d9e2307",
+      "sha256": "bfc8e8d234095e0d96998671bac863ddab273e6a14daa37ad09e355b074e7308",
+      "task_id": "7d7fbf6_1"
+    },
+    {
+      "condition": "OF-S",
+      "path": "heldout/OF-S/7d7fbf6_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-S/task_results/7d7fbf6_1.json",
+      "raw_sha256": "a63a1290d84fe741d09b35c1b0d6a7b9c9ab710fbac7abbd73c7b899aa6801a7",
+      "sha256": "5be2ec8d324436900326512ce007d96167e4ac4fb35a277f03900cddd6e21531",
+      "task_id": "7d7fbf6_1"
+    },
+    {
+      "condition": "FO-C",
+      "path": "heldout/FO-C/7d7fbf6_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-C/task_results/7d7fbf6_1.json",
+      "raw_sha256": "5f2414c93f7e251c84d06c4cbf16198f2d1c5ee5e64a4c525a051cc6e791f36b",
+      "sha256": "d4c551b67187c9057c1d8e0697275c8cb297e264aa0c2acef72d47677cf6b510",
+      "task_id": "7d7fbf6_1"
+    },
+    {
+      "condition": "FO-S",
+      "path": "heldout/FO-S/7d7fbf6_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-S/task_results/7d7fbf6_1.json",
+      "raw_sha256": "c1e4fd4239f0b54d6eabdc993ec236b497f8fb02e40b9e0d7e37c462ab77c9b7",
+      "sha256": "e2f55eb59d1775696a9b3e9f9e19cca8e32ab66c945ca6fb2fe2b07508ae83d3",
+      "task_id": "7d7fbf6_1"
+    },
+    {
+      "condition": "FF-C",
+      "path": "heldout/FF-C/7d7fbf6_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-C/task_results/7d7fbf6_1.json",
+      "raw_sha256": "b49a234111ca2f72c239890b279cdd9b35ba6313a56fc4ecdc47c3107f396ce1",
+      "sha256": "4eb805a69384966b365834a1c0a4ad95a9b3a2cb40f0e455fb285398f0907ff1",
+      "task_id": "7d7fbf6_1"
+    },
+    {
+      "condition": "FF-S",
+      "path": "heldout/FF-S/7d7fbf6_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-S/task_results/7d7fbf6_1.json",
+      "raw_sha256": "b67c49bf398dbc31527d7318b494f189b855935942a5d025635be12da4ddc982",
+      "sha256": "5352bd3f336ff53bea9205410e95cb240c56e7ecc401267337be3e31c86a610b",
+      "task_id": "7d7fbf6_1"
+    },
+    {
+      "kind": "comparison",
+      "path": "comparisons/7d7fbf6_1.md",
+      "sha256": "861a7e717d2547b324398a7dfb67cde2846fec39588f7cb9b00f75256dacb206",
+      "task_id": "7d7fbf6_1"
+    },
+    {
+      "condition": "OO-C",
+      "path": "heldout/OO-C/b7a9ee9_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-C/task_results/b7a9ee9_2.json",
+      "raw_sha256": "2c526e7001588e3750cfaed74762cfd7f9888a16f92bf3ee3e888fb1050ddbbe",
+      "sha256": "3bf624570c60d4ceed82f971c207ea0dbc62ea060a04eb7c015fb5fba9b4efeb",
+      "task_id": "b7a9ee9_2"
+    },
+    {
+      "condition": "OO-S",
+      "path": "heldout/OO-S/b7a9ee9_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-S/task_results/b7a9ee9_2.json",
+      "raw_sha256": "1a5e2332e5849a5407d767d393b48e36063e3866183ee46c892a4de30192d58d",
+      "sha256": "4596c03b817e45b1268b75433e1ffac616db509b9510ec33f38c79150587baaa",
+      "task_id": "b7a9ee9_2"
+    },
+    {
+      "condition": "OF-C",
+      "path": "heldout/OF-C/b7a9ee9_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-C/task_results/b7a9ee9_2.json",
+      "raw_sha256": "cb3128d6da4a7ec48d7f8a2c3a0225039ca5563bc891baac34e7eef53cfabba2",
+      "sha256": "38ce355716b8b36379412ac930ecbf3ce5d8592f5ea14a3f8e8119c6b3c23107",
+      "task_id": "b7a9ee9_2"
+    },
+    {
+      "condition": "OF-S",
+      "path": "heldout/OF-S/b7a9ee9_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-S/task_results/b7a9ee9_2.json",
+      "raw_sha256": "184c1ede861f08161624f72f8f118b12be2b1ce47db3e2ec37fac0452ea70331",
+      "sha256": "5bbb81b798496e7761f0b34f2bb10dfcf025a5e969f8633d5c3a397981c26d27",
+      "task_id": "b7a9ee9_2"
+    },
+    {
+      "condition": "FO-C",
+      "path": "heldout/FO-C/b7a9ee9_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-C/task_results/b7a9ee9_2.json",
+      "raw_sha256": "611b315d77c62aeb55bd4fcb671a72c45a2559182811e1aa7a7bc97869f9397b",
+      "sha256": "dda92e77224079378b59d3cd0ea04b0a097eeb624d0b6f5a5948b80448a5aeb2",
+      "task_id": "b7a9ee9_2"
+    },
+    {
+      "condition": "FO-S",
+      "path": "heldout/FO-S/b7a9ee9_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-S/task_results/b7a9ee9_2.json",
+      "raw_sha256": "65d7d3db105a4b5aadd057c7ea3d4e996d75bed86a42ce1bdb3cd823a3eef28a",
+      "sha256": "f175a78d30d16a6b717d018206d364d25de1608442c21a3979857ab6a7e85601",
+      "task_id": "b7a9ee9_2"
+    },
+    {
+      "condition": "FF-C",
+      "path": "heldout/FF-C/b7a9ee9_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-C/task_results/b7a9ee9_2.json",
+      "raw_sha256": "6f6af388511a0d5a15b7cd8a8d45c6e0a4c9256990e0a42ceb0e2aa9bc580bbe",
+      "sha256": "2335cca2be90e0f41332493a76a22df878d6db59dac312f2fe1698ce702659b0",
+      "task_id": "b7a9ee9_2"
+    },
+    {
+      "condition": "FF-S",
+      "path": "heldout/FF-S/b7a9ee9_2.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-S/task_results/b7a9ee9_2.json",
+      "raw_sha256": "249924633cf05421ea13b9627cdaeef5553ee20156f98d38a14a2296376844c4",
+      "sha256": "03e20b75183336a99021d7f076b498695640f26aea0c2e20366070e326e1847c",
+      "task_id": "b7a9ee9_2"
+    },
+    {
+      "kind": "comparison",
+      "path": "comparisons/b7a9ee9_2.md",
+      "sha256": "59b5a0cee7f3ebdfa56bf8fa1acbc5a48e517f0178cbcd0a17b6ddf2e3658e9e",
+      "task_id": "b7a9ee9_2"
+    },
+    {
+      "condition": "OO-C",
+      "path": "heldout/OO-C/c901732_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-C/task_results/c901732_1.json",
+      "raw_sha256": "5902ffb90e163cd41fff5871bb0fc01d40e6e24e425a52247f76c70d1b3e6fbd",
+      "sha256": "4076bb977bd724e31c4a61ab6858a92c6bbca583048ef57bbee268d909cbfe11",
+      "task_id": "c901732_1"
+    },
+    {
+      "condition": "OO-S",
+      "path": "heldout/OO-S/c901732_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-S/task_results/c901732_1.json",
+      "raw_sha256": "11fb2db1366d6c0d3ae14b02518e6c0b4026fb01a1772a7a4bf912bee688b772",
+      "sha256": "2bda535c04033766f8b3984cd952a2fc8426623ee728ed786ed290ce71dedf98",
+      "task_id": "c901732_1"
+    },
+    {
+      "condition": "OF-C",
+      "path": "heldout/OF-C/c901732_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-C/task_results/c901732_1.json",
+      "raw_sha256": "ced4218efe5c93d7b2e1fff718bb6a5abcafa2e6814e795b571356dea18cbcf9",
+      "sha256": "04cb1fbfaa401cf06d3a94731a0643f48afeecc14f02bb37e58e4396c83f8dce",
+      "task_id": "c901732_1"
+    },
+    {
+      "condition": "OF-S",
+      "path": "heldout/OF-S/c901732_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-S/task_results/c901732_1.json",
+      "raw_sha256": "799f778177371962da7731c01de1eb7b0074bef5b37e7e4bcd6ee446dcc176bb",
+      "sha256": "1e9234fb570f938e594c3ee8ea6a299f35d028b4775f34cd29d0c086005bbd70",
+      "task_id": "c901732_1"
+    },
+    {
+      "condition": "FO-C",
+      "path": "heldout/FO-C/c901732_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-C/task_results/c901732_1.json",
+      "raw_sha256": "024035a2cc8ff68a60c851f268a5cb19c240dbb3f6a84cefcfc9f05b3dc432e5",
+      "sha256": "3d236827d59dee7ee56e50c501fafb67231a6adf2bfa452207e71b11ff7427de",
+      "task_id": "c901732_1"
+    },
+    {
+      "condition": "FO-S",
+      "path": "heldout/FO-S/c901732_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-S/task_results/c901732_1.json",
+      "raw_sha256": "96e8ad0f3a9968ae4f6d9632e7e3d0e46998165fed6a34fb09c95d859c16b101",
+      "sha256": "1bb69b4a8a1ffc26c806f8111c60c6195f47202bb5c790367333d25146280e85",
+      "task_id": "c901732_1"
+    },
+    {
+      "condition": "FF-C",
+      "path": "heldout/FF-C/c901732_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-C/task_results/c901732_1.json",
+      "raw_sha256": "b11bc1610d76c0582d8fc1c8308deb5f761746340d1fde615c388a49c9ef751d",
+      "sha256": "c91d25ec9bd81085ad45eb24a0b911cf86bbb5b9f3ba371a5abba45c286ff02e",
+      "task_id": "c901732_1"
+    },
+    {
+      "condition": "FF-S",
+      "path": "heldout/FF-S/c901732_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-S/task_results/c901732_1.json",
+      "raw_sha256": "51e6e033abfbe3f419e21c918e8dd37b46b4771c3422ee70ed0f98f4673cf65e",
+      "sha256": "ca57b9c3fabda8c0c6da6c6a7a3f975dfcd99362a43f9cb15adc1c043fcc99a7",
+      "task_id": "c901732_1"
+    },
+    {
+      "kind": "comparison",
+      "path": "comparisons/c901732_1.md",
+      "sha256": "502b151694dfb8307c9e69cd1f8fa686e4f0e1e8e44fe5d89db2546340dfdd8d",
+      "task_id": "c901732_1"
+    },
+    {
+      "condition": "OO-C",
+      "path": "heldout/OO-C/c901732_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-C/task_results/c901732_3.json",
+      "raw_sha256": "7a074d58c17211d205aa860ae3a1a93b691b413459347e2b0a05024f3224de3e",
+      "sha256": "9083704c72cfaddc97d2cba7430145b9a30f772a0b1e949c5c8eba017b5b46ba",
+      "task_id": "c901732_3"
+    },
+    {
+      "condition": "OO-S",
+      "path": "heldout/OO-S/c901732_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-S/task_results/c901732_3.json",
+      "raw_sha256": "de254287b145fb1fe1facd4d9cf8027d7068333f1afbd99a6bd93d8363457d8e",
+      "sha256": "af4e6960ec80a4b4adcd7814fb3168a69ba1d9e9da9303dff8fa2e0024ea1d8e",
+      "task_id": "c901732_3"
+    },
+    {
+      "condition": "OF-C",
+      "path": "heldout/OF-C/c901732_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-C/task_results/c901732_3.json",
+      "raw_sha256": "7691c1fc844d0819347c53de8b1c02eaf8a7ac9ccab9b3c28649882baeee7b39",
+      "sha256": "b90b77c31876d649b124fe5101cd034fd9067b99170988c11c63250a81b84b1e",
+      "task_id": "c901732_3"
+    },
+    {
+      "condition": "OF-S",
+      "path": "heldout/OF-S/c901732_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-S/task_results/c901732_3.json",
+      "raw_sha256": "3203a21bcab99ca793e2330540c15c73472e41fc995664f83a7f0d6a721c4fa6",
+      "sha256": "764836f3ff33d47190a9b77a1d2d099695fe1269be8e626131b06ca9c86e3b06",
+      "task_id": "c901732_3"
+    },
+    {
+      "condition": "FO-C",
+      "path": "heldout/FO-C/c901732_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-C/task_results/c901732_3.json",
+      "raw_sha256": "bd9a3bb6b4c813aa1612f899b934a274a01ee56945f4f350ba7e4160cbf9beab",
+      "sha256": "b4ca2fb8f265f9112e8c2be7382c7fcf5af323d01d183bcd9ef5a1ff54b30736",
+      "task_id": "c901732_3"
+    },
+    {
+      "condition": "FO-S",
+      "path": "heldout/FO-S/c901732_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-S/task_results/c901732_3.json",
+      "raw_sha256": "14e0bb30f7153af528686c5a35196f765592414757ef28cfd511ee2322bc2c63",
+      "sha256": "ffa159a748c512efe7af479c0fdf2255299b2d120c9b0a6850904ce62e6ad3af",
+      "task_id": "c901732_3"
+    },
+    {
+      "condition": "FF-C",
+      "path": "heldout/FF-C/c901732_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-C/task_results/c901732_3.json",
+      "raw_sha256": "97df0b20641a40cacaec1bd654eb54d1ae91b75322b9a52a0bca50574f3f90f3",
+      "sha256": "e36545d86e55451c577ce3a10601210c6cf05de021dd774ffe4ff83c8059a007",
+      "task_id": "c901732_3"
+    },
+    {
+      "condition": "FF-S",
+      "path": "heldout/FF-S/c901732_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-S/task_results/c901732_3.json",
+      "raw_sha256": "2870c362103a77c510b036c9d03d95fc5576575276f84f9edcea0e332f9bd760",
+      "sha256": "c62b10b9e928492329eea1f8b2837c506f56a7798cf654bff27c89ea12c0dca9",
+      "task_id": "c901732_3"
+    },
+    {
+      "kind": "comparison",
+      "path": "comparisons/c901732_3.md",
+      "sha256": "c9ce08ae3df4430e29ccb8331cafd6298f7093abd3833d828c45a95acc600f96",
+      "task_id": "c901732_3"
+    },
+    {
+      "condition": "OO-C",
+      "path": "heldout/OO-C/e7a10f8_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-C/task_results/e7a10f8_1.json",
+      "raw_sha256": "810a13d1e32fa8fe92ba5c97e2de5594f83d5ea7d960b5becee4ed8f21940e52",
+      "sha256": "ce363e0cd0ac402efd5b9447b04c92a621082a278164d79bed88cd2895d5ab91",
+      "task_id": "e7a10f8_1"
+    },
+    {
+      "condition": "OO-S",
+      "path": "heldout/OO-S/e7a10f8_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-S/task_results/e7a10f8_1.json",
+      "raw_sha256": "8d85074de8b07a14d0aeac27a5b689987e159b6408cf720fb9ceffb5ed68fd12",
+      "sha256": "1ac84f8aee035e36c437509b39b6ae9771c03c23dfcc4e3d4327f7919eece630",
+      "task_id": "e7a10f8_1"
+    },
+    {
+      "condition": "OF-C",
+      "path": "heldout/OF-C/e7a10f8_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-C/task_results/e7a10f8_1.json",
+      "raw_sha256": "3016368586f132d249ac38fd7cbe800cf780461273e12a326ab523dd86e8e902",
+      "sha256": "a100d3e31b1c3679ec8c8372f5b9be03ec1f6e2820b69de92f7beab3d74ccdac",
+      "task_id": "e7a10f8_1"
+    },
+    {
+      "condition": "OF-S",
+      "path": "heldout/OF-S/e7a10f8_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-S/task_results/e7a10f8_1.json",
+      "raw_sha256": "3f4bd228c77256c51c43c860918d956887d42c14ca89a8f0245cc7e56e6110dd",
+      "sha256": "7185c357831fb4469547c8a3fef4d424624856ab5159e372b67234c3d1b2a8a7",
+      "task_id": "e7a10f8_1"
+    },
+    {
+      "condition": "FO-C",
+      "path": "heldout/FO-C/e7a10f8_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-C/task_results/e7a10f8_1.json",
+      "raw_sha256": "0bd7cfefbd2f9f6841eb7faeecf74ca6de776154f9d6effbc2b2b8ab6f5774fe",
+      "sha256": "07326f32a90e06b6aa62b62a1c03a3094b29d086d5e3da73b379a8a475d51171",
+      "task_id": "e7a10f8_1"
+    },
+    {
+      "condition": "FO-S",
+      "path": "heldout/FO-S/e7a10f8_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-S/task_results/e7a10f8_1.json",
+      "raw_sha256": "c46cb82c6d8483e88a248f80dc180c9ef27996d7ecf87a6fdfa5242c83b1b542",
+      "sha256": "1925c07fc41790d5327ca5954872b75f6ca56798e74b9a9ed4a2644e31d39eb1",
+      "task_id": "e7a10f8_1"
+    },
+    {
+      "condition": "FF-C",
+      "path": "heldout/FF-C/e7a10f8_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-C/task_results/e7a10f8_1.json",
+      "raw_sha256": "d695da6e8c154bec1a6b088c82d987a9fce3594cfd6ba2f3800cd5586c22d839",
+      "sha256": "710346d662f9425bded3eeb185296a284bbc4c8f34eb7c99b05ba20630b5a8c6",
+      "task_id": "e7a10f8_1"
+    },
+    {
+      "condition": "FF-S",
+      "path": "heldout/FF-S/e7a10f8_1.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-S/task_results/e7a10f8_1.json",
+      "raw_sha256": "470a9d4315079894d81593eb33ca8267095516f8d452e07f1c0e2b18ec8917bd",
+      "sha256": "c073ff6c9e978823d8c9f9afd33924a847badba98b942ade59378bd748fb6b55",
+      "task_id": "e7a10f8_1"
+    },
+    {
+      "kind": "comparison",
+      "path": "comparisons/e7a10f8_1.md",
+      "sha256": "1d24e1aefb979df3eca1282bcefaa35d0061bc40f10d621927b0d7ea3a0d5e67",
+      "task_id": "e7a10f8_1"
+    },
+    {
+      "condition": "OO-C",
+      "path": "heldout/OO-C/e7a10f8_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-C/task_results/e7a10f8_3.json",
+      "raw_sha256": "353ae66cd7efb36e59fd03db1427f6d6865374ba2c45573be753f237465a2940",
+      "sha256": "a8e837dac4afa57391d0b19eb4c07378de1451018b2e69e857e65828b1286e44",
+      "task_id": "e7a10f8_3"
+    },
+    {
+      "condition": "OO-S",
+      "path": "heldout/OO-S/e7a10f8_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OO-S/task_results/e7a10f8_3.json",
+      "raw_sha256": "66c4a76565ba4a486a3ad172d6c855025a6c9e788f8d461f819dd6a8427062a6",
+      "sha256": "79bca8be919878c1cd51f2f792ce8a940a37a0332a02910131ec93d1f2d74f5e",
+      "task_id": "e7a10f8_3"
+    },
+    {
+      "condition": "OF-C",
+      "path": "heldout/OF-C/e7a10f8_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-C/task_results/e7a10f8_3.json",
+      "raw_sha256": "ba3103df4e035f2cbe26cfad11d4c8eabd7da51ee713c0425f8a9226c316c569",
+      "sha256": "644a51a640b1bd77980a7e8ec04c2a8fe5c07b4ff1ec4746528b4d700b3d551f",
+      "task_id": "e7a10f8_3"
+    },
+    {
+      "condition": "OF-S",
+      "path": "heldout/OF-S/e7a10f8_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/OF-S/task_results/e7a10f8_3.json",
+      "raw_sha256": "3d1d851871f3e7efeb3c8252733c2d52b7b0527e1244c4e111969bbb342ccd71",
+      "sha256": "c14266c475da935094926e49de623ee1f363206b93a1e7f34cbb7397c66dd77f",
+      "task_id": "e7a10f8_3"
+    },
+    {
+      "condition": "FO-C",
+      "path": "heldout/FO-C/e7a10f8_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-C/task_results/e7a10f8_3.json",
+      "raw_sha256": "42aa513942cc92ad2d60d24439865de9d7b6caf27eeffd4e63c9da531fae3542",
+      "sha256": "2aa7dc8fd2ed5e25e4360cf92db0281af593bbaf9d11713b0937d302c386ab8f",
+      "task_id": "e7a10f8_3"
+    },
+    {
+      "condition": "FO-S",
+      "path": "heldout/FO-S/e7a10f8_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FO-S/task_results/e7a10f8_3.json",
+      "raw_sha256": "82768d3129d5e2f1397298878a9008a5325a7c28d6709fe1d066d56e13525752",
+      "sha256": "f17802894166c618d991eeea5990d8ac7dbb661c655dbc49e9ddf4cbc32b89a7",
+      "task_id": "e7a10f8_3"
+    },
+    {
+      "condition": "FF-C",
+      "path": "heldout/FF-C/e7a10f8_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-C/task_results/e7a10f8_3.json",
+      "raw_sha256": "038688f12547f66ea9fb9e97ff4c5ed2204a7ff9ba8223e05b4f2c541a592e8b",
+      "sha256": "958ec7d4f5440ca64109887600b462a370fbb144e3198f4e4c207f861988ac8d",
+      "task_id": "e7a10f8_3"
+    },
+    {
+      "condition": "FF-S",
+      "path": "heldout/FF-S/e7a10f8_3.jsonl",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/trajectories/conditions/FF-S/task_results/e7a10f8_3.json",
+      "raw_sha256": "0828bf6b556a485e0c05868098ab987fc849bf83306b82fb951129d12a8c0a00",
+      "sha256": "a34679ab315dca9d6be28b9c733295bf62adec392d2734e181cdb0eb39fbb9fb",
+      "task_id": "e7a10f8_3"
+    },
+    {
+      "kind": "comparison",
+      "path": "comparisons/e7a10f8_3.md",
+      "sha256": "d5f643dc220a512fe0510c4ea7ea24d264115c9abf1863206789be2410287bf1",
+      "task_id": "e7a10f8_3"
+    },
+    {
+      "kind": "manifest_or_analysis",
+      "path": "component_package_manifest.json",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/manifests/component_package_manifest.json",
+      "raw_sha256": "d2d6caaedd908dc89439be22bc379cb3884627236854688f3023b225365c9297",
+      "sha256": "d2d6caaedd908dc89439be22bc379cb3884627236854688f3023b225365c9297"
+    },
+    {
+      "kind": "manifest_or_analysis",
+      "path": "condition_manifest.json",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/manifests/condition_manifest.json",
+      "raw_sha256": "f0544ba3ad13ec3c9ce2d9fd27fdc186e5eccba56be2a761923eff30ea8d4d8c",
+      "sha256": "f0544ba3ad13ec3c9ce2d9fd27fdc186e5eccba56be2a761923eff30ea8d4d8c"
+    },
+    {
+      "kind": "manifest_or_analysis",
+      "path": "heldout_tasks.json",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/manifests/heldout_tasks.json",
+      "raw_sha256": "f517aa149d8e30f9a49a88d07e85bbf99cd63022959e16970d5075ff4dc073fb",
+      "sha256": "f517aa149d8e30f9a49a88d07e85bbf99cd63022959e16970d5075ff4dc073fb"
+    },
+    {
+      "kind": "manifest_or_analysis",
+      "path": "dependency_graph.json",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/manifests/dependency_graph.json",
+      "raw_sha256": "1cdc9fcfbe4b76018403de254de7ac56b84bdd9f04b1b567bc4d937b7e310bf6",
+      "sha256": "1cdc9fcfbe4b76018403de254de7ac56b84bdd9f04b1b567bc4d937b7e310bf6"
+    },
+    {
+      "kind": "manifest_or_analysis",
+      "path": "analysis.json",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/results/analysis.json",
+      "raw_sha256": "0296a6596b19803880150d1b9831086242dd300341c2d30f322b173dac69bdec",
+      "sha256": "0296a6596b19803880150d1b9831086242dd300341c2d30f322b173dac69bdec"
+    },
+    {
+      "kind": "manifest_or_analysis",
+      "path": "static_prompt_assets.json",
+      "raw_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/raw_audit/static_prompt_assets.json",
+      "raw_sha256": "2637ca66887750811d1a699d6fc902227341da13fb5d0f1316edc332fe35653f",
+      "sha256": "8e8906743e92ed51b8e31f454468194b472ecba9855d5965a32108288e70cc67"
+    }
+  ],
+  "format": "rcmf_one_demo_component_swap_git_safe_audit_12a_v1",
+  "independently_verified": true,
+  "index_sha256": "97996af2a1a76c9539481de90373f4ccdd270467ce5c4cae2aa63bb4d0a371cc",
+  "raw_lambda_artifact_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001",
+  "raw_unredacted_logs_lambda_only": true,
+  "run_uuid": "rcmf_one_demo_component_swap_12a_20260831_001",
+  "secret_verification": {
+    "checked_text_files": 78,
+    "raw_jwt_match_count": 0,
+    "registered_sensitive_observation_count": 26,
+    "registered_sensitive_observation_leak_count": 0
+  },
+  "task_condition_count": 64,
+  "task_ids": [
+    "76f2c72_1",
+    "76f2c72_2",
+    "7d7fbf6_1",
+    "b7a9ee9_2",
+    "c901732_1",
+    "c901732_3",
+    "e7a10f8_1",
+    "e7a10f8_3"
+  ]
+}

@@ -1,0 +1,557 @@
+{
+  "fields": {
+    "FF": {
+      "historical_401_rebuild_max_abs": {
+        "correct_A": 0.0,
+        "correct_B": 0.0,
+        "shuffle_A": 0.0,
+        "shuffle_B": 0.0
+      },
+      "memory_count": 401,
+      "path": "runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/fields/FF.pt",
+      "remove_restore_max_abs": {
+        "B": 0.0,
+        "correct_A": 1.1920928955078125e-07,
+        "shuffle_A": 1.1920928955078125e-07,
+        "shuffle_B": 0.0
+      },
+      "selector_package": "fresh",
+      "sha256": "87d41ad4eab25fcec963e7e02934b4e9256f28374775b41bcaff64a98460cfe5",
+      "tensors": {
+        "A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 2.3461108207702637,
+          "minimum": -2.2611258029937744,
+          "norm": 268.48858642578125,
+          "rms": 0.1914973258972168,
+          "sha256": "bfc6abc1482987e2d024c04e34be6d415554b4ea1a15b32f95047b972b920e60",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        },
+        "shuffled_A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 2.3373656272888184,
+          "minimum": -2.2643589973449707,
+          "norm": 266.1444396972656,
+          "rms": 0.18982547521591187,
+          "sha256": "7cc4208f762280653bd030a1fbfd4e577b0a5ef04988fd7d6e38b5e592e1caa9",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "shuffled_B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        }
+      },
+      "writer_reader_package": "fresh"
+    },
+    "FO": {
+      "memory_count": 401,
+      "path": "runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/fields/FO.pt",
+      "remove_restore_max_abs": {
+        "B": 0.0,
+        "correct_A": 2.384185791015625e-07,
+        "shuffle_A": 2.384185791015625e-07,
+        "shuffle_B": 0.0
+      },
+      "selector_package": "fresh",
+      "sha256": "9ec7bdd1fac3074a2274ac93a2b5af2a20d48f574697d0e1684b3f3c09386b7a",
+      "tensors": {
+        "A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 3.207568407058716,
+          "minimum": -3.041483163833618,
+          "norm": 366.2255859375,
+          "rms": 0.2612062990665436,
+          "sha256": "8f0ee2245fa6fbdbbf35c96abd38cd8e1779d5d33abcf0b4830eb1c84c195f00",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        },
+        "shuffled_A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 3.173299551010132,
+          "minimum": -2.9948840141296387,
+          "norm": 360.1117858886719,
+          "rms": 0.2568460702896118,
+          "sha256": "7a8b198bce86d86061bb5c72d7dc0feb67a25cc69c24bdfc1dbf030b56290828",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "shuffled_B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        }
+      },
+      "writer_reader_package": "old"
+    },
+    "OF": {
+      "memory_count": 401,
+      "path": "runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/fields/OF.pt",
+      "remove_restore_max_abs": {
+        "B": 0.0,
+        "correct_A": 1.1920928955078125e-07,
+        "shuffle_A": 1.1920928955078125e-07,
+        "shuffle_B": 0.0
+      },
+      "selector_package": "old",
+      "sha256": "b25b6b5bb22174edbc2515224e7281bac28502b9041dbf3d850447cbd5055bb1",
+      "tensors": {
+        "A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 3.3508312702178955,
+          "minimum": -3.2273635864257812,
+          "norm": 275.82513427734375,
+          "rms": 0.1967301368713379,
+          "sha256": "dbacce2693112a33a97c0e03149fbe1cc084081775ee13b88df49675dd20437a",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        },
+        "shuffled_A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 3.3169167041778564,
+          "minimum": -3.216550827026367,
+          "norm": 273.5090637207031,
+          "rms": 0.19507776200771332,
+          "sha256": "c0e68336ed4c7399806927b3177557a057e65c7fb50ccdf3c881d871cb3d8217",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "shuffled_B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        }
+      },
+      "writer_reader_package": "fresh"
+    },
+    "OO": {
+      "historical_401_rebuild_max_abs": {
+        "correct_A": 0.0,
+        "correct_B": 0.0,
+        "shuffle_A": 0.0,
+        "shuffle_B": 0.0
+      },
+      "memory_count": 401,
+      "path": "runs/stage_c/rcmf_one_demo_component_swap_12a_20260831_001/fields/OO.pt",
+      "remove_restore_max_abs": {
+        "B": 0.0,
+        "correct_A": 1.1920928955078125e-07,
+        "shuffle_A": 2.384185791015625e-07,
+        "shuffle_B": 0.0
+      },
+      "selector_package": "old",
+      "sha256": "ee3049f58b036ad8f1e82600fc775a2890b2b4cb788d6db637a93d9d74de346d",
+      "tensors": {
+        "A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 4.651630878448486,
+          "minimum": -4.3261332511901855,
+          "norm": 376.0727233886719,
+          "rms": 0.26823103427886963,
+          "sha256": "047b4a39a2c4bab40f27ed4f68657152db3bb1a9f54ce5b064f935b627d90d8a",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        },
+        "shuffled_A": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 0.0,
+          "finite": true,
+          "maximum": 4.517538547515869,
+          "minimum": -4.2390241622924805,
+          "norm": 370.09429931640625,
+          "rms": 0.26396578550338745,
+          "sha256": "4271ed62373f532721005601f4f82cddf378bb66df580e0281e4f891b5816064",
+          "shape": [
+            960,
+            8,
+            256
+          ]
+        },
+        "shuffled_B": {
+          "dtype": "torch.float32",
+          "exact_zero_rate": 1.0,
+          "finite": true,
+          "maximum": 0.0,
+          "minimum": 0.0,
+          "norm": 0.0,
+          "rms": 0.0,
+          "sha256": "bfe590757c60e113114e4e716bd03edcdc0a559bf44c1b6f098de2d0ade66918",
+          "shape": [
+            8,
+            256
+          ]
+        }
+      },
+      "writer_reader_package": "old"
+    }
+  },
+  "format": "rcmf_one_demo_component_package_manifest_12a_v1",
+  "global_seed": 25101,
+  "manifest_sha256": "a52832e8379f420dc8874ba06dc65ba7348eb2470bedcd1bfdc509c63eaf6d6d",
+  "native_reconstruction": {
+    "fresh": {
+      "historical_path": "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/deployment_field/complete_37_task_field.pt",
+      "historical_sha256": "f7fb2f873425cb3792a12dd84bda0d6d1008061f8235d95df687a78dd2cab169",
+      "rebuild_max_abs": {
+        "A": 3.337860107421875e-06,
+        "B": 0.0,
+        "shuffled_A": 5.960464477539062e-07,
+        "shuffled_B": 0.0
+      },
+      "selector_key_max_abs": 1.1175870895385742e-08,
+      "selector_score_errors": {
+        "centered_direct_vs_qk_max_abs": 2.86102294921875e-06,
+        "centered_direct_vs_qk_mean_abs": 1.985859370279286e-07,
+        "direct_vs_qk_plus_intercept_max_abs": 2.86102294921875e-06,
+        "direct_vs_qk_plus_intercept_mean_abs": 1.9879293233771023e-07,
+        "stored_vs_direct_max_abs": 2.384185791015625e-06,
+        "stored_vs_direct_mean_abs": 1.7065812585315143e-07
+      }
+    },
+    "old": {
+      "historical_path": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/deployment_field/complete_37_task_field.pt",
+      "historical_sha256": "5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e",
+      "rebuild_max_abs": {
+        "A": 3.814697265625e-06,
+        "B": 0.0,
+        "shuffled_A": 9.5367431640625e-07,
+        "shuffled_B": 0.0
+      },
+      "selector_key_max_abs": 7.450580596923828e-09,
+      "selector_score_errors": {
+        "decomposed_vs_stored_max_abs": 2.6226043701171875e-06,
+        "direct_vs_decomposed_max_abs": 2.86102294921875e-06,
+        "direct_vs_stored_max_abs": 2.384185791015625e-06
+      }
+    }
+  },
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "run_uuid": "rcmf_one_demo_component_swap_12a_20260831_001",
+  "selectors": {
+    "fresh": {
+      "archive_identity": "4f5f1d3a74f196581fc570afc5f8eca75e663f4b",
+      "calibrated_intercept": 0.5639004892288608,
+      "ensemble_path": "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/selector/ensemble_scores.pt",
+      "ensemble_sha256": "c6e4e2dd533a593730550d2580054da4fc2ac701cefd0d2def1c4a771b4d6300",
+      "key_dimension": 960,
+      "lambda_root": "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001",
+      "member_paths": [
+        "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/selector/seed_0/field_selector.pt",
+        "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/selector/seed_1/field_selector.pt",
+        "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/selector/seed_2/field_selector.pt"
+      ],
+      "member_sha256": [
+        "b129135bbe88c0bbabbe1e2bfb22f8be94d42197d86a858c75c92b6e96c079a0",
+        "c1e02a9877c46c4267aa48e5012d1e1c5a90b7b90af155cdd9c710a993d47651",
+        "3d19352b2d301d221e16ec32bb734ed32e08802a9f729ae608dbcac2a47899c8"
+      ],
+      "name": "fresh",
+      "parameter_count": 15750528,
+      "source_commit": "4f5f1d3a74f196581fc570afc5f8eca75e663f4b",
+      "source_run": "rcmf_one_demo_selector_retrain_11c_20260830_001"
+    },
+    "old": {
+      "archive_identity": "a2c41652bfea380cfef89df0bee0e4d919458982",
+      "calibrated_intercept": 0.5774197738301861,
+      "ensemble_path": "runs/stage_c/signature_balanced_field_7c_20260818_001/selector/ensemble_scores.pt",
+      "ensemble_sha256": "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f",
+      "key_dimension": 960,
+      "lambda_root": "runs/stage_c/signature_balanced_field_7c_20260818_001",
+      "member_paths": [
+        "runs/stage_c/signature_balanced_field_7c_20260818_001/selector/seed_25071/field_selector.pt",
+        "runs/stage_c/signature_balanced_field_7c_20260818_001/selector/seed_25072/field_selector.pt",
+        "runs/stage_c/signature_balanced_field_7c_20260818_001/selector/seed_25073/field_selector.pt"
+      ],
+      "member_sha256": [
+        "bef5944417ddb41a230b7434393e0c3d3ca75316720c3c6bcc2e34a6a2238494",
+        "c95e166ee32f9ba1740a097ae32119b9cf91954f51f469e66177e43218e6da9c",
+        "71830292e1a8ca170fe6bdacaeeafdcffc208f2acd21f0f406158a0bda3cdaf3"
+      ],
+      "name": "old",
+      "parameter_count": 15750528,
+      "source_commit": "57d2a3479ff292dd8f89bdd0ea9f9417abc42a48",
+      "source_run": "signature_balanced_field_7c_20260818_001"
+    }
+  },
+  "shared": {
+    "appworld": "0.1.0",
+    "field_memory_count": 401,
+    "field_memory_ids_sha256": "309bc61c8a7f9debc7569b05db552b03544d6522ed77d07c67ba715d526289a8",
+    "field_shapes": {
+      "A": [
+        960,
+        8,
+        256
+      ],
+      "B": [
+        8,
+        256
+      ]
+    },
+    "heldout_task_ids": [
+      "76f2c72_1",
+      "76f2c72_2",
+      "7d7fbf6_1",
+      "b7a9ee9_2",
+      "c901732_1",
+      "c901732_3",
+      "e7a10f8_1",
+      "e7a10f8_3"
+    ],
+    "memory_ledger_path": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/memory_provenance.jsonl",
+    "memory_ledger_sha256": "96143da66dc2d0b88ce3e888308099315b80a3f3befa7bdb0a5ff7153d538b6b",
+    "memory_view_sha256": "379d3c93b655701f4f0feb5811f3d0ecf618cfcc9c28523f0b2e6c91167cdd76",
+    "model_training_shuffle_sha256": "9bef7ed7dcbdf720a5a8d50cf996c35e3ddf8afed236ef716a492503457d3ea4",
+    "old_fresh_shuffle_exact_match": true,
+    "prompt": {
+      "add_generation_prompt": true,
+      "chat_history_prompt": true,
+      "initial_message_count": 20,
+      "initial_messages_sha256": "90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe",
+      "prompt_profile": "full_demo_first_only",
+      "renderer_version": "appworld_messages_first_complete_demo_v1",
+      "retained_demo_sha256": "32348a5889682499b1cc17b7dced74dd706db12b6e248c1e6c7dfba5e50ed713"
+    },
+    "qwen": "Qwen/Qwen3-8B",
+    "raw_memory_prompt_text": false,
+    "runtime_per_memory_scoring": false,
+    "runtime_retrieval": false,
+    "runtime_top_k": false,
+    "shuffle_manifest_path": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/key_payload_shuffle_manifest.json",
+    "shuffle_manifest_sha256": "4e5a4d8551223c420b063b0d8043a966367ac7043a53891ff7723616b7aa2170",
+    "task_list_sha256": "2f6cd62aeb004156b3d7e418aa27d98586a0e83afa82c894b345f509a9d718e8",
+    "train_task_ids": [
+      "07b42fd_1",
+      "07b42fd_2",
+      "07b42fd_3",
+      "229360a_2",
+      "229360a_3",
+      "27e1026_2",
+      "287e338_1",
+      "287e338_2",
+      "287e338_3",
+      "34d9492_1",
+      "34d9492_3",
+      "3c13f5a_2",
+      "6104387_3",
+      "76f2c72_3",
+      "771d8fc_1",
+      "771d8fc_2",
+      "7d7fbf6_3",
+      "82e2fac_1",
+      "aa8502b_1",
+      "aa8502b_2",
+      "afc0fce_1",
+      "afc0fce_3",
+      "b0a8eae_3",
+      "b7a9ee9_1",
+      "b7a9ee9_3",
+      "cf6abd2_1",
+      "cf6abd2_2",
+      "cf6abd2_3",
+      "e7a10f8_2"
+    ],
+    "transition_cache_path": "runs/stage_c/signature_balanced_field_7c_20260818_001/representation_cache/multiview/transition_multiview.pt",
+    "transition_cache_sha256": "00549c7de1ee75e39ab5a2919a1f3c8d713fbec6709255955d0b2805b276cc3b"
+  },
+  "source_head": "5754eb12f652cba745aab1683e83be7f680a42e7",
+  "writer_readers": {
+    "fresh": {
+      "architecture": {
+        "field_A": [
+          960,
+          8,
+          256
+        ],
+        "field_B": [
+          8,
+          256
+        ],
+        "memory_views": [
+          8,
+          4096
+        ],
+        "payload": [
+          8,
+          256
+        ],
+        "reader_layers": [
+          7,
+          14,
+          21,
+          28
+        ]
+      },
+      "archive_identity": "4f5f1d3a74f196581fc570afc5f8eca75e663f4b",
+      "checkpoint_sha256": "357491a6c69d141e4ed476b9810a3c8d11bb29ec27e80491db69355b4956d764",
+      "lambda_checkpoint_path": "runs/stage_c/rcmf_one_demo_selector_retrain_11c_20260830_001/joint_training/checkpoints/epoch_01.pt",
+      "name": "fresh",
+      "reader_parameter_count": 17860608,
+      "reader_sha256": "8c179e307cad649dce7c93e004ffc0ab91c598803a673bd80b28fcb1a8efbb4f",
+      "selected_epoch": 1,
+      "source_commit": "4f5f1d3a74f196581fc570afc5f8eca75e663f4b",
+      "source_run": "rcmf_one_demo_selector_retrain_11c_20260830_001",
+      "writer_parameter_count": 8949760,
+      "writer_sha256": "d8f10709dcaeb83f34f67de4be0f9c0280cd2679db456d2d67f9f8f887c6ae0e"
+    },
+    "old": {
+      "architecture": {
+        "field_A": [
+          960,
+          8,
+          256
+        ],
+        "field_B": [
+          8,
+          256
+        ],
+        "memory_views": [
+          8,
+          4096
+        ],
+        "payload": [
+          8,
+          256
+        ],
+        "reader_layers": [
+          7,
+          14,
+          21,
+          28
+        ]
+      },
+      "archive_identity": "a2c41652bfea380cfef89df0bee0e4d919458982",
+      "checkpoint_sha256": "d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1",
+      "lambda_checkpoint_path": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/joint_training/checkpoints/epoch_02.pt",
+      "name": "old",
+      "reader_parameter_count": 17860608,
+      "reader_sha256": "be670d57942f0711bffc05434fb1c20bb7e76793236499c70f007b1781b78ca3",
+      "selected_epoch": 2,
+      "source_commit": "57d2a3479ff292dd8f89bdd0ea9f9417abc42a48",
+      "source_run": "rcmf_joint_full_bank_9a_20260826_001",
+      "writer_parameter_count": 8949760,
+      "writer_sha256": "6ccb7f9893ed878125e04416e49648208b8f78554972b41feb219820f70a3024"
+    }
+  }
+}
