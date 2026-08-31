@@ -1,5 +1,33 @@
 # Current State
 
+## 2026-08-31 EXP-036A Active Frozen Evaluation State
+
+VERIFIED:
+
+- EXP-035A completed at `4aa0fd89b2b63d5a9bcbf1e6b18395e0a14e847b`
+  with the preregistered diagnostic decision `INCONCLUSIVE`.
+- The user has explicitly approved EXP-036A, an evaluation-only complete
+  AppWorld 0.1.0 `test_normal` comparison of shared bare `B0`, primary frozen
+  `BEST-C/BEST-S`, and secondary frozen `FULL1D-C/FULL1D-S`.
+- Local, GitHub, and Lambda start at the exact EXP-035A SHA with clean tracked
+  and untracked state. The Lambda NFS is mounted, storage is healthy, and the
+  H100 has no active compute process.
+- All frozen selector, writer/reader, 499-memory field, shuffle, prompt, and
+  transition-cache hashes required by the EXP-036A contract match their
+  immutable Lambda artifacts.
+
+ACTIVE CONTRACT:
+
+- Freeze the ordered 168-task `test_normal` manifest before generation and run
+  exactly 840 complete trajectories under seed `25101` with no success-based
+  stopping or outcome-led configuration change.
+- Complete formal audits before separate deployment-efficiency, bank-scaling,
+  active-serving-state, and numerical-reversibility measurements.
+- Do not train, calibrate, retrieve, gate, rescale, change the one-demo prompt,
+  or start any follow-up experiment.
+
+Last updated: 2026-08-31.
+
 ## 2026-08-31 EXP-035A Completed Diagnostic State
 
 VERIFIED:

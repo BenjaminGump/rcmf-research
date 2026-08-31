@@ -319,3 +319,39 @@ sweeps, or ensemble training unless the user explicitly changes this policy.
   evaluation contract, and success criteria remain unchanged. EXP-035A stops
   after the four-cell diagnosis and its audit; prompt transport, EXP-035B, and
   every follow-on optimization require new user approval.
+
+## EXP-036A AppWorld Test-Normal Final Evaluation Charter v1
+
+- EXP-036A is evaluation-only. Qwen, tokenizer, both frozen selector packages,
+  both frozen writer/reader packages, both 499-memory fields, field algebra,
+  prompt, evaluator, generation settings, and seed `25101` are immutable; no
+  optimizer step, training, calibration, checkpoint selection, or outcome-led
+  configuration change is permitted.
+- `BEST` is the preregistered primary method: the historical EXP-031A selector,
+  epoch-2 writer/reader, and 499-memory deployment field. `FULL1D` is a frozen
+  secondary ablation using the EXP-034B selector, epoch-1 writer/reader, and
+  its matched 499-memory field. Names and roles cannot change after outcomes.
+- The formal manifest contains exactly the ordered 168-task AppWorld 0.1.0
+  `test_normal` split crossed with five conditions: shared bare `B0`,
+  `BEST-C`, `BEST-S`, `FULL1D-C`, and `FULL1D-S`. Prefix results and low success
+  rates cannot stop or alter the frozen complete evaluation.
+- Every condition uses the exact `full_demo_first_only` prompt, fresh isolated
+  worlds, and deterministic generation. Test outcomes cannot select a model,
+  candidate, scale, prompt, field, shuffle, threshold, or task subset.
+- The complete `test_normal` split is partially exposed by prior first37 and
+  historical evaluations. EXP-036A is therefore a final development benchmark,
+  not untouched confirmatory evidence, and claims must state that limitation.
+- Runtime retrieval, top-k, FAISS, selected-memory access, per-memory runtime
+  scoring, raw-memory prompt text, Q90, gates, field scales, and new calibration
+  are prohibited. Production write/read complexity invariants remain unchanged.
+- Detailed reconstructible per-step audits are mandatory for all 840 formal
+  trajectories. Efficiency profiling is separate from formal task timing, and
+  active serving state must be reported separately from archival ledger and
+  provenance storage.
+- The user authorizes up to 42 wall-clock hours for the complete frozen task.
+  If the measured conservative estimate exceeds 42 hours, execution stops for
+  approval without reducing tasks, conditions, controls, steps, or audit depth.
+- EXP-036A stops after formal evaluation, efficiency/scaling benchmarks,
+  numerical reversibility checks, analysis, records, and handoff. No follow-up
+  experiment, retraining, portability study, or paper automation starts
+  automatically.
