@@ -60,7 +60,7 @@ def test_locked_five_condition_contract_and_primary_role() -> None:
 def test_all_frozen_hashes_are_exact_and_full1d_epoch_two_is_forbidden() -> None:
     config = load_config(CONFIG).raw["stage_c_13a"]
     assert config["packages"]["BEST"]["selector_ensemble_sha256"] == (
-        "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42bb01255a9e623956611f"
+        "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f"
     )
     assert config["packages"]["BEST"]["writer_reader_checkpoint_sha256"] == (
         "d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1"
