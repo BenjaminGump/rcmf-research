@@ -29,6 +29,9 @@ from scripts.export_rcmf_appworld_testnormal_audit_13a import (
     CLAIMS_BOUNDARY,
     latex_values,
 )
+from scripts.export_rcmf_appworld_testnormal_stop_audit_13a import (
+    set_repr_order_only,
+)
 from scripts.run_rcmf_appworld_testnormal_final_13a import FinalTestRuntime, smoke
 from scripts.run_rcmf_joint_full_bank_first37_9a import _run_task
 
@@ -230,3 +233,9 @@ def test_claims_and_latex_keep_unsupported_work_explicit() -> None:
     latex = latex_values(values)
     assert "1/168" in latex
     assert latex.count("NOT\\_RUN") == 2
+
+
+def test_smoke_stop_classifies_only_set_repr_ordering() -> None:
+    assert set_repr_order_only("items: {'a', 'b'}", "items: {'b', 'a'}")
+    assert not set_repr_order_only("items: {'a'}", "items: {'b'}")
+    assert not set_repr_order_only("items: ['a', 'b']", "items: ['b', 'a']")
