@@ -16,6 +16,7 @@ from rcmf.training.rcmf_appworld_testnormal_deterministic_13b import (  # noqa: 
     assert_hash_seed_process,
     augment_task_row,
     read_mode_manifest,
+    validate_formal_manifest,
     write_process_identity,
 )
 from rcmf.training.state_conditioned_program_7d import canonical_sha256  # noqa: E402
@@ -54,6 +55,16 @@ def main() -> None:
     original = base.run_one
     base.TASK_RESULT_FORMAT = TASK_RESULT_FORMAT
 
+    if args.phase in {"run", "finalize"}:
+        condition_manifest = base.read_json(
+            args.artifact_dir / "manifests" / "condition_manifest.json"
+        )
+        validate_formal_manifest(
+            artifact_dir=args.artifact_dir,
+            condition_manifest=condition_manifest,
+            mode=mode,
+        )
+
     def run_one_13b(**kwargs: object):
         row, reused = original(**kwargs)
         if reused:
@@ -84,4 +95,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

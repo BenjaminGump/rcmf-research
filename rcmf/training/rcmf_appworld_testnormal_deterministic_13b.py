@@ -8,6 +8,7 @@ import json
 import locale
 import os
 from pathlib import Path
+import statistics
 import subprocess
 import sys
 import time
@@ -22,6 +23,7 @@ DETERMINISM_MODE = "hash_seed_only"
 PROCESS_IDENTITY_FORMAT = "rcmf_exp036b_process_hash_identity_v1"
 TASK_RESULT_FORMAT = "rcmf_appworld_testnormal_task_13b_v1"
 PROBE_RESULT_FORMAT = "rcmf_appworld_testnormal_probe_task_13b_v1"
+SMOKE_RESULT_FORMAT = "rcmf_appworld_testnormal_smoke_task_13b_v1"
 
 
 def _hash_sentinel() -> dict[str, Any]:
@@ -259,6 +261,280 @@ def compare_probe_rows(left: Mapping[str, Any], right: Mapping[str, Any]) -> dic
         ],
     }
     return {"passed": all(fields.values()), "checks": fields}
+
+
+def compare_complete_smoke_rows(
+    left: Mapping[str, Any], right: Mapping[str, Any]
+) -> dict[str, Any]:
+    """Compare fresh-process smoke rows while ignoring timing and world names."""
+    base = compare_probe_rows(left, right)
+    left_steps = list(left["steps"])
+    right_steps = list(right["steps"])
+
+    def values(key: str) -> tuple[list[Any], list[Any]]:
+        return (
+            [step.get(key) for step in left_steps],
+            [step.get(key) for step in right_steps],
+        )
+
+    def compact_field(step: Mapping[str, Any]) -> dict[str, Any]:
+        field = dict(step["field"])
+        return {
+            "state_views_sha256": None
+            if field.get("state_views") is None
+            else field["state_views"].get("sha256"),
+            "query_sha256": None
+            if field.get("query") is None
+            else field["query"].get("sha256"),
+            "slots_sha256": field["slots"].get("sha256"),
+            "deployment_field_sha256": field.get("deployment_field_sha256"),
+            "complete_bank_memory_count": field.get("complete_bank_memory_count"),
+            "field_control": field.get("field_control"),
+            "runtime_memory_retrieval": field.get("runtime_memory_retrieval"),
+            "runtime_per_memory_scoring": field.get("runtime_per_memory_scoring"),
+        }
+
+    extra: dict[str, bool] = {}
+    for key in (
+        "extracted_code",
+        "automatically_repaired_response",
+        "automatically_repaired_code",
+    ):
+        left_value, right_value = values(key)
+        extra[key] = left_value == right_value
+    extra["model_visible_observations"] = [
+        step["complete_environment_observation"] for step in left_steps
+    ] == [step["complete_environment_observation"] for step in right_steps]
+    extra["raw_canonical_semantic_hashes"] = [
+        (
+            step["observation_rendering"]["raw_observation_sha256"],
+            step["observation_rendering"]["model_visible_observation_sha256"],
+            step["observation_rendering"]["semantic_structure_sha256"],
+        )
+        for step in left_steps
+    ] == [
+        (
+            step["observation_rendering"]["raw_observation_sha256"],
+            step["observation_rendering"]["model_visible_observation_sha256"],
+            step["observation_rendering"]["semantic_structure_sha256"],
+        )
+        for step in right_steps
+    ]
+    extra["query_field_identities"] = [compact_field(step) for step in left_steps] == [
+        compact_field(step) for step in right_steps
+    ]
+    extra["reader_diagnostics"] = [
+        step.get("reader_audit") for step in left_steps
+    ] == [step.get("reader_audit") for step in right_steps]
+    extra["model_package_identities"] = all(
+        left.get(key) == right.get(key)
+        for key in (
+            "model_identity",
+            "deployment_field_sha256",
+            "query_encoder_sha256",
+            "package_manifest_sha256",
+            "exp036a_package",
+            "exp036a_binding",
+            "generation_settings",
+        )
+    )
+    checks = {**base["checks"], **extra}
+    return {"passed": all(checks.values()), "checks": checks}
+
+
+def build_runtime_preflight(
+    *,
+    artifact_dir: Path,
+    primary_rows: Sequence[Mapping[str, Any]],
+    deterministic: Mapping[str, Mapping[str, Any]],
+    settings: Mapping[str, Any],
+    mode: Mapping[str, Any],
+    smoke_task_ids: Sequence[str],
+) -> dict[str, Any]:
+    if len(primary_rows) != 10:
+        raise ValueError("EXP-036B runtime preflight requires ten primary smoke rows")
+    wall = [float(row["wall_seconds"]) for row in primary_rows]
+    by_condition: dict[str, list[float]] = {}
+    for row in primary_rows:
+        by_condition.setdefault(str(row["condition"]), []).append(
+            float(row["wall_seconds"])
+        )
+    conditions = {"B0", "BEST-C", "BEST-S", "FULL1D-C", "FULL1D-S"}
+    if set(by_condition) != conditions or any(
+        len(values) != 2 for values in by_condition.values()
+    ):
+        raise ValueError("EXP-036B smoke condition coverage differs")
+    per_condition = {
+        condition: {
+            "measured_seconds": values,
+            "mean_seconds": statistics.fmean(values),
+            "maximum_seconds": max(values),
+            "expected_168_hours": statistics.fmean(values) * 168 / 3600.0,
+            "conservative_168_hours": max(values) * 168 * 1.25 / 3600.0,
+        }
+        for condition, values in sorted(by_condition.items())
+    }
+    expected_formal = sum(
+        row["expected_168_hours"] for row in per_condition.values()
+    )
+    conservative_formal = sum(
+        row["conservative_168_hours"] for row in per_condition.values()
+    )
+    auxiliary = settings["runtime"]["auxiliary_estimate"]
+    efficiency_expected = float(auxiliary["efficiency_expected_hours"])
+    efficiency_conservative = float(auxiliary["efficiency_conservative_hours"])
+    reversibility_expected = float(auxiliary["reversibility_expected_hours"])
+    reversibility_conservative = float(auxiliary["reversibility_conservative_hours"])
+    audit_expected, audit_conservative = 0.5, 1.0
+    expected_total = (
+        expected_formal + efficiency_expected + reversibility_expected + audit_expected
+    )
+    conservative_total = (
+        conservative_formal
+        + efficiency_conservative
+        + reversibility_conservative
+        + audit_conservative
+    )
+    smoke_bytes = sum(
+        path.stat().st_size
+        for path in (artifact_dir / "final_smoke").rglob("*")
+        if path.is_file()
+    )
+    report = {
+        "format": "rcmf_appworld_testnormal_runtime_preflight_13b_v1",
+        "determinism_mode": str(mode["mode"]),
+        "determinism_mode_sha256": str(mode["manifest_sha256"]),
+        "smoke_task_ids": list(smoke_task_ids),
+        "smoke_trajectory_count": 15,
+        "formal_task_count": 168,
+        "formal_condition_count": 840,
+        "determinism": dict(deterministic),
+        "deterministic": True,
+        "evaluation_seeds": [25101],
+        "per_condition_wall_time": per_condition,
+        "mean_task_condition_wall_seconds": statistics.fmean(wall),
+        "maximum_task_condition_wall_seconds": max(wall),
+        "expected_formal_wall_hours": expected_formal,
+        "conservative_formal_wall_hours": conservative_formal,
+        "efficiency_microbenchmark_estimate": {
+            "expected_wall_hours": efficiency_expected,
+            "conservative_wall_hours": efficiency_conservative,
+            "basis": str(auxiliary["basis"]),
+            "scheduled_after_formal": True,
+        },
+        "numerical_reversibility_estimate": {
+            "expected_wall_hours": reversibility_expected,
+            "conservative_wall_hours": reversibility_conservative,
+            "scheduled_after_formal": True,
+        },
+        "audit_finalization_estimate": {
+            "expected_wall_hours": audit_expected,
+            "conservative_wall_hours": audit_conservative,
+        },
+        "expected_total_wall_hours": expected_total,
+        "conservative_total_wall_hours": conservative_total,
+        "expected_h100_active_hours": (
+            expected_formal + efficiency_expected + reversibility_expected
+        ),
+        "smoke_raw_artifact_bytes": smoke_bytes,
+        "projected_lambda_raw_artifact_bytes": int(smoke_bytes / 15 * 840),
+        "projected_git_safe_artifact_bytes": int(smoke_bytes / 15 * 840 * 0.2),
+        "approved_wall_hours": float(settings["runtime"]["approved_wall_hours"]),
+        "automatic_launch_allowed": conservative_total
+        <= float(settings["runtime"]["approved_wall_hours"]),
+        "lambda_hourly_rate": "NOT_AVAILABLE",
+        "estimated_cost": "NOT_AVAILABLE",
+        "restart_plan": (
+            "one atomic task-condition JSON plus raw per-step rows/tensors; "
+            "resume validates result, config, formal manifest, mode, field, and completion"
+        ),
+        "passed": True,
+    }
+    report["report_sha256"] = canonical_sha256(report)
+    return report
+
+
+def freeze_formal_manifest(
+    *,
+    artifact_dir: Path,
+    condition_manifest: Mapping[str, Any],
+    mode: Mapping[str, Any],
+    source_head: str,
+    config_sha256: str,
+) -> dict[str, Any]:
+    result = {
+        "format": "rcmf_appworld_testnormal_formal_manifest_13b_v1",
+        "run_uuid": "rcmf_appworld_testnormal_final_13b_20260831_001",
+        "source_head": source_head,
+        "config_sha256": config_sha256,
+        "condition_manifest_sha256": sha256_file(
+            artifact_dir / "manifests" / "condition_manifest.json"
+        ),
+        "condition_manifest_logical_sha256": str(
+            condition_manifest["manifest_sha256"]
+        ),
+        "task_ids": list(condition_manifest["task_ids"]),
+        "task_count": 168,
+        "task_list_sha256": str(condition_manifest["task_list_sha256"]),
+        "conditions": ["B0", "BEST-C", "BEST-S", "FULL1D-C", "FULL1D-S"],
+        "trajectory_count": 840,
+        "determinism_mode": str(mode["mode"]),
+        "determinism_mode_sha256": str(mode["manifest_sha256"]),
+        "launcher_sha256": str(mode["launcher"]["sha256"]),
+        "canonicalizer": dict(mode["canonicalizer"]),
+        "observation_rendering_contract": str(
+            mode["model_visible_observation_contract"]
+        ),
+        "raw_observation_preserved": bool(mode["raw_observation_preserved"]),
+        "evaluator_state_modified": bool(mode["evaluator_state_modified"]),
+        "smoke_rows_reusable_as_formal": False,
+        "formal_rows_generated": 0,
+        "frozen_before_formal_generation": True,
+    }
+    result["manifest_sha256"] = canonical_sha256(result)
+    path = artifact_dir / "manifests" / "formal_manifest.json"
+    if path.exists():
+        existing = json.loads(path.read_text(encoding="utf-8"))
+        if existing != result:
+            raise ValueError("Existing EXP-036B formal manifest differs")
+    else:
+        atomic_write_json(path, result)
+    return result
+
+
+def validate_formal_manifest(
+    *,
+    artifact_dir: Path,
+    condition_manifest: Mapping[str, Any],
+    mode: Mapping[str, Any],
+) -> dict[str, Any]:
+    path = artifact_dir / "manifests" / "formal_manifest.json"
+    if not path.exists():
+        raise FileNotFoundError("Frozen EXP-036B formal manifest is missing")
+    result = json.loads(path.read_text(encoding="utf-8"))
+    content = {key: value for key, value in result.items() if key != "manifest_sha256"}
+    checks = {
+        "format": result.get("format")
+        == "rcmf_appworld_testnormal_formal_manifest_13b_v1",
+        "manifest_sha256": result.get("manifest_sha256") == canonical_sha256(content),
+        "condition_manifest_sha256": result.get("condition_manifest_sha256")
+        == sha256_file(artifact_dir / "manifests" / "condition_manifest.json"),
+        "condition_manifest_logical_sha256": result.get(
+            "condition_manifest_logical_sha256"
+        )
+        == condition_manifest.get("manifest_sha256"),
+        "task_list_sha256": result.get("task_list_sha256")
+        == condition_manifest.get("task_list_sha256"),
+        "determinism_mode_sha256": result.get("determinism_mode_sha256")
+        == mode.get("manifest_sha256"),
+        "formal_rows_generated": int(result.get("formal_rows_generated", -1)) == 0,
+        "frozen_before_formal_generation": bool(
+            result.get("frozen_before_formal_generation")
+        ),
+    }
+    if not all(checks.values()):
+        raise ValueError(f"EXP-036B formal manifest differs: {checks}")
+    return result
 
 
 def probe_row_path(artifact_dir: Path, process_label: str, condition: str, task_id: str) -> Path:

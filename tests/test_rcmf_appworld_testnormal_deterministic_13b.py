@@ -19,9 +19,13 @@ from rcmf.training.rcmf_appworld_testnormal_deterministic_13b import (
     TASK_RESULT_FORMAT,
     assert_hash_seed_process,
     augment_task_row,
+    build_runtime_preflight,
+    compare_complete_smoke_rows,
     compare_probe_rows,
+    freeze_formal_manifest,
     freeze_hash_seed_mode,
     read_mode_manifest,
+    validate_formal_manifest,
     write_process_identity,
 )
 from rcmf.training.state_conditioned_program_7d import canonical_sha256
@@ -180,6 +184,57 @@ def test_probe_comparison_covers_prompts_tokens_responses_code_and_world() -> No
     assert result["checks"]["raw_observations"] is False
 
 
+def _complete_smoke_row() -> dict[str, object]:
+    row = augment_task_row(
+        row=_row(),
+        backend=_Backend(),
+        process_identity={"identity_sha256": "p", "artifact_sha256": "pf"},
+        mode={"manifest_sha256": "m", "artifact_sha256": "mf"},
+        result_format=TASK_RESULT_FORMAT,
+    )
+    row.update(
+        {
+            "model_identity": {"model": "qwen"},
+            "deployment_field_sha256": "field",
+            "query_encoder_sha256": "query-encoder",
+            "package_manifest_sha256": "package",
+            "exp036a_package": "BEST",
+            "exp036a_binding": "correct",
+            "generation_settings": {"seed": 25101},
+        }
+    )
+    row["steps"][0].update(
+        {
+            "extracted_code": "print(1)",
+            "automatically_repaired_response": "response",
+            "automatically_repaired_code": "print(1)",
+            "field": {
+                "state_views": {"sha256": "views"},
+                "query": {"sha256": "query"},
+                "slots": {"sha256": "slots"},
+                "deployment_field_sha256": "field",
+                "complete_bank_memory_count": 499,
+                "field_control": "correct",
+                "runtime_memory_retrieval": False,
+                "runtime_per_memory_scoring": False,
+            },
+            "reader_audit": {"active": True, "delta_norms": {"7": [1.0]}},
+        }
+    )
+    return row
+
+
+def test_complete_smoke_comparison_covers_component_and_field_identities() -> None:
+    left = _complete_smoke_row()
+    right = copy.deepcopy(left)
+    right["world_identity"]["experiment_name"] = "fresh-repeat"
+    assert compare_complete_smoke_rows(left, right)["passed"] is True
+    right["steps"][0]["field"]["slots"]["sha256"] = "different"
+    result = compare_complete_smoke_rows(left, right)
+    assert result["passed"] is False
+    assert result["checks"]["query_field_identities"] is False
+
+
 def test_freeze_hash_seed_mode_requires_both_conditions_and_processes(tmp_path: Path) -> None:
     task_id = "task"
     row = augment_task_row(
@@ -239,3 +294,84 @@ def test_old_13a_config_and_runner_remain_default() -> None:
     )
     assert "rcmf_appworld_testnormal_task_13a_v1" in source
     assert "PYTHONHASHSEED" not in source
+
+
+def test_runtime_preflight_is_condition_stratified_and_enforces_cap(
+    tmp_path: Path,
+) -> None:
+    conditions = ("B0", "BEST-C", "BEST-S", "FULL1D-C", "FULL1D-S")
+    rows = [
+        {"condition": condition, "wall_seconds": float(10 + index)}
+        for index, condition in enumerate(conditions)
+        for _ in range(2)
+    ]
+    settings = {
+        "runtime": {
+            "approved_wall_hours": 42.0,
+            "auxiliary_estimate": {
+                "efficiency_expected_hours": 2.5,
+                "efficiency_conservative_hours": 4.0,
+                "reversibility_expected_hours": 0.1,
+                "reversibility_conservative_hours": 0.25,
+                "basis": "fixed",
+            },
+        }
+    }
+    report = build_runtime_preflight(
+        artifact_dir=tmp_path,
+        primary_rows=rows,
+        deterministic={condition: {"passed": True} for condition in conditions},
+        settings=settings,
+        mode={"mode": "hash_seed_only", "manifest_sha256": "mode"},
+        smoke_task_ids=["a", "b"],
+    )
+    assert report["formal_condition_count"] == 840
+    assert set(report["per_condition_wall_time"]) == set(conditions)
+    assert report["automatic_launch_allowed"] is True
+    assert report["report_sha256"] == canonical_sha256(
+        {key: value for key, value in report.items() if key != "report_sha256"}
+    )
+
+
+def test_formal_manifest_freezes_mode_and_zero_formal_rows(tmp_path: Path) -> None:
+    condition_manifest = {
+        "manifest_sha256": "logical",
+        "task_ids": [f"task-{index}" for index in range(168)],
+        "task_list_sha256": "tasks",
+    }
+    atomic_write_json(
+        tmp_path / "manifests" / "condition_manifest.json", condition_manifest
+    )
+    mode = {
+        "mode": "hash_seed_only",
+        "manifest_sha256": "mode",
+        "launcher": {"sha256": "launcher"},
+        "canonicalizer": {"enabled": False, "identity": "disabled"},
+        "model_visible_observation_contract": "exact raw observation string",
+        "raw_observation_preserved": True,
+        "evaluator_state_modified": False,
+    }
+    frozen = freeze_formal_manifest(
+        artifact_dir=tmp_path,
+        condition_manifest=condition_manifest,
+        mode=mode,
+        source_head="a" * 40,
+        config_sha256="config",
+    )
+    assert frozen["formal_rows_generated"] == 0
+    assert frozen["smoke_rows_reusable_as_formal"] is False
+    loaded = validate_formal_manifest(
+        artifact_dir=tmp_path,
+        condition_manifest=condition_manifest,
+        mode=mode,
+    )
+    assert loaded == frozen
+
+
+def test_smoke_runner_requires_fifteen_fresh_process_rows() -> None:
+    source = Path("scripts/run_rcmf_appworld_testnormal_smoke_13b.py").read_text(
+        encoding="utf-8"
+    )
+    assert '"process_count": 15' in source
+    assert '"fresh_process_per_trajectory": True' in source
+    assert "compare_complete_smoke_rows" in source
