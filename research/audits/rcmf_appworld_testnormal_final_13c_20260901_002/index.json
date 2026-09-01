@@ -1,0 +1,39 @@
+{
+  "completed_conditions": {
+    "B0": {
+      "attempt_id": "exp036c-formal-b0-001",
+      "git_safe_attempt_snapshot": {
+        "path": "research/results/exp036c_appworld_testnormal_final/condition_checkpoints/B0/attempts_snapshot.jsonl",
+        "sha256": "5cf0dbcab2c5f69281b2a673d55beeb74643ab44aa74bd7f49678483e85cf297"
+      },
+      "git_safe_per_task": {
+        "path": "research/results/exp036c_appworld_testnormal_final/condition_checkpoints/B0/per_task.jsonl",
+        "sha256": "b9cdf2aacfabc4a4a53bc60a8a172cffc4bdebd1d4f311c6f0af4b0acd6fa807"
+      },
+      "git_safe_summary": {
+        "path": "research/results/exp036c_appworld_testnormal_final/condition_checkpoints/B0/summary.json",
+        "sha256": "07cea983934041414311ae292c487ba91d1493cc55918300f2bc8df44963dbe5"
+      },
+      "git_safe_validation": {
+        "path": "research/results/exp036c_appworld_testnormal_final/condition_checkpoints/B0/validation.json",
+        "sha256": "074a70077d565c0ccd447f15d510c74261edd2ffcfafb359ca0fe33dbc97016b"
+      },
+      "raw_lambda_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13c_20260901_002/formal/conditions/B0",
+      "raw_summary_logical_sha256": "88d004df0e76817519948ded29fc1b993b58b1fb0625aa914075ee8ee8b8bedc",
+      "status": "validated_complete",
+      "success_count": 44,
+      "task_count": 168,
+      "validation_logical_sha256": "c6ff6e4cf795dc5ff2d2499ead17bc45f9a353e71b86898cd0a6e68310ab07cc"
+    }
+  },
+  "formal_condition_count": 5,
+  "formal_task_count": 168,
+  "format": "rcmf_exp036c_git_safe_audit_index_v1",
+  "launch_source_head": "88fd34e6b71167083a4b17244d3e332dcdcf2cc8",
+  "manifest_source_head": "5dd7f715140f5c78fe33e77216cae0f6679091a2",
+  "raw_lambda_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13c_20260901_002",
+  "run_uuid": "rcmf_appworld_testnormal_final_13c_20260901_002",
+  "status": "formal_execution_in_progress",
+  "trajectory_count_completed": 168,
+  "trajectory_count_required": 840
+}
