@@ -1,0 +1,21 @@
+{
+  "approval_timestamp_utc": "2026-09-01T01:43:24.8440325Z",
+  "approving_user_message": "EXP-036C explicitly supersedes the old 42-hour runtime limit and authorizes up to 200 wall-clock hours without changing scientific settings.",
+  "authorization_scope": "EXP-036C only",
+  "conservative_runtime_inherited_hours": 50.3493,
+  "expected_runtime_inherited_hours": 32.8593,
+  "format": "rcmf_exp036c_runtime_authorization_200h_v1",
+  "hard_cap_wall_hours": 200.0,
+  "immutable_manifest_hashes": {
+    "common_shuffle_sha256": "4e5a4d8551223c420b063b0d8043a966367ac7043a53891ff7723616b7aa2170",
+    "determinism_mode_sha256": "d43d46e46ce8beef7c2b5946c1657b84e94d4a0783b4180f45186beedfc9eb5c",
+    "one_demo_initial_messages_sha256": "90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe",
+    "ordered_task_ids_sha256": "990c25609f0777893feec8a72385c0457e5e19f0c17c575159ff263dbe809e83",
+    "retained_demo_sha256": "32348a5889682499b1cc17b7dced74dd706db12b6e248c1e6c7dfba5e50ed713"
+  },
+  "no_scientific_setting_changed": true,
+  "old_42_hour_cap_superseded": true,
+  "run_uuid": "rcmf_appworld_testnormal_final_13c_20260901_001",
+  "source_commit": "97a5965fdf1e8cc4992b3df818966736ea0c159e"
+}
+

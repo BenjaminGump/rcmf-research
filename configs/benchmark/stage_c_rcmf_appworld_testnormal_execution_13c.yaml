@@ -1,0 +1,34 @@
+include: stage_c_rcmf_appworld_testnormal_deterministic_13b.yaml
+
+experiment:
+  name: stage_c_rcmf_appworld_testnormal_execution_13c
+  version: rcmf_appworld_testnormal_execution_13c_v1
+  seed: 25101
+
+stage_c_13a:
+  run_uuid: rcmf_appworld_testnormal_final_13c_20260901_001
+  artifact_dir: runs/stage_c/rcmf_appworld_testnormal_final_13c_20260901_001
+  starting_head: 97a5965fdf1e8cc4992b3df818966736ea0c159e
+  working_branch: research/v5-rcmf-appworld-testnormal-execution
+  experiment_prefix: exp036c
+  determinism:
+    prepare_entrypoint: scripts/prepare_rcmf_appworld_testnormal_execution_13c.py
+  continuation:
+    source_run_uuid: rcmf_appworld_testnormal_final_13b_20260831_001
+    source_artifact_dir: /lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001
+    source_config: configs/benchmark/stage_c_rcmf_appworld_testnormal_deterministic_13b.yaml
+    source_commit: 97a5965fdf1e8cc4992b3df818966736ea0c159e
+    source_determinism_mode_file_sha256: 4fb613da285cbe57a9672629b04c46378919c971e304e7af7cc80f9028c16404
+    source_determinism_mode_logical_sha256: d43d46e46ce8beef7c2b5946c1657b84e94d4a0783b4180f45186beedfc9eb5c
+    source_smoke_summary_file_sha256: 5497edaa2a75b31a3a9b3b343f0a9bdf43668981ec80ea211b362f347fdf2235
+    source_runtime_preflight_file_sha256: b41316a19845c7c25d1edf6bba7812398153b8e6b13fcaf8992d845b0e425b51
+    launcher_sha256: a9be5e359976d922f051361a39d8576c015c74cc7d28c746866bf4d1b87c670f
+    formal_runner_sha256: c0fc92ffe5b8a1c4049460814887bbc5a48269f53614e2f5ce4cd0acd88dc72c
+    runtime_module_sha256: 13fb503022a136295c87267687161d826c33c0d4a0324c19a146b33ba927b14c
+    authorization_record: research/results/exp036c_appworld_testnormal_final/runtime_authorization_200h.json
+  runtime:
+    approved_wall_hours: 200.0
+    warning_wall_hours: 180.0
+    critical_wall_hours: 195.0
+    hard_stop_wall_hours: 200.0
+
