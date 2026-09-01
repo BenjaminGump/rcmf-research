@@ -12,6 +12,7 @@ from scripts.prepare_rcmf_appworld_testnormal_execution_13c import (
     atomic_resume_fixture,
     authorized_runtime_preflight,
     condition_manifest_for_run,
+    source_smoke_passed,
 )
 
 
@@ -96,3 +97,17 @@ def test_atomic_resume_fixture_is_self_authenticating() -> None:
         {key: value for key, value in row.items() if key != "result_sha256"}
     )
 
+
+def test_source_smoke_schema_requires_all_five_exact_comparisons() -> None:
+    smoke = {
+        "passed": True,
+        "deterministic": True,
+        "trajectory_count": 15,
+        "determinism": {
+            condition: {"passed": True}
+            for condition in ("B0", "BEST-C", "BEST-S", "FULL1D-C", "FULL1D-S")
+        },
+    }
+    assert source_smoke_passed(smoke) is True
+    smoke["determinism"]["B0"]["passed"] = False
+    assert source_smoke_passed(smoke) is False

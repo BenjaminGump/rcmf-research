@@ -101,6 +101,18 @@ def atomic_resume_fixture(
     return result
 
 
+def source_smoke_passed(smoke: dict[str, object]) -> bool:
+    comparisons = smoke.get("determinism")
+    return (
+        bool(smoke.get("passed"))
+        and bool(smoke.get("deterministic"))
+        and int(smoke.get("trajectory_count", 0)) == 15
+        and isinstance(comparisons, dict)
+        and set(comparisons) == set(CONDITIONS)
+        and all(bool(row.get("passed")) for row in comparisons.values())
+    )
+
+
 def main() -> None:
     assert_hash_seed_process()
     args = base.parse_args()
@@ -201,7 +213,7 @@ def main() -> None:
         read_json(source_files["preflight"]),
         authorization_sha256=authorization_sha256,
     )
-    if not bool(smoke["determinism_passed"]):
+    if not source_smoke_passed(smoke):
         raise ValueError("EXP-036B complete-path smoke did not pass")
     if float(preflight["conservative_total_wall_hours"]) > 200.0:
         raise RuntimeError("EXP-036C conservative estimate exceeds 200 hours")
@@ -221,7 +233,7 @@ def main() -> None:
         },
         "scientific_config_checks": scientific_checks,
         "complete_path_smoke_trajectory_count": int(smoke["trajectory_count"]),
-        "all_repeat_comparisons_exact": bool(smoke["determinism_passed"]),
+        "all_repeat_comparisons_exact": source_smoke_passed(smoke),
         "new_complete_trajectory_smoke_required": False,
         "authorization_metadata_only_change": True,
         "passed": True,
@@ -294,4 +306,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
