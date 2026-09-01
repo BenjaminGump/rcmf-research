@@ -24,7 +24,7 @@ from rcmf.utils.serialization import atomic_write_json, sha256_file  # noqa: E40
 import scripts.prepare_rcmf_appworld_testnormal_final_13a as base  # noqa: E402
 
 
-RUN_UUID = "rcmf_appworld_testnormal_final_13c_20260901_001"
+RUN_UUID = "rcmf_appworld_testnormal_final_13c_20260901_002"
 SOURCE_RUN_UUID = "rcmf_appworld_testnormal_final_13b_20260831_001"
 CONDITIONS = ["B0", "BEST-C", "BEST-S", "FULL1D-C", "FULL1D-S"]
 SCIENTIFIC_CONFIG_KEYS = (

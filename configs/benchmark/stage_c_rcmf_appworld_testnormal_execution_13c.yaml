@@ -6,8 +6,8 @@ experiment:
   seed: 25101
 
 stage_c_13a:
-  run_uuid: rcmf_appworld_testnormal_final_13c_20260901_001
-  artifact_dir: runs/stage_c/rcmf_appworld_testnormal_final_13c_20260901_001
+  run_uuid: rcmf_appworld_testnormal_final_13c_20260901_002
+  artifact_dir: runs/stage_c/rcmf_appworld_testnormal_final_13c_20260901_002
   starting_head: 97a5965fdf1e8cc4992b3df818966736ea0c159e
   working_branch: research/v5-rcmf-appworld-testnormal-execution
   experiment_prefix: exp036c
@@ -31,4 +31,3 @@ stage_c_13a:
     warning_wall_hours: 180.0
     critical_wall_hours: 195.0
     hard_stop_wall_hours: 200.0
-
