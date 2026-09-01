@@ -1,0 +1,68 @@
+{
+  "abandoned_preflight_root": {
+    "artifact_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13c_20260901_001",
+    "formal_rows": 0,
+    "reason": "metadata-only smoke summary field-name mismatch after base manifests were atomically written",
+    "run_uuid": "rcmf_appworld_testnormal_final_13c_20260901_001",
+    "scientific_output_generated": false
+  },
+  "authorization": {
+    "automatic_launch_allowed": true,
+    "conservative_total_wall_hours": 50.34926502514475,
+    "expected_total_wall_hours": 32.859305854430424,
+    "hard_cap_wall_hours": 200.0,
+    "old_42_hour_cap_superseded": true,
+    "record_sha256": "1942802e910b29fb083a877e28ef990b2a58511608a2995b097117083f6dbc4c"
+  },
+  "environment": {
+    "appworld_identity": "0.1.0/0.1.0/0.1.0",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "nfs_mounted": true,
+    "persistent_available_bytes_at_preflight": 3343843144499200
+  },
+  "formal_rows_before_launch": 0,
+  "format": "rcmf_exp036c_prelaunch_validation_v1",
+  "frozen_manifests": {
+    "condition_logical_sha256": "23617f51e634adf0bac94a3452e1280a23598f87b0b17aea647d4a8330e0e7b9",
+    "determinism_evidence_logical_sha256": "701d6a2f2bf585592edfe74ed290832ebbfbdd1f440f4dfc59a50238257368ff",
+    "determinism_mode_logical_sha256": "d43d46e46ce8beef7c2b5946c1657b84e94d4a0783b4180f45186beedfc9eb5c",
+    "formal_logical_sha256": "1a9b5c07a79bf69125681bd523c8d036be3c476c5c99601ebb0869e297fb4ee2",
+    "package_logical_sha256": "2705f850a915efa965eeaa6d1ece4aaa3e12fa540e671c874784f752936cc09a",
+    "runtime_preflight_logical_sha256": "07df9ab067e026385581c783a0605eef9379929660af6b60bc310f479d64a7fc",
+    "test_normal_logical_sha256": "c76b939420f76596dc7a9a45f8cb5dc9f8b60b05b9d1465b57160d3121cdbde8"
+  },
+  "global_seed": 25101,
+  "hash_seed_only": true,
+  "leakage": {
+    "ground_truth_model_input_leaks": 0,
+    "memory_parent_overlaps": 0,
+    "passed": true
+  },
+  "process_start_sentinel_file_sha256": "befd2ba0078db07510be78d6998b5c7558c3ae1876fbbc2fece8a7b1b67a8874",
+  "run_uuid": "rcmf_appworld_testnormal_final_13c_20260901_002",
+  "runtime_code": {
+    "formal_runner_sha256": "c0fc92ffe5b8a1c4049460814887bbc5a48269f53614e2f5ce4cd0acd88dc72c",
+    "launcher_sha256": "a9be5e359976d922f051361a39d8576c015c74cc7d28c746866bf4d1b87c670f",
+    "runtime_module_sha256": "13fb503022a136295c87267687161d826c33c0d4a0324c19a146b33ba927b14c"
+  },
+  "scientific_configuration_changed": false,
+  "smoke_reuse": {
+    "all_five_repeat_comparisons_exact": true,
+    "complete_path_trajectories": 15,
+    "new_complete_trajectory_smoke_required": false,
+    "source_run_uuid": "rcmf_appworld_testnormal_final_13b_20260831_001"
+  },
+  "source_head": "5dd7f715140f5c78fe33e77216cae0f6679091a2",
+  "task_count": 168,
+  "task_list_sha256": "990c25609f0777893feec8a72385c0457e5e19f0c17c575159ff263dbe809e83",
+  "tests": {
+    "lambda_focused_passed": 37,
+    "local_focused_passed": 36,
+    "local_focused_skipped": 1,
+    "referenced_exp036b_lambda_full_passed": 780,
+    "referenced_exp036b_local_full_passed": 778,
+    "referenced_exp036b_local_full_skipped": 2
+  },
+  "trajectory_count": 840
+}
+

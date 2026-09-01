@@ -1,0 +1,30 @@
+{
+  "all_repeat_comparisons_exact": true,
+  "authorization_metadata_only_change": true,
+  "complete_path_smoke_trajectory_count": 15,
+  "determinism_mode_logical_sha256": "d43d46e46ce8beef7c2b5946c1657b84e94d4a0783b4180f45186beedfc9eb5c",
+  "format": "rcmf_exp036c_smoke_reuse_evidence_v1",
+  "manifest_sha256": "701d6a2f2bf585592edfe74ed290832ebbfbdd1f440f4dfc59a50238257368ff",
+  "new_complete_trajectory_smoke_required": false,
+  "passed": true,
+  "run_uuid": "rcmf_appworld_testnormal_final_13c_20260901_002",
+  "runtime_code_sha256": {
+    "formal_runner": "c0fc92ffe5b8a1c4049460814887bbc5a48269f53614e2f5ce4cd0acd88dc72c",
+    "launcher": "a9be5e359976d922f051361a39d8576c015c74cc7d28c746866bf4d1b87c670f",
+    "runtime_module": "13fb503022a136295c87267687161d826c33c0d4a0324c19a146b33ba927b14c"
+  },
+  "scientific_config_checks": {
+    "appworld_runtime": true,
+    "efficiency": true,
+    "packages": true,
+    "prompt": true,
+    "reversibility": true,
+    "shared": true,
+    "test_normal": true
+  },
+  "source_artifact_dir": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13b_20260831_001",
+  "source_determinism_mode_sha256": "4fb613da285cbe57a9672629b04c46378919c971e304e7af7cc80f9028c16404",
+  "source_run_uuid": "rcmf_appworld_testnormal_final_13b_20260831_001",
+  "source_runtime_preflight_sha256": "b41316a19845c7c25d1edf6bba7812398153b8e6b13fcaf8992d845b0e425b51",
+  "source_smoke_summary_sha256": "5497edaa2a75b31a3a9b3b343f0a9bdf43668981ec80ea211b362f347fdf2235"
+}

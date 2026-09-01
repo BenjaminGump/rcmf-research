@@ -1,0 +1,16 @@
+{
+  "determinism_mode_sha256": "d43d46e46ce8beef7c2b5946c1657b84e94d4a0783b4180f45186beedfc9eb5c",
+  "formal_manifest_sha256": "1a9b5c07a79bf69125681bd523c8d036be3c476c5c99601ebb0869e297fb4ee2",
+  "format": "rcmf_exp036c_run_identity_v1",
+  "manifest_sha256": "7d864aa80f7887ac268ae5ec75b2b18759680239d426b4c4a16b73071555d366",
+  "optimizer_steps": 0,
+  "parameter_updates": 0,
+  "preparation_process_identity_sha256": "ecc813ca69d4d213a2c8542abb1a260bab6929a39ae0bc10c8abb373eba7650e",
+  "run_uuid": "rcmf_appworld_testnormal_final_13c_20260901_002",
+  "runtime_authorization_sha256": "1942802e910b29fb083a877e28ef990b2a58511608a2995b097117083f6dbc4c",
+  "scientific_configuration_changed": false,
+  "smoke_reuse_manifest_sha256": "701d6a2f2bf585592edfe74ed290832ebbfbdd1f440f4dfc59a50238257368ff",
+  "source_head": "5dd7f715140f5c78fe33e77216cae0f6679091a2",
+  "starting_head": "97a5965fdf1e8cc4992b3df818966736ea0c159e",
+  "working_branch": "research/v5-rcmf-appworld-testnormal-execution"
+}

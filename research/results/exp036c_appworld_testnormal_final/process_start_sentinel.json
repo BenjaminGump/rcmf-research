@@ -1,0 +1,91 @@
+{
+  "attempt_id": "exp036c-prepare-001",
+  "child_process_inheritance": {
+    "execution_python": {
+      "executable": "/home/ubuntu/venvs/rcmf-py311/bin/python",
+      "hash_randomization": 1,
+      "hash_sentinel": {
+        "builtin_hash": 1055429093368506471,
+        "value_length": 50,
+        "value_sha256": "c6c054bfdb034fcb028ee9517fa387f16b0a2040870ff968d34e1392d383f2be"
+      },
+      "python_hash_seed": "25101",
+      "python_version": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 11.4.0]"
+    },
+    "legacy_appworld_python": {
+      "executable": "/home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python",
+      "hash_randomization": 1,
+      "hash_sentinel": {
+        "builtin_hash": 1055429093368506471,
+        "value_length": 50,
+        "value_sha256": "c6c054bfdb034fcb028ee9517fa387f16b0a2040870ff968d34e1392d383f2be"
+      },
+      "python_hash_seed": "25101",
+      "python_version": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 11.4.0]"
+    }
+  },
+  "entrypoint_path": "/lambda/nfs/rcmf-persist/project/scripts/prepare_rcmf_appworld_testnormal_execution_13c.py",
+  "entrypoint_sha256": "53e446fa1367cc09253a7ed004e7d102205bcfe04f60394a58ee72d91946b73b",
+  "environment_changed_after_interpreter_start": false,
+  "format": "rcmf_exp036b_process_hash_identity_v1",
+  "hash_randomization": 1,
+  "hash_sentinel": {
+    "builtin_hash": 1055429093368506471,
+    "value_length": 50,
+    "value_sha256": "c6c054bfdb034fcb028ee9517fa387f16b0a2040870ff968d34e1392d383f2be"
+  },
+  "identity_sha256": "ecc813ca69d4d213a2c8542abb1a260bab6929a39ae0bc10c8abb373eba7650e",
+  "launcher_command": "/home/ubuntu/venvs/rcmf-py311/bin/python scripts/prepare_rcmf_appworld_testnormal_execution_13c.py --config configs/benchmark/stage_c_rcmf_appworld_testnormal_execution_13c.yaml --artifact-dir /lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13c_20260901_002 --attempt-id exp036c-prepare-001 --source-head 5dd7f715140f5c78fe33e77216cae0f6679091a2 --github-head 5dd7f715140f5c78fe33e77216cae0f6679091a2 --lambda-head 5dd7f715140f5c78fe33e77216cae0f6679091a2 ",
+  "launcher_path": "/lambda/nfs/rcmf-persist/project/scripts/launch_rcmf_appworld_testnormal_deterministic_13b.sh",
+  "launcher_sha256": "a9be5e359976d922f051361a39d8576c015c74cc7d28c746866bf4d1b87c670f",
+  "locale": {
+    "current": [
+      "en_US",
+      "UTF-8"
+    ],
+    "preferred_encoding": "UTF-8"
+  },
+  "process_start_command": [
+    "/home/ubuntu/venvs/rcmf-py311/bin/python",
+    "scripts/prepare_rcmf_appworld_testnormal_execution_13c.py",
+    "--config",
+    "configs/benchmark/stage_c_rcmf_appworld_testnormal_execution_13c.yaml",
+    "--artifact-dir",
+    "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13c_20260901_002",
+    "--attempt-id",
+    "exp036c-prepare-001",
+    "--source-head",
+    "5dd7f715140f5c78fe33e77216cae0f6679091a2",
+    "--github-head",
+    "5dd7f715140f5c78fe33e77216cae0f6679091a2",
+    "--lambda-head",
+    "5dd7f715140f5c78fe33e77216cae0f6679091a2"
+  ],
+  "python_executable": "/home/ubuntu/venvs/rcmf-py311/bin/python",
+  "python_hash_seed": "25101",
+  "python_version": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 11.4.0]",
+  "required_python_hash_seed": "25101",
+  "scientific_argv": [
+    "scripts/prepare_rcmf_appworld_testnormal_execution_13c.py",
+    "--config",
+    "configs/benchmark/stage_c_rcmf_appworld_testnormal_execution_13c.yaml",
+    "--artifact-dir",
+    "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13c_20260901_002",
+    "--attempt-id",
+    "exp036c-prepare-001",
+    "--source-head",
+    "5dd7f715140f5c78fe33e77216cae0f6679091a2",
+    "--github-head",
+    "5dd7f715140f5c78fe33e77216cae0f6679091a2",
+    "--lambda-head",
+    "5dd7f715140f5c78fe33e77216cae0f6679091a2"
+  ],
+  "source_head": "5dd7f715140f5c78fe33e77216cae0f6679091a2",
+  "timezone": {
+    "environment_TZ": null,
+    "tzname": [
+      "UTC",
+      "UTC"
+    ]
+  }
+}

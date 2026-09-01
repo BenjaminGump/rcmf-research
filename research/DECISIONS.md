@@ -1,5 +1,25 @@
 # Decisions and Deviations
 
+## 2026-09-01 EXP-036C authorization continuation
+
+VERIFIED:
+
+- EXP-036C reuses the exact EXP-036B launcher, formal runner, runtime module,
+  determinism mode, scientific packages, prompt, Test-Normal tasks, condition
+  order, and generation settings.
+- The only scientific-run metadata changes are the new append-only run root
+  and the user-authorized wall-clock ceiling of 200 hours.
+- The inherited expected/conservative estimates are `32.8593h/50.3493h`, so
+  the 200-hour authorization gate passes.
+
+Implementation deviation:
+
+- The first `rcmf_appworld_testnormal_final_13c_20260901_001` preparation
+  process used a nonexistent `determinism_passed` source-summary key after its
+  base manifests had completed. It generated no formal trajectory. The root
+  remains preserved, and the corrected code uses the required new unique UUID
+  suffix `..._002`. No existing artifact or attempt row was rewritten.
+
 ## 2026-08-31 EXP-036B hash-seed repair and runtime stop
 
 VERIFIED:

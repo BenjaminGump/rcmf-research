@@ -1,0 +1,12 @@
+{
+  "audit_complete": true,
+  "condition": "B0",
+  "condition_manifest_sha256": "23617f51e634adf0bac94a3452e1280a23598f87b0b17aea647d4a8330e0e7b9",
+  "config_sha256": "a178b6c203e329d43cf2a976f7f8261ce93abd70b8123f1c00a965202e805201",
+  "format": "rcmf_exp036c_atomic_resume_fixture_v1",
+  "non_scientific": true,
+  "result_sha256": "e7e575620f288249d2741be6b539109314d965be6a66810a05bd98c497ff9902",
+  "run_uuid": "rcmf_appworld_testnormal_final_13c_20260901_002",
+  "source_head": "5dd7f715140f5c78fe33e77216cae0f6679091a2",
+  "task_id": "fixture-task"
+}

@@ -20,11 +20,20 @@ VERIFIED:
 - Local, GitHub, and Lambda preflight passed at the exact EXP-036B final SHA;
   both worktrees were clean, NFS was mounted with sufficient space, and the
   H100 was idle.
+- The first requested `..._001` run root was preserved after a metadata-only
+  smoke-summary field-name mismatch stopped its outer preparation. It produced
+  no formal row. The unique formal run UUID is now
+  `rcmf_appworld_testnormal_final_13c_20260901_002`.
+- The corrected 002 preparation passed 37 focused Lambda tests and froze the
+  168-task/840-condition manifest, 200-hour authorization, zero-leakage audit,
+  EXP-036B smoke reuse, process hash sentinel, and atomic resume fixture.
+- Expected and conservative complete runtimes remain `32.8593h` and
+  `50.3493h`; both are below the authorized 200-hour ceiling.
 
 CURRENT WORK:
 
-- Freeze and validate the EXP-036C authorization and manifests, then launch
-  the unchanged 840-row formal evaluation in a persistent Lambda session.
+- Launch the unchanged 840-row formal evaluation in a persistent Lambda
+  session from the pushed frozen-manifest commit.
 - Run efficiency, scaling, and numerical reversibility only after all formal
   performance rows are complete and sealed.
 
