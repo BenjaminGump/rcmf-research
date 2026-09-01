@@ -1,5 +1,35 @@
 # Current State
 
+## 2026-09-01 EXP-036C Authorized Test-Normal Execution Preparing
+
+VERIFIED:
+
+- EXP-036B remains immutable at
+  `97a5965fdf1e8cc4992b3df818966736ea0c159e`, with formal Test-Normal still
+  `0/840` and `STOPPED_BEFORE_FORMAL`.
+- The user authorized a new append-only EXP-036C run with a 200-hour hard
+  safety ceiling. The old 42-hour limit is superseded for EXP-036C only.
+- EXP-036C changes authorization metadata and the output root only. The frozen
+  scientific manifest, five conditions, 168 tasks, BEST/FULL1D roles,
+  generation settings, evaluator, and seed remain unchanged.
+- Determinism remains `hash_seed_only` with process-start
+  `PYTHONHASHSEED=25101`; canonicalization remains disabled.
+- Archive branch `archive/exp036b-runtime-gate-stop-97a5965f` and annotated
+  tag `exp036b-runtime-gate-stop-verified-97a5965f` preserve the EXP-036B stop
+  commit.
+- Local, GitHub, and Lambda preflight passed at the exact EXP-036B final SHA;
+  both worktrees were clean, NFS was mounted with sufficient space, and the
+  H100 was idle.
+
+CURRENT WORK:
+
+- Freeze and validate the EXP-036C authorization and manifests, then launch
+  the unchanged 840-row formal evaluation in a persistent Lambda session.
+- Run efficiency, scaling, and numerical reversibility only after all formal
+  performance rows are complete and sealed.
+
+Last updated: 2026-09-01.
+
 ## 2026-08-31 EXP-036B Stopped At Runtime Authorization Gate
 
 VERIFIED:

@@ -385,3 +385,24 @@ sweeps, or ensemble training unless the user explicitly changes this policy.
   review without workload reduction.
 - No follow-on experiment, retraining, calibration, portability study, or
   paper automation starts automatically after EXP-036B.
+
+## EXP-036C Authorized Test-Normal Execution Charter v1
+
+- EXP-036C changes no model or scientific configuration. The validated
+  EXP-036B determinism evidence remains the technical source of truth.
+- The determinism mode is frozen as `hash_seed_only` with process-start
+  `PYTHONHASHSEED=25101`; canonicalization remains disabled, raw observations
+  remain model-visible, and evaluator semantics remain unchanged.
+- All five frozen conditions (`B0`, `BEST-C`, `BEST-S`, `FULL1D-C`, and
+  `FULL1D-S`) and all 168 ordered Test-Normal tasks must complete. `BEST`
+  remains the predeclared primary model and `FULL1D` the predeclared secondary
+  configuration.
+- Prefix outcomes cannot stop or alter the run, and Test-Normal outcomes cannot
+  select a model, prompt, field, scale, calibration, task subset, or condition.
+- Formal performance runs before the frozen efficiency, scaling, and numerical
+  reversibility phases.
+- The user explicitly authorizes up to 200 wall-clock hours for EXP-036C. This
+  supersedes the old 42-hour authorization, and no lower runtime gate may be
+  introduced.
+- No follow-on experiment, retraining, calibration, portability study, or
+  paper automation starts automatically after EXP-036C.
