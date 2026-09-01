@@ -1,0 +1,38 @@
+{
+  "checks": {
+    "all_row_checks": true,
+    "manifest_task_count": true,
+    "query_encoder_identity": true,
+    "summary_counts": true,
+    "summary_hash": true,
+    "summary_identity": true,
+    "task_file_count": true,
+    "task_identity_exact": true,
+    "unique_tasks": true
+  },
+  "condition": "BEST-S",
+  "deployment_field_sha256": "5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e",
+  "format": "rcmf_exp036c_condition_checkpoint_validation_v1",
+  "launch_source_head": "88fd34e6b71167083a4b17244d3e332dcdcf2cc8",
+  "manifest_source_head": "5dd7f715140f5c78fe33e77216cae0f6679091a2",
+  "passed": true,
+  "query_encoder_sha256": "5b272ecb036f776add841a87ac9f475657da51bc914e26651d966d4aa3412e80",
+  "raw_condition_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13c_20260901_002/formal/conditions/BEST-S",
+  "raw_summary_file_sha256": "9dd724e3de74372ff480021ed1962513426a167e41d1537f71f865bfbd890c99",
+  "raw_summary_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13c_20260901_002/formal/conditions/BEST-S/summary.json",
+  "run_uuid": "rcmf_appworld_testnormal_final_13c_20260901_002",
+  "success_count": 42,
+  "summary_logical_sha256": "ceac191c90e2c4c15b753d10ec06790100093840adfde213d3eab64b5d2ba5c8",
+  "task_count": 168,
+  "task_result_manifest_sha256": "a7ef4a00ff2b203a20cc6a2c8c7a47209f862354370978a5b90e082f5c1c19a1",
+  "validated_at_utc": "2026-09-01T21:42:46.333542Z",
+  "validation_sha256": "91dd27a749c17d111ba05c88ea6bc12d1718a3696c6d82b35fe0828fb3151374",
+  "validator_schema_correction": {
+    "frozen_runtime_value": "key_payload_shuffle",
+    "incorrect_assumption": "shuffle",
+    "original_validation_sha256": "50d64faa6225e307b27585889bd61f5c009be70150ffe89e2ef43303afad18dd",
+    "scientific_artifacts_modified": false
+  },
+  "violation_count": 0,
+  "violations": []
+}
