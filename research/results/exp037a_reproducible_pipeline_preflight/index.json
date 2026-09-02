@@ -1,0 +1,91 @@
+{
+  "approved_hard_cap_hours": 200.0,
+  "authorized_to_launch": true,
+  "files": [
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/approval_request.json",
+      "sha256": "b3157f43d4ccb8f512b357619eaf0f16a79342925d1650d370f2d08379ab5454",
+      "size_bytes": 614
+    },
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/authoritative_source_manifest.json",
+      "sha256": "e57e7d4f26a5dc278afe048a32cc44aaf0ecc1371e5415edbe9e39e8edba8dc0",
+      "size_bytes": 3745
+    },
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/environment_manifest.json",
+      "sha256": "57bb1003d60935a3a5c711eb86133c26432cc4efe2bbdf56f8cb6b057a3880c4",
+      "size_bytes": 4530
+    },
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/initialization_manifest.json",
+      "sha256": "a932641bf91b264ddab09a1e0b34062c036d0dad10c8a39740b916f0467b2a46",
+      "size_bytes": 5874
+    },
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/lambda_tests.json",
+      "sha256": "fdee05e9aac3274b9b1ed78a4f3e50e55991b8387348c51bbdc679c59efb5e27",
+      "size_bytes": 453
+    },
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/local_tests.json",
+      "sha256": "627103838fb23a48bad67d54aa3306d284382f3b0bfeaeeeabe11296dd155d27",
+      "size_bytes": 470
+    },
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/preflight_summary.json",
+      "sha256": "47e3b89024e7b1d7da9cdb32cc50b055de2fecbe5241990fe4f5d53d6f15bf5a",
+      "size_bytes": 1698
+    },
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/resolved_arm_1d.json",
+      "sha256": "16a250baaf99615dd109c1b901f293d0b7aa6ff2623055ed060b5ed97683052e",
+      "size_bytes": 27767
+    },
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/resolved_arm_3d.json",
+      "sha256": "80fe0ae194676c4d4ed8af9769fbaf5ec28746aa285d11e2f615ea8de36170d6",
+      "size_bytes": 27712
+    },
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/resolved_config_diff.json",
+      "sha256": "e70a82ced491cb524f9f461fdb98b796b11da11dff08c367831f95a8c2b6b228",
+      "size_bytes": 6606
+    },
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/runtime_preflight.json",
+      "sha256": "bcafeb32af99060ddc74751a88449c818e368a043e719dacb002132f1e9bd7be",
+      "size_bytes": 40787
+    },
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/secret_scan.json",
+      "sha256": "8a41db859d636eab256fd6c836f01292542bd196f951c0dab6579bc593be97d0",
+      "size_bytes": 829
+    },
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/shared_cpu_summary.json",
+      "sha256": "6742270a6410321a22f7d33de85fd19656976479705ad177f400b603a0bcbd49",
+      "size_bytes": 2690
+    },
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/smoke_results.json",
+      "sha256": "4f736f9c25d5fd3c35280103c69433d891e289a903d00e4f95b7bd7fa711965d",
+      "size_bytes": 35885
+    },
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/stage_dag.json",
+      "sha256": "42b8e5f5cc84749832c45387061bd28b8d109ac7859923292e09f8daf2abb97f",
+      "size_bytes": 31787
+    },
+    {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/two_arm_contract.json",
+      "sha256": "616095fc498e90584882c46c50e3a4c4fa8199ea341bd766e8204924db9645ab",
+      "size_bytes": 570
+    }
+  ],
+  "format": "exp037a_git_safe_preflight_index_14b_v1",
+  "raw_lambda_preflight_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/preflight",
+  "recommended_hard_cap_hours": 160.0,
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+  "scientific_source_commit": "02ef94726ea0fe566f7eea4fa137fb91da92977f"
+}

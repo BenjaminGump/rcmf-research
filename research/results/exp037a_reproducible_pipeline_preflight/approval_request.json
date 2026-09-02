@@ -1,0 +1,18 @@
+{
+  "authorization_scope": "3d then conditional 1d only after PASS",
+  "authorized_to_launch_when_persisted": true,
+  "checks": {
+    "event_driven_scheduler": true,
+    "frozen_method_contract": true,
+    "no_identity_or_leakage_error": true,
+    "preflight_complete": true,
+    "read_only_twenty_minute_monitor": true,
+    "recommended_hard_cap_at_most_200": true,
+    "same_pipeline_only_prompt_diff": true,
+    "source_and_manifests_consistent": true,
+    "tests_passed": true
+  },
+  "format": "conditional_runtime_authorization_plan_14b_v1",
+  "hard_cap_hours": 200.0,
+  "user_authorization_received": true
+}

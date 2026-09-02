@@ -9,24 +9,23 @@ VERIFIED:
   started clean and at that exact commit, with no active experiment process.
 - Archive branch `archive/exp036c-testnormal-final-53a1c583` and annotated tag
   `exp036c-testnormal-final-verified-53a1c583` preserve the starting state.
-- EXP-037A is approved only through implementation, tests, bounded technical
-  smoke, runtime/cost/storage preflight, and a committed approval packet.
+- Scientific source commit `02ef94726ea0fe566f7eea4fa137fb91da92977f`
+  passed local and Lambda focused/full tests plus the bounded H100 technical
+  smoke. All nine machine authorization checks are true.
+- The measured smoke completed in `45.994` seconds with about `17.9 GB` peak
+  GPU allocation. Expected/conservative total wall time is `47.5/92` hours,
+  expected H100-active time is `39` hours, and expected/conservative storage
+  is `46/90 GiB`.
+- The recommended hard cap is `160` hours under the preregistered formula,
+  below the user's explicit `200`-hour authorization.
 
 CURRENT WORK:
 
-- Build one benchmark-independent, content-addressed, event-driven pipeline
-  around the validated historical selector and writer/field/reader
-  mathematics.
-- Freeze the shared authoritative inputs, two-arm contract, initialization
-  snapshots, stage DAG, reproduction gate, audit contract, and exact resume
-  behavior.
-- The user has now granted a conditional total authorization with a
-  `200`-wall-hour anomaly ceiling. No scientific selector CV, paired causal
-  generation, writer/reader training, heldout trajectory, or dev evaluation
-  may begin until every frozen preflight gate passes and the approval package
-  is committed and synchronized. Once those gates pass, the event-driven
-  parent must record the machine-readable authorization and launch 3D without
-  another conversational pause; 1D remains conditional on
+- Commit and push the content-addressed Git-safe preflight packet, then write
+  the machine-readable runtime authorization and immediately launch the 3D
+  parent orchestrator in persistent tmux.
+- The event-driven parent owns stage progression. The 20-minute monitor is
+  read-only. The 1D arm remains conditional on exact
   `THREE_DEMO_REPRODUCTION_PASS`.
 
 Last updated: 2026-09-03.

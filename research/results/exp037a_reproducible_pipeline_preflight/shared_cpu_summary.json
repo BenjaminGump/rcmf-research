@@ -1,0 +1,61 @@
+{
+  "a_pair_count": 193398,
+  "count_checks": {
+    "downstream_heldout_tasks": true,
+    "downstream_train_tasks": true,
+    "selector_train_states": true,
+    "selector_train_tasks": true,
+    "selector_validation_states": true,
+    "selector_validation_tasks": true,
+    "signature_classes": true,
+    "train_transitions": true
+  },
+  "counts": {
+    "downstream_heldout_tasks": 8,
+    "downstream_train_tasks": 29,
+    "selector_train_states": 499,
+    "selector_train_tasks": 37,
+    "selector_validation_states": 139,
+    "selector_validation_tasks": 9,
+    "signature_classes": 150,
+    "train_transitions": 499
+  },
+  "cv_updates_per_arm": 37800,
+  "format": "fresh_shared_cpu_rebuild_14b_v1",
+  "fresh_outputs": {
+    "illegal_pairs.jsonl": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/preflight/shared/illegal_pairs.jsonl",
+      "sha256": "fbb3d0e6a93f7637e1070e4092e23cd37c74575b399b131c4c58502cd3fd7d4d",
+      "size_bytes": 2881355
+    },
+    "labels.jsonl": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/preflight/shared/labels.jsonl",
+      "sha256": "d68abc6955b38df5005a925599abd0221af20619c81ab1e2c7bd85994f82a82d",
+      "size_bytes": 501226732
+    },
+    "query_signatures.jsonl": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/preflight/shared/query_signatures.jsonl",
+      "sha256": "aaec2a0ca271fec49b307a9fe98e5f38473d95bb52fb399f4bb5be8650807445",
+      "size_bytes": 1659382
+    },
+    "transition_signatures.jsonl": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/preflight/shared/transition_signatures.jsonl",
+      "sha256": "bda379183f42e82390b625689c1db0cc8a9696814df6e2ba208df3a098a1fadb",
+      "size_bytes": 1609741
+    },
+    "transitions.jsonl": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/preflight/shared/transitions.jsonl",
+      "sha256": "f1484d419cb475efcf11231d0fa0548ee402322eba7c96db4301679255f829b3",
+      "size_bytes": 26347944
+    }
+  },
+  "historical_derived_artifact_loaded": false,
+  "illegal_pair_count": 7929,
+  "legal_pair_count": 310433,
+  "teacher_section_metadata": {
+    "derivation": "transition_teacher_section_then_locked_tokenizer_without_special_tokens_or_truncation",
+    "row_count": 499,
+    "source": "authoritative_transition_manifest",
+    "tokenizer_name_or_path": "Qwen/Qwen3-8B"
+  }
+}

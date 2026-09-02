@@ -1,0 +1,31 @@
+{
+  "approval_checks": {
+    "event_driven_scheduler": true,
+    "frozen_method_contract": true,
+    "no_identity_or_leakage_error": true,
+    "preflight_complete": true,
+    "read_only_twenty_minute_monitor": true,
+    "recommended_hard_cap_at_most_200": true,
+    "same_pipeline_only_prompt_diff": true,
+    "source_and_manifests_consistent": true,
+    "tests_passed": true
+  },
+  "approved_hard_cap_hours": 200.0,
+  "authorized_to_launch": true,
+  "format": "rcmf_reproducible_pipeline_preflight_14b_v1",
+  "output_hashes": {
+    "approval_request.json": "b3157f43d4ccb8f512b357619eaf0f16a79342925d1650d370f2d08379ab5454",
+    "authoritative_source_manifest.json": "e57e7d4f26a5dc278afe048a32cc44aaf0ecc1371e5415edbe9e39e8edba8dc0",
+    "environment_manifest.json": "57bb1003d60935a3a5c711eb86133c26432cc4efe2bbdf56f8cb6b057a3880c4",
+    "initialization_manifest.json": "a932641bf91b264ddab09a1e0b34062c036d0dad10c8a39740b916f0467b2a46",
+    "resolved_arm_1d.json": "16a250baaf99615dd109c1b901f293d0b7aa6ff2623055ed060b5ed97683052e",
+    "resolved_arm_3d.json": "80fe0ae194676c4d4ed8af9769fbaf5ec28746aa285d11e2f615ea8de36170d6",
+    "resolved_config_diff.json": "e70a82ced491cb524f9f461fdb98b796b11da11dff08c367831f95a8c2b6b228",
+    "runtime_preflight.json": "bcafeb32af99060ddc74751a88449c818e368a043e719dacb002132f1e9bd7be",
+    "stage_dag.json": "42b8e5f5cc84749832c45387061bd28b8d109ac7859923292e09f8daf2abb97f",
+    "two_arm_contract.json": "616095fc498e90584882c46c50e3a4c4fa8199ea341bd766e8204924db9645ab"
+  },
+  "recommended_hard_cap_hours": 160.0,
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+  "source_commit": "02ef94726ea0fe566f7eea4fa137fb91da92977f"
+}
