@@ -111,6 +111,14 @@ def timing_summary(values: Sequence[float]) -> dict[str, float | int]:
     }
 
 
+def raw_reencoding_cache_equivalence_passed(
+    metrics: Sequence[Mapping[str, Any]],
+) -> bool:
+    return all(
+        bool(row["raw_reencoding_exact_cache_match_at_1e_5"]) for row in metrics
+    )
+
+
 def timed_cuda(
     device: torch.device, operation: Callable[[], Any]
 ) -> tuple[Any, float]:
@@ -677,7 +685,9 @@ def compilation_phase(
         "cached_representation_not_reported_as_raw_ingestion": True,
         "truncation_count": sum(bool(row["truncated"]) for row in metrics),
         "raw_reencoding_frozen_cache_equivalence_atol": 1.0e-5,
-        "raw_reencoding_frozen_cache_equivalence_passed": True,
+        "raw_reencoding_frozen_cache_equivalence_passed": (
+            raw_reencoding_cache_equivalence_passed(metrics)
+        ),
     }
     result["result_sha256"] = canonical_sha256(result)
     return result

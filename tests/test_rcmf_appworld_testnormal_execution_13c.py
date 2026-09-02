@@ -27,6 +27,9 @@ from scripts.export_rcmf_appworld_testnormal_audit_13c import (
 from scripts.run_rcmf_appworld_testnormal_reversibility_13a import (
     load_canonical_records,
 )
+from scripts.benchmark_rcmf_appworld_testnormal_efficiency_13a import (
+    raw_reencoding_cache_equivalence_passed,
+)
 from rcmf.training.rcmf_joint_full_bank_9a import AlignedTransitionWriter
 
 
@@ -173,3 +176,10 @@ def test_reversibility_uses_canonical_cache_not_reencoded_values(tmp_path: Path)
     assert torch.equal(records[0].payload, canonical_payload)
     assert provenance["raw_reencoded_key_max_abs"] > 0.0
     assert provenance["raw_reencoded_payload_max_abs"] > 0.0
+
+
+def test_raw_reencoding_cache_equivalence_is_derived_from_every_record() -> None:
+    passing = {"raw_reencoding_exact_cache_match_at_1e_5": True}
+    failing = {"raw_reencoding_exact_cache_match_at_1e_5": False}
+    assert raw_reencoding_cache_equivalence_passed([passing, passing]) is True
+    assert raw_reencoding_cache_equivalence_passed([passing, failing]) is False
