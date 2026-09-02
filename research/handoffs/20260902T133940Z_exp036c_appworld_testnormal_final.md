@@ -147,3 +147,16 @@ fields, behavioral rows, or compilation timing.
 
 No follow-on experiment, training, calibration, portability study, or paper
 automation was started. Lambda was not terminated.
+
+## Final Machine State
+
+- Final end-to-handoff wall span: approximately `36.49h` from the first `_002`
+  attempt start through the terminal safety check.
+- NFS remains mounted; the persistent filesystem reports 168 GiB used (1%).
+- No EXP-036C generation, benchmark, export, or Python model process remains.
+- The obsolete machine-side EXP-036C watchdog and the Codex 20-minute monitor
+  were stopped after final synchronization.
+- H100: 0% utilization, 0 MiB allocated.
+- Historical tmux shells remain idle; none has an active experiment child.
+- Local, GitHub, and Lambda are clean and synchronized. The Lambda instance is
+  safe to terminate, but was not terminated.
