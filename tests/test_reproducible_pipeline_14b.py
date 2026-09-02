@@ -25,7 +25,10 @@ from rcmf.pipeline.validators import (
 )
 from rcmf.benchmarks.appworld.reproducible_config_14b import build_arm_runtime_config
 from rcmf.benchmarks.appworld.reproducible_stages_14b import _arm_from_stage
-from scripts.prepare_rcmf_reproducible_pipeline_14b import load_resolved
+from scripts.prepare_rcmf_reproducible_pipeline_14b import (
+    _add_teacher_token_metadata,
+    load_resolved,
+)
 from scripts.supervise_rcmf_reproducible_pipeline_14b import (
     RECOVERABLE_PARENT_EXIT_CODES,
 )
@@ -119,6 +122,44 @@ def test_appworld_adapter_delegates_serialized_decision_state_rendering(
     )
     assert rendered == [{"role": "user", "content": "canonical"}]
     assert seen["profile"] == "full_demo"
+
+
+def test_teacher_token_metadata_is_fresh_and_untruncated() -> None:
+    from rcmf.benchmarks.appworld.transitions import transition_teacher_section
+    from rcmf.utils.serialization import sha256_text
+
+    class FakeTokenizer:
+        name_or_path = "locked-tokenizer"
+
+        def __init__(self) -> None:
+            self.calls: list[dict[str, object]] = []
+
+        def __call__(self, text: str, **kwargs: object) -> dict[str, list[int]]:
+            self.calls.append({"text": text, **kwargs})
+            return {"input_ids": list(range(len(text.encode("utf-8"))))}
+
+    transition = {
+        "transition_id": "transition-1",
+        "source_task_goal": "goal",
+        "canonical_pre_action_state": "state",
+        "complete_action": "action",
+        "complete_post_action_observation": "observation",
+    }
+    tokenizer = FakeTokenizer()
+    rows = _add_teacher_token_metadata([transition], tokenizer)
+    section = transition_teacher_section(transition)
+
+    assert "teacher_section_tokens" not in transition
+    assert rows[0]["teacher_section_tokens"] == len(section.encode("utf-8"))
+    assert rows[0]["teacher_section_sha256"] == sha256_text(section)
+    assert rows[0]["tokenizer_name_or_path"] == "locked-tokenizer"
+    assert tokenizer.calls == [
+        {
+            "text": section,
+            "truncation": False,
+            "add_special_tokens": False,
+        }
+    ]
 
 
 def test_arm_diff_rejects_scientific_change() -> None:

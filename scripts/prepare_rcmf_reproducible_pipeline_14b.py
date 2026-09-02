@@ -20,6 +20,7 @@ import yaml
 import _bootstrap  # noqa: F401
 from rcmf.pipeline.contracts import ArmContract, PipelineContract
 from rcmf.benchmarks.appworld.reproducible_config_14b import build_arm_runtime_config
+from rcmf.benchmarks.appworld.transitions import transition_teacher_section
 from rcmf.pipeline.manifests import content_sha256, file_identity
 from rcmf.pipeline.stage_graph import build_exp037a_stage_graph
 from rcmf.pipeline.validators import validate_resolved_arm_diff
@@ -37,6 +38,7 @@ from rcmf.utils.serialization import (
     ensure_dir,
     read_jsonl,
     sha256_file,
+    sha256_text,
     write_jsonl,
 )
 from scripts.prepare_procedural_coverage_6g import _full_transition_signatures
@@ -201,6 +203,32 @@ def _parent_split(transitions: Sequence[Mapping[str, Any]], downstream: Mapping[
     }
 
 
+def _add_teacher_token_metadata(
+    transitions: Sequence[Mapping[str, Any]], tokenizer: Any
+) -> list[dict[str, Any]]:
+    """Derive context metadata directly from authoritative transition text."""
+    rows: list[dict[str, Any]] = []
+    tokenizer_name = str(getattr(tokenizer, "name_or_path", "unknown"))
+    for transition in transitions:
+        row = dict(transition)
+        section = transition_teacher_section(row)
+        tokenized = tokenizer(
+            section,
+            truncation=False,
+            add_special_tokens=False,
+        )
+        input_ids = tokenized["input_ids"]
+        row.update(
+            {
+                "teacher_section_tokens": len(input_ids),
+                "teacher_section_sha256": sha256_text(section),
+                "tokenizer_name_or_path": tokenizer_name,
+            }
+        )
+        rows.append(row)
+    return rows
+
+
 def rebuild_shared_cpu(config: Mapping[str, Any], root: Path) -> dict[str, Any]:
     pipeline = config["pipeline"]
     source_root = Path(str(pipeline["roots"]["authoritative_corpus"]))
@@ -212,6 +240,13 @@ def rebuild_shared_cpu(config: Mapping[str, Any], root: Path) -> dict[str, Any]:
     all_transitions = list(read_jsonl(source_root / "transition_manifest.jsonl"))
     transitions = [row for row in all_transitions if task_split[str(row["parent_task_id"])] == "train"]
     transitions = sorted(transitions, key=lambda row: str(row["transition_id"]))
+    from transformers import AutoTokenizer
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        str(pipeline["roots"]["model_snapshot"]),
+        trust_remote_code=True,
+    )
+    transitions = _add_teacher_token_metadata(transitions, tokenizer)
     downstream = json.loads(Path(str(pipeline["roots"]["approved_downstream_split"])).read_text(encoding="utf-8"))
     parent_split = _parent_split(transitions, downstream)
     query_rows, query_by_id = _query_signatures(examples, task_split)
@@ -324,6 +359,12 @@ def rebuild_shared_cpu(config: Mapping[str, Any], root: Path) -> dict[str, Any]:
         "cv_updates_per_arm": total_cv_updates,
         "fresh_outputs": {
             name: file_identity(shared / name) for name in outputs
+        },
+        "teacher_section_metadata": {
+            "derivation": "transition_teacher_section_then_locked_tokenizer_without_special_tokens_or_truncation",
+            "source": "authoritative_transition_manifest",
+            "tokenizer_name_or_path": str(getattr(tokenizer, "name_or_path", "unknown")),
+            "row_count": len(transitions),
         },
         "historical_derived_artifact_loaded": False,
     }
