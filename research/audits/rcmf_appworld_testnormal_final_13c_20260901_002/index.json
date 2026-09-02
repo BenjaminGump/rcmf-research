@@ -78,6 +78,33 @@
       "success_count": 42,
       "task_count": 168,
       "validation_logical_sha256": "91dd27a749c17d111ba05c88ea6bc12d1718a3696c6d82b35fe0828fb3151374"
+    },
+    "FULL1D-C": {
+      "attempt_id": "exp036c-formal-full1d-c-001",
+      "deployment_field_sha256": "f7fb2f873425cb3792a12dd84bda0d6d1008061f8235d95df687a78dd2cab169",
+      "git_safe_attempt_snapshot": {
+        "path": "research/results/exp036c_appworld_testnormal_final/condition_checkpoints/FULL1D-C/attempts_snapshot.jsonl",
+        "sha256": "14fa70680606648c9dda47bb031dc9b1310477a5630cde7ec522dfcf5d1d3f0a"
+      },
+      "git_safe_per_task": {
+        "path": "research/results/exp036c_appworld_testnormal_final/condition_checkpoints/FULL1D-C/per_task.jsonl",
+        "sha256": "ef6f809f11944d187115c0f918ef3b764066e4b35188a212b64fe77bfb942e20"
+      },
+      "git_safe_summary": {
+        "path": "research/results/exp036c_appworld_testnormal_final/condition_checkpoints/FULL1D-C/summary.json",
+        "sha256": "20ccfd04ebb7907353f6b55ffcf00110ab2e2e9e3db75b33010986ca0521eb74"
+      },
+      "git_safe_validation": {
+        "path": "research/results/exp036c_appworld_testnormal_final/condition_checkpoints/FULL1D-C/validation.json",
+        "sha256": "090fce0d9dd73168ccc4cba6d83e508169f9aa6663812f873627b84e305170b4"
+      },
+      "query_encoder_sha256": "fe809bcb634ea5bcda37525e92f2fdfce9659377051bfb67339ef5404c3e97fb",
+      "raw_lambda_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13c_20260901_002/formal/conditions/FULL1D-C",
+      "raw_summary_logical_sha256": "382e5d88d0c14f5e780902de59d76af50460625bc235a64ab0730bcab4001479",
+      "status": "validated_complete",
+      "success_count": 40,
+      "task_count": 168,
+      "validation_logical_sha256": "01cc684f7f2927e4c636f01074b2726fba328a3c39ac07c1010351c21d27bfa1"
     }
   },
   "formal_condition_count": 5,
@@ -88,6 +115,6 @@
   "raw_lambda_root": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13c_20260901_002",
   "run_uuid": "rcmf_appworld_testnormal_final_13c_20260901_002",
   "status": "formal_execution_in_progress",
-  "trajectory_count_completed": 504,
+  "trajectory_count_completed": 672,
   "trajectory_count_required": 840
 }
