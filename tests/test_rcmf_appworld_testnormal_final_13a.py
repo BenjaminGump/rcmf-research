@@ -22,6 +22,7 @@ from rcmf.training.rcmf_joint_full_bank_9a import (
 )
 from scripts.benchmark_rcmf_appworld_testnormal_efficiency_13a import (
     compilation_phase,
+    greedy_profile_once,
     timed_cuda,
     timing_summary,
 )
@@ -185,6 +186,14 @@ def test_raw_reencoding_keeps_identity_hard_and_numeric_drift_diagnostic() -> No
     assert "Raw transition text/token provenance differs" in source
     assert "raw_reencoding_exact_cache_match_at_1e_5" in source
     assert "Raw transition re-encoding differs from frozen cache" not in source
+
+
+def test_ttft_profiler_initializes_generation_cache_position() -> None:
+    source = inspect.getsource(greedy_profile_once)
+    initialization = "_get_initial_cache_position"
+    update = "_update_model_kwargs_for_generation"
+    assert initialization in source
+    assert source.index(initialization) < source.index(update)
 
 
 def test_reversible_field_keeps_fixed_shape_and_round_trips() -> None:

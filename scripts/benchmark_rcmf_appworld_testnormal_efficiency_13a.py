@@ -420,6 +420,9 @@ def greedy_profile_once(
             "attention_mask": attention_mask,
             "use_cache": True,
         }
+        kwargs = backend.model._get_initial_cache_position(
+            int(input_ids.shape[1]), input_ids.device, kwargs
+        )
         prefill_start = torch.cuda.Event(enable_timing=True)
         prefill_end = torch.cuda.Event(enable_timing=True)
         prefill_start.record()
