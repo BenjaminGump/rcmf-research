@@ -912,8 +912,9 @@ def main() -> None:
         "intent_predictions",
         "state_cache",
         "transition_cache",
-        "parent_training",
     )
+    if args.phase == "train":
+        required += ("parent_training",)
     gate_required = (
         args.phase != "teacher" or "stage_c_11b" not in cfg.raw
     )

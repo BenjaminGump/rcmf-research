@@ -1,0 +1,12 @@
+benchmark_adapter:
+  class: replace.with.YourAdapter
+  prompt_profiles:
+    reference: replace-with-reference-profile
+    intervention: replace-with-intervention-profile
+  authoritative_trajectory_source: replace-with-content-addressed-source
+  split_manifest: replace-with-approved-split-manifest
+  lineage_keys: [task, episode, replay, lineage]
+  action_executor: replace-with-executor
+  evaluator: replace-with-authoritative-evaluator
+  audit_redaction: replace-with-secret-safe-redactor
+

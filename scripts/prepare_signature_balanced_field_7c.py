@@ -360,6 +360,73 @@ def _multiview_preflight(
     renderer_version: str,
     settings: Mapping[str, Any],
 ) -> dict[str, Any]:
+    if bool(settings["multiview_cache"].get("fresh_rebuild_without_old_cache", False)):
+        recomputed_states = [
+            state_example_id(index, example)
+            for index, example in enumerate(examples)
+        ]
+        recomputed_transitions = [str(row["transition_id"]) for row in transitions]
+        expected = settings["expected"]
+        checks = {
+            "reused_states": int(settings["multiview_cache"]["expected_reused_states"]) == 0,
+            "recomputed_states": len(recomputed_states)
+            == int(settings["multiview_cache"]["expected_recomputed_states"]),
+            "reused_transitions": int(
+                settings["multiview_cache"]["expected_reused_transitions"]
+            )
+            == 0,
+            "recomputed_transitions": len(recomputed_transitions)
+            == int(settings["multiview_cache"]["expected_recomputed_transitions"]),
+            "state_total": len(examples)
+            == int(expected["train_decisions"])
+            + int(expected["validation_decisions"]),
+            "transition_total": len(transitions)
+            == int(expected["train_transitions"]),
+        }
+        if not all(checks.values()):
+            raise ValueError(f"Fresh multiview preflight differs: {checks}")
+        new_rows = len(recomputed_states) + len(recomputed_transitions)
+        runtime = {
+            name: {
+                "new_qwen_forward_count": new_rows,
+                "h100_hours": new_rows * float(seconds) / 3600.0,
+                "wall_hours": new_rows * float(seconds) / 3600.0,
+            }
+            for name, seconds in settings["multiview_cache"][
+                "runtime_seconds_per_new_row"
+            ].items()
+        }
+        threshold = float(
+            settings["multiview_cache"]["review_threshold_h100_hours"]
+        )
+        return {
+            "format": "clean_multiview_provenance_preflight_7c_v1",
+            "checks": checks,
+            "state": {
+                "total": len(examples),
+                "reused": 0,
+                "recomputed": len(recomputed_states),
+                "recomputed_ids": sorted(recomputed_states),
+            },
+            "transition": {
+                "total": len(transitions),
+                "reused": 0,
+                "recomputed": len(recomputed_transitions),
+                "recomputed_ids": sorted(recomputed_transitions),
+            },
+            "new_qwen_forward_count": new_rows,
+            "runtime_projection": runtime,
+            "projected_artifact_bytes": new_rows
+            * int(settings["multiview_cache"]["artifact_bytes_per_row"]),
+            "review_threshold_h100_hours": threshold,
+            "requires_explicit_runtime_approval": runtime["expected"]["h100_hours"]
+            > threshold,
+            "resume_plan": (
+                "atomic per-row tensors; aggregate written only after every row hash "
+                "validates; attempt ledger records the latest row"
+            ),
+            "historical_derived_cache_loaded": False,
+        }
     old_state = torch.load(old_state_path, map_location="cpu", weights_only=False)
     old_transition = torch.load(
         old_transition_path, map_location="cpu", weights_only=False
@@ -588,11 +655,24 @@ def main() -> None:
             settings["multiview_cache"]["old_transition_cache"]
         ),
     }
-    for name, path in paths.items():
+    fresh_rebuild = bool(
+        settings["multiview_cache"].get("fresh_rebuild_without_old_cache", False)
+    )
+    required_paths = {
+        name: path
+        for name, path in paths.items()
+        if not (
+            fresh_rebuild
+            and name in {"old_state_multiview", "old_transition_multiview"}
+        )
+    }
+    for name, path in required_paths.items():
         if not path.exists():
             raise FileNotFoundError(f"Required immutable input missing: {name}={path}")
     config_hash = sha256_file(args.config)
-    data_hashes = {name: sha256_file(path) for name, path in paths.items()}
+    data_hashes = {name: sha256_file(path) for name, path in required_paths.items()}
+    if fresh_rebuild:
+        data_hashes["historical_multiview_cache"] = "not_loaded_fresh_rebuild"
     command_scope = [
         "clean procedural labels",
         "signature-class balancing",

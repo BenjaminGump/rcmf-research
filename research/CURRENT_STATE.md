@@ -20,9 +20,14 @@ CURRENT WORK:
 - Freeze the shared authoritative inputs, two-arm contract, initialization
   snapshots, stage DAG, reproduction gate, audit contract, and exact resume
   behavior.
-- Stop at the single pre-launch approval boundary. No scientific selector CV,
-  paired causal generation, writer/reader training, heldout trajectory, or dev
-  evaluation may begin before explicit user approval.
+- The user has now granted a conditional total authorization with a
+  `200`-wall-hour anomaly ceiling. No scientific selector CV, paired causal
+  generation, writer/reader training, heldout trajectory, or dev evaluation
+  may begin until every frozen preflight gate passes and the approval package
+  is committed and synchronized. Once those gates pass, the event-driven
+  parent must record the machine-readable authorization and launch 3D without
+  another conversational pause; 1D remains conditional on
+  `THREE_DEMO_REPRODUCTION_PASS`.
 
 Last updated: 2026-09-03.
 

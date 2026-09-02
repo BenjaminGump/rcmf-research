@@ -400,6 +400,19 @@ def _build_components(device: torch.device) -> tuple[nn.Module, nn.Module]:
     torch.use_deterministic_algorithms(True, warn_only=False)
     writer = AlignedTransitionWriter().to(device=device, dtype=torch.float32)
     reader = StandardFieldCrossAttentionReader().to(device=device, dtype=torch.float32)
+    writer_initial = os.environ.get("RCMF_WRITER_INITIAL_PATH")
+    reader_initial = os.environ.get("RCMF_READER_INITIAL_PATH")
+    if bool(writer_initial) != bool(reader_initial):
+        raise RuntimeError("Writer and reader initialization paths must be paired")
+    if writer_initial and reader_initial:
+        writer.load_state_dict(
+            torch.load(writer_initial, map_location="cpu", weights_only=False),
+            strict=True,
+        )
+        reader.load_state_dict(
+            torch.load(reader_initial, map_location="cpu", weights_only=False),
+            strict=True,
+        )
     return writer, reader
 
 
@@ -1004,6 +1017,10 @@ def _train(
     for epoch in (1, 2):
         schedule.extend(_ordered_epoch_units(unit_manifest, epoch))
         epoch_boundaries.append(len(schedule))
+    stop_after_epoch = int(os.environ.get("RCMF_TRAIN_STOP_AFTER_EPOCH", "2"))
+    if stop_after_epoch not in (1, 2):
+        raise ValueError("RCMF_TRAIN_STOP_AFTER_EPOCH must be 1 or 2")
+    schedule_limit = epoch_boundaries[stop_after_epoch - 1]
     unit_ids = [f"e{1 if index < epoch_boundaries[0] else 2}:{row['unit_id']}" for index, row in enumerate(schedule)]
     source_hashes = {
         "source_cache": sha256_file(paths["source_cache"]),
@@ -1059,7 +1076,9 @@ def _train(
     started = time.perf_counter()
     checkpoint_every = int(settings["training"]["checkpoint_every_units"])
     epoch_metrics: dict[int, list[dict[str, float]]] = {1: [], 2: []}
-    for cursor in range(completed, len(schedule)):
+    if completed > schedule_limit:
+        raise ValueError("Resume checkpoint is beyond the requested epoch boundary")
+    for cursor in range(completed, schedule_limit):
         epoch = 1 if cursor < epoch_boundaries[0] else 2
         if cursor == epoch_boundaries[0]:
             shuffle_nll = {}
@@ -1197,7 +1216,7 @@ def _train(
                 latest_validated_checkpoint=str(checkpoint_path),
             )
     checkpoints = []
-    for epoch in (1, 2):
+    for epoch in range(1, stop_after_epoch + 1):
         path = paths["checkpoints"] / f"epoch_{epoch:02d}.pt"
         checkpoints.append(
             {"epoch": epoch, "path": str(path), "sha256": sha256_file(path)}
@@ -1205,9 +1224,9 @@ def _train(
     summary = {
         "format": "rcmf_joint_full_bank_training_summary_9a_v1",
         "global_seed": GLOBAL_SEED,
-        "epoch_count": 2,
-        "completed_units": len(schedule),
-        "backward_count": len(schedule),
+        "epoch_count": stop_after_epoch,
+        "completed_units": schedule_limit,
+        "backward_count": schedule_limit,
         "checkpoints": checkpoints,
         "writer_parameters": sum(parameter.numel() for parameter in writer.parameters()),
         "reader_parameters": sum(parameter.numel() for parameter in reader.parameters()),
@@ -1215,9 +1234,14 @@ def _train(
         "every_scientific_forward_used_complete_task_legal_field": True,
         "runtime_memory_retrieval_used": False,
         "elapsed_seconds_this_attempt": time.perf_counter() - started,
-        "passed": len(checkpoints) == 2,
+        "passed": len(checkpoints) == stop_after_epoch,
     }
-    atomic_write_json(paths["training_summary"], summary)
+    summary_path = (
+        paths["training_summary"]
+        if stop_after_epoch == 2
+        else paths["checkpoints"] / "epoch_01_stage_summary.json"
+    )
+    atomic_write_json(summary_path, summary)
     return summary
 
 def _validation_condition_path(
@@ -1473,7 +1497,11 @@ def main() -> None:
             result = _train(
                 cfg=cfg, settings=settings, paths=paths, attempt=attempt
             )
-            latest = paths["training_summary"]
+            latest = (
+                paths["training_summary"]
+                if int(os.environ.get("RCMF_TRAIN_STOP_AFTER_EPOCH", "2")) == 2
+                else paths["checkpoints"] / "epoch_01_stage_summary.json"
+            )
         else:
             _require(
                 paths,

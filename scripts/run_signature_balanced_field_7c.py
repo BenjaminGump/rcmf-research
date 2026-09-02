@@ -107,6 +107,22 @@ def _selector(
     return model
 
 
+def _load_initial_selector(
+    model: SignatureBalancedFieldSelector,
+    settings: Mapping[str, Any],
+    filename: str,
+) -> None:
+    """Load an optional content-addressed initial state without changing defaults."""
+    root = settings.get("initialization_root")
+    if root is None:
+        return
+    path = Path(str(root)) / filename
+    if not path.exists():
+        raise FileNotFoundError(f"Required selector initialization is missing: {path}")
+    state = torch.load(path, map_location="cpu", weights_only=False)
+    model.load_state_dict(state, strict=True)
+
+
 def _subset_representations(
     payload: Mapping[str, Any], ids: Sequence[str], layer: str
 ) -> Tensor:
@@ -659,6 +675,11 @@ def _cv_candidate(
             int(settings["cv_seed"]), candidate["name"], fold_index
         )
         model = _selector(settings, model_seed)
+        _load_initial_selector(
+            model,
+            settings,
+            f"selector_cv_{candidate['name']}_fold_{fold_index}.pt",
+        )
         checkpoint = output_root / f"candidate_{candidate_index}/fold_{fold_index}.pt"
         resume = None
         if checkpoint.exists():
@@ -1187,6 +1208,15 @@ def main() -> None:
             "b_c_d_e_inspected_for_selection": False,
         }
         atomic_write_json(cv_root / "a_only_cv_report.json", cv_report)
+        if os.environ.get("RCMF_SELECTOR_STOP_AFTER_CV") == "1":
+            attempt.progress(
+                status="a_only_grouped_cv_complete",
+                latest_validated_checkpoint=str(
+                    cv_root / "a_only_cv_report.json"
+                ),
+            )
+            print(json.dumps(cv_report, indent=2, sort_keys=True), flush=True)
+            return
         final_state_ids = sorted(
             {str(row["state_example_id"]) for row in labels_a}
         )
@@ -1212,6 +1242,11 @@ def main() -> None:
         for seed in selector_settings["final_seeds"]:
             seed = int(seed)
             model = _selector(selector_settings, seed)
+            _load_initial_selector(
+                model,
+                selector_settings,
+                f"selector_final_seed_{seed}.pt",
+            )
             checkpoint = output_root / f"seed_{seed}/field_selector.pt"
             checkpoint.parent.mkdir(parents=True, exist_ok=True)
             resume = None

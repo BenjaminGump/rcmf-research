@@ -188,6 +188,9 @@ class LiveFieldQueryEncoder:
         parent = Path(str(settings["parent_exp025c"]))
         ensemble_path = parent / "selector/ensemble_scores.pt"
         expected = str(settings["expected"]["selector_ensemble_sha256"])
+        if expected == "fresh_stage_output":
+            summary = _json(parent / "selector/selector_summary.json")
+            expected = str(summary["ensemble"]["sha256"])
         if sha256_file(ensemble_path) != expected:
             raise ValueError("Frozen selector ensemble SHA differs")
         ensemble = torch.load(ensemble_path, map_location="cpu", weights_only=False)

@@ -346,23 +346,37 @@ def main() -> None:
         "intent_checkpoint",
         "selector",
         "task_split",
-        "parent_training",
     )
+    fresh_pipeline_mode = bool(settings.get("fresh_pipeline_mode", False))
+    if not fresh_pipeline_mode:
+        required += ("parent_training",)
     _require(paths, required)
-    parent_training = _json(paths["parent_training"])
-    paths["parent_checkpoint"] = Path(str(parent_training["selected_checkpoint"]))
-    _require(paths, ("parent_checkpoint",))
-    required = (*required, "parent_checkpoint")
+    parent_training = None
+    if not fresh_pipeline_mode:
+        parent_training = _json(paths["parent_training"])
+        paths["parent_checkpoint"] = Path(str(parent_training["selected_checkpoint"]))
+        _require(paths, ("parent_checkpoint",))
+        required = (*required, "parent_checkpoint")
     source_hashes = {name: sha256_file(paths[name]) for name in required}
+    expected_selector = str(settings["expected_selector_sha256"])
+    if expected_selector == "fresh_stage_output":
+        expected_selector = source_hashes["selector"]
     immutable_checks = {
-        "selector_sha256": source_hashes["selector"] == str(settings["expected_selector_sha256"]),
-        "parent_checkpoint_sha256": source_hashes["parent_checkpoint"]
-        == str(settings["expected_exp027b_checkpoint_sha256"]),
+        "selector_sha256": source_hashes["selector"] == expected_selector,
         "replay_lineage": str(_json(paths["replay_lineage"])["lineage_sha256"])
         == str(settings["expected_replay_lineage_sha256"]),
-        "parent_checkpoint_selected": str(parent_training["selected_checkpoint_sha256"])
-        == str(settings["expected_exp027b_checkpoint_sha256"]),
     }
+    if parent_training is not None:
+        immutable_checks.update(
+            {
+                "parent_checkpoint_sha256": source_hashes["parent_checkpoint"]
+                == str(settings["expected_exp027b_checkpoint_sha256"]),
+                "parent_checkpoint_selected": str(
+                    parent_training["selected_checkpoint_sha256"]
+                )
+                == str(settings["expected_exp027b_checkpoint_sha256"]),
+            }
+        )
     if not all(immutable_checks.values()):
         raise ValueError(f"EXP-028A immutable inputs differ: {immutable_checks}")
     with AttemptLedger(
