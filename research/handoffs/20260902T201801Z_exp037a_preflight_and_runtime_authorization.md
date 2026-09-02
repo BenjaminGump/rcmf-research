@@ -14,6 +14,8 @@ same one-demo pipeline only after exact `THREE_DEMO_REPRODUCTION_PASS`.
 - Run UUID: `rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001`
 - Seed: `25101`
 - Preflight authorization: all checks passed
+- Formal launch UTC: `2026-09-02T20:23:02.803442+00:00`
+- Persistent sessions: `exp037a_repro_14b`, `exp037a_watchdog_14b`
 - Recommended hard cap: `160 h`
 - Approved hard cap: `200 h`
 
@@ -36,16 +38,19 @@ The expected complete wall time is `47.5 h` if 1D launches; conservative time
 is `92 h`; expected H100-active time is `39 h`. Expected/conservative storage
 is `46/90 GiB`. No local Lambda hourly rate was available for a cost estimate.
 
-After this approval packet is committed and pushed, the Lambda checkout at the
-scientific source SHA may write the machine-readable runtime authorization and
-launch persistent tmux sessions for the parent scheduler and 20-minute
-read-only watchdog. Ordinary recoverable infrastructure failures close their
-attempt and exact-resume without changing scientific parameters.
+The approval packet was committed and pushed before launch. The Lambda
+checkout at the scientific source SHA then wrote the machine-readable runtime
+authorization and launched persistent tmux sessions for the parent scheduler
+and 20-minute read-only watchdog. The first health check found the worker at
+`S05_transition_representations` with an active H100 process. Ordinary
+recoverable infrastructure failures close their attempt and exact-resume
+without changing scientific parameters.
 
 ## Sources of truth
 
 - Report: `research/results/EXP_037A_PREFLIGHT.md`
 - Git-safe index: `research/results/exp037a_reproducible_pipeline_preflight/index.json`
+- Runtime authorization: `research/results/exp037a_reproducible_pipeline_preflight/runtime_authorization.json`
 - Authorization plan: `research/plans/EXP_037A_CONDITIONAL_RUNTIME_AUTHORIZATION.md`
 - Pipeline config: `configs/pipeline/rcmf_appworld_repro_14b.yaml`
 - Stage DAG implementation: `rcmf/pipeline/stage_graph.py`

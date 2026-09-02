@@ -53,6 +53,11 @@
       "size_bytes": 6606
     },
     {
+      "path": "research/results/exp037a_reproducible_pipeline_preflight/runtime_authorization.json",
+      "sha256": "1ad68067c7b4aee2b01c9d977e73c878c195de08e7ae991419712001f4ae71f8",
+      "size_bytes": 1034
+    },
+    {
       "path": "research/results/exp037a_reproducible_pipeline_preflight/runtime_preflight.json",
       "sha256": "bcafeb32af99060ddc74751a88449c818e368a043e719dacb002132f1e9bd7be",
       "size_bytes": 40787

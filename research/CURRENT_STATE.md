@@ -21,9 +21,10 @@ VERIFIED:
 
 CURRENT WORK:
 
-- Commit and push the content-addressed Git-safe preflight packet, then write
-  the machine-readable runtime authorization and immediately launch the 3D
-  parent orchestrator in persistent tmux.
+- The content-addressed Git-safe preflight packet was committed and pushed.
+  The machine-readable runtime authorization was written at
+  `2026-09-02T20:23:02.803442+00:00`, and the 3D parent orchestrator launched
+  in persistent tmux.
 - The event-driven parent owns stage progression. The 20-minute monitor is
   read-only. The 1D arm remains conditional on exact
   `THREE_DEMO_REPRODUCTION_PASS`.

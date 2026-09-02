@@ -3,11 +3,13 @@
 ## Status
 
 **VERIFIED:** all nine conditional runtime-authorization gates passed. The
-frozen three-demo reproduction run is authorized to launch automatically after
-this Git-safe approval package is committed and pushed.
+frozen three-demo reproduction run launched in persistent tmux at
+`2026-09-02T20:23:02.803442+00:00` after the Git-safe approval package was
+committed and pushed.
 
-This is a preflight record, not a scientific result. No formal EXP-037A stage
-had run when this packet was sealed.
+This is a preflight and launch record, not a scientific result. The initial
+post-launch health check found the event-driven pipeline at
+`S05_transition_representations`, with the H100 worker using about `36.5 GiB`.
 
 ## Frozen identities
 
@@ -114,6 +116,11 @@ resume at the first incomplete stage.
 
 The 20-minute monitor is read-only. Only the event-driven parent scheduler may
 advance stages. Exactly `THREE_DEMO_REPRODUCTION_PASS` may launch the 1D arm.
+
+The machine-readable runtime authorization has SHA256
+`1ad68067c7b4aee2b01c9d977e73c878c195de08e7ae991419712001f4ae71f8`.
+Its nine launch checks are all true, its source is the user's conditional total
+authorization, and it fixes the anomaly ceiling at `200 h`.
 
 ## Artifacts
 

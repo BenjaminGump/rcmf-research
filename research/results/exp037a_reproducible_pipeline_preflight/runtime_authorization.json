@@ -1,0 +1,26 @@
+{
+  "authorization_source": "user_conditional_total_authorization",
+  "authorized": true,
+  "authorized_at_utc": "2026-09-02T20:23:02.803423+00:00",
+  "checks": {
+    "all_preflight_checks": true,
+    "approval_package_authorized": true,
+    "approved_cap_is_200": true,
+    "clean_checkout": true,
+    "contract_hash_valid": true,
+    "one_global_seed": true,
+    "persistent_mount": true,
+    "recommended_cap_at_most_200": true,
+    "source_commit": true
+  },
+  "contract_sha256": "42b8e5f5cc84749832c45387061bd28b8d109ac7859923292e09f8daf2abb97f",
+  "format": "exp037a_runtime_authorization_14b_v1",
+  "gate_to_one_demo_target_seconds": 60,
+  "hard_cap_hours": 200.0,
+  "monitor_is_scheduler": false,
+  "preflight_summary_sha256": "47e3b89024e7b1d7da9cdb32cc50b055de2fecbe5241990fe4f5d53d6f15bf5a",
+  "recommended_hard_cap_hours": 160.0,
+  "run_started_utc": "2026-09-02T20:23:02.803442+00:00",
+  "scope": "complete_3d_then_1d_only_on_THREE_DEMO_REPRODUCTION_PASS",
+  "source_commit": "02ef94726ea0fe566f7eea4fa137fb91da92977f"
+}
