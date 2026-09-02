@@ -1,5 +1,31 @@
 # Current State
 
+## 2026-09-03 EXP-037A Reproducible 3D-Gated Pipeline Preflight
+
+VERIFIED:
+
+- EXP-036C is preserved at
+  `53a1c583574d249d63b91a28fbb20ae17a7037b3`; local, GitHub, and Lambda
+  started clean and at that exact commit, with no active experiment process.
+- Archive branch `archive/exp036c-testnormal-final-53a1c583` and annotated tag
+  `exp036c-testnormal-final-verified-53a1c583` preserve the starting state.
+- EXP-037A is approved only through implementation, tests, bounded technical
+  smoke, runtime/cost/storage preflight, and a committed approval packet.
+
+CURRENT WORK:
+
+- Build one benchmark-independent, content-addressed, event-driven pipeline
+  around the validated historical selector and writer/field/reader
+  mathematics.
+- Freeze the shared authoritative inputs, two-arm contract, initialization
+  snapshots, stage DAG, reproduction gate, audit contract, and exact resume
+  behavior.
+- Stop at the single pre-launch approval boundary. No scientific selector CV,
+  paired causal generation, writer/reader training, heldout trajectory, or dev
+  evaluation may begin before explicit user approval.
+
+Last updated: 2026-09-03.
+
 ## 2026-09-02 EXP-036C Complete Test-Normal Evaluation
 
 VERIFIED:

@@ -406,3 +406,82 @@ sweeps, or ensemble training unless the user explicitly changes this policy.
   introduced.
 - No follow-on experiment, retraining, calibration, portability study, or
   paper automation starts automatically after EXP-036C.
+
+## EXP-037A Reproducible 3D-Gated Pipeline Charter v1
+
+### Problem Definition And Contribution
+
+- Raw complete transition memories remain an editable human-readable ledger.
+  Each memory is feed-forward compiled into an independently addable and
+  removable contribution to a fixed-dimensional whole-bank field.
+- Deployment memory addition cannot train on or scan the existing bank, and
+  deployment read shape and complexity cannot depend on memory count.
+- The contribution under test is the reusable writer, reversible compiled
+  field, fixed-size state-conditioned read, and frozen-policy reader
+  framework. Cross-attention itself is not claimed as an RCMF contribution.
+
+### Generality Contract
+
+- Generic pipeline code is benchmark-independent. Benchmark-specific logic is
+  confined to a compact adapter, prompt/rendering assets, environment
+  execution, task evaluation, leakage/lineage definitions, and optional
+  selector supervision.
+- The generic core cannot know about apps, APIs, `apis.<app>.<api>`,
+  API-documentation actions, AppWorld task IDs, procedural tiers, or AppWorld
+  evaluator fields. Porting may require a compact adapter, not changes to the
+  writer/field/reader mathematics or orchestration.
+
+### Scientific And Evaluation Scope
+
+- EXP-037A first reproduces the historical three-demo pipeline from
+  authoritative source data. The same pipeline runs the one-demo arm only
+  after `THREE_DEMO_REPRODUCTION_PASS`.
+- The only intended inter-arm variable is the task-conditioned prompt profile:
+  `full_demo` for Arm 3D and `full_demo_first_only` for Arm 1D. Both fresh
+  packages receive final deployment evaluation under the same one-demo prompt.
+- Selector candidate selection uses historical A-cell grouped CV only.
+  Writer/reader checkpoint selection uses the immutable heldout-train tasks
+  only. Official AppWorld dev cannot alter either arm, and Test-Normal is not
+  rerun in EXP-037A.
+- Every paired causal condition and complete agent trajectory requires a
+  reconstructible audit record.
+
+### Prohibited Shortcuts
+
+- Historical trained selectors, q/k tensors, writers, readers, checkpoints,
+  fields, state/transition caches, labels, paired outcomes, policy teachers,
+  zero caches, and training-unit manifests cannot initialize or otherwise
+  serve as scientific inputs to either fresh arm. Historical artifacts are
+  read-only comparison inputs only after fresh three-demo outputs are sealed.
+- Retrieval, top-k, FAISS, runtime per-memory scoring, raw-memory student
+  prompts, gates, Q90, field scaling, arbitrary truncation, token subsampling,
+  and separate scientific implementations for the two arms are prohibited.
+
+### Execution Contract
+
+- A persistent event-driven parent orchestrator owns the stage DAG. It waits
+  directly for child completion, validates each atomic stage result, and
+  launches the next eligible stage without waiting for monitoring, Git, Codex,
+  ChatGPT, or user interaction.
+- The separate watchdog is read-only and checks exactly every 20 minutes;
+  machine heartbeat cadence is 240 seconds. Monitoring cannot launch stages,
+  acquire the scientific lock, select checkpoints, or modify manifests.
+- The long scientific run starts only after implementation, tests, bounded
+  smoke, exact runtime/storage/cost preflight, committed manifests, and one
+  explicit user approval. The approved hard cap is an anomaly ceiling and is
+  at least twice the expected complete runtime.
+
+### Sources Of Truth
+
+- Pipeline contract: `rcmf/pipeline/contracts.py`
+- Benchmark adapter protocol: `rcmf/pipeline/adapter.py`
+- AppWorld adapter: `rcmf/benchmarks/appworld/pipeline_adapter.py`
+- Stage DAG: `configs/pipeline/rcmf_appworld_repro_14b.yaml`
+- Orchestrator and scheduler: `rcmf/pipeline/orchestrator.py` and
+  `rcmf/pipeline/scheduler.py`
+- Resolved arm configs: `configs/pipeline/rcmf_appworld_arm_3d_14b.yaml` and
+  `configs/pipeline/rcmf_appworld_arm_1d_14b.yaml`
+- Gate definition and validators: `rcmf/pipeline/validators.py`
+- Launcher: `scripts/run_rcmf_reproducible_pipeline_14b.py`
+- Raw Lambda root and Git-safe audit index are frozen by the preflight
+  manifest; the structured handoff is published under `research/handoffs/`.
