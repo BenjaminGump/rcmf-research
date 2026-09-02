@@ -1,0 +1,269 @@
+{
+  "appworld_test_normal": {
+    "B0": {
+      "success_count": 44,
+      "success_rate": 0.2619047619047619,
+      "task_count": 168
+    },
+    "BEST-C": {
+      "success_count": 48,
+      "success_rate": 0.2857142857142857,
+      "task_count": 168
+    },
+    "BEST-S": {
+      "success_count": 42,
+      "success_rate": 0.25,
+      "task_count": 168
+    },
+    "FULL1D-C": {
+      "success_count": 40,
+      "success_rate": 0.23809523809523808,
+      "task_count": 168
+    },
+    "FULL1D-S": {
+      "success_count": 48,
+      "success_rate": 0.2857142857142857,
+      "task_count": 168
+    }
+  },
+  "formal_efficiency": {
+    "complete": true,
+    "components": {
+      "compilation": "370581717bf8e9d794d47df7ddae659c3b1814cd3a0f166ee85682b44019ae2a",
+      "scaling": "c3f27f05852a2f3fd6da160665159f37ea8d6a0ea49236af62ff12045e5d06fd",
+      "ttft": "693f7b8f8859bd7e5d8d0a7cea50cbdf768d7c07658c3acdbd6511d53c16270b"
+    },
+    "formal_task_time_is_analytically_separate": true,
+    "format": "rcmf_exp036a_formal_efficiency_13a_v1",
+    "result_sha256": "09d10ef7fe6cb51408af7c378dce69ede856728a9a53e9dce3fb7f7ece35eeeb",
+    "serving_state_sha256": "3b41f0e2cbcc9ced8dc9d50565a99b59fb619ddf35d9f9f66dac4b551a757838"
+  },
+  "format": "rcmf_exp036a_paper_table_values_13a_v1",
+  "numerical_reversibility": {
+    "maximum_absolute_error": {
+      "count": 499,
+      "maximum": 2.384185791015625e-07,
+      "mean": 7.453566801571893e-08,
+      "median": 5.960464477539063e-08,
+      "minimum": 1.4901161193847656e-08,
+      "p95": 2.384185791015625e-07
+    },
+    "relative_frobenius_error": {
+      "count": 499,
+      "maximum": 4.134972036846138e-09,
+      "mean": 7.154080639153114e-10,
+      "median": 5.411293237566175e-10,
+      "minimum": 1.6098616730008158e-10,
+      "p95": 2.576372668553498e-09
+    },
+    "remove_ms": {
+      "count": 499,
+      "maximum": 0.1703999936580658,
+      "mean": 0.08063358716472595,
+      "median": 0.07903999835252762,
+      "minimum": 0.06934399902820587,
+      "p95": 0.09868799820542329
+    },
+    "restore_ms": {
+      "count": 499,
+      "maximum": 0.07574400305747986,
+      "mean": 0.040122356653989916,
+      "median": 0.03891199827194214,
+      "minimum": 0.03404799848794937,
+      "p95": 0.0477599985897541
+    }
+  },
+  "paired_effects": {
+    "BEST-C_minus_B0": {
+      "bootstrap_95_ci": {
+        "analysis_seed": 25101,
+        "lower_95": -0.041666666666666664,
+        "observed": 0.023809523809523808,
+        "replicates": 100000,
+        "upper_95": 0.08928571428571429
+      },
+      "effect_count": 4,
+      "effect_rate": 0.023809523809523808,
+      "exact_mcnemar": {
+        "discordant": 30,
+        "left_only": 17,
+        "right_only": 13,
+        "two_sided_exact_p": 0.584664711728692
+      }
+    },
+    "BEST-C_minus_BEST-S": {
+      "bootstrap_95_ci": {
+        "analysis_seed": 25101,
+        "lower_95": -0.017857142857142856,
+        "observed": 0.03571428571428571,
+        "replicates": 100000,
+        "upper_95": 0.08928571428571429
+      },
+      "effect_count": 6,
+      "effect_rate": 0.03571428571428571,
+      "exact_mcnemar": {
+        "discordant": 22,
+        "left_only": 14,
+        "right_only": 8,
+        "two_sided_exact_p": 0.28627872467041016
+      }
+    },
+    "BEST-C_minus_FULL1D-C": {
+      "bootstrap_95_ci": {
+        "analysis_seed": 25101,
+        "lower_95": -0.023809523809523808,
+        "observed": 0.047619047619047616,
+        "replicates": 100000,
+        "upper_95": 0.11904761904761904
+      },
+      "effect_count": 8,
+      "effect_rate": 0.047619047619047616,
+      "exact_mcnemar": {
+        "discordant": 38,
+        "left_only": 23,
+        "right_only": 15,
+        "two_sided_exact_p": 0.2558750795433298
+      }
+    },
+    "FULL1D-C_minus_B0": {
+      "bootstrap_95_ci": {
+        "analysis_seed": 25101,
+        "lower_95": -0.08928571428571429,
+        "observed": -0.023809523809523808,
+        "replicates": 100000,
+        "upper_95": 0.041666666666666664
+      },
+      "effect_count": -4,
+      "effect_rate": -0.023809523809523808,
+      "exact_mcnemar": {
+        "discordant": 30,
+        "left_only": 13,
+        "right_only": 17,
+        "two_sided_exact_p": 0.584664711728692
+      }
+    },
+    "FULL1D-C_minus_FULL1D-S": {
+      "bootstrap_95_ci": {
+        "analysis_seed": 25101,
+        "lower_95": -0.1130952380952381,
+        "observed": -0.047619047619047616,
+        "replicates": 100000,
+        "upper_95": 0.017857142857142856
+      },
+      "effect_count": -8,
+      "effect_rate": -0.047619047619047616,
+      "exact_mcnemar": {
+        "discordant": 32,
+        "left_only": 12,
+        "right_only": 20,
+        "two_sided_exact_p": 0.21532714972272515
+      }
+    }
+  },
+  "serving_state": {
+    "active_field_state_independent_of_memory_count": true,
+    "claim": "active whole-bank field state and read shape are independent of N; raw ledger and per-record deletion/provenance storage scale with N",
+    "complete_raw_transition_text_bytes": 23559155,
+    "format": "rcmf_exp036a_serving_state_13a_v1",
+    "raw_ledger_and_deletion_state_scale_with_memory_count": true,
+    "result_sha256": "3b41f0e2cbcc9ced8dc9d50565a99b59fb619ddf35d9f9f66dac4b551a757838",
+    "rows": [
+      {
+        "active_field_A_bytes": 7864320,
+        "active_field_B_bytes": 8192,
+        "active_field_total_bytes": 7872512,
+        "archival_total_bytes": 55263,
+        "fixed_reader_parameter_bytes": 71442432,
+        "fixed_selector_checkpoint_bytes": 189240255,
+        "fixed_writer_parameter_bytes": 35799040,
+        "memory_count": 1,
+        "per_record_deletion_state_bytes": 12040,
+        "provenance_allocated_bytes": 3048,
+        "raw_ledger_text_bytes": 40175,
+        "total_model_side_memory_adapter_bytes": 268555199
+      },
+      {
+        "active_field_A_bytes": 7864320,
+        "active_field_B_bytes": 8192,
+        "active_field_total_bytes": 7872512,
+        "archival_total_bytes": 492550,
+        "fixed_reader_parameter_bytes": 71442432,
+        "fixed_selector_checkpoint_bytes": 189240255,
+        "fixed_writer_parameter_bytes": 35799040,
+        "memory_count": 8,
+        "per_record_deletion_state_bytes": 96320,
+        "provenance_allocated_bytes": 24385,
+        "raw_ledger_text_bytes": 371845,
+        "total_model_side_memory_adapter_bytes": 268555199
+      },
+      {
+        "active_field_A_bytes": 7864320,
+        "active_field_B_bytes": 8192,
+        "active_field_total_bytes": 7872512,
+        "archival_total_bytes": 1928429,
+        "fixed_reader_parameter_bytes": 71442432,
+        "fixed_selector_checkpoint_bytes": 189240255,
+        "fixed_writer_parameter_bytes": 35799040,
+        "memory_count": 32,
+        "per_record_deletion_state_bytes": 385280,
+        "provenance_allocated_bytes": 97543,
+        "raw_ledger_text_bytes": 1445606,
+        "total_model_side_memory_adapter_bytes": 268555199
+      },
+      {
+        "active_field_A_bytes": 7864320,
+        "active_field_B_bytes": 8192,
+        "active_field_total_bytes": 7872512,
+        "archival_total_bytes": 7801606,
+        "fixed_reader_parameter_bytes": 71442432,
+        "fixed_selector_checkpoint_bytes": 189240255,
+        "fixed_writer_parameter_bytes": 35799040,
+        "memory_count": 128,
+        "per_record_deletion_state_bytes": 1541120,
+        "provenance_allocated_bytes": 390172,
+        "raw_ledger_text_bytes": 5870314,
+        "total_model_side_memory_adapter_bytes": 268555199
+      },
+      {
+        "active_field_A_bytes": 7864320,
+        "active_field_B_bytes": 8192,
+        "active_field_total_bytes": 7872512,
+        "archival_total_bytes": 15588570,
+        "fixed_reader_parameter_bytes": 71442432,
+        "fixed_selector_checkpoint_bytes": 189240255,
+        "fixed_writer_parameter_bytes": 35799040,
+        "memory_count": 256,
+        "per_record_deletion_state_bytes": 3082240,
+        "provenance_allocated_bytes": 780344,
+        "raw_ledger_text_bytes": 11725986,
+        "total_model_side_memory_adapter_bytes": 268555199
+      },
+      {
+        "active_field_A_bytes": 7864320,
+        "active_field_B_bytes": 8192,
+        "active_field_total_bytes": 7872512,
+        "archival_total_bytes": 31088178,
+        "fixed_reader_parameter_bytes": 71442432,
+        "fixed_selector_checkpoint_bytes": 189240255,
+        "fixed_writer_parameter_bytes": 35799040,
+        "memory_count": 499,
+        "per_record_deletion_state_bytes": 6007960,
+        "provenance_allocated_bytes": 1521063,
+        "raw_ledger_text_bytes": 23559155,
+        "total_model_side_memory_adapter_bytes": 268555199
+      }
+    ],
+    "source_cache_archive_bytes": 69828848
+  },
+  "unsupported": {
+    "ALFWorld": "NOT_RUN",
+    "Experience-LoRA": "NOT_RUN",
+    "ReMe": "NOT_RUN",
+    "TTR": "NOT_RUN",
+    "WebShop": "NOT_RUN",
+    "behavioral_record_deletion": "NOT_RUN",
+    "raw_memory_compilation_retention": "NOT_RUN",
+    "state_query_shuffle_full_task": "NOT_RUN"
+  },
+  "values_sha256": "64c75cee42cb10fab80df6498e2be65e6b277e23ff72854594010eb5412a5035"
+}

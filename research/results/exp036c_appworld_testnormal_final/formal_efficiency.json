@@ -1,0 +1,47 @@
+{
+  "B0": {
+    "environment_execution_seconds": 375.4105621315539,
+    "evaluator_seconds": 285.8314857534133,
+    "mean_peak_allocated_bytes": 19528405775.238094,
+    "mean_peak_reserved_bytes": 27055045875.809525,
+    "measured_model_gpu_active_seconds": 17163.315981874708,
+    "peak_allocated_bytes": 26915579904,
+    "peak_reserved_bytes": 27552382976
+  },
+  "BEST-C": {
+    "environment_execution_seconds": 363.8745466610417,
+    "evaluator_seconds": 280.6812878558412,
+    "mean_peak_allocated_bytes": 25361655905.52381,
+    "mean_peak_reserved_bytes": 56478999698.28571,
+    "measured_model_gpu_active_seconds": 20489.619675767608,
+    "peak_allocated_bytes": 47602254848,
+    "peak_reserved_bytes": 80817946624
+  },
+  "BEST-S": {
+    "environment_execution_seconds": 413.34856811352074,
+    "evaluator_seconds": 283.5429404103197,
+    "mean_peak_allocated_bytes": 25254022296.38095,
+    "mean_peak_reserved_bytes": 58918024923.42857,
+    "measured_model_gpu_active_seconds": 21801.63645640295,
+    "peak_allocated_bytes": 47595744768,
+    "peak_reserved_bytes": 82803949568
+  },
+  "FULL1D-C": {
+    "environment_execution_seconds": 408.00816202908754,
+    "evaluator_seconds": 297.2672838405706,
+    "mean_peak_allocated_bytes": 26136678814.47619,
+    "mean_peak_reserved_bytes": 70725989327.2381,
+    "measured_model_gpu_active_seconds": 20428.306514936965,
+    "peak_allocated_bytes": 47563303424,
+    "peak_reserved_bytes": 83290488832
+  },
+  "FULL1D-S": {
+    "environment_execution_seconds": 397.23906808765605,
+    "evaluator_seconds": 278.9793116035871,
+    "mean_peak_allocated_bytes": 24532035151.238094,
+    "mean_peak_reserved_bytes": 51617314523.42857,
+    "measured_model_gpu_active_seconds": 18210.558979545254,
+    "peak_allocated_bytes": 47355076096,
+    "peak_reserved_bytes": 83980451840
+  }
+}

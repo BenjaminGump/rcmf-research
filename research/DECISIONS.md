@@ -1,5 +1,41 @@
 # Decisions and Deviations
 
+## 2026-09-02 EXP-036C final development result
+
+VERIFIED:
+
+- All 840 frozen Test-Normal trajectories completed. BEST-C reaches `48/168`,
+  versus bare `44/168` and BEST-S `42/168`. FULL1D-C reaches `40/168`, versus
+  FULL1D-S `48/168`.
+- BEST-C's paired point estimates are positive but uncertain: `+0.02381`
+  versus bare (95% CI `[-0.04167, 0.08929]`) and `+0.03571` versus shuffle
+  (95% CI `[-0.01786, 0.08929]`). No paired interval excludes zero.
+- Production algebra checks pass: fixed-size whole-bank read, no runtime scan,
+  and 499-record canonical-cache remove/restore maximum error `2.384186e-7`.
+
+Decision:
+
+- Record EXP-036C as `completed_evaluation_only`. Preserve BEST as the primary
+  preregistered method and FULL1D as the secondary frozen configuration.
+- Do not convert positive BEST point estimates into a confirmatory claim. The
+  split is partially exposed and uncertainty includes zero.
+- Stop for review. No subsequent experiment is authorized by this result.
+
+Implementation deviations:
+
+- The efficiency pilot initially assumed a legacy Qwen hook supplied
+  `cache_position`; commit `10610ac` repaired the profiling hook. Scientific
+  trajectory code and outputs were unchanged.
+- The first reversibility preflight rebuilt from freshly re-encoded BF16
+  representations and failed the canonical-field tolerance. Commit `52692aa`
+  made the audit use immutable source-cache representations plus the frozen
+  deployment writer. The final all-record audit passed.
+- The compilation artifact's aggregate raw-reencoding equivalence flag was
+  hard-coded true even though record-level values were false. Commit
+  `b99a87f` derives the aggregate from all rows. The original artifact was not
+  rewritten; the correction is append-only and has no effect on timing,
+  frozen fields, or behavioral results.
+
 ## 2026-09-01 EXP-036C authorization continuation
 
 VERIFIED:

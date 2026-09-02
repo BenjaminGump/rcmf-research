@@ -1,0 +1,22 @@
+{
+  "atol": 1e-05,
+  "canonical_reversibility_result_sha256": "e081be3b7996f5f5032a4b4ccaa455cdf5ec3a079f66f329571e49ca7bddcc97",
+  "correction_sha256": "97a87cf0c19cbb90facb3398afc7dd8818416012d8de2219c89f963e5885dea6",
+  "format": "rcmf_exp036c_compilation_provenance_correction_v1",
+  "matching_record_count": 0,
+  "mismatching_record_count": 499,
+  "original_artifact_rewritten": false,
+  "original_file_sha256": "6c6cc91c9eb82db530fbd766f97c280fb8210e156449a6e20487ea4839abea5b",
+  "original_lambda_path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_appworld_testnormal_final_13c_20260901_002/efficiency/compilation_results.json",
+  "original_reported_equivalence_passed": true,
+  "original_result_sha256": "370581717bf8e9d794d47df7ddae659c3b1814cd3a0f166ee85682b44019ae2a",
+  "raw_reencoded_key_max_abs": 0.00139625184237957,
+  "raw_reencoded_payload_max_abs": 0.16206932067871094,
+  "raw_reencoding_combined_max_abs": 0.16206932067871094,
+  "raw_reencoding_combined_median_abs": 0.058625221252441406,
+  "recomputed_equivalence_passed": false,
+  "record_count": 499,
+  "run_uuid": "rcmf_appworld_testnormal_final_13c_20260901_002",
+  "scientific_effect": "none_on_frozen_fields_formal_trajectories_or_compilation_timing",
+  "source_fix_commit": "b99a87f"
+}

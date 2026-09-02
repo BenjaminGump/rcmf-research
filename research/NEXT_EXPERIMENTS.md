@@ -1,5 +1,18 @@
 # Next Experiments
 
+## EXP-036C Review Stop
+
+EXP-036C completed all 840 frozen trajectories. BEST-C is `48/168`, compared
+with bare `44/168` and matched shuffle `42/168`; FULL1D-C is `40/168`, compared
+with FULL1D-S `48/168`. BEST's absolute and specificity point estimates are
+positive, leave-one-task-out direction-stable, and spread across task families,
+but their paired confidence intervals include zero.
+
+No next experiment is authorized. The next action is user/ChatGPT review of
+the full per-task audit and paper-claim boundary. Do not start retraining,
+calibration, another prompt or field, portability evaluation, another AppWorld
+split, or paper automation automatically.
+
 ## EXP-036B Runtime Authorization Review Stop
 
 EXP-036B has a valid deterministic harness and a frozen 168-task,

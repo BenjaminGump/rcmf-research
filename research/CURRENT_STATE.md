@@ -1,5 +1,38 @@
 # Current State
 
+## 2026-09-02 EXP-036C Complete Test-Normal Evaluation
+
+VERIFIED:
+
+- The frozen 168-task, five-condition Test-Normal manifest completed all
+  `840/840` trajectories with zero infrastructure exceptions, optimizer steps,
+  or parameter updates.
+- Success counts are `B0 44/168`, `BEST-C 48/168`, `BEST-S 42/168`,
+  `FULL1D-C 40/168`, and `FULL1D-S 48/168`.
+- BEST-C has positive point estimates versus bare (`+4` tasks) and matched
+  shuffle (`+6`), but both paired 95% confidence intervals include zero.
+- FULL1D-C is below bare (`-4`) and below its matched shuffle (`-8`); those
+  intervals also include zero.
+- The compiled field/read shape is independent of memory count, the 499-record
+  canonical-cache remove/restore audit passed, and all raw Git-safe traces are
+  being published through the EXP-036C audit index.
+- A post-run efficiency-provenance audit found that a raw-reencoding cache
+  equivalence aggregate had been hard-coded true. The original artifact remains
+  immutable; commit `b99a87f` and an append-only correction record report the
+  true `0/499` match count. Formal trajectories and frozen fields are unaffected.
+
+CURRENT DECISION:
+
+- EXP-036C is complete and stopped for user/ChatGPT review. Test-Normal is
+  partially exposed, so this is a final development-benchmark result rather
+  than an untouched-test confirmatory claim.
+- No follow-on experiment, retraining, calibration, portability study, or
+  paper automation is authorized.
+
+Full report: `research/results/EXP_036C_APPWORLD_TESTNORMAL_FINAL.md`.
+
+Last updated: 2026-09-02.
+
 ## 2026-09-01 EXP-036C Authorized Test-Normal Execution Preparing
 
 VERIFIED:

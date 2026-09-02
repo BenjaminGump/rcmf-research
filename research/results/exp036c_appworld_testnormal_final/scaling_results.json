@@ -1,0 +1,683 @@
+{
+  "compiled_field_shape_independent_of_memory_count": true,
+  "format": "rcmf_exp036a_read_scaling_13a_v1",
+  "median_slopes_ms_per_memory": {
+    "long:compiled_read_ms": 5.59904579601919e-05,
+    "long:explicit_sum_ms": 0.06053343018181922,
+    "medium:compiled_read_ms": 7.299804168126426e-05,
+    "medium:explicit_sum_ms": 0.0605403891375163,
+    "short:compiled_read_ms": 7.780621830254888e-05,
+    "short:explicit_sum_ms": 0.06054397778914482
+  },
+  "repetitions": 1000,
+  "result_sha256": "c3f27f05852a2f3fd6da160665159f37ea8d6a0ea49236af62ff12045e5d06fd",
+  "rows": [
+    {
+      "compiled_explicit_max_abs": 1.430511474609375e-06,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.14336000382900238,
+        "mean": 0.11376288003474475,
+        "median": 0.11116799712181091,
+        "minimum": 0.10604800283908844,
+        "p95": 0.12868160381913185
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 0.16787199676036835,
+        "mean": 0.13276563199609517,
+        "median": 0.1297920048236847,
+        "minimum": 0.1236800029873848,
+        "p95": 0.1478399932384491
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 1,
+      "memory_ids_sha256": "7c108b89a3eb23f484895015011f96b3e77110a172f931ac716756ad2866340c",
+      "peak_allocated_bytes": 22261747200,
+      "peak_reserved_bytes": 22762487808,
+      "prompt_label": "short",
+      "prompt_tokens": 7326
+    },
+    {
+      "compiled_explicit_max_abs": 1.430511474609375e-06,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.15408000349998474,
+        "mean": 0.11443513594567775,
+        "median": 0.11164800077676773,
+        "minimum": 0.10595200210809708,
+        "p95": 0.12960160300135612
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 0.16739200055599213,
+        "mean": 0.1331770879328251,
+        "median": 0.1300320029258728,
+        "minimum": 0.12492799758911133,
+        "p95": 0.14899520203471184
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 1,
+      "memory_ids_sha256": "7c108b89a3eb23f484895015011f96b3e77110a172f931ac716756ad2866340c",
+      "peak_allocated_bytes": 24272093184,
+      "peak_reserved_bytes": 25801261056,
+      "prompt_label": "medium",
+      "prompt_tokens": 9999
+    },
+    {
+      "compiled_explicit_max_abs": 2.384185791015625e-06,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.191103994846344,
+        "mean": 0.13251145572960377,
+        "median": 0.13171200454235077,
+        "minimum": 0.10742399841547012,
+        "p95": 0.15331199765205383
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 0.18928000330924988,
+        "mean": 0.1531324803084135,
+        "median": 0.1523520052433014,
+        "minimum": 0.12470400333404541,
+        "p95": 0.17436959445476533
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 1,
+      "memory_ids_sha256": "7c108b89a3eb23f484895015011f96b3e77110a172f931ac716756ad2866340c",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32075939840,
+      "prompt_label": "long",
+      "prompt_tokens": 16985
+    },
+    {
+      "compiled_explicit_max_abs": 1.6689300537109375e-06,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.17455999553203583,
+        "mean": 0.11826838405430316,
+        "median": 0.11622399836778641,
+        "minimum": 0.10969600081443787,
+        "p95": 0.13174560442566868
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 1.0821759700775146,
+        "mean": 0.5706601281166077,
+        "median": 0.5712160170078278,
+        "minimum": 0.5428799986839294,
+        "p95": 0.5915888249874115
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 8,
+      "memory_ids_sha256": "6276b315fa1e3bbe7f8cc9481efefae45ada699b926fa073823ba26d09eab867",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32078036992,
+      "prompt_label": "short",
+      "prompt_tokens": 7326
+    },
+    {
+      "compiled_explicit_max_abs": 1.233816146850586e-05,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.20547200739383698,
+        "mean": 0.1177157119512558,
+        "median": 0.11593600362539291,
+        "minimum": 0.10979200154542923,
+        "p95": 0.13085120543837547
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 0.612064003944397,
+        "mean": 0.5671085750460625,
+        "median": 0.568992018699646,
+        "minimum": 0.5429760217666626,
+        "p95": 0.5851248204708099
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 8,
+      "memory_ids_sha256": "6276b315fa1e3bbe7f8cc9481efefae45ada699b926fa073823ba26d09eab867",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32078036992,
+      "prompt_label": "medium",
+      "prompt_tokens": 9999
+    },
+    {
+      "compiled_explicit_max_abs": 1.430511474609375e-06,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.1581439971923828,
+        "mean": 0.11877615991979837,
+        "median": 0.11644800007343292,
+        "minimum": 0.11004800349473953,
+        "p95": 0.133600003272295
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 0.72297602891922,
+        "mean": 0.5696327674388886,
+        "median": 0.5698719918727875,
+        "minimum": 0.544704020023346,
+        "p95": 0.5874383807182312
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 8,
+      "memory_ids_sha256": "6276b315fa1e3bbe7f8cc9481efefae45ada699b926fa073823ba26d09eab867",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32078036992,
+      "prompt_label": "long",
+      "prompt_tokens": 16985
+    },
+    {
+      "compiled_explicit_max_abs": 1.6689300537109375e-06,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.17791999876499176,
+        "mean": 0.12519449605047703,
+        "median": 0.1215360015630722,
+        "minimum": 0.11680000275373459,
+        "p95": 0.14675359949469566
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 2.8555519580841064,
+        "mean": 2.05479481446743,
+        "median": 2.027519941329956,
+        "minimum": 1.9960319995880127,
+        "p95": 2.3893503189086913
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 32,
+      "memory_ids_sha256": "51e586f026588201d60175dbd5ed06d595129519d9f230650e627e2c2b75bef5",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32078036992,
+      "prompt_label": "short",
+      "prompt_tokens": 7326
+    },
+    {
+      "compiled_explicit_max_abs": 1.4543533325195312e-05,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.17372800409793854,
+        "mean": 0.12407350396364927,
+        "median": 0.12078400328755379,
+        "minimum": 0.1159679964184761,
+        "p95": 0.14167359843850136
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 2.486720085144043,
+        "mean": 2.0414300150871276,
+        "median": 2.0260798931121826,
+        "minimum": 1.9888639450073242,
+        "p95": 2.1308929085731507
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 32,
+      "memory_ids_sha256": "51e586f026588201d60175dbd5ed06d595129519d9f230650e627e2c2b75bef5",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32078036992,
+      "prompt_label": "medium",
+      "prompt_tokens": 9999
+    },
+    {
+      "compiled_explicit_max_abs": 2.1457672119140625e-06,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.2088959962129593,
+        "mean": 0.12280851193517446,
+        "median": 0.12012799829244614,
+        "minimum": 0.11606399714946747,
+        "p95": 0.1373616024851799
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 2.3742079734802246,
+        "mean": 2.0263188164234163,
+        "median": 2.0211520195007324,
+        "minimum": 1.985983967781067,
+        "p95": 2.050531244277954
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 32,
+      "memory_ids_sha256": "51e586f026588201d60175dbd5ed06d595129519d9f230650e627e2c2b75bef5",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32078036992,
+      "prompt_label": "long",
+      "prompt_tokens": 16985
+    },
+    {
+      "compiled_explicit_max_abs": 2.6226043701171875e-06,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.2483839988708496,
+        "mean": 0.13576764802634717,
+        "median": 0.1313759982585907,
+        "minimum": 0.12515200674533844,
+        "p95": 0.1576816007494926
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 9.55174446105957,
+        "mean": 7.913335285663605,
+        "median": 7.823280096054077,
+        "minimum": 7.746079921722412,
+        "p95": 8.547880363464355
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 128,
+      "memory_ids_sha256": "bfae2b5f5acc5ab8d89e4a4f48c2810027c936e151fe62216a6ff88f7b504a3b",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32078036992,
+      "prompt_label": "short",
+      "prompt_tokens": 7326
+    },
+    {
+      "compiled_explicit_max_abs": 3.337860107421875e-06,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.20764799416065216,
+        "mean": 0.1358536641597748,
+        "median": 0.1316159963607788,
+        "minimum": 0.12534399330615997,
+        "p95": 0.15674720108509063
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 9.471136093139648,
+        "mean": 7.923285820484161,
+        "median": 7.837328195571899,
+        "minimum": 7.729055881500244,
+        "p95": 8.592883348464966
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 128,
+      "memory_ids_sha256": "bfae2b5f5acc5ab8d89e4a4f48c2810027c936e151fe62216a6ff88f7b504a3b",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32078036992,
+      "prompt_label": "medium",
+      "prompt_tokens": 9999
+    },
+    {
+      "compiled_explicit_max_abs": 4.76837158203125e-06,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.1960960030555725,
+        "mean": 0.13332444816082717,
+        "median": 0.13011200726032257,
+        "minimum": 0.1247360035777092,
+        "p95": 0.14982879385352135
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 9.647392272949219,
+        "mean": 7.893625259876251,
+        "median": 7.836335897445679,
+        "minimum": 7.751391887664795,
+        "p95": 8.230003356933592
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 128,
+      "memory_ids_sha256": "bfae2b5f5acc5ab8d89e4a4f48c2810027c936e151fe62216a6ff88f7b504a3b",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32078036992,
+      "prompt_label": "long",
+      "prompt_tokens": 16985
+    },
+    {
+      "compiled_explicit_max_abs": 1.9073486328125e-06,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.22598400712013245,
+        "mean": 0.14485712012648583,
+        "median": 0.14083200693130493,
+        "minimum": 0.1345600038766861,
+        "p95": 0.16367519497871397
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 19.4880313873291,
+        "mean": 15.773879519462586,
+        "median": 15.597951889038086,
+        "minimum": 15.475584030151367,
+        "p95": 16.79755277633667
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 256,
+      "memory_ids_sha256": "e939197ffa4c1040445e125cb5e56c55db2b689e45a28bcd151bdbe9afcb6f9d",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32078036992,
+      "prompt_label": "short",
+      "prompt_tokens": 7326
+    },
+    {
+      "compiled_explicit_max_abs": 3.814697265625e-06,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.23308800160884857,
+        "mean": 0.14350448013842107,
+        "median": 0.14028800278902054,
+        "minimum": 0.13369600474834442,
+        "p95": 0.1591808050870895
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 18.639488220214844,
+        "mean": 15.706706676483154,
+        "median": 15.592912197113037,
+        "minimum": 15.451904296875,
+        "p95": 16.3216269493103
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 256,
+      "memory_ids_sha256": "e939197ffa4c1040445e125cb5e56c55db2b689e45a28bcd151bdbe9afcb6f9d",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32078036992,
+      "prompt_label": "medium",
+      "prompt_tokens": 9999
+    },
+    {
+      "compiled_explicit_max_abs": 1.0728836059570312e-05,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.3569599986076355,
+        "mean": 0.14460425621271134,
+        "median": 0.141184002161026,
+        "minimum": 0.13388800621032715,
+        "p95": 0.16240800693631172
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 18.814912796020508,
+        "mean": 15.730979328155518,
+        "median": 15.602335929870605,
+        "minimum": 15.437055587768555,
+        "p95": 16.362373065948486
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 256,
+      "memory_ids_sha256": "e939197ffa4c1040445e125cb5e56c55db2b689e45a28bcd151bdbe9afcb6f9d",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32078036992,
+      "prompt_label": "long",
+      "prompt_tokens": 16985
+    },
+    {
+      "compiled_explicit_max_abs": 3.814697265625e-06,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.3436479866504669,
+        "mean": 0.1559919681251049,
+        "median": 0.15251199901103973,
+        "minimum": 0.14137600362300873,
+        "p95": 0.1745151951909065
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 35.568702697753906,
+        "mean": 30.50706912612915,
+        "median": 30.28715229034424,
+        "minimum": 30.074623107910156,
+        "p95": 32.097338104248045
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 499,
+      "memory_ids_sha256": "6cbaf15f3e65ba46cdd1a68116b1641b1a1e9f004427a325f5174793d7f81659",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32078036992,
+      "prompt_label": "short",
+      "prompt_tokens": 7326
+    },
+    {
+      "compiled_explicit_max_abs": 5.4836273193359375e-06,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.22655999660491943,
+        "mean": 0.15335932806134223,
+        "median": 0.14987199753522873,
+        "minimum": 0.1412159949541092,
+        "p95": 0.17268320322036743
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 36.84425735473633,
+        "mean": 30.534769695281984,
+        "median": 30.286383628845215,
+        "minimum": 30.044160842895508,
+        "p95": 32.14739589691162
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 499,
+      "memory_ids_sha256": "6cbaf15f3e65ba46cdd1a68116b1641b1a1e9f004427a325f5174793d7f81659",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32078036992,
+      "prompt_label": "medium",
+      "prompt_tokens": 9999
+    },
+    {
+      "compiled_explicit_max_abs": 1.7881393432617188e-05,
+      "compiled_read_ms": {
+        "count": 1000,
+        "maximum": 0.22979199886322021,
+        "mean": 0.15321408008038997,
+        "median": 0.14902399480342865,
+        "minimum": 0.13990400731563568,
+        "p95": 0.17510400712490082
+      },
+      "explicit_sum_ms": {
+        "count": 1000,
+        "maximum": 36.69504165649414,
+        "mean": 30.652558406829833,
+        "median": 30.28822422027588,
+        "minimum": 30.046560287475586,
+        "p95": 33.859593772888175
+      },
+      "field_bytes": 7872512,
+      "field_shape": {
+        "A": [
+          960,
+          8,
+          256
+        ],
+        "B": [
+          8,
+          256
+        ]
+      },
+      "memory_count": 499,
+      "memory_ids_sha256": "6cbaf15f3e65ba46cdd1a68116b1641b1a1e9f004427a325f5174793d7f81659",
+      "peak_allocated_bytes": 29544316416,
+      "peak_reserved_bytes": 32078036992,
+      "prompt_label": "long",
+      "prompt_tokens": 16985
+    }
+  ],
+  "warmups": 100
+}
