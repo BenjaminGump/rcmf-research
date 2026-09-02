@@ -20,6 +20,7 @@ from torch import Tensor
 from rcmf.config import load_config
 from rcmf.training.rcmf_appworld_testnormal_final_13a import quantile
 from rcmf.training.rcmf_joint_full_bank_9a import (
+    AlignedTransitionWriter,
     RCMFFieldRecord,
     ReversibleRCMFField,
 )
@@ -96,6 +97,60 @@ def aggregate(rows: list[dict[str, Any]], key: str) -> dict[str, Any]:
     return timing_summary(values)
 
 
+def load_canonical_records(
+    *,
+    identity_cache_path: Path,
+    source_cache_path: Path,
+    data_manifest_path: Path,
+    deployment: dict[str, Any],
+    device: torch.device,
+) -> tuple[list[RCMFFieldRecord], dict[str, Any]]:
+    """Recover exact EXP-031A records without raw re-encoding drift."""
+
+    identity_records = load_cached_records(identity_cache_path, device)
+    source_cache = torch.load(
+        source_cache_path, map_location="cpu", weights_only=False
+    )
+    data_manifest = read_json(data_manifest_path)
+    memory_ids = [str(value) for value in source_cache["ordered_transition_ids"]]
+    if memory_ids != [row.memory_id for row in identity_records]:
+        raise ValueError("Canonical source cache and compilation identity order differ")
+
+    writer = AlignedTransitionWriter().to(device)
+    writer.load_state_dict(deployment["writer_state_dict"], strict=True)
+    writer.eval()
+    with torch.no_grad():
+        payloads = writer(
+            source_cache["memory_views"].to(device=device, dtype=torch.float32)
+        )
+    keys = source_cache["memory_keys"].to(device=device, dtype=torch.float32)
+    rho_by_id = data_manifest["rho_by_transition_id"]
+    records = [
+        RCMFFieldRecord(
+            memory_id=identity.memory_id,
+            parent_id=identity.parent_id,
+            parent_task_id=identity.parent_task_id,
+            key=keys[index],
+            payload=payloads[index],
+            rho=float(rho_by_id[identity.memory_id]),
+            mu=0.0,
+        )
+        for index, identity in enumerate(identity_records)
+    ]
+    drift = {
+        "raw_reencoded_key_max_abs": max(
+            float((identity.key - record.key).abs().max().item())
+            for identity, record in zip(identity_records, records, strict=True)
+        ),
+        "raw_reencoded_payload_max_abs": max(
+            float((identity.payload - record.payload).abs().max().item())
+            for identity, record in zip(identity_records, records, strict=True)
+        ),
+        "record_source": "immutable_exp031a_source_cache_and_deployment_writer",
+    }
+    return records, drift
+
+
 def main() -> None:
     args = parse_args()
     cfg = load_config(args.config)
@@ -125,11 +180,6 @@ def main() -> None:
     if not torch.cuda.is_available():
         raise RuntimeError("EXP-036A reversibility requires the H100 CUDA device")
     device = torch.device("cuda")
-    records = load_cached_records(
-        args.artifact_dir / "efficiency/cache/best_compiled_records.pt", device
-    )
-    if len(records) != 499:
-        raise ValueError("Reversibility requires all 499 BEST records")
     deployment_path = Path(
         str(settings["packages"]["BEST"]["deployment_field"])
     )
@@ -140,6 +190,26 @@ def main() -> None:
     deployment = torch.load(deployment_path, map_location="cpu", weights_only=False)
     reference_A = deployment["A"].to(device, torch.float32)
     reference_B = deployment["B"].to(device, torch.float32)
+    package_manifest = read_json(args.artifact_dir / "manifests/package_manifest.json")
+    package = package_manifest["packages"]["BEST"]
+    source_cache_path = Path(str(settings["packages"]["BEST"]["source_cache"]))
+    data_manifest_path = Path(str(settings["packages"]["BEST"]["data_manifest"]))
+    if sha256_file(source_cache_path) != str(package["hashes"]["source_cache"]):
+        raise ValueError("BEST source-cache SHA differs")
+    if sha256_file(data_manifest_path) != str(package["hashes"]["data_manifest"]):
+        raise ValueError("BEST data-manifest SHA differs")
+    identity_cache_path = (
+        args.artifact_dir / "efficiency/cache/best_compiled_records.pt"
+    )
+    records, canonical_record_provenance = load_canonical_records(
+        identity_cache_path=identity_cache_path,
+        source_cache_path=source_cache_path,
+        data_manifest_path=data_manifest_path,
+        deployment=deployment,
+        device=device,
+    )
+    if len(records) != 499:
+        raise ValueError("Reversibility requires all 499 BEST records")
     field = ReversibleRCMFField(device=device)
     for record in records:
         field.add_memory_fast(record)
@@ -164,9 +234,9 @@ def main() -> None:
         config_sha256=sha256_file(args.config),
         data_manifest_hashes={
             "deployment_field": sha256_file(deployment_path),
-            "compiled_record_cache": sha256_file(
-                args.artifact_dir / "efficiency/cache/best_compiled_records.pt"
-            ),
+            "compiled_record_identity_cache": sha256_file(identity_cache_path),
+            "canonical_source_cache": sha256_file(source_cache_path),
+            "canonical_data_manifest": sha256_file(data_manifest_path),
         },
         parent_attempt_id="none",
         resume_checkpoint="all_499_records_atomic_result",
@@ -297,6 +367,7 @@ def main() -> None:
             "format": "rcmf_exp036a_numerical_reversibility_13a_v1",
             "memory_count": 499,
             "deployment_field_sha256": sha256_file(deployment_path),
+            "canonical_record_provenance": canonical_record_provenance,
             "initial_rebuild_error": rebuild_error,
             "remove_ms": aggregate(rows, "remove_ms"),
             "restore_ms": aggregate(rows, "restore_ms"),

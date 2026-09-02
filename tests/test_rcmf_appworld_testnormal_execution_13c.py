@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import torch
+
 from rcmf.config import load_config
 from rcmf.training.state_conditioned_program_7d import canonical_sha256
 from rcmf.utils.serialization import sha256_file
@@ -22,6 +24,10 @@ from scripts.export_rcmf_appworld_testnormal_audit_13c import (
     FORMAT as AUDIT_FORMAT,
     RUN_UUID as AUDIT_RUN_UUID,
 )
+from scripts.run_rcmf_appworld_testnormal_reversibility_13a import (
+    load_canonical_records,
+)
+from rcmf.training.rcmf_joint_full_bank_9a import AlignedTransitionWriter
 
 
 CONFIG = Path("configs/benchmark/stage_c_rcmf_appworld_testnormal_execution_13c.yaml")
@@ -126,3 +132,44 @@ def test_postrun_tools_are_bound_to_the_authorized_run() -> None:
     assert AUDIT_RUN_UUID == RUN_UUID
     assert ANALYSIS_FORMAT == "rcmf_appworld_testnormal_paired_analysis_13c_v1"
     assert AUDIT_FORMAT == "rcmf_appworld_testnormal_git_safe_audit_13c_v1"
+
+
+def test_reversibility_uses_canonical_cache_not_reencoded_values(tmp_path: Path) -> None:
+    writer = AlignedTransitionWriter()
+    memory_id = "memory-1"
+    source_cache = {
+        "ordered_transition_ids": [memory_id],
+        "memory_views": torch.randn(1, 8, 4096),
+        "memory_keys": torch.randn(1, 960),
+    }
+    with torch.no_grad():
+        canonical_payload = writer(source_cache["memory_views"])[0]
+    identity_cache = {
+        "memory_ids": [memory_id],
+        "parent_ids": ["parent-1"],
+        "parent_task_ids": ["task-1"],
+        "keys": source_cache["memory_keys"] + 1.0e-6,
+        "payloads": canonical_payload.unsqueeze(0) + 1.0e-6,
+        "rho": torch.tensor([0.5], dtype=torch.float32),
+    }
+    identity_path = tmp_path / "identity.pt"
+    source_path = tmp_path / "source.pt"
+    data_path = tmp_path / "data.json"
+    torch.save(identity_cache, identity_path)
+    torch.save(source_cache, source_path)
+    data_path.write_text(
+        json.dumps({"rho_by_transition_id": {memory_id: 0.5}}), encoding="utf-8"
+    )
+
+    records, provenance = load_canonical_records(
+        identity_cache_path=identity_path,
+        source_cache_path=source_path,
+        data_manifest_path=data_path,
+        deployment={"writer_state_dict": writer.state_dict()},
+        device=torch.device("cpu"),
+    )
+
+    assert torch.equal(records[0].key, source_cache["memory_keys"][0])
+    assert torch.equal(records[0].payload, canonical_payload)
+    assert provenance["raw_reencoded_key_max_abs"] > 0.0
+    assert provenance["raw_reencoded_payload_max_abs"] > 0.0
