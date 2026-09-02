@@ -14,6 +14,14 @@ from scripts.prepare_rcmf_appworld_testnormal_execution_13c import (
     condition_manifest_for_run,
     source_smoke_passed,
 )
+from scripts.analyze_rcmf_appworld_testnormal_execution_13c import (
+    FORMAT as ANALYSIS_FORMAT,
+    RUN_UUID as ANALYSIS_RUN_UUID,
+)
+from scripts.export_rcmf_appworld_testnormal_audit_13c import (
+    FORMAT as AUDIT_FORMAT,
+    RUN_UUID as AUDIT_RUN_UUID,
+)
 
 
 CONFIG = Path("configs/benchmark/stage_c_rcmf_appworld_testnormal_execution_13c.yaml")
@@ -111,3 +119,10 @@ def test_source_smoke_schema_requires_all_five_exact_comparisons() -> None:
     assert source_smoke_passed(smoke) is True
     smoke["determinism"]["B0"]["passed"] = False
     assert source_smoke_passed(smoke) is False
+
+
+def test_postrun_tools_are_bound_to_the_authorized_run() -> None:
+    assert ANALYSIS_RUN_UUID == RUN_UUID
+    assert AUDIT_RUN_UUID == RUN_UUID
+    assert ANALYSIS_FORMAT == "rcmf_appworld_testnormal_paired_analysis_13c_v1"
+    assert AUDIT_FORMAT == "rcmf_appworld_testnormal_git_safe_audit_13c_v1"
