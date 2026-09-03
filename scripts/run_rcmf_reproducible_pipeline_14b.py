@@ -67,7 +67,9 @@ def _authorize(
     checks = {
         "persistent_mount": os.path.ismount("/lambda/nfs/rcmf-persist"),
         "clean_checkout": _status() == "",
-        "source_commit": _head() == contract.source_commit == str(preflight["source_commit"]),
+        "source_commit": _head()
+        == contract.source_commit
+        == str(preflight["launch_source_sha"]),
         "all_preflight_checks": all(bool(v) for v in preflight["approval_checks"].values()),
         "preflight_requires_explicit_approval": bool(
             preflight.get("explicit_user_approval_required", True)
@@ -90,7 +92,10 @@ def _authorize(
         else {}
     )
     payload: dict[str, object] = {
-        "format": "exp037a_runtime_authorization_14f_v1",
+        "format": str(contract.metadata["authorization_version"]),
+        "authorization_version": str(
+            contract.metadata["authorization_version"]
+        ),
         "authorized": True,
         "authorization_status": "AUTHORIZED",
         "granted_by_user": True,
@@ -114,7 +119,7 @@ def _authorize(
         "hard_cap_hours": float(contract.hard_cap_hours),
         "recommended_hard_cap_hours": float(runtime["recommended_hard_cap_hours"]),
         "checks": checks,
-        "scope": "complete_3d_then_1d_only_on_THREE_DEMO_REPRODUCTION_PASS",
+        "scope": str(contract.metadata["authorization_scope"]),
         "gate_to_one_demo_target_seconds": 60,
         "monitor_is_scheduler": False,
     }

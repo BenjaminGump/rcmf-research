@@ -137,7 +137,192 @@ def evaluate_three_demo_reproduction_gate(evidence: Mapping[str, Any]) -> dict[s
     return result
 
 
-def validate_stage_completion(stage_dir: str | Path, source_commit: str) -> dict[str, Any]:
+def _paired_rows_by_id(payload: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
+    rows = {
+        str(row["state_example_id"]): dict(row)
+        for row in payload.get("rows", [])
+    }
+    if len(rows) != len(payload.get("rows", [])):
+        raise ValueError("Paired outcomes contain duplicate state IDs")
+    return rows
+
+
+def _state_ids(rows: Iterable[Any]) -> set[str]:
+    result: set[str] = set()
+    for row in rows:
+        if isinstance(row, Mapping):
+            value = row.get("state_example_id", row.get("state_id"))
+        else:
+            value = row
+        if value is not None:
+            result.add(str(value))
+    return result
+
+
+def _over_context_ids(rows: Iterable[Mapping[str, Any]]) -> set[str]:
+    return {
+        str(row["state_example_id"])
+        for row in rows
+        if bool(row.get("over_context")) or row.get("scoreable") is False
+    }
+
+
+def evaluate_d06_reproduction_gate(
+    *,
+    fresh: Mapping[str, Any],
+    historical: Mapping[str, Any],
+    fresh_selections: Iterable[Mapping[str, Any]],
+    historical_selections: Iterable[Mapping[str, Any]],
+    expected_train_completed: int,
+    expected_heldout_completed: int,
+    expected_label_counts: Mapping[str, int],
+) -> dict[str, Any]:
+    """Compare sealed fresh D06 outcomes with read-only historical evidence."""
+    fresh_rows = _paired_rows_by_id(fresh)
+    historical_rows = _paired_rows_by_id(historical)
+    fresh_train = {
+        state_id
+        for state_id, row in fresh_rows.items()
+        if str(row.get("model_split")) == "model_train"
+    }
+    fresh_heldout = {
+        state_id
+        for state_id, row in fresh_rows.items()
+        if str(row.get("model_split")) == "heldout_train_validation"
+    }
+    historical_train = {
+        state_id
+        for state_id, row in historical_rows.items()
+        if str(row.get("model_split")) == "model_train"
+    }
+    historical_heldout = {
+        state_id
+        for state_id, row in historical_rows.items()
+        if str(row.get("model_split")) == "heldout_train_validation"
+    }
+    fresh_labels = {
+        state_id: str(row.get("label")) for state_id, row in fresh_rows.items()
+    }
+    historical_labels = {
+        state_id: str(row.get("label")) for state_id, row in historical_rows.items()
+    }
+    fresh_selection_rows = [dict(row) for row in fresh_selections]
+    historical_selection_rows = [dict(row) for row in historical_selections]
+    fresh_selection_ids = _state_ids(fresh_selection_rows)
+    historical_selection_ids = _state_ids(historical_selection_rows)
+    fresh_over_context = _over_context_ids(fresh_selection_rows)
+    historical_over_context = _over_context_ids(historical_selection_rows)
+    fresh_replay = _state_ids(fresh.get("replay_semantic_missing_rows", []))
+    historical_replay = _state_ids(
+        historical.get("replay_semantic_missing_rows", [])
+    )
+    fresh_label_counts = {
+        str(key): int(value) for key, value in fresh.get("label_counts", {}).items()
+    }
+    historical_label_counts = {
+        str(key): int(value)
+        for key, value in historical.get("label_counts", {}).items()
+    }
+    expected_labels = {
+        str(key): int(value) for key, value in expected_label_counts.items()
+    }
+    checks = {
+        "fresh_train_completed_count": len(fresh_train)
+        == int(expected_train_completed),
+        "fresh_heldout_completed_count": len(fresh_heldout)
+        == int(expected_heldout_completed),
+        "historical_train_reference_count": len(historical_train)
+        == int(expected_train_completed),
+        "historical_heldout_reference_count": len(historical_heldout)
+        == int(expected_heldout_completed),
+        "completed_state_sets_exact": set(fresh_rows) == set(historical_rows),
+        "train_state_set_exact": fresh_train == historical_train,
+        "heldout_state_set_exact": fresh_heldout == historical_heldout,
+        "paired_labels_exact": fresh_labels == historical_labels,
+        "fresh_label_counts_expected": fresh_label_counts == expected_labels,
+        "historical_label_counts_expected": historical_label_counts
+        == expected_labels,
+        "over_context_state_set_exact": fresh_over_context
+        == historical_over_context,
+        "replay_semantic_failure_set_exact": fresh_replay == historical_replay,
+        "fresh_state_universe_count": len(fresh_selection_rows) == 499,
+        "historical_state_universe_count": len(historical_selection_rows) == 499,
+        "fresh_state_universe_unique": len(fresh_selection_ids) == 499,
+        "historical_state_universe_unique": len(historical_selection_ids) == 499,
+        "state_universe_exact": fresh_selection_ids == historical_selection_ids,
+    }
+    passed = all(checks.values())
+    result = {
+        "format": "d06_three_demo_reproduction_gate_14g_v1",
+        "decision": (
+            "D06_THREE_DEMO_REPRODUCTION_PASS"
+            if passed
+            else "D06_THREE_DEMO_REPRODUCTION_FAIL"
+        ),
+        "passed": passed,
+        "historical_artifacts_role": "read_only_comparison_after_fresh_d06_seal",
+        "historical_artifacts_used_for_generation": False,
+        "checks": checks,
+        "counts": {
+            "fresh_train_completed": len(fresh_train),
+            "fresh_heldout_completed": len(fresh_heldout),
+            "historical_train_completed": len(historical_train),
+            "historical_heldout_completed": len(historical_heldout),
+            "fresh_over_context": len(fresh_over_context),
+            "historical_over_context": len(historical_over_context),
+            "fresh_replay_semantic_failures": len(fresh_replay),
+            "historical_replay_semantic_failures": len(historical_replay),
+        },
+        "label_counts": {
+            "expected": expected_labels,
+            "fresh": fresh_label_counts,
+            "historical": historical_label_counts,
+        },
+        "differences": {
+            "fresh_only_completed": sorted(set(fresh_rows) - set(historical_rows)),
+            "historical_only_completed": sorted(
+                set(historical_rows) - set(fresh_rows)
+            ),
+            "fresh_only_state_universe": sorted(
+                fresh_selection_ids - historical_selection_ids
+            ),
+            "historical_only_state_universe": sorted(
+                historical_selection_ids - fresh_selection_ids
+            ),
+            "label_mismatches": [
+                {
+                    "state_example_id": state_id,
+                    "fresh": fresh_labels.get(state_id),
+                    "historical": historical_labels.get(state_id),
+                }
+                for state_id in sorted(set(fresh_labels) | set(historical_labels))
+                if fresh_labels.get(state_id) != historical_labels.get(state_id)
+            ],
+            "fresh_only_over_context": sorted(
+                fresh_over_context - historical_over_context
+            ),
+            "historical_only_over_context": sorted(
+                historical_over_context - fresh_over_context
+            ),
+            "fresh_only_replay_semantic": sorted(fresh_replay - historical_replay),
+            "historical_only_replay_semantic": sorted(
+                historical_replay - fresh_replay
+            ),
+        },
+    }
+    result["gate_sha256"] = content_sha256(result)
+    return result
+
+
+def validate_stage_completion(
+    stage_dir: str | Path,
+    source_commit: str,
+    *,
+    expected_run_uuid: str | None = None,
+    expected_pipeline_config_sha256: str | None = None,
+    expected_contract_sha256: str | None = None,
+    expected_run_root: str | Path | None = None,
+) -> dict[str, Any]:
     root = Path(stage_dir)
     output_manifest_path = root / "output_manifest.json"
     validator_path = root / "validator.json"
@@ -149,6 +334,23 @@ def validate_stage_completion(stage_dir: str | Path, source_commit: str) -> dict
         "stage_id": str(manifest.get("stage_id")) == root.name,
         "output_hashes": True,
     }
+    if expected_run_uuid is not None:
+        checks["run_uuid"] = (
+            str(manifest.get("run_uuid")) == str(expected_run_uuid)
+        )
+    if expected_pipeline_config_sha256 is not None:
+        checks["pipeline_config_sha256"] = (
+            str(manifest.get("pipeline_config_sha256"))
+            == str(expected_pipeline_config_sha256)
+        )
+    if expected_contract_sha256 is not None:
+        checks["contract_sha256"] = (
+            str(manifest.get("contract_sha256")) == str(expected_contract_sha256)
+        )
+    if expected_run_root is not None:
+        checks["run_root"] = Path(
+            str(manifest.get("run_root", ""))
+        ).resolve(strict=False) == Path(expected_run_root).resolve(strict=False)
     for row in manifest.get("outputs", []):
         path = Path(str(row["path"]))
         if not path.is_absolute():

@@ -13,6 +13,7 @@ from typing import Any, Callable, Mapping, Sequence
 
 from rcmf.pipeline.contracts import PipelineContract, StageSpec
 from rcmf.pipeline.authorization import validate_runtime_authorization
+from rcmf.pipeline.manifests import content_sha256
 from rcmf.pipeline.resume import (
     AppendOnlyAttemptLedger,
     StageStateStore,
@@ -21,7 +22,7 @@ from rcmf.pipeline.resume import (
     utc_now,
 )
 from rcmf.pipeline.validators import validate_stage_completion
-from rcmf.utils.serialization import atomic_write_json, ensure_dir
+from rcmf.utils.serialization import atomic_write_json, ensure_dir, sha256_file
 
 
 StageRunner = Callable[[StageSpec, Sequence[str], Path, Mapping[str, str]], int]
@@ -126,6 +127,30 @@ class EventDrivenScheduler:
         self.heartbeat_interval_seconds = heartbeat_interval_seconds
         self.transition_target_seconds = transition_target_seconds
         self.contract_sha256 = contract_sha256
+        self.strict_stage_identity = bool(
+            self.contract.metadata.get("strict_stage_identity", False)
+        )
+        config_path = Path(self.config_path)
+        self.pipeline_config_sha256 = (
+            sha256_file(config_path) if config_path.exists() else ""
+        )
+        if self.strict_stage_identity:
+            if not self.contract_sha256:
+                raise ValueError("Strict stage identity requires contract SHA256")
+            if not config_path.exists():
+                raise FileNotFoundError(
+                    f"Strict pipeline config does not exist: {config_path}"
+                )
+            configured_sha = str(
+                self.contract.metadata.get("pipeline_config_sha256", "")
+            )
+            if configured_sha != self.pipeline_config_sha256:
+                raise ValueError("Pipeline config SHA differs from frozen contract")
+            configured_root = Path(
+                str(self.contract.metadata.get("canonical_run_root", ""))
+            ).resolve(strict=False)
+            if configured_root != self.run_root.resolve(strict=False):
+                raise ValueError("Scheduler run root differs from frozen contract")
         self._stop_heartbeat = threading.Event()
         self._current_stage: str | None = None
 
@@ -148,22 +173,77 @@ class EventDrivenScheduler:
             )
             self._stop_heartbeat.wait(self.heartbeat_interval_seconds)
 
+    def _validate_stage_output(self, stage: StageSpec) -> Mapping[str, Any]:
+        if not self.strict_stage_identity:
+            return self.validator(
+                stage,
+                self.store.stage_dir(stage.stage_id),
+                self.contract.source_commit,
+            )
+        strict = validate_stage_completion(
+            self.store.stage_dir(stage.stage_id),
+            self.contract.source_commit,
+            expected_run_uuid=self.contract.run_uuid,
+            expected_pipeline_config_sha256=self.pipeline_config_sha256,
+            expected_contract_sha256=self.contract_sha256,
+            expected_run_root=self.run_root,
+        )
+        if self.validator is default_stage_validator:
+            return strict
+        custom = self.validator(
+            stage,
+            self.store.stage_dir(stage.stage_id),
+            self.contract.source_commit,
+        )
+        return {
+            "format": "rcmf_combined_stage_validator_14g_v1",
+            "passed": bool(strict.get("passed")) and bool(custom.get("passed")),
+            "strict_identity": dict(strict),
+            "custom": dict(custom),
+        }
+
     def _completion_valid(self, stage: StageSpec) -> bool:
         completion = self.store.load_completion(stage.stage_id)
         if not completion or not completion.get("passed"):
             return False
-        result = self.validator(stage, self.store.stage_dir(stage.stage_id), self.contract.source_commit)
+        if self.strict_stage_identity:
+            expected = {
+                "run_uuid": self.contract.run_uuid,
+                "source_commit": self.contract.source_commit,
+                "pipeline_config_sha256": self.pipeline_config_sha256,
+                "contract_sha256": self.contract_sha256,
+                "run_root": str(self.run_root.resolve(strict=False)),
+            }
+            if any(str(completion.get(key)) != str(value) for key, value in expected.items()):
+                return False
+            recorded_hash = completion.get("completion_sha256")
+            body = {
+                key: value
+                for key, value in completion.items()
+                if key != "completion_sha256"
+            }
+            if recorded_hash != content_sha256(body):
+                return False
+        result = self._validate_stage_output(stage)
         return bool(result.get("passed"))
 
     def _gate_allows_one_demo(self) -> bool:
+        stage = self.contract.stage_map().get(
+            "D22_three_demo_reproduction_gate"
+        )
+        if stage is None or not self._completion_valid(stage):
+            return False
         completion = self.store.load_completion("D22_three_demo_reproduction_gate")
-        if not completion:
+        if not completion or not completion.get("passed"):
             return False
         gate_path = self.store.stage_dir("D22_three_demo_reproduction_gate") / "gate.json"
         if not gate_path.exists():
             return False
         gate = json.loads(gate_path.read_text(encoding="utf-8"))
-        return bool(gate.get("continue_to_one_demo", False))
+        return (
+            gate.get("decision") == "THREE_DEMO_REPRODUCTION_PASS"
+            and gate.get("continue_to_one_demo") is True
+        )
 
     def _is_eligible(self, stage: StageSpec) -> bool:
         if stage.conditional_on and not self._gate_allows_one_demo():
@@ -250,7 +330,7 @@ class EventDrivenScheduler:
                     for retry_ordinal in range(1, maximum_attempts + 1):
                         self._current_stage = stage.stage_id
                         attempt_id = (
-                            f"{stage.stage_id}-{int(time.time() * 1_000_000)}"
+                            f"{stage.stage_id}-{time.time_ns()}-r{retry_ordinal}"
                         )
                         stage_start = time.monotonic()
                         stage_start_utc = utc_now()
@@ -261,6 +341,8 @@ class EventDrivenScheduler:
                                 "run_uuid": self.contract.run_uuid,
                                 "stage_id": stage.stage_id,
                                 "source_commit": self.contract.source_commit,
+                                "pipeline_config_sha256": self.pipeline_config_sha256,
+                                "contract_sha256": self.contract_sha256,
                                 "command": command,
                                 "retry_ordinal": retry_ordinal,
                                 "maximum_recoverable_attempts": maximum_attempts,
@@ -271,6 +353,16 @@ class EventDrivenScheduler:
                             self.contract.global_seed
                         )
                         environment["RCMF_PIPELINE_ATTEMPT_ID"] = attempt_id
+                        environment["RCMF_PIPELINE_RUN_UUID"] = self.contract.run_uuid
+                        environment["RCMF_PIPELINE_CONFIG_SHA256"] = (
+                            self.pipeline_config_sha256
+                        )
+                        environment["RCMF_PIPELINE_CONTRACT_SHA256"] = str(
+                            self.contract_sha256 or ""
+                        )
+                        environment["RCMF_PIPELINE_RUN_ROOT"] = str(
+                            self.run_root.resolve(strict=False)
+                        )
                         environment["RCMF_PIPELINE_HARD_DEADLINE_EPOCH"] = str(
                             started_timestamp + self.contract.hard_cap_hours * 3600.0
                         )
@@ -283,11 +375,7 @@ class EventDrivenScheduler:
                         stage_end_utc = utc_now()
                         validator_start = time.monotonic()
                         validator_start_utc = utc_now()
-                        validation = self.validator(
-                            stage,
-                            self.store.stage_dir(stage.stage_id),
-                            self.contract.source_commit,
-                        )
+                        validation = self._validate_stage_output(stage)
                         validator_end = time.monotonic()
                         validator_end_utc = utc_now()
                         passed = exit_code == 0 and bool(validation.get("passed"))
@@ -302,6 +390,10 @@ class EventDrivenScheduler:
                                 "exit_code": exit_code,
                                 "recoverable": recoverable,
                                 "source_commit": self.contract.source_commit,
+                                "run_uuid": self.contract.run_uuid,
+                                "run_root": str(self.run_root.resolve(strict=False)),
+                                "pipeline_config_sha256": self.pipeline_config_sha256,
+                                "contract_sha256": self.contract_sha256,
                                 "attempt_id": attempt_id,
                                 "retry_ordinal": retry_ordinal,
                                 "validator": dict(validation),

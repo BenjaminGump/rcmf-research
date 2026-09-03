@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
-from rcmf.pipeline.contracts import ArmContract, PipelineContract
+from rcmf.pipeline.contracts import ArmContract, PipelineContract, StageSpec
 from rcmf.pipeline.scheduler import EventDrivenScheduler, SchedulerResult
 from rcmf.pipeline.stage_graph import build_exp037a_stage_graph
 from rcmf.utils.serialization import sha256_file
@@ -16,13 +16,32 @@ def load_pipeline_contract(path: str | Path) -> PipelineContract:
         key: ArmContract(**value)
         for key, value in payload["arms"].items()
     }
+    stage_rows = payload.get("stages")
+    stages = (
+        tuple(
+            StageSpec(
+                stage_id=str(row["stage_id"]),
+                arm=str(row["arm"]),
+                dependencies=tuple(row.get("dependencies", ())),
+                command=tuple(row.get("command", ())),
+                validator=str(row.get("validator", "completion_manifest")),
+                scientific=bool(row.get("scientific", False)),
+                uses_gpu=bool(row.get("uses_gpu", False)),
+                conditional_on=row.get("conditional_on"),
+                expected_outputs=tuple(row.get("expected_outputs", ())),
+            )
+            for row in stage_rows
+        )
+        if stage_rows is not None
+        else build_exp037a_stage_graph()
+    )
     contract = PipelineContract(
         schema_version=str(payload["schema_version"]),
         run_uuid=str(payload["run_uuid"]),
         source_commit=str(payload["source_commit"]),
         global_seed=int(payload["global_seed"]),
         hard_cap_hours=float(payload["hard_cap_hours"]),
-        stages=build_exp037a_stage_graph(),
+        stages=stages,
         arms=arms,
         shared_initialization=dict(payload.get("shared_initialization", {})),
         metadata=dict(payload.get("metadata", {})),

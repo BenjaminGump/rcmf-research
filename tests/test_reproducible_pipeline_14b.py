@@ -70,7 +70,7 @@ def test_stage_graph_is_complete_and_ordered() -> None:
     stages = build_exp037a_stage_graph()
     ids = [stage.stage_id for stage in stages]
     assert ids == [*SHARED_STAGES, *THREE_DEMO_STAGES, *ONE_DEMO_STAGES, *FINAL_STAGES]
-    assert len(stages) == 58
+    assert len(stages) == 60
     _contract(stages).validate()
 
 
@@ -400,7 +400,14 @@ def test_scheduler_gate_controls_immediate_one_demo_launch(tmp_path: Path) -> No
             if stage.stage_id == "D22_three_demo_reproduction_gate":
                 atomic_write_json(
                     stage_dir / "gate.json",
-                    {"continue_to_one_demo": continue_to_one_demo},
+                    {
+                        "decision": (
+                            "THREE_DEMO_REPRODUCTION_PASS"
+                            if continue_to_one_demo
+                            else "THREE_DEMO_REPRODUCTION_NOT_ESTABLISHED"
+                        ),
+                        "continue_to_one_demo": continue_to_one_demo,
+                    },
                 )
             _write_stage_output(stage, stage_dir, contract.source_commit)
             return 0

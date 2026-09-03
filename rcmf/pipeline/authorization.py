@@ -26,6 +26,10 @@ def _run_bound_checks(
     contract_sha256: str,
     pipeline_config_sha256: str,
 ) -> dict[str, bool]:
+    expected_scope = str(contract.metadata.get("authorization_scope", ""))
+    expected_version = str(
+        contract.metadata.get("authorization_version", "")
+    )
     return {
         "authorization_status": payload.get("authorization_status") == "AUTHORIZED",
         "authorized": payload.get("authorized") is True,
@@ -40,6 +44,16 @@ def _run_bound_checks(
         "contract_sha256": str(payload.get("contract_sha256")) == contract_sha256,
         "pipeline_config_sha256": str(payload.get("pipeline_config_sha256"))
         == pipeline_config_sha256,
+        "authorization_scope": (
+            str(payload.get("scope")) == expected_scope
+            if expected_scope
+            else True
+        ),
+        "authorization_version": (
+            str(payload.get("authorization_version")) == expected_version
+            if expected_version
+            else True
+        ),
         "hard_cap_hours": _float_matches(
             payload.get("hard_cap_hours"), contract.hard_cap_hours
         ),

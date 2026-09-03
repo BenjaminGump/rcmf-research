@@ -25,6 +25,7 @@ from rcmf.factory import build_backend
 from rcmf.pipeline.manifests import content_sha256, file_identity
 from rcmf.pipeline.stage_graph import SHARED_STAGES, THREE_DEMO_STAGES
 from rcmf.pipeline.validators import (
+    evaluate_d06_reproduction_gate,
     evaluate_three_demo_reproduction_gate,
     validate_stage_completion,
 )
@@ -637,6 +638,8 @@ def _paired_or_teacher_command(
     teacher: bool,
 ) -> dict[str, Any]:
     target = arm_root(run_root, arm_id)
+    if teacher and arm_id == "3d":
+        _require_d06_reproduction_gate(run_root)
     script = (
         "scripts/run_appworld_structured_compiler_7hr.py"
         if teacher
@@ -661,9 +664,127 @@ def _paired_or_teacher_command(
     return {"phase": phase, "output": file_identity(output)}
 
 
-def _joint_prepare(
-    run_root: Path, arm_id: str, source_commit: str, attempt_id: str
+def _require_d06_reproduction_gate(run_root: Path) -> dict[str, Any]:
+    path = run_root / "gate/d06_three_demo_reproduction_gate.json"
+    if not path.exists():
+        raise RuntimeError("Fresh D06 reproduction gate has not completed")
+    gate = _json(path)
+    if (
+        gate.get("decision") != "D06_THREE_DEMO_REPRODUCTION_PASS"
+        or gate.get("passed") is not True
+    ):
+        raise RuntimeError("Fresh D06 reproduction gate did not pass")
+    return gate
+
+
+def _d06_reproduction_gate(
+    config: Mapping[str, Any], run_root: Path, source_commit: str
 ) -> dict[str, Any]:
+    target = arm_root(run_root, "3d")
+    d06_stage = run_root / "stages/D06_paired_causal_outcomes"
+    completion = _json(d06_stage / "completion.json")
+    if not bool(completion.get("passed")) or str(
+        completion.get("source_commit")
+    ) != source_commit:
+        raise RuntimeError("Fresh D06 must be sealed before historical comparison")
+    fresh_path = target / "paired_causal/paired_outcomes.json"
+    fresh_selections_path = target / "preflight/frozen_train_selections.jsonl"
+    fresh_identity = {
+        "paired_outcomes": file_identity(fresh_path),
+        "selected_memories": file_identity(fresh_selections_path),
+        "d06_completion": file_identity(d06_stage / "completion.json"),
+        "d06_output_manifest": file_identity(d06_stage / "output_manifest.json"),
+    }
+    references = config["pipeline"]["reproduction_contract"]["audit_references"]
+    historical_path = Path(str(references["paired_outcomes"]))
+    historical_selections_path = Path(str(references["selected_memories"]))
+    historical_identity = {
+        "paired_outcomes": file_identity(historical_path),
+        "selected_memories": file_identity(historical_selections_path),
+    }
+    contract = config["pipeline"]["reproduction_contract"][
+        "post_d06_reproduction_gate"
+    ]
+    result = evaluate_d06_reproduction_gate(
+        fresh=_json(fresh_path),
+        historical=_json(historical_path),
+        fresh_selections=_rows(fresh_selections_path),
+        historical_selections=_rows(historical_selections_path),
+        expected_train_completed=int(contract["expected_train_completed"]),
+        expected_heldout_completed=int(contract["expected_heldout_completed"]),
+        expected_label_counts=contract["expected_label_counts"],
+    )
+    result.update(
+        {
+            "fresh_seal": fresh_identity,
+            "historical_references": historical_identity,
+            "historical_read_after_fresh_seal": True,
+            "source_commit": source_commit,
+        }
+    )
+    path = run_root / "gate/d06_three_demo_reproduction_gate.json"
+    atomic_write_json(path, result)
+    atomic_write_json(
+        run_root
+        / "stages/D06B_three_demo_causal_reproduction_gate/gate.json",
+        result,
+    )
+    return result
+
+
+def _joint_prepare(
+    config: Mapping[str, Any],
+    run_root: Path,
+    arm_id: str,
+    source_commit: str,
+    attempt_id: str,
+) -> dict[str, Any]:
+    prerequisites: dict[str, Any] = {}
+    if arm_id == "3d":
+        d06_gate = _require_d06_reproduction_gate(run_root)
+        source_gate = _json(
+            run_root
+            / "preflight/shared/joint_source_contract_preflight_14c.json"
+        )
+        expected = config["pipeline"]["reproduction_contract"][
+            "post_d06_reproduction_gate"
+        ]
+        prerequisite_checks = {
+            "d06_reproduction_passed": bool(d06_gate.get("passed")),
+            "completed_366_98": d06_gate.get("counts", {}).get(
+                "fresh_train_completed"
+            )
+            == int(expected["expected_train_completed"])
+            and d06_gate.get("counts", {}).get("fresh_heldout_completed")
+            == int(expected["expected_heldout_completed"]),
+            "s05b_source_consumer_contract_passed": bool(
+                source_gate.get("passed")
+            ),
+            "transition_metadata_rows_499": bool(
+                source_gate.get("checks", {}).get("row_count_499")
+            )
+            and bool(
+                source_gate.get("checks", {}).get("consumer_row_count_499")
+            ),
+            "no_truncation": bool(
+                source_gate.get("checks", {}).get("no_truncation")
+            ),
+            "no_missing_row_imputation": True,
+        }
+        if not all(prerequisite_checks.values()):
+            raise RuntimeError(
+                f"D08 prerequisites failed: {prerequisite_checks}"
+            )
+        prerequisites = {
+            "checks": prerequisite_checks,
+            "d06_gate": file_identity(
+                run_root / "gate/d06_three_demo_reproduction_gate.json"
+            ),
+            "s05b_gate": file_identity(
+                run_root
+                / "preflight/shared/joint_source_contract_preflight_14c.json"
+            ),
+        }
     target = arm_root(run_root, arm_id)
     config_path = _arm_config(run_root, arm_id)
     command = _runner_args(
@@ -691,11 +812,177 @@ def _joint_prepare(
     return {
         "format": "fresh_joint_training_units_and_zero_cache_14b_v1",
         "phases": outputs,
+        "prerequisites": prerequisites,
         "data_manifest": file_identity(target / "data/full_bank_data_manifest.json"),
             "zero_cache": file_identity(
                 target / "joint_training/zero_policy_nll_summary.json"
             ),
     }
+
+
+def _link_smoke_input(source: Path, target: Path) -> None:
+    if not source.exists():
+        raise FileNotFoundError(source)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if target.exists() or target.is_symlink():
+        if target.resolve(strict=True) != source.resolve(strict=True):
+            raise ValueError(f"Writer-reader smoke input link differs: {target}")
+        return
+    target.symlink_to(source, target_is_directory=source.is_dir())
+
+
+def _checkpoint_hashes(root: Path) -> dict[str, str]:
+    if not root.exists():
+        return {}
+    return {
+        str(path.relative_to(root)): sha256_file(path)
+        for path in sorted(root.rglob("*"))
+        if path.is_file()
+    }
+
+
+def _path_identity(path: Path) -> dict[str, Any]:
+    if path.is_file():
+        return {"kind": "file", **file_identity(path)}
+    files = [
+        file_identity(candidate, path)
+        for candidate in sorted(path.rglob("*"))
+        if candidate.is_file()
+    ]
+    return {
+        "kind": "directory",
+        "path": str(path.resolve(strict=False)),
+        "file_count": len(files),
+        "size_bytes": sum(int(row["size_bytes"]) for row in files),
+        "sha256": content_sha256(files),
+        "files": files,
+    }
+
+
+def _writer_reader_one_unit_smoke(
+    run_root: Path, source_commit: str, attempt_id: str
+) -> dict[str, Any]:
+    _require_d06_reproduction_gate(run_root)
+    target = arm_root(run_root, "3d")
+    smoke_root = run_root / "engineering_smoke/3d_writer_reader_one_unit"
+    gate_path = smoke_root / "writer_reader_smoke_gate.json"
+    if gate_path.exists():
+        prior = _json(gate_path)
+        if bool(prior.get("passed")):
+            return prior
+        raise RuntimeError("Existing writer-reader smoke gate is not valid")
+    links = {
+        "data/rcmf_source_cache.pt": target / "data/rcmf_source_cache.pt",
+        "data/full_bank_data_manifest.json": target
+        / "data/full_bank_data_manifest.json",
+        "data/source_representation_audit.json": target
+        / "data/source_representation_audit.json",
+        "data/selector_decomposition_audit.json": target
+        / "data/selector_decomposition_audit.json",
+        "data/key_payload_shuffle_manifest.json": target
+        / "data/key_payload_shuffle_manifest.json",
+        "runtime/static_counts.json": target / "runtime/static_counts.json",
+        "runtime/formal_gpu_preflight.json": target
+        / "runtime/formal_gpu_preflight.json",
+        "joint_training/training_unit_manifest.json": target
+        / "joint_training/training_unit_manifest.json",
+        "joint_training/state_query_shuffle_manifest.json": target
+        / "joint_training/state_query_shuffle_manifest.json",
+        "joint_training/zero_policy_nll_summary.json": target
+        / "joint_training/zero_policy_nll_summary.json",
+        "joint_training/zero_policy_nll": target
+        / "joint_training/zero_policy_nll",
+    }
+    for relative, source in links.items():
+        _link_smoke_input(source, smoke_root / relative)
+    scientific_checkpoint_root = target / "joint_training/checkpoints"
+    scientific_before = _checkpoint_hashes(scientific_checkpoint_root)
+    init = run_root / "preflight/initialization_snapshots"
+    command = _runner_args(
+        "scripts/run_rcmf_joint_full_bank_9a.py",
+        config=_arm_config(run_root, "3d"),
+        artifact_dir=smoke_root,
+        attempt_id=f"{attempt_id}-isolated-one-unit",
+        source_commit=source_commit,
+        parent_attempt_id=attempt_id,
+    )
+    command.extend(["--phase", "train"])
+    _run(
+        command,
+        environment={
+            "RCMF_TRAIN_STOP_AFTER_EPOCH": "1",
+            "RCMF_DIAGNOSTIC_MAX_TRAINING_UNITS": "1",
+            "RCMF_WRITER_INITIAL_PATH": str(init / "writer_initial.pt"),
+            "RCMF_READER_INITIAL_PATH": str(init / "reader_initial.pt"),
+        },
+    )
+    summary_path = (
+        smoke_root
+        / "joint_training/checkpoints/diagnostic_one_unit_summary_14c.json"
+    )
+    summary = _json(summary_path)
+    checkpoint = Path(str(summary["checkpoint"]["path"]))
+    checkpoint_hash = sha256_file(checkpoint)
+    scientific_after = _checkpoint_hashes(scientific_checkpoint_root)
+    checks = {
+        "diagnostic_summary_passed": bool(summary.get("passed")),
+        "one_backward": int(summary.get("backward_count", 0)) == 1,
+        "one_unit": int(summary.get("completed_units", 0)) == 1,
+        "finite_loss": bool(summary.get("all_losses_finite")),
+        "finite_gradients": bool(summary.get("trainable_gradients_finite")),
+        "writer_gradient_nonzero": bool(summary.get("writer_gradient_nonzero")),
+        "reader_gradient_nonzero": bool(summary.get("reader_gradient_nonzero")),
+        "qwen_frozen": bool(summary.get("qwen_frozen_and_gradient_free")),
+        "selector_frozen": bool(summary.get("selector_tensors_frozen")),
+        "scientific_checkpoints_unchanged": scientific_before == scientific_after,
+        "isolated_checkpoint": smoke_root.resolve(strict=False)
+        in checkpoint.resolve(strict=False).parents,
+    }
+    result = {
+        "format": "d08b_writer_reader_one_unit_smoke_14g_v1",
+        "passed": all(checks.values()),
+        "scientific_result": False,
+        "checks": checks,
+        "source_commit": source_commit,
+        "training_unit_ids": list(summary.get("completed_global_unit_ids", [])),
+        "backward_count": int(summary.get("backward_count", 0)),
+        "optimizer_step_count": int(summary.get("backward_count", 0)),
+        "checkpoint_sha256_before_discard": checkpoint_hash,
+        "smoke_parameters_used_by_d09": False,
+        "d09_initialization": {
+            "writer": file_identity(init / "writer_initial.pt"),
+            "reader": file_identity(init / "reader_initial.pt"),
+        },
+        "input_links": {
+            relative: _path_identity(source) for relative, source in links.items()
+        },
+        "diagnostic_summary": file_identity(summary_path),
+    }
+    if not result["passed"]:
+        atomic_write_json(gate_path, result)
+        return result
+    checkpoint.unlink()
+    latest = smoke_root / "joint_training/latest_checkpoint.json"
+    latest.unlink(missing_ok=True)
+    result["smoke_parameter_disposition"] = "discarded_after_hash_recorded"
+    result["checkpoint_exists_after_discard"] = checkpoint.exists()
+    atomic_write_json(gate_path, result)
+    return result
+
+
+def _require_writer_reader_smoke_gate(run_root: Path) -> dict[str, Any]:
+    path = (
+        run_root
+        / "engineering_smoke/3d_writer_reader_one_unit/writer_reader_smoke_gate.json"
+    )
+    if not path.exists():
+        raise RuntimeError("D08B writer-reader smoke gate has not completed")
+    gate = _json(path)
+    if not bool(gate.get("passed")):
+        raise RuntimeError("D08B writer-reader smoke gate did not pass")
+    if gate.get("smoke_parameters_used_by_d09") is not False:
+        raise RuntimeError("D08B smoke parameters are not isolated from D09")
+    return gate
 
 
 def _joint_training_epoch(
@@ -705,6 +992,8 @@ def _joint_training_epoch(
     attempt_id: str,
     epoch: int,
 ) -> dict[str, Any]:
+    if arm_id == "3d":
+        _require_writer_reader_smoke_gate(run_root)
     target = arm_root(run_root, arm_id)
     command = _runner_args(
         "scripts/run_rcmf_joint_full_bank_9a.py",
@@ -900,6 +1189,12 @@ def _run_task_set(
         "prompt_profile": prompt_profile,
         "memory_count": 0 if bare else memory_count,
         "source_commit": source_commit,
+        "run_uuid": os.environ.get("RCMF_PIPELINE_RUN_UUID"),
+        "run_root": str(run_root.resolve(strict=False)),
+        "pipeline_config_sha256": os.environ.get(
+            "RCMF_PIPELINE_CONFIG_SHA256"
+        ),
+        "contract_sha256": os.environ.get("RCMF_PIPELINE_CONTRACT_SHA256"),
         "fresh_isolated_world_per_task": True,
         "runtime_retrieval": False,
     }
@@ -1151,7 +1446,7 @@ def _validate_deployment_field(run_root: Path, arm_id: str) -> dict[str, Any]:
     selection = _json(
         target / "heldout_validation/live_full_field/checkpoint_selection.json"
     )
-    if field_control != "D0" and not isinstance(selection.get("selected"), Mapping):
+    if not isinstance(selection.get("selected"), Mapping):
         return {
             "format": "rcmf_deployment_field_validation_14b_v1",
             "arm": arm_id,
@@ -1542,6 +1837,12 @@ def execute_stage(
             raise PermissionError("EXP-037A runtime authorization is not active")
         return authorization
     if arm_id is not None:
+        if stage_id == "D06B_three_demo_causal_reproduction_gate":
+            return _d06_reproduction_gate(config, run_root, source_commit)
+        if stage_id == "D08B_writer_reader_one_unit_smoke":
+            return _writer_reader_one_unit_smoke(
+                run_root, source_commit, attempt_id
+            )
         index = int(stage_id[1:3])
         if index == 0:
             return _prepare_selector_inputs(
@@ -1572,7 +1873,9 @@ def execute_stage(
                 run_root, arm_id, source_commit, attempt_id, teacher=True
             )
         if index == 8:
-            return _joint_prepare(run_root, arm_id, source_commit, attempt_id)
+            return _joint_prepare(
+                config, run_root, arm_id, source_commit, attempt_id
+            )
         if index in (9, 10):
             return _joint_training_epoch(
                 run_root, arm_id, source_commit, attempt_id, index - 8

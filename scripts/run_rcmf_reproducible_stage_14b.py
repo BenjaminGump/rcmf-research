@@ -18,6 +18,7 @@ from rcmf.benchmarks.appworld.reproducible_stages_14b import (
     initialize_runtime_layout,
     write_stage_manifest,
 )
+from rcmf.utils.serialization import sha256_file
 from scripts.prepare_rcmf_reproducible_pipeline_14b import load_resolved
 
 
@@ -62,6 +63,18 @@ def main() -> None:
     started = time.perf_counter()
     started_utc = datetime.now(timezone.utc).isoformat()
     config = load_resolved(args.config)
+    expected_config_sha = os.environ.get("RCMF_PIPELINE_CONFIG_SHA256")
+    if expected_config_sha and sha256_file(args.config) != expected_config_sha:
+        raise PermissionError("Stage config SHA differs from scheduler contract")
+    expected_run_uuid = os.environ.get("RCMF_PIPELINE_RUN_UUID")
+    configured_run_uuid = str(config["pipeline"]["run_uuid"])
+    if expected_run_uuid and configured_run_uuid != expected_run_uuid:
+        raise PermissionError("Stage run UUID differs from scheduler contract")
+    expected_run_root = os.environ.get("RCMF_PIPELINE_RUN_ROOT")
+    if expected_run_root and args.run_root.resolve(strict=False) != Path(
+        expected_run_root
+    ).resolve(strict=False):
+        raise PermissionError("Stage run root differs from scheduler contract")
     if not (args.run_root / "runtime_layout.json").exists():
         initialize_runtime_layout(config, args.run_root)
     stage_dir = args.run_root / "stages" / args.stage
@@ -94,6 +107,12 @@ def main() -> None:
                     os.environ.get("RCMF_PIPELINE_ATTEMPT_ID", "manual")
                 ),
                 "source_commit": args.source_commit,
+                "run_uuid": expected_run_uuid,
+                "run_root": str(args.run_root.resolve(strict=False)),
+                "pipeline_config_sha256": expected_config_sha,
+                "contract_sha256": os.environ.get(
+                    "RCMF_PIPELINE_CONTRACT_SHA256"
+                ),
                 "classification": (
                     "recoverable_infrastructure" if recoverable else "fatal"
                 ),
