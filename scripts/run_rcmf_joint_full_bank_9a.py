@@ -1325,6 +1325,12 @@ def _train(
             )
     if diagnostic_mode:
         checkpoint_path = paths["checkpoints"] / "progress.pt"
+        selector_tensors_unchanged = frozen_selector_tensor_hashes == {
+            "keys": tensor_state_sha256({"keys": tensors["keys"].detach().cpu()}),
+            "queries": tensor_state_sha256(
+                {"queries": tensors["queries"].detach().cpu()}
+            ),
+        }
         summary = {
             "format": "rcmf_joint_full_bank_one_unit_diagnostic_14c_v1",
             "scientific_result": False,
@@ -1389,6 +1395,7 @@ def _train(
                     for row in epoch_metrics[1]
                 )
                 and bool(optimizer.state_dict()["state"])
+                and selector_tensors_unchanged
             ),
         }
         summary_path = paths["checkpoints"] / "diagnostic_one_unit_summary_14c.json"
