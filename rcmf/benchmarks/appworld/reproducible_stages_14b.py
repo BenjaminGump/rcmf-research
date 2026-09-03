@@ -37,12 +37,14 @@ from rcmf.training.multiview_representations_6c import (
 from rcmf.training.rcmf_joint_full_bank_9a import (
     FrozenSelectorDecomposition,
     read_compiled_field,
+    tensor_sha256,
 )
 from rcmf.utils.serialization import (
     atomic_write_json,
     ensure_dir,
     read_jsonl,
     sha256_file,
+    write_jsonl,
 )
 from scripts.build_clean_multiview_cache_7c import (
     _aggregate,
@@ -248,6 +250,165 @@ def _fresh_transition_representations(
     }
     atomic_write_json(output / "transition_summary.json", summary)
     return summary
+
+
+def _joint_source_contract_preflight(
+    config: Mapping[str, Any], run_root: Path
+) -> dict[str, Any]:
+    """Exercise the unchanged EXP-031A consumer over every real fresh cache row."""
+    from scripts.prepare_rcmf_joint_full_bank_9a import _section_contract
+
+    shared = run_root / "preflight" / "shared"
+    transition_path = shared / "transitions.jsonl"
+    transitions = _rows(transition_path)
+    transition_by_id = {str(row["transition_id"]): row for row in transitions}
+    cache_root = run_root / "shared" / "representation_cache" / "multiview"
+    aggregate_path = cache_root / "transition_multiview.pt"
+    aggregate = torch.load(aggregate_path, map_location="cpu", weights_only=False)
+    ordered_ids = [str(value) for value in aggregate["ordered_ids"]]
+    aggregate_rows = list(aggregate["rows"])
+    expected_count = int(config["pipeline"]["expected"]["train_transitions"])
+    lineage = str(config["pipeline"]["expected"]["structural_lineage_sha256"])
+    representations = aggregate["representations"]["final_layer"].to(torch.float32)
+    mismatches: list[dict[str, Any]] = []
+    consumer_rows = []
+    section_map = {
+        "source_task_goal_tokens": "source_task_goal",
+        "canonical_pre_action_state_tokens": "pre_action_state",
+        "complete_action_tokens": "complete_action",
+        "complete_post_action_observation_tokens": "post_action_observation",
+    }
+    if len(transitions) != expected_count or len(ordered_ids) != expected_count:
+        mismatches.append(
+            {
+                "kind": "row_count_mismatch",
+                "transition_rows": len(transitions),
+                "cache_rows": len(ordered_ids),
+                "expected": expected_count,
+            }
+        )
+    expected_order = sorted(transition_by_id)
+    if ordered_ids != expected_order:
+        mismatches.append(
+            {
+                "kind": "transition_order_mismatch",
+                "manifest_order_sha256": content_sha256(expected_order),
+                "cache_order_sha256": content_sha256(ordered_ids),
+            }
+        )
+    for position, transition_id in enumerate(ordered_ids):
+        if transition_id not in transition_by_id or position >= len(aggregate_rows):
+            mismatches.append(
+                {
+                    "kind": "coverage_mismatch",
+                    "position": position,
+                    "transition_id": transition_id,
+                }
+            )
+            continue
+        row_path = cache_root / "transition_rows" / f"{transition_id}.pt"
+        if not row_path.exists():
+            mismatches.append(
+                {
+                    "kind": "missing_cache_row",
+                    "position": position,
+                    "transition_id": transition_id,
+                    "path": str(row_path),
+                }
+            )
+            continue
+        cache_payload = torch.load(row_path, map_location="cpu", weights_only=False)
+        transition = transition_by_id[transition_id]
+        cache_row = aggregate_rows[position]
+        row_mismatches = []
+        if str(cache_payload["transition_id"]) != transition_id:
+            row_mismatches.append("transition_id")
+        if int(cache_payload["token_count"]) != int(transition["teacher_section_tokens"]):
+            row_mismatches.append("teacher_section_tokens")
+        if str(cache_payload["teacher_section_sha256"]) != str(
+            transition["teacher_section_sha256"]
+        ):
+            row_mismatches.append("teacher_section_sha256")
+        if bool(cache_payload.get("truncated")):
+            row_mismatches.append("truncated")
+        for field_name, span_name in section_map.items():
+            actual = int(cache_payload["span_rows"][span_name]["token_count"])
+            if int(transition[field_name]) != actual:
+                row_mismatches.append(field_name)
+        if row_mismatches:
+            mismatches.append(
+                {
+                    "kind": "cache_contract_mismatch",
+                    "position": position,
+                    "transition_id": transition_id,
+                    "fields": row_mismatches,
+                    "cache_row": file_identity(row_path),
+                }
+            )
+            continue
+        try:
+            consumer_rows.append(
+                _section_contract(
+                    transition,
+                    cache_row,
+                    representations[position, :8],
+                    lineage=lineage,
+                )
+            )
+        except Exception as error:
+            mismatches.append(
+                {
+                    "kind": "historical_consumer_error",
+                    "position": position,
+                    "transition_id": transition_id,
+                    "error_type": type(error).__name__,
+                    "error": str(error),
+                }
+            )
+    mismatch_path = shared / "joint_source_contract_mismatches_14c.jsonl"
+    write_jsonl(mismatch_path, mismatches)
+    required_fields = (
+        "teacher_section_tokens",
+        "source_task_goal_tokens",
+        "canonical_pre_action_state_tokens",
+        "complete_action_tokens",
+        "complete_post_action_observation_tokens",
+    )
+    checks = {
+        "row_count_499": len(transitions) == len(ordered_ids) == expected_count,
+        "full_order_match": ordered_ids == sorted(transition_by_id),
+        "consumer_row_count_499": len(consumer_rows) == expected_count,
+        "required_metadata_present": all(
+            all(field in row for field in required_fields) for row in transitions
+        ),
+        "no_truncation": all(not bool(row.get("truncated")) for row in aggregate_rows),
+        "mismatch_count_zero": not mismatches,
+    }
+    report = {
+        "format": "rcmf_joint_source_contract_preflight_14c_v1",
+        "stage_id": "S05B_joint_source_contract_preflight",
+        "historical_consumer": {
+            "callable": "scripts.prepare_rcmf_joint_full_bank_9a._section_contract",
+            "semantics_changed": False,
+        },
+        "transition_manifest": file_identity(transition_path),
+        "aggregate_cache": file_identity(aggregate_path),
+        "ordered_transition_ids_sha256": content_sha256(ordered_ids),
+        "representation_tensor_sha256": tensor_sha256(representations),
+        "individual_cache_row_count": sum(
+            (cache_root / "transition_rows" / f"{value}.pt").exists()
+            for value in ordered_ids
+        ),
+        "consumer_rows_sha256": content_sha256(consumer_rows),
+        "mismatches": file_identity(mismatch_path),
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
+    report_path = shared / "joint_source_contract_preflight_14c.json"
+    atomic_write_json(report_path, report)
+    if not report["passed"]:
+        raise RuntimeError(f"Joint source contract preflight failed: {mismatches[:3]}")
+    return report
 
 
 def _prepare_selector_inputs(
@@ -1364,6 +1525,8 @@ def execute_stage(
         }
     if stage_id == "S05_transition_representations":
         return _fresh_transition_representations(config, run_root, stage_dir)
+    if stage_id == "S05B_joint_source_contract_preflight":
+        return _joint_source_contract_preflight(config, run_root)
     if stage_id == "S06_cv_folds_and_sampling":
         return _json(run_root / "preflight/shared/cv_folds_and_sampling.json")
     if stage_id == "S07_initial_parameter_snapshots":

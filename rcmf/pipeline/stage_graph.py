@@ -10,6 +10,7 @@ SHARED_STAGES = (
     "S03_transition_records",
     "S04_selector_supervision",
     "S05_transition_representations",
+    "S05B_joint_source_contract_preflight",
     "S06_cv_folds_and_sampling",
     "S07_initial_parameter_snapshots",
     "S08_two_arm_contract",

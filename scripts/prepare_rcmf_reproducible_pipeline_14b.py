@@ -20,7 +20,9 @@ import yaml
 import _bootstrap  # noqa: F401
 from rcmf.pipeline.contracts import ArmContract, PipelineContract
 from rcmf.benchmarks.appworld.reproducible_config_14b import build_arm_runtime_config
-from rcmf.benchmarks.appworld.transitions import transition_teacher_section
+from rcmf.benchmarks.appworld.transition_metadata_14c import (
+    enrich_transition_token_metadata,
+)
 from rcmf.pipeline.manifests import content_sha256, file_identity
 from rcmf.pipeline.stage_graph import build_exp037a_stage_graph
 from rcmf.pipeline.validators import validate_resolved_arm_diff
@@ -38,7 +40,6 @@ from rcmf.utils.serialization import (
     ensure_dir,
     read_jsonl,
     sha256_file,
-    sha256_text,
     write_jsonl,
 )
 from scripts.prepare_procedural_coverage_6g import _full_transition_signatures
@@ -207,25 +208,9 @@ def _add_teacher_token_metadata(
     transitions: Sequence[Mapping[str, Any]], tokenizer: Any
 ) -> list[dict[str, Any]]:
     """Derive context metadata directly from authoritative transition text."""
-    rows: list[dict[str, Any]] = []
-    tokenizer_name = str(getattr(tokenizer, "name_or_path", "unknown"))
-    for transition in transitions:
-        row = dict(transition)
-        section = transition_teacher_section(row)
-        tokenized = tokenizer(
-            section,
-            truncation=False,
-            add_special_tokens=False,
-        )
-        input_ids = tokenized["input_ids"]
-        row.update(
-            {
-                "teacher_section_tokens": len(input_ids),
-                "teacher_section_sha256": sha256_text(section),
-                "tokenizer_name_or_path": tokenizer_name,
-            }
-        )
-        rows.append(row)
+    rows, report, mismatches = enrich_transition_token_metadata(transitions, tokenizer)
+    if not report["passed"]:
+        raise ValueError(f"Transition token metadata audit failed: {mismatches[:3]}")
     return rows
 
 
@@ -246,7 +231,31 @@ def rebuild_shared_cpu(config: Mapping[str, Any], root: Path) -> dict[str, Any]:
         str(pipeline["roots"]["model_snapshot"]),
         trust_remote_code=True,
     )
-    transitions = _add_teacher_token_metadata(transitions, tokenizer)
+    transitions, token_metadata_audit, token_metadata_mismatches = (
+        enrich_transition_token_metadata(
+            transitions,
+            tokenizer,
+            snapshot=pipeline["roots"]["model_snapshot"],
+        )
+    )
+    atomic_write_json(
+        shared / "transition_token_metadata_schema_14c.json",
+        token_metadata_audit["schema"],
+    )
+    atomic_write_json(
+        shared / "transition_token_metadata_audit_14c.json",
+        token_metadata_audit,
+    )
+    write_jsonl(
+        shared / "transition_token_metadata_mismatches_14c.jsonl",
+        token_metadata_mismatches,
+    )
+    if len(transitions) != int(pipeline["expected"]["train_transitions"]):
+        raise ValueError("Transition token metadata row count differs from 499")
+    if not token_metadata_audit["passed"]:
+        raise ValueError(
+            f"Transition token metadata audit failed: {token_metadata_mismatches[:3]}"
+        )
     downstream = json.loads(Path(str(pipeline["roots"]["approved_downstream_split"])).read_text(encoding="utf-8"))
     parent_split = _parent_split(transitions, downstream)
     query_rows, query_by_id = _query_signatures(examples, task_split)
@@ -361,10 +370,16 @@ def rebuild_shared_cpu(config: Mapping[str, Any], root: Path) -> dict[str, Any]:
             name: file_identity(shared / name) for name in outputs
         },
         "teacher_section_metadata": {
-            "derivation": "transition_teacher_section_then_locked_tokenizer_without_special_tokens_or_truncation",
+            "schema": "rcmf_transition_token_metadata_14c_v1",
+            "derivation": "one_complete_teacher_section_tokenization_with_canonical_offset_spans",
             "source": "authoritative_transition_manifest",
             "tokenizer_name_or_path": str(getattr(tokenizer, "name_or_path", "unknown")),
+            "tokenizer_identity_sha256": token_metadata_audit["tokenizer"]["tokenizer_identity_sha256"],
+            "tokenizer_snapshot_sha256": token_metadata_audit["tokenizer"]["tokenizer_snapshot_sha256"],
             "row_count": len(transitions),
+            "required_fields": token_metadata_audit["schema"]["required_integer_fields"],
+            "audit": file_identity(shared / "transition_token_metadata_audit_14c.json"),
+            "mismatches": file_identity(shared / "transition_token_metadata_mismatches_14c.jsonl"),
         },
         "historical_derived_artifact_loaded": False,
     }
@@ -498,6 +513,9 @@ def _runtime_preflight(config: Mapping[str, Any], shared: Mapping[str, Any], smo
     conservative_total = 92.0
     hard_cap = max(2.0 * expected_total, 1.25 * conservative_total, 160.0)
     measured = dict(smoke or {})
+    authorization = config["pipeline"].get(
+        "conditional_runtime_authorization", {}
+    )
     measured_basis = {
         "technical_smoke_elapsed_seconds": measured.get("elapsed_seconds"),
         "technical_smoke_peak_gpu_memory_bytes": measured.get(
@@ -565,7 +583,7 @@ def _runtime_preflight(config: Mapping[str, Any], shared: Mapping[str, Any], smo
         "recommended_hard_cap_hours": hard_cap,
         "approved_hard_cap_hours": float(config["pipeline"]["approved_hard_cap_hours"]),
         "hard_cap_formula": "max(2*expected_total,1.25*conservative_total,160)",
-        "authorized_by_user_message": True,
+        "authorized_by_user_message": bool(authorization.get("granted_by_user")),
         "restart_plan": {
             "atomic_stage_outputs": True,
             "append_only_attempts": True,
@@ -651,6 +669,8 @@ def prepare(config: Mapping[str, Any], output_root: Path, source_commit: str, sm
     )
     smoke = json.loads(smoke_path.read_text(encoding="utf-8")) if smoke_path and smoke_path.exists() else None
     runtime = _runtime_preflight(config, shared, smoke)
+    authorization = pipeline.get("conditional_runtime_authorization", {})
+    authorization_received = bool(authorization.get("granted_by_user"))
     approval_checks = {
         "source_and_manifests_consistent": True,
         "tests_passed": bool((smoke or {}).get("all_tests_passed", False)),
@@ -662,7 +682,7 @@ def prepare(config: Mapping[str, Any], output_root: Path, source_commit: str, sm
         "preflight_complete": smoke is not None,
         "recommended_hard_cap_at_most_200": float(runtime["recommended_hard_cap_hours"]) <= 200.0,
     }
-    authorized = all(approval_checks.values())
+    authorized = authorization_received and all(approval_checks.values())
     files = {
         "environment_manifest.json": environment,
         "authoritative_source_manifest.json": sources,
@@ -679,11 +699,13 @@ def prepare(config: Mapping[str, Any], output_root: Path, source_commit: str, sm
         "runtime_preflight.json": runtime,
         "approval_request.json": {
             "format": "conditional_runtime_authorization_plan_14b_v1",
-            "user_authorization_received": True,
-            "hard_cap_hours": 200.0,
+            "user_authorization_received": authorization_received,
+            "hard_cap_hours": float(pipeline["approved_hard_cap_hours"]),
             "checks": approval_checks,
             "authorized_to_launch_when_persisted": authorized,
-            "authorization_scope": "3d then conditional 1d only after PASS",
+            "authorization_scope": (
+                "3d then conditional 1d only after PASS" if authorized else "none"
+            ),
         },
     }
     for name, payload in files.items():
@@ -692,12 +714,12 @@ def prepare(config: Mapping[str, Any], output_root: Path, source_commit: str, sm
         atomic_write_json(output_root / "smoke_results.json", smoke)
     summary = {
         "format": PREFLIGHT_FORMAT,
-        "run_uuid": RUN_UUID,
+        "run_uuid": str(pipeline["run_uuid"]),
         "source_commit": source_commit,
         "approval_checks": approval_checks,
         "authorized_to_launch": authorized,
         "recommended_hard_cap_hours": runtime["recommended_hard_cap_hours"],
-        "approved_hard_cap_hours": 200.0,
+        "approved_hard_cap_hours": float(pipeline["approved_hard_cap_hours"]),
         "output_hashes": {
             name: sha256_file(output_root / name)
             for name in files

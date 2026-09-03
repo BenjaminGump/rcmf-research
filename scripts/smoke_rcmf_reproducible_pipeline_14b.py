@@ -83,6 +83,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--local-tests", type=Path, required=True)
     parser.add_argument("--lambda-tests", type=Path, required=True)
+    parser.add_argument("--real-historical-integration-report", type=Path)
     return parser.parse_args()
 
 
@@ -347,7 +348,7 @@ def _scheduler_smoke(source_commit: str) -> dict[str, Any]:
         "fail_gate": fail_summary,
         "passed": (
             pass_summary["status"] == "complete"
-            and pass_summary["stage_count"] == 57
+            and pass_summary["stage_count"] == len(stages)
             and pass_summary["one_demo_launched"]
             and transition_max <= 60
             and fail_summary["status"] == "complete"
@@ -737,6 +738,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     scheduler = _scheduler_smoke(args.source_commit)
     local_tests = _json(args.local_tests)
     lambda_tests = _json(args.lambda_tests)
+    historical_integration = None
+    if args.real_historical_integration_report is not None:
+        historical_integration = _json(args.real_historical_integration_report)
     passed = all(
         (
             local_tests.get("passed") is True,
@@ -747,6 +751,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             reversible_error <= 1.0e-5,
             scheduler["passed"],
             all(row["status"] == "complete" for row in trajectories.values()),
+            historical_integration is None
+            or bool(historical_integration.get("passed")),
         )
     )
     elapsed = time.perf_counter() - started
@@ -780,6 +786,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "policy_teacher_target_score": teacher_score,
         "policy_teacher_seconds": teacher_seconds,
         "writer_reader_backward": gradient_rows,
+        "integration_levels": {
+            "low_level_writer_reader_smoke": {
+                "present": True,
+                "passed": gradient_rows[-1]["writer_any_gradient"]
+                and gradient_rows[-1]["reader_any_gradient"],
+            },
+            "real_historical_joint_prepare_smoke": {
+                "present": historical_integration is not None,
+                "report": historical_integration,
+                "passed": historical_integration is None
+                or bool(historical_integration.get("passed")),
+            },
+        },
         "field_fixture": {
             "memory_count": 401,
             "A_shape": list(A_401.shape),

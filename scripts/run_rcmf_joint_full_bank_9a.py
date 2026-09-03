@@ -22,6 +22,7 @@ import torch.nn.functional as F
 
 from rcmf.config import load_config
 from rcmf.factory import build_backend
+from rcmf.training.oracle_convergence_5fb import tensor_state_sha256
 from rcmf.training.oracle_decoder_5fc import module_state_sha256
 from rcmf.training.rcmf_joint_full_bank_9a import (
     GLOBAL_SEED,
@@ -438,6 +439,20 @@ def _runtime_tensors(data: Mapping[str, Any], device: torch.device) -> dict[str,
             for task_id, indices in task_indices.items()
         },
     }
+
+
+def _diagnostic_schedule_limit(
+    *, normal_limit: int, diagnostic_max_units: int
+) -> int:
+    if diagnostic_max_units < 0:
+        raise ValueError("RCMF_DIAGNOSTIC_MAX_TRAINING_UNITS must be nonnegative")
+    if diagnostic_max_units == 0:
+        return normal_limit
+    return min(normal_limit, diagnostic_max_units)
+
+
+def _module_parameters_finite(module: nn.Module) -> bool:
+    return all(bool(torch.isfinite(parameter.detach()).all()) for parameter in module.parameters())
 
 
 def _legal_field(
@@ -1021,6 +1036,12 @@ def _train(
     if stop_after_epoch not in (1, 2):
         raise ValueError("RCMF_TRAIN_STOP_AFTER_EPOCH must be 1 or 2")
     schedule_limit = epoch_boundaries[stop_after_epoch - 1]
+    diagnostic_max_units = int(os.environ.get("RCMF_DIAGNOSTIC_MAX_TRAINING_UNITS", "0"))
+    diagnostic_mode = diagnostic_max_units > 0
+    schedule_limit = _diagnostic_schedule_limit(
+        normal_limit=schedule_limit,
+        diagnostic_max_units=diagnostic_max_units,
+    )
     unit_ids = [f"e{1 if index < epoch_boundaries[0] else 2}:{row['unit_id']}" for index, row in enumerate(schedule)]
     source_hashes = {
         "source_cache": sha256_file(paths["source_cache"]),
@@ -1033,6 +1054,12 @@ def _train(
     backend = _build_backend(cfg)
     writer, reader = _build_components(backend.device)
     tensors = _runtime_tensors(data, backend.device)
+    frozen_selector_tensor_hashes = {
+        "keys": tensor_state_sha256({"keys": tensors["keys"].detach().cpu()}),
+        "queries": tensor_state_sha256(
+            {"queries": tensors["queries"].detach().cpu()}
+        ),
+    }
     optimizer = torch.optim.AdamW(
         [
             {
@@ -1064,6 +1091,11 @@ def _train(
             unit_ids=unit_ids,
             source_hashes=source_hashes,
         )
+    resume_completed_units = completed
+    attempt_start_module_hashes = {
+        "writer": module_state_sha256(writer),
+        "reader": module_state_sha256(reader),
+    }
     zero_nll = {
         str(row["state_example_id"]): float(row["policy_nll"])
         for row in (
@@ -1073,6 +1105,46 @@ def _train(
     }
     results_root = paths["training_summary"].parent / "condition_rows"
     results_root.mkdir(parents=True, exist_ok=True)
+    diagnostic_summary_path = (
+        paths["checkpoints"] / "diagnostic_one_unit_summary_14c.json"
+    )
+    if diagnostic_mode and completed == schedule_limit:
+        if not diagnostic_summary_path.exists():
+            raise FileNotFoundError(
+                "Diagnostic checkpoint exists without its one-unit summary"
+            )
+        existing_summary = _json(diagnostic_summary_path)
+        checkpoint_path = paths["checkpoints"] / "progress.pt"
+        checks = {
+            "existing_summary_passed": bool(existing_summary.get("passed")),
+            "completed_units_match": int(existing_summary["completed_units"])
+            == completed,
+            "checkpoint_hash_match": str(
+                existing_summary["checkpoint"]["sha256"]
+            )
+            == sha256_file(checkpoint_path),
+            "writer_hash_restored": str(
+                existing_summary["final_module_hashes"]["writer"]
+            )
+            == module_state_sha256(writer),
+            "reader_hash_restored": str(
+                existing_summary["final_module_hashes"]["reader"]
+            )
+            == module_state_sha256(reader),
+        }
+        result = {
+            **existing_summary,
+            "resume_validation": checks,
+            "resume_validation_passed": all(checks.values()),
+            "backward_count_this_attempt": 0,
+        }
+        atomic_write_json(
+            paths["checkpoints"] / "diagnostic_resume_validation_14c.json",
+            result,
+        )
+        if not result["resume_validation_passed"]:
+            raise RuntimeError(f"One-unit diagnostic resume failed: {checks}")
+        return result
     started = time.perf_counter()
     checkpoint_every = int(settings["training"]["checkpoint_every_units"])
     epoch_metrics: dict[int, list[dict[str, float]]] = {1: [], 2: []}
@@ -1143,6 +1215,20 @@ def _train(
         assert_frozen_without_gradients(backend.model)
         if str(unit["role"]) == "key_payload_shuffle":
             shuffle_nll[state_id] = float(terms["shuffle_raw_nll"].detach().cpu())
+        writer_gradient_nonzero = any(
+            parameter.grad is not None
+            and bool((parameter.grad.detach().abs() > 0).any())
+            for parameter in writer.parameters()
+        )
+        reader_gradient_nonzero = any(
+            parameter.grad is not None
+            and bool((parameter.grad.detach().abs() > 0).any())
+            for parameter in reader.parameters()
+        )
+        gradients_finite = all(
+            parameter.grad is None or bool(torch.isfinite(parameter.grad).all())
+            for parameter in list(writer.parameters()) + list(reader.parameters())
+        )
         metric = {
             "loss": float(loss.detach().cpu()),
             "policy_kl": float(terms["policy_kl"].detach().cpu()),
@@ -1154,6 +1240,23 @@ def _train(
             "slot_norm": float(field["slot_norm"].detach().cpu()),
             "payload_norm": float(field["payload_norm"].detach().cpu()),
             "seconds": time.perf_counter() - unit_started,
+            "writer_gradient_nonzero": writer_gradient_nonzero,
+            "reader_gradient_nonzero": reader_gradient_nonzero,
+            "trainable_gradients_finite": gradients_finite,
+            "enabled_loss_terms_finite": all(
+                math.isfinite(value)
+                for value in (
+                    float(terms["policy_kl"].detach().cpu()),
+                    float(terms["teacher_token_ce"].detach().cpu()),
+                    float(terms["ground_truth_ce"].detach().cpu()),
+                    float(margin_zero.detach().cpu()),
+                    float(margin_shuffle.detach().cpu()),
+                    float(hooks.residual_penalty().detach().cpu()),
+                    float(field["payload_norm"].square().detach().cpu()),
+                )
+            ),
+            "post_step_writer_parameters_finite": _module_parameters_finite(writer),
+            "post_step_reader_parameters_finite": _module_parameters_finite(reader),
         }
         epoch_metrics[epoch].append(metric)
         result_path = results_root / f"{sha256_text(unit_ids[cursor])}.json"
@@ -1173,7 +1276,12 @@ def _train(
         )
         completed = cursor + 1
         at_epoch = completed in epoch_boundaries
-        if completed % checkpoint_every == 0 or at_epoch or completed == len(schedule):
+        if (
+            completed % checkpoint_every == 0
+            or at_epoch
+            or completed == len(schedule)
+            or (diagnostic_mode and completed == schedule_limit)
+        ):
             history_entry = {
                 "completed_units": completed,
                 "epoch": epoch,
@@ -1215,6 +1323,77 @@ def _train(
                 total_units=len(schedule),
                 latest_validated_checkpoint=str(checkpoint_path),
             )
+    if diagnostic_mode:
+        checkpoint_path = paths["checkpoints"] / "progress.pt"
+        summary = {
+            "format": "rcmf_joint_full_bank_one_unit_diagnostic_14c_v1",
+            "scientific_result": False,
+            "diagnostic_stop_present_in_scientific_config": False,
+            "global_seed": GLOBAL_SEED,
+            "requested_maximum_units": diagnostic_max_units,
+            "completed_units": completed,
+            "completed_global_unit_ids": unit_ids[:completed],
+            "backward_count": completed,
+            "backward_count_this_attempt": completed - resume_completed_units,
+            "metrics": epoch_metrics[1],
+            "attempt_start_module_hashes": attempt_start_module_hashes,
+            "final_module_hashes": {
+                "writer": module_state_sha256(writer),
+                "reader": module_state_sha256(reader),
+            },
+            "checkpoint": {
+                "path": str(checkpoint_path),
+                "sha256": sha256_file(checkpoint_path),
+            },
+            "optimizer_state_saved": True,
+            "optimizer_state_nonempty": bool(optimizer.state_dict()["state"]),
+            "qwen_frozen_and_gradient_free": True,
+            "selector_tensors_frozen": frozen_selector_tensor_hashes
+            == {
+                "keys": tensor_state_sha256({"keys": tensors["keys"].detach().cpu()}),
+                "queries": tensor_state_sha256(
+                    {"queries": tensors["queries"].detach().cpu()}
+                ),
+            },
+            "selector_tensor_hashes": frozen_selector_tensor_hashes,
+            "all_losses_finite": all(
+                math.isfinite(float(row["loss"])) for row in epoch_metrics[1]
+            ),
+            "all_enabled_loss_terms_finite": all(
+                bool(row["enabled_loss_terms_finite"]) for row in epoch_metrics[1]
+            ),
+            "writer_gradient_nonzero": all(
+                bool(row["writer_gradient_nonzero"]) for row in epoch_metrics[1]
+            ),
+            "reader_gradient_nonzero": all(
+                bool(row["reader_gradient_nonzero"]) for row in epoch_metrics[1]
+            ),
+            "trainable_gradients_finite": all(
+                bool(row["trainable_gradients_finite"]) for row in epoch_metrics[1]
+            ),
+            "post_step_parameters_finite": all(
+                bool(row["post_step_writer_parameters_finite"])
+                and bool(row["post_step_reader_parameters_finite"])
+                for row in epoch_metrics[1]
+            ),
+            "passed": (
+                completed == diagnostic_max_units
+                and all(math.isfinite(float(row["loss"])) for row in epoch_metrics[1])
+                and all(bool(row["writer_gradient_nonzero"]) for row in epoch_metrics[1])
+                and all(bool(row["reader_gradient_nonzero"]) for row in epoch_metrics[1])
+                and all(bool(row["trainable_gradients_finite"]) for row in epoch_metrics[1])
+                and all(bool(row["enabled_loss_terms_finite"]) for row in epoch_metrics[1])
+                and all(
+                    bool(row["post_step_writer_parameters_finite"])
+                    and bool(row["post_step_reader_parameters_finite"])
+                    for row in epoch_metrics[1]
+                )
+                and bool(optimizer.state_dict()["state"])
+            ),
+        }
+        summary_path = paths["checkpoints"] / "diagnostic_one_unit_summary_14c.json"
+        atomic_write_json(summary_path, summary)
+        return summary
     checkpoints = []
     for epoch in range(1, stop_after_epoch + 1):
         path = paths["checkpoints"] / f"epoch_{epoch:02d}.pt"

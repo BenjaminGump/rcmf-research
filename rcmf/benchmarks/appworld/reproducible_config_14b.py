@@ -150,7 +150,11 @@ def build_arm_runtime_config(
             "run_uuid": f"{method['run_uuid']}-{arm_id}",
             "artifact_dir": str(target),
             "starting_head": "resolved_at_launch",
-            "working_branch": "research/v6-rcmf-reproducible-3d-gated-pipeline",
+            "working_branch": str(
+                method.get(
+                    "working_branch", "research/v6-rcmf-reproducible-3d-gated-pipeline"
+                )
+            ),
             "global_seed": int(method["global_seed"]),
             "parent_exp025b": str(parent_b),
             "parent_exp025c": str(target),

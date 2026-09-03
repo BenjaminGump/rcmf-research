@@ -3,6 +3,7 @@ from __future__ import annotations
 import sys
 import json
 import os
+import torch
 import time
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
@@ -69,7 +70,7 @@ def test_stage_graph_is_complete_and_ordered() -> None:
     stages = build_exp037a_stage_graph()
     ids = [stage.stage_id for stage in stages]
     assert ids == [*SHARED_STAGES, *THREE_DEMO_STAGES, *ONE_DEMO_STAGES, *FINAL_STAGES]
-    assert len(stages) == 57
+    assert len(stages) == 58
     _contract(stages).validate()
 
 
@@ -130,34 +131,64 @@ def test_teacher_token_metadata_is_fresh_and_untruncated() -> None:
 
     class FakeTokenizer:
         name_or_path = "locked-tokenizer"
+        vocab_size = 256
+        model_max_length = 40960
+        chat_template = ""
+        special_tokens_map = {}
+        init_kwargs = {"_commit_hash": "tokenizer-commit"}
 
         def __init__(self) -> None:
             self.calls: list[dict[str, object]] = []
 
-        def __call__(self, text: str, **kwargs: object) -> dict[str, list[int]]:
+        def __call__(self, text: str, **kwargs: object) -> dict[str, torch.Tensor]:
             self.calls.append({"text": text, **kwargs})
-            return {"input_ids": list(range(len(text.encode("utf-8"))))}
+            values = torch.tensor([[ord(value) for value in text]], dtype=torch.long)
+            return {
+                "input_ids": values,
+                "attention_mask": torch.ones_like(values),
+                "offset_mapping": torch.tensor(
+                    [[[index, index + 1] for index in range(len(text))]],
+                    dtype=torch.long,
+                ),
+            }
 
-    transition = {
-        "transition_id": "transition-1",
+        def decode(self, token_ids: list[int], **_: object) -> str:
+            return "".join(chr(value) for value in token_ids)
+
+    sections = {
         "source_task_goal": "goal",
         "canonical_pre_action_state": "state",
         "complete_action": "action",
         "complete_post_action_observation": "observation",
+    }
+    transition = {
+        "transition_id": "transition-1",
+        "transition_content_sha256": "a" * 64,
+        **sections,
+        **{
+            f"{name}_sha256": sha256_text(value)
+            for name, value in sections.items()
+        },
     }
     tokenizer = FakeTokenizer()
     rows = _add_teacher_token_metadata([transition], tokenizer)
     section = transition_teacher_section(transition)
 
     assert "teacher_section_tokens" not in transition
-    assert rows[0]["teacher_section_tokens"] == len(section.encode("utf-8"))
+    assert rows[0]["teacher_section_tokens"] == len(section)
+    assert rows[0]["source_task_goal_tokens"] == len("goal")
+    assert rows[0]["canonical_pre_action_state_tokens"] == len("state")
+    assert rows[0]["complete_action_tokens"] == len("action")
+    assert rows[0]["complete_post_action_observation_tokens"] == len("observation")
     assert rows[0]["teacher_section_sha256"] == sha256_text(section)
     assert rows[0]["tokenizer_name_or_path"] == "locked-tokenizer"
     assert tokenizer.calls == [
         {
             "text": section,
-            "truncation": False,
             "add_special_tokens": False,
+            "truncation": False,
+            "return_offsets_mapping": True,
+            "return_tensors": "pt",
         }
     ]
 
