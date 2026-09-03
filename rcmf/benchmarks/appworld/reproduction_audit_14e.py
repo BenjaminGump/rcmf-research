@@ -282,6 +282,34 @@ def simulate_historical_adaptive_expansion(
     }
 
 
+def _selection_context_budget(selection: Mapping[str, Any]) -> dict[str, Any]:
+    base_tokens = int(selection["base_prompt_tokens"])
+    raw_value = selection.get("raw_prompt_tokens")
+    raw_tokens = int(raw_value) if raw_value is not None else None
+    attempts = [
+        {
+            "transition_id": str(row["transition_id"]),
+            "prompt_tokens": int(row["prompt_tokens"]),
+            "memory_increment_tokens": int(row["prompt_tokens"]) - base_tokens,
+        }
+        for row in selection.get("attempts", [])
+    ]
+    minimum_attempt = min(
+        attempts,
+        key=lambda row: (int(row["prompt_tokens"]), str(row["transition_id"])),
+        default=None,
+    )
+    return {
+        "base_prompt_tokens": base_tokens,
+        "memory_increment_tokens": (
+            raw_tokens - base_tokens if raw_tokens is not None else None
+        ),
+        "total_prompt_tokens": raw_tokens,
+        "minimum_attempt": minimum_attempt,
+        "attempts": attempts,
+    }
+
+
 def audit_selector_and_context(
     config: Mapping[str, Any], fresh_root: Path, output_root: Path
 ) -> dict[str, Any]:
@@ -347,20 +375,16 @@ def audit_selector_and_context(
         )
         same_context = all(fresh.get(key) == historical.get(key) for key in context_fields)
         context_match += int(same_context)
+        context_budget = _selection_context_budget(fresh)
         row = {
             "state_example_id": state_id,
             "state_task_id": str(fresh["state_task_id"]),
-            "fresh_selected_memory_id": str(fresh["selected_transition_id"]),
-            "historical_selected_memory_id": str(
-                historical["selected_transition_id"]
-            ),
+            "fresh_selected_memory_id": fresh["selected_transition_id"],
+            "historical_selected_memory_id": historical["selected_transition_id"],
             "selected_memory_match": same_selected,
             "selected_class_match": same_class,
             "base_prompt_sha256": str(fresh["base_prompt_sha256"]),
-            "base_prompt_tokens": int(fresh["base_prompt_tokens"]),
-            "memory_increment_tokens": int(fresh["raw_prompt_tokens"])
-            - int(fresh["base_prompt_tokens"]),
-            "total_prompt_tokens": int(fresh["raw_prompt_tokens"]),
+            **context_budget,
             "context_limit": 40960,
             "context_decision": (
                 "OVER_CONTEXT" if bool(fresh["over_context"]) else "PASS"

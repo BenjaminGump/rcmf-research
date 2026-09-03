@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from rcmf.benchmarks.appworld.reproduction_audit_14e import (
+    _selection_context_budget,
     compare_label_cells,
     simulate_historical_adaptive_expansion,
 )
@@ -140,6 +141,27 @@ def test_label_comparison_detects_cell_movement(tmp_path: Path) -> None:
     result = compare_label_cells(fresh, historical, expected_count=1)
     assert result["moved_cell_count"] == 1
     assert not result["passed"]
+
+
+def test_over_context_selection_preserves_nullable_budget_and_attempts() -> None:
+    result = _selection_context_budget(
+        {
+            "base_prompt_tokens": 39000,
+            "raw_prompt_tokens": None,
+            "attempts": [
+                {"transition_id": "long", "prompt_tokens": 43000},
+                {"transition_id": "short", "prompt_tokens": 42000},
+            ],
+        }
+    )
+    assert result["memory_increment_tokens"] is None
+    assert result["total_prompt_tokens"] is None
+    assert result["minimum_attempt"] == {
+        "transition_id": "short",
+        "prompt_tokens": 42000,
+        "memory_increment_tokens": 3000,
+    }
+    assert len(result["attempts"]) == 2
 
 
 def test_diagnostic_runner_cannot_cross_d05() -> None:
