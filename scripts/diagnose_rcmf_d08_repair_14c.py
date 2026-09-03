@@ -24,7 +24,10 @@ from rcmf.benchmarks.appworld.reproducible_stages_14b import (
 )
 from rcmf.pipeline.manifests import content_sha256, file_identity
 from rcmf.utils.serialization import atomic_write_json, sha256_file, write_jsonl
-from scripts.prepare_rcmf_reproducible_pipeline_14b import rebuild_shared_cpu
+from scripts.prepare_rcmf_reproducible_pipeline_14b import (
+    load_resolved,
+    rebuild_shared_cpu,
+)
 
 
 FORMAT = "rcmf_exp037a_d08_repair_diagnostic_14c_v1"
@@ -170,7 +173,7 @@ def _copy_d00_d07_fixtures(failed: Path, diagnostic: Path) -> dict[str, Any]:
 
 
 def _resolved_diagnostic_config(source: Path, root: Path, source_commit: str) -> dict[str, Any]:
-    config = copy.deepcopy(yaml.safe_load(source.read_text(encoding="utf-8")))
+    config = copy.deepcopy(load_resolved(source))
     pipeline = config["pipeline"]
     pipeline["run_uuid"] = root.name
     pipeline["roots"]["run_root"] = str(root)

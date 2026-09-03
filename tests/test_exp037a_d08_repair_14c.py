@@ -336,6 +336,8 @@ def test_proposed_config_and_diagnostic_override_are_not_authorized(
         tmp_path / "diagnostic",
         "a" * 40,
     )
+    assert diagnostic["arms"]["3d"]["task_conditioned_prompt_profile"] == "full_demo"
+    assert diagnostic["arms"]["1d"]["task_conditioned_prompt_profile"] == "full_demo_first_only"
     diagnostic_authorization = diagnostic["pipeline"][
         "conditional_runtime_authorization"
     ]
