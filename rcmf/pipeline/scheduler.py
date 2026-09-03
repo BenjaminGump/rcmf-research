@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
 from rcmf.pipeline.contracts import PipelineContract, StageSpec
+from rcmf.pipeline.authorization import validate_runtime_authorization
 from rcmf.pipeline.resume import (
     AppendOnlyAttemptLedger,
     StageStateStore,
@@ -111,6 +112,7 @@ class EventDrivenScheduler:
         validator: StageValidator = default_stage_validator,
         heartbeat_interval_seconds: float = 240.0,
         transition_target_seconds: float = 60.0,
+        contract_sha256: str | None = None,
     ) -> None:
         contract.validate()
         self.contract = contract
@@ -123,6 +125,7 @@ class EventDrivenScheduler:
         self.validator = validator
         self.heartbeat_interval_seconds = heartbeat_interval_seconds
         self.transition_target_seconds = transition_target_seconds
+        self.contract_sha256 = contract_sha256
         self._stop_heartbeat = threading.Event()
         self._current_stage: str | None = None
 
@@ -184,6 +187,16 @@ class EventDrivenScheduler:
         if not authorization.exists():
             raise PermissionError("Formal scheduler requires runtime_authorization.json")
         auth = json.loads(authorization.read_text(encoding="utf-8"))
+        if self.contract.metadata.get("require_run_bound_authorization"):
+            if not self.contract_sha256:
+                raise PermissionError("Strict runtime authorization requires contract SHA256")
+            validate_runtime_authorization(
+                auth,
+                self.contract,
+                run_root=self.run_root,
+                contract_sha256=self.contract_sha256,
+                pipeline_config_path=self.config_path,
+            )
         if not auth.get("authorized") or float(auth.get("hard_cap_hours", 0)) != self.contract.hard_cap_hours:
             raise PermissionError("Runtime authorization does not match the pipeline contract")
         if auth.get("source_commit") and str(auth["source_commit"]) != self.contract.source_commit:

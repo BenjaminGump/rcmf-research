@@ -23,6 +23,17 @@ def compatibility_parent_b(run_root: str | Path) -> Path:
     return Path(run_root) / "shared" / "compat_exp025b"
 
 
+def configured_hard_cap_hours(method: Mapping[str, Any]) -> float:
+    """Return the approved cap, or the unapproved proposal for static resolution."""
+    authorization = method.get("conditional_runtime_authorization", {})
+    approved = authorization.get("approved_hard_cap_wall_hours")
+    if approved is not None:
+        return float(approved)
+    if "approved_hard_cap_hours" in method:
+        return float(method["approved_hard_cap_hours"])
+    return float(method["proposed_hard_cap_hours"])
+
+
 def build_arm_runtime_config(
     pipeline: Mapping[str, Any], run_root: str | Path, arm_id: str
 ) -> dict[str, Any]:
@@ -149,7 +160,7 @@ def build_arm_runtime_config(
     )
     causal["runtime"] = {
         **causal["runtime"],
-        "review_threshold_h100_hours": float(method["approved_hard_cap_hours"]),
+        "review_threshold_h100_hours": configured_hard_cap_hours(method),
     }
     base["stage_c_7hr"] = causal
 
@@ -212,7 +223,7 @@ def build_arm_runtime_config(
     }
     full_bank["runtime"] = {
         **full_bank["runtime"],
-        "review_threshold_h100_hours": float(method["approved_hard_cap_hours"]),
+        "review_threshold_h100_hours": configured_hard_cap_hours(method),
     }
     base["stage_c_9a"] = full_bank
 

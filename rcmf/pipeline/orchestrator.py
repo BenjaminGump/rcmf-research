@@ -7,6 +7,7 @@ from typing import Any, Mapping
 from rcmf.pipeline.contracts import ArmContract, PipelineContract
 from rcmf.pipeline.scheduler import EventDrivenScheduler, SchedulerResult
 from rcmf.pipeline.stage_graph import build_exp037a_stage_graph
+from rcmf.utils.serialization import sha256_file
 
 
 def load_pipeline_contract(path: str | Path) -> PipelineContract:
@@ -48,6 +49,7 @@ def run_pipeline(
         run_root,
         python_executable=python_executable,
         config_path=stage_config,
+        contract_sha256=sha256_file(contract_path),
     )
     return scheduler.run()
 

@@ -1,0 +1,198 @@
+pipeline:
+  schema_version: rcmf_reproducible_pipeline_14f_v1
+  run_uuid: rcmf_reproducible_3d_gate_1d_pipeline_14f_20260903_001
+  config_path: configs/pipeline/rcmf_appworld_repro_14f.yaml
+  source_commit_policy: exact_clean_head_at_launch
+  global_seed: 25101
+  selector_cv_seed: 25071
+  final_selector_member_seeds: [25071, 25072, 25073]
+  heartbeat_interval_seconds: 240
+  heartbeat_stale_seconds: 720
+  watchdog_interval_seconds: 1200
+  stage_transition_target_seconds: 60
+  maximum_recoverable_attempts_per_stage: 3
+  recoverable_retry_delay_seconds: 60
+  proposed_hard_cap_hours: 80
+  conditional_runtime_authorization:
+    authorization_version: exp037a_run_bound_authorization_14f_v1
+    authorization_status: NOT_AUTHORIZED
+    granted_by_user: false
+    previous_200_hour_authorization_inherited: false
+    full_pipeline_authorized: false
+    d06_or_later_authorized: false
+    one_demo_authorized: false
+    proposed_hard_cap_wall_hours: 80
+    approved_hard_cap_wall_hours: null
+    automatic_three_demo_launch_after_preflight: false
+    automatic_one_demo_launch_only_after: false
+    maximum_gate_to_one_demo_launch_seconds: 60
+    monitor_is_scheduler: false
+    ordinary_infrastructure_failures_are_resumable: true
+  required_environment:
+    python: /home/ubuntu/venvs/rcmf-py311/bin/python
+    legacy_python: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    persistent_mount: /lambda/nfs/rcmf-persist
+    legacy_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+    hardware: NVIDIA H100 80GB HBM3
+  roots:
+    run_root: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14f_20260903_001
+    authoritative_corpus: /lambda/nfs/rcmf-persist/project/runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+    replay_validated_corpus: /lambda/nfs/rcmf-persist/project/runs/stage_c/replay_clean_rebuild_7b_20260818_001
+    approved_downstream_split: /lambda/nfs/rcmf-persist/project/runs/stage_c/state_conditioned_program_direct_7dg_20260821_001/preflight/a_task_split.json
+    model_snapshot: Qwen/Qwen3-8B
+  reproduction_contract:
+    selector_parent_split:
+      algorithm: sha256_order_first_heldout_then_remaining_train
+      seed: 18018
+      train_parent_count: 29
+      heldout_parent_count: 8
+    causal_panel:
+      initial_state_count: 256
+      maximum_state_count: 499
+      minimum_per_label: 40
+    expected_parent_split_sha256: 0c6707f61f3fa62847c1abea366b44e4fd50c206f773fa6e79a5e8ffe433c615
+    expected_selector_winner: hard_lr3e4_e120_t075
+    expected_selected_memory_agreement: 499
+    audit_references:
+      parent_split: /lambda/nfs/rcmf-persist/project/runs/stage_c/replay_clean_rebuild_7b_20260818_001/clean_procedural_audit/clean_parent_split_manifest.json
+      labels: /lambda/nfs/rcmf-persist/project/runs/stage_c/signature_balanced_field_7c_20260818_001/clean_full_procedural_labels.jsonl
+      cv_report: /lambda/nfs/rcmf-persist/project/runs/stage_c/signature_balanced_field_7c_20260818_001/selector/a_only_cv/a_only_cv_report.json
+      selector_summary: /lambda/nfs/rcmf-persist/project/runs/stage_c/signature_balanced_field_7c_20260818_001/selector/selector_summary.json
+      selected_memories: /lambda/nfs/rcmf-persist/project/runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/preflight/frozen_train_selections.jsonl
+      causal_panel: /lambda/nfs/rcmf-persist/project/runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/preflight/initial_panel.json
+      paired_outcomes: /lambda/nfs/rcmf-persist/project/runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/paired_causal/paired_outcomes.json
+    representation_sha256:
+      state_final: fd4c32c8366604e34cc40a060aba4fa3269b9ef5cd135a4af96b77c70865c084
+      state_mean_final_four: eca49197c51266a4328af0d884216d10fac0ea391941cfce7d36a8bdacb2d30d
+      transition_final: 2ed58934ee486431b9d6cda7c581a2db1fb3db6e707a3817a8636b75a5495929
+      transition_mean_final_four: 97ccc747e535910d8e3a462f52d718b0febd01f73c04d94de1d385f0854e1ec2
+    post_d06_reproduction_gate:
+      expected_train_completed: 366
+      expected_heldout_completed: 98
+      construction_input: false
+  expected:
+    structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+    replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+    selector_train_tasks: 37
+    selector_validation_tasks: 9
+    selector_train_states: 499
+    selector_validation_states: 139
+    train_transitions: 499
+    signature_classes: 150
+    selector_legal_pairs: 310433
+    downstream_train_tasks: 29
+    downstream_heldout_tasks: 8
+    downstream_train_states: 366
+    downstream_heldout_states: 98
+    train_memories: 401
+    heldout_parent_memories: 98
+    deployment_memories: 499
+    dev_tasks: 57
+    dev_ordered_task_sha256: c6aad8dca959d9c54537555dd6c3a4ececdd55390029511ab7971550d796e463
+  prompt_assets:
+    full_demo_raw_sha256: dd74c379c97031a062ba79b2b82d3992ec3b38870792f53d86821544f994c4c3
+    one_demo_initial_messages_sha256: 90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe
+    retained_first_demo_sha256: 32348a5889682499b1cc17b7dced74dd706db12b6e248c1e6c7dfba5e50ed713
+  selector:
+    layer: final_layer
+    state_views: 10
+    transition_views: 10
+    input_dim: 4096
+    projection_dim: 64
+    interaction_rank: 32
+    batch_states: 8
+    maximum_pair_samples_per_state: 256
+    maximum_hard_samples_per_state: 128
+    cv_folds: 3
+    cv_seed: 25071
+    weight_decay: 0.0001
+    checkpoint_interval_epochs: 10
+    candidates:
+      - name: balanced_lr3e4_e60_t1
+        learning_rate: 0.0003
+        epochs: 60
+        temperature: 1.0
+        listwise_weight: 1.0
+        pairwise_weight: 1.0
+        hard_negative_weight: 0.5
+        exact_api_weight: 0.1
+        stage_weight: 0.1
+      - name: balanced_lr1e4_e120_t075
+        learning_rate: 0.0001
+        epochs: 120
+        temperature: 0.75
+        listwise_weight: 1.0
+        pairwise_weight: 1.0
+        hard_negative_weight: 0.5
+        exact_api_weight: 0.1
+        stage_weight: 0.1
+      - name: hard_lr3e4_e120_t075
+        learning_rate: 0.0003
+        epochs: 120
+        temperature: 0.75
+        listwise_weight: 1.0
+        pairwise_weight: 0.75
+        hard_negative_weight: 0.75
+        exact_api_weight: 0.1
+        stage_weight: 0.1
+  memory:
+    source_views: [source_task_goal, pre_action_state, complete_action, post_action_observation]
+    pooling_rules: [token_mean, final_token]
+    input_dim: 4096
+    writer_hidden_dim: 512
+    payload_dim: 256
+    slot_count: 8
+    key_dim: 960
+    accumulator_dtype: float32
+    parent_weighting: parent_normalized
+    arbitrary_truncation_allowed: false
+    token_subsampling_allowed: false
+  reader:
+    insertion_layers: [7, 14, 21, 28]
+    model_dim: 4096
+    payload_dim: 256
+    attention_dim: 512
+    heads: 8
+    output_projection_zero_initialized: true
+    self_attention_kv_append: false
+  training:
+    epochs: [1, 2]
+    writer_learning_rate: 0.0001
+    reader_learning_rate: 0.0001
+    weight_decay: 0.0001
+    max_grad_norm: 1.0
+    raw_or_bare_policy_kl_weight: 1.0
+    teacher_token_ce_weight: 0.25
+    ground_truth_action_ce_weight: 0.05
+    full_vs_zero_nll_weight: 0.10
+    full_vs_shuffle_nll_weight: 0.10
+    reader_residual_norm_weight: 0.001
+    writer_payload_norm_weight: 0.0001
+    positive_bare_class_balance: true
+    gradient_checkpointing: true
+    mixed_precision: bfloat16
+    checkpoint_every_units: 25
+  evaluation:
+    deployment_prompt_profile: full_demo_first_only
+    max_steps: 50
+    max_api_calls_per_interaction: 100
+    max_context_turns: 40
+    max_new_tokens: 512
+    context_limit: 40960
+    temperature: 0.0
+    top_p: 1.0
+    do_sample: false
+    enable_thinking: false
+    seed: 25101
+  historical_comparison:
+    allowed_stage: D21_historical_reproduction_analysis
+    selector_ensemble_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42bb01255a9e623956611f
+    writer_reader_checkpoint_sha256: d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1
+    deployment_field_sha256: 5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e
+    dev_reference: {bare: 12, correct: 17, shuffle: 12, total: 57}
+
+arms:
+  3d:
+    include: rcmf_appworld_arm_3d_14f.yaml
+  1d:
+    include: rcmf_appworld_arm_1d_14f.yaml

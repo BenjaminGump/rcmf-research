@@ -12,6 +12,7 @@ import sys
 import _bootstrap  # noqa: F401
 
 from rcmf.pipeline.orchestrator import load_pipeline_contract, result_as_dict, run_pipeline
+from rcmf.pipeline.authorization import validate_explicit_authorization
 from rcmf.utils.serialization import atomic_write_json, sha256_file
 
 
@@ -20,6 +21,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--contract", type=Path, required=True)
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--authorize-and-run", action="store_true")
+    parser.add_argument("--authorization-file", type=Path)
     return parser.parse_args()
 
 
@@ -41,7 +43,11 @@ def _status() -> str:
     ).stdout.strip()
 
 
-def _authorize(contract_path: Path, run_root: Path) -> dict[str, object]:
+def _authorize(
+    contract_path: Path, run_root: Path, authorization_path: Path | None
+) -> dict[str, object]:
+    if authorization_path is None:
+        raise PermissionError("A fresh explicit --authorization-file is required")
     contract = load_pipeline_contract(contract_path)
     preflight = json.loads(
         (run_root / "preflight/preflight_summary.json").read_text(encoding="utf-8")
@@ -49,20 +55,31 @@ def _authorize(contract_path: Path, run_root: Path) -> dict[str, object]:
     runtime = json.loads(
         (run_root / "preflight/runtime_preflight.json").read_text(encoding="utf-8")
     )
-    approval = json.loads(
-        (run_root / "preflight/approval_request.json").read_text(encoding="utf-8")
+    approval = json.loads(authorization_path.read_text(encoding="utf-8"))
+    config_path = Path(str(contract.metadata["pipeline_config_path"]))
+    run_bound_checks = validate_explicit_authorization(
+        approval,
+        contract,
+        run_root=run_root,
+        contract_path=contract_path,
+        pipeline_config_path=config_path,
     )
     checks = {
         "persistent_mount": os.path.ismount("/lambda/nfs/rcmf-persist"),
         "clean_checkout": _status() == "",
         "source_commit": _head() == contract.source_commit == str(preflight["source_commit"]),
         "all_preflight_checks": all(bool(v) for v in preflight["approval_checks"].values()),
-        "approval_package_authorized": bool(approval["authorized_to_launch_when_persisted"]),
-        "recommended_cap_at_most_200": float(runtime["recommended_hard_cap_hours"]) <= 200.0,
-        "approved_cap_is_200": float(contract.hard_cap_hours) == 200.0,
+        "preflight_requires_explicit_approval": bool(
+            preflight.get("explicit_user_approval_required", True)
+        ),
+        "recommended_cap_within_approved_cap": float(
+            runtime["recommended_hard_cap_hours"]
+        )
+        <= float(contract.hard_cap_hours),
         "contract_hash_valid": sha256_file(contract_path)
         == sha256_file(run_root / "preflight/stage_dag.json"),
         "one_global_seed": int(contract.global_seed) == 25101,
+        **{f"run_bound_{key}": value for key, value in run_bound_checks.items()},
     }
     if not all(checks.values()):
         raise PermissionError(f"EXP-037A conditional authorization checks failed: {checks}")
@@ -73,19 +90,28 @@ def _authorize(contract_path: Path, run_root: Path) -> dict[str, object]:
         else {}
     )
     payload: dict[str, object] = {
-        "format": "exp037a_runtime_authorization_14b_v1",
+        "format": "exp037a_runtime_authorization_14f_v1",
         "authorized": True,
-        "authorization_source": "user_conditional_total_authorization",
+        "authorization_status": "AUTHORIZED",
+        "granted_by_user": True,
+        "full_pipeline_authorized": True,
+        "d06_or_later_authorized": True,
+        "one_demo_authorized": True,
+        "previous_200_hour_authorization_inherited": False,
+        "authorization_source": "explicit_run_bound_user_authorization",
         "authorized_at_utc": existing.get("authorized_at_utc")
         or datetime.now(timezone.utc).isoformat(),
         "run_started_utc": existing.get("run_started_utc")
         or datetime.now(timezone.utc).isoformat(),
         "source_commit": contract.source_commit,
+        "run_uuid": contract.run_uuid,
+        "run_root": str(run_root.resolve()),
         "contract_sha256": sha256_file(contract_path),
+        "pipeline_config_sha256": sha256_file(config_path),
         "preflight_summary_sha256": sha256_file(
             run_root / "preflight/preflight_summary.json"
         ),
-        "hard_cap_hours": 200.0,
+        "hard_cap_hours": float(contract.hard_cap_hours),
         "recommended_hard_cap_hours": float(runtime["recommended_hard_cap_hours"]),
         "checks": checks,
         "scope": "complete_3d_then_1d_only_on_THREE_DEMO_REPRODUCTION_PASS",
@@ -99,7 +125,7 @@ def _authorize(contract_path: Path, run_root: Path) -> dict[str, object]:
 def main() -> None:
     args = parse_args()
     if args.authorize_and_run:
-        authorization = _authorize(args.contract, args.run_root)
+        authorization = _authorize(args.contract, args.run_root, args.authorization_file)
         print(json.dumps({"authorization": authorization}, sort_keys=True), flush=True)
     result = run_pipeline(
         args.contract,
