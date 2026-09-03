@@ -1,0 +1,24 @@
+{
+  "format": "exp037a_r7_tests_14h_v1",
+  "lambda": {
+    "command": "PYTHONHASHSEED=25101 /home/ubuntu/venvs/rcmf-py311/bin/python -m pytest -q",
+    "focused": "60 passed in 3.10s; post-smoke 15 passed in 2.58s",
+    "full": "902 passed in 9.39s"
+  },
+  "local": {
+    "command": "PYTHONHASHSEED=25101 conda run -n appworld_env python -m pytest -p no:cacheprovider --basetemp <fresh> -q",
+    "focused": "99 passed in 10.70s; final R7 focused 60 passed in 8.58s",
+    "full": "900 passed, 2 skipped in 18.72s"
+  },
+  "passed": true,
+  "process_start_pythonhashseed": "25101",
+  "real_path_smoke": {
+    "root": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r7_stage_manifest_smoke_14h_20260904_002",
+    "scientific_stage_count": 0,
+    "second_run_skip_count": 5,
+    "second_run_subprocess_count": 0,
+    "stage_count": 5,
+    "strict_pass_count": 5,
+    "summary_sha256": "d73737d10f636532e792acb3568db239ef4951190a65f7308c0577cacd970f07"
+  }
+}

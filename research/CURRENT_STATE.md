@@ -1,5 +1,41 @@
 # Current State
 
+## 2026-09-03 EXP-037A-R7 Ready For Reauthorization
+
+VERIFIED:
+
+- The canonical successful stage-manifest producer now emits the same
+  run-bound source, UUID, canonical root, config SHA, contract SHA, stage, and
+  attempt identity required by strict validation. Success and failure paths
+  share one verified identity payload.
+- All 60 formal stage IDs round-trip through the real producer and strict
+  validator in synthetic schema tests. The real scheduler, subprocess runner,
+  production stage runner, producer, and validator completed S00-S04 at 5/5
+  under a new diagnostic root; a second scheduler invocation skipped 5/5 and
+  launched zero subprocesses.
+- Resume validation now checks recorded dependency-completion hashes as well
+  as stage output and run identity. A tampered manifest is rejected and the
+  scheduler reruns the affected stage in regression coverage.
+- The new 14h launch source is frozen at
+  `272b0e9a1f8b29f898024f1115d1710d41270758`. The 14h formal root was fresh
+  before preflight and now contains preflight only, with no runtime
+  authorization, stages, attempts, or scientific outputs.
+- Local tests passed 900 with 2 skipped; Lambda tests passed 902. H100
+  scientific active time and scientific stage count are zero.
+
+CURRENT DECISION:
+
+- `READY_FOR_REAUTHORIZATION`
+- `AUTHORIZATION_REMAINS_FALSE`
+- The failed 14g run and R6 authorization remain immutable and cannot be
+  resumed or reused. A new explicit approval bound to the exact 14h source,
+  UUID, root, config, contract, scope, and proposed 120-hour cap is required.
+
+Full report:
+`research/results/EXP_037A_R7_STAGE_MANIFEST_IDENTITY_REPAIR.md`.
+
+Last updated: 2026-09-03.
+
 ## 2026-09-03 EXP-037A-R6 Stopped Before Science At S00
 
 VERIFIED:

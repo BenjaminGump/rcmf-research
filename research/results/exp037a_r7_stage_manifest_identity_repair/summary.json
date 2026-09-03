@@ -1,0 +1,38 @@
+{
+  "authorization_status": "NOT_AUTHORIZED",
+  "authorized_to_launch": false,
+  "decision": "READY_FOR_REAUTHORIZATION",
+  "failed_14g_run_immutable": true,
+  "failed_r6_authorization_inherited": false,
+  "format": "exp037a_r7_stage_manifest_identity_repair_summary_v1",
+  "h100_scientific_active_hours": 0,
+  "lambda_full_tests": {
+    "passed": 902,
+    "skipped": 0
+  },
+  "launch_source_sha": "272b0e9a1f8b29f898024f1115d1710d41270758",
+  "local_full_tests": {
+    "passed": 900,
+    "skipped": 2
+  },
+  "new_run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001",
+  "new_run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001",
+  "pipeline_config_sha256": "53b87b0624fe08824b4d976554e745c95753ab59ecbf338a1c060a069259cfd9",
+  "production_path_smoke": {
+    "elapsed_seconds": 14.529714860022068,
+    "passed_stages": 5,
+    "resume_skipped_stages": 5,
+    "second_run_subprocesses": 0,
+    "total_stages": 5
+  },
+  "proposed_hard_cap_hours": 120.0,
+  "scientific_configuration_changes": 0,
+  "scientific_result": "NOT_EVALUATED",
+  "scientific_stage_execution_count": 0,
+  "stage_contract_sha256": "dce77ba06e39b8e38449f10f514e3a0972d0e15ef04e9a5e762720e8d1f0fc29",
+  "stage_manifest_producer_audit": {
+    "formal_stage_count": 60,
+    "passed": 60
+  },
+  "starting_records_sha": "c003de43307b263b688bb074560c3a05022fb882"
+}

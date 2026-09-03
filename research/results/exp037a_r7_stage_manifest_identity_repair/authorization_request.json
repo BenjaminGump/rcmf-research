@@ -1,0 +1,66 @@
+{
+  "authorization_status": "NOT_AUTHORIZED",
+  "authorization_version": "exp037a_run_bound_authorization_14h_v1",
+  "authorized": false,
+  "authorized_to_launch": false,
+  "checkpoint_restart_plan": {
+    "append_only_attempts": true,
+    "atomic_stage_outputs": true,
+    "resume_first_incomplete_stage": true,
+    "strict_run_source_config_contract_hash_before_skip": true
+  },
+  "contract_sha256": "dce77ba06e39b8e38449f10f514e3a0972d0e15ef04e9a5e762720e8d1f0fc29",
+  "d06_or_later_authorized": false,
+  "direct_submission_to_launcher_must_fail": true,
+  "failed_r6_authorization_inherited": false,
+  "format": "exp037a_r7_authorization_request_14h_v1",
+  "full_pipeline_authorized": false,
+  "gates": {
+    "d06": "D06B_three_demo_causal_reproduction_gate",
+    "d08": "D08_zero_cache_and_training_units",
+    "d22": "D22_three_demo_reproduction_gate",
+    "writer_reader_smoke": "D08B_writer_reader_one_unit_smoke"
+  },
+  "global_seed": 25101,
+  "granted_by_user": false,
+  "hard_cap_hours": 120.0,
+  "one_demo_authorized": false,
+  "pipeline_config_sha256": "53b87b0624fe08824b4d976554e745c95753ab59ecbf338a1c060a069259cfd9",
+  "previous_200_hour_authorization_inherited": false,
+  "recommended_hard_cap_hours": 120.0,
+  "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001",
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001",
+  "runtime": {
+    "branch_3d_passes_and_1d_executes": {
+      "conservative_wall_hours": 92.5,
+      "expected_h100_active_hours": 39.05,
+      "expected_wall_hours": 47.75,
+      "scope": "shared + complete 3D + D22 + complete conditional 1D + final reporting"
+    },
+    "branch_3d_reproduction_fails": {
+      "conservative_wall_hours": 56.5,
+      "expected_h100_active_hours": 21.85,
+      "expected_wall_hours": 26.75,
+      "scope": "shared + complete 3D through D22 + final failure reporting"
+    },
+    "cost": {
+      "available": false,
+      "reason": "no configured Lambda H100 hourly rate is present"
+    },
+    "format": "exp037a_r7_runtime_by_branch_14h_v1",
+    "storage": {
+      "conservative_gib": 90.0,
+      "expected_gib": 46.0
+    }
+  },
+  "scope": "complete_fresh_3d_then_conditional_fresh_1d_and_final_reporting",
+  "selector_seeds": {
+    "cv": 25071,
+    "final": [
+      25071,
+      25072,
+      25073
+    ]
+  },
+  "source_commit": "272b0e9a1f8b29f898024f1115d1710d41270758"
+}

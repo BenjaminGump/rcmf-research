@@ -1,0 +1,90 @@
+{
+  "basis": [
+    "R3 measured S05+D00-D05 selector reconstruction: 2.437285 h",
+    "failed 14b D06 measured wall: 1.868714 h",
+    "original full-scope EXP-037A preflight: 47.5 h expected / 92 h conservative",
+    "EXP-031A/034A/034B/036C complete-run throughput anchors"
+  ],
+  "format": "exp037a_r7_runtime_by_stage_14h_v1",
+  "groups": [
+    {
+      "conservative_wall_hours": 5.0,
+      "expected_wall_hours": 2.5,
+      "gpu": "mixed",
+      "group": "shared_preflight_and_transition_representations",
+      "stages": "S00-S09"
+    },
+    {
+      "conservative_wall_hours": 4.0,
+      "expected_wall_hours": 2.5,
+      "gpu": "mixed",
+      "group": "three_demo_selector",
+      "measured_r3_wall_hours": 2.437285044068057,
+      "stages": "D00-D05"
+    },
+    {
+      "conservative_wall_hours": 4.0,
+      "expected_wall_hours": 2.0,
+      "gpu": "mixed",
+      "group": "three_demo_paired_and_early_gate",
+      "measured_d06_wall_hours": 1.8687141789252766,
+      "stages": "D06-D06B"
+    },
+    {
+      "conservative_wall_hours": 3.0,
+      "expected_wall_hours": 1.5,
+      "gpu": "mixed",
+      "group": "three_demo_teacher_prepare_and_smoke",
+      "stages": "D07-D08B"
+    },
+    {
+      "conservative_wall_hours": 15.0,
+      "expected_wall_hours": 6.0,
+      "gpu": "mixed",
+      "group": "three_demo_training_validation_and_fields",
+      "stages": "D09-D17"
+    },
+    {
+      "conservative_wall_hours": 25.0,
+      "expected_wall_hours": 12.0,
+      "gpu": "mixed",
+      "group": "three_demo_dev_and_final_gate",
+      "stages": "D18-D22"
+    },
+    {
+      "conservative_wall_hours": 4.0,
+      "expected_wall_hours": 2.5,
+      "gpu": "mixed",
+      "group": "conditional_one_demo_selector",
+      "stages": "O00-O05"
+    },
+    {
+      "conservative_wall_hours": 6.0,
+      "expected_wall_hours": 3.5,
+      "gpu": "mixed",
+      "group": "conditional_one_demo_paired_teacher_prepare",
+      "stages": "O06-O08"
+    },
+    {
+      "conservative_wall_hours": 12.0,
+      "expected_wall_hours": 6.0,
+      "gpu": "mixed",
+      "group": "conditional_one_demo_training_validation_and_fields",
+      "stages": "O09-O17"
+    },
+    {
+      "conservative_wall_hours": 14.0,
+      "expected_wall_hours": 9.0,
+      "gpu": "yes",
+      "group": "conditional_one_demo_dev",
+      "stages": "O18-O19"
+    },
+    {
+      "conservative_wall_hours": 0.5,
+      "expected_wall_hours": 0.25,
+      "gpu": "no",
+      "group": "final_analysis_and_reporting",
+      "stages": "F00-F03"
+    }
+  ]
+}

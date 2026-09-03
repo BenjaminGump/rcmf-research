@@ -1,0 +1,28 @@
+{
+  "active_exp037a_processes": [],
+  "active_formal_run": false,
+  "captured_utc": "2026-09-03T19:33:48.843687+00:00",
+  "format": "exp037a_r7_runtime_state_14h_v1",
+  "gpu": [
+    "NVIDIA H100 80GB HBM3, 81559, 0, 0"
+  ],
+  "h100_scientific_active_hours": 0,
+  "nfs_mounted": true,
+  "safe_to_leave_idle": true,
+  "source_commit": "272b0e9a1f8b29f898024f1115d1710d41270758",
+  "tmux": [
+    "exp024a: 1 windows (created Sun Aug 16 18:04:38 2026)",
+    "exp024r: 1 windows (created Mon Aug 17 01:07:24 2026)",
+    "exp024r2: 1 windows (created Mon Aug 17 03:29:07 2026)",
+    "exp024r3: 1 windows (created Mon Aug 17 08:21:26 2026)",
+    "exp025b: 1 windows (created Mon Aug 17 16:43:05 2026)",
+    "exp025cr: 1 windows (created Tue Aug 18 12:42:56 2026)",
+    "exp025dg2: 1 windows (created Fri Aug 21 12:36:31 2026)",
+    "exp027a_pairmlp: 1 windows (created Sat Aug 22 13:50:12 2026)",
+    "exp027a_pairmlp_eval: 1 windows (created Sat Aug 22 17:36:42 2026)",
+    "exp027a_pairmlp_u16: 1 windows (created Sat Aug 22 15:48:39 2026)",
+    "exp031b_stage8d_l1_d1: 1 windows (created Thu Aug 27 15:12:52 2026)",
+    "exp036a_smoke_002: 1 windows (created Mon Aug 31 04:55:56 2026)",
+    "exp036c_b0: 1 windows (created Tue Sep  1 01:55:58 2026)"
+  ]
+}

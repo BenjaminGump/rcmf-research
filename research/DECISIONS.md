@@ -1,5 +1,43 @@
 # Decisions and Deviations
 
+## 2026-09-03 EXP-037A-R7 stage-manifest identity repair
+
+VERIFIED:
+
+- R6 failed because the successful production manifest omitted four
+  scheduler-provided run-bound identity fields required by the strict
+  validator. The validator was correct and was not weakened.
+- The production stage runner now verifies and explicitly passes one canonical
+  identity payload to the successful producer; execution failures after
+  identity verification use the same payload.
+- Dependency completion hashes are now validated during resume, preventing a
+  downstream completion from remaining valid after an upstream completion
+  changes.
+- All 60 formal stage commands use the single repaired producer. The real
+  S00-S04 production path passed 5/5, and hash-valid resume skipped 5/5.
+- The 14h scientific contract is unchanged from R3/R5. No S05, selector,
+  representation, D-stage, O-stage, AppWorld scientific generation, optimizer,
+  or long run was executed.
+
+DECISION:
+
+- Record `READY_FOR_REAUTHORIZATION`.
+- Freeze `272b0e9a1f8b29f898024f1115d1710d41270758` as the new launch source.
+- Preserve 120 hours as an unapproved anomaly-cap proposal. Require a fresh
+  exact run-bound user authorization before formal launch.
+
+IMPLEMENTATION DEVIATIONS:
+
+- The first real-path diagnostic root stopped at S00 before science because
+  the diagnostic fixture omitted two files required by runtime-layout
+  compatibility setup. That preserved failed diagnostic exposed that setup
+  failures were outside the failure-recording guard. The fixture and guard
+  were repaired without changing production science; a fresh diagnostic root
+  then passed.
+- Windows pytest could not access its default temp root. Tests used unique
+  writable basetemp directories under `C:/gbz`; no test or source semantics
+  changed.
+
 ## 2026-09-03 EXP-037A-R6 formal launch stopped at S00
 
 VERIFIED:

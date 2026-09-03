@@ -1,0 +1,29 @@
+{
+  "canonical_run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001",
+  "contract_sha256": "dce77ba06e39b8e38449f10f514e3a0972d0e15ef04e9a5e762720e8d1f0fc29",
+  "format": "exp037a_r7_run_identity_14h_v1",
+  "historical_predecessors": {
+    "14b": {
+      "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+      "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001"
+    },
+    "14f": {
+      "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14f_20260903_001",
+      "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14f_20260903_001"
+    },
+    "14g": {
+      "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001",
+      "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001"
+    }
+  },
+  "historical_roots_written": false,
+  "pipeline_config": {
+    "path": "/lambda/nfs/rcmf-persist/project/configs/pipeline/rcmf_appworld_repro_14h.yaml",
+    "sha256": "53b87b0624fe08824b4d976554e745c95753ab59ecbf338a1c060a069259cfd9",
+    "size_bytes": 8986
+  },
+  "root_entries_before_preflight": [],
+  "root_existed_before_preflight": false,
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001",
+  "scientific_outputs_before_preflight": 0
+}
