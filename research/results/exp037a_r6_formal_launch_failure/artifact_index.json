@@ -1,0 +1,22 @@
+{
+  "artifacts": [
+    {"path": "preflight/authorization_request.json", "sha256": "c69378137bfeb0cdbd60ac145f69ad6c7882e56d883a93367e2e8841ab426151", "size_bytes": 2392},
+    {"path": "preflight/explicit_user_authorization.json", "sha256": "2540e7da598c37bbfb03eb3ba2fea082b2b231182abd868c20b57c34a504010b", "size_bytes": 1388},
+    {"path": "runtime_authorization.json", "sha256": "5da0dd48206ffe4487095431f1c9c0047d0d1091fe06b196cae4ecbacd07545e", "size_bytes": 2256},
+    {"path": "attempts.jsonl", "sha256": "c71d381f3f85160398f095eb332271f2b97121440841c8380d3e479106b89e52", "size_bytes": 1520},
+    {"path": "heartbeat.json", "sha256": "a85464631720e47bfd6381a69aaa4b6a7af1263fa376e8aa1fc873a442ba596b", "size_bytes": 241},
+    {"path": "scheduler_state.json", "sha256": "e0ac86ed24408ac4ae23b7e5178faed305af6ad364eaa99463485096546fce80", "size_bytes": 827},
+    {"path": "orchestrator_result.json", "sha256": "e0ac86ed24408ac4ae23b7e5178faed305af6ad364eaa99463485096546fce80", "size_bytes": 827},
+    {"path": "orchestrator.log", "sha256": "f6258d2837c9ecbd6a3f152da16f75ad11c7f6dbbbaeffd736750b3b1660dcb1", "size_bytes": 2852},
+    {"path": "stages/S00_environment_manifest/completion.json", "sha256": "e884e597663accedf76b8312d1feb7c39302fedc337678ffbf0cdfdf5c0e1118", "size_bytes": 1247},
+    {"path": "stages/S00_environment_manifest/output_manifest.json", "sha256": "cd24578a71d2250f36965fd2276f1a0133ab5b7f7a1ce4b1a71bd4e4f65d59ec", "size_bytes": 1171},
+    {"path": "stages/S00_environment_manifest/validator.json", "sha256": "40e4b5779f17eed464d758d9007ad2d3f99fd476a125801a65765600a6cb253b", "size_bytes": 410},
+    {"path": "stages/S00_environment_manifest/stage_result.json", "sha256": "46431bc3036e4ab0ad9d75e3e78b4a55325136e49735875f20baedc8665ce57b", "size_bytes": 4428},
+    {"path": "stages/S00_environment_manifest/process.json", "sha256": "bd6c04345d6ed93c6f2c2852a9b68fb01ca9ba8c7fdcad156ee8cd1b9c6f9cc8", "size_bytes": 517},
+    {"path": "stages/S00_environment_manifest/logs/stdout.log", "sha256": "e47890b9a478b54ca943a05493284f0b65a369bb77d3bf937c0915c2b6437210", "size_bytes": 221},
+    {"path": "stages/S00_environment_manifest/logs/stderr.log", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "size_bytes": 0}
+  ],
+  "format": "exp037a_r6_launch_failure_artifact_index_v1",
+  "immutable_raw_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001",
+  "source_commit": "31c9e98ab408d4768c83d2a45bb1b21ae565b4be"
+}

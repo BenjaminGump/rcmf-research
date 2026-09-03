@@ -1,5 +1,33 @@
 # Current State
 
+## 2026-09-03 EXP-037A-R6 Stopped Before Science At S00
+
+VERIFIED:
+
+- The exact 14g explicit authorization and generated runtime authorization
+  passed their frozen run-bound validators under the approved 120-hour cap.
+- The first non-scientific stage, `S00_environment_manifest`, executed once
+  and exited 0, but strict validation failed because its frozen output
+  manifest omitted `run_uuid`, `run_root`, `pipeline_config_sha256`, and
+  `contract_sha256`.
+- The attempt closed non-recoverably before any scientific stage. D06-D09,
+  D22, and the 1D arm were not reached. H100 scientific active time is zero.
+- The Lambda checkout remains clean at launch source
+  `31c9e98ab408d4768c83d2a45bb1b21ae565b4be`; no source or manifest was
+  patched and the failed raw root remains preserved.
+
+CURRENT DECISION:
+
+- `STOP_EXECUTABLE_IDENTITY_CONTRACT_FAILURE`
+- Scientific result: `NOT_EVALUATED`
+- A new reviewed launch source and new run-bound authorization are required;
+  this R6 authorization must not be reused.
+
+Full report:
+`research/results/EXP_037A_R6_FORMAL_LAUNCH_FAILURE.md`.
+
+Last updated: 2026-09-03.
+
 ## 2026-09-03 EXP-037A-R5 Ready For Final Run Approval
 
 VERIFIED:

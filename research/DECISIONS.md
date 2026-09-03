@@ -1,5 +1,32 @@
 # Decisions and Deviations
 
+## 2026-09-03 EXP-037A-R6 formal launch stopped at S00
+
+VERIFIED:
+
+- Explicit and runtime authorization validation passed for the exact 14g
+  source, UUID, root, config, contract, 120-hour cap, and full conditional
+  scope. The old 200-hour authorization was not inherited.
+- The frozen `write_stage_manifest()` producer omits four identity fields
+  required by strict `validate_stage_completion()`: `run_uuid`, `run_root`,
+  `pipeline_config_sha256`, and `contract_sha256`.
+- S00 exited 0 but failed strict validation. The attempt is closed,
+  non-recoverable, and no scientific stage started.
+
+DECISION:
+
+- Record `STOP_EXECUTABLE_IDENTITY_CONTRACT_FAILURE`.
+- Record scientific result `NOT_EVALUATED`.
+- Do not patch the output manifest or retry the run under the source-bound R6
+  authorization. Require a reviewed executable fix, new launch source, and
+  new explicit authorization.
+
+IMPLEMENTATION DEVIATIONS:
+
+- None were made during R6. The frozen executable mismatch was diagnosed and
+  preserved without source, config, stage-graph, validator, prompt, model, or
+  scientific changes.
+
 ## 2026-09-03 EXP-037A-R5 final launch freeze
 
 VERIFIED:
