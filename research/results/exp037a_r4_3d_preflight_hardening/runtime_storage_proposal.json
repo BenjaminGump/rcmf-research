@@ -1,0 +1,19 @@
+{
+  "conservative_storage_gib": 90.0,
+  "conservative_wall_hours": 56.0,
+  "could_exceed_18_hours": true,
+  "expected_h100_active_hours": 21.8,
+  "expected_storage_gib": 46.0,
+  "expected_wall_hours": 26.5,
+  "explicit_user_approval_required": true,
+  "format": "exp037a_r4_runtime_storage_proposal_v1",
+  "proposed_hard_cap_hours": 80.0,
+  "recommended_hard_cap_hours": 80.0,
+  "restart_plan": {
+    "append_only_attempts": true,
+    "atomic_stage_outputs": true,
+    "content_hash_validation_before_skip": true,
+    "persistent_event_driven_parent": true,
+    "resume_from_first_incomplete_stage": true
+  }
+}

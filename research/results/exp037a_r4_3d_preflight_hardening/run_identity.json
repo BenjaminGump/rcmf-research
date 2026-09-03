@@ -1,0 +1,12 @@
+{
+  "config_path": "configs/pipeline/rcmf_appworld_repro_14f.yaml",
+  "config_sha256": "226ba22d8dd3bfc464b9198a6ab634170ce9386ecd1973044e6e35357825abd4",
+  "format": "exp037a_r4_run_identity_v1",
+  "new_root_existed_before_preflight": false,
+  "new_root_prior_entries": [],
+  "new_run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14f_20260903_001",
+  "new_run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14f_20260903_001",
+  "previous_run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+  "previous_run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+  "source_commit": "ed9b7c22fb7452a8ec6eb5faacbe10976829abf8"
+}

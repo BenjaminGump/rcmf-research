@@ -1,0 +1,16 @@
+{
+  "format": "exp037a_r4_artifact_index_v1",
+  "source_commit": "ed9b7c22fb7452a8ec6eb5faacbe10976829abf8",
+  "artifacts": [
+    {"path": "configs/pipeline/rcmf_appworld_repro_14f.yaml", "sha256": "226ba22d8dd3bfc464b9198a6ab634170ce9386ecd1973044e6e35357825abd4"},
+    {"path": "research/results/exp037a_r4_3d_preflight_hardening/authorization_state.json", "sha256": "15fd9482459a43b935fbde934c84194935a80b9f3937ae2bff44cc2081ad0081"},
+    {"path": "research/results/exp037a_r4_3d_preflight_hardening/launcher_authorization_checks.json", "sha256": "09deb9d650392e6400489c886d1e6edaf9a7aa7e25abf55d4a6d89e014ef1070"},
+    {"path": "research/results/exp037a_r4_3d_preflight_hardening/preflight_summary.json", "sha256": "20289f26eef821d701eae7f6a44d0fbdb70f4e0c41fd1d105b9f0c05c86b72b5"},
+    {"path": "research/results/exp037a_r4_3d_preflight_hardening/run_identity.json", "sha256": "e337ad03b8b94057cb34424f8f4070362e7518fdb21176e72d0d882b74fe3624"},
+    {"path": "research/results/exp037a_r4_3d_preflight_hardening/runtime_storage_proposal.json", "sha256": "c6c1dc379174c09e9d3cb3fb9ced9e964cea1143e2e81fa103c4325e1f41ccda"},
+    {"path": "research/results/exp037a_r4_3d_preflight_hardening/scientific_invariants.json", "sha256": "a3532d58aed693683d4c8e7022a227f1660119e0ffb17fd6c803e8118c0634ea"},
+    {"path": "research/results/exp037a_r4_3d_preflight_hardening/stage_dag.json", "sha256": "515ea361a053a82eae8696b2fef2a5a3fddc06fa0a75e18274390714180ac72f"}
+  ],
+  "new_scientific_run_root_created": false,
+  "scientific_stage_execution_count": 0
+}

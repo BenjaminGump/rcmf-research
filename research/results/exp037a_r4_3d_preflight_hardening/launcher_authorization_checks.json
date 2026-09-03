@@ -1,0 +1,16 @@
+{
+  "bound_fields": [
+    "run_uuid",
+    "run_root",
+    "source_commit",
+    "contract_sha256",
+    "pipeline_config_sha256",
+    "hard_cap_hours"
+  ],
+  "format": "exp037a_r4_launcher_authorization_checks_v1",
+  "hard_coded_200_hour_cap": false,
+  "old_config_granted_by_user_is_insufficient": true,
+  "requires_explicit_authorization_file": true,
+  "scientific_stage_execution_count": 0,
+  "stale_authorization_rejected": true
+}

@@ -1,5 +1,32 @@
 # Current State
 
+## 2026-09-03 EXP-037A-R4 Ready For Explicit Approval, Not Authorized
+
+VERIFIED:
+
+- A fresh future-run identity is frozen as
+  `rcmf_reproducible_3d_gate_1d_pipeline_14f_20260903_001`; its NFS root was
+  absent during Lambda static preflight and was not created.
+- The launcher and scheduler now require a fresh authorization bound to the
+  exact run UUID, root, source, contract, config, and cap. The old 200-hour
+  authorization cannot propagate.
+- The R3 scientific contract remains unchanged: selector split 18018/29/8,
+  panel 256/499/40, selector seeds 25071/25072/25073, prompt-only arm
+  difference, and post-D06 366/98 outcome gate.
+- Final local tests passed 861 with 2 skipped; final Lambda tests passed 863.
+  H100 scientific active time and scientific stage count are zero.
+
+CURRENT DECISION:
+
+- `READY_FOR_EXPLICIT_USER_APPROVAL`
+- `NOT_AUTHORIZED_TO_LAUNCH`
+- Proposed cap 80 hours. New explicit approval is required before launch.
+
+Full report:
+`research/results/EXP_037A_R4_3D_PREFLIGHT_HARDENING.md`.
+
+Last updated: 2026-09-03.
+
 ## 2026-09-03 EXP-037A-R3 Reproduction Contract Repair Validated
 
 VERIFIED:

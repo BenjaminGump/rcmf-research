@@ -1,0 +1,14 @@
+{
+  "authorization_status": "NOT_AUTHORIZED",
+  "authorized_to_launch": false,
+  "automatic_three_demo_launch_after_preflight": false,
+  "d06_or_later_authorized": false,
+  "explicit_user_approval_required": true,
+  "format": "exp037a_r4_authorization_state_v1",
+  "full_pipeline_authorized": false,
+  "granted_by_user": false,
+  "one_demo_authorized": false,
+  "previous_200_hour_authorization_inherited": false,
+  "proposed_hard_cap_hours": 80.0,
+  "status": "READY_FOR_USER_APPROVAL"
+}

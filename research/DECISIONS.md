@@ -2976,3 +2976,29 @@ IMPLEMENTATION DEVIATIONS:
   before the co-adaptation branch can be reached.
 - The Windows sandboxed `apply_patch` helper failed; the Codex apply-patch
   backend was used and final suites passed locally and on Lambda.
+
+## 2026-09-03 EXP-037A-R4 execution-authorization hardening
+
+VERIFIED:
+
+- Use the new `14f` UUID and root for any future clean run. Preserve `_001`
+  `14b` and its root as immutable historical evidence.
+- Preflight readiness and runtime authorization are separate states. A
+  preflight marked ready cannot create authorization or launch stages.
+- Require explicit authorization bound to run UUID, canonical root, source
+  commit, contract SHA, config SHA, exact cap, and authorized stage scope.
+- Reject stale, inherited, partial, or old 200-hour authorization.
+- Retain 80 hours only as a proposed anomaly cap. The future run remains above
+  the 18-hour threshold and requires explicit user approval.
+
+DECISION:
+
+- `READY_FOR_EXPLICIT_USER_APPROVAL`
+- `NOT_AUTHORIZED_TO_LAUNCH`
+
+IMPLEMENTATION DEVIATIONS:
+
+- None affecting scientific semantics. A test-only quoting typo and a Windows
+  POSIX-path display mismatch were corrected before final local/Lambda suites.
+- No scientific stage, selector training, representation rebuild, AppWorld
+  generation, or GPU computation ran.

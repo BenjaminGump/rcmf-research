@@ -1,0 +1,41 @@
+{
+  "approval_checks": {
+    "arm_diff_prompt_only": true,
+    "arm_prompt_profiles": true,
+    "authorization_status_not_authorized": true,
+    "automatic_three_demo_false": true,
+    "d06_or_later_false": true,
+    "full_pipeline_false": true,
+    "granted_by_user_false": true,
+    "new_run_root": true,
+    "new_run_root_absent": true,
+    "new_run_uuid": true,
+    "old_200h_not_inherited": true,
+    "one_demo_false": true,
+    "panel_contract": true,
+    "post_d06_outcome_gate_only": true,
+    "proposed_cap_80": true,
+    "selector_parent_split": true,
+    "selector_seeds": true
+  },
+  "authorized_to_launch": false,
+  "decision": "READY_FOR_EXPLICIT_USER_APPROVAL",
+  "explicit_user_approval_required": true,
+  "format": "exp037a_r4_3d_preflight_hardening_v1",
+  "h100_scientific_active_hours": 0,
+  "output_hashes": {
+    "authorization_state.json": "15fd9482459a43b935fbde934c84194935a80b9f3937ae2bff44cc2081ad0081",
+    "launcher_authorization_checks.json": "09deb9d650392e6400489c886d1e6edaf9a7aa7e25abf55d4a6d89e014ef1070",
+    "run_identity.json": "e337ad03b8b94057cb34424f8f4070362e7518fdb21176e72d0d882b74fe3624",
+    "runtime_storage_proposal.json": "c6c1dc379174c09e9d3cb3fb9ced9e964cea1143e2e81fa103c4325e1f41ccda",
+    "scientific_invariants.json": "a3532d58aed693683d4c8e7022a227f1660119e0ffb17fd6c803e8118c0634ea",
+    "stage_dag.json": "515ea361a053a82eae8696b2fef2a5a3fddc06fa0a75e18274390714180ac72f"
+  },
+  "previous_200_hour_authorization_inherited": false,
+  "proposed_hard_cap_hours": 80.0,
+  "recommended_hard_cap_hours": 80.0,
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14f_20260903_001",
+  "scientific_stage_execution_count": 0,
+  "source_commit": "ed9b7c22fb7452a8ec6eb5faacbe10976829abf8",
+  "status": "READY_FOR_USER_APPROVAL"
+}

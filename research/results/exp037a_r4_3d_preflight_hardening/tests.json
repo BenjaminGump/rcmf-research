@@ -1,0 +1,24 @@
+{
+  "format": "exp037a_r4_tests_v1",
+  "process_start_pythonhashseed": 25101,
+  "final": {
+    "lambda_focused": {"passed": 33, "failed": 0, "skipped": 0},
+    "lambda_full": {"passed": 863, "failed": 0, "skipped": 0},
+    "local_focused": {"passed": 33, "failed": 0, "skipped": 0},
+    "local_full": {"passed": 861, "failed": 0, "skipped": 2}
+  },
+  "development_attempts": [
+    {
+      "result": "collection_error",
+      "reason": "test-only string quoting typo",
+      "scientific_effect": false
+    },
+    {
+      "result": "24 passed, 8 failed",
+      "reason": "Windows Path string rendering differed from the configured POSIX Lambda root",
+      "scientific_effect": false
+    }
+  ],
+  "scientific_stage_execution_count": 0,
+  "h100_scientific_active_hours": 0
+}
