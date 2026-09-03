@@ -1,5 +1,43 @@
 # Decisions and Deviations
 
+## 2026-09-03 EXP-037A-R2 first-divergence diagnosis
+
+VERIFIED:
+
+- Historical paired outcomes contain 366 completed model-training rows and
+  98 heldout rows; the EXP-031A training-unit manifest consumes all 366.
+- The fresh selector parent split differs from the historical clean parent
+  split. This changes 97,734 legal label cells, CV folds, and the selected
+  candidate before paired generation.
+- Fresh panel admission uses 366 as an input quota and stops after 464 total
+  attempts. Historical admission used 256 initial states and expanded through
+  all 499 because its 40-per-label criterion remained unmet.
+- Twenty-five historical scoreable train rows are omitted before fresh
+  generation. One additional historical completion becomes over-context
+  after the changed selector chooses a longer transition; two historical
+  failures become fresh completions. This exactly reconciles `366 -> 342`.
+- The five fresh replay-semantic failures are historical or previously masked
+  failures and do not account for any lost historical scoreable row.
+
+DECISION:
+
+- Record `CAUSE_IDENTIFIED`; scientific performance remains `NOT_EVALUATED`.
+- Treat both selector-split and panel-admission mismatches as reproduction
+  contract failures. Do not accept 342 or import/fill historical rows.
+- A reviewed repair should restore the historical selector parent split and
+  256/499/40 panel expansion, then require exact pre-generation invariance.
+  This task does not implement that repair.
+
+IMPLEMENTATION DEVIATIONS:
+
+- No scientific implementation was changed. The audit utility reads JSON/
+  JSONL/text artifacts only, rejects checkpoint-like binary paths, and writes
+  exclusively to a new diagnostics root.
+- The historical selector was never loaded, deserialized, or executed.
+- The first local focused-test invocation hit Windows default-temp permission
+  errors in five fixture setups; the unchanged suite passed 10/10 with an
+  ignored repository-local `--basetemp`.
+
 ## 2026-09-03 EXP-037A-R1 secondary D08 contract stop
 
 VERIFIED:

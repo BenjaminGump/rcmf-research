@@ -1,5 +1,39 @@
 # Current State
 
+## 2026-09-03 EXP-037A-R2 First-Divergence Cause Identified
+
+VERIFIED:
+
+- The historical `366` model-training count is real: 366 completed paired
+  rows existed and all 366 were consumed as correct EXP-031A training units.
+- The fresh pipeline first diverges at selector-training provenance: it uses
+  the downstream query-task split instead of the historical clean selector
+  parent split, moving 97,734/310,433 legal pair labels and changing the CV
+  winner.
+- A second upstream divergence treats the historical post-outcome count 366
+  as an a-priori panel quota. Fresh preparation attempts 464 rows with
+  `minimum_per_label=0`; historical preparation used 256 initial rows and
+  expanded through all 499 under `minimum_per_label=40`.
+- Exact train-set accounting is 366 historical, minus 25 omitted historical
+  completions, minus one in-panel completion changed to over-context, plus two
+  fresh-only completions, yielding 342.
+- The fresh missing panel is 19 over-context plus five replay-semantic rows
+  with zero overlap. The prior 23-over-context count includes four unattempted
+  expansion slots. Replay failures remove no historical scoreable row.
+- The historical selector checkpoint was never loaded, deserialized, or
+  executed. Optimizer updates and backward passes are zero.
+
+CURRENT DECISION:
+
+- `decision = CAUSE_IDENTIFIED`
+- `scientific_result = NOT_EVALUATED`
+- Stop after diagnosis. Do not implement the proposed selector-split/panel-
+  contract repair or launch a follow-on run without user/ChatGPT review.
+
+Full report: `research/analysis/EXP_037A_R2_FIRST_DIVERGENCE_AUDIT.md`.
+
+Last updated: 2026-09-03.
+
 ## 2026-09-03 EXP-037A-R1 Stopped At Secondary D08 Contract
 
 VERIFIED:

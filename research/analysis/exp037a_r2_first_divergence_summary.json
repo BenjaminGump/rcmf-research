@@ -1,0 +1,124 @@
+{
+  "backward_count": 0,
+  "completed_train_set_accounting": {
+    "fresh": 342,
+    "fresh_only": 2,
+    "historical": 366,
+    "historical_completed_lost_inside_panel": 1,
+    "historical_completed_omitted_by_panel": 25,
+    "historical_only": 26,
+    "intersection": 340,
+    "net_loss": 24
+  },
+  "decision": "CAUSE_IDENTIFIED",
+  "diagnostic_run_id": "rcmf_exp037a_r2_first_divergence_audit_14d_20260903_001",
+  "first_observable_state_level_counts": {
+    "L5_selected_memory_identity": 5,
+    "NONE_STATE_WAS_NOT_HISTORICAL_SCOREABLE": 19
+  },
+  "format": "exp037a_r2_first_divergence_audit_v1",
+  "fresh_missing_24_partition": {
+    "all_499_over_context": 23,
+    "note": "The previously cited 23 over-context count covers all 499 logical slots; only 19 are in the 464 attempted panel. The four additional over-context slots were never attempted, not overlapping replay failures.",
+    "over_context": 19,
+    "overlap": 0,
+    "replay_semantic": 5,
+    "unattempted_over_context": 4
+  },
+  "global_seed": 25101,
+  "heldout_explanation": "All 98 heldout rows belonged to the historical 256-state initial panel, which is a subset of the fresh 464-state panel; their outcome set remains identical despite only 68/98 selected-memory agreement. The panel cap therefore removed training expansion rows, not heldout rows.",
+  "historical_366_evidence": {
+    "paired_completed_train_rows": 366,
+    "training_correct_units": 366,
+    "training_role_correct_units": 366
+  },
+  "historical_366_independently_proven_real": true,
+  "historical_selector_loaded_deserialized_or_executed": false,
+  "optimizer_updates": 0,
+  "over_context_cause_counts": {
+    "SAME_HISTORICAL_OVER_CONTEXT": 19,
+    "SELECTOR_CHANGE_BUT_BOTH_OVER_CONTEXT": 3,
+    "SELECTOR_CHANGE_HISTORICAL_PASS_TO_FRESH_OVER_CONTEXT": 1
+  },
+  "primary_metric": {
+    "name": "first_divergence_resolved_count_over_24",
+    "resolved": 24,
+    "total": 24
+  },
+  "proposed_repair_not_implemented": "Restore the historical selector-parent split and historical 256/499/40 panel admission/expansion contract, then require exact pre-generation manifests and count/set invariance before any new scientific run.",
+  "replay_semantic_cause_counts": {
+    "FRESH_REPLAY_FAILURE_AFTER_HISTORICAL_OVER_CONTEXT": 1,
+    "SAME_HISTORICAL_REPLAY_SEMANTIC_FAILURE": 4
+  },
+  "root_causes": [
+    {
+      "finding": "Fresh selector training used the downstream query-task split as its parent split instead of the historical locked selector-parent split.",
+      "level": "L4_selector_training_provenance",
+      "status": "VERIFIED"
+    },
+    {
+      "finding": "Fresh preparation treated the historical post-outcome count 366 as an a-priori train-panel size, set the panel to 464 total rows, and set minimum_per_label to zero; historical preparation attempted all 499 states through its 256-plus-expansion contract.",
+      "level": "paired_panel_admission_contract",
+      "status": "VERIFIED"
+    }
+  ],
+  "scientific_result": "NOT_EVALUATED",
+  "selector_agreement": {
+    "all_499": {
+      "comparable_count": 499,
+      "same_selected_class_count": 364,
+      "same_selected_transition_count": 367,
+      "selected_class_agreement": 0.7294589178356713,
+      "selected_transition_agreement": 0.7354709418837675
+    },
+    "common_completed_train_340": {
+      "comparable_count": 340,
+      "same_selected_class_count": 254,
+      "same_selected_transition_count": 254,
+      "selected_class_agreement": 0.7470588235294118,
+      "selected_transition_agreement": 0.7470588235294118
+    },
+    "fresh_missing_24": {
+      "comparable_count": 24,
+      "same_selected_class_count": 19,
+      "same_selected_transition_count": 20,
+      "selected_class_agreement": 0.7916666666666666,
+      "selected_transition_agreement": 0.8333333333333334
+    },
+    "heldout_98": {
+      "comparable_count": 98,
+      "same_selected_class_count": 68,
+      "same_selected_transition_count": 68,
+      "selected_class_agreement": 0.6938775510204082,
+      "selected_transition_agreement": 0.6938775510204082
+    },
+    "historical_completed_train": {
+      "comparable_count": 366,
+      "same_selected_class_count": 271,
+      "same_selected_transition_count": 271,
+      "selected_class_agreement": 0.7404371584699454,
+      "selected_transition_agreement": 0.7404371584699454
+    },
+    "historical_only_completed_26": {
+      "comparable_count": 26,
+      "same_selected_class_count": 17,
+      "same_selected_transition_count": 17,
+      "selected_class_agreement": 0.6538461538461539,
+      "selected_transition_agreement": 0.6538461538461539
+    },
+    "matched_controls_24": {
+      "comparable_count": 24,
+      "same_selected_class_count": 18,
+      "same_selected_transition_count": 18,
+      "selected_class_agreement": 0.75,
+      "selected_transition_agreement": 0.75
+    }
+  },
+  "starting_head": "255eec178e6e5a1a0e3d0d1f4d246c240a4f6ecb",
+  "unresolved_evidence_gaps": [
+    {
+      "gap": "The historical paired-selection rows preserve the exact rendered base-prompt SHA256 and token count, but not a separate structured-message-array SHA256 or input-token-ID SHA256. All 499 rendered prompt hashes and counts match the fresh rows.",
+      "material_to_count_cause": false
+    }
+  ]
+}

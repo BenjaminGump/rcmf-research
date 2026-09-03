@@ -1,0 +1,178 @@
+{
+  "format": "exp037a_r2_first_divergence_audit_v1",
+  "historical_selector_loaded_deserialized_or_executed": false,
+  "immutable_roots_written": false,
+  "inputs": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/arms/3d/paired_causal/condition_manifest.json",
+      "role": "fresh_condition_manifest",
+      "sha256": "56b6e96141e66643fca41bef0103c1897c3fa50683ed92b8869fca8c02e9c791",
+      "size_bytes": 891844
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/arms/3d/selector/a_only_cv/a_only_cv_report.json",
+      "role": "fresh_cv_report",
+      "sha256": "bd78838a04f521d866632ca80c17dcdd12bf9305ece4a892ffe7a4cba07d81cb",
+      "size_bytes": 173862
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/arms/3d/clean_full_procedural_labels.jsonl",
+      "role": "fresh_labels",
+      "sha256": "1f10dc69613216e54f191369a2284abae58e60af1d271477d5618f18245e838a",
+      "size_bytes": 501226732
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/arms/3d/paired_causal/paired_outcomes.json",
+      "role": "fresh_outcomes",
+      "sha256": "0088da1b9b01e57a0f02caa772935447bfa84c04123495ffb5bc86767d9e1e2f",
+      "size_bytes": 3309715
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/arms/3d/preflight/initial_panel.json",
+      "role": "fresh_panel",
+      "sha256": "3f40aed81c947d09a7ed3063f4d67985706ef7dfdd75306d4a24540f54db7b7a",
+      "size_bytes": 25306
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/preflight/shared/parent_split.json",
+      "role": "fresh_parent_split",
+      "sha256": "0b6ca2f85c939c3753617bf43ca178be801b0d88a0fdec4cb1f06afe970438ae",
+      "size_bytes": 3222
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/arms/3d/representation_cache/multiview/clean_multiview_cache_summary.json",
+      "role": "fresh_representation_summary",
+      "sha256": "f585a0033d936aa00813a75678f35f9af80fcc1b4471880a2d682bfc4bb058d2",
+      "size_bytes": 2175
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/arms/3d/preflight/frozen_train_selections.jsonl",
+      "role": "fresh_selections",
+      "sha256": "301ec298d5be7156bd395ede65f2861bc3c90ff9b286fb08fc394b7243af6a55",
+      "size_bytes": 9406890
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/arms/3d/selector/selector_summary.json",
+      "role": "fresh_selector_summary",
+      "sha256": "a0e3f79741014cd7bff1c03ba11cfdef6442e6fa43941faaee611b1037e7b6bd",
+      "size_bytes": 3920805
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/preflight/shared/transitions.jsonl",
+      "role": "fresh_transition_manifest",
+      "sha256": "f1484d419cb475efcf11231d0fa0548ee402322eba7c96db4301679255f829b3",
+      "size_bytes": 26347944
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/paired_causal/condition_manifest.json",
+      "role": "historical_condition_manifest",
+      "sha256": "b4132b13386cd6d51bb259a10d75393a413bd9518337b8e75ad15869fdb8b681",
+      "size_bytes": 886640
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/signature_balanced_field_7c_20260818_001/selector/a_only_cv/a_only_cv_report.json",
+      "role": "historical_cv_report",
+      "sha256": "7205f81317bd9507a96231c3e99fb440f66b4cfd4c5ed03dec09fd91bff08e60",
+      "size_bytes": 173052
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/full_bank_data_manifest.json",
+      "role": "historical_data_manifest",
+      "sha256": "196f9ec57674de202324bd34f0168cf4c0f6c5399fc9828939a8dcc730b214b2",
+      "size_bytes": 33646
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/signature_balanced_field_7c_20260818_001/clean_full_procedural_labels.jsonl",
+      "role": "historical_labels",
+      "sha256": "82cea859b097c2abfe028cb7dd08d3ff4e0ed8830197f29a1b15873fc870ff65",
+      "size_bytes": 501211960
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/paired_causal/paired_outcomes.json",
+      "role": "historical_outcomes",
+      "sha256": "1b02ab0ecf3da87b2485acce6de8a7188db610e1f56f9bb66c55ad45f94e0bf9",
+      "size_bytes": 3495985
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/preflight/initial_panel.json",
+      "role": "historical_panel",
+      "sha256": "0bea33764b7fe8bada8ce7fb7b90a360e0ecb16e334ddc40b0b2db55981d4961",
+      "size_bytes": 25294
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/replay_clean_rebuild_7b_20260818_001/clean_procedural_audit/clean_parent_split_manifest.json",
+      "role": "historical_parent_split",
+      "sha256": "0c6707f61f3fa62847c1abea366b44e4fd50c206f773fa6e79a5e8ffe433c615",
+      "size_bytes": 3135
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/signature_balanced_field_7c_20260818_001/representation_cache/multiview/clean_multiview_cache_summary.json",
+      "role": "historical_representation_summary",
+      "sha256": "d7b5373f3743e72dba1745f7d51ff6b7d7c18aa21cc1da789b0739816b5112d6",
+      "size_bytes": 1693
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/preflight/frozen_train_selections.jsonl",
+      "role": "historical_selections",
+      "sha256": "23c6c8ea7800797706166c48fa846ca4533493379736c729a216cb57ba4df6ce",
+      "size_bytes": 9401237
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/signature_balanced_field_7c_20260818_001/selector/selector_summary.json",
+      "role": "historical_selector_summary",
+      "sha256": "0fe3046f18cfef5cd33a2db5d1d8b0ba89238c254e8d1ecc90e995629d110c74",
+      "size_bytes": 3934462
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/joint_training/training_unit_manifest.json",
+      "role": "historical_training_unit_manifest",
+      "sha256": "7bb0532e54ee8039b349fdba4ab29d595ced60c79f8ad7f8a74a2eb14f76b8c7",
+      "size_bytes": 235692
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/replay_clean_rebuild_7b_20260818_001/clean_cache_rebuild/transition_preflight/transition_manifest.jsonl",
+      "role": "historical_transition_manifest",
+      "sha256": "f25f7ed937776cd8f0f373a16cf7869f766bac2a269083aed2998779de31c623",
+      "size_bytes": 26438869
+    }
+  ],
+  "outputs": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r2_first_divergence_audit_14d_20260903_001_published/exp037a_r2_first_divergence_summary.json",
+      "role": "summary",
+      "sha256": "7d625cc12b43add92c922aa3048d29eb89f2a6d164edd006a7e1f6029e641652",
+      "size_bytes": 5245
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r2_first_divergence_audit_14d_20260903_001_published/exp037a_r2_first_divergence_rows.jsonl",
+      "role": "rows",
+      "sha256": "cff0483dd6c40a5be00a2eb58a5d5c8378eede64b9ca0faad0e35e2e6985930f",
+      "size_bytes": 44920
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r2_first_divergence_audit_14d_20260903_001_published/exp037a_r2_state_set_comparison.json",
+      "role": "sets",
+      "sha256": "4d6ccd60e50b92abdfd66e935cc6f90a24c28544183da69782a262062c54eb88",
+      "size_bytes": 54002
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r2_first_divergence_audit_14d_20260903_001_published/exp037a_r2_selector_provenance_comparison.json",
+      "role": "selector",
+      "sha256": "8463cd6635ab1114a9a55bb70a15c34a4795b4332b2c7657599081567718f303",
+      "size_bytes": 6445
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r2_first_divergence_audit_14d_20260903_001_published/exp037a_r2_context_budget_comparison.jsonl",
+      "role": "context",
+      "sha256": "823d7138337f1595fde2fbfd7d357046f20f51500016e63989017d11ee5af5dc",
+      "size_bytes": 197967
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r2_first_divergence_audit_14d_20260903_001_published/exp037a_r2_historical_state_manifest.json",
+      "role": "historical_states",
+      "sha256": "2104500ec2ed785f1b7ee82b8484b9c11aa1a7ac699e0334213998ff586e592c",
+      "size_bytes": 24290
+    }
+  ],
+  "run_id": "rcmf_exp037a_r2_first_divergence_audit_14d_20260903_001"
+}

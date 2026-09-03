@@ -1,0 +1,180 @@
+{
+  "agreement": {
+    "all_499": {
+      "comparable_count": 499,
+      "same_selected_class_count": 364,
+      "same_selected_transition_count": 367,
+      "selected_class_agreement": 0.7294589178356713,
+      "selected_transition_agreement": 0.7354709418837675
+    },
+    "common_completed_train_340": {
+      "comparable_count": 340,
+      "same_selected_class_count": 254,
+      "same_selected_transition_count": 254,
+      "selected_class_agreement": 0.7470588235294118,
+      "selected_transition_agreement": 0.7470588235294118
+    },
+    "fresh_missing_24": {
+      "comparable_count": 24,
+      "same_selected_class_count": 19,
+      "same_selected_transition_count": 20,
+      "selected_class_agreement": 0.7916666666666666,
+      "selected_transition_agreement": 0.8333333333333334
+    },
+    "heldout_98": {
+      "comparable_count": 98,
+      "same_selected_class_count": 68,
+      "same_selected_transition_count": 68,
+      "selected_class_agreement": 0.6938775510204082,
+      "selected_transition_agreement": 0.6938775510204082
+    },
+    "historical_completed_train": {
+      "comparable_count": 366,
+      "same_selected_class_count": 271,
+      "same_selected_transition_count": 271,
+      "selected_class_agreement": 0.7404371584699454,
+      "selected_transition_agreement": 0.7404371584699454
+    },
+    "historical_only_completed_26": {
+      "comparable_count": 26,
+      "same_selected_class_count": 17,
+      "same_selected_transition_count": 17,
+      "selected_class_agreement": 0.6538461538461539,
+      "selected_transition_agreement": 0.6538461538461539
+    },
+    "matched_controls_24": {
+      "comparable_count": 24,
+      "same_selected_class_count": 18,
+      "same_selected_transition_count": 18,
+      "selected_class_agreement": 0.75,
+      "selected_transition_agreement": 0.75
+    }
+  },
+  "candidate_definitions_equal": true,
+  "common_label_pairs": 310433,
+  "count_causal_accounting": {
+    "fresh_only_completed_offsets": 2,
+    "fresh_only_completed_state_ids": [
+      "appworld:trace:3c13f5a_2:step:18:line:498",
+      "appworld:trace:afc0fce_1:step:18:line:74"
+    ],
+    "historical_completed_rows_in_fresh_panel_but_lost": 1,
+    "historical_completed_rows_omitted_by_fresh_panel": 25,
+    "in_panel_lost_state_ids": [
+      "appworld:trace:afc0fce_1:step:13:line:69"
+    ],
+    "omitted_state_ids": [
+      "appworld:trace:229360a_3:step:14:line:369",
+      "appworld:trace:229360a_3:step:15:line:370",
+      "appworld:trace:229360a_3:step:16:line:371",
+      "appworld:trace:229360a_3:step:18:line:373",
+      "appworld:trace:229360a_3:step:1:line:356",
+      "appworld:trace:229360a_3:step:20:line:375",
+      "appworld:trace:229360a_3:step:22:line:377",
+      "appworld:trace:229360a_3:step:23:line:378",
+      "appworld:trace:229360a_3:step:26:line:381",
+      "appworld:trace:229360a_3:step:6:line:361",
+      "appworld:trace:3c13f5a_2:step:16:line:496",
+      "appworld:trace:3c13f5a_2:step:17:line:497",
+      "appworld:trace:afc0fce_1:step:12:line:68",
+      "appworld:trace:afc0fce_1:step:14:line:70",
+      "appworld:trace:afc0fce_1:step:15:line:71",
+      "appworld:trace:afc0fce_1:step:16:line:72",
+      "appworld:trace:afc0fce_1:step:1:line:57",
+      "appworld:trace:afc0fce_1:step:2:line:58",
+      "appworld:trace:afc0fce_1:step:5:line:61",
+      "appworld:trace:afc0fce_1:step:7:line:63",
+      "appworld:trace:afc0fce_1:step:8:line:64",
+      "appworld:trace:afc0fce_1:step:9:line:65",
+      "appworld:trace:afc0fce_3:step:10:line:102",
+      "appworld:trace:afc0fce_3:step:1:line:93",
+      "appworld:trace:afc0fce_3:step:2:line:94"
+    ]
+  },
+  "cv_folds_equal": false,
+  "format": "exp037a_r2_first_divergence_audit_v1",
+  "fresh_final_seeds": [
+    25071,
+    25072,
+    25073
+  ],
+  "fresh_heldout_parent_tasks": [
+    "76f2c72_1",
+    "76f2c72_2",
+    "7d7fbf6_1",
+    "b7a9ee9_2",
+    "c901732_1",
+    "c901732_3",
+    "e7a10f8_1",
+    "e7a10f8_3"
+  ],
+  "fresh_parent_split_sha256": "0b6ca2f85c939c3753617bf43ca178be801b0d88a0fdec4cb1f06afe970438ae",
+  "fresh_selected_candidate": {
+    "epochs": 60,
+    "exact_api_weight": 0.1,
+    "hard_negative_weight": 0.5,
+    "learning_rate": 0.0003,
+    "listwise_weight": 1.0,
+    "name": "balanced_lr3e4_e60_t1",
+    "pairwise_weight": 1.0,
+    "stage_weight": 0.1,
+    "temperature": 1.0
+  },
+  "fresh_selector_sha256": "07eee76ace3c2e48485b4290528d65232a9fc3b8041b2659fed54e9f2b291544",
+  "historical_final_seeds": [
+    25071,
+    25072,
+    25073
+  ],
+  "historical_heldout_parent_tasks": [
+    "07b42fd_1",
+    "07b42fd_2",
+    "287e338_1",
+    "76f2c72_1",
+    "76f2c72_3",
+    "771d8fc_1",
+    "b7a9ee9_1",
+    "cf6abd2_3"
+  ],
+  "historical_parent_split_sha256": "0c6707f61f3fa62847c1abea366b44e4fd50c206f773fa6e79a5e8ffe433c615",
+  "historical_selected_candidate": {
+    "epochs": 120,
+    "exact_api_weight": 0.1,
+    "hard_negative_weight": 0.75,
+    "learning_rate": 0.0003,
+    "listwise_weight": 1.0,
+    "name": "hard_lr3e4_e120_t075",
+    "pairwise_weight": 0.75,
+    "stage_weight": 0.1,
+    "temperature": 0.75
+  },
+  "historical_selector_checkpoint_deserialized": false,
+  "historical_selector_sha256": "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f",
+  "label_pair_count_fresh": 310433,
+  "label_pair_count_historical": 310433,
+  "moved_cell_count": 97734,
+  "parent_task_split_match": false,
+  "representation_evidence": {
+    "common_content_hash_count": 4,
+    "common_content_hashes": [
+      "2ed58934ee486431b9d6cda7c581a2db1fb3db6e707a3817a8636b75a5495929",
+      "97ccc747e535910d8e3a462f52d718b0febd01f73c04d94de1d385f0854e1ec2",
+      "eca49197c51266a4328af0d884216d10fac0ea391941cfce7d36a8bdacb2d30d",
+      "fd4c32c8366604e34cc40a060aba4fa3269b9ef5cd135a4af96b77c70865c084"
+    ],
+    "fresh_summary_sha256": "f585a0033d936aa00813a75678f35f9af80fcc1b4471880a2d682bfc4bb058d2",
+    "historical_summary_sha256": "d7b5373f3743e72dba1745f7d51ff6b7d7c18aa21cc1da789b0739816b5112d6"
+  },
+  "same_cell_count": 212699,
+  "state_prompt_evidence": {
+    "base_prompt_token_count_match_count": 499,
+    "base_rendered_sha256_match_count": 499,
+    "comparable_count": 499
+  },
+  "transition_evidence": {
+    "comparable_count": 499,
+    "fresh_manifest_sha256": "f1484d419cb475efcf11231d0fa0548ee402322eba7c96db4301679255f829b3",
+    "historical_manifest_sha256": "f25f7ed937776cd8f0f373a16cf7869f766bac2a269083aed2998779de31c623",
+    "scientific_identity_match_count": 499
+  }
+}
