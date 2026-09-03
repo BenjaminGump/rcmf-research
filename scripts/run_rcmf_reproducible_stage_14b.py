@@ -141,8 +141,6 @@ def main() -> None:
     started_utc = datetime.now(timezone.utc).isoformat()
     config = load_resolved(args.config)
     identity = _verified_stage_identity(args, config)
-    if not (args.run_root / "runtime_layout.json").exists():
-        initialize_runtime_layout(config, args.run_root)
     stage_dir = args.run_root / "stages" / args.stage
     stage_dir.mkdir(parents=True, exist_ok=True)
     arm_id = _arm_from_stage(args.stage)
@@ -150,6 +148,8 @@ def main() -> None:
     if arm_id:
         prompt_profile = str(config["arms"][arm_id]["task_conditioned_prompt_profile"])
     try:
+        if not (args.run_root / "runtime_layout.json").exists():
+            initialize_runtime_layout(config, args.run_root)
         result = execute_stage(
             stage_id=args.stage,
             config=config,

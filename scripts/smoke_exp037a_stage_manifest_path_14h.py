@@ -58,6 +58,8 @@ def _copy_fixture_preflight(source: Path, target: Path) -> dict[str, Any]:
         Path("authoritative_source_manifest.json"),
         Path("shared/parent_split.json"),
         Path("shared/transitions.jsonl"),
+        Path("shared/transition_signatures.jsonl"),
+        Path("shared/signature_equivalence.json"),
         Path("shared/labels.jsonl"),
         Path("shared/illegal_pairs.jsonl"),
     )
