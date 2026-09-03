@@ -34,7 +34,7 @@ from rcmf.utils.serialization import (
 from scripts.prepare_rcmf_reproducible_pipeline_14b import load_resolved, prepare
 
 
-RUN_ID = "rcmf_exp037a_r3_selector_reproduction_14e_20260903_001"
+RUN_ID = "rcmf_exp037a_r3_selector_reproduction_14e_fix1_20260903_001"
 ALLOWED_PIPELINE_STAGES = (
     "S05_transition_representations",
     "D00_state_representations",
