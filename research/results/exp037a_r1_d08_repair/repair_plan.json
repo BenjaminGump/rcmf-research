@@ -1,0 +1,77 @@
+{
+  "format": "exp037a_r1_repair_plan_v1",
+  "milestone": "EXP-037A-R1",
+  "starting_failure_record_commit": "bba2b99fe360c531ccfe7281c07ffaea639c678e",
+  "failed_scientific_source_commit": "02ef94726ea0fe566f7eea4fa137fb91da92977f",
+  "failed_run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+  "hypothesis": "D08 failed because the fresh transition-metadata producer does not satisfy the unchanged historical EXP-031A preparation consumer schema.",
+  "mechanism": {
+    "producer_fields": [
+      "teacher_section_tokens",
+      "teacher_section_sha256",
+      "tokenizer_name_or_path"
+    ],
+    "consumer_additional_required_fields": [
+      "source_task_goal_tokens",
+      "canonical_pre_action_state_tokens",
+      "complete_action_tokens",
+      "complete_post_action_observation_tokens"
+    ]
+  },
+  "planned_repair": {
+    "location": "fresh transition metadata producer and derived pipeline schema",
+    "historical_consumer_semantics_must_change": false,
+    "tokenization_contract": {
+      "render_complete_teacher_section_once": true,
+      "canonical_helpers": [
+        "transition_text_and_char_spans",
+        "tokenize_and_validate_char_spans"
+      ],
+      "add_special_tokens": false,
+      "truncation": false,
+      "return_offsets_mapping": true
+    },
+    "schema_version": "rcmf_transition_token_metadata_14c_v1"
+  },
+  "expected_signal": {
+    "transition_rows": 499,
+    "required_metadata_rows": 499,
+    "required_field_mismatches": 0,
+    "token_count_mismatches": 0,
+    "text_or_hash_mismatches": 0,
+    "truncation_count": 0,
+    "token_subsampling_count": 0,
+    "transition_order_unchanged": true,
+    "transition_representation_tensor_sha_unchanged": true,
+    "d00_d07_scientific_artifacts_unchanged": true,
+    "historical_d08_prepare_completes": true,
+    "d08_zero_cache_completes": true,
+    "one_real_d09_training_unit_finite": true,
+    "writer_reader_gradients_nonzero_and_finite": true,
+    "qwen_frozen": true
+  },
+  "failure_modes": [
+    "isolated section tokenization differs from complete-render aligned spans",
+    "transition text or token IDs change",
+    "transition representations change",
+    "a second downstream schema or compatibility mismatch appears",
+    "the diagnostic writes into the failed _001 root",
+    "the historical consumer is weakened",
+    "scientific config, prompt, model, data, objective, split, selection, evaluator, or RCMF mathematics change"
+  ],
+  "decision_rules": {
+    "proceed": "All exact schema, D08, D09, invariance, config, test, and _001 immutability checks pass.",
+    "stop": "Any scientific semantic change, tensor change, leakage, consumer weakening, _001 mutation, or unreconstructible provenance is required or observed.",
+    "inconclusive": "Exact spans, tensor invariance, real D08 execution, or D09 production-step equivalence cannot be established."
+  },
+  "authorizations": {
+    "engineering_repair": true,
+    "isolated_d08_diagnostic": true,
+    "single_d09_optimizer_unit_diagnostic": true,
+    "new_long_scientific_run": false,
+    "three_demo_arm": false,
+    "one_demo_arm": false,
+    "test_normal": false,
+    "alfworld_or_webshop": false
+  }
+}
