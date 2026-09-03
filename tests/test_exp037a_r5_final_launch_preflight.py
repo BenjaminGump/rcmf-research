@@ -386,6 +386,16 @@ def test_launcher_uses_final_preflight_source_and_no_hardcoded_cap() -> None:
     assert '"hard_cap_hours": 200' not in source
 
 
+def test_technical_smoke_appworld_identity_is_run_bound() -> None:
+    source = Path(
+        "scripts/smoke_rcmf_reproducible_pipeline_14b.py"
+    ).read_text(encoding="utf-8")
+    assert '"source_commit": args.source_commit' in source
+    assert '"run_root": str(args.run_root.resolve(strict=False))' in source
+    assert 'experiment_prefix=f"exp037a_r5_{smoke_identity}"' in source
+    assert 'experiment_prefix="exp037a"' not in source
+
+
 def test_strict_resume_rejects_foreign_stage_output(tmp_path: Path) -> None:
     config_path = tmp_path / "config.yaml"
     config_path.write_text("test: true", encoding="utf-8")

@@ -704,6 +704,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         ),
     }
     trajectories = {}
+    smoke_identity = content_sha256(
+        {
+            "source_commit": args.source_commit,
+            "run_root": str(args.run_root.resolve(strict=False)),
+        }
+    )[:12]
     for condition in ("D0", "D1", "D2"):
         row, reused = _run_task(
             task_id=task_id,
@@ -714,13 +720,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             paths=task_paths,
             manifest=condition_manifest,
             config_sha256=sha256_file(_arm_config(args.run_root, "1d")),
-            attempt_id=f"exp037a-smoke-{condition}",
+            attempt_id=f"exp037a-smoke-{smoke_identity}-{condition}",
             smoke=True,
             memory_count=0 if condition == "D0" else 401,
             field_artifact_path=deployment,
             field_provenance_path=provenance,
             max_steps_override=1,
-            experiment_prefix="exp037a",
+            experiment_prefix=f"exp037a_r5_{smoke_identity}",
             field_control_condition=condition,
             collect_resource_metrics=True,
         )
