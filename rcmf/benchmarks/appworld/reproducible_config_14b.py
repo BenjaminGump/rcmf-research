@@ -7,6 +7,10 @@ from typing import Any, Mapping
 import yaml
 
 from rcmf.config import load_config
+from rcmf.benchmarks.appworld.reproduction_contract_14e import (
+    resolved_causal_panel_contract,
+    validate_post_d06_expectations_are_not_panel_inputs,
+)
 
 
 def arm_root(run_root: str | Path, arm_id: str) -> Path:
@@ -129,15 +133,20 @@ def build_arm_runtime_config(
             )
         },
     }
+    panel_contract = resolved_causal_panel_contract(method)
     causal["panel"] = {
         **causal["panel"],
-        "initial_state_count": int(expected["downstream_train_states"])
-        + int(expected["downstream_heldout_states"]),
-        "maximum_state_count": int(expected["downstream_train_states"])
-        + int(expected["downstream_heldout_states"]),
-        "minimum_per_label": 0,
+        **panel_contract,
         "task_split_manifest": str(method["roots"]["approved_downstream_split"]),
     }
+    panel_independence = validate_post_d06_expectations_are_not_panel_inputs(
+        method, panel_contract
+    )
+    if not panel_independence["passed"]:
+        raise ValueError(f"Causal-panel independence gate failed: {panel_independence}")
+    causal["panel"]["post_d06_reproduction_expectation"] = (
+        panel_independence["post_d06_expected_completed"]
+    )
     causal["runtime"] = {
         **causal["runtime"],
         "review_threshold_h100_hours": float(method["approved_hard_cap_hours"]),

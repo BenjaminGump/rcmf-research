@@ -10,7 +10,6 @@ import os
 import platform
 import subprocess
 import sys
-from collections import Counter
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -18,6 +17,9 @@ import torch
 import yaml
 
 import _bootstrap  # noqa: F401
+from rcmf.benchmarks.appworld.reproduction_contract_14e import (
+    reconstruct_historical_selector_parent_split,
+)
 from rcmf.pipeline.contracts import ArmContract, PipelineContract
 from rcmf.benchmarks.appworld.reproducible_config_14b import build_arm_runtime_config
 from rcmf.benchmarks.appworld.transition_metadata_14c import (
@@ -172,36 +174,10 @@ def _source_manifest(config: Mapping[str, Any]) -> dict[str, Any]:
         "replay_lineage_sha256": replay_payload["lineage_sha256"],
     }
 
-
-def _parent_split(transitions: Sequence[Mapping[str, Any]], downstream: Mapping[str, Any]) -> dict[str, Any]:
-    train_tasks = set(map(str, downstream["train_task_ids"]))
-    heldout_tasks = set(map(str, downstream["validation_task_ids"]))
-    overlap = train_tasks & heldout_tasks
-    if overlap:
-        raise ValueError(f"Downstream task split overlaps: {sorted(overlap)}")
-    split_by_parent: dict[str, str] = {}
-    split_by_parent_task: dict[str, str] = {}
-    for row in transitions:
-        task_id = str(row["parent_task_id"])
-        if task_id in train_tasks:
-            split = "train"
-        elif task_id in heldout_tasks:
-            split = "heldout"
-        else:
-            raise ValueError(f"Training transition parent task lacks approved split: {task_id}")
-        split_by_parent[str(row["parent_memory_id"])] = split
-        split_by_parent_task[task_id] = split
-    counts = Counter(split_by_parent.values())
-    if counts != Counter({"train": 29, "heldout": 8}):
-        raise ValueError(f"Parent split count differs: {counts}")
-    return {
-        "format": "rcmf_fresh_approved_parent_split_14b_v1",
-        "split_by_parent": dict(sorted(split_by_parent.items())),
-        "split_by_parent_task": dict(sorted(split_by_parent_task.items())),
-        "train_parent_count": 29,
-        "heldout_parent_count": 8,
-        "source_split_sha256": content_sha256(downstream),
-    }
+def _parent_split(
+    transitions: Sequence[Mapping[str, Any]], contract: Mapping[str, Any]
+) -> dict[str, Any]:
+    return reconstruct_historical_selector_parent_split(transitions, contract)
 
 
 def _add_teacher_token_metadata(
@@ -257,7 +233,10 @@ def rebuild_shared_cpu(config: Mapping[str, Any], root: Path) -> dict[str, Any]:
             f"Transition token metadata audit failed: {token_metadata_mismatches[:3]}"
         )
     downstream = json.loads(Path(str(pipeline["roots"]["approved_downstream_split"])).read_text(encoding="utf-8"))
-    parent_split = _parent_split(transitions, downstream)
+    parent_split = _parent_split(
+        transitions,
+        pipeline["reproduction_contract"]["selector_parent_split"],
+    )
     query_rows, query_by_id = _query_signatures(examples, task_split)
     transition_signatures, signature_validation = _full_transition_signatures(
         transitions, old_signature_rows=[]
@@ -358,16 +337,29 @@ def rebuild_shared_cpu(config: Mapping[str, Any], root: Path) -> dict[str, Any]:
     count_checks = {key: int(value) == int(expected[key]) for key, value in counts.items()}
     if not all(count_checks.values()):
         raise ValueError(f"Fresh shared count gate failed: {counts} {count_checks}")
+    legal_pair_count = len(labels)
+    expected_legal_pair_count = int(expected["selector_legal_pairs"])
+    if legal_pair_count != expected_legal_pair_count:
+        raise ValueError(
+            f"Fresh legal-pair count differs: {legal_pair_count} != {expected_legal_pair_count}"
+        )
     summary = {
         "format": "fresh_shared_cpu_rebuild_14b_v1",
         "counts": counts,
         "count_checks": count_checks,
-        "legal_pair_count": len(labels),
+        "legal_pair_count": legal_pair_count,
         "illegal_pair_count": len(illegal),
         "a_pair_count": len(labels_a),
         "cv_updates_per_arm": total_cv_updates,
         "fresh_outputs": {
             name: file_identity(shared / name) for name in outputs
+        },
+        "selector_parent_split_provenance": {
+            "mechanism": "deterministic_parent_split_from_authoritative_transition_parents",
+            "historical_artifact_used_as_input": False,
+            "contract": dict(
+                pipeline["reproduction_contract"]["selector_parent_split"]
+            ),
         },
         "teacher_section_metadata": {
             "schema": "rcmf_transition_token_metadata_14c_v1",
