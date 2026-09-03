@@ -1,5 +1,38 @@
 # Current State
 
+## 2026-09-03 EXP-037A-R3 Reproduction Contract Repair Validated
+
+VERIFIED:
+
+- The selector parent split is now freshly reconstructed from authoritative
+  parent identities with the historical deterministic algorithm. The sealed
+  split SHA256 is
+  0c6707f61f3fa62847c1abea366b44e4fd50c206f773fa6e79a5e8ffe433c615.
+- Fresh and historical label cells agree 310,433/310,433, with zero moved,
+  missing, or fresh-only pairs. Grouped folds, candidate definitions, CV seed,
+  and final-member seeds agree exactly.
+- The causal-panel construction contract is restored to 256 initial, 499
+  maximum, and 40 minimum completed rows per label. Historical 366/98 counts
+  are post-D06 gates only, never panel inputs.
+- The bounded fresh selector diagnostic reproduced the historical
+  hard_lr3e4_e120_t075 winner, 499/499 selected memories, 499/499 selected
+  classes, and 499/499 pre-generation context decisions.
+- No historical selector was loaded or executed. No historical outcome
+  constructed the fresh panel. Full D06, D07-D09, the 1D arm, and any new long
+  run were not launched.
+
+CURRENT DECISION:
+
+- decision = REPAIR_VALIDATED_READY_FOR_3D_PREFLIGHT
+- A future clean 3D run remains unlaunched and requires explicit approval
+  because its 26.5/56-hour expected/conservative estimate exceeds 18 hours.
+- The old 200-hour EXP-037A authorization does not carry over.
+
+Full report:
+research/results/EXP_037A_R3_REPRODUCTION_CONTRACT_REPAIR.md.
+
+Last updated: 2026-09-03.
+
 ## 2026-09-03 EXP-037A-R2 First-Divergence Cause Identified
 
 VERIFIED:

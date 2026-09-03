@@ -1,0 +1,51 @@
+{
+  "authorized": true,
+  "conservative_wall_hours": 4.0,
+  "cv_seed": 25071,
+  "expected_h100_active_hours": 1.9,
+  "expected_wall_hours": 2.25,
+  "final_member_seeds": [
+    25071,
+    25072,
+    25073
+  ],
+  "format": "exp037a_r3_selector_diagnostic_runtime_preflight_14e_v1",
+  "global_seed": 25101,
+  "hardware": "NVIDIA H100 80GB HBM3",
+  "measured_prior_stage_seconds": {
+    "D00_state_representations": 622.1346927732229,
+    "D01_selector_candidate_cv": 3606.7848129598424,
+    "D02_selector_candidate_selection": 0.019501507747918367,
+    "D03_final_selector_ensemble": 1519.0908979219384,
+    "D04_selector_factorization": 1.2913607521913946,
+    "D05_selected_memory_manifest": 46.604309672955424,
+    "S05_transition_representations": 487.4812981300056
+  },
+  "measured_prior_total_hours": 1.7453907982549735,
+  "old_200_hour_authorization_inherited": false,
+  "prohibited": [
+    "D06",
+    "D07",
+    "D08",
+    "D09",
+    "one_demo_arm"
+  ],
+  "purpose": "fresh three-demo selector reconstruction and render-only context audit",
+  "requires_explicit_over_18h_approval": false,
+  "restart_plan": {
+    "append_only_attempts": true,
+    "atomic_stage_results": true,
+    "resume_at_first_incomplete_allowed_stage": true,
+    "skip_only_after_source_and_result_hash_validation": true
+  },
+  "scope": [
+    "S05_transition_representations",
+    "D00_state_representations",
+    "D01_selector_candidate_cv",
+    "D02_selector_candidate_selection",
+    "D03_final_selector_ensemble",
+    "D04_selector_factorization",
+    "D05_selected_memory_manifest"
+  ],
+  "source_commit": "f6325e84a20856a3e704fc70cfbc72326feb2872"
+}

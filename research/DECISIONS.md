@@ -1,5 +1,47 @@
 # Decisions and Deviations
 
+## 2026-09-03 EXP-037A-R3 reproduction-contract repair
+
+VERIFIED:
+
+- The clean selector parent split is regenerated from authoritative transition
+  parents before any historical comparison, using the historical SHA256-order
+  split with seed 18018 and 29/8 parent counts.
+- The sealed split, all 310,433 keyed label cells, grouped CV folds, candidate
+  definitions, CV seed, and final-member seeds match the historical audit.
+- The paired-panel constructor now uses 256/499/40. Expected completed counts
+  366/98 are explicitly post-D06 reproduction gates and cannot influence
+  panel construction.
+- A fresh selector-only reconstruction reproduced the historical candidate
+  winner and selected-memory/class/context manifests 499/499.
+
+DECISION:
+
+- Record REPAIR_VALIDATED_READY_FOR_3D_PREFLIGHT.
+- This decision permits only a future run proposal. It does not authorize
+  D06, D07, D08, D09, the 1D arm, or a new long run.
+- A future clean 3D reproduction requires explicit approval. The current
+  expected/conservative estimate is 26.5/56 wall-clock hours, and the previous
+  200-hour authorization is not inherited.
+
+IMPLEMENTATION DEVIATIONS:
+
+- An initial static audit compared two semantically unordered JSONL files by
+  row position and stopped before GPU work. The corrected audit compares by
+  state/transition key and separately reports row-order differences.
+- The fresh fix1 diagnostic completed and sealed S05 plus D00-D05. Its
+  post-hoc reporter then failed on a legitimate null raw_prompt_tokens value
+  for over-context rows. A separate read-only audit verified the sealed root;
+  it did not modify or resume that root.
+- Neither audit issue changed source data, scientific configuration, selector
+  optimization, or sealed outputs. Historical checkpoints and tensors were
+  not deserialized as inputs.
+- A final local focused-test invocation against the Windows default pytest
+  temp root hit five fixture-setup ACL errors after seven tests passed. The
+  unchanged suite passed 12/12 with the preregistered ignored repository-local
+  basetemp; this is a host-filesystem workaround, not a source or science
+  change.
+
 ## 2026-09-03 EXP-037A-R2 first-divergence diagnosis
 
 VERIFIED:

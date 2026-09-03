@@ -1,0 +1,270 @@
+{
+  "candidate_definitions": [
+    {
+      "epochs": 60,
+      "exact_api_weight": 0.1,
+      "hard_negative_weight": 0.5,
+      "learning_rate": 0.0003,
+      "listwise_weight": 1.0,
+      "name": "balanced_lr3e4_e60_t1",
+      "pairwise_weight": 1.0,
+      "stage_weight": 0.1,
+      "temperature": 1.0
+    },
+    {
+      "epochs": 120,
+      "exact_api_weight": 0.1,
+      "hard_negative_weight": 0.5,
+      "learning_rate": 0.0001,
+      "listwise_weight": 1.0,
+      "name": "balanced_lr1e4_e120_t075",
+      "pairwise_weight": 1.0,
+      "stage_weight": 0.1,
+      "temperature": 0.75
+    },
+    {
+      "epochs": 120,
+      "exact_api_weight": 0.1,
+      "hard_negative_weight": 0.75,
+      "learning_rate": 0.0003,
+      "listwise_weight": 1.0,
+      "name": "hard_lr3e4_e120_t075",
+      "pairwise_weight": 0.75,
+      "stage_weight": 0.1,
+      "temperature": 0.75
+    }
+  ],
+  "checks": {
+    "candidate_definitions_match": true,
+    "cv_seed_matches": true,
+    "final_member_seeds_match": true,
+    "fold_memberships_match": true,
+    "fresh_split_payload_matches_historical": true,
+    "fresh_split_sha_matches_target": true,
+    "labels_match_310433_of_310433": true,
+    "panel_1d_is_256_499_40": true,
+    "panel_3d_is_256_499_40": true,
+    "panel_not_derived_from_366_98": true
+  },
+  "format": "exp037a_r3_static_reproduction_contract_audit_14e_v1",
+  "fresh_folds": [
+    {
+      "fold": 0,
+      "heldout_parents": [
+        "271cd526-def9-5918-9eb5-af49cbcba77a",
+        "452d9484-d68b-5b99-a692-c548575ed623",
+        "806cbabc-95ef-5414-a437-45c9596d3935",
+        "879ace16-f730-5806-af5a-a0039e55324a",
+        "c36d723a-3ab4-5777-8fc2-92fcec2e488f",
+        "ceaedacd-164b-5bbd-a874-bd61f4b848e2",
+        "e69c59f0-1f8f-583f-838f-15c7a4b97f71",
+        "eb03548d-8be2-53a6-bed6-ab77608ebdc5",
+        "ef830c7b-329b-52a0-9e67-733a3a8ec0d7",
+        "f8876205-8ffa-529d-ae97-42422b2cb749"
+      ],
+      "heldout_tasks": [
+        "07b42fd_3",
+        "229360a_3",
+        "287e338_3",
+        "34d9492_3",
+        "3c13f5a_2",
+        "6104387_3",
+        "76f2c72_1",
+        "76f2c72_3",
+        "771d8fc_1",
+        "82e2fac_1",
+        "afc0fce_1",
+        "cf6abd2_3",
+        "e7a10f8_3"
+      ]
+    },
+    {
+      "fold": 1,
+      "heldout_parents": [
+        "007f8489-ac8f-5555-8fda-325e4c83da50",
+        "0c8e94ec-b579-5d89-9ece-0c9f3c25eaea",
+        "28b694ab-6a47-515b-9dd7-b6386eb692ac",
+        "3a4fd684-ed14-5f4d-97e2-83784fbc6c1f",
+        "4ed81322-37a2-50d0-9789-f2e2c7941ef7",
+        "524eab83-5520-5d42-8bd3-751abd3dee72",
+        "566acaf2-e964-5d32-a913-83cf57374be1",
+        "5cd9c1dc-51a3-5842-a86d-90660d93647d",
+        "8a77a781-b064-5508-b25d-bc5314ee8df2",
+        "ea2c866a-5ed9-5a69-be30-89c2899b0c84"
+      ],
+      "heldout_tasks": [
+        "07b42fd_2",
+        "229360a_2",
+        "287e338_2",
+        "76f2c72_2",
+        "771d8fc_2",
+        "aa8502b_1",
+        "aa8502b_2",
+        "b7a9ee9_1",
+        "b7a9ee9_3",
+        "c901732_3",
+        "cf6abd2_1",
+        "cf6abd2_2"
+      ]
+    },
+    {
+      "fold": 2,
+      "heldout_parents": [
+        "076f5673-6565-5f20-aada-6f16a0f8d4b0",
+        "1034b5c8-6a38-58ef-8597-559e77a96856",
+        "219f2098-90a3-5cab-be2f-0994f20a0c69",
+        "3aa08204-ebfa-5dbc-8b45-f90e9b78ccb6",
+        "493a4cc3-396a-5f92-ac2f-6a53d4e140b0",
+        "55bcdd03-fa90-5f8d-b91c-5cc64a64d46f",
+        "5b7b5df0-de25-51bb-80e3-540059e1de17",
+        "783ea68e-a3c2-5480-8e20-e41652980d23",
+        "c9ec7d01-f877-533a-a93e-f7bb109660e1"
+      ],
+      "heldout_tasks": [
+        "07b42fd_1",
+        "27e1026_2",
+        "287e338_1",
+        "34d9492_1",
+        "7d7fbf6_1",
+        "7d7fbf6_3",
+        "afc0fce_3",
+        "b0a8eae_3",
+        "b7a9ee9_2",
+        "c901732_1",
+        "e7a10f8_1",
+        "e7a10f8_2"
+      ]
+    }
+  ],
+  "fresh_labels": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r3_selector_reproduction_14e_fix1_20260903_001/preflight/shared/labels.jsonl",
+    "sha256": "1af73f5525e339cb5b138ee312aa58e957adf7d629daa6c14855f4a66186421b",
+    "size_bytes": 501211960
+  },
+  "fresh_parent_split": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r3_selector_reproduction_14e_fix1_20260903_001/preflight/shared/parent_split.json",
+    "sha256": "0c6707f61f3fa62847c1abea366b44e4fd50c206f773fa6e79a5e8ffe433c615",
+    "size_bytes": 3135
+  },
+  "fresh_sealed_before_historical_reference_read": true,
+  "historical_artifacts_used_as_scientific_inputs": false,
+  "historical_folds": [
+    {
+      "fold": 0,
+      "heldout_parents": [
+        "271cd526-def9-5918-9eb5-af49cbcba77a",
+        "452d9484-d68b-5b99-a692-c548575ed623",
+        "806cbabc-95ef-5414-a437-45c9596d3935",
+        "879ace16-f730-5806-af5a-a0039e55324a",
+        "c36d723a-3ab4-5777-8fc2-92fcec2e488f",
+        "ceaedacd-164b-5bbd-a874-bd61f4b848e2",
+        "e69c59f0-1f8f-583f-838f-15c7a4b97f71",
+        "eb03548d-8be2-53a6-bed6-ab77608ebdc5",
+        "ef830c7b-329b-52a0-9e67-733a3a8ec0d7",
+        "f8876205-8ffa-529d-ae97-42422b2cb749"
+      ],
+      "heldout_tasks": [
+        "07b42fd_3",
+        "229360a_3",
+        "287e338_3",
+        "34d9492_3",
+        "3c13f5a_2",
+        "6104387_3",
+        "76f2c72_1",
+        "76f2c72_3",
+        "771d8fc_1",
+        "82e2fac_1",
+        "afc0fce_1",
+        "cf6abd2_3",
+        "e7a10f8_3"
+      ]
+    },
+    {
+      "fold": 1,
+      "heldout_parents": [
+        "007f8489-ac8f-5555-8fda-325e4c83da50",
+        "0c8e94ec-b579-5d89-9ece-0c9f3c25eaea",
+        "28b694ab-6a47-515b-9dd7-b6386eb692ac",
+        "3a4fd684-ed14-5f4d-97e2-83784fbc6c1f",
+        "4ed81322-37a2-50d0-9789-f2e2c7941ef7",
+        "524eab83-5520-5d42-8bd3-751abd3dee72",
+        "566acaf2-e964-5d32-a913-83cf57374be1",
+        "5cd9c1dc-51a3-5842-a86d-90660d93647d",
+        "8a77a781-b064-5508-b25d-bc5314ee8df2",
+        "ea2c866a-5ed9-5a69-be30-89c2899b0c84"
+      ],
+      "heldout_tasks": [
+        "07b42fd_2",
+        "229360a_2",
+        "287e338_2",
+        "76f2c72_2",
+        "771d8fc_2",
+        "aa8502b_1",
+        "aa8502b_2",
+        "b7a9ee9_1",
+        "b7a9ee9_3",
+        "c901732_3",
+        "cf6abd2_1",
+        "cf6abd2_2"
+      ]
+    },
+    {
+      "fold": 2,
+      "heldout_parents": [
+        "076f5673-6565-5f20-aada-6f16a0f8d4b0",
+        "1034b5c8-6a38-58ef-8597-559e77a96856",
+        "219f2098-90a3-5cab-be2f-0994f20a0c69",
+        "3aa08204-ebfa-5dbc-8b45-f90e9b78ccb6",
+        "493a4cc3-396a-5f92-ac2f-6a53d4e140b0",
+        "55bcdd03-fa90-5f8d-b91c-5cc64a64d46f",
+        "5b7b5df0-de25-51bb-80e3-540059e1de17",
+        "783ea68e-a3c2-5480-8e20-e41652980d23",
+        "c9ec7d01-f877-533a-a93e-f7bb109660e1"
+      ],
+      "heldout_tasks": [
+        "07b42fd_1",
+        "27e1026_2",
+        "287e338_1",
+        "34d9492_1",
+        "7d7fbf6_1",
+        "7d7fbf6_3",
+        "afc0fce_3",
+        "b0a8eae_3",
+        "b7a9ee9_2",
+        "c901732_1",
+        "e7a10f8_1",
+        "e7a10f8_2"
+      ]
+    }
+  ],
+  "historical_labels": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/signature_balanced_field_7c_20260818_001/clean_full_procedural_labels.jsonl",
+    "sha256": "82cea859b097c2abfe028cb7dd08d3ff4e0ed8830197f29a1b15873fc870ff65",
+    "size_bytes": 501211960
+  },
+  "historical_parent_split": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/replay_clean_rebuild_7b_20260818_001/clean_procedural_audit/clean_parent_split_manifest.json",
+    "sha256": "0c6707f61f3fa62847c1abea366b44e4fd50c206f773fa6e79a5e8ffe433c615",
+    "size_bytes": 3135
+  },
+  "label_comparison": {
+    "fresh_only_count": 0,
+    "historical_row_count": 310433,
+    "missing_in_fresh_count": 0,
+    "moved_cell_count": 0,
+    "pair_order_mismatch_count": 309942,
+    "passed": true,
+    "row_count": 310433
+  },
+  "panel_1d": {
+    "initial_state_count": 256,
+    "maximum_state_count": 499,
+    "minimum_per_label": 40
+  },
+  "panel_3d": {
+    "initial_state_count": 256,
+    "maximum_state_count": 499,
+    "minimum_per_label": 40
+  },
+  "passed": true
+}

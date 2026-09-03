@@ -1,0 +1,28 @@
+{
+  "actual": {
+    "state_final": "fd4c32c8366604e34cc40a060aba4fa3269b9ef5cd135a4af96b77c70865c084",
+    "state_mean_final_four": "eca49197c51266a4328af0d884216d10fac0ea391941cfce7d36a8bdacb2d30d",
+    "transition_final": "2ed58934ee486431b9d6cda7c581a2db1fb3db6e707a3817a8636b75a5495929",
+    "transition_mean_final_four": "97ccc747e535910d8e3a462f52d718b0febd01f73c04d94de1d385f0854e1ec2"
+  },
+  "checks": {
+    "state_final": true,
+    "state_mean_final_four": true,
+    "transition_final": true,
+    "transition_mean_final_four": true
+  },
+  "expected": {
+    "state_final": "fd4c32c8366604e34cc40a060aba4fa3269b9ef5cd135a4af96b77c70865c084",
+    "state_mean_final_four": "eca49197c51266a4328af0d884216d10fac0ea391941cfce7d36a8bdacb2d30d",
+    "transition_final": "2ed58934ee486431b9d6cda7c581a2db1fb3db6e707a3817a8636b75a5495929",
+    "transition_mean_final_four": "97ccc747e535910d8e3a462f52d718b0febd01f73c04d94de1d385f0854e1ec2"
+  },
+  "format": "exp037a_r3_representation_identity_audit_14e_v1",
+  "historical_tensor_loaded": false,
+  "passed": true,
+  "summary": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r3_selector_reproduction_14e_fix1_20260903_001/arms/3d/representation_cache/multiview/clean_multiview_cache_summary.json",
+    "sha256": "b6c33f0643c2626b7d9ab303d2332245b27a3af4dab976240f78cb18c5094542",
+    "size_bytes": 2160
+  }
+}

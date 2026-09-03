@@ -1,0 +1,51 @@
+{
+  "format": "exp037a_r3_future_3d_runtime_proposal_v1",
+  "status": "EXPLICIT_USER_APPROVAL_REQUIRED",
+  "scientific_scope": "future clean three-demo reproduction through its preregistered gate",
+  "implementation_commit": "7dcc2640d10094473427343d8c511e0f7a24d2c5",
+  "config": "configs/pipeline/rcmf_appworld_repro_14b.yaml",
+  "authoritative_inputs": {
+    "corpus": "/lambda/nfs/rcmf-persist/project/runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001",
+    "replay_validated_corpus": "/lambda/nfs/rcmf-persist/project/runs/stage_c/replay_clean_rebuild_7b_20260818_001",
+    "downstream_split": "/lambda/nfs/rcmf-persist/project/runs/stage_c/state_conditioned_program_direct_7dg_20260821_001/preflight/a_task_split.json",
+    "model_snapshot": "Qwen/Qwen3-8B"
+  },
+  "environment": {
+    "hardware": "NVIDIA H100 80GB HBM3",
+    "python": "/home/ubuntu/venvs/rcmf-py311/bin/python",
+    "appworld_python": "/home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python",
+    "appworld_root": "/lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root"
+  },
+  "seeds": {
+    "global": 25101,
+    "selector_cv": 25071,
+    "selector_final_members": [25071, 25072, 25073]
+  },
+  "measured_bounded_selector_diagnostic": {
+    "wall_hours": 2.437285044068057,
+    "estimated_h100_active_hours": 2.4261555555555556,
+    "completed_stages": 7
+  },
+  "future_estimate": {
+    "expected_wall_hours": 26.5,
+    "conservative_wall_hours": 56.0,
+    "estimated_h100_active_hours": 21.8,
+    "expected_storage_gib": 46,
+    "conservative_storage_gib": 90,
+    "proposed_hard_cap_wall_hours": 80,
+    "hourly_cost_usd": null
+  },
+  "restart_plan": {
+    "atomic_stage_outputs": true,
+    "append_only_attempts": true,
+    "content_hash_validation_before_skip": true,
+    "resume_from_first_incomplete_stage": true,
+    "persistent_event_driven_parent": true
+  },
+  "authorization": {
+    "previous_200_hour_authorization_inherited": false,
+    "could_exceed_18_hours": true,
+    "explicit_user_approval_required_before_launch": true,
+    "launched": false
+  }
+}
