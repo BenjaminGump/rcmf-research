@@ -223,7 +223,15 @@ def _write_mock_output(
     atomic_write_json(payload, {"stage": stage.stage_id})
     if stage.stage_id == "D22_three_demo_reproduction_gate":
         atomic_write_json(
-            stage_dir / "gate.json", {"continue_to_one_demo": gate}
+            stage_dir / "gate.json",
+            {
+                "decision": (
+                    "THREE_DEMO_REPRODUCTION_PASS"
+                    if gate
+                    else "THREE_DEMO_REPRODUCTION_NOT_ESTABLISHED"
+                ),
+                "continue_to_one_demo": gate,
+            },
         )
     atomic_write_json(
         stage_dir / "output_manifest.json",
@@ -239,14 +247,16 @@ def _write_mock_output(
     )
 
 
-def _scheduler_smoke(source_commit: str) -> dict[str, Any]:
+def _scheduler_smoke(
+    source_commit: str, hard_cap_hours: float
+) -> dict[str, Any]:
     stages = build_exp037a_stage_graph()
     contract = PipelineContract(
         schema_version="exp037a_mock_smoke_v1",
         run_uuid="exp037a-mock-smoke",
         source_commit=source_commit,
         global_seed=25101,
-        hard_cap_hours=200.0,
+        hard_cap_hours=hard_cap_hours,
         stages=stages,
         arms={
             "3d": ArmContract("3d", "full_demo", "arms/3d", "mock-3d"),
@@ -267,7 +277,7 @@ def _scheduler_smoke(source_commit: str) -> dict[str, Any]:
             root / "runtime_authorization.json",
             {
                 "authorized": True,
-                "hard_cap_hours": 200.0,
+                "hard_cap_hours": hard_cap_hours,
                 "source_commit": source_commit,
             },
         )
@@ -313,7 +323,7 @@ def _scheduler_smoke(source_commit: str) -> dict[str, Any]:
             root / "runtime_authorization.json",
             {
                 "authorized": True,
-                "hard_cap_hours": 200.0,
+                "hard_cap_hours": hard_cap_hours,
                 "source_commit": source_commit,
             },
         )
@@ -735,7 +745,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             ),
         }
 
-    scheduler = _scheduler_smoke(args.source_commit)
+    scheduler = _scheduler_smoke(
+        args.source_commit, float(pipeline["proposed_hard_cap_hours"])
+    )
     local_tests = _json(args.local_tests)
     lambda_tests = _json(args.lambda_tests)
     historical_integration = None
