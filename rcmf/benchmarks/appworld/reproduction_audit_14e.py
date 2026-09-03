@@ -32,36 +32,57 @@ def _label_cells(path: str | Path) -> Iterable[tuple[str, str, str]]:
 
 
 def compare_label_cells(
-    fresh_path: str | Path, historical_path: str | Path
+    fresh_path: str | Path,
+    historical_path: str | Path,
+    *,
+    expected_count: int = 310433,
 ) -> dict[str, Any]:
-    fresh = _label_cells(fresh_path)
-    historical = _label_cells(historical_path)
-    count = 0
+    fresh_cells: dict[tuple[str, str], str] = {}
+    fresh_order: list[tuple[str, str]] = []
+    for state_id, transition_id, cell in _label_cells(fresh_path):
+        key = (state_id, transition_id)
+        if key in fresh_cells:
+            raise ValueError(f"Duplicate fresh label pair: {key!r}")
+        fresh_cells[key] = cell
+        fresh_order.append(key)
+
+    historical_keys: set[tuple[str, str]] = set()
+    historical_count = 0
     moved = 0
+    missing_in_fresh = 0
     order_mismatch = 0
-    while True:
-        try:
-            fresh_row = next(fresh)
-        except StopIteration:
-            fresh_row = None
-        try:
-            historical_row = next(historical)
-        except StopIteration:
-            historical_row = None
-        if fresh_row is None and historical_row is None:
-            break
-        if fresh_row is None or historical_row is None:
-            raise ValueError("Fresh and historical label row counts differ")
-        count += 1
-        if fresh_row[:2] != historical_row[:2]:
+    for index, (state_id, transition_id, cell) in enumerate(
+        _label_cells(historical_path)
+    ):
+        key = (state_id, transition_id)
+        if key in historical_keys:
+            raise ValueError(f"Duplicate historical label pair: {key!r}")
+        historical_keys.add(key)
+        historical_count += 1
+        if index >= len(fresh_order) or fresh_order[index] != key:
             order_mismatch += 1
-        if fresh_row != historical_row:
+        fresh_cell = fresh_cells.get(key)
+        if fresh_cell is None:
+            missing_in_fresh += 1
+        elif fresh_cell != cell:
             moved += 1
+
+    fresh_only = len(set(fresh_cells) - historical_keys)
+    passed = (
+        len(fresh_cells) == expected_count
+        and historical_count == expected_count
+        and missing_in_fresh == 0
+        and fresh_only == 0
+        and moved == 0
+    )
     return {
-        "row_count": count,
+        "row_count": len(fresh_cells),
+        "historical_row_count": historical_count,
         "pair_order_mismatch_count": order_mismatch,
+        "missing_in_fresh_count": missing_in_fresh,
+        "fresh_only_count": fresh_only,
         "moved_cell_count": moved,
-        "passed": count == 310433 and order_mismatch == 0 and moved == 0,
+        "passed": passed,
     }
 
 

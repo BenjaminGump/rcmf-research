@@ -103,7 +103,7 @@ def test_arm_contract_diff_remains_prompt_only(tmp_path: Path) -> None:
     assert arm_1d["benchmark"]["prompt_profile"] == "full_demo_first_only"
 
 
-def test_label_comparison_is_ordered_and_exact(tmp_path: Path) -> None:
+def test_label_comparison_is_keyed_and_order_is_diagnostic(tmp_path: Path) -> None:
     rows = [
         {"state_example_id": "s1", "transition_id": "m1", "cell": "A"},
         {"state_example_id": "s1", "transition_id": "m2", "cell": "B"},
@@ -112,11 +112,34 @@ def test_label_comparison_is_ordered_and_exact(tmp_path: Path) -> None:
     historical = tmp_path / "historical.jsonl"
     text = "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows)
     fresh.write_text(text, encoding="utf-8")
-    historical.write_text(text, encoding="utf-8")
-    result = compare_label_cells(fresh, historical)
+    historical.write_text(
+        "".join(json.dumps(row, sort_keys=True) + "\n" for row in reversed(rows)),
+        encoding="utf-8",
+    )
+    result = compare_label_cells(fresh, historical, expected_count=2)
     assert result["row_count"] == 2
+    assert result["historical_row_count"] == 2
+    assert result["pair_order_mismatch_count"] == 2
     assert result["moved_cell_count"] == 0
-    assert not result["passed"]  # Production gate also requires exactly 310,433.
+    assert result["passed"]
+
+
+def test_label_comparison_detects_cell_movement(tmp_path: Path) -> None:
+    fresh = tmp_path / "fresh.jsonl"
+    historical = tmp_path / "historical.jsonl"
+    fresh.write_text(
+        json.dumps({"state_example_id": "s1", "transition_id": "m1", "cell": "A"})
+        + "\n",
+        encoding="utf-8",
+    )
+    historical.write_text(
+        json.dumps({"state_example_id": "s1", "transition_id": "m1", "cell": "B"})
+        + "\n",
+        encoding="utf-8",
+    )
+    result = compare_label_cells(fresh, historical, expected_count=1)
+    assert result["moved_cell_count"] == 1
+    assert not result["passed"]
 
 
 def test_diagnostic_runner_cannot_cross_d05() -> None:
