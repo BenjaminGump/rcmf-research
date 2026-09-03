@@ -1,0 +1,188 @@
+{
+  "blocking_contract": {
+    "configured_scoreable_heldout": 98,
+    "configured_scoreable_train": 366,
+    "consumer_file": "scripts/prepare_rcmf_joint_full_bank_9a.py",
+    "consumer_lines": [
+      605,
+      611
+    ],
+    "heldout_labels": {
+      "HARMFUL": 11,
+      "NEUTRAL": 60,
+      "POSITIVE": 27
+    },
+    "initial_state_count": 464,
+    "missing_logical_states": 24,
+    "model_train_labels": {
+      "HARMFUL": 28,
+      "NEUTRAL": 211,
+      "POSITIVE": 103
+    },
+    "observed_scoreable_heldout": 98,
+    "observed_scoreable_train": 342,
+    "observed_total_rows": 440,
+    "over_context_missing_count": 23,
+    "overlap_between_missing_sets": 4,
+    "replay_semantic_missing_count": 5
+  },
+  "checks": [
+    {
+      "check_name": "transition_metadata_schema",
+      "evidence_path": "early_contract_gate.json",
+      "expected": "499/499",
+      "observed": "499/499",
+      "passed": true
+    },
+    {
+      "check_name": "required_token_fields",
+      "evidence_path": "schema_audit_499.json",
+      "expected": "0 missing",
+      "observed": "0 missing",
+      "passed": true
+    },
+    {
+      "check_name": "token_count_semantics",
+      "evidence_path": "schema_audit_499.json",
+      "expected": "0 mismatches",
+      "observed": "0 mismatches",
+      "passed": true
+    },
+    {
+      "check_name": "transition_text_and_hashes",
+      "evidence_path": "schema_audit_499.json",
+      "expected": "0 mismatches",
+      "observed": "0 mismatches",
+      "passed": true
+    },
+    {
+      "check_name": "truncation_or_subsampling",
+      "evidence_path": "schema_audit_499.json",
+      "expected": "0",
+      "observed": "0",
+      "passed": true
+    },
+    {
+      "check_name": "historical_section_contract",
+      "evidence_path": "early_contract_gate.json",
+      "expected": "499/499",
+      "observed": "499/499",
+      "passed": true
+    },
+    {
+      "check_name": "transition_id_coverage",
+      "evidence_path": "early_contract_gate.json",
+      "expected": "499 ordered IDs",
+      "observed": "499 ordered IDs",
+      "passed": true
+    },
+    {
+      "check_name": "representation_order",
+      "evidence_path": "early_contract_gate.json",
+      "expected": "exact",
+      "observed": "exact",
+      "passed": true
+    },
+    {
+      "check_name": "train_task_count",
+      "evidence_path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002/arms/3d/attempts.jsonl",
+      "expected": 29,
+      "observed": 29,
+      "passed": true
+    },
+    {
+      "check_name": "heldout_task_count",
+      "evidence_path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002/arms/3d/attempts.jsonl",
+      "expected": 8,
+      "observed": 8,
+      "passed": true
+    },
+    {
+      "check_name": "train_memory_count",
+      "evidence_path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002/arms/3d/attempts.jsonl",
+      "expected": 401,
+      "observed": 401,
+      "passed": true
+    },
+    {
+      "check_name": "heldout_memory_count",
+      "evidence_path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002/arms/3d/attempts.jsonl",
+      "expected": 98,
+      "observed": 98,
+      "passed": true
+    },
+    {
+      "check_name": "scoreable_train_state_count",
+      "evidence_path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002/arms/3d/paired_causal/paired_outcomes.json",
+      "expected": 366,
+      "observed": 342,
+      "passed": false
+    },
+    {
+      "check_name": "scoreable_heldout_state_count",
+      "evidence_path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002/arms/3d/paired_causal/paired_outcomes.json",
+      "expected": 98,
+      "observed": 98,
+      "passed": true
+    },
+    {
+      "check_name": "paired_outcome_total",
+      "evidence_path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002/arms/3d/paired_causal/paired_outcomes.json",
+      "expected": 464,
+      "observed": 440,
+      "passed": false
+    },
+    {
+      "check_name": "teacher_cache_id_contract",
+      "evidence_path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002/arms/3d/structured_compiler/policy_teacher_cache.pt",
+      "expected": "complete validation",
+      "observed": "not reached",
+      "passed": null
+    },
+    {
+      "check_name": "selector_exact_decomposition",
+      "evidence_path": "absent selector/exact_decomposition_audit.json",
+      "expected": "passed report",
+      "observed": "not reached",
+      "passed": null
+    },
+    {
+      "check_name": "rho_parent_normalization",
+      "evidence_path": "blocked before full data manifest",
+      "expected": "passed report",
+      "observed": "not reached",
+      "passed": null
+    },
+    {
+      "check_name": "shuffle_validator",
+      "evidence_path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002/arms/3d/data/key_payload_shuffle_manifest.json",
+      "expected": "passed report",
+      "observed": "manifest created; full validator not reached",
+      "passed": null
+    },
+    {
+      "check_name": "zero_policy_contract",
+      "evidence_path": "zero-cache outputs absent",
+      "expected": "passed",
+      "observed": "not reached",
+      "passed": false
+    },
+    {
+      "check_name": "units_per_epoch",
+      "evidence_path": "training manifest absent",
+      "expected": "validated",
+      "observed": "not reached",
+      "passed": false
+    }
+  ],
+  "dynamic_expected_count_rewrite_applied": false,
+  "execution_action": "STOP",
+  "format": "exp037a_r1_d08_secondary_contract_audit_v1",
+  "full_d08_completed": false,
+  "historical_consumer_weakened": false,
+  "repair_decision": "INCONCLUSIVE",
+  "scientific_semantics_changed": false,
+  "status": "BLOCKED",
+  "why_not_repaired": "Changing 366 to 342, imputing missing outcomes, or rebuilding the panel would change D09 training-unit coverage/data semantics. The repair charter requires a stop rather than a relaxed check.",
+  "zero_cache_completed": false
+}

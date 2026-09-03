@@ -1,0 +1,28 @@
+{
+  "consumer": "scripts.prepare_rcmf_joint_full_bank_9a._section_contract",
+  "derivation": {
+    "add_special_tokens": false,
+    "complete_teacher_section_tokenized_once": true,
+    "renderer": "transition_text_and_char_spans",
+    "return_offsets_mapping": true,
+    "section_counts_derived_from_complete_render_offsets": true,
+    "tokenizer": "tokenize_and_validate_char_spans",
+    "truncation": false
+  },
+  "format": "rcmf_transition_token_metadata_14c_v1",
+  "historical_consumer_semantics_changed": false,
+  "required_integer_fields": [
+    "teacher_section_tokens",
+    "source_task_goal_tokens",
+    "canonical_pre_action_state_tokens",
+    "complete_action_tokens",
+    "complete_post_action_observation_tokens"
+  ],
+  "schema_sha256": "bb228630b656a7e3c137dfcf88e37fb39197453d7d63a3ca1ef062da129a1bab",
+  "span_to_field": {
+    "complete_action": "complete_action_tokens",
+    "post_action_observation": "complete_post_action_observation_tokens",
+    "pre_action_state": "canonical_pre_action_state_tokens",
+    "source_task_goal": "source_task_goal_tokens"
+  }
+}

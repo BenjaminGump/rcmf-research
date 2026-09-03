@@ -1,0 +1,26 @@
+{
+  "environment": "/home/ubuntu/venvs/rcmf-py311/bin/python",
+  "focused": {
+    "command": "python -m pytest -q -rs -p no:cacheprovider tests/test_exp037a_d08_repair_14c.py tests/test_reproducible_pipeline_14b.py",
+    "duration_seconds": 2.77,
+    "failed": 0,
+    "passed": 38,
+    "skipped": 0
+  },
+  "format": "exp037a_r1_test_report_v1",
+  "full": {
+    "command": "python -m pytest -q -p no:cacheprovider",
+    "duration_seconds": 7.71,
+    "failed": 0,
+    "passed": 829,
+    "skipped": 0,
+    "skips": []
+  },
+  "initial_invocation_error": {
+    "reason": "PYTHONHASHSEED was not set before process start",
+    "rerun_under_required_contract_passed": true,
+    "scientific_effect": false,
+    "status": "FAILED_DURING_COLLECTION"
+  },
+  "pythonhashseed": 25101
+}

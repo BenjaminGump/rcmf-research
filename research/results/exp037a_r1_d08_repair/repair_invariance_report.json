@@ -1,0 +1,68 @@
+{
+  "changed_hashes": [
+    {
+      "after": "7e9e41985ea8defbba57345e8008af4927bd71348e012a72333eda9ea0d03c7b",
+      "artifact": "transition manifest",
+      "before": "f1484d419cb475efcf11231d0fa0548ee402322eba7c96db4301679255f829b3",
+      "reason": "adds derived token metadata and schema only"
+    },
+    {
+      "after": "0866d41622b4c6d08edbd3e31f6658c56335f7e6",
+      "artifact": "source commit",
+      "before": "bba2b99fe360c531ccfe7281c07ffaea639c678e",
+      "reason": "producer/schema, early gate, diagnostics, and tests"
+    },
+    {
+      "after": "58-stage source graph",
+      "artifact": "stage DAG",
+      "before": "57-stage source graph",
+      "reason": "adds S05B engineering validity gate"
+    }
+  ],
+  "diagnostic_fixtures": {
+    "checked_files": 1221,
+    "mismatches": 0,
+    "passed": true,
+    "rows_sha256": "bafd24b7294425776212f39aad29034845191e37d9a93497c6778aeaa78a022c"
+  },
+  "failed_run_immutable": {
+    "checked_files": 45,
+    "mismatches": 0,
+    "passed": true
+  },
+  "format": "exp037a_r1_repair_invariance_v1",
+  "not_exercised_due_stop": [
+    "D08 zero cache",
+    "D09 training unit",
+    "writer/reader gradients",
+    "checkpoint/resume"
+  ],
+  "other_frozen_fixture_hashes": {
+    "paired_outcomes": "0088da1b9b01e57a0f02caa772935447bfa84c04123495ffb5bc86767d9e1e2f",
+    "policy_teacher": "ac0be282619acf3a8b0a76ae0a344562e1a0de895d664fecfed1b9a038ee23c7",
+    "selector_ensemble_scores": "07eee76ace3c2e48485b4290528d65232a9fc3b8041b2659fed54e9f2b291544",
+    "state_cache": "cf2b1323ed081b641dbb774bdef3d0fe4506dab4a637ec54a59420a28006cf73",
+    "task_split": "b2e1efc1ea687dc0e2767f281e31c7405fc63e6c8935a9e853b6d0e40b97ee14"
+  },
+  "passed_where_exercised": true,
+  "scientific_config_diff": {
+    "passed": true,
+    "prohibited_differences": []
+  },
+  "transition_identity": {
+    "content_hashes_sha256_after": "7db025653350dbda3d96afab77d6f0bd6fef85aa337021f1493306ebedffdf53",
+    "content_hashes_sha256_before": "7db025653350dbda3d96afab77d6f0bd6fef85aa337021f1493306ebedffdf53",
+    "ordered_ids_sha256_after": "6cbaf15f3e65ba46cdd1a68116b1641b1a1e9f004427a325f5174793d7f81659",
+    "ordered_ids_sha256_before": "6cbaf15f3e65ba46cdd1a68116b1641b1a1e9f004427a325f5174793d7f81659",
+    "row_count": 499,
+    "section_hashes_sha256_after": "cc69f89f2c3f0e1faa1db065deb72cf1454ec5f57c224b270176c731a67c150b",
+    "section_hashes_sha256_before": "cc69f89f2c3f0e1faa1db065deb72cf1454ec5f57c224b270176c731a67c150b"
+  },
+  "transition_representations": {
+    "container_sha256_after_revalidation": "f3bf7798e73cbbdb2ccb87c7fd6ee4835d73b7a463a496a788b070dfd3c740b8",
+    "container_sha256_before": "f3bf7798e73cbbdb2ccb87c7fd6ee4835d73b7a463a496a788b070dfd3c740b8",
+    "final_layer_tensor_sha256": "2ed58934ee486431b9d6cda7c581a2db1fb3db6e707a3817a8636b75a5495929",
+    "mean_final_four_layers_tensor_sha256": "97ccc747e535910d8e3a462f52d718b0febd01f73c04d94de1d385f0854e1ec2",
+    "s05b_consumer_slice_tensor_sha256": "e7c8ea5522378505a2edb15d41b39324eaeb06a8f5649bca08429f4915b82f18"
+  }
+}

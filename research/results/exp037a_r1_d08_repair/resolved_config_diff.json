@@ -1,0 +1,144 @@
+{
+  "allowed_prefixes": [],
+  "allowlist": [
+    "benchmark.prompt_profile",
+    "experiment.name",
+    "stage_c_11b.artifact_dir",
+    "stage_c_11b.prompt_profile",
+    "stage_c_11b.run_uuid",
+    "stage_c_7c.artifact_dir",
+    "stage_c_7c.generation.prompt_profile",
+    "stage_c_7c.multiview_cache.output_root",
+    "stage_c_7c.run_uuid",
+    "stage_c_7hr.appworld.prompt_profile",
+    "stage_c_7hr.artifact_dir",
+    "stage_c_7hr.parent_exp025c",
+    "stage_c_7hr.run_uuid",
+    "stage_c_9a.appworld.prompt_profile",
+    "stage_c_9a.artifact_dir",
+    "stage_c_9a.parent_exp025c",
+    "stage_c_9a.parent_exp028a",
+    "stage_c_9a.prompt_dependent_inputs.outcomes",
+    "stage_c_9a.prompt_dependent_inputs.state_cache",
+    "stage_c_9a.prompt_dependent_inputs.teacher_cache",
+    "stage_c_9a.run_uuid"
+  ],
+  "differences": [
+    {
+      "left": "full_demo",
+      "path": "benchmark.prompt_profile",
+      "right": "full_demo_first_only"
+    },
+    {
+      "left": "rcmf_reproducible_pipeline_14b_3d",
+      "path": "experiment.name",
+      "right": "rcmf_reproducible_pipeline_14b_1d"
+    },
+    {
+      "left": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\3d",
+      "path": "stage_c_11b.artifact_dir",
+      "right": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\1d"
+    },
+    {
+      "left": "full_demo",
+      "path": "stage_c_11b.prompt_profile",
+      "right": "full_demo_first_only"
+    },
+    {
+      "left": "rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002-3d",
+      "path": "stage_c_11b.run_uuid",
+      "right": "rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002-1d"
+    },
+    {
+      "left": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\3d",
+      "path": "stage_c_7c.artifact_dir",
+      "right": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\1d"
+    },
+    {
+      "left": "full_demo",
+      "path": "stage_c_7c.generation.prompt_profile",
+      "right": "full_demo_first_only"
+    },
+    {
+      "left": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\3d\\representation_cache\\multiview",
+      "path": "stage_c_7c.multiview_cache.output_root",
+      "right": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\1d\\representation_cache\\multiview"
+    },
+    {
+      "left": "rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002-3d",
+      "path": "stage_c_7c.run_uuid",
+      "right": "rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002-1d"
+    },
+    {
+      "left": "full_demo",
+      "path": "stage_c_7hr.appworld.prompt_profile",
+      "right": "full_demo_first_only"
+    },
+    {
+      "left": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\3d",
+      "path": "stage_c_7hr.artifact_dir",
+      "right": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\1d"
+    },
+    {
+      "left": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\3d",
+      "path": "stage_c_7hr.parent_exp025c",
+      "right": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\1d"
+    },
+    {
+      "left": "rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002-3d",
+      "path": "stage_c_7hr.run_uuid",
+      "right": "rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002-1d"
+    },
+    {
+      "left": "full_demo",
+      "path": "stage_c_9a.appworld.prompt_profile",
+      "right": "full_demo_first_only"
+    },
+    {
+      "left": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\3d",
+      "path": "stage_c_9a.artifact_dir",
+      "right": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\1d"
+    },
+    {
+      "left": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\3d",
+      "path": "stage_c_9a.parent_exp025c",
+      "right": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\1d"
+    },
+    {
+      "left": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\3d",
+      "path": "stage_c_9a.parent_exp028a",
+      "right": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\1d"
+    },
+    {
+      "left": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\3d\\paired_causal\\paired_outcomes.json",
+      "path": "stage_c_9a.prompt_dependent_inputs.outcomes",
+      "right": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\1d\\paired_causal\\paired_outcomes.json"
+    },
+    {
+      "left": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\3d\\representation_cache\\multiview\\state_multiview.pt",
+      "path": "stage_c_9a.prompt_dependent_inputs.state_cache",
+      "right": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\1d\\representation_cache\\multiview\\state_multiview.pt"
+    },
+    {
+      "left": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\3d\\structured_compiler\\policy_teacher_cache.pt",
+      "path": "stage_c_9a.prompt_dependent_inputs.teacher_cache",
+      "right": "\\lambda\\nfs\\rcmf-persist\\project\\runs\\reproducible_pipeline\\rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002\\arms\\1d\\structured_compiler\\policy_teacher_cache.pt"
+    },
+    {
+      "left": "rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002-3d",
+      "path": "stage_c_9a.run_uuid",
+      "right": "rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002-1d"
+    }
+  ],
+  "format": "resolved_arm_diff_validation_14b_v1",
+  "metadata_schema_shared_between_arms": true,
+  "passed": true,
+  "prohibited_differences": [],
+  "scientific_intervention": "full_demo vs full_demo_first_only",
+  "standalone_contract_mode_note": {
+    "detail": "The simplified --mode contract resolver reports artifact_prefix/run_id as prohibited. It is not the formal prepare() runtime-config validator and was not repaired after the hard stop.",
+    "scientific_effect": false,
+    "status": "KNOWN_UNFIXED_ENGINEERING_DIAGNOSTIC_ISSUE"
+  },
+  "validator_path": "formal preflight prepare() runtime-config validator"
+}

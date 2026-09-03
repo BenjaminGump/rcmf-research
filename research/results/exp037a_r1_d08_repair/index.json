@@ -1,0 +1,105 @@
+{
+  "decision": "INCONCLUSIVE",
+  "format": "exp037a_r1_git_safe_artifact_index_v1",
+  "item_count": 18,
+  "items": [
+    {
+      "path": "research/results/exp037a_r1_d08_repair/attempts.jsonl",
+      "sha256": "e5b19cc79ab8fe76cb4b1e04fe399abb4c1db1ff82de8a8afa3516a68f80c0c0",
+      "size_bytes": 620
+    },
+    {
+      "path": "research/results/exp037a_r1_d08_repair/d08_diagnostic_manifest.json",
+      "sha256": "c00cd9fbe119797b0bc78997335b25c6393955a68df661f0ea5a1c05b5290e08",
+      "size_bytes": 3800
+    },
+    {
+      "path": "research/results/exp037a_r1_d08_repair/d08_secondary_contract_audit.json",
+      "sha256": "6d8fe60ade833c42838ecf6f6dc900c89af1f712f6ebb10b2ffcedd7546464f8",
+      "size_bytes": 6455
+    },
+    {
+      "path": "research/results/exp037a_r1_d08_repair/d09_one_unit_probe.json",
+      "sha256": "42f03deb7fb69707ae1f2886024d0b580a9494d2a86a1dd12efff6e4e0920b4d",
+      "size_bytes": 471
+    },
+    {
+      "path": "research/results/exp037a_r1_d08_repair/early_contract_gate.json",
+      "sha256": "448095be790cdaf06daf5520389095fd0fa5e2fbb6c9e2aa7d4d681572a64d3a",
+      "size_bytes": 1750
+    },
+    {
+      "path": "research/results/exp037a_r1_d08_repair/lambda_tests.json",
+      "sha256": "3679e4f57681c49ac995bb8a3a4e9223c7a46015cf2fdb7d7bb1a512bca91b10",
+      "size_bytes": 799
+    },
+    {
+      "path": "research/results/exp037a_r1_d08_repair/local_tests.json",
+      "sha256": "092ab1cc1e548b01f7334f47fb6beb43af8716899e806b9dbf0da8f73ee1175a",
+      "size_bytes": 1120
+    },
+    {
+      "path": "research/results/exp037a_r1_d08_repair/producer_consumer_contract.json",
+      "sha256": "fc0ca67dea407214024f4ae416a82053ceb0024064670980e03cbd816fc46aa3",
+      "size_bytes": 1172
+    },
+    {
+      "path": "research/results/exp037a_r1_d08_repair/producer_schema.json",
+      "sha256": "9290774f5a8a1b7ad569cefa6ab02d31da30b830add49d425672a5bf104b8353",
+      "size_bytes": 1107
+    },
+    {
+      "path": "research/results/exp037a_r1_d08_repair/proposed_run_002.json",
+      "sha256": "6fa99300c18e5f0b657b6e6fcda22f8465755e3da0b2b9b6986a444948238c2c",
+      "size_bytes": 615
+    },
+    {
+      "path": "research/results/exp037a_r1_d08_repair/repair_invariance_report.json",
+      "sha256": "0fcc3162c1d5e00068606eeff756e735222d5560a17a5807be6e68ffcf29d36d",
+      "size_bytes": 3117
+    },
+    {
+      "path": "research/results/exp037a_r1_d08_repair/repair_plan.json",
+      "sha256": "ab88867315a3eaa9b32deb01ffbb23aa23d602437425c8adec39098acf65efdc",
+      "size_bytes": 3181
+    },
+    {
+      "path": "research/results/exp037a_r1_d08_repair/resolved_config_diff.json",
+      "sha256": "5b2bf72ef952af8c0b3294541635ec831d5e3a231be55c4b7802ddf1f466a75a",
+      "size_bytes": 7488
+    },
+    {
+      "path": "research/results/exp037a_r1_d08_repair/runtime_preflight_002.json",
+      "sha256": "490b27b4f21a7e62900dfa644ea9b28db653e0d771b012ff9590bee00f55a1c5",
+      "size_bytes": 568
+    },
+    {
+      "path": "research/results/exp037a_r1_d08_repair/schema_audit_499.json",
+      "sha256": "f7c1b880bf96f2fd66a36ac05d12f04aff891e28e9a1172e5c7237c8677a50c9",
+      "size_bytes": 3186
+    },
+    {
+      "path": "research/results/exp037a_r1_d08_repair/schema_mismatches.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "research/results/EXP_037A_R1_D08_REPAIR.md",
+      "sha256": "c81e74ddba069320584fdb55eeab450722dd99e177a0e51039c2fa67778e96e3",
+      "size_bytes": 6475
+    },
+    {
+      "path": "research/handoffs/20260903T042125Z_exp037a_r1_d08_repair.md",
+      "sha256": "7ade3f2c20f4bb1f7a47e6bc0ea4af441ee84ba96bde9c7e687194f120e32769",
+      "size_bytes": 2281
+    }
+  ],
+  "raw_roots": [
+    "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+    "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_001",
+    "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002"
+  ],
+  "raw_roots_modified_by_export": false,
+  "repair_source_commit": "0866d41622b4c6d08edbd3e31f6658c56335f7e6",
+  "scientific_result": "NOT_EVALUATED"
+}

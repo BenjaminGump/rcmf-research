@@ -1,0 +1,36 @@
+{
+  "consumer": "scripts.prepare_rcmf_joint_full_bank_9a._section_contract",
+  "consumer_rows": 499,
+  "consumer_rows_sha256": "3a11b4d535c747720b5c747e311d5e0ddab1f203dd0379e1b721bedf602b58d2",
+  "consumer_semantics_changed": false,
+  "focused_lambda": {
+    "duration_seconds": 2.77,
+    "failed": 0,
+    "passed": 38,
+    "skipped": 0
+  },
+  "focused_local": {
+    "duration_seconds": 6.48,
+    "failed": 0,
+    "passed": 38,
+    "skipped": 0
+  },
+  "focused_test_files": [
+    "tests/test_exp037a_d08_repair_14c.py",
+    "tests/test_reproducible_pipeline_14b.py"
+  ],
+  "format": "exp037a_r1_producer_consumer_contract_v1",
+  "original_failure": "KeyError: source_task_goal_tokens",
+  "producer": "rcmf.benchmarks.appworld.transition_metadata_14c.enrich_transition_token_metadata",
+  "required_integer_fields": [
+    "teacher_section_tokens",
+    "source_task_goal_tokens",
+    "canonical_pre_action_state_tokens",
+    "complete_action_tokens",
+    "complete_post_action_observation_tokens"
+  ],
+  "row_count": 499,
+  "schema": "rcmf_transition_token_metadata_14c_v1",
+  "status": "PASSED",
+  "would_fail_on_source_02ef947": true
+}

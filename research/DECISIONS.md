@@ -1,5 +1,32 @@
 # Decisions and Deviations
 
+## 2026-09-03 EXP-037A-R1 secondary D08 contract stop
+
+VERIFIED:
+
+- The known transition metadata producer/consumer KeyError is repaired with
+  exact canonical token-span counts; historical consumer semantics are unchanged.
+- All 499 rows and S05B pass, and transition tensor hashes remain identical.
+- Real D08 observes 342 model-training scoreable states against the immutable
+  expected 366. It stops before zero-cache, D09, or any optimizer update.
+
+Decision:
+
+- Record `INCONCLUSIVE` and stop. Do not rewrite the expected count, impute the
+  24 missing rows, or regenerate targets without an explicit scientific decision.
+- Do not prepare or launch `_002`; the `_001` authorization is not inherited.
+
+Implementation deviations:
+
+- Diagnostic attempt 1 passed unresolved arm include pointers; commit
+  `0866d41622b4c6d08edbd3e31f6658c56335f7e6` fixed only that wrapper plumbing
+  and added a regression test.
+- The simplified standalone `--mode contract` helper still flags arm run/path
+  identities, while the formal prepare-time runtime-config validator passes.
+  It was not modified after the hard stop and has no scientific effect.
+- Initial full-test invocations omitted process-start `PYTHONHASHSEED=25101` and
+  failed collection; required-contract reruns passed on both hosts.
+
 ## 2026-09-03 EXP-037A D08 infrastructure implementation failure
 
 VERIFIED:

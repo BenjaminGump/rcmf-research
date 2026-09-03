@@ -1,0 +1,36 @@
+{
+  "aggregate_cache": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002/shared/representation_cache/multiview/transition_multiview.pt",
+    "sha256": "f3bf7798e73cbbdb2ccb87c7fd6ee4835d73b7a463a496a788b070dfd3c740b8",
+    "size_bytes": 163699821
+  },
+  "checks": {
+    "consumer_row_count_499": true,
+    "full_order_match": true,
+    "mismatch_count_zero": true,
+    "no_truncation": true,
+    "required_metadata_present": true,
+    "row_count_499": true
+  },
+  "consumer_rows_sha256": "3a11b4d535c747720b5c747e311d5e0ddab1f203dd0379e1b721bedf602b58d2",
+  "format": "rcmf_joint_source_contract_preflight_14c_v1",
+  "historical_consumer": {
+    "callable": "scripts.prepare_rcmf_joint_full_bank_9a._section_contract",
+    "semantics_changed": false
+  },
+  "individual_cache_row_count": 499,
+  "mismatches": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002/preflight/shared/joint_source_contract_mismatches_14c.jsonl",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "size_bytes": 0
+  },
+  "ordered_transition_ids_sha256": "6cbaf15f3e65ba46cdd1a68116b1641b1a1e9f004427a325f5174793d7f81659",
+  "passed": true,
+  "representation_tensor_sha256": "e7c8ea5522378505a2edb15d41b39324eaeb06a8f5649bca08429f4915b82f18",
+  "stage_id": "S05B_joint_source_contract_preflight",
+  "transition_manifest": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002/preflight/shared/transitions.jsonl",
+    "sha256": "7e9e41985ea8defbba57345e8008af4927bd71348e012a72333eda9ea0d03c7b",
+    "size_bytes": 26559237
+  }
+}

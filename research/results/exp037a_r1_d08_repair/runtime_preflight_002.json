@@ -1,0 +1,14 @@
+{
+  "conservative_total_wall_hours": null,
+  "cost": "not estimated because the preflight gate was not reached",
+  "expected_h100_active_hours": null,
+  "expected_total_wall_hours": null,
+  "format": "exp037a_r1_runtime_preflight_002_v1",
+  "new_authorization_required": true,
+  "old_001_authorization_inherited": false,
+  "proposed_run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002",
+  "reason": "Repair did not satisfy the real-D08 and D09 gates.",
+  "recommended_hard_cap_hours": null,
+  "status": "NOT_PREPARED",
+  "storage": null
+}

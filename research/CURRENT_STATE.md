@@ -1,5 +1,30 @@
 # Current State
 
+## 2026-09-03 EXP-037A-R1 Stopped At Secondary D08 Contract
+
+VERIFIED:
+
+- The canonical token-span metadata repair passes 499/499 rows and the real
+  S05B historical-consumer gate without changing transition tensors.
+- Isolated real D08 reaches the historical prepared-count gate, then stops:
+  model-training scoreable states are 342 versus the frozen expected 366;
+  heldout states remain 98/98 and memory counts remain 401/98.
+- D08 zero-cache and the D09 one-unit optimizer probe were not run. The
+  proposed `_002` root is absent and no old runtime authorization was inherited.
+- Focused/full local and Lambda tests pass; `_001` remains immutable.
+
+CURRENT DECISION:
+
+- `repair_decision = INCONCLUSIVE`
+- `execution_action = STOP`
+- `scientific_result = NOT_EVALUATED`
+- Review is required because changing 366 to 342 or filling missing rows would
+  alter scientific training coverage.
+
+Full report: `research/results/EXP_037A_R1_D08_REPAIR.md`.
+
+Last updated: 2026-09-03.
+
 ## 2026-09-03 EXP-037A Stopped At D08 Contract Failure
 
 VERIFIED:

@@ -1,0 +1,12 @@
+{
+  "authorization": "EXPLICIT_NEW_USER_APPROVAL_REQUIRED_AFTER_A_SUCCESSFUL_REPAIR_PREFLIGHT",
+  "format": "exp037a_r1_proposed_run_002_v1",
+  "historical_fixture_reuse_planned": false,
+  "repair_source_commit": "0866d41622b4c6d08edbd3e31f6658c56335f7e6",
+  "root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002",
+  "root_exists": false,
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14c_20260903_002",
+  "source_frozen_for_science": false,
+  "starts_from_s00": true,
+  "status": "NOT_PREPARED_NOT_AUTHORIZED_NOT_LAUNCHED"
+}

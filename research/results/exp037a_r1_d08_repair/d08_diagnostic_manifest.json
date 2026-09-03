@@ -1,0 +1,78 @@
+{
+  "attempts": [
+    {
+      "cause": "diagnostic wrapper passed unresolved arm include pointers to initialize_runtime_layout",
+      "diagnostic_id": "rcmf_exp037a_d08_repair_diag_14c_20260903_001",
+      "error": "KeyError: task_conditioned_prompt_profile",
+      "failure_sha256": "3b3b3450499eb1690f7ce77ec38f1a3de0208f323bd22253c6b5d91b44bae84b",
+      "fix_commit": "0866d41622b4c6d08edbd3e31f6658c56335f7e6",
+      "gpu_work": false,
+      "root": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_001",
+      "scientific_outputs": 0,
+      "status": "FAILED_BEFORE_D08"
+    },
+    {
+      "absent_outputs": [
+        "data/full_bank_data_manifest.json",
+        "data/source_provenance_audit.json",
+        "selector/exact_decomposition_audit.json",
+        "data/runtime_static_counts.json",
+        "data/zero_policy_cache.pt",
+        "data/zero_policy_summary.json",
+        "preflight/preflight_report.json",
+        "smoke/smoke_report.json",
+        "checkpoint/diagnostic_one_unit.pt",
+        "diagnostic_one_unit_probe.json"
+      ],
+      "attempts_sha256": "12727f62b554da201fbadb16b08166e72ae4db99cf81df47e7a802eebccced68",
+      "diagnostic_id": "rcmf_exp037a_d08_repair_diag_14c_20260903_002",
+      "early_s05b_passed": true,
+      "failure_sha256": "ba3e296f05267f68efefee91c038f1663137dcc9326a8eca655120f88fa4d44c",
+      "fixture_file_count": 1221,
+      "fixture_hash_mismatches": 0,
+      "fixture_manifest_sha256": "637f112ad71b67c2fcc760f9aea73e878ecbaf9c582ae52e0f60f43684b382bf",
+      "fixture_rows_sha256": "bafd24b7294425776212f39aad29034845191e37d9a93497c6778aeaa78a022c",
+      "fixture_total_bytes": 2359800062,
+      "gpu_work": false,
+      "known_metadata_keyerror_reproduced": false,
+      "new_error": "Prepared data counts differ: scoreable_train=false",
+      "partial_non_scientific_outputs": [
+        {
+          "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002/arms/3d/data/rcmf_source_cache.pt",
+          "sha256": "747ef57ca6f212fa8c73e951c08063877b46fc69f0f832e2a59dbc9e4326a2e3",
+          "size_bytes": 69828848
+        },
+        {
+          "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002/arms/3d/data/memory_provenance.jsonl",
+          "sha256": "b67be115f8612ad87c29f68cac4e12903810a83dd9b8e6f1c3edb9bc7e974188",
+          "size_bytes": 1520488
+        },
+        {
+          "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002/arms/3d/data/key_payload_shuffle_manifest.json",
+          "sha256": "8e85888c5c05c890b8eb6526aaf25f764813b48aab0b84eb5b9a982567a5d51c",
+          "size_bytes": 272329
+        }
+      ],
+      "root": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_d08_repair_diag_14c_20260903_002",
+      "root_total_bytes": 2995347575,
+      "status": "STOPPED_AT_SECONDARY_D08_CONTRACT"
+    }
+  ],
+  "d09_launched": false,
+  "failed_run": {
+    "post_diagnostic_rehash": {
+      "checked": 45,
+      "mismatches": 0,
+      "passed": true
+    },
+    "published_artifact_index_sha256": "370b46e3aca0f99ade20e334a208de6ff94e83c74e164b5c80716aa297c546af",
+    "read_only": true,
+    "root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+    "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001"
+  },
+  "format": "exp037a_r1_d08_diagnostic_manifest_v1",
+  "long_scientific_run_launched": false,
+  "repair_source_commit": "0866d41622b4c6d08edbd3e31f6658c56335f7e6",
+  "scientific_result": "NOT_EVALUATED",
+  "zero_cache_launched": false
+}

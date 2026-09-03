@@ -1,0 +1,35 @@
+{
+  "environment": "C:\\Users\\Admin\\miniconda3\\envs\\appworld_env\\python.exe",
+  "focused": {
+    "command": "python -m pytest -q -rs -p no:cacheprovider tests/test_exp037a_d08_repair_14c.py tests/test_reproducible_pipeline_14b.py",
+    "duration_seconds": 6.48,
+    "failed": 0,
+    "passed": 38,
+    "skipped": 0
+  },
+  "format": "exp037a_r1_test_report_v1",
+  "full": {
+    "command": "python -m pytest -q -rs -p no:cacheprovider",
+    "duration_seconds": 17.22,
+    "failed": 0,
+    "passed": 827,
+    "skipped": 2,
+    "skips": [
+      {
+        "reason": "requires CUDA device split",
+        "test": "tests/test_oracle_decoder_5fc.py:281"
+      },
+      {
+        "reason": "Bash launcher execution is validated on Lambda",
+        "test": "tests/test_rcmf_appworld_testnormal_deterministic_13b.py:63"
+      }
+    ]
+  },
+  "initial_invocation_error": {
+    "reason": "PYTHONHASHSEED was not set before process start",
+    "rerun_under_required_contract_passed": true,
+    "scientific_effect": false,
+    "status": "FAILED_DURING_COLLECTION"
+  },
+  "pythonhashseed": 25101
+}

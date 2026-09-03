@@ -1,0 +1,14 @@
+{
+  "backward_count": 0,
+  "checkpoint": null,
+  "format": "exp037a_r1_d09_one_unit_probe_v1",
+  "losses": null,
+  "optimizer_updates": 0,
+  "qwen_gradient_status": "NO_D09_FORWARD_OR_BACKWARD",
+  "reader_gradient": null,
+  "reason": "Real D08 did not pass the immutable scoreable-train count contract; D09 is conditional on complete D08 success.",
+  "resume_validation": null,
+  "status": "NOT_RUN",
+  "training_unit_id": null,
+  "writer_gradient": null
+}
