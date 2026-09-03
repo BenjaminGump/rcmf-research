@@ -1,0 +1,298 @@
+{
+  "completed_stage_count": 8,
+  "format": "exp037a_stage_status_v1",
+  "global_reuse_warning": "Validated stages are diagnostic fixtures only and cannot automatically serve as scientific input to a new run.",
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+  "scientific_source_commit": "02ef94726ea0fe566f7eea4fa137fb91da92977f",
+  "stages": [
+    {
+      "additional_files": [
+        {
+          "mtime_utc": "2026-09-02T20:41:59.903175+00:00",
+          "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D00_state_representations/representation_progress.json",
+          "run_relative_path": "stages/D00_state_representations/representation_progress.json",
+          "sha256": "56488bda39c8193fb93ad2438be8b482b79fb83c69f4e6f76faa026980a894c3",
+          "size_bytes": 444
+        }
+      ],
+      "all_declared_outputs_match": true,
+      "attempt_id": "D00_state_representations-1788381098035148",
+      "automatic_scientific_input_reuse_allowed": false,
+      "completion_passed": true,
+      "content_address_validation_passed": true,
+      "exit_code": 0,
+      "missing_support_files": [],
+      "output_manifest_sha256": "e78e67124c8523a75c4f35aa65aea01e7957c8611ecf8d5aa9ecab2a9b56d842",
+      "outputs": [
+        {
+          "actual": {
+            "mtime_utc": "2026-09-02T20:42:02.412878+00:00",
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D00_state_representations/stage_result.json",
+            "run_relative_path": "stages/D00_state_representations/stage_result.json",
+            "sha256": "f585a0033d936aa00813a75678f35f9af80fcc1b4471880a2d682bfc4bb058d2",
+            "size_bytes": 2175
+          },
+          "declared": {
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D00_state_representations/stage_result.json",
+            "sha256": "f585a0033d936aa00813a75678f35f9af80fcc1b4471880a2d682bfc4bb058d2",
+            "size_bytes": 2175
+          },
+          "matches_manifest": true
+        }
+      ],
+      "partial_or_extra_files_present": true,
+      "read_only_diagnostic_fixture_eligible": true,
+      "reuse_warning": "May be used only as a hash-validated read-only diagnostic fixture. It must not automatically become scientific input to a new run.",
+      "source_commit": "02ef94726ea0fe566f7eea4fa137fb91da92977f",
+      "stage_file_count": 8,
+      "stage_id": "D00_state_representations",
+      "validator_passed": true
+    },
+    {
+      "additional_files": [],
+      "all_declared_outputs_match": true,
+      "attempt_id": "D01_selector_candidate_cv-1788381723050415",
+      "automatic_scientific_input_reuse_allowed": false,
+      "completion_passed": true,
+      "content_address_validation_passed": true,
+      "exit_code": 0,
+      "missing_support_files": [],
+      "output_manifest_sha256": "bce410379c776ee65379222c35b20aef72df34ae9fb41e10b523857ec117eefc",
+      "outputs": [
+        {
+          "actual": {
+            "mtime_utc": "2026-09-02T21:42:12.196737+00:00",
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D01_selector_candidate_cv/stage_result.json",
+            "run_relative_path": "stages/D01_selector_candidate_cv/stage_result.json",
+            "sha256": "8ea3c435d13c3a3b75d03aaf4df1eea38a6ca1415e1e7b6b323bdb3195ecc7c5",
+            "size_bytes": 333
+          },
+          "declared": {
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D01_selector_candidate_cv/stage_result.json",
+            "sha256": "8ea3c435d13c3a3b75d03aaf4df1eea38a6ca1415e1e7b6b323bdb3195ecc7c5",
+            "size_bytes": 333
+          },
+          "matches_manifest": true
+        }
+      ],
+      "partial_or_extra_files_present": false,
+      "read_only_diagnostic_fixture_eligible": true,
+      "reuse_warning": "May be used only as a hash-validated read-only diagnostic fixture. It must not automatically become scientific input to a new run.",
+      "source_commit": "02ef94726ea0fe566f7eea4fa137fb91da92977f",
+      "stage_file_count": 7,
+      "stage_id": "D01_selector_candidate_cv",
+      "validator_passed": true
+    },
+    {
+      "additional_files": [],
+      "all_declared_outputs_match": true,
+      "attempt_id": "D02_selector_candidate_selection-1788385332645244",
+      "automatic_scientific_input_reuse_allowed": false,
+      "completion_passed": true,
+      "content_address_validation_passed": true,
+      "exit_code": 0,
+      "missing_support_files": [],
+      "output_manifest_sha256": "1a9682b7fa1339b63460f0d88a2f13ce18a144fedeb82be32db9e10c87d4b543",
+      "outputs": [
+        {
+          "actual": {
+            "mtime_utc": "2026-09-02T21:42:15.014635+00:00",
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D02_selector_candidate_selection/stage_result.json",
+            "run_relative_path": "stages/D02_selector_candidate_selection/stage_result.json",
+            "sha256": "a04bc243b0a4ceb5fc91ea36cae35bba3207008608c7333ff9db0568308c7274",
+            "size_bytes": 851
+          },
+          "declared": {
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D02_selector_candidate_selection/stage_result.json",
+            "sha256": "a04bc243b0a4ceb5fc91ea36cae35bba3207008608c7333ff9db0568308c7274",
+            "size_bytes": 851
+          },
+          "matches_manifest": true
+        }
+      ],
+      "partial_or_extra_files_present": false,
+      "read_only_diagnostic_fixture_eligible": true,
+      "reuse_warning": "May be used only as a hash-validated read-only diagnostic fixture. It must not automatically become scientific input to a new run.",
+      "source_commit": "02ef94726ea0fe566f7eea4fa137fb91da92977f",
+      "stage_file_count": 7,
+      "stage_id": "D02_selector_candidate_selection",
+      "validator_passed": true
+    },
+    {
+      "additional_files": [],
+      "all_declared_outputs_match": true,
+      "attempt_id": "D03_final_selector_ensemble-1788385335460237",
+      "automatic_scientific_input_reuse_allowed": false,
+      "completion_passed": true,
+      "content_address_validation_passed": true,
+      "exit_code": 0,
+      "missing_support_files": [],
+      "output_manifest_sha256": "9d6c27da8894e58e9308735cf50f530223ca8bbbd8992665a822f41b177028ee",
+      "outputs": [
+        {
+          "actual": {
+            "mtime_utc": "2026-09-02T22:07:36.817025+00:00",
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D03_final_selector_ensemble/stage_result.json",
+            "run_relative_path": "stages/D03_final_selector_ensemble/stage_result.json",
+            "sha256": "eab8668a62db097f8223c047dba7fecd0a8e5b9b2d32f6a847ad9b66cc98e860",
+            "size_bytes": 325
+          },
+          "declared": {
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D03_final_selector_ensemble/stage_result.json",
+            "sha256": "eab8668a62db097f8223c047dba7fecd0a8e5b9b2d32f6a847ad9b66cc98e860",
+            "size_bytes": 325
+          },
+          "matches_manifest": true
+        }
+      ],
+      "partial_or_extra_files_present": false,
+      "read_only_diagnostic_fixture_eligible": true,
+      "reuse_warning": "May be used only as a hash-validated read-only diagnostic fixture. It must not automatically become scientific input to a new run.",
+      "source_commit": "02ef94726ea0fe566f7eea4fa137fb91da92977f",
+      "stage_file_count": 7,
+      "stage_id": "D03_final_selector_ensemble",
+      "validator_passed": true
+    },
+    {
+      "additional_files": [],
+      "all_declared_outputs_match": true,
+      "attempt_id": "D04_selector_factorization-1788386857227204",
+      "automatic_scientific_input_reuse_allowed": false,
+      "completion_passed": true,
+      "content_address_validation_passed": true,
+      "exit_code": 0,
+      "missing_support_files": [],
+      "output_manifest_sha256": "3f857cee829501d8e5fe95ad6bb80098a7fc8542055b0057b6272abcdbb6bcf1",
+      "outputs": [
+        {
+          "actual": {
+            "mtime_utc": "2026-09-02T22:07:40.822421+00:00",
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D04_selector_factorization/stage_result.json",
+            "run_relative_path": "stages/D04_selector_factorization/stage_result.json",
+            "sha256": "42f332530f60c17942b5ba595c93628b5de592146f916eec5d2fc89abfd49127",
+            "size_bytes": 1800
+          },
+          "declared": {
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D04_selector_factorization/stage_result.json",
+            "sha256": "42f332530f60c17942b5ba595c93628b5de592146f916eec5d2fc89abfd49127",
+            "size_bytes": 1800
+          },
+          "matches_manifest": true
+        }
+      ],
+      "partial_or_extra_files_present": false,
+      "read_only_diagnostic_fixture_eligible": true,
+      "reuse_warning": "May be used only as a hash-validated read-only diagnostic fixture. It must not automatically become scientific input to a new run.",
+      "source_commit": "02ef94726ea0fe566f7eea4fa137fb91da92977f",
+      "stage_file_count": 7,
+      "stage_id": "D04_selector_factorization",
+      "validator_passed": true
+    },
+    {
+      "additional_files": [],
+      "all_declared_outputs_match": true,
+      "attempt_id": "D05_selected_memory_manifest-1788386861295833",
+      "automatic_scientific_input_reuse_allowed": false,
+      "completion_passed": true,
+      "content_address_validation_passed": true,
+      "exit_code": 0,
+      "missing_support_files": [],
+      "output_manifest_sha256": "c7636628f05f06eca51c4c818458216ac72a7b7883ea64aac8d382db457d3016",
+      "outputs": [
+        {
+          "actual": {
+            "mtime_utc": "2026-09-02T22:08:30.149473+00:00",
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D05_selected_memory_manifest/stage_result.json",
+            "run_relative_path": "stages/D05_selected_memory_manifest/stage_result.json",
+            "sha256": "6a349d4fcc5be1b5e666429f6e9e8a44b241a0f156ec4d2865a9a6660232f9b8",
+            "size_bytes": 548
+          },
+          "declared": {
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D05_selected_memory_manifest/stage_result.json",
+            "sha256": "6a349d4fcc5be1b5e666429f6e9e8a44b241a0f156ec4d2865a9a6660232f9b8",
+            "size_bytes": 548
+          },
+          "matches_manifest": true
+        }
+      ],
+      "partial_or_extra_files_present": false,
+      "read_only_diagnostic_fixture_eligible": true,
+      "reuse_warning": "May be used only as a hash-validated read-only diagnostic fixture. It must not automatically become scientific input to a new run.",
+      "source_commit": "02ef94726ea0fe566f7eea4fa137fb91da92977f",
+      "stage_file_count": 7,
+      "stage_id": "D05_selected_memory_manifest",
+      "validator_passed": true
+    },
+    {
+      "additional_files": [],
+      "all_declared_outputs_match": true,
+      "attempt_id": "D06_paired_causal_outcomes-1788386910599058",
+      "automatic_scientific_input_reuse_allowed": false,
+      "completion_passed": true,
+      "content_address_validation_passed": true,
+      "exit_code": 0,
+      "missing_support_files": [],
+      "output_manifest_sha256": "b32a877c62c10342d8905d86e31188abfcbebd700cb91e290450221ce5142c49",
+      "outputs": [
+        {
+          "actual": {
+            "mtime_utc": "2026-09-03T00:00:40.234689+00:00",
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D06_paired_causal_outcomes/stage_result.json",
+            "run_relative_path": "stages/D06_paired_causal_outcomes/stage_result.json",
+            "sha256": "0e1f8fac82b951309ec39891a9ba939e4f016c84ad0de26fe132c4a0d32d751c",
+            "size_bytes": 324
+          },
+          "declared": {
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D06_paired_causal_outcomes/stage_result.json",
+            "sha256": "0e1f8fac82b951309ec39891a9ba939e4f016c84ad0de26fe132c4a0d32d751c",
+            "size_bytes": 324
+          },
+          "matches_manifest": true
+        }
+      ],
+      "partial_or_extra_files_present": false,
+      "read_only_diagnostic_fixture_eligible": true,
+      "reuse_warning": "May be used only as a hash-validated read-only diagnostic fixture. It must not automatically become scientific input to a new run.",
+      "source_commit": "02ef94726ea0fe566f7eea4fa137fb91da92977f",
+      "stage_file_count": 7,
+      "stage_id": "D06_paired_causal_outcomes",
+      "validator_passed": true
+    },
+    {
+      "additional_files": [],
+      "all_declared_outputs_match": true,
+      "attempt_id": "D07_policy_teacher-1788393640653363",
+      "automatic_scientific_input_reuse_allowed": false,
+      "completion_passed": true,
+      "content_address_validation_passed": true,
+      "exit_code": 0,
+      "missing_support_files": [],
+      "output_manifest_sha256": "69b947f5c29834d80b06b50ca3727cb94b96390b4177051881cd12eb08d66347",
+      "outputs": [
+        {
+          "actual": {
+            "mtime_utc": "2026-09-03T00:20:57.258138+00:00",
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D07_policy_teacher/stage_result.json",
+            "run_relative_path": "stages/D07_policy_teacher/stage_result.json",
+            "sha256": "83a164afbe8f08f1841e7caf8c3a037b701ee4f4be554e07f318322850a463da",
+            "size_bytes": 336
+          },
+          "declared": {
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D07_policy_teacher/stage_result.json",
+            "sha256": "83a164afbe8f08f1841e7caf8c3a037b701ee4f4be554e07f318322850a463da",
+            "size_bytes": 336
+          },
+          "matches_manifest": true
+        }
+      ],
+      "partial_or_extra_files_present": false,
+      "read_only_diagnostic_fixture_eligible": true,
+      "reuse_warning": "May be used only as a hash-validated read-only diagnostic fixture. It must not automatically become scientific input to a new run.",
+      "source_commit": "02ef94726ea0fe566f7eea4fa137fb91da92977f",
+      "stage_file_count": 7,
+      "stage_id": "D07_policy_teacher",
+      "validator_passed": true
+    }
+  ],
+  "validated_stage_count": 8
+}

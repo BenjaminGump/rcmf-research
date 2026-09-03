@@ -1,0 +1,324 @@
+{
+  "format": "exp037a_failure_artifact_index_v1",
+  "items": [
+    {
+      "mtime_utc": "2026-09-03T00:21:03.255045+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/attempts.jsonl",
+      "run_relative_path": "attempts.jsonl",
+      "sha256": "64d0bb68c544a4e5eba75e0163f5dea36763d451a26af88d5e60e5354b030fac",
+      "size_bytes": 23386
+    },
+    {
+      "mtime_utc": "2026-09-03T00:19:03.263444+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/heartbeat.json",
+      "run_relative_path": "heartbeat.json",
+      "sha256": "a3f99657fa1cc65d27c121010acf9eff93072ddd170a8294a89c3c61f97d2941",
+      "size_bytes": 256
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:03.278450+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/orchestrator.log",
+      "run_relative_path": "orchestrator.log",
+      "sha256": "79da860ad89077a09c39ba1a5884b8e1b282d8687056cbdbdf419c22a930909e",
+      "size_bytes": 13178
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:03.266212+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/orchestrator_result.json",
+      "run_relative_path": "orchestrator_result.json",
+      "sha256": "1820711ec3fd53710d0e4dac8c4526a164bc701fd3c9a2fe0d0c884e2b2e0cf3",
+      "size_bytes": 13959
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:03.260731+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/scheduler_state.json",
+      "run_relative_path": "scheduler_state.json",
+      "sha256": "1820711ec3fd53710d0e4dac8c4526a164bc701fd3c9a2fe0d0c884e2b2e0cf3",
+      "size_bytes": 13959
+    },
+    {
+      "mtime_utc": "2026-09-02T20:42:03.031323+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D00_state_representations/completion.json",
+      "run_relative_path": "stages/D00_state_representations/completion.json",
+      "sha256": "dc7e0255b2034b1826259979056b10370e1273ece4e55b35443869bbb5094b09",
+      "size_bytes": 732
+    },
+    {
+      "mtime_utc": "2026-09-02T20:42:02.421555+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D00_state_representations/output_manifest.json",
+      "run_relative_path": "stages/D00_state_representations/output_manifest.json",
+      "sha256": "e78e67124c8523a75c4f35aa65aea01e7957c8611ecf8d5aa9ecab2a9b56d842",
+      "size_bytes": 1483
+    },
+    {
+      "mtime_utc": "2026-09-02T20:42:02.412878+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D00_state_representations/stage_result.json",
+      "run_relative_path": "stages/D00_state_representations/stage_result.json",
+      "sha256": "f585a0033d936aa00813a75678f35f9af80fcc1b4471880a2d682bfc4bb058d2",
+      "size_bytes": 2175
+    },
+    {
+      "mtime_utc": "2026-09-02T20:42:03.048601+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D00_state_representations/validator.json",
+      "run_relative_path": "stages/D00_state_representations/validator.json",
+      "sha256": "05773a014097f588b8d62e1b3fd5deb1fbd5d67c990693d822cd5292fed5df52",
+      "size_bytes": 297
+    },
+    {
+      "mtime_utc": "2026-09-02T21:42:12.624803+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D01_selector_candidate_cv/completion.json",
+      "run_relative_path": "stages/D01_selector_candidate_cv/completion.json",
+      "sha256": "da5a63588a2efa64bdaf748fb0a547a6b92a95ba085fab2aea3c4ccd7795a4d1",
+      "size_bytes": 732
+    },
+    {
+      "mtime_utc": "2026-09-02T21:42:12.205314+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D01_selector_candidate_cv/output_manifest.json",
+      "run_relative_path": "stages/D01_selector_candidate_cv/output_manifest.json",
+      "sha256": "bce410379c776ee65379222c35b20aef72df34ae9fb41e10b523857ec117eefc",
+      "size_bytes": 1474
+    },
+    {
+      "mtime_utc": "2026-09-02T21:42:12.196737+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D01_selector_candidate_cv/stage_result.json",
+      "run_relative_path": "stages/D01_selector_candidate_cv/stage_result.json",
+      "sha256": "8ea3c435d13c3a3b75d03aaf4df1eea38a6ca1415e1e7b6b323bdb3195ecc7c5",
+      "size_bytes": 333
+    },
+    {
+      "mtime_utc": "2026-09-02T21:42:12.643492+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D01_selector_candidate_cv/validator.json",
+      "run_relative_path": "stages/D01_selector_candidate_cv/validator.json",
+      "sha256": "4b8d1636c2782da3b6ae7e5449ba541d7b25513a2c3520242abfd4b76ca45a0b",
+      "size_bytes": 297
+    },
+    {
+      "mtime_utc": "2026-09-02T21:42:15.441411+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D02_selector_candidate_selection/completion.json",
+      "run_relative_path": "stages/D02_selector_candidate_selection/completion.json",
+      "sha256": "75b09352e035dff6f012169e36379ec9ab6f51025a1504dea6f2f18ce812ada4",
+      "size_bytes": 753
+    },
+    {
+      "mtime_utc": "2026-09-02T21:42:15.021842+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D02_selector_candidate_selection/output_manifest.json",
+      "run_relative_path": "stages/D02_selector_candidate_selection/output_manifest.json",
+      "sha256": "1a9682b7fa1339b63460f0d88a2f13ce18a144fedeb82be32db9e10c87d4b543",
+      "size_bytes": 1504
+    },
+    {
+      "mtime_utc": "2026-09-02T21:42:15.014635+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D02_selector_candidate_selection/stage_result.json",
+      "run_relative_path": "stages/D02_selector_candidate_selection/stage_result.json",
+      "sha256": "a04bc243b0a4ceb5fc91ea36cae35bba3207008608c7333ff9db0568308c7274",
+      "size_bytes": 851
+    },
+    {
+      "mtime_utc": "2026-09-02T21:42:15.458476+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D02_selector_candidate_selection/validator.json",
+      "run_relative_path": "stages/D02_selector_candidate_selection/validator.json",
+      "sha256": "a059433f075936046c7d313346355b8bd36e344c2bd10a98cb4e910898cfd7b1",
+      "size_bytes": 304
+    },
+    {
+      "mtime_utc": "2026-09-02T22:07:37.207412+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D03_final_selector_ensemble/completion.json",
+      "run_relative_path": "stages/D03_final_selector_ensemble/completion.json",
+      "sha256": "d44e72d0cd98c8f73a39b702ac417846d5e544b5577e4d17c0e45caae7beb5a8",
+      "size_bytes": 738
+    },
+    {
+      "mtime_utc": "2026-09-02T22:07:36.824783+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D03_final_selector_ensemble/output_manifest.json",
+      "run_relative_path": "stages/D03_final_selector_ensemble/output_manifest.json",
+      "sha256": "9d6c27da8894e58e9308735cf50f530223ca8bbbd8992665a822f41b177028ee",
+      "size_bytes": 1489
+    },
+    {
+      "mtime_utc": "2026-09-02T22:07:36.817025+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D03_final_selector_ensemble/stage_result.json",
+      "run_relative_path": "stages/D03_final_selector_ensemble/stage_result.json",
+      "sha256": "eab8668a62db097f8223c047dba7fecd0a8e5b9b2d32f6a847ad9b66cc98e860",
+      "size_bytes": 325
+    },
+    {
+      "mtime_utc": "2026-09-02T22:07:37.225536+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D03_final_selector_ensemble/validator.json",
+      "run_relative_path": "stages/D03_final_selector_ensemble/validator.json",
+      "sha256": "04d49386ae8871ddcf3abbf3cd937551072741639f0679add7739e7578d53d22",
+      "size_bytes": 299
+    },
+    {
+      "mtime_utc": "2026-09-02T22:07:41.275095+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D04_selector_factorization/completion.json",
+      "run_relative_path": "stages/D04_selector_factorization/completion.json",
+      "sha256": "09abf3011d3a5b4186d05908768e62ced36c5d360be3c8d16103b84a1acce05e",
+      "size_bytes": 735
+    },
+    {
+      "mtime_utc": "2026-09-02T22:07:40.830948+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D04_selector_factorization/output_manifest.json",
+      "run_relative_path": "stages/D04_selector_factorization/output_manifest.json",
+      "sha256": "3f857cee829501d8e5fe95ad6bb80098a7fc8542055b0057b6272abcdbb6bcf1",
+      "size_bytes": 1481
+    },
+    {
+      "mtime_utc": "2026-09-02T22:07:40.822421+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D04_selector_factorization/stage_result.json",
+      "run_relative_path": "stages/D04_selector_factorization/stage_result.json",
+      "sha256": "42f332530f60c17942b5ba595c93628b5de592146f916eec5d2fc89abfd49127",
+      "size_bytes": 1800
+    },
+    {
+      "mtime_utc": "2026-09-02T22:07:41.294172+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D04_selector_factorization/validator.json",
+      "run_relative_path": "stages/D04_selector_factorization/validator.json",
+      "sha256": "14fe0815b2472b7966815275a5d9d41b5d2ff00b416ff2d7b4165df9c58cb404",
+      "size_bytes": 298
+    },
+    {
+      "mtime_utc": "2026-09-02T22:08:30.578165+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D05_selected_memory_manifest/completion.json",
+      "run_relative_path": "stages/D05_selected_memory_manifest/completion.json",
+      "sha256": "69cc452ae3a2ac9652c7c5c2adfc4d4418fdd956b54993577db101266fe158e3",
+      "size_bytes": 741
+    },
+    {
+      "mtime_utc": "2026-09-02T22:08:30.156758+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D05_selected_memory_manifest/output_manifest.json",
+      "run_relative_path": "stages/D05_selected_memory_manifest/output_manifest.json",
+      "sha256": "c7636628f05f06eca51c4c818458216ac72a7b7883ea64aac8d382db457d3016",
+      "size_bytes": 1487
+    },
+    {
+      "mtime_utc": "2026-09-02T22:08:30.149473+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D05_selected_memory_manifest/stage_result.json",
+      "run_relative_path": "stages/D05_selected_memory_manifest/stage_result.json",
+      "sha256": "6a349d4fcc5be1b5e666429f6e9e8a44b241a0f156ec4d2865a9a6660232f9b8",
+      "size_bytes": 548
+    },
+    {
+      "mtime_utc": "2026-09-02T22:08:30.597467+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D05_selected_memory_manifest/validator.json",
+      "run_relative_path": "stages/D05_selected_memory_manifest/validator.json",
+      "sha256": "4a51387916d79d8585deff0f69a1b62cecb5cda54db56d6e6fe615790640c0b4",
+      "size_bytes": 300
+    },
+    {
+      "mtime_utc": "2026-09-03T00:00:40.634090+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D06_paired_causal_outcomes/completion.json",
+      "run_relative_path": "stages/D06_paired_causal_outcomes/completion.json",
+      "sha256": "5570e2b0e88dd49b42485e45c82c6a3bb5196a88ea687f21ea3570e912a9d7c0",
+      "size_bytes": 735
+    },
+    {
+      "mtime_utc": "2026-09-03T00:00:40.241947+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D06_paired_causal_outcomes/output_manifest.json",
+      "run_relative_path": "stages/D06_paired_causal_outcomes/output_manifest.json",
+      "sha256": "b32a877c62c10342d8905d86e31188abfcbebd700cb91e290450221ce5142c49",
+      "size_bytes": 1480
+    },
+    {
+      "mtime_utc": "2026-09-03T00:00:40.234689+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D06_paired_causal_outcomes/stage_result.json",
+      "run_relative_path": "stages/D06_paired_causal_outcomes/stage_result.json",
+      "sha256": "0e1f8fac82b951309ec39891a9ba939e4f016c84ad0de26fe132c4a0d32d751c",
+      "size_bytes": 324
+    },
+    {
+      "mtime_utc": "2026-09-03T00:00:40.651591+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D06_paired_causal_outcomes/validator.json",
+      "run_relative_path": "stages/D06_paired_causal_outcomes/validator.json",
+      "sha256": "a6e745c36fbfffd66633e12982cf00e0dffebd288f19abb67dfb1c0e57760334",
+      "size_bytes": 298
+    },
+    {
+      "mtime_utc": "2026-09-03T00:20:57.683872+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D07_policy_teacher/completion.json",
+      "run_relative_path": "stages/D07_policy_teacher/completion.json",
+      "sha256": "d3085489f49e59091824294892bc9e735d72e72015990be4dd6f4b9fc344f876",
+      "size_bytes": 711
+    },
+    {
+      "mtime_utc": "2026-09-03T00:20:57.266409+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D07_policy_teacher/output_manifest.json",
+      "run_relative_path": "stages/D07_policy_teacher/output_manifest.json",
+      "sha256": "69b947f5c29834d80b06b50ca3727cb94b96390b4177051881cd12eb08d66347",
+      "size_bytes": 1447
+    },
+    {
+      "mtime_utc": "2026-09-03T00:20:57.258138+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D07_policy_teacher/stage_result.json",
+      "run_relative_path": "stages/D07_policy_teacher/stage_result.json",
+      "sha256": "83a164afbe8f08f1841e7caf8c3a037b701ee4f4be554e07f318322850a463da",
+      "size_bytes": 336
+    },
+    {
+      "mtime_utc": "2026-09-03T00:20:57.703671+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D07_policy_teacher/validator.json",
+      "run_relative_path": "stages/D07_policy_teacher/validator.json",
+      "sha256": "fd53e89d7cc228553e4ab103d2bffbd2c76b298406c2bb7c275874d014c1054e",
+      "size_bytes": 290
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:03.250880+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D08_zero_cache_and_training_units/completion.json",
+      "run_relative_path": "stages/D08_zero_cache_and_training_units/completion.json",
+      "sha256": "f6173856a963b66b2b0b09881b679d902269a444555d47cae7a4eace3c48db16",
+      "size_bytes": 500
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:02.821338+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D08_zero_cache_and_training_units/failure.json",
+      "run_relative_path": "stages/D08_zero_cache_and_training_units/failure.json",
+      "sha256": "e2bdbe0f67633563e01e9ed2447e8f99a324e8370f99a9855c530495fbe031b7",
+      "size_bytes": 2946
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:02.815494+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D08_zero_cache_and_training_units/logs/stderr.log",
+      "run_relative_path": "stages/D08_zero_cache_and_training_units/logs/stderr.log",
+      "sha256": "b9edbff85c80b6b1eec3790926dca96af2375ef47b484268f9ddc64511134254",
+      "size_bytes": 542
+    },
+    {
+      "mtime_utc": "2026-09-03T00:20:57.710051+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D08_zero_cache_and_training_units/logs/stdout.log",
+      "run_relative_path": "stages/D08_zero_cache_and_training_units/logs/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "mtime_utc": "2026-09-03T00:20:57.715168+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D08_zero_cache_and_training_units/process.json",
+      "run_relative_path": "stages/D08_zero_cache_and_training_units/process.json",
+      "sha256": "f1bdafdedf66a0aa1d77550152daf666c1b96de0236cf986d9514372cef44a91",
+      "size_bytes": 526
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:03.280757+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/supervisor_attempts.jsonl",
+      "run_relative_path": "supervisor_attempts.jsonl",
+      "sha256": "2dca40762e02ad42758cb804e22dacfe2aafe3047ce0ef9717546cc94df8a5b6",
+      "size_bytes": 723
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:03.285380+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/supervisor_state.json",
+      "run_relative_path": "supervisor_state.json",
+      "sha256": "8e3c706c15a176df8ae47271c4d90939e8a6516009f657f36cefe0e00bb9d43e",
+      "size_bytes": 211
+    },
+    {
+      "mtime_utc": "2026-09-03T02:03:08.356727+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/watchdog.log",
+      "run_relative_path": "watchdog.log",
+      "sha256": "b375f308d6c0467b4cdeccfe103ea56bbc8b262a73d2473367c20e148f9b4e83",
+      "size_bytes": 19924
+    }
+  ],
+  "raw_run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+  "raw_run_root_read_only": true,
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+  "scientific_source_commit": "02ef94726ea0fe566f7eea4fa137fb91da92977f"
+}

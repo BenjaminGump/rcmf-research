@@ -1,5 +1,40 @@
 # Decisions and Deviations
 
+## 2026-09-03 EXP-037A D08 infrastructure implementation failure
+
+VERIFIED:
+
+- The `_001` parent exited non-recoverably at
+  `D08_zero_cache_and_training_units` before zero-cache construction or
+  writer/reader training.
+- The fresh transition producer emits aggregate `teacher_section_tokens`, and
+  the compatibility adapter copies that row unchanged. The historical 9a
+  consumer requires four per-section token-count fields; the first row lacks
+  all four and raises `KeyError: 'source_task_goal_tokens'`.
+- D00-D07 pass independent content-address verification. D08 has no output
+  manifest, no partial scientific output, no checkpoint/config change, and no
+  optimizer update.
+
+Decision:
+
+- Record `INFRASTRUCTURE_IMPLEMENTATION_FAILURE` and
+  `scientific_result = NOT_EVALUATED`.
+- The three-demo reproduction gate was not reached and the one-demo arm was not
+  launched.
+- Do not restart unchanged source, choose a repair, or authorize earlier-stage
+  scientific reuse in this records-only task.
+
+Implementation deviations:
+
+- None in scientific or implementation scope. The publication changed only
+  Git-safe records. The Lambda raw root and scientific checkout were not
+  modified. The orphaned read-only watchdog was stopped after its final
+  snapshot as explicitly authorized.
+- The Windows `apply_patch` helper could create new files but could not open
+  existing record files because of `helper_unknown_error`; this idempotent
+  records-only updater was used for `CURRENT_STATE.md`, `DECISIONS.md`, and the
+  append-only experiment ledger.
+
 ## 2026-09-02 EXP-036C final development result
 
 VERIFIED:

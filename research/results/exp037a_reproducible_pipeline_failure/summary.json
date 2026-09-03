@@ -1,0 +1,60 @@
+{
+  "attempts": {
+    "arm_3d_attempt_count": 7,
+    "failed_attempt_ids": [
+      "D08_zero_cache_and_training_units-1788394857705625",
+      "D08_zero_cache_and_training_units-1788394857705625-prepare",
+      "parent-1788380582584142"
+    ],
+    "open_attempt_count": 0,
+    "root_attempt_count": 19,
+    "supervisor_attempt_count": 1
+  },
+  "decision": "INFRASTRUCTURE_IMPLEMENTATION_FAILURE",
+  "failed_stage": "D08_zero_cache_and_training_units",
+  "format": "exp037a_reproducible_pipeline_failure_summary_v1",
+  "git_at_collection": {
+    "branch": "research/v6-rcmf-reproducible-3d-gated-pipeline",
+    "github_head": "7cc63c0a430153b8e6be2a81536fbd1bbaa1d365",
+    "lambda_ahead_behind_github": [0, 2],
+    "lambda_head": "02ef94726ea0fe566f7eea4fa137fb91da92977f",
+    "lambda_worktree_clean": true,
+    "local_ahead_behind_github": [0, 0],
+    "local_head": "7cc63c0a430153b8e6be2a81536fbd1bbaa1d365",
+    "local_worktree_clean_before_records": true
+  },
+  "implementation_changed": false,
+  "lambda_checkout_kept_at_scientific_source": true,
+  "nfs_mounted": true,
+  "one_demo_arm": "NOT_LAUNCHED",
+  "publication_parent_commit": "7cc63c0a430153b8e6be2a81536fbd1bbaa1d365",
+  "raw_run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+  "raw_run_root_read_only_during_publication": true,
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+  "scientific_result": "NOT_EVALUATED",
+  "scientific_source_commit": "02ef94726ea0fe566f7eea4fa137fb91da92977f",
+  "stage_accounting": {
+    "completed_scheduler_stages": 18,
+    "d00_d07_content_address_validated": 8,
+    "d00_d07_content_address_validation_failures": 0,
+    "failed_stage_output_manifest_present": false
+  },
+  "three_demo_reproduction_gate": "NOT_REACHED",
+  "watchdog_stop": {
+    "after": {
+      "bash_pid_692487_present": false,
+      "monitor_pid_692489_present": false,
+      "tmux_present": false,
+      "utc": "2026-09-03T02:14:09.168675+00:00"
+    },
+    "before": {
+      "bash_pid": 692487,
+      "elapsed_seconds": 21037,
+      "monitor_pid": 692489,
+      "tmux_present": true,
+      "utc": "2026-09-03T02:13:39.086831+00:00",
+      "watchdog_log_sha256": "b375f308d6c0467b4cdeccfe103ea56bbc8b262a73d2473367c20e148f9b4e83"
+    },
+    "stopped_after_final_snapshot": true
+  }
+}

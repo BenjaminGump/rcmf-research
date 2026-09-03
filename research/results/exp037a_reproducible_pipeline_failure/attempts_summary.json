@@ -1,0 +1,88 @@
+{
+  "arm_3d": {
+    "attempt_count": 7,
+    "attempt_ids": [
+      "D00_state_representations-1788381098035148-prepare",
+      "D01_selector_candidate_cv-1788381723050415",
+      "D03_final_selector_ensemble-1788385335460237",
+      "D05_selected_memory_manifest-1788386861295833",
+      "D06_paired_causal_outcomes-1788386910599058",
+      "D07_policy_teacher-1788393640653363",
+      "D08_zero_cache_and_training_units-1788394857705625-prepare"
+    ],
+    "failed_attempt_ids": [
+      "D08_zero_cache_and_training_units-1788394857705625-prepare"
+    ],
+    "file": {
+      "mtime_utc": "2026-09-03T00:21:02.564129+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/arms/3d/attempts.jsonl",
+      "run_relative_path": "arms/3d/attempts.jsonl",
+      "sha256": "2c89ba41101934e4c85a2c2d92f410167aae52d47a59d10c1222a0d1383d5c99",
+      "size_bytes": 36323
+    },
+    "open_attempt_ids": [],
+    "row_count": 14
+  },
+  "failed_stage_attempt": {
+    "child": "D08_zero_cache_and_training_units-1788394857705625-prepare",
+    "child_stop_reason": "KeyError: 'source_task_goal_tokens'",
+    "outer": "D08_zero_cache_and_training_units-1788394857705625",
+    "outer_exit_code": 65
+  },
+  "format": "exp037a_failure_attempts_summary_v1",
+  "root": {
+    "attempt_count": 19,
+    "attempt_ids": [
+      "D00_state_representations-1788381098035148",
+      "D01_selector_candidate_cv-1788381723050415",
+      "D02_selector_candidate_selection-1788385332645244",
+      "D03_final_selector_ensemble-1788385335460237",
+      "D04_selector_factorization-1788386857227204",
+      "D05_selected_memory_manifest-1788386861295833",
+      "D06_paired_causal_outcomes-1788386910599058",
+      "D07_policy_teacher-1788393640653363",
+      "D08_zero_cache_and_training_units-1788394857705625",
+      "S00_environment_manifest-1788380582823572",
+      "S01_authoritative_corpus-1788380585537920",
+      "S02_task_and_parent_splits-1788380588155650",
+      "S03_transition_records-1788380590869267",
+      "S04_selector_supervision-1788380593584041",
+      "S05_transition_representations-1788380596898456",
+      "S06_cv_folds_and_sampling-1788381087280918",
+      "S07_initial_parameter_snapshots-1788381089994178",
+      "S08_two_arm_contract-1788381092658311",
+      "S09_runtime_preflight_and_approval-1788381095321291"
+    ],
+    "failed_attempt_ids": [
+      "D08_zero_cache_and_training_units-1788394857705625"
+    ],
+    "file": {
+      "mtime_utc": "2026-09-03T00:21:03.255045+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/attempts.jsonl",
+      "run_relative_path": "attempts.jsonl",
+      "sha256": "64d0bb68c544a4e5eba75e0163f5dea36763d451a26af88d5e60e5354b030fac",
+      "size_bytes": 23386
+    },
+    "open_attempt_ids": [],
+    "row_count": 38
+  },
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+  "supervisor": {
+    "attempt_count": 1,
+    "attempt_ids": [
+      "parent-1788380582584142"
+    ],
+    "failed_attempt_ids": [
+      "parent-1788380582584142"
+    ],
+    "file": {
+      "mtime_utc": "2026-09-03T00:21:03.280757+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/supervisor_attempts.jsonl",
+      "run_relative_path": "supervisor_attempts.jsonl",
+      "sha256": "2dca40762e02ad42758cb804e22dacfe2aafe3047ce0ef9717546cc94df8a5b6",
+      "size_bytes": 723
+    },
+    "open_attempt_ids": [],
+    "row_count": 2
+  }
+}

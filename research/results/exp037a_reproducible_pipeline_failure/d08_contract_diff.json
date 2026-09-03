@@ -1,0 +1,197 @@
+{
+  "actual_row_fields": [
+    "action_type",
+    "api_names",
+    "apps",
+    "canonical_pre_action_state",
+    "canonical_pre_action_state_sha256",
+    "complete_action",
+    "complete_action_sha256",
+    "complete_post_action_observation",
+    "complete_post_action_observation_sha256",
+    "completion_related",
+    "format",
+    "leakage_keys",
+    "parent_episode_id",
+    "parent_episode_ids",
+    "parent_final_answer",
+    "parent_lineage_ids",
+    "parent_memory_id",
+    "parent_replay_ids",
+    "parent_source_path",
+    "parent_system_prompt_sha256",
+    "parent_task_id",
+    "parent_task_ids",
+    "parent_trajectory_sha256",
+    "source_task_goal",
+    "source_task_goal_sha256",
+    "step_count",
+    "step_index",
+    "teacher_section_sha256",
+    "teacher_section_tokens",
+    "tokenizer_name_or_path",
+    "transition_content_sha256",
+    "transition_id"
+  ],
+  "arm_files_modified_during_stage_window": [
+    {
+      "mtime_utc": "2026-09-03T00:21:02.559100+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/arms/3d/heartbeat.json",
+      "run_relative_path": "arms/3d/heartbeat.json",
+      "sha256": "4cb212b63a056466002278a031cc67e867f96962f78ce20c3334803bf8fc2c2e",
+      "size_bytes": 350
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:02.564129+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/arms/3d/attempts.jsonl",
+      "run_relative_path": "arms/3d/attempts.jsonl",
+      "sha256": "2c89ba41101934e4c85a2c2d92f410167aae52d47a59d10c1222a0d1383d5c99",
+      "size_bytes": 36323
+    }
+  ],
+  "attempt_id": "D08_zero_cache_and_training_units-1788394857705625",
+  "checkpoint_or_model_files_modified": [],
+  "child_stderr": "Traceback (most recent call last):\n  File \"/lambda/nfs/rcmf-persist/project/scripts/prepare_rcmf_joint_full_bank_9a.py\", line 750, in <module>\n    main()\n  File \"/lambda/nfs/rcmf-persist/project/scripts/prepare_rcmf_joint_full_bank_9a.py\", line 440, in main\n    _section_contract(\n  File \"/lambda/nfs/rcmf-persist/project/scripts/prepare_rcmf_joint_full_bank_9a.py\", line 204, in _section_contract\n    \"source_token_count\": int(transition[token_name]),\n                              ~~~~~~~~~~^^^^^^^^^^^^\nKeyError: 'source_task_goal_tokens'\n",
+  "config_files_modified": [],
+  "consumer_code_path": {
+    "behavior": "Requires four per-section token-count fields while constructing source provenance.",
+    "function": "_section_contract",
+    "path": "scripts/prepare_rcmf_joint_full_bank_9a.py"
+  },
+  "consumer_required_fields": [
+    "source_task_goal_tokens",
+    "canonical_pre_action_state_tokens",
+    "complete_action_tokens",
+    "complete_post_action_observation_tokens"
+  ],
+  "decision": "INFRASTRUCTURE_IMPLEMENTATION_FAILURE",
+  "exact_traceback": "Traceback (most recent call last):\n  File \"/lambda/nfs/rcmf-persist/project/scripts/run_rcmf_reproducible_stage_14b.py\", line 74, in main\n    result = execute_stage(\n             ^^^^^^^^^^^^^^\n  File \"/lambda/nfs/rcmf-persist/project/rcmf/benchmarks/appworld/reproducible_stages_14b.py\", line 1412, in execute_stage\n    return _joint_prepare(run_root, arm_id, source_commit, attempt_id)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/lambda/nfs/rcmf-persist/project/rcmf/benchmarks/appworld/reproducible_stages_14b.py\", line 516, in _joint_prepare\n    _run(command)\n  File \"/lambda/nfs/rcmf-persist/project/rcmf/benchmarks/appworld/reproducible_stages_14b.py\", line 104, in _run\n    subprocess.run(list(command), check=True, cwd=Path.cwd(), env=env)\n  File \"/usr/lib/python3.11/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['/home/ubuntu/venvs/rcmf-py311/bin/python', 'scripts/prepare_rcmf_joint_full_bank_9a.py', '--config', '/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/resolved_configs/arm_3d.yaml', '--artifact-dir', '/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/arms/3d', '--attempt-id', 'D08_zero_cache_and_training_units-1788394857705625-prepare', '--local-head', '02ef94726ea0fe566f7eea4fa137fb91da92977f', '--github-head', '02ef94726ea0fe566f7eea4fa137fb91da92977f', '--lambda-head', '02ef94726ea0fe566f7eea4fa137fb91da92977f', '--parent-attempt-id', 'pipeline', '--resume-checkpoint', 'auto', '--tmux-session', 'exp037a_pipeline']' returned non-zero exit status 1.\n",
+  "failed_stage": "D08_zero_cache_and_training_units",
+  "failing_source": {
+    "expression": "int(transition[token_name])",
+    "function": "_section_contract",
+    "line": 204,
+    "path": "scripts/prepare_rcmf_joint_full_bank_9a.py"
+  },
+  "first_triggering_transition_id": "001629b3-5715-5e40-b42a-b7d00dc82b7d",
+  "format": "exp037a_d08_contract_diff_v1",
+  "generated_or_modified_files_during_stage_window": [
+    {
+      "mtime_utc": "2026-09-03T00:20:57.715168+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D08_zero_cache_and_training_units/process.json",
+      "run_relative_path": "stages/D08_zero_cache_and_training_units/process.json",
+      "sha256": "f1bdafdedf66a0aa1d77550152daf666c1b96de0236cf986d9514372cef44a91",
+      "size_bytes": 526
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:02.559100+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/arms/3d/heartbeat.json",
+      "run_relative_path": "arms/3d/heartbeat.json",
+      "sha256": "4cb212b63a056466002278a031cc67e867f96962f78ce20c3334803bf8fc2c2e",
+      "size_bytes": 350
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:02.564129+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/arms/3d/attempts.jsonl",
+      "run_relative_path": "arms/3d/attempts.jsonl",
+      "sha256": "2c89ba41101934e4c85a2c2d92f410167aae52d47a59d10c1222a0d1383d5c99",
+      "size_bytes": 36323
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:02.815494+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D08_zero_cache_and_training_units/logs/stderr.log",
+      "run_relative_path": "stages/D08_zero_cache_and_training_units/logs/stderr.log",
+      "sha256": "b9edbff85c80b6b1eec3790926dca96af2375ef47b484268f9ddc64511134254",
+      "size_bytes": 542
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:02.821338+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D08_zero_cache_and_training_units/failure.json",
+      "run_relative_path": "stages/D08_zero_cache_and_training_units/failure.json",
+      "sha256": "e2bdbe0f67633563e01e9ed2447e8f99a324e8370f99a9855c530495fbe031b7",
+      "size_bytes": 2946
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:03.250880+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/stages/D08_zero_cache_and_training_units/completion.json",
+      "run_relative_path": "stages/D08_zero_cache_and_training_units/completion.json",
+      "sha256": "f6173856a963b66b2b0b09881b679d902269a444555d47cae7a4eace3c48db16",
+      "size_bytes": 500
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:03.255045+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/attempts.jsonl",
+      "run_relative_path": "attempts.jsonl",
+      "sha256": "64d0bb68c544a4e5eba75e0163f5dea36763d451a26af88d5e60e5354b030fac",
+      "size_bytes": 23386
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:03.260731+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/scheduler_state.json",
+      "run_relative_path": "scheduler_state.json",
+      "sha256": "1820711ec3fd53710d0e4dac8c4526a164bc701fd3c9a2fe0d0c884e2b2e0cf3",
+      "size_bytes": 13959
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:03.266212+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/orchestrator_result.json",
+      "run_relative_path": "orchestrator_result.json",
+      "sha256": "1820711ec3fd53710d0e4dac8c4526a164bc701fd3c9a2fe0d0c884e2b2e0cf3",
+      "size_bytes": 13959
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:03.278450+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/orchestrator.log",
+      "run_relative_path": "orchestrator.log",
+      "sha256": "79da860ad89077a09c39ba1a5884b8e1b282d8687056cbdbdf419c22a930909e",
+      "size_bytes": 13178
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:03.280757+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/supervisor_attempts.jsonl",
+      "run_relative_path": "supervisor_attempts.jsonl",
+      "sha256": "2dca40762e02ad42758cb804e22dacfe2aafe3047ce0ef9717546cc94df8a5b6",
+      "size_bytes": 723
+    },
+    {
+      "mtime_utc": "2026-09-03T00:21:03.285380+00:00",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/supervisor_state.json",
+      "run_relative_path": "supervisor_state.json",
+      "sha256": "8e3c706c15a176df8ae47271c4d90939e8a6516009f657f36cefe0e00bb9d43e",
+      "size_bytes": 211
+    }
+  ],
+  "input_transition_manifest": {
+    "mtime_utc": "2026-09-02T20:09:50.819257+00:00",
+    "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001/shared/compat_exp025b/clean_cache_rebuild/transition_preflight/transition_manifest.jsonl",
+    "run_relative_path": "shared/compat_exp025b/clean_cache_rebuild/transition_preflight/transition_manifest.jsonl",
+    "sha256": "f1484d419cb475efcf11231d0fa0548ee402322eba7c96db4301679255f829b3",
+    "size_bytes": 26347944
+  },
+  "missing_fields": [
+    "canonical_pre_action_state_tokens",
+    "complete_action_tokens",
+    "complete_post_action_observation_tokens",
+    "source_task_goal_tokens"
+  ],
+  "optimizer_update_basis": "The prepare subprocess failed before the smoke, zero-cache, or train runner was launched; no checkpoint-like file changed in the D08 window.",
+  "partial_output_basis": "No D08 output_manifest exists, and the only arm files modified in the stage window were heartbeat.json and attempts.jsonl.",
+  "partial_scientific_output_exists": false,
+  "producer_code_paths": [
+    {
+      "behavior": "Adds teacher_section_tokens but not the four per-section token counts.",
+      "function": "_add_teacher_token_metadata",
+      "path": "scripts/prepare_rcmf_reproducible_pipeline_14b.py"
+    },
+    {
+      "behavior": "Copies shared/transitions.jsonl byte-for-byte into the EXP-025B compatibility path consumed by 9a preparation.",
+      "function": "_compatibility_inputs",
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py"
+    }
+  ],
+  "recoverable": false,
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+  "scientific_result": "NOT_EVALUATED",
+  "stage_exit_code": 65,
+  "writer_reader_optimizer_updates": 0
+}

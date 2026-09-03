@@ -1,5 +1,36 @@
 # Current State
 
+## 2026-09-03 EXP-037A Stopped At D08 Contract Failure
+
+VERIFIED:
+
+- Run `rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001` stopped at
+  `D08_zero_cache_and_training_units` with exit `65` and
+  `recoverable=false`.
+- The failure is a producer/consumer schema mismatch: the fresh compatibility
+  transition row lacks all four per-section token-count fields required by
+  `prepare_rcmf_joint_full_bank_9a.py::_section_contract`.
+- D00-D07 are `8/8` content-address validated. D08 wrote no scientific output,
+  changed no checkpoint/config, and consumed zero writer/reader optimizer
+  updates.
+- The raw Lambda run remains immutable at scientific source `02ef947`; the
+  orphaned read-only watchdog was stopped only after its final snapshot.
+
+CURRENT DECISION:
+
+- `decision = INFRASTRUCTURE_IMPLEMENTATION_FAILURE`
+- `scientific_result = NOT_EVALUATED`
+- `failed_stage = D08_zero_cache_and_training_units`
+- `three_demo_reproduction_gate = NOT_REACHED`
+- `one_demo_arm = NOT_LAUNCHED`
+- Do not repair or resume until user and ChatGPT review the published contract
+  diff. Validated earlier stages are diagnostic fixtures only and are not
+  automatically authorized as scientific input to a new run.
+
+Full report: `research/results/EXP_037A_FAILED_D08_CONTRACT.md`.
+
+Last updated: 2026-09-03.
+
 ## 2026-09-03 EXP-037A Reproducible 3D-Gated Pipeline Preflight
 
 VERIFIED:
