@@ -346,6 +346,7 @@ No part of this proposal was implemented in EXP-037A-R2.
 ## Verification
 
 - Focused audit suite: `10 passed in 0.17s`.
+- Focused Lambda audit suite: `10 passed in 0.07s`.
 - Complete local repository suite under process-start
   `PYTHONHASHSEED=25101`: `837 passed, 2 skipped in 19.04s`.
 - Generated JSON validation: five JSON documents and all experiment-ledger

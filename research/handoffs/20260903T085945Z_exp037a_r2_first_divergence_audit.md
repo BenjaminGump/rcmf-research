@@ -114,6 +114,7 @@ Published artifact-index SHA256:
 ## Verification
 
 - Focused local tests: `10 passed in 0.17s`.
+- Focused Lambda tests: `10 passed in 0.07s`.
 - Full local tests with process-start `PYTHONHASHSEED=25101`:
   `837 passed, 2 skipped in 19.04s`.
 - JSON and JSONL parse checks passed.
