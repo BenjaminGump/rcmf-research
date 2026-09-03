@@ -86,10 +86,14 @@ scope. The proposed 120-hour cap remains unapproved.
 
 ## Runtime State
 
-At the final preflight snapshot, NFS was mounted, the H100 reported 0% and
-0 MiB, no EXP-037A process or tmux session existed, and only unrelated
-historical tmux sessions remained. The host is safe to leave idle. The final
-termination recommendation is recorded after records synchronization.
+At 2026-09-03T17:54:40Z, NFS was mounted, the H100 reported 0% and 0 MiB,
+no EXP-037A process or tmux session existed, and only unrelated historical
+tmux sessions remained. Lambda was clean on the frozen launch-source archive;
+the canonical root had no runtime authorization and no stages.
+
+`SAFE_TO_TERMINATE = YES`: no active work depends on the instance, and all
+preflight/diagnostic artifacts are persisted on NFS. The instance was not
+terminated.
 
 ## Next Exact Action
 

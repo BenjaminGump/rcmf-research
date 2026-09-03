@@ -206,3 +206,15 @@ root and are content-addressed in the artifact index.
 - No 1D arm ran in R5.
 - No new long scientific run launched.
 - H100 scientific active time is zero.
+
+## Final Runtime Snapshot
+
+At 2026-09-03T17:54:40Z, NFS was mounted; the H100 was at 0% utilization and
+0 MiB used; no EXP-037A process or tmux session existed; and the canonical
+root had neither `runtime_authorization.json` nor `stages/`. Lambda remained
+clean on `archive/exp037a-r5-launch-source-31c9e98` at the exact launch source.
+The records branch is separately pushed and synchronized as a ref.
+
+`SAFE_TO_TERMINATE = YES`: no active work depends on the instance, and all
+preflight/diagnostic artifacts are persisted on NFS. The instance was not
+terminated.
