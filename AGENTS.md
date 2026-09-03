@@ -471,17 +471,17 @@ sweeps, or ensemble training unless the user explicitly changes this policy.
   explicit user approval. The approved hard cap is an anomaly ceiling and is
   at least twice the expected complete runtime.
 
-### Sources Of Truth (Final Launch Contract v2)
+### Sources Of Truth (Stage-Manifest Repair Launch Contract v3)
 
 - Pipeline contract: `rcmf/pipeline/contracts.py`
 - Benchmark adapter protocol: `rcmf/pipeline/adapter.py`
 - AppWorld adapter: `rcmf/benchmarks/appworld/pipeline_adapter.py`
-- Final pipeline config: `configs/pipeline/rcmf_appworld_repro_14g.yaml`
+- Final pipeline config: `configs/pipeline/rcmf_appworld_repro_14h.yaml`
 - Final resolved arm sources:
-  `configs/pipeline/rcmf_appworld_arm_3d_14g.yaml` and
-  `configs/pipeline/rcmf_appworld_arm_1d_14g.yaml`
+  `configs/pipeline/rcmf_appworld_arm_3d_14h.yaml` and
+  `configs/pipeline/rcmf_appworld_arm_1d_14h.yaml`
 - Final preflight builder:
-  `scripts/prepare_rcmf_reproducible_pipeline_14g.py`
+  `scripts/prepare_rcmf_reproducible_pipeline_14h.py`
 - Active launcher: `scripts/run_rcmf_reproducible_pipeline_14b.py`
 - Authorization validator: `rcmf/pipeline/authorization.py`
 - Orchestrator and scheduler: `rcmf/pipeline/orchestrator.py` and
@@ -489,12 +489,13 @@ sweeps, or ensemble training unless the user explicitly changes this policy.
 - Stage graph and validators: `rcmf/pipeline/stage_graph.py` and
   `rcmf/pipeline/validators.py`
 - Final run UUID:
-  `rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001`
+  `rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001`
 - Final canonical Lambda root:
-  `/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001`
+  `/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001`
 - The 14b run is immutable failed-run evidence. The 14f package is immutable
-  R4 preflight history. Neither is an active launch source or resumable input
-  for 14g.
+  R4 preflight history. The 14g package is immutable R5/R6 preflight and
+  pre-science launch-failure evidence. None is an active launch source or
+  resumable input for 14h.
 - The raw Lambda root and Git-safe audit index are frozen by the final
   preflight manifest; the structured handoff is published under
   `research/handoffs/`.

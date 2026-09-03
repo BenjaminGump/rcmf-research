@@ -333,6 +333,7 @@ def validate_stage_completion(
         "source_commit": str(manifest.get("source_commit")) == source_commit,
         "stage_id": str(manifest.get("stage_id")) == root.name,
         "output_hashes": True,
+        "input_completion_hashes": True,
     }
     if expected_run_uuid is not None:
         checks["run_uuid"] = (
@@ -357,6 +358,16 @@ def validate_stage_completion(
             path = root / path
         if not path.exists() or sha256_file(path) != str(row["sha256"]):
             checks["output_hashes"] = False
+    for row in manifest.get("input_completion_manifests", []):
+        path = Path(str(row["path"]))
+        if not path.is_absolute():
+            path = root / path
+        if (
+            not path.exists()
+            or path.stat().st_size != int(row["size_bytes"])
+            or sha256_file(path) != str(row["sha256"])
+        ):
+            checks["input_completion_hashes"] = False
     passed = all(checks.values()) and bool(manifest.get("passed", False))
     result = {
         "format": "rcmf_stage_validator_14b_v1",

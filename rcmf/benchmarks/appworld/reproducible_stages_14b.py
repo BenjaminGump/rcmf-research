@@ -1965,7 +1965,7 @@ def write_stage_manifest(
     *,
     stage_id: str,
     stage_dir: Path,
-    source_commit: str,
+    stage_identity: Mapping[str, Any],
     arm: str,
     prompt_profile: str | None,
     result: Mapping[str, Any],
@@ -1974,6 +1974,8 @@ def write_stage_manifest(
     elapsed_seconds: float,
     run_root: Path,
 ) -> Path:
+    if str(stage_identity.get("stage_id")) != stage_id:
+        raise ValueError("Stage identity does not match manifest stage")
     result_path = stage_dir / "stage_result.json"
     atomic_write_json(result_path, dict(result))
     dependency_rows = []
@@ -1989,9 +1991,8 @@ def write_stage_manifest(
         "stage_id": stage_id,
         "arm": arm,
         "prompt_profile": prompt_profile,
-        "source_commit": source_commit,
+        **dict(stage_identity),
         "command": list(command),
-        "attempt_id": os.environ.get("RCMF_PIPELINE_ATTEMPT_ID"),
         "started_utc": started_utc,
         "elapsed_seconds": elapsed_seconds,
         "input_completion_manifests": dependency_rows,

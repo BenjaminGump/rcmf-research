@@ -8,6 +8,45 @@ from typing import Any, Iterable, Mapping
 from rcmf.utils.serialization import atomic_write_json, sha256_file, to_jsonable
 
 
+STAGE_IDENTITY_KEYS = (
+    "source_commit",
+    "run_uuid",
+    "run_root",
+    "pipeline_config_sha256",
+    "contract_sha256",
+    "stage_id",
+    "attempt_id",
+)
+
+
+def stage_identity_payload(
+    *,
+    source_commit: str,
+    run_uuid: str,
+    run_root: str | Path,
+    pipeline_config_sha256: str,
+    contract_sha256: str,
+    stage_id: str,
+    attempt_id: str,
+    require_complete: bool,
+) -> dict[str, str]:
+    payload = {
+        "source_commit": str(source_commit),
+        "run_uuid": str(run_uuid),
+        "run_root": str(Path(run_root).expanduser().resolve(strict=False)),
+        "pipeline_config_sha256": str(pipeline_config_sha256),
+        "contract_sha256": str(contract_sha256),
+        "stage_id": str(stage_id),
+        "attempt_id": str(attempt_id),
+    }
+    missing = [key for key in STAGE_IDENTITY_KEYS if not payload[key]]
+    if require_complete and missing:
+        raise PermissionError(
+            f"Formal stage identity is incomplete: {missing}"
+        )
+    return payload
+
+
 def canonical_json_bytes(value: Any) -> bytes:
     return json.dumps(
         to_jsonable(value), ensure_ascii=False, separators=(",", ":"), sort_keys=True
@@ -54,4 +93,3 @@ def validate_content_manifest(path: str | Path) -> dict[str, Any]:
         raise ValueError(f"Manifest hash differs for {source}: {recorded} != {actual}")
     payload["manifest_sha256"] = recorded
     return payload
-
