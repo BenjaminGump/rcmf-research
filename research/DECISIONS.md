@@ -1,5 +1,44 @@
 # Decisions and Deviations
 
+## 2026-09-03 EXP-037A-R5 final launch freeze
+
+VERIFIED:
+
+- `LAUNCH_SOURCE_SHA` is frozen at
+  `31c9e98ab408d4768c83d2a45bb1b21ae565b4be`; the final 14g package binds
+  UUID, root, source, config, stage DAG, cap, version, and full scope.
+- D06B is an exact post-seal 366/98 historical positive-control gate; D07 and
+  D08 cannot run before it passes. D08B is an isolated discarded one-unit
+  writer/reader smoke before D09. D22 is the only 1D gateway.
+- The longest permitted branch is 47.75 hours expected and 92.5 hours
+  conservative. The proposed cap is 120 hours from
+  `max(2*47.75, 1.25*92.5)`, rounded upward.
+- Authorization remains `NOT_AUTHORIZED`; the old 200-hour authorization is
+  not inherited. A real launcher submission of the request failed before any
+  stage and created no runtime authorization.
+- Scientific changes from R3, scientific stage executions, and H100
+  scientific active time are zero.
+
+DECISION:
+
+- Record `READY_FOR_FINAL_RUN_APPROVAL`.
+- Formal execution must check out `LAUNCH_SOURCE_SHA`, not `RECORDS_SHA`.
+- A later explicit user approval for the exact frozen packet is required
+  before a valid run-bound authorization file may be created or launched.
+
+IMPLEMENTATION DEVIATIONS:
+
+- Two preliminary launch-source candidates were superseded after bounded
+  technical smoke exposed a mock D22 decision mismatch and an AppWorld
+  experiment-name collision. The final smoke identity is source/root-bound.
+- An old compatibility preflight path stopped on the deliberately absent
+  legacy approved-cap key after creating diagnostic-only inputs. The final
+  14g builder is the sole approval source and completed successfully.
+- Windows pytest default-temp ACL errors were bypassed with the existing
+  ignored repository-local basetemp. All exact test suites passed unchanged.
+- None of these engineering iterations altered scientific semantics or
+  launched a scientific stage.
+
 ## 2026-09-03 EXP-037A-R3 reproduction-contract repair
 
 VERIFIED:

@@ -1,0 +1,16 @@
+{
+  "completion_bound_fields": [
+    "run_uuid",
+    "run_root",
+    "source_commit",
+    "pipeline_config_sha256",
+    "contract_sha256",
+    "stage_id",
+    "output_hashes"
+  ],
+  "completion_hash_self_validated": true,
+  "foreign_completion_rejected": true,
+  "format": "exp037a_r5_resume_audit_14g_v1",
+  "interrupted_attempts_closed_before_resume": true,
+  "resume_policy": "first incomplete hash-valid stage"
+}

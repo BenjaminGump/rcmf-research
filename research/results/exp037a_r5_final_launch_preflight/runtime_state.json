@@ -1,0 +1,22 @@
+{
+  "active_exp037a_processes": [],
+  "active_exp037a_tmux_sessions": [],
+  "captured_at_utc": "2026-09-03T17:37:40Z",
+  "formal_run_started": false,
+  "format": "exp037a_r5_runtime_state_14g_v1",
+  "gpu": {
+    "compute_processes": [],
+    "memory_total_mib": 81559,
+    "memory_used_mib": 0,
+    "name": "NVIDIA H100 80GB HBM3",
+    "utilization_percent": 0
+  },
+  "h100_scientific_active_time_hours": 0.0,
+  "historical_unrelated_tmux_session_count": 13,
+  "lambda_checkout_branch": "archive/exp037a-r5-launch-source-31c9e98",
+  "lambda_checkout_clean": true,
+  "nfs_mount": "/lambda/nfs/rcmf-persist",
+  "nfs_mounted": true,
+  "safe_to_leave_idle": true,
+  "source_commit": "31c9e98ab408d4768c83d2a45bb1b21ae565b4be"
+}

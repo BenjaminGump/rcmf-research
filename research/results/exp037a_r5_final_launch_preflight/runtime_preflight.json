@@ -1,0 +1,42 @@
+{
+  "approved_hard_cap_hours": null,
+  "authorized_by_user_message": false,
+  "conservative_total_wall_hours": 92.5,
+  "expected_h100_active_hours": 39.05,
+  "expected_wall_hours": {
+    "branch_3d_passes_and_1d_executes": {
+      "conservative_wall_hours": 92.5,
+      "expected_h100_active_hours": 39.05,
+      "expected_wall_hours": 47.75,
+      "scope": "shared + complete 3D + D22 + complete conditional 1D + final reporting"
+    },
+    "branch_3d_reproduction_fails": {
+      "conservative_wall_hours": 56.5,
+      "expected_h100_active_hours": 21.85,
+      "expected_wall_hours": 26.75,
+      "scope": "shared + complete 3D through D22 + final failure reporting"
+    },
+    "cost": {
+      "available": false,
+      "reason": "no configured Lambda H100 hourly rate is present"
+    },
+    "format": "exp037a_r5_runtime_by_branch_14g_v1",
+    "storage": {
+      "conservative_gib": 90.0,
+      "expected_gib": 46.0
+    }
+  },
+  "explicit_user_approval_required": true,
+  "format": "rcmf_runtime_preflight_14g_v1",
+  "recommended_hard_cap_hours": 120.0,
+  "restart_plan": {
+    "append_only_attempts": true,
+    "atomic_stage_outputs": true,
+    "resume_at_first_incomplete_stage": true,
+    "strict_identity_validation_before_skip": true
+  },
+  "storage": {
+    "conservative_gib": 90.0,
+    "expected_gib": 46.0
+  }
+}

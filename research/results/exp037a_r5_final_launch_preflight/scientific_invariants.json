@@ -1,0 +1,194 @@
+{
+  "causal_panel": {
+    "initial_state_count": 256,
+    "maximum_state_count": 499,
+    "minimum_per_label": 40
+  },
+  "format": "exp037a_r5_scientific_invariants_14g_v1",
+  "historical_artifacts_role": "comparison_only_after_fresh_artifact_seal",
+  "only_intended_arm_difference": "task_conditioned_prompt_profile",
+  "post_d06_reproduction_gate": {
+    "construction_input": false,
+    "expected_heldout_completed": 98,
+    "expected_label_counts": {
+      "HARMFUL": 35,
+      "NEUTRAL": 300,
+      "POSITIVE": 129
+    },
+    "expected_train_completed": 366,
+    "historical_comparison_after_fresh_seal_only": true,
+    "stop_before_d07_on_failure": true
+  },
+  "prompt_profiles": {
+    "1d": "full_demo_first_only",
+    "3d": "full_demo"
+  },
+  "resolved_arm_diff": {
+    "allowed_prefixes": [],
+    "allowlist": [
+      "benchmark.prompt_profile",
+      "experiment.name",
+      "stage_c_11b.artifact_dir",
+      "stage_c_11b.prompt_profile",
+      "stage_c_11b.run_uuid",
+      "stage_c_7c.artifact_dir",
+      "stage_c_7c.generation.prompt_profile",
+      "stage_c_7c.multiview_cache.output_root",
+      "stage_c_7c.run_uuid",
+      "stage_c_7hr.appworld.prompt_profile",
+      "stage_c_7hr.artifact_dir",
+      "stage_c_7hr.parent_exp025c",
+      "stage_c_7hr.run_uuid",
+      "stage_c_9a.appworld.prompt_profile",
+      "stage_c_9a.artifact_dir",
+      "stage_c_9a.parent_exp025c",
+      "stage_c_9a.parent_exp028a",
+      "stage_c_9a.prompt_dependent_inputs.outcomes",
+      "stage_c_9a.prompt_dependent_inputs.state_cache",
+      "stage_c_9a.prompt_dependent_inputs.teacher_cache",
+      "stage_c_9a.run_uuid"
+    ],
+    "differences": [
+      {
+        "left": "full_demo",
+        "path": "benchmark.prompt_profile",
+        "right": "full_demo_first_only"
+      },
+      {
+        "left": "rcmf_reproducible_pipeline_14b_3d",
+        "path": "experiment.name",
+        "right": "rcmf_reproducible_pipeline_14b_1d"
+      },
+      {
+        "left": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/3d",
+        "path": "stage_c_11b.artifact_dir",
+        "right": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/1d"
+      },
+      {
+        "left": "full_demo",
+        "path": "stage_c_11b.prompt_profile",
+        "right": "full_demo_first_only"
+      },
+      {
+        "left": "rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001-3d",
+        "path": "stage_c_11b.run_uuid",
+        "right": "rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001-1d"
+      },
+      {
+        "left": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/3d",
+        "path": "stage_c_7c.artifact_dir",
+        "right": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/1d"
+      },
+      {
+        "left": "full_demo",
+        "path": "stage_c_7c.generation.prompt_profile",
+        "right": "full_demo_first_only"
+      },
+      {
+        "left": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/3d/representation_cache/multiview",
+        "path": "stage_c_7c.multiview_cache.output_root",
+        "right": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/1d/representation_cache/multiview"
+      },
+      {
+        "left": "rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001-3d",
+        "path": "stage_c_7c.run_uuid",
+        "right": "rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001-1d"
+      },
+      {
+        "left": "full_demo",
+        "path": "stage_c_7hr.appworld.prompt_profile",
+        "right": "full_demo_first_only"
+      },
+      {
+        "left": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/3d",
+        "path": "stage_c_7hr.artifact_dir",
+        "right": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/1d"
+      },
+      {
+        "left": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/3d",
+        "path": "stage_c_7hr.parent_exp025c",
+        "right": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/1d"
+      },
+      {
+        "left": "rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001-3d",
+        "path": "stage_c_7hr.run_uuid",
+        "right": "rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001-1d"
+      },
+      {
+        "left": "full_demo",
+        "path": "stage_c_9a.appworld.prompt_profile",
+        "right": "full_demo_first_only"
+      },
+      {
+        "left": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/3d",
+        "path": "stage_c_9a.artifact_dir",
+        "right": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/1d"
+      },
+      {
+        "left": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/3d",
+        "path": "stage_c_9a.parent_exp025c",
+        "right": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/1d"
+      },
+      {
+        "left": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/3d",
+        "path": "stage_c_9a.parent_exp028a",
+        "right": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/1d"
+      },
+      {
+        "left": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/3d/paired_causal/paired_outcomes.json",
+        "path": "stage_c_9a.prompt_dependent_inputs.outcomes",
+        "right": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/1d/paired_causal/paired_outcomes.json"
+      },
+      {
+        "left": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/3d/representation_cache/multiview/state_multiview.pt",
+        "path": "stage_c_9a.prompt_dependent_inputs.state_cache",
+        "right": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/1d/representation_cache/multiview/state_multiview.pt"
+      },
+      {
+        "left": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/3d/structured_compiler/policy_teacher_cache.pt",
+        "path": "stage_c_9a.prompt_dependent_inputs.teacher_cache",
+        "right": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/arms/1d/structured_compiler/policy_teacher_cache.pt"
+      },
+      {
+        "left": "rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001-3d",
+        "path": "stage_c_9a.run_uuid",
+        "right": "rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001-1d"
+      }
+    ],
+    "format": "resolved_arm_diff_validation_14b_v1",
+    "passed": true,
+    "prohibited_differences": []
+  },
+  "scientific_changes_from_r3": 0,
+  "selector_cv_seed": 25071,
+  "selector_final_member_seeds": [
+    25071,
+    25072,
+    25073
+  ],
+  "selector_legal_pairs": 310433,
+  "selector_parent_split": {
+    "algorithm": "sha256_order_first_heldout_then_remaining_train",
+    "heldout_parent_count": 8,
+    "seed": 18018,
+    "train_parent_count": 29
+  },
+  "writer_reader": {
+    "checkpoint_selection": "heldout_train_tasks_only",
+    "epochs": [
+      1,
+      2
+    ],
+    "losses": {
+      "full_vs_shuffle_nll_weight": 0.1,
+      "full_vs_zero_nll_weight": 0.1,
+      "ground_truth_action_ce_weight": 0.05,
+      "raw_or_bare_policy_kl_weight": 1.0,
+      "reader_residual_norm_weight": 0.001,
+      "teacher_token_ce_weight": 0.25,
+      "writer_payload_norm_weight": 0.0001
+    },
+    "reader_learning_rate": 0.0001,
+    "writer_learning_rate": 0.0001
+  }
+}

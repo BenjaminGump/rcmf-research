@@ -1,5 +1,36 @@
 # Current State
 
+## 2026-09-03 EXP-037A-R5 Ready For Final Run Approval
+
+VERIFIED:
+
+- Executable launch sources are frozen at
+  `31c9e98ab408d4768c83d2a45bb1b21ae565b4be`; formal execution must use
+  this SHA, not the later records commit.
+- The fresh 14g UUID/root/config/stage DAG are uniquely bound. The canonical
+  root was absent before preflight and contains no scientific stages or
+  runtime authorization.
+- D06B enforces the exact fresh 366/98 reproduction gate before D07; D08 and
+  the isolated D08B writer/reader smoke block D09 on failure; D22 alone gates
+  the conditional 1D arm.
+- Authorization remains false, the old 200-hour grant is not inherited, and
+  the real launcher rejects the preflight request before stage execution.
+- Local tests passed 885 with 2 skipped; Lambda tests passed 887. The bounded
+  technical smoke passed in 46.629611 seconds. H100 scientific active time and
+  scientific stage count are zero.
+
+CURRENT DECISION:
+
+- `READY_FOR_FINAL_RUN_APPROVAL`
+- `NOT_AUTHORIZED_TO_LAUNCH`
+- Expected/conservative full permitted branch: 47.75/92.5 wall hours;
+  proposed unapproved anomaly cap: 120 hours.
+
+Full report:
+`research/results/EXP_037A_R5_FINAL_LAUNCH_PREFLIGHT.md`.
+
+Last updated: 2026-09-03.
+
 ## 2026-09-03 EXP-037A-R4 Ready For Explicit Approval, Not Authorized
 
 VERIFIED:

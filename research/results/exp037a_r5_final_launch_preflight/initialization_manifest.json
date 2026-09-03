@@ -1,0 +1,117 @@
+{
+  "format": "shared_initial_parameter_snapshots_14b_v1",
+  "optimizer": {
+    "name": "AdamW",
+    "reader_learning_rate": 0.0001,
+    "weight_decay": 0.0001,
+    "writer_learning_rate": 0.0001
+  },
+  "reader": {
+    "parameter_count": 17860608,
+    "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/initialization_snapshots/reader_initial.pt",
+    "sha256": "d9813fe66df24e67912f8505de38c8df1fd850c370b8cdf512df029b0e6ca319",
+    "size_bytes": 71454221
+  },
+  "same_snapshots_required_for_both_arms": true,
+  "selector_cv": [
+    {
+      "candidate": "balanced_lr3e4_e60_t1",
+      "fold": 0,
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/initialization_snapshots/selector_cv_balanced_lr3e4_e60_t1_fold_0.pt",
+      "seed": 1981665421,
+      "sha256": "2edc9bee1f4f19f3f3a65d2a1113a2c65bb91f63f2f496507c40aa7978a99b75",
+      "size_bytes": 21010459
+    },
+    {
+      "candidate": "balanced_lr1e4_e120_t075",
+      "fold": 0,
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/initialization_snapshots/selector_cv_balanced_lr1e4_e120_t075_fold_0.pt",
+      "seed": 1929378757,
+      "sha256": "cebab5d3b841f1f1cebaadd581743799e96b042d9b89803e42800dba5452ef30",
+      "size_bytes": 21010546
+    },
+    {
+      "candidate": "hard_lr3e4_e120_t075",
+      "fold": 0,
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/initialization_snapshots/selector_cv_hard_lr3e4_e120_t075_fold_0.pt",
+      "seed": 3803282488,
+      "sha256": "9f86655ed609c6c0b48ef1b08cba855043616e8dddd0957833179389ad9585eb",
+      "size_bytes": 21010430
+    },
+    {
+      "candidate": "balanced_lr3e4_e60_t1",
+      "fold": 1,
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/initialization_snapshots/selector_cv_balanced_lr3e4_e60_t1_fold_1.pt",
+      "seed": 2601749890,
+      "sha256": "50f00a96b0949890134d2fb557611f19cb7b112a92565a057af42439789ea6d3",
+      "size_bytes": 21010459
+    },
+    {
+      "candidate": "balanced_lr1e4_e120_t075",
+      "fold": 1,
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/initialization_snapshots/selector_cv_balanced_lr1e4_e120_t075_fold_1.pt",
+      "seed": 3449619822,
+      "sha256": "7a6335729739f962041da49e18f06ba5907c7d53ea8d1ed31a2c829372ef6c55",
+      "size_bytes": 21010546
+    },
+    {
+      "candidate": "hard_lr3e4_e120_t075",
+      "fold": 1,
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/initialization_snapshots/selector_cv_hard_lr3e4_e120_t075_fold_1.pt",
+      "seed": 2503256982,
+      "sha256": "aaf14cb98a8f390e9b0a0d178557d809ee18ccdee2fb4424a9a211f7b820f3a0",
+      "size_bytes": 21010430
+    },
+    {
+      "candidate": "balanced_lr3e4_e60_t1",
+      "fold": 2,
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/initialization_snapshots/selector_cv_balanced_lr3e4_e60_t1_fold_2.pt",
+      "seed": 2992423177,
+      "sha256": "6462f4a25a287f0e7aab2cc3cea36f9eecde1ccf8865f1e8bf8aea712861334c",
+      "size_bytes": 21010459
+    },
+    {
+      "candidate": "balanced_lr1e4_e120_t075",
+      "fold": 2,
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/initialization_snapshots/selector_cv_balanced_lr1e4_e120_t075_fold_2.pt",
+      "seed": 723411047,
+      "sha256": "c117dc399a2a9c86ba755eb609ab9453217578ab2113a399538698df36255511",
+      "size_bytes": 21010546
+    },
+    {
+      "candidate": "hard_lr3e4_e120_t075",
+      "fold": 2,
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/initialization_snapshots/selector_cv_hard_lr3e4_e120_t075_fold_2.pt",
+      "seed": 1007275488,
+      "sha256": "9367de19508452527abe2d5285b48bf29b0aa7f4be6a913e3c1f24b1151cdab8",
+      "size_bytes": 21010430
+    }
+  ],
+  "selector_final": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/initialization_snapshots/selector_final_seed_25071.pt",
+      "seed": 25071,
+      "sha256": "de144c9cd2f625d4c1b4ed51dc94bafc77790e45fa87d30c49db8513d4604766",
+      "size_bytes": 21009960
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/initialization_snapshots/selector_final_seed_25072.pt",
+      "seed": 25072,
+      "sha256": "6b7ccc3626730095d84f6d79d95248d78cdf40c83bfb5cbde5572ed471be0a02",
+      "size_bytes": 21009960
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/initialization_snapshots/selector_final_seed_25073.pt",
+      "seed": 25073,
+      "sha256": "8721c711c9b1505ac6f5e3be2fe1e662af0ab7a13b630810012102d5f22b67f1",
+      "size_bytes": 21009960
+    }
+  ],
+  "writer": {
+    "parameter_count": 8949760,
+    "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/initialization_snapshots/writer_initial.pt",
+    "sha256": "6f60556e6969011e58853ca08d2e70e4570fb69927ec0bb60a10c16cbde7f4ae",
+    "size_bytes": 35808177
+  },
+  "writer_reader_seed": 25101
+}

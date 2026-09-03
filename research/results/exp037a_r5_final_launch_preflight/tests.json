@@ -1,0 +1,38 @@
+{
+  "format": "exp037a_r5_required_tests_14g_v1",
+  "lambda": {
+    "focused": {
+      "command": "PYTHONHASHSEED=25101 /home/ubuntu/venvs/rcmf-py311/bin/python -m pytest -q tests/test_exp037a_r5_final_launch_preflight.py tests/test_exp037a_r4_preflight_hardening.py tests/test_exp037a_r3_reproduction_contract.py tests/test_exp037a_first_divergence_audit.py tests/test_exp037a_d08_repair_14c.py tests/test_reproducible_pipeline_14b.py",
+      "failed": 0,
+      "passed": 96,
+      "skipped": 0
+    },
+    "full": {
+      "command": "PYTHONHASHSEED=25101 /home/ubuntu/venvs/rcmf-py311/bin/python -m pytest -q",
+      "failed": 0,
+      "passed": 887,
+      "skipped": 0
+    }
+  },
+  "local": {
+    "focused": {
+      "command": "PYTHONHASHSEED=25101 conda run -n appworld_env python -m pytest -q -p no:cacheprovider --basetemp <isolated> tests/test_exp037a_r5_final_launch_preflight.py tests/test_exp037a_r4_preflight_hardening.py tests/test_exp037a_r3_reproduction_contract.py tests/test_exp037a_first_divergence_audit.py tests/test_exp037a_d08_repair_14c.py tests/test_reproducible_pipeline_14b.py",
+      "failed": 0,
+      "passed": 96,
+      "skipped": 0
+    },
+    "full": {
+      "command": "PYTHONHASHSEED=25101 conda run -n appworld_env python -m pytest -q -p no:cacheprovider --basetemp <isolated>",
+      "failed": 0,
+      "passed": 885,
+      "skipped": 2
+    }
+  },
+  "notes": [
+    "The first resumed focused command named two nonexistent legacy test paths and collected no tests.",
+    "A subsequent local run hit only a Windows pytest temp-directory permission error after 47 tests passed; the exact suite passed after TEMP/TMP/basetemp were isolated under .codex_tmp."
+  ],
+  "passed": true,
+  "process_start_pythonhashseed": 25101,
+  "source_commit": "31c9e98ab408d4768c83d2a45bb1b21ae565b4be"
+}

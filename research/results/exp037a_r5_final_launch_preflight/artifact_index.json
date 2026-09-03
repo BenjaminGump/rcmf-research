@@ -1,0 +1,133 @@
+{
+  "artifacts": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/stage_dag.json",
+      "sha256": "5c254fb2ccb4cf76c7275451c9bdfc3332962e6d196ed8691cbd3206d6e2b47f",
+      "size_bytes": 33841
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/authoritative_source_manifest.json",
+      "sha256": "e57e7d4f26a5dc278afe048a32cc44aaf0ecc1371e5415edbe9e39e8edba8dc0",
+      "size_bytes": 3745
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/authorization_request.json",
+      "sha256": "c69378137bfeb0cdbd60ac145f69ad6c7882e56d883a93367e2e8841ab426151",
+      "size_bytes": 2392
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/authorization_validator_audit.json",
+      "sha256": "73554e18ceab71a741631169b092468b06ac861488f9cc7f689fe8e7d493138d",
+      "size_bytes": 528
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/conditional_1d_audit.json",
+      "sha256": "ba89150233367346db2ae159a42ef225ee9788ac4f40d1c4f2265ed40c66df50",
+      "size_bytes": 419
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/d06_reproduction_gate_contract.json",
+      "sha256": "f3dde8d5e13dda3867d12ab7648b368b7ff17e7250552abbe0b88c3572df0c56",
+      "size_bytes": 1249
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/environment_manifest.json",
+      "sha256": "46431bc3036e4ab0ad9d75e3e78b4a55325136e49735875f20baedc8665ce57b",
+      "size_bytes": 4428
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/hard_cap_proposal.json",
+      "sha256": "fce0a5734469ed2d23b291a95762b7dab164cdbfc25279c3bd0d919293079faa",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/initialization_manifest.json",
+      "sha256": "2f395d182ca673bbd7ddcc71093141f2c6d4091fdac6088ab7e501d4388c53ef",
+      "size_bytes": 5874
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/launch_source.json",
+      "sha256": "a7f220f01b951c6d092542dbefdcf06773f8117c9da71219e7f8ad9b273fdea9",
+      "size_bytes": 559
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/resolved_arm_1d.json",
+      "sha256": "2a6b136a47b84c06c9220684fd40d7131bda29379dfdcdcb1c4a2a345547e094",
+      "size_bytes": 27872
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/resolved_arm_3d.json",
+      "sha256": "fefc08166e129b2db6456cb5f0a8c5df9281532c1eb1361147597a3077b9311c",
+      "size_bytes": 27817
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/resolved_config_diff.json",
+      "sha256": "7fa6dfce7613f77360545778eeb05b453c7e0a3cbdbf5a8d68831515592d5586",
+      "size_bytes": 6606
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/resume_audit.json",
+      "sha256": "3cee3059c50b81790c8271653253bf879ed7dc89ee180cdd53509b40c8d324b4",
+      "size_bytes": 417
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/run_identity.json",
+      "sha256": "3799f95eb6d8cae4cd58213bf938f143e8dc9b6b5108e0798963208173ddeb60",
+      "size_bytes": 1238
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/runtime_by_branch.json",
+      "sha256": "b27152cef31bed1821e0afc6edc001e8134808c8d96e9ce79f9c5699b0fe32f9",
+      "size_bytes": 705
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/runtime_by_stage.json",
+      "sha256": "8d214dc13602b2d6da4173bc9bf4989276df8f6192d1e060823f1c2ecdd05f06",
+      "size_bytes": 2507
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/runtime_preflight.json",
+      "sha256": "33c6c61cc9f081303c7d5c469750fd14109387a5c58c1dda96e92df3b7229804",
+      "size_bytes": 1324
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/runtime_state.json",
+      "sha256": "d5f19710a225a9dc606cbc3d119518478fc0b485640e883f5929b59cf04d63dc",
+      "size_bytes": 723
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/scientific_invariants.json",
+      "sha256": "2d45e2857de40f45b29f28c84f4ee328203e717caec33b3e11cdd4f6058a16fd",
+      "size_bytes": 8510
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/stage_gate_audit.json",
+      "sha256": "91f2a144e47dcebef84cbe6e7369ae55b853ed00de00362a07089bd727acff18",
+      "size_bytes": 2418
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/technical_smoke.json",
+      "sha256": "9d660cdf27424194742da9756a93cd945ac2dff03b2fb1d2764e3947765a013d",
+      "size_bytes": 35546
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/tests.json",
+      "sha256": "b241a23b02b54dc44e7d74a0bb6f1297b3a94df347896c67e52a26615e93f2ce",
+      "size_bytes": 1816
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/two_arm_contract.json",
+      "sha256": "240691cff2a6ad3145f8aa9dec06fe6a8064b7223a93844337e02ded609a9149",
+      "size_bytes": 570
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001/preflight/writer_reader_smoke_contract.json",
+      "sha256": "d1615dd53db21b6af4beebe461ab3976f584217b80cdf0aab9bdf18e07043e39",
+      "size_bytes": 566
+    }
+  ],
+  "format": "exp037a_r5_artifact_index_14g_v1",
+  "large_scientific_outputs": [],
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001",
+  "source_commit": "31c9e98ab408d4768c83d2a45bb1b21ae565b4be"
+}

@@ -1,0 +1,981 @@
+{
+  "all_tests_passed": true,
+  "elapsed_seconds": 46.62961105629802,
+  "field_fixture": {
+    "A_shape": [
+      960,
+      8,
+      256
+    ],
+    "B_shape": [
+      8,
+      256
+    ],
+    "artifact": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r5_launch_smoke_31c9e98/technical_smoke/fixture_field.pt",
+      "sha256": "8c97dbc746ddec72c8cb1abbe80d8b7a6fa71404bbf93abc84100b9e44d27bad",
+      "size_bytes": 15747545
+    },
+    "correct_slot_shape": [
+      8,
+      256
+    ],
+    "memory_count": 401,
+    "reversible_rebuild_max_abs": 0.0,
+    "shuffle_fixed_points": 0
+  },
+  "format": "exp037a_bounded_technical_smoke_14b_v1",
+  "global_seed": 25101,
+  "heldout_train_appworld": {
+    "conditions": {
+      "D0": {
+        "generated_tokens": 146,
+        "infrastructure_exception_count": 0,
+        "peak_gpu_memory_bytes": 17784787456,
+        "prompt_tokens": 2489,
+        "reused": false,
+        "status": "complete",
+        "step_count": 1,
+        "success": false,
+        "task_result_sha256": "3336628c6d011828728e8e69c84de19f5e997df666143d799564203ef74ae27d",
+        "wall_seconds": 9.267871399410069
+      },
+      "D1": {
+        "generated_tokens": 137,
+        "infrastructure_exception_count": 0,
+        "peak_gpu_memory_bytes": 17903331840,
+        "prompt_tokens": 2489,
+        "reused": false,
+        "status": "complete",
+        "step_count": 1,
+        "success": false,
+        "task_result_sha256": "551138a7d41eca451756c13fc0cfaeea570aab04a70dbaf807aca7729062bc6d",
+        "wall_seconds": 9.141186642926186
+      },
+      "D2": {
+        "generated_tokens": 157,
+        "infrastructure_exception_count": 0,
+        "peak_gpu_memory_bytes": 17903331840,
+        "prompt_tokens": 2489,
+        "reused": false,
+        "status": "complete",
+        "step_count": 1,
+        "success": false,
+        "task_result_sha256": "ef1ba9f32818b680d0a5614fc8b92afe0ece30e16e5b7652bf7e0ea010b2c244",
+        "wall_seconds": 9.793482770677656
+      }
+    },
+    "max_steps": 1,
+    "task_id": "76f2c72_1"
+  },
+  "integration_levels": {
+    "low_level_writer_reader_smoke": {
+      "passed": true,
+      "present": true
+    },
+    "real_historical_joint_prepare_smoke": {
+      "passed": true,
+      "present": false,
+      "report": null
+    }
+  },
+  "lambda_tests": {
+    "command": "PYTHONHASHSEED=25101 /home/ubuntu/venvs/rcmf-py311/bin/python -m pytest -q",
+    "passed": true,
+    "passed_count": 887,
+    "skipped_count": 0,
+    "source_commit": "31c9e98ab408d4768c83d2a45bb1b21ae565b4be"
+  },
+  "local_tests": {
+    "command": "PYTHONHASHSEED=25101 conda run -n appworld_env python -m pytest -q",
+    "passed": true,
+    "passed_count": 885,
+    "skipped_count": 2,
+    "source_commit": "31c9e98ab408d4768c83d2a45bb1b21ae565b4be"
+  },
+  "paired_causal_generation": [
+    {
+      "condition": "bare",
+      "elapsed_seconds": 0.5547730913385749,
+      "text_sha256": "5c4634fc4498079823a01c9834c6dcba40e80d6ad8a7507fe1a58b18b9f5b493",
+      "token_ids": [
+        1249,
+        1477,
+        279,
+        2265,
+        315,
+        279,
+        1429,
+        12,
+        43236,
+        5492,
+        304,
+        697,
+        40537,
+        68808,
+        11,
+        358
+      ],
+      "usage": {
+        "completion_tokens": 16,
+        "prompt_tokens": 2477,
+        "total_tokens": 2493
+      }
+    },
+    {
+      "condition": "raw_transition",
+      "elapsed_seconds": 0.9886810523457825,
+      "text_sha256": "38bc0c92a6acc1e1667f2a7fb4fed52cb54e1825b9df735d3c0b712a1ba0f995",
+      "token_ids": [
+        40,
+        1184,
+        311,
+        1477,
+        279,
+        1429,
+        12,
+        43236,
+        5492,
+        304,
+        697,
+        40537,
+        68808,
+        13,
+        1096,
+        7460
+      ],
+      "usage": {
+        "completion_tokens": 16,
+        "prompt_tokens": 12510,
+        "total_tokens": 12526
+      }
+    }
+  ],
+  "passed": true,
+  "peak_gpu_memory_bytes": 17903331840,
+  "policy_teacher_seconds": 0.9106318727135658,
+  "policy_teacher_target_score": -1.2714639902114868,
+  "scheduler": {
+    "fail_gate": {
+      "one_demo_launched": false,
+      "stage_count": 40,
+      "status": "complete"
+    },
+    "pass_gate": {
+      "maximum_transition_seconds": 0.0007515251636505127,
+      "one_demo_launched": true,
+      "stage_count": 60,
+      "status": "complete"
+    },
+    "passed": true
+  },
+  "scientific_result": false,
+  "selector": {
+    "candidate": "balanced_lr3e4_e60_t1",
+    "elapsed_seconds": 0.275770063046366,
+    "ensemble_member_construction_count": 3,
+    "final_member_seed": 25071,
+    "folds_exercised": 1,
+    "key_shape": [
+      4,
+      960
+    ],
+    "optimizer_updates": 1,
+    "query_shape": [
+      960
+    ]
+  },
+  "source_commit": "31c9e98ab408d4768c83d2a45bb1b21ae565b4be",
+  "state": {
+    "arms": {
+      "1d": {
+        "elapsed_seconds": 0.5217024069279432,
+        "prompt_profile": "full_demo_first_only",
+        "rendered_sha256": "ac557674812056b27afd535a75169aee991b61a5147d2f928d3802758a9385e6",
+        "source_metadata": {
+          "current_task_history_definition": "cumulative current-task conversation from goal start through latest available user observation; full-demo messages are excluded",
+          "current_task_message_count": 1,
+          "future_observation_accessed": false,
+          "generation_boundary_definition": "complete character extent of the tokenizer's final nonempty prompt token",
+          "initial_demo_message_count": 20,
+          "message_content_spans": [
+            {
+              "char_end": 2954,
+              "char_start": 17,
+              "message_index": 0,
+              "role": "user",
+              "source_text_sha256": "b827fcf783d32d29a1a63dd8e1016ec838d03a6a5a0e859df979815609270fd6"
+            },
+            {
+              "char_end": 3315,
+              "char_start": 2987,
+              "message_index": 1,
+              "role": "assistant",
+              "source_text_sha256": "2ced9ff94b023ba2173b6f8e174851f3c16f300fed28a82d3b9e544dc2857606"
+            },
+            {
+              "char_end": 3651,
+              "char_start": 3343,
+              "message_index": 2,
+              "role": "user",
+              "source_text_sha256": "f4cc24f87ebba30c956340ef99f2831aa3f9dcabd502aeb5490999e4e7a21136"
+            },
+            {
+              "char_end": 3927,
+              "char_start": 3684,
+              "message_index": 3,
+              "role": "assistant",
+              "source_text_sha256": "9616f12b5402076c92922997efa2bdcdaec37c6500120d447fa2aa1ac5778a40"
+            },
+            {
+              "char_end": 4362,
+              "char_start": 3955,
+              "message_index": 4,
+              "role": "user",
+              "source_text_sha256": "3fe1d4fa53e679919e8651e18c014e09e19cf415a815b4351b998e8c9753f040"
+            },
+            {
+              "char_end": 4608,
+              "char_start": 4395,
+              "message_index": 5,
+              "role": "assistant",
+              "source_text_sha256": "cf9b2145793c45f95762f6bc00781b8f37c610641754bf2719d3b44d4bfdcf6d"
+            },
+            {
+              "char_end": 6017,
+              "char_start": 4636,
+              "message_index": 6,
+              "role": "user",
+              "source_text_sha256": "797994b26bd4c7941469821c933b6ffd9d8aef8eafa54d5ef49a7a433cae15b0"
+            },
+            {
+              "char_end": 6208,
+              "char_start": 6050,
+              "message_index": 7,
+              "role": "assistant",
+              "source_text_sha256": "5b86e56f03c4b608d9b84b796a1b95139149eae989c5ca5620992637774ca0ef"
+            },
+            {
+              "char_end": 6368,
+              "char_start": 6236,
+              "message_index": 8,
+              "role": "user",
+              "source_text_sha256": "216d390e50118744fe58a6088a69aca0144d57badaffab3ea972961f94475ac0"
+            },
+            {
+              "char_end": 6688,
+              "char_start": 6401,
+              "message_index": 9,
+              "role": "assistant",
+              "source_text_sha256": "a307393e4957898d97742ff5185f18d18fac304a7027915280004b0001faafee"
+            },
+            {
+              "char_end": 6857,
+              "char_start": 6716,
+              "message_index": 10,
+              "role": "user",
+              "source_text_sha256": "be0a6bf3fb833754b8fa38b31d8f214314534c679201a4d7302be20961028617"
+            },
+            {
+              "char_end": 7247,
+              "char_start": 6890,
+              "message_index": 11,
+              "role": "assistant",
+              "source_text_sha256": "4d55ff2ca5ef6ef4293ca1ac0b16a3d30befe48023112e1b31a9edeaf6d485f6"
+            },
+            {
+              "char_end": 7331,
+              "char_start": 7275,
+              "message_index": 12,
+              "role": "user",
+              "source_text_sha256": "418735e5dd4ab0da789bf8f90b0493b932674120ca0e80f13fd94e323c1e032e"
+            },
+            {
+              "char_end": 7669,
+              "char_start": 7364,
+              "message_index": 13,
+              "role": "assistant",
+              "source_text_sha256": "f3abf7edb2c599340370a322f38961a6607adcb003db5da3b10191b3eaf1ace7"
+            },
+            {
+              "char_end": 8190,
+              "char_start": 7697,
+              "message_index": 14,
+              "role": "user",
+              "source_text_sha256": "074b1b408cacbe54939c5235ea9155fbad5c6f17f0f53307cddfb20c76ffbe68"
+            },
+            {
+              "char_end": 8787,
+              "char_start": 8223,
+              "message_index": 15,
+              "role": "assistant",
+              "source_text_sha256": "b5976b56728ae1eafc3ad31d5c85763ee8604e5f49ed38c1299a914b607819ac"
+            },
+            {
+              "char_end": 8850,
+              "char_start": 8815,
+              "message_index": 16,
+              "role": "user",
+              "source_text_sha256": "dbe8209762022cf2d75e4fa7dced815bd3e52772952a735545e81877b555b6d8"
+            },
+            {
+              "char_end": 9236,
+              "char_start": 8883,
+              "message_index": 17,
+              "role": "assistant",
+              "source_text_sha256": "c0b7c3be7207dc50745968561391c8d7906e959f5358ccf9aee9757dcb8b951d"
+            },
+            {
+              "char_end": 9352,
+              "char_start": 9264,
+              "message_index": 18,
+              "role": "user",
+              "source_text_sha256": "9d3253d0233414e36166a475ce1d44c4b80eef5750a3b0a1a82359851e8e7934"
+            },
+            {
+              "char_end": 10535,
+              "char_start": 9380,
+              "message_index": 19,
+              "role": "user",
+              "source_text_sha256": "b60055dd5a9459d3f857d845fb9945a9441b72181fc69884e887b7bf36754ae3"
+            },
+            {
+              "char_end": 10814,
+              "char_start": 10563,
+              "message_index": 20,
+              "role": "user",
+              "source_text_sha256": "5d980c062ad22adfae118c3ea1f38cf4073291a8e9d5d4561fdd5d61091a33a0"
+            }
+          ],
+          "message_count": 21,
+          "target_action_accessed": false
+        },
+        "span_count": 5,
+        "tensor_sha256": "c98d5ea2ade23527515a46e9ca45f02e9d287076744a1f49ac13920aa4cde1dd",
+        "token_count": 2477,
+        "truncated": false
+      },
+      "3d": {
+        "elapsed_seconds": 0.9894669149070978,
+        "prompt_profile": "full_demo",
+        "rendered_sha256": "c1a94e6b3c08c2a293a330dbffdd6520ceeb5bf6aa4c22556000b66d410ba42d",
+        "source_metadata": {
+          "current_task_history_definition": "cumulative current-task conversation from goal start through latest available user observation; full-demo messages are excluded",
+          "current_task_message_count": 1,
+          "future_observation_accessed": false,
+          "generation_boundary_definition": "complete character extent of the tokenizer's final nonempty prompt token",
+          "initial_demo_message_count": 74,
+          "message_content_spans": [
+            {
+              "char_end": 2954,
+              "char_start": 17,
+              "message_index": 0,
+              "role": "user",
+              "source_text_sha256": "b827fcf783d32d29a1a63dd8e1016ec838d03a6a5a0e859df979815609270fd6"
+            },
+            {
+              "char_end": 3315,
+              "char_start": 2987,
+              "message_index": 1,
+              "role": "assistant",
+              "source_text_sha256": "2ced9ff94b023ba2173b6f8e174851f3c16f300fed28a82d3b9e544dc2857606"
+            },
+            {
+              "char_end": 3651,
+              "char_start": 3343,
+              "message_index": 2,
+              "role": "user",
+              "source_text_sha256": "f4cc24f87ebba30c956340ef99f2831aa3f9dcabd502aeb5490999e4e7a21136"
+            },
+            {
+              "char_end": 3927,
+              "char_start": 3684,
+              "message_index": 3,
+              "role": "assistant",
+              "source_text_sha256": "9616f12b5402076c92922997efa2bdcdaec37c6500120d447fa2aa1ac5778a40"
+            },
+            {
+              "char_end": 4362,
+              "char_start": 3955,
+              "message_index": 4,
+              "role": "user",
+              "source_text_sha256": "3fe1d4fa53e679919e8651e18c014e09e19cf415a815b4351b998e8c9753f040"
+            },
+            {
+              "char_end": 4608,
+              "char_start": 4395,
+              "message_index": 5,
+              "role": "assistant",
+              "source_text_sha256": "cf9b2145793c45f95762f6bc00781b8f37c610641754bf2719d3b44d4bfdcf6d"
+            },
+            {
+              "char_end": 6017,
+              "char_start": 4636,
+              "message_index": 6,
+              "role": "user",
+              "source_text_sha256": "797994b26bd4c7941469821c933b6ffd9d8aef8eafa54d5ef49a7a433cae15b0"
+            },
+            {
+              "char_end": 6208,
+              "char_start": 6050,
+              "message_index": 7,
+              "role": "assistant",
+              "source_text_sha256": "5b86e56f03c4b608d9b84b796a1b95139149eae989c5ca5620992637774ca0ef"
+            },
+            {
+              "char_end": 6368,
+              "char_start": 6236,
+              "message_index": 8,
+              "role": "user",
+              "source_text_sha256": "216d390e50118744fe58a6088a69aca0144d57badaffab3ea972961f94475ac0"
+            },
+            {
+              "char_end": 6688,
+              "char_start": 6401,
+              "message_index": 9,
+              "role": "assistant",
+              "source_text_sha256": "a307393e4957898d97742ff5185f18d18fac304a7027915280004b0001faafee"
+            },
+            {
+              "char_end": 6857,
+              "char_start": 6716,
+              "message_index": 10,
+              "role": "user",
+              "source_text_sha256": "be0a6bf3fb833754b8fa38b31d8f214314534c679201a4d7302be20961028617"
+            },
+            {
+              "char_end": 7247,
+              "char_start": 6890,
+              "message_index": 11,
+              "role": "assistant",
+              "source_text_sha256": "4d55ff2ca5ef6ef4293ca1ac0b16a3d30befe48023112e1b31a9edeaf6d485f6"
+            },
+            {
+              "char_end": 7331,
+              "char_start": 7275,
+              "message_index": 12,
+              "role": "user",
+              "source_text_sha256": "418735e5dd4ab0da789bf8f90b0493b932674120ca0e80f13fd94e323c1e032e"
+            },
+            {
+              "char_end": 7669,
+              "char_start": 7364,
+              "message_index": 13,
+              "role": "assistant",
+              "source_text_sha256": "f3abf7edb2c599340370a322f38961a6607adcb003db5da3b10191b3eaf1ace7"
+            },
+            {
+              "char_end": 8190,
+              "char_start": 7697,
+              "message_index": 14,
+              "role": "user",
+              "source_text_sha256": "074b1b408cacbe54939c5235ea9155fbad5c6f17f0f53307cddfb20c76ffbe68"
+            },
+            {
+              "char_end": 8787,
+              "char_start": 8223,
+              "message_index": 15,
+              "role": "assistant",
+              "source_text_sha256": "b5976b56728ae1eafc3ad31d5c85763ee8604e5f49ed38c1299a914b607819ac"
+            },
+            {
+              "char_end": 8850,
+              "char_start": 8815,
+              "message_index": 16,
+              "role": "user",
+              "source_text_sha256": "dbe8209762022cf2d75e4fa7dced815bd3e52772952a735545e81877b555b6d8"
+            },
+            {
+              "char_end": 9236,
+              "char_start": 8883,
+              "message_index": 17,
+              "role": "assistant",
+              "source_text_sha256": "c0b7c3be7207dc50745968561391c8d7906e959f5358ccf9aee9757dcb8b951d"
+            },
+            {
+              "char_end": 9611,
+              "char_start": 9264,
+              "message_index": 18,
+              "role": "user",
+              "source_text_sha256": "ab29dfca690148b51cfc65fdb03c0621d2a8a2624165e842f5883358a30a31e2"
+            },
+            {
+              "char_end": 10037,
+              "char_start": 9644,
+              "message_index": 19,
+              "role": "assistant",
+              "source_text_sha256": "169506d98a5c2c8d628612296baca0012f7a15c5bf4e5c863d2eb8a7e39ba17e"
+            },
+            {
+              "char_end": 10365,
+              "char_start": 10065,
+              "message_index": 20,
+              "role": "user",
+              "source_text_sha256": "3473c5d9cc06aec55fe4e9e6f43dd45a93471f78aff6cf89326c029dfba6ae6e"
+            },
+            {
+              "char_end": 10681,
+              "char_start": 10398,
+              "message_index": 21,
+              "role": "assistant",
+              "source_text_sha256": "b48a962f078917dc4f61f8161154e9003c6686b97fb898d27171ef7f3c7a4c17"
+            },
+            {
+              "char_end": 10732,
+              "char_start": 10709,
+              "message_index": 22,
+              "role": "user",
+              "source_text_sha256": "6496578af2f0198e27419987c80d876a64e2dc2212536def53b049f3ab8a3c43"
+            },
+            {
+              "char_end": 11012,
+              "char_start": 10765,
+              "message_index": 23,
+              "role": "assistant",
+              "source_text_sha256": "f16ffbf135280d0c1690ec1f88e2da3d985a063fad0e82ed29a12874405d2cc4"
+            },
+            {
+              "char_end": 11143,
+              "char_start": 11040,
+              "message_index": 24,
+              "role": "user",
+              "source_text_sha256": "19fd440c72629bf861a85a6f6c56ebcfbcc26b356c77f0810974aea6f35b649d"
+            },
+            {
+              "char_end": 11536,
+              "char_start": 11176,
+              "message_index": 25,
+              "role": "assistant",
+              "source_text_sha256": "755dd60b8d86a0cf04686d08107e69f361450c7f91492fb6f78acb184f23fe33"
+            },
+            {
+              "char_end": 11941,
+              "char_start": 11564,
+              "message_index": 26,
+              "role": "user",
+              "source_text_sha256": "a80edcc644028b6fbadcaa7507e125caba7e872fe8bb38ed1f08d64632bf8c68"
+            },
+            {
+              "char_end": 12521,
+              "char_start": 11974,
+              "message_index": 27,
+              "role": "assistant",
+              "source_text_sha256": "b42b702d4cd3e2d588cbb831ef3c9bc1614c295ab4fc50dd4f3a3ba9971d6cd4"
+            },
+            {
+              "char_end": 12582,
+              "char_start": 12549,
+              "message_index": 28,
+              "role": "user",
+              "source_text_sha256": "3b12802a2be203106f7db7868d1eb596017fc55c6050472b6b90b717c66374c8"
+            },
+            {
+              "char_end": 12950,
+              "char_start": 12615,
+              "message_index": 29,
+              "role": "assistant",
+              "source_text_sha256": "6af245680135bbb618fa21c9caba94d504531dd9bbab221be5749061f697f65a"
+            },
+            {
+              "char_end": 13502,
+              "char_start": 12978,
+              "message_index": 30,
+              "role": "user",
+              "source_text_sha256": "af8518b70c541ed4bba694a70528e2f9c1294cd233b8aab8960fa906c4f9fadc"
+            },
+            {
+              "char_end": 13784,
+              "char_start": 13535,
+              "message_index": 31,
+              "role": "assistant",
+              "source_text_sha256": "31674741eb1d44bc019d8d3dd571710c7a9c51b8875a8a7bbaf88c90c348ef96"
+            },
+            {
+              "char_end": 14150,
+              "char_start": 13812,
+              "message_index": 32,
+              "role": "user",
+              "source_text_sha256": "7179551d8e31126a6ddefa3a36aae8348a9514887e6101692845c47eda4f74db"
+            },
+            {
+              "char_end": 14767,
+              "char_start": 14183,
+              "message_index": 33,
+              "role": "assistant",
+              "source_text_sha256": "c118bee645857370bf352178b728f27eae60cfc9b1328040421e986fd54e4e41"
+            },
+            {
+              "char_end": 14853,
+              "char_start": 14795,
+              "message_index": 34,
+              "role": "user",
+              "source_text_sha256": "f78f85f7f14797d2f96d6f029df794cebe7c3b410c72b4f835a809771e424644"
+            },
+            {
+              "char_end": 15237,
+              "char_start": 14886,
+              "message_index": 35,
+              "role": "assistant",
+              "source_text_sha256": "7f66ebae2b93b348d899d95080b52fb044d8a0388468f87ef28333cd2cc5158a"
+            },
+            {
+              "char_end": 15311,
+              "char_start": 15265,
+              "message_index": 36,
+              "role": "user",
+              "source_text_sha256": "684ab9e8123530ac58db486ca3f8666e94e3042d5b48faec1e0263ce3dd7a841"
+            },
+            {
+              "char_end": 15798,
+              "char_start": 15344,
+              "message_index": 37,
+              "role": "assistant",
+              "source_text_sha256": "94ccf9ef8e067ec0d2111546d79dbf18a8cd75851b4b8e48eff10eeed0c18cc4"
+            },
+            {
+              "char_end": 15894,
+              "char_start": 15826,
+              "message_index": 38,
+              "role": "user",
+              "source_text_sha256": "a59ff35fdfacdac4f86448cb451a60b8832629744b42f7567cd05a872b174467"
+            },
+            {
+              "char_end": 16556,
+              "char_start": 15927,
+              "message_index": 39,
+              "role": "assistant",
+              "source_text_sha256": "c6bd0e7082ac156d9c34103d4f33c342cd46dae5274e380f1e9c316255be4e25"
+            },
+            {
+              "char_end": 17045,
+              "char_start": 16584,
+              "message_index": 40,
+              "role": "user",
+              "source_text_sha256": "57782b9342f1d5fc555f28642cff3dbfd9093665022600ff5de0c58fa992ace3"
+            },
+            {
+              "char_end": 17640,
+              "char_start": 17078,
+              "message_index": 41,
+              "role": "assistant",
+              "source_text_sha256": "6dcd60abcf78920f1215f05354da485be8a5ceea2e708a9ea65f0ee82a217ed7"
+            },
+            {
+              "char_end": 18117,
+              "char_start": 17668,
+              "message_index": 42,
+              "role": "user",
+              "source_text_sha256": "30398d879f8ea5e46dd5ba564c409d0c46f059a5b2dd093897f6a8cd4402c75f"
+            },
+            {
+              "char_end": 18458,
+              "char_start": 18150,
+              "message_index": 43,
+              "role": "assistant",
+              "source_text_sha256": "4ae9ce622f547ae281eaa6dc4d0ed8552707e818f18a1e52ce6d7450a96c4a4e"
+            },
+            {
+              "char_end": 19102,
+              "char_start": 18486,
+              "message_index": 44,
+              "role": "user",
+              "source_text_sha256": "14c2ef8556e12454191af5575609cfddf359d91ee969275ca2a703c657e84944"
+            },
+            {
+              "char_end": 19376,
+              "char_start": 19135,
+              "message_index": 45,
+              "role": "assistant",
+              "source_text_sha256": "9752e3498397f1e68865986d8ad30047700813a78d808ef77d5c8e0590904795"
+            },
+            {
+              "char_end": 19745,
+              "char_start": 19404,
+              "message_index": 46,
+              "role": "user",
+              "source_text_sha256": "1756165927bc79b2a66c82d3b8f5925fae3f4b004a3359214a21d6a063a5a6cb"
+            },
+            {
+              "char_end": 20027,
+              "char_start": 19778,
+              "message_index": 47,
+              "role": "assistant",
+              "source_text_sha256": "167acdf3c3c765cbc2ea7141b3e0189558124cfa71cef91e407e850ea1111b50"
+            },
+            {
+              "char_end": 20355,
+              "char_start": 20055,
+              "message_index": 48,
+              "role": "user",
+              "source_text_sha256": "3473c5d9cc06aec55fe4e9e6f43dd45a93471f78aff6cf89326c029dfba6ae6e"
+            },
+            {
+              "char_end": 20590,
+              "char_start": 20388,
+              "message_index": 49,
+              "role": "assistant",
+              "source_text_sha256": "681f53bb2138b6efb024a7d6f0175d5dac08e8f01476b1f2e9174b8c642aab92"
+            },
+            {
+              "char_end": 20807,
+              "char_start": 20618,
+              "message_index": 50,
+              "role": "user",
+              "source_text_sha256": "64589c80cb5f70e2597a64b341a3a89b5fadc59971d80dc59ddc470788f85505"
+            },
+            {
+              "char_end": 21254,
+              "char_start": 20840,
+              "message_index": 51,
+              "role": "assistant",
+              "source_text_sha256": "e35d7d8ca2e4e40b5fd92efd84c79b97e4cca12abcf6439deb1ceb677d2904f2"
+            },
+            {
+              "char_end": 21385,
+              "char_start": 21282,
+              "message_index": 52,
+              "role": "user",
+              "source_text_sha256": "19fd440c72629bf861a85a6f6c56ebcfbcc26b356c77f0810974aea6f35b649d"
+            },
+            {
+              "char_end": 21645,
+              "char_start": 21418,
+              "message_index": 53,
+              "role": "assistant",
+              "source_text_sha256": "765bdad7be9f15ed713fbc7c8da7fb5196974895bedf5764b3db872b8c20eafa"
+            },
+            {
+              "char_end": 22137,
+              "char_start": 21673,
+              "message_index": 54,
+              "role": "user",
+              "source_text_sha256": "9e517830f02dfa386b7a8af2617d78ef0dc0b61de3cabc728df18463fae3f297"
+            },
+            {
+              "char_end": 22489,
+              "char_start": 22170,
+              "message_index": 55,
+              "role": "assistant",
+              "source_text_sha256": "532f653e48d5f3c57ad5107c9b1f1e35a614469b12e148b56a6b4b53b5ad40fc"
+            },
+            {
+              "char_end": 22772,
+              "char_start": 22517,
+              "message_index": 56,
+              "role": "user",
+              "source_text_sha256": "e578d2f8b7cf9a9d4089eb40c9e97f86f8c0d692debed74de0c1e5971b6e9489"
+            },
+            {
+              "char_end": 23302,
+              "char_start": 22805,
+              "message_index": 57,
+              "role": "assistant",
+              "source_text_sha256": "31771c43779d357d254966c295122c932dbf963a56ef02a9da7b9530d0d574ea"
+            },
+            {
+              "char_end": 23666,
+              "char_start": 23330,
+              "message_index": 58,
+              "role": "user",
+              "source_text_sha256": "ba2b4a4deb770375b3a04e8bbbe37d8ade3f8a476104876d9d71f4dec27ce2c8"
+            },
+            {
+              "char_end": 24093,
+              "char_start": 23699,
+              "message_index": 59,
+              "role": "assistant",
+              "source_text_sha256": "39dc125e245a288064f884c3fa3851f810a67b3bae7d5d9b7ba373b1e719a33f"
+            },
+            {
+              "char_end": 24485,
+              "char_start": 24121,
+              "message_index": 60,
+              "role": "user",
+              "source_text_sha256": "d10b5f18e80948bfec86c4a245cc99655952cf6c494bbb51e93be0ee399ff335"
+            },
+            {
+              "char_end": 24927,
+              "char_start": 24518,
+              "message_index": 61,
+              "role": "assistant",
+              "source_text_sha256": "95b83b057dc3bfdbde73dd69ff540d43b134381037e3c6b6a4838b51e066f7a1"
+            },
+            {
+              "char_end": 25058,
+              "char_start": 24955,
+              "message_index": 62,
+              "role": "user",
+              "source_text_sha256": "19fd440c72629bf861a85a6f6c56ebcfbcc26b356c77f0810974aea6f35b649d"
+            },
+            {
+              "char_end": 25597,
+              "char_start": 25091,
+              "message_index": 63,
+              "role": "assistant",
+              "source_text_sha256": "7ef4f64276d82cd8f5e1454657b22820f78f59361d6a645ddf8267cc62ca6364"
+            },
+            {
+              "char_end": 25829,
+              "char_start": 25625,
+              "message_index": 64,
+              "role": "user",
+              "source_text_sha256": "ce6020f35f25adbbf4260df3d3dc1c4e57ef030cf58da6329fb6bfb66ad4dbc4"
+            },
+            {
+              "char_end": 26177,
+              "char_start": 25862,
+              "message_index": 65,
+              "role": "assistant",
+              "source_text_sha256": "b7b2cab16998d5ed8fabe8245797e6f34e99d3b7f5dda21f4f53dc236d3f70c2"
+            },
+            {
+              "char_end": 26708,
+              "char_start": 26205,
+              "message_index": 66,
+              "role": "user",
+              "source_text_sha256": "c3d7e186e94b424cea58fafc8b1c5aebc2bb9051f476193159943f1a2a6c11e9"
+            },
+            {
+              "char_end": 27800,
+              "char_start": 26741,
+              "message_index": 67,
+              "role": "assistant",
+              "source_text_sha256": "8aafdda0ca4a2cfb5564e1b6f72b2e8fe016ac91e23f9706c4bfcea74dcd006d"
+            },
+            {
+              "char_end": 27846,
+              "char_start": 27828,
+              "message_index": 68,
+              "role": "user",
+              "source_text_sha256": "32c35d4b88f44df046a0a5b8f82cf3bbac1a616d91d76a12756375ff9f05e2a1"
+            },
+            {
+              "char_end": 28877,
+              "char_start": 27879,
+              "message_index": 69,
+              "role": "assistant",
+              "source_text_sha256": "2f81ea9b8e1f437aea75a08e874cfad380d5ae0c576252839334977718107254"
+            },
+            {
+              "char_end": 28980,
+              "char_start": 28905,
+              "message_index": 70,
+              "role": "user",
+              "source_text_sha256": "96351ad56915fa37960f1c825d9f04f1397fdad55ad9f4ff92cc234114a14cd7"
+            },
+            {
+              "char_end": 29303,
+              "char_start": 29013,
+              "message_index": 71,
+              "role": "assistant",
+              "source_text_sha256": "e4086979f39604155c57647f010847c68e9cd87e14f00d4db60508c96ac429e1"
+            },
+            {
+              "char_end": 29416,
+              "char_start": 29331,
+              "message_index": 72,
+              "role": "user",
+              "source_text_sha256": "9dbb476e18a1f7e9a20bb1e9ccdcc2dc3e7225772e1f0333dd20d4337d5dd2d0"
+            },
+            {
+              "char_end": 30599,
+              "char_start": 29444,
+              "message_index": 73,
+              "role": "user",
+              "source_text_sha256": "b60055dd5a9459d3f857d845fb9945a9441b72181fc69884e887b7bf36754ae3"
+            },
+            {
+              "char_end": 30878,
+              "char_start": 30627,
+              "message_index": 74,
+              "role": "user",
+              "source_text_sha256": "5d980c062ad22adfae118c3ea1f38cf4073291a8e9d5d4561fdd5d61091a33a0"
+            }
+          ],
+          "message_count": 75,
+          "target_action_accessed": false
+        },
+        "span_count": 5,
+        "tensor_sha256": "c953027cd64e75ce07321cb8720d711fef41d2c9921186f4360500bf6059e266",
+        "token_count": 7326,
+        "truncated": false
+      }
+    },
+    "state_example_id": "appworld:trace:82e2fac_1:step:1:line:1",
+    "task_id": "82e2fac_1"
+  },
+  "transitions": [
+    {
+      "elapsed_seconds": 0.8213825826533139,
+      "prompt_demonstrations_used": false,
+      "rendered_sha256": "07d6eadb0b99989bd163ef3fc6705cbb0a600cc06fd8a5d1449deb3c4ae3d864",
+      "source_metadata": {
+        "teacher_section_sha256": "e89d52f6e70030ec1b4ad9ad5aab0c28c5acd83b28a462dee6496c48150f684a",
+        "transition_content_sha256": "2a7e5c9a7eb1b60ab4473dc5c5b8e3d2097d662ee323a77484c96f487b122245"
+      },
+      "span_count": 5,
+      "tensor_sha256": "32c1195e4e54d91ff595929dd85f6800e9a0dc58a92bf69fe63208b67682c220",
+      "token_count": 10017,
+      "transition_id": "001629b3-5715-5e40-b42a-b7d00dc82b7d",
+      "truncated": false
+    },
+    {
+      "elapsed_seconds": 0.8018885557539761,
+      "prompt_demonstrations_used": false,
+      "rendered_sha256": "c3ea4ea02c56a690474f9f0cc592aee858c2750c44d3cbd54eb8f68f36294a6a",
+      "source_metadata": {
+        "teacher_section_sha256": "4737d21532babfc9da47242b74a17f9289c2e8341b91fd2ef9b4509461dd2a83",
+        "transition_content_sha256": "23067c68215ff5c7f7a759a497c3dfb1425b94d95a6c6badb85e7ce09eb70c3e"
+      },
+      "span_count": 5,
+      "tensor_sha256": "7881be9cbfe294f0a38b6e003bf34e0dac6d78573e42cf830f8e93e6b82c30a2",
+      "token_count": 9887,
+      "transition_id": "001f176d-e399-572c-9cec-a75754bd243f",
+      "truncated": false
+    },
+    {
+      "elapsed_seconds": 1.230416988953948,
+      "prompt_demonstrations_used": false,
+      "rendered_sha256": "f4897416f708a96e2407d29dd79848dd82ef61cf26b75ec6cb1a5abc5f91f2f0",
+      "source_metadata": {
+        "teacher_section_sha256": "0a38f53f55b78e47144b38277cd9d09923fee4ccc6c8b9f71d43009c858405bb",
+        "transition_content_sha256": "c0164b6d463c67cbf25e2a0b6c59180cf9cd8c535555e32ea8a2da8a858157f8"
+      },
+      "span_count": 5,
+      "tensor_sha256": "dde4be4b49bf4e7b1c935c4b353ecc841e081b01e6007822390ce00d8396ed7d",
+      "token_count": 19010,
+      "transition_id": "00ab3f58-5c47-5f55-9f5f-2765d78757a7",
+      "truncated": false
+    },
+    {
+      "elapsed_seconds": 0.9998951558955014,
+      "prompt_demonstrations_used": false,
+      "rendered_sha256": "3dee1ea858e8f74d15d5c09c06b0ab239e3be2ab214c9f59ec7006826fbf8527",
+      "source_metadata": {
+        "teacher_section_sha256": "581e9369ae1894357b068111a1736e52799bb986a6e9d6b77a3e3691c8da7c4a",
+        "transition_content_sha256": "c272f0181ae1b132b11fddedd1067016e4b435b91c3cea562164f12461bdbc85"
+      },
+      "span_count": 5,
+      "tensor_sha256": "9ece018222b5619d36562c6895ed50a841b455d8cee08c9736dd7bc2f1383251",
+      "token_count": 14295,
+      "transition_id": "019d821f-0ed2-58ab-a848-53d6fcd1a212",
+      "truncated": false
+    }
+  ],
+  "writer_reader_backward": [
+    {
+      "elapsed_seconds": 2.4902992588467896,
+      "loss": 1.9474693536758423,
+      "reader_any_gradient": true,
+      "update": 1,
+      "writer_any_gradient": true
+    },
+    {
+      "elapsed_seconds": 0.2503863456659019,
+      "loss": 0.7917636036872864,
+      "reader_any_gradient": true,
+      "update": 2,
+      "writer_any_gradient": true
+    }
+  ]
+}

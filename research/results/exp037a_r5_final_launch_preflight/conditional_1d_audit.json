@@ -1,0 +1,9 @@
+{
+  "fail_behavior": "skip all O00-O19 and continue final failure reporting",
+  "format": "exp037a_r5_conditional_1d_audit_14g_v1",
+  "gateway": "D22_three_demo_reproduction_gate",
+  "one_demo_authorized_only_as_conditional_scope": true,
+  "pass_behavior": "launch O00 within scheduler transition target",
+  "required_decision": "THREE_DEMO_REPRODUCTION_PASS",
+  "scheduler_revalidates_d22_completion_identity": true
+}

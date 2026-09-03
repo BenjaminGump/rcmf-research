@@ -1,0 +1,39 @@
+{
+  "exact_comparisons": [
+    "completed_state_ids",
+    "completed_status",
+    "paired_labels",
+    "label_counts",
+    "over_context_state_ids",
+    "replay_semantic_failure_state_ids"
+  ],
+  "expected_heldout_completed": 98,
+  "expected_label_counts": {
+    "HARMFUL": 35,
+    "NEUTRAL": 300,
+    "POSITIVE": 129
+  },
+  "expected_train_completed": 366,
+  "failure_blocks": [
+    "D07",
+    "D08",
+    "D09",
+    "1D"
+  ],
+  "format": "exp037a_r5_d06_gate_contract_14g_v1",
+  "fresh_d06_must_be_sealed_first": true,
+  "historical_inputs_to_generation": false,
+  "historical_references": {
+    "paired_outcomes": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/paired_causal/paired_outcomes.json",
+      "sha256": "1b02ab0ecf3da87b2485acce6de8a7188db610e1f56f9bb66c55ad45f94e0bf9",
+      "size_bytes": 3495985
+    },
+    "selected_memories": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/preflight/frozen_train_selections.jsonl",
+      "sha256": "23c6c8ea7800797706166c48fa846ca4533493379736c729a216cb57ba4df6ce",
+      "size_bytes": 9401237
+    }
+  },
+  "stage_id": "D06B_three_demo_causal_reproduction_gate"
+}

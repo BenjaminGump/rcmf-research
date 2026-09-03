@@ -1,0 +1,18 @@
+{
+  "authorization_request_is_not_runtime_authorization": true,
+  "bound_fields": [
+    "run_uuid",
+    "run_root",
+    "source_commit",
+    "contract_sha256",
+    "pipeline_config_sha256",
+    "hard_cap_hours",
+    "scope",
+    "authorization_version"
+  ],
+  "format": "exp037a_r5_authorization_validator_audit_14g_v1",
+  "missing_authorization_fails_before_science": true,
+  "old_200_hour_authorization_fails_closed": true,
+  "scheduler_independent_revalidation": true,
+  "stale_or_partial_authorization_fails_closed": true
+}
