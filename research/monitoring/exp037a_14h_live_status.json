@@ -1,12 +1,12 @@
 {
   "attempts": {
-    "complete": 20,
-    "current_attempt_id": "D08_zero_cache_and_training_units-1788497469350755335-r1",
+    "complete": 22,
+    "current_attempt_id": "D09_writer_reader_epoch_1-1788497940303784877-r1",
     "current_command": [
       "/home/ubuntu/venvs/rcmf-py311/bin/python",
       "scripts/run_rcmf_reproducible_stage_14b.py",
       "--stage",
-      "D08_zero_cache_and_training_units",
+      "D09_writer_reader_epoch_1",
       "--config",
       "configs/pipeline/rcmf_appworld_repro_14h.yaml",
       "--run-root",
@@ -14,16 +14,16 @@
       "--source-commit",
       "272b0e9a1f8b29f898024f1115d1710d41270758"
     ],
-    "current_stage": "D08_zero_cache_and_training_units",
+    "current_stage": "D09_writer_reader_epoch_1",
     "failed_or_interrupted": 0,
     "failed_or_interrupted_attempt_ids": [],
     "open": 1,
     "open_attempt_ids": [
-      "D08_zero_cache_and_training_units-1788497469350755335-r1"
+      "D09_writer_reader_epoch_1-1788497940303784877-r1"
     ],
-    "total": 21
+    "total": 23
   },
-  "completed_stage_count": 20,
+  "completed_stage_count": 22,
   "completed_stages": [
     "S00_environment_manifest",
     "S01_authoritative_corpus",
@@ -44,21 +44,23 @@
     "D05_selected_memory_manifest",
     "D06_paired_causal_outcomes",
     "D06B_three_demo_causal_reproduction_gate",
-    "D07_policy_teacher"
+    "D07_policy_teacher",
+    "D08_zero_cache_and_training_units",
+    "D08B_writer_reader_one_unit_smoke"
   ],
-  "current_attempt_id": "D08_zero_cache_and_training_units-1788497469350755335-r1",
-  "current_stage": "D08_zero_cache_and_training_units",
+  "current_attempt_id": "D09_writer_reader_epoch_1-1788497940303784877-r1",
+  "current_stage": "D09_writer_reader_epoch_1",
   "current_stage_progress_files": [
     {
-      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/stages/D08_zero_cache_and_training_units/process.json",
-      "sha256": "0cb0d1d8595b4052f4fcce28f8a29111ffe1f83185def100a2e6f4fa3c9e9a60",
-      "size_bytes": 526
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/stages/D09_writer_reader_epoch_1/process.json",
+      "sha256": "7238f899233529706d8c988d31251bac8255488a0b0eae9c90fd63145563fc55",
+      "size_bytes": 518
     }
   ],
   "evidence": [
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/heartbeat.json",
-      "sha256": "f88e9d24eb702bc43d7f1a6bf8dcb6c0bad3146ee25664963fe6a7a0cb96f934",
+      "sha256": "676365744fe6ed8c4b1d9523a0ee4906dee70d82caddcc5efb696d1ff64d1275",
       "size_bytes": 272
     },
     {
@@ -68,13 +70,13 @@
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/scheduler_state.json",
-      "sha256": "db521d2e1bee0f25d9704941eb65673fa62e7faa0e5794f3a7f58a48bc47539d",
-      "size_bytes": 14884
+      "sha256": "4f9521221d84e7b27fe072b30096dad0ba4755f6e99867db31416d7dba6908b5",
+      "size_bytes": 16411
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/attempts.jsonl",
-      "sha256": "193e1104fc85434872c9c3353afbfc4e39c1eb24e2c14887d884ae0805bdc2b6",
-      "size_bytes": 32296
+      "sha256": "35159b157fe079e06b19fd3e10065a4201c64e12e94e8e2650f971ae5b07870e",
+      "size_bytes": 35462
     }
   ],
   "failure_files": [],
@@ -93,10 +95,12 @@
       "state": "passed"
     },
     "D08B": {
-      "completion_exit_code": null,
+      "completion_exit_code": 0,
       "failure_present": false,
-      "result": {},
-      "state": "not_reached"
+      "result": {
+        "passed": true
+      },
+      "state": "passed"
     },
     "D22": {
       "completion_exit_code": null,
@@ -116,31 +120,31 @@
     "gpus": [
       {
         "memory_total_mib": 81559,
-        "memory_used_mib": 22195,
+        "memory_used_mib": 44767,
         "name": "NVIDIA H100 80GB HBM3",
-        "utilization_percent": 74
+        "utilization_percent": 100
       }
     ],
     "telemetry_only": true
   },
   "heartbeat": {
-    "age_seconds": 45.185442,
+    "age_seconds": 105.180609,
     "current_stage": "D08_zero_cache_and_training_units",
     "pid": 722342,
     "stale": false,
     "stale_threshold_seconds": 720,
-    "utc": "2026-09-04T04:54:21.810496+00:00"
+    "utc": "2026-09-04T04:58:21.817177+00:00"
   },
   "invalid_completion_stages": [],
-  "last_updated_utc": "2026-09-04T04:55:07.118990+00:00",
-  "latest_completed_stage": "D07_policy_teacher",
-  "material_signature": "7c5a28e04dcce7d3106063cb380e763266b4b2c19b0bf1b6e023b56fd7acfcb2",
+  "last_updated_utc": "2026-09-04T05:00:07.152568+00:00",
+  "latest_completed_stage": "D08B_writer_reader_one_unit_smoke",
+  "material_signature": "8e155e90434d43bdb5361a16d6503a327e3b171458c935387db137bb3a02b67f",
   "monitor_state": "RUNNING_STAGE_CHANGED",
   "most_recent_failed_stage": null,
   "nfs": {
-    "free_bytes": 3344620980273152,
-    "free_gib": 3114921.0224609375,
-    "total_bytes": 3344832751730688
+    "free_bytes": 3344622322450432,
+    "free_gib": 3114922.2724609375,
+    "total_bytes": 3344834093907968
   },
   "one_demo_started": false,
   "orchestrator_result": null,
