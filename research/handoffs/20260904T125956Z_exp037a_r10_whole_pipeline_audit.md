@@ -80,4 +80,3 @@ fail-closed scheduler lock requiring operator triage.
 No long run was launched. A new explicit authorization bound to the exact
 14j source/UUID/root/config/contract/scope and proposed 120-hour cap is
 required before launch.
-

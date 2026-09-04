@@ -157,4 +157,3 @@ Scientific configuration changes: `0`.
 H100 scientific active time: `0`.
 
 Long scientific run launched: `false`.
-
