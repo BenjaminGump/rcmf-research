@@ -1,12 +1,12 @@
 {
   "attempts": {
-    "complete": 14,
-    "current_attempt_id": "D03_final_selector_ensemble-1788533949006050321-r1",
+    "complete": 16,
+    "current_attempt_id": "D05_selected_memory_manifest-1788537401837849782-r1",
     "current_command": [
       "/home/ubuntu/venvs/rcmf-py311/bin/python",
       "scripts/run_rcmf_reproducible_stage_14b.py",
       "--stage",
-      "D03_final_selector_ensemble",
+      "D05_selected_memory_manifest",
       "--config",
       "configs/pipeline/rcmf_appworld_repro_14j.yaml",
       "--run-root",
@@ -14,16 +14,16 @@
       "--source-commit",
       "0e4015547da45802cc7b6ff3a9b92adce73077fc"
     ],
-    "current_stage": "D03_final_selector_ensemble",
+    "current_stage": "D05_selected_memory_manifest",
     "failed_or_interrupted": 0,
     "failed_or_interrupted_attempt_ids": [],
     "open": 1,
     "open_attempt_ids": [
-      "D03_final_selector_ensemble-1788533949006050321-r1"
+      "D05_selected_memory_manifest-1788537401837849782-r1"
     ],
-    "total": 15
+    "total": 17
   },
-  "completed_stage_count": 14,
+  "completed_stage_count": 16,
   "completed_stages": [
     "S00_environment_manifest",
     "S01_authoritative_corpus",
@@ -38,22 +38,24 @@
     "S09_runtime_preflight_and_approval",
     "D00_state_representations",
     "D01_selector_candidate_cv",
-    "D02_selector_candidate_selection"
+    "D02_selector_candidate_selection",
+    "D03_final_selector_ensemble",
+    "D04_selector_factorization"
   ],
-  "current_attempt_id": "D03_final_selector_ensemble-1788533949006050321-r1",
-  "current_stage": "D03_final_selector_ensemble",
+  "current_attempt_id": "D05_selected_memory_manifest-1788537401837849782-r1",
+  "current_stage": "D05_selected_memory_manifest",
   "current_stage_progress_files": [
     {
-      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/stages/D03_final_selector_ensemble/process.json",
-      "sha256": "f51d1b749e6f15f67aade8b8d01c167f65e2dd99019d26be29d90019ddccbf0a",
-      "size_bytes": 520
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/stages/D05_selected_memory_manifest/process.json",
+      "sha256": "4f4d03aa8c833bef7607feb72b2954c01c3c18d14fd4afe922fb8b1a73853260",
+      "size_bytes": 521
     }
   ],
   "evidence": [
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/heartbeat.json",
-      "sha256": "0ebde58f0fe429e5473b64cd6408582f46bed980571765d7cc601ddb038af2cc",
-      "size_bytes": 266
+      "sha256": "2874d9ef589d48d1def7c7502be76311d27275f2fc318ce64aec916d9f0db7f5",
+      "size_bytes": 265
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/scheduler.lock",
@@ -62,13 +64,13 @@
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/scheduler_state.json",
-      "sha256": "40a2e3c514fc6d90e9778a8ab638f4e03f37dc3c87ddccec0f39095d974d8bd1",
-      "size_bytes": 10449
+      "sha256": "627f0315d8934c8d3a24dc5f0e2fd19f075f2268f123090bd807908db404b078",
+      "size_bytes": 11913
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/attempts.jsonl",
-      "sha256": "f71b2025852916d8187d155aa99b02e2a9accdb03d97a385ccb371fc82da197b",
-      "size_bytes": 22873
+      "sha256": "66d2a7722f3f947e9d6c4ca16464441824dab97b1f3c4af9ecd52a6a85bb1b17",
+      "size_bytes": 26001
     }
   ],
   "failure_files": [],
@@ -107,31 +109,31 @@
     "gpus": [
       {
         "memory_total_mib": 81559,
-        "memory_used_mib": 1041,
+        "memory_used_mib": 0,
         "name": "NVIDIA H100 80GB HBM3",
-        "utilization_percent": 35
+        "utilization_percent": 0
       }
     ],
     "telemetry_only": true
   },
   "heartbeat": {
-    "age_seconds": 29.282978,
+    "age_seconds": 149.171616,
     "current_stage": "D03_final_selector_ensemble",
     "pid": 743225,
     "stale": false,
     "stale_threshold_seconds": 720,
-    "utc": "2026-09-04T15:06:33.651774+00:00"
+    "utc": "2026-09-04T15:54:33.763148+00:00"
   },
   "invalid_completion_stages": [],
-  "last_updated_utc": "2026-09-04T15:07:06.577735+00:00",
-  "latest_completed_stage": "D02_selector_candidate_selection",
-  "material_signature": "261931d948393877aae9835864d27c5aa75ba2b2c3f84e8394bc815d738198be",
-  "monitor_state": "RUNNING_HEALTHY",
+  "last_updated_utc": "2026-09-04T15:57:06.811800+00:00",
+  "latest_completed_stage": "D04_selector_factorization",
+  "material_signature": "5b172630a208062f47e7ce9ac0c3c4980e9b184f45964830e9e54f76bf10c172",
+  "monitor_state": "RUNNING_STAGE_CHANGED",
   "most_recent_failed_stage": null,
   "nfs": {
-    "free_bytes": 3344574207492096,
-    "free_gib": 3114877.4619140625,
-    "total_bytes": 3344803223830528
+    "free_bytes": 3343991265296384,
+    "free_gib": 3114334.5546875,
+    "total_bytes": 3344220450455552
   },
   "one_demo_started": false,
   "orchestrator_result": null,
