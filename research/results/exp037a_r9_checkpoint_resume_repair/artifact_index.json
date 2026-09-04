@@ -5,8 +5,8 @@
   "artifacts": [
     {
       "path": "research/results/EXP_037A_R9_CHECKPOINT_RESUME_REPAIR.md",
-      "sha256": "04fa32ff9d517aba8871779f65e669aa986dbc9897e0725f0182a207601f69a2",
-      "size_bytes": 7713
+      "sha256": "8cbb49c163d609e3e13eb9b6021a2ec53c109364089815ba05b3db369d0413a0",
+      "size_bytes": 7711
     },
     {
       "path": "research/results/exp037a_r9_checkpoint_resume_repair/summary.json",

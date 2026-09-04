@@ -1,7 +1,9 @@
 # EXP-037A-R9 Checkpoint Resume Repair
 
-Date: 2026-09-04  
-Decision: `READY_FOR_14I_REAUTHORIZATION`  
+Date: 2026-09-04
+
+Decision: `READY_FOR_14I_REAUTHORIZATION`
+
 Scientific result: `NOT_EVALUATED`
 
 ## Scope
