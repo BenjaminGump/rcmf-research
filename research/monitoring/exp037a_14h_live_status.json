@@ -1,29 +1,18 @@
 {
   "attempts": {
-    "complete": 22,
-    "current_attempt_id": "D09_writer_reader_epoch_1-1788497940303784877-r1",
-    "current_command": [
-      "/home/ubuntu/venvs/rcmf-py311/bin/python",
-      "scripts/run_rcmf_reproducible_stage_14b.py",
-      "--stage",
-      "D09_writer_reader_epoch_1",
-      "--config",
-      "configs/pipeline/rcmf_appworld_repro_14h.yaml",
-      "--run-root",
-      "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001",
-      "--source-commit",
-      "272b0e9a1f8b29f898024f1115d1710d41270758"
+    "complete": 23,
+    "current_attempt_id": null,
+    "current_command": null,
+    "current_stage": null,
+    "failed_or_interrupted": 1,
+    "failed_or_interrupted_attempt_ids": [
+      "D10_writer_reader_epoch_2-1788501645911565815-r1"
     ],
-    "current_stage": "D09_writer_reader_epoch_1",
-    "failed_or_interrupted": 0,
-    "failed_or_interrupted_attempt_ids": [],
-    "open": 1,
-    "open_attempt_ids": [
-      "D09_writer_reader_epoch_1-1788497940303784877-r1"
-    ],
-    "total": 23
+    "open": 0,
+    "open_attempt_ids": [],
+    "total": 24
   },
-  "completed_stage_count": 22,
+  "completed_stage_count": 23,
   "completed_stages": [
     "S00_environment_manifest",
     "S01_authoritative_corpus",
@@ -46,9 +35,10 @@
     "D06B_three_demo_causal_reproduction_gate",
     "D07_policy_teacher",
     "D08_zero_cache_and_training_units",
-    "D08B_writer_reader_one_unit_smoke"
+    "D08B_writer_reader_one_unit_smoke",
+    "D09_writer_reader_epoch_1"
   ],
-  "current_attempt_id": "D09_writer_reader_epoch_1-1788497940303784877-r1",
+  "current_attempt_id": null,
   "current_stage": "D09_writer_reader_epoch_1",
   "current_stage_progress_files": [
     {
@@ -60,26 +50,28 @@
   "evidence": [
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/heartbeat.json",
-      "sha256": "6323a2152d5455f5b9fa49cc55eab7e80555813409ca82c8c381fb4a6b25be81",
+      "sha256": "90ad44dd9c2e15d01af851b20d2649aa777d56f88df8f071e587d490e33fbf01",
       "size_bytes": 264
     },
     {
-      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/scheduler.lock",
-      "sha256": "4afc36a8c6f46a05f8eb805dc3c5a425160fc12819942951ab262afc475dd186",
-      "size_bytes": 128
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/scheduler_state.json",
+      "sha256": "629e32f18cb12f19b3a078e6c99a0f559399b9b605e72c1a06425c2dc1188e85",
+      "size_bytes": 17832
     },
     {
-      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/scheduler_state.json",
-      "sha256": "4f9521221d84e7b27fe072b30096dad0ba4755f6e99867db31416d7dba6908b5",
-      "size_bytes": 16411
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/orchestrator_result.json",
+      "sha256": "629e32f18cb12f19b3a078e6c99a0f559399b9b605e72c1a06425c2dc1188e85",
+      "size_bytes": 17832
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/attempts.jsonl",
-      "sha256": "35159b157fe079e06b19fd3e10065a4201c64e12e94e8e2650f971ae5b07870e",
-      "size_bytes": 35462
+      "sha256": "ec31aef08926f770c64c25753a39e8174565aedbeb85f8ee74f30c950afd8372",
+      "size_bytes": 37274
     }
   ],
-  "failure_files": [],
+  "failure_files": [
+    "stages/D10_writer_reader_epoch_2/failure.json"
+  ],
   "formal_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001",
   "formal_run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001",
   "format": "exp037a_14h_read_only_status_bridge_v1",
@@ -120,40 +112,433 @@
     "gpus": [
       {
         "memory_total_mib": 81559,
-        "memory_used_mib": 44791,
+        "memory_used_mib": 0,
         "name": "NVIDIA H100 80GB HBM3",
-        "utilization_percent": 100
+        "utilization_percent": 0
       }
     ],
     "telemetry_only": true
   },
   "heartbeat": {
-    "age_seconds": 165.172971,
+    "age_seconds": 405.052952,
     "current_stage": "D09_writer_reader_epoch_1",
     "pid": 722342,
     "stale": false,
     "stale_threshold_seconds": 720,
-    "utc": "2026-09-04T05:02:21.824651+00:00"
+    "utc": "2026-09-04T05:58:21.943063+00:00"
   },
-  "invalid_completion_stages": [],
-  "last_updated_utc": "2026-09-04T05:05:07.149628+00:00",
-  "latest_completed_stage": "D08B_writer_reader_one_unit_smoke",
-  "material_signature": "84fb0fe9492963a349adb55aaa8671ee5769ac6c1581b02a2ec20af9c4469782",
-  "monitor_state": "RUNNING_HEALTHY",
-  "most_recent_failed_stage": null,
+  "invalid_completion_stages": [
+    "D10_writer_reader_epoch_2"
+  ],
+  "last_updated_utc": "2026-09-04T06:05:07.144019+00:00",
+  "latest_completed_stage": "D09_writer_reader_epoch_1",
+  "material_signature": "3c4b5402b1f8b71fedf89226bfabe6bd0d58cf045d3d4950ae436e50d20a3b12",
+  "monitor_state": "TERMINAL_INFRASTRUCTURE_FAILURE",
+  "most_recent_failed_stage": "D10_writer_reader_epoch_2",
   "nfs": {
-    "free_bytes": 3344620658360320,
-    "free_gib": 3114920.72265625,
-    "total_bytes": 3344832751730688
+    "free_bytes": 3344057963118592,
+    "free_gib": 3114396.671875,
+    "total_bytes": 3344270379450368
   },
   "one_demo_started": false,
-  "orchestrator_result": null,
-  "parent_alive": true,
+  "orchestrator_result": {
+    "completed": [
+      "S00_environment_manifest",
+      "S01_authoritative_corpus",
+      "S02_task_and_parent_splits",
+      "S03_transition_records",
+      "S04_selector_supervision",
+      "S05_transition_representations",
+      "S05B_joint_source_contract_preflight",
+      "S06_cv_folds_and_sampling",
+      "S07_initial_parameter_snapshots",
+      "S08_two_arm_contract",
+      "S09_runtime_preflight_and_approval",
+      "D00_state_representations",
+      "D01_selector_candidate_cv",
+      "D02_selector_candidate_selection",
+      "D03_final_selector_ensemble",
+      "D04_selector_factorization",
+      "D05_selected_memory_manifest",
+      "D06_paired_causal_outcomes",
+      "D06B_three_demo_causal_reproduction_gate",
+      "D07_policy_teacher",
+      "D08_zero_cache_and_training_units",
+      "D08B_writer_reader_one_unit_smoke",
+      "D09_writer_reader_epoch_1"
+    ],
+    "failed_stage": "D10_writer_reader_epoch_2",
+    "skipped": [],
+    "status": "failed",
+    "transitions": [
+      {
+        "attempt_id": "S00_environment_manifest-1788480621248566397-r1",
+        "next_stage_start_utc": "2026-09-04T00:10:24.500256+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T00:10:24.485535+00:00",
+        "stage_id": "S00_environment_manifest",
+        "stage_start_utc": "2026-09-04T00:10:21.248568+00:00",
+        "stage_to_next_transition_seconds": 0.007705532014369965,
+        "stage_wall_seconds": 3.236989197321236,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T00:10:24.492551+00:00",
+        "validator_seconds": 0.006991931702941656,
+        "validator_start_utc": "2026-09-04T00:10:24.485557+00:00"
+      },
+      {
+        "attempt_id": "S01_authoritative_corpus-1788480624513362513-r1",
+        "next_stage_start_utc": "2026-09-04T00:10:27.268224+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T00:10:27.252737+00:00",
+        "stage_id": "S01_authoritative_corpus",
+        "stage_start_utc": "2026-09-04T00:10:24.513364+00:00",
+        "stage_to_next_transition_seconds": 0.007770010735839605,
+        "stage_wall_seconds": 2.7393955159932375,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T00:10:27.260453+00:00",
+        "validator_seconds": 0.007693130057305098,
+        "validator_start_utc": "2026-09-04T00:10:27.252759+00:00"
+      },
+      {
+        "attempt_id": "S02_task_and_parent_splits-1788480627282871892-r1",
+        "next_stage_start_utc": "2026-09-04T00:10:29.984344+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T00:10:29.969867+00:00",
+        "stage_id": "S02_task_and_parent_splits",
+        "stage_start_utc": "2026-09-04T00:10:27.282873+00:00",
+        "stage_to_next_transition_seconds": 0.00671768793836236,
+        "stage_wall_seconds": 2.6870172917842865,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T00:10:29.977625+00:00",
+        "validator_seconds": 0.007733670063316822,
+        "validator_start_utc": "2026-09-04T00:10:29.969891+00:00"
+      },
+      {
+        "attempt_id": "S03_transition_records-1788480629998416854-r1",
+        "next_stage_start_utc": "2026-09-04T00:10:32.745586+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T00:10:32.730791+00:00",
+        "stage_id": "S03_transition_records",
+        "stage_start_utc": "2026-09-04T00:10:29.998419+00:00",
+        "stage_to_next_transition_seconds": 0.006983587983995676,
+        "stage_wall_seconds": 2.7323937243781984,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T00:10:32.738601+00:00",
+        "validator_seconds": 0.007787939626723528,
+        "validator_start_utc": "2026-09-04T00:10:32.730813+00:00"
+      },
+      {
+        "attempt_id": "S04_selector_supervision-1788480632763699003-r1",
+        "next_stage_start_utc": "2026-09-04T00:10:36.165521+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T00:10:36.150793+00:00",
+        "stage_id": "S04_selector_supervision",
+        "stage_start_utc": "2026-09-04T00:10:32.763701+00:00",
+        "stage_to_next_transition_seconds": 0.0068548573181033134,
+        "stage_wall_seconds": 3.3871157779358327,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T00:10:36.158665+00:00",
+        "validator_seconds": 0.00784827210009098,
+        "validator_start_utc": "2026-09-04T00:10:36.150816+00:00"
+      },
+      {
+        "attempt_id": "S05_transition_representations-1788480636179905633-r1",
+        "next_stage_start_utc": "2026-09-04T00:18:46.700136+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T00:18:46.683939+00:00",
+        "stage_id": "S05_transition_representations",
+        "stage_start_utc": "2026-09-04T00:10:36.179907+00:00",
+        "stage_to_next_transition_seconds": 0.008047348354011774,
+        "stage_wall_seconds": 490.50405647512525,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T00:18:46.692088+00:00",
+        "validator_seconds": 0.008122971747070551,
+        "validator_start_utc": "2026-09-04T00:18:46.683964+00:00"
+      },
+      {
+        "attempt_id": "S05B_joint_source_contract_preflight-1788481126715604452-r1",
+        "next_stage_start_utc": "2026-09-04T00:18:52.822984+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T00:18:52.807667+00:00",
+        "stage_id": "S05B_joint_source_contract_preflight",
+        "stage_start_utc": "2026-09-04T00:18:46.715607+00:00",
+        "stage_to_next_transition_seconds": 0.007703992072492838,
+        "stage_wall_seconds": 6.092084072064608,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T00:18:52.815279+00:00",
+        "validator_seconds": 0.007588049862533808,
+        "validator_start_utc": "2026-09-04T00:18:52.807690+00:00"
+      },
+      {
+        "attempt_id": "S06_cv_folds_and_sampling-1788481132837116898-r1",
+        "next_stage_start_utc": "2026-09-04T00:18:55.539825+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T00:18:55.523659+00:00",
+        "stage_id": "S06_cv_folds_and_sampling",
+        "stage_start_utc": "2026-09-04T00:18:52.837118+00:00",
+        "stage_to_next_transition_seconds": 0.007572800852358341,
+        "stage_wall_seconds": 2.6865627388469875,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T00:18:55.532252+00:00",
+        "validator_seconds": 0.008570194244384766,
+        "validator_start_utc": "2026-09-04T00:18:55.523681+00:00"
+      },
+      {
+        "attempt_id": "S07_initial_parameter_snapshots-1788481135553967317-r1",
+        "next_stage_start_utc": "2026-09-04T00:18:58.256849+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T00:18:58.240462+00:00",
+        "stage_id": "S07_initial_parameter_snapshots",
+        "stage_start_utc": "2026-09-04T00:18:55.553969+00:00",
+        "stage_to_next_transition_seconds": 0.0075373402796685696,
+        "stage_wall_seconds": 2.6865155082195997,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T00:18:58.249311+00:00",
+        "validator_seconds": 0.008826554752886295,
+        "validator_start_utc": "2026-09-04T00:18:58.240484+00:00"
+      },
+      {
+        "attempt_id": "S08_two_arm_contract-1788481138271849787-r1",
+        "next_stage_start_utc": "2026-09-04T00:19:00.925200+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T00:19:00.909255+00:00",
+        "stage_id": "S08_two_arm_contract",
+        "stage_start_utc": "2026-09-04T00:18:58.271851+00:00",
+        "stage_to_next_transition_seconds": 0.007000911049544811,
+        "stage_wall_seconds": 2.6374248741194606,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T00:19:00.918199+00:00",
+        "validator_seconds": 0.008922457695007324,
+        "validator_start_utc": "2026-09-04T00:19:00.909276+00:00"
+      },
+      {
+        "attempt_id": "S09_runtime_preflight_and_approval-1788481140939046788-r1",
+        "next_stage_start_utc": "2026-09-04T00:19:03.638739+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T00:19:03.622602+00:00",
+        "stage_id": "S09_runtime_preflight_and_approval",
+        "stage_start_utc": "2026-09-04T00:19:00.939048+00:00",
+        "stage_to_next_transition_seconds": 0.0076685440726578236,
+        "stage_wall_seconds": 2.683574528899044,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T00:19:03.631070+00:00",
+        "validator_seconds": 0.008447051048278809,
+        "validator_start_utc": "2026-09-04T00:19:03.622623+00:00"
+      },
+      {
+        "attempt_id": "D00_state_representations-1788481143652716883-r1",
+        "next_stage_start_utc": "2026-09-04T00:29:26.948266+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T00:29:26.932284+00:00",
+        "stage_id": "D00_state_representations",
+        "stage_start_utc": "2026-09-04T00:19:03.652718+00:00",
+        "stage_to_next_transition_seconds": 0.00792863592505455,
+        "stage_wall_seconds": 623.279588745907,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T00:29:26.940337+00:00",
+        "validator_seconds": 0.008029695134609938,
+        "validator_start_utc": "2026-09-04T00:29:26.932307+00:00"
+      },
+      {
+        "attempt_id": "D01_selector_candidate_cv-1788481766962194822-r1",
+        "next_stage_start_utc": "2026-09-04T01:39:18.123791+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T01:39:18.105390+00:00",
+        "stage_id": "D01_selector_candidate_cv",
+        "stage_start_utc": "2026-09-04T00:29:26.962196+00:00",
+        "stage_to_next_transition_seconds": 0.009888292290270329,
+        "stage_wall_seconds": 4191.14321703976,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T01:39:18.113902+00:00",
+        "validator_seconds": 0.008488276973366737,
+        "validator_start_utc": "2026-09-04T01:39:18.105413+00:00"
+      },
+      {
+        "attempt_id": "D02_selector_candidate_selection-1788485958139950037-r1",
+        "next_stage_start_utc": "2026-09-04T01:39:20.993714+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T01:39:20.978406+00:00",
+        "stage_id": "D02_selector_candidate_selection",
+        "stage_start_utc": "2026-09-04T01:39:18.139952+00:00",
+        "stage_to_next_transition_seconds": 0.006934301927685738,
+        "stage_wall_seconds": 2.8384782960638404,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T01:39:20.986780+00:00",
+        "validator_seconds": 0.008349282201379538,
+        "validator_start_utc": "2026-09-04T01:39:20.978430+00:00"
+      },
+      {
+        "attempt_id": "D03_final_selector_ensemble-1788485961008127566-r1",
+        "next_stage_start_utc": "2026-09-04T02:37:37.552453+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T02:37:37.536700+00:00",
+        "stage_id": "D03_final_selector_ensemble",
+        "stage_start_utc": "2026-09-04T01:39:21.008129+00:00",
+        "stage_to_next_transition_seconds": 0.007654970977455378,
+        "stage_wall_seconds": 3496.5285925078206,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T02:37:37.544797+00:00",
+        "validator_seconds": 0.00807525496929884,
+        "validator_start_utc": "2026-09-04T02:37:37.536721+00:00"
+      },
+      {
+        "attempt_id": "D04_selector_factorization-1788489457566888497-r1",
+        "next_stage_start_utc": "2026-09-04T02:37:41.668964+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T02:37:41.654146+00:00",
+        "stage_id": "D04_selector_factorization",
+        "stage_start_utc": "2026-09-04T02:37:37.566890+00:00",
+        "stage_to_next_transition_seconds": 0.006904019974172115,
+        "stage_wall_seconds": 4.087276556994766,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T02:37:41.662060+00:00",
+        "validator_seconds": 0.00789276696741581,
+        "validator_start_utc": "2026-09-04T02:37:41.654166+00:00"
+      },
+      {
+        "attempt_id": "D05_selected_memory_manifest-1788489461683037003-r1",
+        "next_stage_start_utc": "2026-09-04T02:38:21.798984+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T02:38:21.784200+00:00",
+        "stage_id": "D05_selected_memory_manifest",
+        "stage_start_utc": "2026-09-04T02:37:41.683038+00:00",
+        "stage_to_next_transition_seconds": 0.006859320215880871,
+        "stage_wall_seconds": 40.10118364309892,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T02:38:21.792124+00:00",
+        "validator_seconds": 0.007902017794549465,
+        "validator_start_utc": "2026-09-04T02:38:21.784222+00:00"
+      },
+      {
+        "attempt_id": "D06_paired_causal_outcomes-1788489501812925946-r1",
+        "next_stage_start_utc": "2026-09-04T04:29:25.639167+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T04:29:25.625004+00:00",
+        "stage_id": "D06_paired_causal_outcomes",
+        "stage_start_utc": "2026-09-04T02:38:21.812927+00:00",
+        "stage_to_next_transition_seconds": 0.006886075250804424,
+        "stage_wall_seconds": 6663.812098420225,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T04:29:25.632281+00:00",
+        "validator_seconds": 0.007253558840602636,
+        "validator_start_utc": "2026-09-04T04:29:25.625026+00:00"
+      },
+      {
+        "attempt_id": "D06B_three_demo_causal_reproduction_gate-1788496165652158927-r1",
+        "next_stage_start_utc": "2026-09-04T04:29:28.700947+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T04:29:28.686761+00:00",
+        "stage_id": "D06B_three_demo_causal_reproduction_gate",
+        "stage_start_utc": "2026-09-04T04:29:25.652160+00:00",
+        "stage_to_next_transition_seconds": 0.00640230905264616,
+        "stage_wall_seconds": 3.0346220857463777,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T04:29:28.694544+00:00",
+        "validator_seconds": 0.007761084008961916,
+        "validator_start_utc": "2026-09-04T04:29:28.686782+00:00"
+      },
+      {
+        "attempt_id": "D07_policy_teacher-1788496168714464278-r1",
+        "next_stage_start_utc": "2026-09-04T04:51:09.335966+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T04:51:09.321161+00:00",
+        "stage_id": "D07_policy_teacher",
+        "stage_start_utc": "2026-09-04T04:29:28.714466+00:00",
+        "stage_to_next_transition_seconds": 0.007342214696109295,
+        "stage_wall_seconds": 1300.6067179180682,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T04:51:09.328624+00:00",
+        "validator_seconds": 0.007439460139721632,
+        "validator_start_utc": "2026-09-04T04:51:09.321183+00:00"
+      },
+      {
+        "attempt_id": "D08_zero_cache_and_training_units-1788497469350755335-r1",
+        "next_stage_start_utc": "2026-09-04T04:58:36.391954+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T04:58:36.339890+00:00",
+        "stage_id": "D08_zero_cache_and_training_units",
+        "stage_start_utc": "2026-09-04T04:51:09.350757+00:00",
+        "stage_to_next_transition_seconds": 0.024138954933732748,
+        "stage_wall_seconds": 446.98915378097445,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T04:58:36.367813+00:00",
+        "validator_seconds": 0.027901240158826113,
+        "validator_start_utc": "2026-09-04T04:58:36.339911+00:00"
+      },
+      {
+        "attempt_id": "D08B_writer_reader_one_unit_smoke-1788497916435139852-r1",
+        "next_stage_start_utc": "2026-09-04T04:59:00.288822+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T04:59:00.273296+00:00",
+        "stage_id": "D08B_writer_reader_one_unit_smoke",
+        "stage_start_utc": "2026-09-04T04:58:36.435141+00:00",
+        "stage_to_next_transition_seconds": 0.007113337051123381,
+        "stage_wall_seconds": 23.838175487238914,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T04:59:00.281709+00:00",
+        "validator_seconds": 0.008390701841562986,
+        "validator_start_utc": "2026-09-04T04:59:00.273317+00:00"
+      },
+      {
+        "attempt_id": "D09_writer_reader_epoch_1-1788497940303784877-r1",
+        "next_stage_start_utc": "2026-09-04T06:00:45.896728+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T06:00:45.878222+00:00",
+        "stage_id": "D09_writer_reader_epoch_1",
+        "stage_start_utc": "2026-09-04T04:59:00.303787+00:00",
+        "stage_to_next_transition_seconds": 0.007770148105919361,
+        "stage_wall_seconds": 3705.574457634706,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T06:00:45.888957+00:00",
+        "validator_seconds": 0.010712949093431234,
+        "validator_start_utc": "2026-09-04T06:00:45.878244+00:00"
+      },
+      {
+        "attempt_id": "D10_writer_reader_epoch_2-1788501645911565815-r1",
+        "next_stage_start_utc": "2026-09-04T06:01:01.640107+00:00",
+        "retry_ordinal": 1,
+        "stage_end_utc": "2026-09-04T06:01:01.630213+00:00",
+        "stage_id": "D10_writer_reader_epoch_2",
+        "stage_start_utc": "2026-09-04T06:00:45.911567+00:00",
+        "stage_to_next_transition_seconds": 0.008952734991908073,
+        "stage_wall_seconds": 15.718668460845947,
+        "target_met": true,
+        "transition_delay_reason": "none",
+        "validator_end_utc": "2026-09-04T06:01:01.631153+00:00",
+        "validator_seconds": 0.0009175529703497887,
+        "validator_start_utc": "2026-09-04T06:01:01.630236+00:00"
+      }
+    ]
+  },
+  "parent_alive": false,
   "parent_pid": 722342,
   "parent_tmux": {
-    "exists": true,
+    "exists": false,
     "name": "exp037a_14h_formal",
-    "pane_pid": 722342
+    "pane_pid": null
   },
   "poll_interval_seconds": 300,
   "read_only_contract": {
@@ -165,6 +550,21 @@
       "separate_git_worktree_only"
     ]
   },
-  "scheduler_lock_present": true,
-  "terminal": false
+  "scheduler_lock_present": false,
+  "terminal": true,
+  "terminal_or_alert_evidence": {
+    "one_demo_executed": false,
+    "orchestrator_log": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/orchestrator.log",
+      "sha256": "623203e7912966d96db7ea6d79b49a7c6b5adf3754995bbdbd31698a1a945789",
+      "tail": "548573181033134, \"stage_wall_seconds\": 3.3871157779358327, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T00:10:36.158665+00:00\", \"validator_seconds\": 0.00784827210009098, \"validator_start_utc\": \"2026-09-04T00:10:36.150816+00:00\"}, {\"attempt_id\": \"S05_transition_representations-1788480636179905633-r1\", \"next_stage_start_utc\": \"2026-09-04T00:18:46.700136+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T00:18:46.683939+00:00\", \"stage_id\": \"S05_transition_representations\", \"stage_start_utc\": \"2026-09-04T00:10:36.179907+00:00\", \"stage_to_next_transition_seconds\": 0.008047348354011774, \"stage_wall_seconds\": 490.50405647512525, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T00:18:46.692088+00:00\", \"validator_seconds\": 0.008122971747070551, \"validator_start_utc\": \"2026-09-04T00:18:46.683964+00:00\"}, {\"attempt_id\": \"S05B_joint_source_contract_preflight-1788481126715604452-r1\", \"next_stage_start_utc\": \"2026-09-04T00:18:52.822984+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T00:18:52.807667+00:00\", \"stage_id\": \"S05B_joint_source_contract_preflight\", \"stage_start_utc\": \"2026-09-04T00:18:46.715607+00:00\", \"stage_to_next_transition_seconds\": 0.007703992072492838, \"stage_wall_seconds\": 6.092084072064608, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T00:18:52.815279+00:00\", \"validator_seconds\": 0.007588049862533808, \"validator_start_utc\": \"2026-09-04T00:18:52.807690+00:00\"}, {\"attempt_id\": \"S06_cv_folds_and_sampling-1788481132837116898-r1\", \"next_stage_start_utc\": \"2026-09-04T00:18:55.539825+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T00:18:55.523659+00:00\", \"stage_id\": \"S06_cv_folds_and_sampling\", \"stage_start_utc\": \"2026-09-04T00:18:52.837118+00:00\", \"stage_to_next_transition_seconds\": 0.007572800852358341, \"stage_wall_seconds\": 2.6865627388469875, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T00:18:55.532252+00:00\", \"validator_seconds\": 0.008570194244384766, \"validator_start_utc\": \"2026-09-04T00:18:55.523681+00:00\"}, {\"attempt_id\": \"S07_initial_parameter_snapshots-1788481135553967317-r1\", \"next_stage_start_utc\": \"2026-09-04T00:18:58.256849+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T00:18:58.240462+00:00\", \"stage_id\": \"S07_initial_parameter_snapshots\", \"stage_start_utc\": \"2026-09-04T00:18:55.553969+00:00\", \"stage_to_next_transition_seconds\": 0.0075373402796685696, \"stage_wall_seconds\": 2.6865155082195997, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T00:18:58.249311+00:00\", \"validator_seconds\": 0.008826554752886295, \"validator_start_utc\": \"2026-09-04T00:18:58.240484+00:00\"}, {\"attempt_id\": \"S08_two_arm_contract-1788481138271849787-r1\", \"next_stage_start_utc\": \"2026-09-04T00:19:00.925200+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T00:19:00.909255+00:00\", \"stage_id\": \"S08_two_arm_contract\", \"stage_start_utc\": \"2026-09-04T00:18:58.271851+00:00\", \"stage_to_next_transition_seconds\": 0.007000911049544811, \"stage_wall_seconds\": 2.6374248741194606, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T00:19:00.918199+00:00\", \"validator_seconds\": 0.008922457695007324, \"validator_start_utc\": \"2026-09-04T00:19:00.909276+00:00\"}, {\"attempt_id\": \"S09_runtime_preflight_and_approval-1788481140939046788-r1\", \"next_stage_start_utc\": \"2026-09-04T00:19:03.638739+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T00:19:03.622602+00:00\", \"stage_id\": \"S09_runtime_preflight_and_approval\", \"stage_start_utc\": \"2026-09-04T00:19:00.939048+00:00\", \"stage_to_next_transition_seconds\": 0.0076685440726578236, \"stage_wall_seconds\": 2.683574528899044, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T00:19:03.631070+00:00\", \"validator_seconds\": 0.008447051048278809, \"validator_start_utc\": \"2026-09-04T00:19:03.622623+00:00\"}, {\"attempt_id\": \"D00_state_representations-1788481143652716883-r1\", \"next_stage_start_utc\": \"2026-09-04T00:29:26.948266+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T00:29:26.932284+00:00\", \"stage_id\": \"D00_state_representations\", \"stage_start_utc\": \"2026-09-04T00:19:03.652718+00:00\", \"stage_to_next_transition_seconds\": 0.00792863592505455, \"stage_wall_seconds\": 623.279588745907, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T00:29:26.940337+00:00\", \"validator_seconds\": 0.008029695134609938, \"validator_start_utc\": \"2026-09-04T00:29:26.932307+00:00\"}, {\"attempt_id\": \"D01_selector_candidate_cv-1788481766962194822-r1\", \"next_stage_start_utc\": \"2026-09-04T01:39:18.123791+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T01:39:18.105390+00:00\", \"stage_id\": \"D01_selector_candidate_cv\", \"stage_start_utc\": \"2026-09-04T00:29:26.962196+00:00\", \"stage_to_next_transition_seconds\": 0.009888292290270329, \"stage_wall_seconds\": 4191.14321703976, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T01:39:18.113902+00:00\", \"validator_seconds\": 0.008488276973366737, \"validator_start_utc\": \"2026-09-04T01:39:18.105413+00:00\"}, {\"attempt_id\": \"D02_selector_candidate_selection-1788485958139950037-r1\", \"next_stage_start_utc\": \"2026-09-04T01:39:20.993714+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T01:39:20.978406+00:00\", \"stage_id\": \"D02_selector_candidate_selection\", \"stage_start_utc\": \"2026-09-04T01:39:18.139952+00:00\", \"stage_to_next_transition_seconds\": 0.006934301927685738, \"stage_wall_seconds\": 2.8384782960638404, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T01:39:20.986780+00:00\", \"validator_seconds\": 0.008349282201379538, \"validator_start_utc\": \"2026-09-04T01:39:20.978430+00:00\"}, {\"attempt_id\": \"D03_final_selector_ensemble-1788485961008127566-r1\", \"next_stage_start_utc\": \"2026-09-04T02:37:37.552453+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T02:37:37.536700+00:00\", \"stage_id\": \"D03_final_selector_ensemble\", \"stage_start_utc\": \"2026-09-04T01:39:21.008129+00:00\", \"stage_to_next_transition_seconds\": 0.007654970977455378, \"stage_wall_seconds\": 3496.5285925078206, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T02:37:37.544797+00:00\", \"validator_seconds\": 0.00807525496929884, \"validator_start_utc\": \"2026-09-04T02:37:37.536721+00:00\"}, {\"attempt_id\": \"D04_selector_factorization-1788489457566888497-r1\", \"next_stage_start_utc\": \"2026-09-04T02:37:41.668964+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T02:37:41.654146+00:00\", \"stage_id\": \"D04_selector_factorization\", \"stage_start_utc\": \"2026-09-04T02:37:37.566890+00:00\", \"stage_to_next_transition_seconds\": 0.006904019974172115, \"stage_wall_seconds\": 4.087276556994766, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T02:37:41.662060+00:00\", \"validator_seconds\": 0.00789276696741581, \"validator_start_utc\": \"2026-09-04T02:37:41.654166+00:00\"}, {\"attempt_id\": \"D05_selected_memory_manifest-1788489461683037003-r1\", \"next_stage_start_utc\": \"2026-09-04T02:38:21.798984+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T02:38:21.784200+00:00\", \"stage_id\": \"D05_selected_memory_manifest\", \"stage_start_utc\": \"2026-09-04T02:37:41.683038+00:00\", \"stage_to_next_transition_seconds\": 0.006859320215880871, \"stage_wall_seconds\": 40.10118364309892, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T02:38:21.792124+00:00\", \"validator_seconds\": 0.007902017794549465, \"validator_start_utc\": \"2026-09-04T02:38:21.784222+00:00\"}, {\"attempt_id\": \"D06_paired_causal_outcomes-1788489501812925946-r1\", \"next_stage_start_utc\": \"2026-09-04T04:29:25.639167+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T04:29:25.625004+00:00\", \"stage_id\": \"D06_paired_causal_outcomes\", \"stage_start_utc\": \"2026-09-04T02:38:21.812927+00:00\", \"stage_to_next_transition_seconds\": 0.006886075250804424, \"stage_wall_seconds\": 6663.812098420225, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T04:29:25.632281+00:00\", \"validator_seconds\": 0.007253558840602636, \"validator_start_utc\": \"2026-09-04T04:29:25.625026+00:00\"}, {\"attempt_id\": \"D06B_three_demo_causal_reproduction_gate-1788496165652158927-r1\", \"next_stage_start_utc\": \"2026-09-04T04:29:28.700947+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T04:29:28.686761+00:00\", \"stage_id\": \"D06B_three_demo_causal_reproduction_gate\", \"stage_start_utc\": \"2026-09-04T04:29:25.652160+00:00\", \"stage_to_next_transition_seconds\": 0.00640230905264616, \"stage_wall_seconds\": 3.0346220857463777, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T04:29:28.694544+00:00\", \"validator_seconds\": 0.007761084008961916, \"validator_start_utc\": \"2026-09-04T04:29:28.686782+00:00\"}, {\"attempt_id\": \"D07_policy_teacher-1788496168714464278-r1\", \"next_stage_start_utc\": \"2026-09-04T04:51:09.335966+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T04:51:09.321161+00:00\", \"stage_id\": \"D07_policy_teacher\", \"stage_start_utc\": \"2026-09-04T04:29:28.714466+00:00\", \"stage_to_next_transition_seconds\": 0.007342214696109295, \"stage_wall_seconds\": 1300.6067179180682, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T04:51:09.328624+00:00\", \"validator_seconds\": 0.007439460139721632, \"validator_start_utc\": \"2026-09-04T04:51:09.321183+00:00\"}, {\"attempt_id\": \"D08_zero_cache_and_training_units-1788497469350755335-r1\", \"next_stage_start_utc\": \"2026-09-04T04:58:36.391954+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T04:58:36.339890+00:00\", \"stage_id\": \"D08_zero_cache_and_training_units\", \"stage_start_utc\": \"2026-09-04T04:51:09.350757+00:00\", \"stage_to_next_transition_seconds\": 0.024138954933732748, \"stage_wall_seconds\": 446.98915378097445, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T04:58:36.367813+00:00\", \"validator_seconds\": 0.027901240158826113, \"validator_start_utc\": \"2026-09-04T04:58:36.339911+00:00\"}, {\"attempt_id\": \"D08B_writer_reader_one_unit_smoke-1788497916435139852-r1\", \"next_stage_start_utc\": \"2026-09-04T04:59:00.288822+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T04:59:00.273296+00:00\", \"stage_id\": \"D08B_writer_reader_one_unit_smoke\", \"stage_start_utc\": \"2026-09-04T04:58:36.435141+00:00\", \"stage_to_next_transition_seconds\": 0.007113337051123381, \"stage_wall_seconds\": 23.838175487238914, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T04:59:00.281709+00:00\", \"validator_seconds\": 0.008390701841562986, \"validator_start_utc\": \"2026-09-04T04:59:00.273317+00:00\"}, {\"attempt_id\": \"D09_writer_reader_epoch_1-1788497940303784877-r1\", \"next_stage_start_utc\": \"2026-09-04T06:00:45.896728+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T06:00:45.878222+00:00\", \"stage_id\": \"D09_writer_reader_epoch_1\", \"stage_start_utc\": \"2026-09-04T04:59:00.303787+00:00\", \"stage_to_next_transition_seconds\": 0.007770148105919361, \"stage_wall_seconds\": 3705.574457634706, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T06:00:45.888957+00:00\", \"validator_seconds\": 0.010712949093431234, \"validator_start_utc\": \"2026-09-04T06:00:45.878244+00:00\"}, {\"attempt_id\": \"D10_writer_reader_epoch_2-1788501645911565815-r1\", \"next_stage_start_utc\": \"2026-09-04T06:01:01.640107+00:00\", \"retry_ordinal\": 1, \"stage_end_utc\": \"2026-09-04T06:01:01.630213+00:00\", \"stage_id\": \"D10_writer_reader_epoch_2\", \"stage_start_utc\": \"2026-09-04T06:00:45.911567+00:00\", \"stage_to_next_transition_seconds\": 0.008952734991908073, \"stage_wall_seconds\": 15.718668460845947, \"target_met\": true, \"transition_delay_reason\": \"none\", \"validator_end_utc\": \"2026-09-04T06:01:01.631153+00:00\", \"validator_seconds\": 0.0009175529703497887, \"validator_start_utc\": \"2026-09-04T06:01:01.630236+00:00\"}]}\n"
+    },
+    "required_action": "engineering_or_scientific_review",
+    "scientific_results_exist": true,
+    "watchdog_log": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/watchdog.log",
+      "sha256": "4557c67fad5bab3b5f8c06471536c752718cc8c0e95cf8bb8609b06b24b22972",
+      "tail": "f_reproducible_3d_gate_1d_pipeline_14h_20260904_001\", \"--source-commit\", \"272b0e9a1f8b29f898024f1115d1710d41270758\"], \"child_pid\": 723631, \"current_stage\": \"D03_final_selector_ensemble\", \"format\": \"rcmf_read_only_watchdog_snapshot_14b_v1\", \"heartbeat_age_seconds\": 124.29189801216125, \"heartbeat_stale\": false, \"latest_completed_stage\": \"D02_selector_candidate_selection\", \"orchestrator_pid\": 722342, \"scheduler_lock_present\": true, \"scheduler_status\": \"running\", \"utc\": \"2026-09-04T02:36:25.843309+00:00\", \"wall_hours\": 2.4346156924963}}\n{\"capabilities\": {\"can_acquire_scheduler_lock\": false, \"can_launch_stages\": false, \"can_modify_scientific_state\": false, \"heartbeat_stale_seconds\": 720, \"interval_seconds\": 1200, \"pid\": 722864}, \"gpu\": {\"available\": true, \"rows\": [\"NVIDIA H100 80GB HBM3, 77, 29381, 81559\"]}, \"health\": {\"approved_hard_cap_hours\": 120.0, \"child_command\": [\"/home/ubuntu/venvs/rcmf-py311/bin/python\", \"scripts/run_rcmf_reproducible_stage_14b.py\", \"--stage\", \"D06_paired_causal_outcomes\", \"--config\", \"configs/pipeline/rcmf_appworld_repro_14h.yaml\", \"--run-root\", \"/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001\", \"--source-commit\", \"272b0e9a1f8b29f898024f1115d1710d41270758\"], \"child_pid\": 724576, \"current_stage\": \"D06_paired_causal_outcomes\", \"format\": \"rcmf_read_only_watchdog_snapshot_14b_v1\", \"heartbeat_age_seconds\": 124.2815580368042, \"heartbeat_stale\": false, \"latest_completed_stage\": \"D05_selected_memory_manifest\", \"orchestrator_pid\": 722342, \"scheduler_lock_present\": true, \"scheduler_status\": \"running\", \"utc\": \"2026-09-04T02:56:25.871756+00:00\", \"wall_hours\": 2.7679569277498457}}\n{\"capabilities\": {\"can_acquire_scheduler_lock\": false, \"can_launch_stages\": false, \"can_modify_scientific_state\": false, \"heartbeat_stale_seconds\": 720, \"interval_seconds\": 1200, \"pid\": 722864}, \"gpu\": {\"available\": true, \"rows\": [\"NVIDIA H100 80GB HBM3, 0, 29381, 81559\"]}, \"health\": {\"approved_hard_cap_hours\": 120.0, \"child_command\": [\"/home/ubuntu/venvs/rcmf-py311/bin/python\", \"scripts/run_rcmf_reproducible_stage_14b.py\", \"--stage\", \"D06_paired_causal_outcomes\", \"--config\", \"configs/pipeline/rcmf_appworld_repro_14h.yaml\", \"--run-root\", \"/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001\", \"--source-commit\", \"272b0e9a1f8b29f898024f1115d1710d41270758\"], \"child_pid\": 724576, \"current_stage\": \"D06_paired_causal_outcomes\", \"format\": \"rcmf_read_only_watchdog_snapshot_14b_v1\", \"heartbeat_age_seconds\": 124.27565813064575, \"heartbeat_stale\": false, \"latest_completed_stage\": \"D05_selected_memory_manifest\", \"orchestrator_pid\": 722342, \"scheduler_lock_present\": true, \"scheduler_status\": \"running\", \"utc\": \"2026-09-04T03:16:25.900826+00:00\", \"wall_hours\": 3.101298336121771}}\n{\"capabilities\": {\"can_acquire_scheduler_lock\": false, \"can_launch_stages\": false, \"can_modify_scientific_state\": false, \"heartbeat_stale_seconds\": 720, \"interval_seconds\": 1200, \"pid\": 722864}, \"gpu\": {\"available\": true, \"rows\": [\"NVIDIA H100 80GB HBM3, 0, 29381, 81559\"]}, \"health\": {\"approved_hard_cap_hours\": 120.0, \"child_command\": [\"/home/ubuntu/venvs/rcmf-py311/bin/python\", \"scripts/run_rcmf_reproducible_stage_14b.py\", \"--stage\", \"D06_paired_causal_outcomes\", \"--config\", \"configs/pipeline/rcmf_appworld_repro_14h.yaml\", \"--run-root\", \"/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001\", \"--source-commit\", \"272b0e9a1f8b29f898024f1115d1710d41270758\"], \"child_pid\": 724576, \"current_stage\": \"D06_paired_causal_outcomes\", \"format\": \"rcmf_read_only_watchdog_snapshot_14b_v1\", \"heartbeat_age_seconds\": 124.26956415176392, \"heartbeat_stale\": false, \"latest_completed_stage\": \"D05_selected_memory_manifest\", \"orchestrator_pid\": 722342, \"scheduler_lock_present\": true, \"scheduler_status\": \"running\", \"utc\": \"2026-09-04T03:36:25.929640+00:00\", \"wall_hours\": 3.4346396730343502}}\n{\"capabilities\": {\"can_acquire_scheduler_lock\": false, \"can_launch_stages\": false, \"can_modify_scientific_state\": false, \"heartbeat_stale_seconds\": 720, \"interval_seconds\": 1200, \"pid\": 722864}, \"gpu\": {\"available\": true, \"rows\": [\"NVIDIA H100 80GB HBM3, 16, 32249, 81559\"]}, \"health\": {\"approved_hard_cap_hours\": 120.0, \"child_command\": [\"/home/ubuntu/venvs/rcmf-py311/bin/python\", \"scripts/run_rcmf_reproducible_stage_14b.py\", \"--stage\", \"D06_paired_causal_outcomes\", \"--config\", \"configs/pipeline/rcmf_appworld_repro_14h.yaml\", \"--run-root\", \"/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001\", \"--source-commit\", \"272b0e9a1f8b29f898024f1115d1710d41270758\"], \"child_pid\": 724576, \"current_stage\": \"D06_paired_causal_outcomes\", \"format\": \"rcmf_read_only_watchdog_snapshot_14b_v1\", \"heartbeat_age_seconds\": 124.2605950832367, \"heartbeat_stale\": false, \"latest_completed_stage\": \"D05_selected_memory_manifest\", \"orchestrator_pid\": 722342, \"scheduler_lock_present\": true, \"scheduler_status\": \"running\", \"utc\": \"2026-09-04T03:56:25.956730+00:00\", \"wall_hours\": 3.7679805316527686}}\n{\"capabilities\": {\"can_acquire_scheduler_lock\": false, \"can_launch_stages\": false, \"can_modify_scientific_state\": false, \"heartbeat_stale_seconds\": 720, \"interval_seconds\": 1200, \"pid\": 722864}, \"gpu\": {\"available\": true, \"rows\": [\"NVIDIA H100 80GB HBM3, 0, 32249, 81559\"]}, \"health\": {\"approved_hard_cap_hours\": 120.0, \"child_command\": [\"/home/ubuntu/venvs/rcmf-py311/bin/python\", \"scripts/run_rcmf_reproducible_stage_14b.py\", \"--stage\", \"D06_paired_causal_outcomes\", \"--config\", \"configs/pipeline/rcmf_appworld_repro_14h.yaml\", \"--run-root\", \"/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001\", \"--source-commit\", \"272b0e9a1f8b29f898024f1115d1710d41270758\"], \"child_pid\": 724576, \"current_stage\": \"D06_paired_causal_outcomes\", \"format\": \"rcmf_read_only_watchdog_snapshot_14b_v1\", \"heartbeat_age_seconds\": 124.24833393096924, \"heartbeat_stale\": false, \"latest_completed_stage\": \"D05_selected_memory_manifest\", \"orchestrator_pid\": 722342, \"scheduler_lock_present\": true, \"scheduler_status\": \"running\", \"utc\": \"2026-09-04T04:16:25.984715+00:00\", \"wall_hours\": 4.101321638623873}}\n{\"capabilities\": {\"can_acquire_scheduler_lock\": false, \"can_launch_stages\": false, \"can_modify_scientific_state\": false, \"heartbeat_stale_seconds\": 720, \"interval_seconds\": 1200, \"pid\": 722864}, \"gpu\": {\"available\": true, \"rows\": [\"NVIDIA H100 80GB HBM3, 100, 25461, 81559\"]}, \"health\": {\"approved_hard_cap_hours\": 120.0, \"child_command\": [\"/home/ubuntu/venvs/rcmf-py311/bin/python\", \"scripts/run_rcmf_reproducible_stage_14b.py\", \"--stage\", \"D07_policy_teacher\", \"--config\", \"configs/pipeline/rcmf_appworld_repro_14h.yaml\", \"--run-root\", \"/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001\", \"--source-commit\", \"272b0e9a1f8b29f898024f1115d1710d41270758\"], \"child_pid\": 730125, \"current_stage\": \"D07_policy_teacher\", \"format\": \"rcmf_read_only_watchdog_snapshot_14b_v1\", \"heartbeat_age_seconds\": 124.23880290985107, \"heartbeat_stale\": false, \"latest_completed_stage\": \"D06B_three_demo_causal_reproduction_gate\", \"orchestrator_pid\": 722342, \"scheduler_lock_present\": true, \"scheduler_status\": \"running\", \"utc\": \"2026-09-04T04:36:26.011847+00:00\", \"wall_hours\": 4.4346625086334015}}\n{\"capabilities\": {\"can_acquire_scheduler_lock\": false, \"can_launch_stages\": false, \"can_modify_scientific_state\": false, \"heartbeat_stale_seconds\": 720, \"interval_seconds\": 1200, \"pid\": 722864}, \"gpu\": {\"available\": true, \"rows\": [\"NVIDIA H100 80GB HBM3, 100, 24207, 81559\"]}, \"health\": {\"approved_hard_cap_hours\": 120.0, \"child_command\": [\"/home/ubuntu/venvs/rcmf-py311/bin/python\", \"scripts/run_rcmf_reproducible_stage_14b.py\", \"--stage\", \"D08_zero_cache_and_training_units\", \"--config\", \"configs/pipeline/rcmf_appworld_repro_14h.yaml\", \"--run-root\", \"/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001\", \"--source-commit\", \"272b0e9a1f8b29f898024f1115d1710d41270758\"], \"child_pid\": 730374, \"current_stage\": \"D08_zero_cache_and_training_units\", \"format\": \"rcmf_read_only_watchdog_snapshot_14b_v1\", \"heartbeat_age_seconds\": 124.22768783569336, \"heartbeat_stale\": false, \"latest_completed_stage\": \"D07_policy_teacher\", \"orchestrator_pid\": 722342, \"scheduler_lock_present\": true, \"scheduler_status\": \"running\", \"utc\": \"2026-09-04T04:56:26.038198+00:00\", \"wall_hours\": 4.768003161682023}}\n{\"capabilities\": {\"can_acquire_scheduler_lock\": false, \"can_launch_stages\": false, \"can_modify_scientific_state\": false, \"heartbeat_stale_seconds\": 720, \"interval_seconds\": 1200, \"pid\": 722864}, \"gpu\": {\"available\": true, \"rows\": [\"NVIDIA H100 80GB HBM3, 100, 59535, 81559\"]}, \"health\": {\"approved_hard_cap_hours\": 120.0, \"child_command\": [\"/home/ubuntu/venvs/rcmf-py311/bin/python\", \"scripts/run_rcmf_reproducible_stage_14b.py\", \"--stage\", \"D09_writer_reader_epoch_1\", \"--config\", \"configs/pipeline/rcmf_appworld_repro_14h.yaml\", \"--run-root\", \"/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001\", \"--source-commit\", \"272b0e9a1f8b29f898024f1115d1710d41270758\"], \"child_pid\": 730685, \"current_stage\": \"D09_writer_reader_epoch_1\", \"format\": \"rcmf_read_only_watchdog_snapshot_14b_v1\", \"heartbeat_age_seconds\": 124.21773409843445, \"heartbeat_stale\": false, \"latest_completed_stage\": \"D08B_writer_reader_one_unit_smoke\", \"orchestrator_pid\": 722342, \"scheduler_lock_present\": true, \"scheduler_status\": \"running\", \"utc\": \"2026-09-04T05:16:26.066945+00:00\", \"wall_hours\": 5.101344480249617}}\n{\"capabilities\": {\"can_acquire_scheduler_lock\": false, \"can_launch_stages\": false, \"can_modify_scientific_state\": false, \"heartbeat_stale_seconds\": 720, \"interval_seconds\": 1200, \"pid\": 722864}, \"gpu\": {\"available\": true, \"rows\": [\"NVIDIA H100 80GB HBM3, 100, 60877, 81559\"]}, \"health\": {\"approved_hard_cap_hours\": 120.0, \"child_command\": [\"/home/ubuntu/venvs/rcmf-py311/bin/python\", \"scripts/run_rcmf_reproducible_stage_14b.py\", \"--stage\", \"D09_writer_reader_epoch_1\", \"--config\", \"configs/pipeline/rcmf_appworld_repro_14h.yaml\", \"--run-root\", \"/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001\", \"--source-commit\", \"272b0e9a1f8b29f898024f1115d1710d41270758\"], \"child_pid\": 730685, \"current_stage\": \"D09_writer_reader_epoch_1\", \"format\": \"rcmf_read_only_watchdog_snapshot_14b_v1\", \"heartbeat_age_seconds\": 124.2007040977478, \"heartbeat_stale\": false, \"latest_completed_stage\": \"D08B_writer_reader_one_unit_smoke\", \"orchestrator_pid\": 722342, \"scheduler_lock_present\": true, \"scheduler_status\": \"running\", \"utc\": \"2026-09-04T05:36:26.094499+00:00\", \"wall_hours\": 5.434685467481613}}\n{\"capabilities\": {\"can_acquire_scheduler_lock\": false, \"can_launch_stages\": false, \"can_modify_scientific_state\": false, \"heartbeat_stale_seconds\": 720, \"interval_seconds\": 1200, \"pid\": 722864}, \"gpu\": {\"available\": true, \"rows\": [\"NVIDIA H100 80GB HBM3, 79, 60877, 81559\"]}, \"health\": {\"approved_hard_cap_hours\": 120.0, \"child_command\": [\"/home/ubuntu/venvs/rcmf-py311/bin/python\", \"scripts/run_rcmf_reproducible_stage_14b.py\", \"--stage\", \"D09_writer_reader_epoch_1\", \"--config\", \"configs/pipeline/rcmf_appworld_repro_14h.yaml\", \"--run-root\", \"/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001\", \"--source-commit\", \"272b0e9a1f8b29f898024f1115d1710d41270758\"], \"child_pid\": 730685, \"current_stage\": \"D09_writer_reader_epoch_1\", \"format\": \"rcmf_read_only_watchdog_snapshot_14b_v1\", \"heartbeat_age_seconds\": 124.18821597099304, \"heartbeat_stale\": false, \"latest_completed_stage\": \"D08B_writer_reader_one_unit_smoke\", \"orchestrator_pid\": 722342, \"scheduler_lock_present\": true, \"scheduler_status\": \"running\", \"utc\": \"2026-09-04T05:56:26.123547+00:00\", \"wall_hours\": 5.768026869694392}}\n"
+    }
+  }
 }
