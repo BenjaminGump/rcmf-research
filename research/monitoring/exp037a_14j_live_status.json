@@ -50,8 +50,8 @@
   "evidence": [
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/heartbeat.json",
-      "sha256": "31e76ad226bf4d6001f5aa16a9d8a0ef6c35c4096857e8caa41d007a07b38ed9",
-      "size_bytes": 263
+      "sha256": "ee318b4a9fa63c384a0fe72e475d718ce9ff18c3834613f7c51dc2ad524b5ddd",
+      "size_bytes": 264
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/scheduler.lock",
@@ -105,31 +105,31 @@
     "gpus": [
       {
         "memory_total_mib": 81559,
-        "memory_used_mib": 1389,
+        "memory_used_mib": 1429,
         "name": "NVIDIA H100 80GB HBM3",
-        "utilization_percent": 32
+        "utilization_percent": 33
       }
     ],
     "telemetry_only": true
   },
   "heartbeat": {
-    "age_seconds": 89.449231,
+    "age_seconds": 149.441504,
     "current_stage": "D01_selector_candidate_cv",
     "pid": 743225,
     "stale": false,
     "stale_threshold_seconds": 720,
-    "utc": "2026-09-04T13:50:33.485508+00:00"
+    "utc": "2026-09-04T13:54:33.493442+00:00"
   },
   "invalid_completion_stages": [],
-  "last_updated_utc": "2026-09-04T13:52:05.856241+00:00",
+  "last_updated_utc": "2026-09-04T13:57:05.804120+00:00",
   "latest_completed_stage": "D00_state_representations",
-  "material_signature": "f5e251b3987b70663709b7494b419c1b7e71efbd149aee248bfe9d596f884674",
-  "monitor_state": "RUNNING_STAGE_CHANGED",
+  "material_signature": "dec6653b320c4510ed7b6c81aa62d38cf7dd3a06f165bf6e4b1985d360000eeb",
+  "monitor_state": "RUNNING_HEALTHY",
   "most_recent_failed_stage": null,
   "nfs": {
-    "free_bytes": 3344455590477824,
-    "free_gib": 3114766.9912109375,
-    "total_bytes": 3344684038488064
+    "free_bytes": 3344452037902336,
+    "free_gib": 3114763.6826171875,
+    "total_bytes": 3344680548827136
   },
   "one_demo_started": false,
   "orchestrator_result": null,
