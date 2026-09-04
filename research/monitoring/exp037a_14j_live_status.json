@@ -1,12 +1,12 @@
 {
   "attempts": {
-    "complete": 16,
-    "current_attempt_id": "D05_selected_memory_manifest-1788537401837849782-r1",
+    "complete": 17,
+    "current_attempt_id": "D06_paired_causal_outcomes-1788537443808495954-r1",
     "current_command": [
       "/home/ubuntu/venvs/rcmf-py311/bin/python",
       "scripts/run_rcmf_reproducible_stage_14b.py",
       "--stage",
-      "D05_selected_memory_manifest",
+      "D06_paired_causal_outcomes",
       "--config",
       "configs/pipeline/rcmf_appworld_repro_14j.yaml",
       "--run-root",
@@ -14,16 +14,16 @@
       "--source-commit",
       "0e4015547da45802cc7b6ff3a9b92adce73077fc"
     ],
-    "current_stage": "D05_selected_memory_manifest",
+    "current_stage": "D06_paired_causal_outcomes",
     "failed_or_interrupted": 0,
     "failed_or_interrupted_attempt_ids": [],
     "open": 1,
     "open_attempt_ids": [
-      "D05_selected_memory_manifest-1788537401837849782-r1"
+      "D06_paired_causal_outcomes-1788537443808495954-r1"
     ],
-    "total": 17
+    "total": 18
   },
-  "completed_stage_count": 16,
+  "completed_stage_count": 17,
   "completed_stages": [
     "S00_environment_manifest",
     "S01_authoritative_corpus",
@@ -40,21 +40,22 @@
     "D01_selector_candidate_cv",
     "D02_selector_candidate_selection",
     "D03_final_selector_ensemble",
-    "D04_selector_factorization"
+    "D04_selector_factorization",
+    "D05_selected_memory_manifest"
   ],
-  "current_attempt_id": "D05_selected_memory_manifest-1788537401837849782-r1",
-  "current_stage": "D05_selected_memory_manifest",
+  "current_attempt_id": "D06_paired_causal_outcomes-1788537443808495954-r1",
+  "current_stage": "D06_paired_causal_outcomes",
   "current_stage_progress_files": [
     {
-      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/stages/D05_selected_memory_manifest/process.json",
-      "sha256": "4f4d03aa8c833bef7607feb72b2954c01c3c18d14fd4afe922fb8b1a73853260",
-      "size_bytes": 521
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/stages/D06_paired_causal_outcomes/process.json",
+      "sha256": "8ec311da41a03d380a2706cf502fe80fb91458a5495093a1c1febfc987504065",
+      "size_bytes": 519
     }
   ],
   "evidence": [
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/heartbeat.json",
-      "sha256": "2874d9ef589d48d1def7c7502be76311d27275f2fc318ce64aec916d9f0db7f5",
+      "sha256": "cf6e945f277735c31b6e4130259f91e1ba2e9dbe8a7024255cb41079df47dfe5",
       "size_bytes": 265
     },
     {
@@ -64,13 +65,13 @@
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/scheduler_state.json",
-      "sha256": "627f0315d8934c8d3a24dc5f0e2fd19f075f2268f123090bd807908db404b078",
-      "size_bytes": 11913
+      "sha256": "77387eb313d754099ca274cff16986c89102e27a8d4b2993c4a2aaa092c9985c",
+      "size_bytes": 12656
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/attempts.jsonl",
-      "sha256": "66d2a7722f3f947e9d6c4ca16464441824dab97b1f3c4af9ecd52a6a85bb1b17",
-      "size_bytes": 26001
+      "sha256": "b589606c1b38cbbf2e2dd22be83448120c0977c4c52a3e0ad3617f6a17762319",
+      "size_bytes": 27565
     }
   ],
   "failure_files": [],
@@ -109,7 +110,7 @@
     "gpus": [
       {
         "memory_total_mib": 81559,
-        "memory_used_mib": 0,
+        "memory_used_mib": 29381,
         "name": "NVIDIA H100 80GB HBM3",
         "utilization_percent": 0
       }
@@ -117,23 +118,23 @@
     "telemetry_only": true
   },
   "heartbeat": {
-    "age_seconds": 149.171616,
-    "current_stage": "D03_final_selector_ensemble",
+    "age_seconds": 209.163645,
+    "current_stage": "D06_paired_causal_outcomes",
     "pid": 743225,
     "stale": false,
     "stale_threshold_seconds": 720,
-    "utc": "2026-09-04T15:54:33.763148+00:00"
+    "utc": "2026-09-04T15:58:33.771321+00:00"
   },
   "invalid_completion_stages": [],
-  "last_updated_utc": "2026-09-04T15:57:06.811800+00:00",
-  "latest_completed_stage": "D04_selector_factorization",
-  "material_signature": "5b172630a208062f47e7ce9ac0c3c4980e9b184f45964830e9e54f76bf10c172",
+  "last_updated_utc": "2026-09-04T16:02:06.885002+00:00",
+  "latest_completed_stage": "D05_selected_memory_manifest",
+  "material_signature": "1d2c8a5e934b4c50343b37cd86745f71a6cd519cd25e769e16a92bbc22a01f8e",
   "monitor_state": "RUNNING_STAGE_CHANGED",
   "most_recent_failed_stage": null,
   "nfs": {
-    "free_bytes": 3343991265296384,
-    "free_gib": 3114334.5546875,
-    "total_bytes": 3344220450455552
+    "free_bytes": 3343993936019456,
+    "free_gib": 3114337.0419921875,
+    "total_bytes": 3344223134810112
   },
   "one_demo_started": false,
   "orchestrator_result": null,
