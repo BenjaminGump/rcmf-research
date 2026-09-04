@@ -60,8 +60,8 @@
   "evidence": [
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/heartbeat.json",
-      "sha256": "676365744fe6ed8c4b1d9523a0ee4906dee70d82caddcc5efb696d1ff64d1275",
-      "size_bytes": 272
+      "sha256": "6323a2152d5455f5b9fa49cc55eab7e80555813409ca82c8c381fb4a6b25be81",
+      "size_bytes": 264
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/scheduler.lock",
@@ -120,7 +120,7 @@
     "gpus": [
       {
         "memory_total_mib": 81559,
-        "memory_used_mib": 44767,
+        "memory_used_mib": 44791,
         "name": "NVIDIA H100 80GB HBM3",
         "utilization_percent": 100
       }
@@ -128,23 +128,23 @@
     "telemetry_only": true
   },
   "heartbeat": {
-    "age_seconds": 105.180609,
-    "current_stage": "D08_zero_cache_and_training_units",
+    "age_seconds": 165.172971,
+    "current_stage": "D09_writer_reader_epoch_1",
     "pid": 722342,
     "stale": false,
     "stale_threshold_seconds": 720,
-    "utc": "2026-09-04T04:58:21.817177+00:00"
+    "utc": "2026-09-04T05:02:21.824651+00:00"
   },
   "invalid_completion_stages": [],
-  "last_updated_utc": "2026-09-04T05:00:07.152568+00:00",
+  "last_updated_utc": "2026-09-04T05:05:07.149628+00:00",
   "latest_completed_stage": "D08B_writer_reader_one_unit_smoke",
-  "material_signature": "8e155e90434d43bdb5361a16d6503a327e3b171458c935387db137bb3a02b67f",
-  "monitor_state": "RUNNING_STAGE_CHANGED",
+  "material_signature": "84fb0fe9492963a349adb55aaa8671ee5769ac6c1581b02a2ec20af9c4469782",
+  "monitor_state": "RUNNING_HEALTHY",
   "most_recent_failed_stage": null,
   "nfs": {
-    "free_bytes": 3344622322450432,
-    "free_gib": 3114922.2724609375,
-    "total_bytes": 3344834093907968
+    "free_bytes": 3344620658360320,
+    "free_gib": 3114920.72265625,
+    "total_bytes": 3344832751730688
   },
   "one_demo_started": false,
   "orchestrator_result": null,
