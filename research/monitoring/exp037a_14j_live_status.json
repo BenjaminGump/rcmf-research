@@ -55,7 +55,7 @@
   "evidence": [
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/heartbeat.json",
-      "sha256": "cf6e945f277735c31b6e4130259f91e1ba2e9dbe8a7024255cb41079df47dfe5",
+      "sha256": "3be8b061164c824352ae657a46858ee4cd5b738bbaf9f4629df9869b05f0b509",
       "size_bytes": 265
     },
     {
@@ -112,29 +112,29 @@
         "memory_total_mib": 81559,
         "memory_used_mib": 29381,
         "name": "NVIDIA H100 80GB HBM3",
-        "utilization_percent": 0
+        "utilization_percent": 100
       }
     ],
     "telemetry_only": true
   },
   "heartbeat": {
-    "age_seconds": 209.163645,
+    "age_seconds": 29.149195,
     "current_stage": "D06_paired_causal_outcomes",
     "pid": 743225,
     "stale": false,
     "stale_threshold_seconds": 720,
-    "utc": "2026-09-04T15:58:33.771321+00:00"
+    "utc": "2026-09-04T16:06:33.785277+00:00"
   },
   "invalid_completion_stages": [],
-  "last_updated_utc": "2026-09-04T16:02:06.885002+00:00",
+  "last_updated_utc": "2026-09-04T16:07:06.858929+00:00",
   "latest_completed_stage": "D05_selected_memory_manifest",
-  "material_signature": "1d2c8a5e934b4c50343b37cd86745f71a6cd519cd25e769e16a92bbc22a01f8e",
-  "monitor_state": "RUNNING_STAGE_CHANGED",
+  "material_signature": "d57b47c2b83916ce449ab3778fe93d48e92d4af6489c7d6cef769d10d87b2b51",
+  "monitor_state": "RUNNING_HEALTHY",
   "most_recent_failed_stage": null,
   "nfs": {
-    "free_bytes": 3343993936019456,
-    "free_gib": 3114337.0419921875,
-    "total_bytes": 3344223134810112
+    "free_bytes": 3344004401856512,
+    "free_gib": 3114346.7890625,
+    "total_bytes": 3344233603792896
   },
   "one_demo_started": false,
   "orchestrator_result": null,
