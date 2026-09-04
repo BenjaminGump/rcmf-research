@@ -55,8 +55,8 @@
   "evidence": [
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/heartbeat.json",
-      "sha256": "ab26b9bb3edb2800a723a29baaa83013c85eee438799e07ee5e5a2c2a629a9ce",
-      "size_bytes": 267
+      "sha256": "69990786b9b96b36a23b916ca8370086d4413fcb0c9f31c214dba290172d57bb",
+      "size_bytes": 265
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/scheduler.lock",
@@ -110,31 +110,31 @@
     "gpus": [
       {
         "memory_total_mib": 81559,
-        "memory_used_mib": 26699,
+        "memory_used_mib": 29381,
         "name": "NVIDIA H100 80GB HBM3",
-        "utilization_percent": 0
+        "utilization_percent": 100
       }
     ],
     "telemetry_only": true
   },
   "heartbeat": {
-    "age_seconds": 105.437078,
-    "current_stage": "D05_selected_memory_manifest",
+    "age_seconds": 165.429472,
+    "current_stage": "D06_paired_causal_outcomes",
     "pid": 722342,
     "stale": false,
     "stale_threshold_seconds": 720,
-    "utc": "2026-09-04T02:38:21.560597+00:00"
+    "utc": "2026-09-04T02:42:21.568044+00:00"
   },
   "invalid_completion_stages": [],
-  "last_updated_utc": "2026-09-04T02:40:07.108101+00:00",
+  "last_updated_utc": "2026-09-04T02:45:07.103537+00:00",
   "latest_completed_stage": "D05_selected_memory_manifest",
-  "material_signature": "1d2c8a5e934b4c50343b37cd86745f71a6cd519cd25e769e16a92bbc22a01f8e",
-  "monitor_state": "RUNNING_STAGE_CHANGED",
+  "material_signature": "d57b47c2b83916ce449ab3778fe93d48e92d4af6489c7d6cef769d10d87b2b51",
+  "monitor_state": "RUNNING_HEALTHY",
   "most_recent_failed_stage": null,
   "nfs": {
-    "free_bytes": 3344587325177856,
-    "free_gib": 3114889.6787109375,
-    "total_bytes": 3344798660427776
+    "free_bytes": 3344595107708928,
+    "free_gib": 3114896.9267578125,
+    "total_bytes": 3344806445056000
   },
   "one_demo_started": false,
   "orchestrator_result": null,
