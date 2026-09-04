@@ -23,7 +23,11 @@ from scripts.run_rcmf_joint_full_bank_9a import (
     _restore_checkpoint,
     _validated_checkpoint_pointer,
 )
-from scripts.audit_exp037a_pipeline_r10 import build_stage_map, device_load_audit
+from scripts.audit_exp037a_pipeline_r10 import (
+    build_stage_map,
+    device_load_audit,
+    sealed_formal_artifact_audit,
+)
 
 
 SOURCE = "a" * 40
@@ -332,3 +336,19 @@ def test_whole_pipeline_audit_covers_every_exact_stage_and_device_load() -> None
                 continue
             assert producer in valid_stage_ids
     assert all(row["classification"] != "UNCERTAIN" for row in device_load_audit())
+
+
+def test_sealed_formal_artifact_audit_uses_production_resolver(
+    tmp_path: Path,
+) -> None:
+    run_root = tmp_path / "run"
+    stage_dir = run_root / "stages/S00_environment_manifest"
+    stage_dir.mkdir(parents=True)
+    artifact = run_root / "preflight/environment_manifest.json"
+    atomic_write_json(artifact, {"environment": "sealed"})
+    atomic_write_json(stage_dir / "completion.json", {"passed": True})
+    rows = sealed_formal_artifact_audit(run_root)
+    assert len(rows) == 1
+    assert rows[0]["stage_id"] == "S00_environment_manifest"
+    assert rows[0]["artifact_count"] == 1
+    assert rows[0]["artifacts"][0]["sha256"] == sha256_file(artifact)

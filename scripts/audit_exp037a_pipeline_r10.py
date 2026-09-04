@@ -10,6 +10,9 @@ from pathlib import Path
 from typing import Any
 
 import _bootstrap  # noqa: F401
+from rcmf.benchmarks.appworld.reproducible_stages_14b import (
+    formal_stage_output_paths,
+)
 from rcmf.pipeline.manifests import file_identity
 from rcmf.pipeline.stage_graph import build_exp037a_stage_graph
 from rcmf.utils.serialization import atomic_write_json, sha256_file
@@ -230,6 +233,10 @@ def build_stage_map(formal_root: Path | None) -> list[dict[str, Any]]:
                 "command": list(stage.command),
                 "logical_inputs": _logical_inputs(stage.stage_id, stage.dependencies),
                 "declared_outputs": _output_contract(stage.stage_id),
+                "output_path_constructor": (
+                    "rcmf.benchmarks.appworld.reproducible_stages_14b."
+                    "formal_stage_output_paths(stage_id, run_root)"
+                ),
                 "output_schema": "stage-specific payload plus strict output_manifest.json",
                 "output_validator": stage.validator,
                 "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
@@ -242,6 +249,28 @@ def build_stage_map(formal_root: Path | None) -> list[dict[str, Any]]:
                     else None
                 ),
                 "coverage": _coverage(stage.stage_id, formal_root),
+            }
+        )
+    return rows
+
+
+def sealed_formal_artifact_audit(
+    formal_root: Path | None,
+) -> list[dict[str, Any]]:
+    """Content-address actual artifacts from every sealed formal completion."""
+    if formal_root is None:
+        return []
+    rows = []
+    for completion in sorted((formal_root / "stages").glob("*/completion.json")):
+        stage_id = completion.parent.name
+        outputs = formal_stage_output_paths(stage_id, formal_root)
+        rows.append(
+            {
+                "stage_id": stage_id,
+                "completion": file_identity(completion),
+                "artifacts": [file_identity(path) for path in outputs],
+                "artifact_count": len(outputs),
+                "all_declared_artifacts_exist": True,
             }
         )
     return rows
@@ -290,6 +319,7 @@ def main() -> None:
     formal_root = args.formal_14h_root
     stage_rows = build_stage_map(formal_root)
     device_rows = device_load_audit()
+    sealed_artifacts = sealed_formal_artifact_audit(formal_root)
     defects = [
         {
             "id": "R10-D1",
@@ -373,6 +403,12 @@ def main() -> None:
                 {"stage_id": row["stage_id"], "outputs": row["declared_outputs"]}
                 for row in stage_rows
             ],
+        },
+        "sealed_14h_artifact_audit.json": {
+            "format": FORMAT,
+            "formal_root": None if formal_root is None else str(formal_root),
+            "completed_stage_count": len(sealed_artifacts),
+            "stages": sealed_artifacts,
         },
         "device_load_audit.json": {"format": FORMAT, "loads": device_rows},
         "checkpoint_lifecycle_audit.json": {
