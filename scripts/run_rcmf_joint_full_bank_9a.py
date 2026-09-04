@@ -982,6 +982,38 @@ def _checkpoint_payload(
     }
 
 
+def _canonical_rng_byte_tensor(value: Any, *, name: str) -> Tensor:
+    if not isinstance(value, Tensor):
+        raise TypeError(f"{name} must be a torch.Tensor")
+    if value.dtype != torch.uint8:
+        raise TypeError(f"{name} must have dtype torch.uint8")
+    if value.ndim != 1 or value.numel() == 0:
+        raise ValueError(f"{name} must be a nonempty one-dimensional tensor")
+    return value.detach().to(device="cpu").contiguous()
+
+
+def _restore_rng_states(payload: Mapping[str, Any]) -> None:
+    torch_rng_state = _canonical_rng_byte_tensor(
+        payload["torch_rng_state"], name="torch_rng_state"
+    )
+    cuda_rng_state = payload["cuda_rng_state"]
+    if not isinstance(cuda_rng_state, (list, tuple)):
+        raise TypeError("cuda_rng_state must be a list or tuple of tensors")
+    canonical_cuda_states = [
+        _canonical_rng_byte_tensor(value, name=f"cuda_rng_state[{index}]")
+        for index, value in enumerate(cuda_rng_state)
+    ]
+    if torch.cuda.is_available() and (
+        len(canonical_cuda_states) != torch.cuda.device_count()
+    ):
+        raise ValueError(
+            "cuda_rng_state device count differs from the available CUDA devices"
+        )
+    torch.set_rng_state(torch_rng_state)
+    if torch.cuda.is_available() and canonical_cuda_states:
+        torch.cuda.set_rng_state_all(canonical_cuda_states)
+
+
 def _restore_checkpoint(
     *,
     payload: Mapping[str, Any],
@@ -1003,9 +1035,7 @@ def _restore_checkpoint(
     reader.load_state_dict(payload["reader_state_dict"])
     optimizer.load_state_dict(payload["optimizer_state_dict"])
     random.setstate(payload["python_random_state"])
-    torch.set_rng_state(payload["torch_rng_state"])
-    if torch.cuda.is_available() and payload["cuda_rng_state"]:
-        torch.cuda.set_rng_state_all(payload["cuda_rng_state"])
+    _restore_rng_states(payload)
     return (
         int(payload["completed_units"]),
         [dict(row) for row in payload["history"]],
@@ -1325,6 +1355,9 @@ def _train(
             )
     if diagnostic_mode:
         checkpoint_path = paths["checkpoints"] / "progress.pt"
+        attempt_metrics = [
+            row for epoch in sorted(epoch_metrics) for row in epoch_metrics[epoch]
+        ]
         selector_tensors_unchanged = frozen_selector_tensor_hashes == {
             "keys": tensor_state_sha256({"keys": tensors["keys"].detach().cpu()}),
             "queries": tensor_state_sha256(
@@ -1341,7 +1374,8 @@ def _train(
             "completed_global_unit_ids": unit_ids[:completed],
             "backward_count": completed,
             "backward_count_this_attempt": completed - resume_completed_units,
-            "metrics": epoch_metrics[1],
+            "optimizer_step_count_this_attempt": completed - resume_completed_units,
+            "metrics": attempt_metrics,
             "attempt_start_module_hashes": attempt_start_module_hashes,
             "final_module_hashes": {
                 "writer": module_state_sha256(writer),
@@ -1363,36 +1397,37 @@ def _train(
             },
             "selector_tensor_hashes": frozen_selector_tensor_hashes,
             "all_losses_finite": all(
-                math.isfinite(float(row["loss"])) for row in epoch_metrics[1]
+                math.isfinite(float(row["loss"])) for row in attempt_metrics
             ),
             "all_enabled_loss_terms_finite": all(
-                bool(row["enabled_loss_terms_finite"]) for row in epoch_metrics[1]
+                bool(row["enabled_loss_terms_finite"]) for row in attempt_metrics
             ),
             "writer_gradient_nonzero": all(
-                bool(row["writer_gradient_nonzero"]) for row in epoch_metrics[1]
+                bool(row["writer_gradient_nonzero"]) for row in attempt_metrics
             ),
             "reader_gradient_nonzero": all(
-                bool(row["reader_gradient_nonzero"]) for row in epoch_metrics[1]
+                bool(row["reader_gradient_nonzero"]) for row in attempt_metrics
             ),
             "trainable_gradients_finite": all(
-                bool(row["trainable_gradients_finite"]) for row in epoch_metrics[1]
+                bool(row["trainable_gradients_finite"]) for row in attempt_metrics
             ),
             "post_step_parameters_finite": all(
                 bool(row["post_step_writer_parameters_finite"])
                 and bool(row["post_step_reader_parameters_finite"])
-                for row in epoch_metrics[1]
+                for row in attempt_metrics
             ),
             "passed": (
                 completed == diagnostic_max_units
-                and all(math.isfinite(float(row["loss"])) for row in epoch_metrics[1])
-                and all(bool(row["writer_gradient_nonzero"]) for row in epoch_metrics[1])
-                and all(bool(row["reader_gradient_nonzero"]) for row in epoch_metrics[1])
-                and all(bool(row["trainable_gradients_finite"]) for row in epoch_metrics[1])
-                and all(bool(row["enabled_loss_terms_finite"]) for row in epoch_metrics[1])
+                and len(attempt_metrics) == completed - resume_completed_units
+                and all(math.isfinite(float(row["loss"])) for row in attempt_metrics)
+                and all(bool(row["writer_gradient_nonzero"]) for row in attempt_metrics)
+                and all(bool(row["reader_gradient_nonzero"]) for row in attempt_metrics)
+                and all(bool(row["trainable_gradients_finite"]) for row in attempt_metrics)
+                and all(bool(row["enabled_loss_terms_finite"]) for row in attempt_metrics)
                 and all(
                     bool(row["post_step_writer_parameters_finite"])
                     and bool(row["post_step_reader_parameters_finite"])
-                    for row in epoch_metrics[1]
+                    for row in attempt_metrics
                 )
                 and bool(optimizer.state_dict()["state"])
                 and selector_tensors_unchanged
