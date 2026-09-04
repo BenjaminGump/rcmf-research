@@ -57,8 +57,8 @@
   "evidence": [
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/heartbeat.json",
-      "sha256": "28b263d70658cb323c8bf6edca415274ac1b55e0b4e58588622baa047f60b293",
-      "size_bytes": 265
+      "sha256": "3b83c7562868e168fb8aa4cd4d67996d1eb99686ac6e30d82a853a86cdb8ee52",
+      "size_bytes": 257
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001/scheduler.lock",
@@ -115,31 +115,31 @@
     "gpus": [
       {
         "memory_total_mib": 81559,
-        "memory_used_mib": 22751,
+        "memory_used_mib": 25455,
         "name": "NVIDIA H100 80GB HBM3",
-        "utilization_percent": 100
+        "utilization_percent": 0
       }
     ],
     "telemetry_only": true
   },
   "heartbeat": {
-    "age_seconds": 225.239745,
-    "current_stage": "D06_paired_causal_outcomes",
+    "age_seconds": 45.224078,
+    "current_stage": "D07_policy_teacher",
     "pid": 722342,
     "stale": false,
     "stale_threshold_seconds": 720,
-    "utc": "2026-09-04T04:26:21.758032+00:00"
+    "utc": "2026-09-04T04:34:21.773029+00:00"
   },
   "invalid_completion_stages": [],
-  "last_updated_utc": "2026-09-04T04:30:07.120093+00:00",
+  "last_updated_utc": "2026-09-04T04:35:07.113609+00:00",
   "latest_completed_stage": "D06B_three_demo_causal_reproduction_gate",
-  "material_signature": "f61917af365d04731ecbaa2b94b1eaf0b51a3fa16a08237d2e1649f8081e8aec",
-  "monitor_state": "RUNNING_STAGE_CHANGED",
+  "material_signature": "6abd9d92f19f46ce36f0feb818e953d7f750d03f81e1d9d73c3e7cd31b0cd86e",
+  "monitor_state": "RUNNING_HEALTHY",
   "most_recent_failed_stage": null,
   "nfs": {
-    "free_bytes": 3344617319694336,
-    "free_gib": 3114917.61328125,
-    "total_bytes": 3344828725198848
+    "free_bytes": 3344621346226176,
+    "free_gib": 3114921.36328125,
+    "total_bytes": 3344832751730688
   },
   "one_demo_started": false,
   "orchestrator_result": null,
