@@ -1,0 +1,17 @@
+{
+  "elapsed_seconds": 14.7971778572537,
+  "format": "exp037a_r9_production_path_smoke_compact_v1",
+  "h100_scientific_active_hours": 0,
+  "passed": true,
+  "root": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r9_stage_manifest_smoke_14i_20260904_002",
+  "sealed_summary_sha256": "5ce22c9f2fed02c03c438d210d9bed0b54e97ff5f43e827eab035cdcd6fdb287",
+  "second_run": {"hash_valid_stages_skipped": 5, "subprocess_stage_execution_count": 0},
+  "stages": [
+    {"completion": true, "exit_code": 0, "manifest_sha256": "d3f0774026f137e0bf293add36603cf267c6e83ddd87afb582c39dfb8ee948a6", "stage_id": "S00_environment_manifest", "strict_validator": true},
+    {"completion": true, "exit_code": 0, "manifest_sha256": "6455a2cdca718dd9ab0beb3dbfc8e9f3557530e2d3bdf053006dbc0f24bbb495", "stage_id": "S01_authoritative_corpus", "strict_validator": true},
+    {"completion": true, "exit_code": 0, "manifest_sha256": "f6e5858e30229d770f05d79af8f3fe2c26ca2fbdf6f79769e3b790f9d4c7a224", "stage_id": "S02_task_and_parent_splits", "strict_validator": true},
+    {"completion": true, "exit_code": 0, "manifest_sha256": "a8c257957a58db96c64626eab1c75079e9579cba284794bd43a3f10bf0ffe1bb", "stage_id": "S03_transition_records", "strict_validator": true},
+    {"completion": true, "exit_code": 0, "manifest_sha256": "6244f717c267bda5b86ac71b2b55d93aab5dfbaa1696bf32796ca42d454ef145", "stage_id": "S04_selector_supervision", "strict_validator": true}
+  ],
+  "stopped_before": "S05_transition_representations"
+}

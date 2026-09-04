@@ -1,0 +1,39 @@
+{
+  "classification": "DETERMINISTIC_CHECKPOINT_RESUME_DEVICE_MAPPING_BUG",
+  "d09": {
+    "checkpoint_path": "arms/3d/joint_training/checkpoints/epoch_01.pt",
+    "checkpoint_sha256": "60c40ca73ecdc7f8fea15ec50e87bca28ad8efcd4c33d98b91ea282273c2bd40",
+    "checkpoint_size_bytes": 321891075,
+    "completed_units": 576,
+    "completion_sha256": "c8f50e6fc9f0bb05325361ebc3f798f7525e61e85431a8377b64cbdc3d1e28a9",
+    "manifest_sha256": "b645ec3889d2471b3761ac0e625b804ce364509d8b04c0daa88d7a7f5944fed1",
+    "strict_validator_passed": true,
+    "validator_sha256": "e6097bd28d28c41823d25299e64020480f81c9d96080cb090acf6ea1555e3c4a"
+  },
+  "d10": {
+    "attempt_id": "D10_writer_reader_epoch_2-1788501645911565815-r1",
+    "backward_count": 0,
+    "completion_sha256": "dfb97a0cc2d4fae7060342b7748337d9e054c2ae7278e26a3d4a4460fef16448",
+    "failure_sha256": "7eb12a52848980fe59835af9fe83a5e2ba3a1f883efffd279c226a1d1ea278de",
+    "optimizer_step_count": 0,
+    "process_sha256": "b0c8520fe6309298cba51fac6124b730c11d4f9c1881c2885759e96939e5225a",
+    "stderr_sha256": "a6585751023dd1297f8f5e5e88f7815fb7687b4bee4ab5b80df2069fc923747b",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "traceback": [
+      "scripts/run_rcmf_joint_full_bank_9a.py:1086 in _train",
+      "scripts/run_rcmf_joint_full_bank_9a.py:1006 in _restore_checkpoint",
+      "torch.set_rng_state(payload[\"torch_rng_state\"])",
+      "TypeError: RNG state must be a torch.ByteTensor"
+    ]
+  },
+  "failed_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001",
+  "format": "exp037a_r9_14h_failure_evidence_v1",
+  "formal_timestamps_utc": {
+    "d09_completed": "2026-09-04T06:00:45.889012+00:00",
+    "d10_failed": "2026-09-04T06:01:01.175302+00:00",
+    "formal_started": "2026-09-04T00:10:21.226814+00:00"
+  },
+  "mechanism": "torch.load map_location=cuda mapped the saved CPU RNG ByteTensor to CUDA before torch.set_rng_state",
+  "orchestrator_result_sha256": "629e32f18cb12f19b3a078e6c99a0f559399b9b605e72c1a06425c2dc1188e85",
+  "scheduler_state_sha256": "629e32f18cb12f19b3a078e6c99a0f559399b9b605e72c1a06425c2dc1188e85"
+}

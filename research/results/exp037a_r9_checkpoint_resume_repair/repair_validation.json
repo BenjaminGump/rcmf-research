@@ -1,0 +1,31 @@
+{
+  "cuda_rng": {
+    "canonical_device": "cpu",
+    "canonical_dtype": "torch.uint8",
+    "device_count_checked": true,
+    "restore_api": "torch.cuda.set_rng_state_all"
+  },
+  "cpu_rng": {
+    "canonical_device": "cpu",
+    "canonical_dtype": "torch.uint8",
+    "nonempty_one_dimensional_required": true,
+    "restore_api": "torch.set_rng_state"
+  },
+  "fail_closed": [
+    "non_tensor",
+    "non_uint8",
+    "empty_or_non_1d",
+    "cuda_state_not_sequence",
+    "cuda_device_count_mismatch"
+  ],
+  "format": "exp037a_r9_repair_validation_v1",
+  "minimal_repair": true,
+  "optimizer_restore_changed": false,
+  "scientific_configuration_changes": 0,
+  "source_file": "scripts/run_rcmf_joint_full_bank_9a.py",
+  "source_symbols": [
+    "_canonical_rng_byte_tensor",
+    "_restore_rng_states",
+    "_restore_checkpoint"
+  ]
+}

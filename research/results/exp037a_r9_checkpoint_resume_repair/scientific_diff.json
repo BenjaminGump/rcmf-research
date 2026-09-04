@@ -1,0 +1,19 @@
+{
+  "d06b_changed": false,
+  "d08_changed": false,
+  "d08b_changed": false,
+  "d22_changed": false,
+  "evaluation_changed": false,
+  "executable_changes": [
+    "checkpoint RNG tensors are validated and canonicalized to contiguous CPU uint8 before PyTorch RNG restoration",
+    "diagnostic-only checkpoint resume validation and 14i preflight plumbing"
+  ],
+  "format": "exp037a_r9_scientific_diff_v1",
+  "panel": {"initial": 256, "maximum": 499, "minimum_per_label": 40},
+  "post_d06_expected": {"HARMFUL": 35, "NEUTRAL": 300, "POSITIVE": 129, "heldout": 98, "train": 366},
+  "prompts": {"1d": "full_demo_first_only", "3d": "full_demo"},
+  "scientific_configuration_changes": 0,
+  "seeds": {"global": 25101, "selector_cv": 25071, "selector_final": [25071, 25072, 25073], "selector_parent_split": 18018},
+  "selector_parent_counts": {"heldout": 8, "train": 29},
+  "writer_reader_recipe_changed": false
+}

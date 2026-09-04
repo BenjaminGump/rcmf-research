@@ -1,0 +1,14 @@
+{
+  "decision": "FRESH_RERUN_PREFERRED",
+  "estimated_machine_wall_hours_saved": 5.84,
+  "format": "exp037a_r9_checkpoint_migration_feasibility_v1",
+  "implemented": false,
+  "requirements": [
+    "cross-source checkpoint provenance contract",
+    "new scheduler and gate semantics for source-bound completion migration",
+    "proof that all upstream dependency identities remain admissible",
+    "reviewed completion and attempt representation without pretending stages reran"
+  ],
+  "risk": "high relative to the approximately 5.84 wall hours saved",
+  "scientific_checkpoint_migrated": false
+}

@@ -1,0 +1,22 @@
+{
+  "backward_count_this_attempt": 1,
+  "completed_units_after": 577,
+  "completed_units_before": 576,
+  "diagnostic_checkpoint_sha256": "62c4720fbcf418eef2442736c0b16365c665ef1bb3109634b8f1afc24bfd7af3",
+  "diagnostic_only": true,
+  "finite_loss": 0.03523876518011093,
+  "format": "exp037a_r9_d09_one_unit_resume_compact_v1",
+  "gradients_finite": true,
+  "optimizer_step_count_this_attempt": 1,
+  "optimizer_state_restored": true,
+  "original_checkpoint_sha256": "60c40ca73ecdc7f8fea15ec50e87bca28ad8efcd4c33d98b91ea282273c2bd40",
+  "original_root_unchanged": true,
+  "passed": true,
+  "preparation_manifest_sha256": "9b605ee24f7d86e6b765884716e79dcd244578e1ccfb34d7567cd122a77ff960",
+  "qwen_frozen": true,
+  "root": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r9_d09_one_unit_resume_20260904_002",
+  "sealed_summary_sha256": "187738f70aa0daebb9fdd5b9d5203abcf213dfc2af114133dba722b3bece76bb",
+  "selector_frozen": true,
+  "source_immutability_file_count": 481,
+  "source_immutability_sha256": "5a741f5423dc208178835a6edba8ddc75e3c4e86d1e63f6aff2893065272c294"
+}

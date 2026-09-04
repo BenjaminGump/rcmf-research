@@ -1,0 +1,15 @@
+{
+  "authorization_status": "NOT_AUTHORIZED",
+  "branches": {
+    "3d_reproduction_fails": {"conservative_wall_hours": 56.5, "expected_h100_active_hours": 21.85, "expected_wall_hours": 26.75},
+    "3d_passes_full_1d_executes": {"conservative_wall_hours": 92.5, "expected_h100_active_hours": 39.05, "expected_wall_hours": 47.75}
+  },
+  "format": "exp037a_r9_runtime_v1",
+  "measured_14h": {
+    "d06_hours": 1.8510589166666667,
+    "d09_hours": 1.02932625,
+    "formal_start_through_d09_hours": 5.840184166666667
+  },
+  "proposed_hard_cap_hours": 120,
+  "storage_gib": {"conservative": 90, "expected": 46}
+}

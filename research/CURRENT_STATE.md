@@ -1,5 +1,36 @@
 # Current State
 
+## 2026-09-04 EXP-037A-R9 Ready For 14i Reauthorization
+
+VERIFIED:
+
+- The formal 14h run passed D06B, D08B, and D09, then failed at D10 before
+  any D10 backward or optimizer step. CUDA `map_location` moved the saved CPU
+  RNG ByteTensor to CUDA, and `torch.set_rng_state` rejected it.
+- The minimal repair validates and canonicalizes CPU and CUDA RNG states to
+  contiguous CPU `torch.uint8` tensors. Writer, reader, optimizer, schedule,
+  losses, data, model, and seed behavior are unchanged.
+- Synthetic fresh-process checkpoint/resume exactly matched uninterrupted
+  training. A diagnostic copy of the sealed D09 checkpoint resumed from 576,
+  ran exactly one unit, and passed with one backward and one optimizer step.
+- Final local tests passed 915 with 3 skipped; Lambda tests passed 918. The
+  real S00-S04 path passed 5/5 and resume skipped 5/5.
+- The fresh 14i `_002` package is frozen at launch source
+  `fa069cd3619ddbd9d4ebe0fd82038ca25b60c75d`. It contains preflight only and
+  remains `NOT_AUTHORIZED`.
+
+CURRENT DECISION:
+
+- `READY_FOR_14I_REAUTHORIZATION`
+- `FRESH_RERUN_PREFERRED`
+- The 14h root is immutable. Its D09 checkpoint was used only in an isolated
+  diagnostic and is not a 14i scientific input.
+
+Full report:
+`research/results/EXP_037A_R9_CHECKPOINT_RESUME_REPAIR.md`.
+
+Last updated: 2026-09-04.
+
 ## 2026-09-03 EXP-037A-R7 Ready For Reauthorization
 
 VERIFIED:

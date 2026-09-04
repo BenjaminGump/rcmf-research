@@ -1,0 +1,18 @@
+{
+  "checkpoint_sha256": "eea1e7a3d05536926fe7abe1fb5820a1991bf06aa7b2b61e1184a00d7a87e9ac",
+  "comparisons_all_exact": true,
+  "device": "cuda",
+  "format": "exp037a_r9_cross_process_resume_equivalence_compact_v1",
+  "loss_history": [0.16069361567497253, 0.27370429039001465, 0.09246108680963516],
+  "passed": true,
+  "process_count": 3,
+  "root": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r9_synthetic_resume_20260904_001",
+  "sealed_summary_sha256": "ad4be5c64f770481226b165e388d9e9daba1cd82fee1d8122621fc5734a91e44",
+  "terminal_hashes": {
+    "cpu_rng": "23cd072dd9c7ef25aba925d0a34aef3d2a4eb6fd00aba3242e3ed7e2eacfb7f2",
+    "cuda_rng": "204156fa70731591c0ad22af6832a0d4d15e5d262f07959086d0647f4c7b4479",
+    "optimizer": "3297efc82b3f87b8647ace177f4603a0b8d9b144d60dd1751219c8bb68532acb",
+    "reader": "e7af2cf694d69d6edd3319c6fd8cb6fe121c932575949e33a7e76adb0ba296b7",
+    "writer": "77241bfd7618731ce02e4abfcc0abe493bea98d71d1731d8808e44748ccd791f"
+  }
+}

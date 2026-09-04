@@ -1,5 +1,41 @@
 # Decisions and Deviations
 
+## 2026-09-04 EXP-037A-R9 checkpoint resume repair
+
+VERIFIED:
+
+- The 14h D10 failure is a deterministic infrastructure bug, not a scientific
+  result: CUDA checkpoint loading mapped the saved CPU RNG ByteTensor to CUDA
+  before the old restore path called `torch.set_rng_state`.
+- D10 performed zero backward passes and zero optimizer steps. The sealed D09
+  checkpoint remains hash-valid at 576 completed units.
+- CPU and CUDA RNG states are now strictly validated and canonicalized to the
+  PyTorch-required contiguous CPU `torch.uint8` representation. Optimizer,
+  module, identity, and training semantics remain unchanged.
+- Synthetic cross-process equivalence and a one-unit diagnostic resume from
+  the actual sealed D09 checkpoint both passed. No 14h artifact was mutated.
+- The 14i scientific configuration is unchanged and the fresh `_002` package
+  remains unlaunched and unauthorized.
+
+DECISION:
+
+- Record `READY_FOR_14I_REAUTHORIZATION`.
+- Record `FRESH_RERUN_PREFERRED`. A production D09 migration could save about
+  5.84 wall hours but would require a new cross-source provenance and
+  scheduler/gate contract; it was not implemented.
+- Require a new explicit run-bound authorization for launch source
+  `fa069cd3619ddbd9d4ebe0fd82038ca25b60c75d` and the exact 14i `_002`
+  UUID/root/config/contract/scope/cap.
+
+IMPLEMENTATION DEVIATIONS:
+
+- The first D09 diagnostic omitted `runtime/static_counts.json` and stopped
+  before model loading or optimizer work. The preserved `_002` diagnostic
+  passed after the diagnostic preparation was corrected.
+- A superseded 14i `_001` preflight remains immutable and unlaunched. The
+  final source and preflight use a fresh `_002` identity.
+- No scientific semantics changed and no long scientific run launched.
+
 ## 2026-09-03 EXP-037A-R7 stage-manifest identity repair
 
 VERIFIED:

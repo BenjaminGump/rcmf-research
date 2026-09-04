@@ -1,0 +1,72 @@
+{
+  "format": "exp037a_r9_git_safe_artifact_index_v1",
+  "generated_utc": "2026-09-04T08:15:03Z",
+  "launch_source_sha": "fa069cd3619ddbd9d4ebe0fd82038ca25b60c75d",
+  "artifacts": [
+    {
+      "path": "research/results/EXP_037A_R9_CHECKPOINT_RESUME_REPAIR.md",
+      "sha256": "04fa32ff9d517aba8871779f65e669aa986dbc9897e0725f0182a207601f69a2",
+      "size_bytes": 7713
+    },
+    {
+      "path": "research/results/exp037a_r9_checkpoint_resume_repair/summary.json",
+      "sha256": "acb3e209ea0215efa21064a2aa7cfd492994792741ef51a7d7dda591a99c65c7",
+      "size_bytes": 1419
+    },
+    {
+      "path": "research/results/exp037a_r9_checkpoint_resume_repair/failure_evidence.json",
+      "sha256": "5371668eaa3b261b2c9c58c252c5af0e460dda8f2b6837579bf65d1ae0a4f3d1",
+      "size_bytes": 2212
+    },
+    {
+      "path": "research/results/exp037a_r9_checkpoint_resume_repair/repair_validation.json",
+      "sha256": "12ae496b9783f506f6e938f43bb157359bdae953202803c1eaa93a79f4acafdb",
+      "size_bytes": 825
+    },
+    {
+      "path": "research/results/exp037a_r9_checkpoint_resume_repair/synthetic_resume_equivalence.json",
+      "sha256": "091965ff8091301722c88c2da008a0b7313e9ae39e92d73340486439afde771c",
+      "size_bytes": 982
+    },
+    {
+      "path": "research/results/exp037a_r9_checkpoint_resume_repair/d09_resume_smoke.json",
+      "sha256": "8ac010777cfe231ede2c03814b9b0b227bb05a6d4529c8d64343e4daa2aa894a",
+      "size_bytes": 1081
+    },
+    {
+      "path": "research/results/exp037a_r9_checkpoint_resume_repair/production_path_smoke.json",
+      "sha256": "954d615ff03246470d9800a29ab8b921d69d47e9063358c45097b389e8d2cf8c",
+      "size_bytes": 1504
+    },
+    {
+      "path": "research/results/exp037a_r9_checkpoint_resume_repair/scientific_diff.json",
+      "sha256": "30359e556df6f6d8564c5ceaafed4a88f0c2a2dfd22988d148c523a8f50f924f",
+      "size_bytes": 903
+    },
+    {
+      "path": "research/results/exp037a_r9_checkpoint_resume_repair/runtime.json",
+      "sha256": "56ca784a48b9883467ee69e6a90556b77c2b73cd1a575340b06c92857e0af502",
+      "size_bytes": 607
+    },
+    {
+      "path": "research/results/exp037a_r9_checkpoint_resume_repair/migration_feasibility.json",
+      "sha256": "7098ea10bc392e79fd087b2c04bcebf3ed6c90bfb5376bb3f0308c2ad30aab06",
+      "size_bytes": 597
+    },
+    {
+      "path": "research/results/exp037a_r9_checkpoint_resume_repair/preflight_summary.json",
+      "sha256": "b67442bac7e79ca8c27b9f16d3873bf7df806a2df4e592c96e9cd2bbf81cef52",
+      "size_bytes": 1142
+    },
+    {
+      "path": "research/results/exp037a_r9_checkpoint_resume_repair/tests.json",
+      "sha256": "14680404dce5cebf3a5ab53f21bb238db0353eb54c9907698eb7e547ac61f026",
+      "size_bytes": 1417
+    },
+    {
+      "path": "research/handoffs/20260904T081503Z_exp037a_r9_checkpoint_resume_repair.md",
+      "sha256": "23d93cdb1617a003e86c13ba3418b8e08cf71add745f1460f957189a86a5687a",
+      "size_bytes": 4385
+    }
+  ]
+}

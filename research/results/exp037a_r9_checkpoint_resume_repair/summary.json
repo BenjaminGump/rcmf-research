@@ -1,0 +1,30 @@
+{
+  "authorization_status": "NOT_AUTHORIZED",
+  "decision": "READY_FOR_14I_REAUTHORIZATION",
+  "failed_run": {
+    "d06b": "PASS",
+    "d08b": "PASS",
+    "d09": "PASS",
+    "d10": "FAILED_BEFORE_TRAINING",
+    "d22": "NOT_REACHED",
+    "one_demo": "NOT_STARTED",
+    "root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001",
+    "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001",
+    "source_commit": "272b0e9a1f8b29f898024f1115d1710d41270758"
+  },
+  "format": "exp037a_r9_checkpoint_resume_repair_summary_v1",
+  "fresh_run": {
+    "artifact_index_sha256": "863227c89d1d63c665ca142307c9a32468a2b9b8d433135c4868668aecb923cd",
+    "contract_sha256": "6d580bc616136c2b696efc1a37c6aa14fb9474decead0adcdfeaf1d1e3e72d83",
+    "pipeline_config_sha256": "88e7eebbb47f680bf330ad5667f98ce8983aadc3894a48f51d79a5b1fefeb48d",
+    "root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_002",
+    "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_002",
+    "scientific_stage_count": 0,
+    "source_commit": "fa069cd3619ddbd9d4ebe0fd82038ca25b60c75d"
+  },
+  "global_seed": 25101,
+  "optimizer_updates_in_failed_d10": 0,
+  "scientific_configuration_changes": 0,
+  "scientific_result": "NOT_EVALUATED",
+  "starting_commit": "6a3b8740a9611564b66f898035299625ace93922"
+}

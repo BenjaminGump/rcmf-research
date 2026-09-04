@@ -1,0 +1,19 @@
+{
+  "artifact_index_sha256": "863227c89d1d63c665ca142307c9a32468a2b9b8d433135c4868668aecb923cd",
+  "authorization_request_sha256": "2893731036046a8433baa18a253ca13a9c375a164b8ad49774c36cdf007e931d",
+  "authorization_status": "NOT_AUTHORIZED",
+  "authorized_to_launch": false,
+  "contract_sha256": "6d580bc616136c2b696efc1a37c6aa14fb9474decead0adcdfeaf1d1e3e72d83",
+  "decision": "READY_FOR_14I_REAUTHORIZATION",
+  "failed_r6_authorization_inherited": false,
+  "failed_r8_14h_authorization_inherited": false,
+  "format": "exp037a_r9_preflight_summary_git_safe_v1",
+  "h100_scientific_active_hours": 0,
+  "launch_source_sha": "fa069cd3619ddbd9d4ebe0fd82038ca25b60c75d",
+  "pipeline_config_sha256": "88e7eebbb47f680bf330ad5667f98ce8983aadc3894a48f51d79a5b1fefeb48d",
+  "proposed_hard_cap_hours": 120,
+  "raw_preflight_summary_sha256": "dc6acd2f3099044332e9f3e2bb8d192761a58d618f23077d1373c82264e92810",
+  "root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_002",
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_002",
+  "scientific_stage_execution_count": 0
+}
