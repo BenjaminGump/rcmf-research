@@ -51,6 +51,7 @@ def _source_files(formal_root: Path) -> list[tuple[Path, Path]]:
     rows.extend(
         [
             (arm / "runtime/formal_gpu_preflight.json", Path("arm/runtime/formal_gpu_preflight.json")),
+            (arm / "runtime/static_counts.json", Path("arm/runtime/static_counts.json")),
             (arm / "joint_training/training_unit_manifest.json", Path("arm/joint_training/training_unit_manifest.json")),
             (arm / "joint_training/state_query_shuffle_manifest.json", Path("arm/joint_training/state_query_shuffle_manifest.json")),
             (arm / "joint_training/zero_policy_nll_summary.json", Path("arm/joint_training/zero_policy_nll_summary.json")),
