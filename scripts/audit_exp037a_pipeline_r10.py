@@ -35,6 +35,10 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _json(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def _arm_stage(arm: str, index: int) -> str:
     prefix = "D" if arm == "3d" else "O"
     return _stage_id(f"{prefix}{index:02d}")
@@ -200,7 +204,11 @@ def _output_contract(stage_id: str) -> list[str]:
 def _coverage(stage_id: str, formal_root: Path | None) -> dict[str, Any]:
     completion = None if formal_root is None else formal_root / "stages" / stage_id / "completion.json"
     failure = None if formal_root is None else formal_root / "stages" / stage_id / "failure.json"
-    formal_completed = bool(completion and completion.is_file())
+    formal_completed = bool(
+        completion
+        and completion.is_file()
+        and _json(completion).get("passed") is True
+    )
     formal_failed = bool(failure and failure.is_file())
     return {
         "formal_14h": (
@@ -262,6 +270,8 @@ def sealed_formal_artifact_audit(
         return []
     rows = []
     for completion in sorted((formal_root / "stages").glob("*/completion.json")):
+        if _json(completion).get("passed") is not True:
+            continue
         stage_id = completion.parent.name
         outputs = formal_stage_output_paths(stage_id, formal_root)
         rows.append(

@@ -352,3 +352,19 @@ def test_sealed_formal_artifact_audit_uses_production_resolver(
     assert rows[0]["stage_id"] == "S00_environment_manifest"
     assert rows[0]["artifact_count"] == 1
     assert rows[0]["artifacts"][0]["sha256"] == sha256_file(artifact)
+
+
+def test_sealed_formal_artifact_audit_excludes_failed_completion(
+    tmp_path: Path,
+) -> None:
+    stage_dir = tmp_path / "run/stages/D10_writer_reader_epoch_2"
+    stage_dir.mkdir(parents=True)
+    atomic_write_json(stage_dir / "completion.json", {"passed": False})
+    atomic_write_json(stage_dir / "failure.json", {"status": "failed"})
+    assert sealed_formal_artifact_audit(tmp_path / "run") == []
+    row = next(
+        item
+        for item in build_stage_map(tmp_path / "run")
+        if item["stage_id"] == "D10_writer_reader_epoch_2"
+    )
+    assert row["coverage"]["formal_14h"] == "attempted_failed"
