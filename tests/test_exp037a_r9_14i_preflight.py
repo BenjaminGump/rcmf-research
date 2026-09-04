@@ -75,6 +75,7 @@ def test_14i_identity_is_fresh_and_authorization_is_false() -> None:
     assert pipeline["run_uuid"] == RUN_UUID
     assert pipeline["roots"]["run_root"] == RUN_ROOT
     assert "14h_20260904_001" not in RUN_UUID
+    assert RUN_UUID.endswith("14i_20260904_002")
     assert authorization["authorization_version"] == AUTHORIZATION_VERSION
     assert authorization["authorization_status"] == "NOT_AUTHORIZED"
     assert authorization["granted_by_user"] is False

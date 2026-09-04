@@ -1,6 +1,6 @@
 pipeline:
   schema_version: rcmf_reproducible_pipeline_14i_v1
-  run_uuid: rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_001
+  run_uuid: rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_002
   config_path: configs/pipeline/rcmf_appworld_repro_14i.yaml
   strict_stage_identity: true
   source_commit_policy: exact_clean_head_at_launch
@@ -38,7 +38,7 @@ pipeline:
     legacy_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
     hardware: NVIDIA H100 80GB HBM3
   roots:
-    run_root: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_001
+    run_root: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_002
     authoritative_corpus: /lambda/nfs/rcmf-persist/project/runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
     replay_validated_corpus: /lambda/nfs/rcmf-persist/project/runs/stage_c/replay_clean_rebuild_7b_20260818_001
     approved_downstream_split: /lambda/nfs/rcmf-persist/project/runs/stage_c/state_conditioned_program_direct_7dg_20260821_001/preflight/a_task_split.json

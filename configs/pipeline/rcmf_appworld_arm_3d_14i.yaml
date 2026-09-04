@@ -1,7 +1,7 @@
 arm_id: 3d
 task_conditioned_prompt_profile: full_demo
 artifact_prefix: arms/3d
-run_id: rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_001-3d
+run_id: rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_002-3d
 prompt_dependent:
   rebuild_state_representations: true
   rebuild_selected_memories: true

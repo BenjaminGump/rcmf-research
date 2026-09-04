@@ -31,12 +31,17 @@ from scripts.prepare_rcmf_reproducible_pipeline_14b import (
 from scripts.prepare_rcmf_reproducible_pipeline_14f import ARM_DIFF_ALLOWLIST
 
 
-RUN_UUID = "rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_001"
+RUN_UUID = "rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_002"
 RUN_ROOT = (
     "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/"
     + RUN_UUID
 )
 OLD_RUNS = {
+    "14i_preflight_001": (
+        "rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_001",
+        "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/"
+        "rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_001",
+    ),
     "14b": (
         "rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
         "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/"
@@ -915,7 +920,7 @@ def build_preflight(
     atomic_write_json(output_root / "artifact_index.json", artifact_index)
     summary = {
         "format": "exp037a_r9_final_launch_preflight_14i_v1",
-        "decision": "READY_FOR_FINAL_RUN_APPROVAL",
+        "decision": "READY_FOR_14I_REAUTHORIZATION",
         "run_uuid": RUN_UUID,
         "run_root": RUN_ROOT,
         "launch_source_sha": source_commit,

@@ -489,9 +489,9 @@ sweeps, or ensemble training unless the user explicitly changes this policy.
 - Stage graph and validators: `rcmf/pipeline/stage_graph.py` and
   `rcmf/pipeline/validators.py`
 - Final run UUID:
-  `rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_001`
+  `rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_002`
 - Final canonical Lambda root:
-  `/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_001`
+  `/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_002`
 - The 14b run is immutable failed-run evidence. The 14f package is immutable
   R4 preflight history. The 14g package is immutable R5/R6 preflight and
   pre-science launch-failure evidence. The 14h package is immutable R7/R8
@@ -499,6 +499,9 @@ sweeps, or ensemble training unless the user explicitly changes this policy.
   passed. None is an active launch source or resumable scientific input for
   14i. The 14h D09 checkpoint may be used only for bounded diagnostic resume
   validation and must not initialize 14i science.
+- The 14i `_001` root is immutable unlaunched R9 preflight history from the
+  superseded launch-source freeze; it is not authorized or resumable input for
+  the active 14i `_002` package.
 - The raw Lambda root and Git-safe audit index are frozen by the final
   preflight manifest; the structured handoff is published under
   `research/handoffs/`.
