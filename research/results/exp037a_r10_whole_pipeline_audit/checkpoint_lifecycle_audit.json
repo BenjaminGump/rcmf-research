@@ -1,0 +1,20 @@
+{
+  "format": "exp037a_r10_whole_pipeline_logic_audit_v1",
+  "lifecycle": [
+    "locked initialization",
+    "atomic progress.pt",
+    "atomic epoch_01.pt / epoch_02.pt",
+    "atomic latest_checkpoint.json",
+    "pointer path/root/SHA/epoch/boundary validation before load",
+    "checkpoint identity and writer/reader/optimizer/RNG restore",
+    "post-load module hash validation",
+    "heldout evaluation",
+    "checkpoint selection",
+    "401-memory field",
+    "98-memory instant add",
+    "499-memory deployment validation"
+  ],
+  "migration_from_14h": false,
+  "next_stage_resume": "epoch-boundary filename and completed-unit boundary required",
+  "same_stage_resume": "supported from progress.pt with strict pointer and payload identity"
+}

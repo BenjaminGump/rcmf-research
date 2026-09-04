@@ -1,5 +1,35 @@
 # Current State
 
+## 2026-09-04 EXP-037A-R10 Ready For Reauthorization
+
+VERIFIED:
+
+- The full 60-stage pipeline was mapped end to end. Five reachable
+  execution/provenance defects were repaired: scientific artifact sealing,
+  checkpoint pointer validation before load, restored module hash checks,
+  full gate-prefix identity, and exact 401/499 field provenance validation.
+- Scientific configuration changes are zero. The R9 checkpoint/RNG repair,
+  selector, panel, prompts, writer/reader, D06B, D08B, D22, conditional 1D,
+  and evaluator remain unchanged.
+- Real S00-S04 production execution passed 5/5 at the frozen source; resume
+  skipped 5/5. Local full tests passed 931 with 3 skipped; Lambda full tests
+  passed 934 with CUDA coverage.
+- The final 14j package is frozen at
+  `0e4015547da45802cc7b6ff3a9b92adce73077fc`, contains preflight only, and
+  remains `NOT_AUTHORIZED`.
+
+CURRENT DECISION:
+
+- `READY_FOR_REAUTHORIZATION`
+- Formal execution must use archive ref
+  `archive/exp037a-r10-launch-source-0e40155` and exact 14j identities after a
+  new explicit user authorization. No long run was launched in R10.
+
+Full report:
+`research/results/EXP_037A_R10_WHOLE_PIPELINE_AUDIT.md`.
+
+Last updated: 2026-09-04.
+
 ## 2026-09-04 EXP-037A-R9 Ready For 14i Reauthorization
 
 VERIFIED:

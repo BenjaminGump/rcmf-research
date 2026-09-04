@@ -1,0 +1,41 @@
+{
+  "canonical_run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001",
+  "contract_sha256": "2ff7810700abe99c53c298978e0c6f14d56f6cd0465d2c8065d3569e59abdafb",
+  "format": "exp037a_r10_run_identity_14j_v1",
+  "historical_predecessors": {
+    "14b": {
+      "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001",
+      "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14b_20260903_001"
+    },
+    "14f": {
+      "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14f_20260903_001",
+      "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14f_20260903_001"
+    },
+    "14g": {
+      "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001",
+      "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14g_20260904_001"
+    },
+    "14h": {
+      "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001",
+      "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001"
+    },
+    "14i_preflight_001": {
+      "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_001",
+      "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_001"
+    },
+    "14i_preflight_002": {
+      "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_002",
+      "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14i_20260904_002"
+    }
+  },
+  "historical_roots_written": false,
+  "pipeline_config": {
+    "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/configs/pipeline/rcmf_appworld_repro_14j.yaml",
+    "sha256": "470f7183adb8804540c46e146e2db9e359f09f67b43eb0d3e0fab153bedf41a9",
+    "size_bytes": 9032
+  },
+  "root_entries_before_preflight": [],
+  "root_existed_before_preflight": false,
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001",
+  "scientific_outputs_before_preflight": 0
+}

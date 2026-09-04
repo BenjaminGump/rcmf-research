@@ -1,0 +1,26 @@
+{
+  "format": "exp037a_r10_scientific_diff_v1",
+  "comparison": "R9 14i to R10 14j",
+  "scientific_configuration_changes": 0,
+  "execution_only_changes": [
+    "seal resume-critical stage artifacts",
+    "validate checkpoint pointer before deserialization",
+    "validate restored module hashes",
+    "validate complete gate-stage run identity",
+    "strengthen field provenance validators"
+  ],
+  "unchanged": {
+    "global_seed": 25101,
+    "selector_parent_split_seed": 18018,
+    "selector_parent_counts": [29, 8],
+    "legal_selector_cells": 310433,
+    "selector_cv_seed": 25071,
+    "selector_final_seeds": [25071, 25072, 25073],
+    "causal_panel": [256, 499, 40],
+    "d06_completed_counts": [366, 98],
+    "d06_label_counts": [129, 300, 35],
+    "three_demo_prompt": "full_demo",
+    "one_demo_prompt": "full_demo_first_only",
+    "epochs": 2
+  }
+}

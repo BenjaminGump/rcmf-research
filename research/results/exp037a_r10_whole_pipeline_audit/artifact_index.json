@@ -1,0 +1,74 @@
+{
+  "formal_14h_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14h_20260904_001",
+  "format": "exp037a_r10_whole_pipeline_logic_audit_v1",
+  "inputs": {
+    "rcmf/benchmarks/appworld/reproducible_stages_14b.py": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "sha256": "4c2d5b5931e6c5efe53b4d9041b1948041039f791263bb3cf17f926a70bf4bef",
+      "size_bytes": 91847
+    },
+    "scripts/run_rcmf_joint_full_bank_9a.py": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/scripts/run_rcmf_joint_full_bank_9a.py",
+      "sha256": "15e7642dcfa88a68e7a91d86647e32ab2a5ed544cf679cb3090905af1f59b21a",
+      "size_bytes": 75430
+    },
+    "scripts/run_rcmf_joint_full_bank_first37_9a.py": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/scripts/run_rcmf_joint_full_bank_first37_9a.py",
+      "sha256": "f4ab033d16d4119158e6626a2243565131a84d462a57980f427bcc26b3583c5b",
+      "size_bytes": 50906
+    },
+    "scripts/run_rcmf_joint_full_bank_live_9a.py": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/scripts/run_rcmf_joint_full_bank_live_9a.py",
+      "sha256": "a52e40a95c0e09b1343310993a3acc872be9c0800fba6250d8a24d4b48ec77ac",
+      "size_bytes": 45593
+    }
+  },
+  "outputs": {
+    "artifact_contract_map.json": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r10_pipeline_audit_20260904_003/artifact_contract_map.json",
+      "sha256": "b8c59a22946d48b58a01c9be4faa875608ff1001989c5bb82cc25a428f4ea081",
+      "size_bytes": 10600
+    },
+    "chatgpt_leads_disposition.json": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r10_pipeline_audit_20260904_003/chatgpt_leads_disposition.json",
+      "sha256": "e4e57d258aeb443eab8e6afab553b3837bb296ae4b79f5443ad9595f7773861a",
+      "size_bytes": 590
+    },
+    "checkpoint_lifecycle_audit.json": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r10_pipeline_audit_20260904_003/checkpoint_lifecycle_audit.json",
+      "sha256": "8a01305bf45cb3687a4042f11922ab35d3c3fafc51d42f34d513efcb43c83fe3",
+      "size_bytes": 746
+    },
+    "copy_link_audit.json": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r10_pipeline_audit_20260904_003/copy_link_audit.json",
+      "sha256": "7fc2c7adf202373cb782a3e96dfe2e20d31e7fbd432a3d67166678d59347a286",
+      "size_bytes": 637
+    },
+    "coverage_matrix.json": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r10_pipeline_audit_20260904_003/coverage_matrix.json",
+      "sha256": "c08e8bfa68a4133a83882a1421a16e4e82f9ffee35256946869e8afa62714cfb",
+      "size_bytes": 116931
+    },
+    "device_load_audit.json": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r10_pipeline_audit_20260904_003/device_load_audit.json",
+      "sha256": "d0701a50f84a00a9dda38ddfd321eb6dcbab5fa9ff38ba5960e4522e233b38d8",
+      "size_bytes": 9686
+    },
+    "pipeline_audit_summary.json": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r10_pipeline_audit_20260904_003/pipeline_audit_summary.json",
+      "sha256": "ebc1ae053be97072de17b71ba77715605523d09410efaefb917d8ab0c38c939d",
+      "size_bytes": 3358
+    },
+    "sealed_14h_artifact_audit.json": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r10_pipeline_audit_20260904_003/sealed_14h_artifact_audit.json",
+      "sha256": "89794e4c522cf8c09ab3a29962a729e770336a158b7288d02c414f2b58ed96db",
+      "size_bytes": 761156
+    },
+    "stage_dependency_map.json": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r10_pipeline_audit_20260904_003/stage_dependency_map.json",
+      "sha256": "c08e8bfa68a4133a83882a1421a16e4e82f9ffee35256946869e8afa62714cfb",
+      "size_bytes": 116931
+    }
+  },
+  "source_commit": "0e4015547da45802cc7b6ff3a9b92adce73077fc"
+}

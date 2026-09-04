@@ -1,5 +1,45 @@
 # Decisions and Deviations
 
+## 2026-09-04 EXP-037A-R10 whole-pipeline audit
+
+VERIFIED:
+
+- Five reachable infrastructure/provenance defects were found and repaired:
+  stage manifests did not seal downstream scientific artifacts; checkpoint
+  pointer SHA/root/boundary identity was not checked before load; restored
+  module hashes were not rechecked; D06B/D22 prefix checks omitted full run
+  identity; and field validators omitted material 401/499 invariants.
+- All 60 stages now have strict synthetic artifact-contract coverage. The
+  real S00-S04 scheduler/subprocess path passed 5/5 and resume skipped 5/5.
+- Device-sensitive deserialization, 1D parity, no-selected-checkpoint,
+  hard-link/copy semantics, authorization, scheduler, stop branches, and final
+  reporting were audited. No additional verified defect requires repair.
+- Scientific configuration changes are zero. No S05 or scientific stage ran.
+
+DECISION:
+
+- Record `READY_FOR_REAUTHORIZATION` for frozen launch source
+  `0e4015547da45802cc7b6ff3a9b92adce73077fc` and the fresh 14j `_001`
+  preflight package.
+- Supersede the unlaunched R9 14i `_002` launch package as active future
+  source while preserving it immutably.
+- Require a new exact run-bound authorization; proposed 120 hours remains
+  unapproved.
+
+IMPLEMENTATION DEVIATIONS:
+
+- A first content-address audit attempt treated D10's existing
+  `completion.json` as completed without parsing `passed=false`. It failed
+  before publication, was preserved as audit-only evidence, and the final
+  `_003` audit correctly records 23 completed plus one attempted failure.
+- One preflight invocation used a compact R9 resume summary and failed closed
+  before creating the 14j root. The full sealed CUDA equivalence and D09
+  diagnostic summaries were then supplied; the canonical root remained fresh.
+- Lambda lacked GitHub SSH credentials. Tested commits were synchronized with
+  SHA-verified incremental Git bundles into an isolated worktree; the frozen
+  formal checkout was not moved.
+
+
 ## 2026-09-04 EXP-037A-R9 checkpoint resume repair
 
 VERIFIED:

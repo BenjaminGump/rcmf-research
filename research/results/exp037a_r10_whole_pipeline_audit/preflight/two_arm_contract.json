@@ -1,0 +1,18 @@
+{
+  "arms": {
+    "1d": {
+      "arm_id": "1d",
+      "artifact_prefix": "arms/1d",
+      "run_id": "rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001-1d",
+      "task_conditioned_prompt_profile": "full_demo_first_only"
+    },
+    "3d": {
+      "arm_id": "3d",
+      "artifact_prefix": "arms/3d",
+      "run_id": "rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001-3d",
+      "task_conditioned_prompt_profile": "full_demo"
+    }
+  },
+  "format": "two_arm_prompt_intervention_contract_14j_v1",
+  "only_intended_intervention": "task_conditioned_prompt_profile"
+}

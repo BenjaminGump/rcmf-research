@@ -1,0 +1,11 @@
+{
+  "format": "exp037a_r10_whole_pipeline_logic_audit_v1",
+  "leads": {
+    "A_latest_checkpoint": "confirmed_issue_fixed",
+    "B_device_sensitive_loads": "partially_valid_r9_fix_sufficient_other_formal_loads_safe",
+    "C_D11_D22_coverage": "partially_valid_residual_formal_coverage_gap_hardened_statically",
+    "D_1D_post_training_parity": "already_handled_generic_dispatch_and_prompt_only_config_diff",
+    "E_no_selected_checkpoint": "already_handled_explicit_no_deployable_branch",
+    "F_immutable_hard_links": "already_handled_read_only_consumers_no_in_place_mutation_found"
+  }
+}

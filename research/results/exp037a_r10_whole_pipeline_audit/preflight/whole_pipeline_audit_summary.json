@@ -1,0 +1,68 @@
+{
+  "chatgpt_leads": {
+    "A_latest_checkpoint": "confirmed_issue_fixed",
+    "B_device_sensitive_loads": "partially_valid_r9_fix_sufficient_other_formal_loads_safe",
+    "C_D11_D22_coverage": "partially_valid_residual_formal_coverage_gap_hardened_statically",
+    "D_1D_post_training_parity": "already_handled_generic_dispatch_and_prompt_only_config_diff",
+    "E_no_selected_checkpoint": "already_handled_explicit_no_deployable_branch",
+    "F_immutable_hard_links": "already_handled_read_only_consumers_no_in_place_mutation_found"
+  },
+  "device_load_count": 29,
+  "formal_14h_completed_count": 23,
+  "format": "exp037a_r10_whole_pipeline_logic_audit_v1",
+  "long_scientific_run_launched": false,
+  "residual_risks": [
+    {
+      "mitigation": "Static contract map, all-stage synthetic manifest coverage, bounded branch fixtures, and strict artifact sealing.",
+      "requires_long_science_to_close": true,
+      "risk": "D11-D22 and O00-O19 have not all executed in a complete fresh formal run."
+    },
+    {
+      "mitigation": "Fail-closed lock plus read-only process/heartbeat validation prevents duplicate launch.",
+      "requires_long_science_to_close": false,
+      "risk": "Abrupt host loss can leave scheduler.lock until operator triage."
+    }
+  ],
+  "scientific_configuration_changes": 0,
+  "source_commit": "0e4015547da45802cc7b6ff3a9b92adce73077fc",
+  "stage_count": 60,
+  "unclassified_device_load_count": 0,
+  "verified_defect_count": 5,
+  "verified_defects": [
+    {
+      "defect": "Stage manifests sealed only stage_result.json, not downstream scientific artifacts.",
+      "failure_mode": "A corrupted checkpoint, field, or summary could remain resume-eligible.",
+      "fix": "Canonical per-stage artifact contracts are included in the strict output manifest.",
+      "id": "R10-D1",
+      "scientific_semantics_changed": false
+    },
+    {
+      "defect": "latest_checkpoint.json SHA/root/boundary semantics were not verified before torch.load.",
+      "failure_mode": "A stale, replaced, or wrong-kind checkpoint could be deserialized and resumed.",
+      "fix": "Fail-closed pointer validation now precedes deserialization.",
+      "id": "R10-D2",
+      "scientific_semantics_changed": false
+    },
+    {
+      "defect": "Restored writer/reader tensors were not checked against checkpoint module hashes.",
+      "failure_mode": "Internal state corruption could survive strict load_state_dict.",
+      "fix": "Post-load module hashes must exactly match checkpoint identities.",
+      "id": "R10-D3",
+      "scientific_semantics_changed": false
+    },
+    {
+      "defect": "D06B/D22 prior-stage checks omitted run UUID/root/config/contract identity.",
+      "failure_mode": "A self-consistent foreign stage prefix could pass the manual gate audit.",
+      "fix": "Gate-time prior-stage validation now uses the full formal identity.",
+      "id": "R10-D4",
+      "scientific_semantics_changed": false
+    },
+    {
+      "defect": "401/499 field validators omitted binding, count, shape, checkpoint, and add provenance checks.",
+      "failure_mode": "Malformed shuffle B, wrong checkpoint, or incorrect 401+98 composition could reach evaluation.",
+      "fix": "Explicit finite/shape/count/checkpoint/memory-ID/add-only checks fail before evaluation.",
+      "id": "R10-D5",
+      "scientific_semantics_changed": false
+    }
+  ]
+}

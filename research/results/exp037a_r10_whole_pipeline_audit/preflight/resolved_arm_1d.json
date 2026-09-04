@@ -1,0 +1,734 @@
+{
+  "address": {
+    "mode": "topk_softmax",
+    "topk": 4,
+    "use_utility_loss": true
+  },
+  "benchmark": {
+    "max_context_turns": 40,
+    "max_steps": 50,
+    "name": "appworld",
+    "prompt_profile": "full_demo_first_only",
+    "splits": {
+      "dev": "dev",
+      "test": "test_normal",
+      "train": "train"
+    },
+    "task_limit": null
+  },
+  "compiler": {
+    "shared_encoder": true,
+    "use_failed_trajectories": false,
+    "use_write_strength": true,
+    "version": "rcmf-v1"
+  },
+  "data": {
+    "allow_test_ground_truth": false,
+    "output_dir": "runs/appworld/prepared"
+  },
+  "encoder": {
+    "dropout": 0.1,
+    "hidden_size": 512,
+    "intermediate_size": 2048,
+    "max_experience_tokens": null,
+    "max_state_tokens": null,
+    "num_heads": 8,
+    "num_layers": 2,
+    "shared_state_experience_encoder": false,
+    "train_token_embedding": false,
+    "type": "qwen_hidden"
+  },
+  "experiment": {
+    "name": "rcmf_reproducible_pipeline_14b_1d",
+    "seed": 25101,
+    "version": "rcmf_reproducible_pipeline_arm_14b_v1"
+  },
+  "injector": {
+    "initial_scale": 0.1,
+    "num_prefix_tokens": 4,
+    "num_tokens": 4,
+    "position": "last_user_k",
+    "type": "additive_token"
+  },
+  "loss": {
+    "action": true,
+    "interference": false,
+    "lambda_distill": 0.0,
+    "lambda_interference": 0.1,
+    "lambda_orthogonal": 0.01,
+    "lambda_rank": 0.2,
+    "lambda_sparse": 0.01,
+    "lambda_utility": 1.0,
+    "orthogonal": false,
+    "rank": false,
+    "sparse": false,
+    "teacher_distillation": false,
+    "utility": false
+  },
+  "memory": {
+    "enabled": true,
+    "eps": 1e-06,
+    "normalization": "mass",
+    "program_dim": 128,
+    "rank": 64,
+    "store_per_memory_delta": true
+  },
+  "model": {
+    "backend": "hf_qwen",
+    "device_map": null,
+    "dtype": "bfloat16",
+    "enable_thinking": false,
+    "freeze_backbone": true,
+    "name": "Qwen/Qwen3-8B"
+  },
+  "stage_c_11a": {
+    "artifact_dir": "runs/stage_c/rcmf_exp031a_one_demo_dev_11a_20260829_001",
+    "dev": {
+      "authoritative_success": "evaluation.success",
+      "condition_order": [
+        "D0",
+        "D1",
+        "D2"
+      ],
+      "dataset_name": "dev",
+      "expected_condition_count": 171,
+      "expected_task_count": 57
+    },
+    "exp031a_source_head": "57d2a3479ff292dd8f89bdd0ea9f9417abc42a48",
+    "global_seed": 25101,
+    "immutable_exp031a": {
+      "artifact_root": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001",
+      "checkpoint": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/joint_training/checkpoints/epoch_02.pt",
+      "checkpoint_sha256": "d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1",
+      "data_manifest": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/full_bank_data_manifest.json",
+      "deployment_field": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/deployment_field/complete_37_task_field.pt",
+      "deployment_field_sha256": "5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e",
+      "instant_add_report": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/deployment_field/instant_add_report.json",
+      "memory_count": 499,
+      "memory_provenance": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/memory_provenance.jsonl",
+      "selector_ensemble": "runs/stage_c/signature_balanced_field_7c_20260818_001/selector/ensemble_scores.pt",
+      "selector_ensemble_sha256": "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f",
+      "shuffle_manifest": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/key_payload_shuffle_manifest.json"
+    },
+    "persistent_root": "/lambda/nfs/rcmf-persist",
+    "prompt": {
+      "one_demo_message_count": 20,
+      "one_demo_prompt_sha256": "a0a8d3b2e10f167dba5dcab5ad62fa8f6737629b813d2d0e27af4872bef9e27b",
+      "one_demo_structured_messages_sha256": "90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe",
+      "original_full_prompt_sha256": "dd74c379c97031a062ba79b2b82d3992ec3b38870792f53d86821544f994c4c3",
+      "original_message_count": 74,
+      "original_structured_messages_sha256": "f9a6937120b7da883c60e9b5e9187290bf71d3d68b0182640487b705f4cb3734",
+      "profile": "full_demo_first_only",
+      "retained_demo_instruction": "How many playlists do I have in Spotify?"
+    },
+    "run_uuid": "rcmf_exp031a_one_demo_dev_11a_20260829_001",
+    "runtime": {
+      "expected_git_safe_audit_bytes": 2200000000,
+      "expected_lambda_raw_audit_bytes": 6500000000,
+      "hardware_required": "NVIDIA H100 80GB HBM3",
+      "heartbeat_interval_seconds": 240,
+      "heartbeat_stale_seconds": 720,
+      "review_threshold_hours": 18.0,
+      "sequential_conditions": true
+    },
+    "smoke": {
+      "dataset_name": "train",
+      "max_steps": 2,
+      "task_count": 2
+    },
+    "source_branch": "research/v5-rcmf-onpolicy-trajectory-distillation",
+    "source_head": "b04d49d2ce9af305a004bb8bee2a3fc469e53927",
+    "working_branch": "research/v5-rcmf-one-demo-dev-eval"
+  },
+  "stage_c_11b": {
+    "artifact_dir": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d",
+    "expected": {
+      "dev_task_count": 57,
+      "dev_task_list_sha256": "c6aad8dca959d9c54537555dd6c3a4ececdd55390029511ab7971550d796e463",
+      "heldout_state_count": 98,
+      "initial_prompt_asset_sha256": "90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe",
+      "memory_count": 499,
+      "old_checkpoint_sha256": "d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1",
+      "old_deployment_field_sha256": "5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e",
+      "old_dev_audit_sha256": "1616378ab22874c21d4f9bff84db52078ed4d9533b4d86cac79014adb7a09b72",
+      "replay_lineage_sha256": "5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1",
+      "retained_demo_sha256": "32348a5889682499b1cc17b7dced74dd706db12b6e248c1e6c7dfba5e50ed713",
+      "selector_ensemble_sha256": "c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f",
+      "structural_lineage_sha256": "f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb",
+      "train_state_count": 366
+    },
+    "global_seed": 25101,
+    "immutable": {
+      "exp031a_root": "runs/stage_c/rcmf_joint_full_bank_9a_20260826_001",
+      "exp033a_audit_index": "research/audits/rcmf_exp031a_one_demo_dev_11a_20260829_001/index.json",
+      "exp033a_root": "runs/stage_c/rcmf_exp031a_one_demo_dev_11a_20260829_001",
+      "old_outcomes": "runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/paired_causal/paired_outcomes.json",
+      "old_state_cache": "runs/stage_c/signature_balanced_field_7c_20260818_001/representation_cache/multiview/state_multiview.pt",
+      "selector_ensemble": "runs/stage_c/signature_balanced_field_7c_20260818_001/selector/ensemble_scores.pt",
+      "selector_root": "runs/stage_c/signature_balanced_field_7c_20260818_001/selector",
+      "transition_cache": "runs/stage_c/signature_balanced_field_7c_20260818_001/representation_cache/multiview/transition_multiview.pt"
+    },
+    "persistent_root": "/lambda/nfs/rcmf-persist",
+    "prompt_profile": "full_demo_first_only",
+    "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001-1d",
+    "runtime": {
+      "expected_git_safe_audit_bytes": 2400000000,
+      "expected_lambda_raw_audit_bytes": 8000000000,
+      "hardware_required": "NVIDIA H100 80GB HBM3",
+      "heartbeat_interval_seconds": 240,
+      "heartbeat_stale_seconds": 720,
+      "review_threshold_hours": 18.0
+    },
+    "source_branch": "research/v5-rcmf-one-demo-dev-eval",
+    "source_head": "a2c41652bfea380cfef89df0bee0e4d919458982",
+    "working_branch": "research/v5-rcmf-one-demo-retrain"
+  },
+  "stage_c_7c": {
+    "artifact_dir": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d",
+    "expected": {
+      "api_documentation_transitions": 210,
+      "audit_states": 45,
+      "duplicate_classes": 54,
+      "duplicate_transitions": 349,
+      "old_conditions": 323,
+      "parent_split_heldout": 8,
+      "parent_split_train": 29,
+      "signature_classes": 150,
+      "train_decisions": 499,
+      "train_tasks": 37,
+      "train_transitions": 499,
+      "validation_decisions": 139,
+      "validation_tasks": 9
+    },
+    "expected_replay_lineage_sha256": "5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1",
+    "expected_structural_lineage_sha256": "f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb",
+    "gates": {
+      "behavior": {
+        "content_gain": 0.05,
+        "maximum_execution_drop": 0.05,
+        "oracle_retention": 0.7,
+        "positive_tasks": 6
+      },
+      "deployment_e": {
+        "exact_api_recall4": 0.65,
+        "ndcg4_gain": 0.05,
+        "positive_tasks": 6,
+        "state_shuffle_drop": 0.08,
+        "tier34_recall4": 0.6,
+        "top1_tier34_coverage": 0.7,
+        "transition_shuffle_drop": 0.08
+      },
+      "strict_b": {
+        "exact_api_recall4": 0.6,
+        "ndcg4_gain": 0.05,
+        "positive_tasks": 6,
+        "same_intent_pairwise_accuracy": 0.65,
+        "state_shuffle_drop": 0.08,
+        "tier34_recall4": 0.5,
+        "transition_shuffle_drop": 0.08
+      }
+    },
+    "generation": {
+      "artifact_bytes_per_condition": 2359296,
+      "context_limit": 40960,
+      "device_map": null,
+      "do_sample": false,
+      "dtype": "bfloat16",
+      "enable_thinking": false,
+      "max_new_tokens": 1024,
+      "model_name": "Qwen/Qwen3-8B",
+      "prompt_profile": "full_demo_first_only",
+      "replay_seconds_per_condition": {
+        "best": 2.0,
+        "conservative": 10.0,
+        "expected": 5.0
+      },
+      "review_threshold_h100_hours": 12.0,
+      "seconds_per_new_condition": {
+        "best": 2.0,
+        "conservative": 8.0,
+        "expected": 4.0
+      },
+      "temperature": 0.0,
+      "top_p": 1.0
+    },
+    "heartbeat_interval_seconds": 240,
+    "legacy": {
+      "appworld_root": "/lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root",
+      "executable": "/home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python"
+    },
+    "multiview_cache": {
+      "artifact_bytes_per_row": 700000,
+      "dtype": "bfloat16",
+      "expected_recomputed_states": 638,
+      "expected_recomputed_transitions": 499,
+      "expected_reused_states": 0,
+      "expected_reused_transitions": 0,
+      "fresh_rebuild_without_old_cache": true,
+      "model_name": "Qwen/Qwen3-8B",
+      "old_state_cache": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/forbidden_historical_state_cache.pt",
+      "old_transition_cache": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/forbidden_historical_transition_cache.pt",
+      "output_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d/representation_cache/multiview",
+      "renderer_version": "state_transition_multiview_spans_6c_v1",
+      "review_threshold_h100_hours": 12.0,
+      "runtime_seconds_per_new_row": {
+        "best": 1.5,
+        "conservative": 8.0,
+        "expected": 3.5
+      }
+    },
+    "parent_exp025b": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/shared/compat_exp025b",
+    "persistent_root": "/lambda/nfs/rcmf-persist",
+    "reconciled_corpus_dir": "/lambda/nfs/rcmf-persist/project/runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001",
+    "replay": {
+      "max_api_calls_per_interaction": 1000,
+      "max_interactions": 1000,
+      "random_seed": 100,
+      "subprocess_timeout_seconds": 600
+    },
+    "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001-1d",
+    "selector": {
+      "batch_states": 8,
+      "bootstrap_samples": 10000,
+      "bootstrap_seed": 25073,
+      "candidates": [
+        {
+          "epochs": 60,
+          "exact_api_weight": 0.1,
+          "hard_negative_weight": 0.5,
+          "learning_rate": 0.0003,
+          "listwise_weight": 1.0,
+          "name": "balanced_lr3e4_e60_t1",
+          "pairwise_weight": 1.0,
+          "stage_weight": 0.1,
+          "temperature": 1.0
+        },
+        {
+          "epochs": 120,
+          "exact_api_weight": 0.1,
+          "hard_negative_weight": 0.5,
+          "learning_rate": 0.0001,
+          "listwise_weight": 1.0,
+          "name": "balanced_lr1e4_e120_t075",
+          "pairwise_weight": 1.0,
+          "stage_weight": 0.1,
+          "temperature": 0.75
+        },
+        {
+          "epochs": 120,
+          "exact_api_weight": 0.1,
+          "hard_negative_weight": 0.75,
+          "learning_rate": 0.0003,
+          "listwise_weight": 1.0,
+          "name": "hard_lr3e4_e120_t075",
+          "pairwise_weight": 0.75,
+          "stage_weight": 0.1,
+          "temperature": 0.75
+        }
+      ],
+      "checkpoint_interval_epochs": 10,
+      "cv_folds": 3,
+      "cv_seed": 25071,
+      "final_seeds": [
+        25071,
+        25072,
+        25073
+      ],
+      "initialization_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/preflight/initialization_snapshots",
+      "input_dim": 4096,
+      "interaction_rank": 32,
+      "layer": "final_layer",
+      "maximum_hard_samples_per_state": 128,
+      "maximum_pair_samples_per_state": 256,
+      "projection_dim": 64,
+      "state_views": 10,
+      "transition_views": 10,
+      "weight_decay": 0.0001
+    },
+    "source": {
+      "branch": "research/v4-identity-reconciled-corpus",
+      "starting_head": "d2dd315260906aa1aec71ff4fc9e58f297c506b1"
+    }
+  },
+  "stage_c_7hr": {
+    "appworld": {
+      "context_limit": 40960,
+      "enable_thinking": false,
+      "full_bridge_script": "scripts/appworld_full_agent_bridge_7f.py",
+      "legacy_python": "/home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python",
+      "legacy_root": "/lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root",
+      "max_api_calls_per_interaction": 100,
+      "max_context_turns": 40,
+      "max_new_tokens": 512,
+      "max_steps": 50,
+      "one_step_bridge_script": "scripts/appworld_live_one_step_bridge_7b.py",
+      "prompt_profile": "full_demo_first_only",
+      "semantic_module": "rcmf/training/appworld_replay_clean_rebuild_7b.py",
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "worker_timeout_seconds": 600
+    },
+    "archive_branch": "archive/v4-generic-memory-specific-amortization-failed",
+    "artifact_dir": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d",
+    "compiler": {
+      "beta_learning_rate": 0.0001,
+      "checkpoint_updates": [
+        2,
+        4
+      ],
+      "decoder_learning_rate": 1e-06,
+      "ground_truth_ce_weight": 0.05,
+      "max_grad_norm": 1.0,
+      "maximum_updates_per_pair": 4,
+      "policy_kl_weight": 1.0,
+      "program_dim": 256,
+      "ratio_budget_per_layer": 1.0,
+      "ratio_restraint_weight": 0.001,
+      "selected_layer_indices": [
+        7,
+        14,
+        21,
+        28
+      ],
+      "structured_hidden_dim": 128,
+      "structured_learning_rate": 0.0001,
+      "teacher_token_ce_weight": 0.25,
+      "token_count": 4,
+      "top_k": 64,
+      "weight_decay": 0.0001
+    },
+    "expected_exp027b_checkpoint_sha256": "8af2d1068ee0059c79edf740920f9d506b8a880459ff53656b449f767e5dffda",
+    "expected_model_name": "Qwen/Qwen3-8B",
+    "expected_replay_lineage_sha256": "5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1",
+    "expected_selector_sha256": "fresh_stage_output",
+    "expected_structural_lineage_sha256": "f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb",
+    "feature_contract": {
+      "context_limit": 40960,
+      "forbidden_fields": [
+        "target_action",
+        "target_observation",
+        "ground_truth_next_app",
+        "ground_truth_next_api",
+        "procedural_tier",
+        "exact_api_match",
+        "paired_outcome",
+        "task_id",
+        "state_id",
+        "transition_id",
+        "signature_class_id",
+        "first37_outcome"
+      ],
+      "parent_step_buckets": [
+        0,
+        3,
+        8
+      ],
+      "version": "appworld_deployment_structured_features_7hr_v1"
+    },
+    "first37": {
+      "always_on_raw_success": 5,
+      "always_on_raw_summary": "runs/stage_c/deep_residual_amortization_7f_20260822_001/phase_a_first37_v3/summary.json",
+      "matched_bare_success": 8,
+      "matched_bare_summary": "runs/stage_c/memory_specific_deep_amortization_7g_20260823_001/phase_a_matched_bare_first37/summary.json"
+    },
+    "fresh_pipeline_mode": true,
+    "gate": {
+      "activation_thresholds": [
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9
+      ],
+      "calibration_temperatures": [
+        0.5,
+        0.75,
+        1.0,
+        1.25,
+        1.5,
+        2.0
+      ],
+      "epoch_checkpoints": [
+        50,
+        100,
+        200
+      ],
+      "hidden_dim": 64,
+      "learning_rate": 0.001,
+      "maximum_activation_rate": 0.6,
+      "maximum_execution_drop": 0.02,
+      "maximum_harmful_activation_rate": 0.2,
+      "maximum_harmful_probability": 0.25,
+      "minimum_activation_rate": 0.05,
+      "minimum_positive_prevalence_lift": 0.1,
+      "weight_decay": 0.0001
+    },
+    "global_seed": 25101,
+    "heartbeat_interval_seconds": 240,
+    "panel": {
+      "action_strata": [
+        "authentication",
+        "read_query",
+        "write_mutation",
+        "api_documentation",
+        "completion",
+        "python_reasoning",
+        "api_other"
+      ],
+      "heldout_train_validation_task_count": 8,
+      "initial_state_count": 256,
+      "maximum_state_count": 499,
+      "minimum_per_label": 40,
+      "model_train_task_count": 29,
+      "post_d06_reproduction_expectation": {
+        "heldout": 98,
+        "model_train": 366
+      },
+      "quantile_count": 4,
+      "task_split_manifest": "/lambda/nfs/rcmf-persist/project/runs/stage_c/state_conditioned_program_direct_7dg_20260821_001/preflight/a_task_split.json"
+    },
+    "parent_exp025b": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/shared/compat_exp025b",
+    "parent_exp025c": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d",
+    "parent_exp025cr": "runs/stage_c/signature_balanced_field_7cr_20260818_001",
+    "parent_exp025d": "runs/stage_c/state_conditioned_program_direct_7dg_20260821_001",
+    "parent_exp027b": "runs/stage_c/memory_specific_deep_amortization_7g_20260823_001",
+    "persistent_root": "/lambda/nfs/rcmf-persist",
+    "reconciled_corpus_dir": "/lambda/nfs/rcmf-persist/project/runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001",
+    "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001-1d",
+    "runtime": {
+      "backward_seconds_conservative": 4.0,
+      "backward_seconds_expected": 2.4,
+      "first37_conservative_hours": 2.2,
+      "first37_expected_hours": 1.3,
+      "one_step_generation_seconds_conservative": 12.0,
+      "one_step_generation_seconds_expected": 7.85,
+      "policy_forward_seconds_conservative": 3.5,
+      "policy_forward_seconds_expected": 1.85,
+      "projected_bytes_per_checkpoint": 650000000,
+      "projected_bytes_per_condition": 2359296,
+      "review_threshold_h100_hours": 120.0
+    },
+    "starting_head": "78f8e2e674709775b8a2a9b92297d255ec0e73c3",
+    "working_branch": "research/v4-appworld-structured-rescue"
+  },
+  "stage_c_9a": {
+    "appworld": {
+      "context_limit": 40960,
+      "do_sample": false,
+      "enable_thinking": false,
+      "full_bridge_script": "scripts/appworld_full_agent_bridge_7f.py",
+      "legacy_python": "/home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python",
+      "legacy_root": "/lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root",
+      "max_api_calls_per_interaction": 100,
+      "max_context_turns": 40,
+      "max_new_tokens": 512,
+      "max_steps": 50,
+      "one_step_bridge_script": "scripts/appworld_live_one_step_bridge_7b.py",
+      "prompt_profile": "full_demo_first_only",
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "worker_timeout_seconds": 600
+    },
+    "archive_branch": "archive/v4-exp030a-selected-memory-proxy",
+    "artifact_dir": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d",
+    "audit": {
+      "format": "detailed_generation_interaction_audit_11b_v1",
+      "git_safe_root": "research/audits/rcmf_exp031a_one_demo_retrain_11b_20260829_001",
+      "lambda_raw_root": "runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001/audits"
+    },
+    "expected": {
+      "complete_train_memory_count": 401,
+      "heldout_memory_count": 98,
+      "heldout_task_count": 8,
+      "model_name": "Qwen/Qwen3-8B",
+      "replay_lineage_sha256": "5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1",
+      "scoreable_heldout_state_count": 98,
+      "scoreable_train_state_count": 366,
+      "selector_ensemble_sha256": "fresh_stage_output",
+      "structural_lineage_sha256": "f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb",
+      "train_task_count": 29
+    },
+    "field": {
+      "A_shape": [
+        960,
+        8,
+        256
+      ],
+      "B_shape": [
+        8,
+        256
+      ],
+      "accumulator_dtype": "float32",
+      "key_dim": 960,
+      "parent_weighting": "parent_normalized",
+      "payload_dim": 256,
+      "runtime_memory_scan_allowed": false,
+      "slot_count": 8,
+      "training_same_task_exclusion": "direct_task_accumulator_subtraction",
+      "version": "rcmf_reversible_full_bank_field_9a_v1"
+    },
+    "first37": {
+      "complete_field_memory_count": 499,
+      "condition_ids": [
+        "D0",
+        "D1",
+        "D2"
+      ],
+      "correct_field_multiplier_conservative": 3.0,
+      "correct_field_multiplier_expected": 2.0,
+      "expected_condition_count": 111,
+      "expected_git_safe_audit_bytes": 1500000000,
+      "expected_lambda_raw_audit_bytes": 4000000000,
+      "expected_task_count": 37,
+      "measured_bare_h100_hours": 0.769878765447235,
+      "task_manifest_config": "configs/benchmark/stage_c_deep_residual_amortization_7f.yaml",
+      "task_manifest_section": "stage_c_7f.first37.task_ids"
+    },
+    "global_seed": 25101,
+    "memory": {
+      "arbitrary_truncation_allowed": false,
+      "cache_dtype": "float32",
+      "full_transition_global_excluded": true,
+      "input_dim": 4096,
+      "payload_dim": 256,
+      "pooling_rules": [
+        "token_mean",
+        "final_token"
+      ],
+      "pooling_type_embedding": "learned_shared_mean_final",
+      "slot_count": 8,
+      "source_layer": "final_layer",
+      "source_view_names": [
+        "source_task_goal",
+        "pre_action_state",
+        "complete_action",
+        "post_action_observation"
+      ],
+      "token_subsampling_allowed": false,
+      "writer_hidden_dim": 512
+    },
+    "parent_exp025b": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/shared/compat_exp025b",
+    "parent_exp025c": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d",
+    "parent_exp025cr": "runs/stage_c/signature_balanced_field_7cr_20260818_001",
+    "parent_exp028a": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d",
+    "persistent_root": "/lambda/nfs/rcmf-persist",
+    "prompt_dependent_inputs": {
+      "outcomes": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d/paired_causal/paired_outcomes.json",
+      "state_cache": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d/representation_cache/multiview/state_multiview.pt",
+      "teacher_cache": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d/structured_compiler/policy_teacher_cache.pt"
+    },
+    "reader": {
+      "attention_dim": 512,
+      "head_dim": 64,
+      "heads": 8,
+      "insertion_layers": [
+        7,
+        14,
+        21,
+        28
+      ],
+      "key_projection": "trainable_independent",
+      "model_dim": 4096,
+      "output_projection": "trainable_zero_initialized",
+      "payload_dim": 256,
+      "query_projection": "trainable_independent",
+      "self_attention_kv_append": false,
+      "slot_causal_mask": false,
+      "value_projection": "trainable_independent",
+      "version": "rcmf_standard_field_cross_attention_reader_9a_v1"
+    },
+    "reconciled_corpus_dir": "/lambda/nfs/rcmf-persist/project/runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001",
+    "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001-1d",
+    "runtime": {
+      "hardware_required": "NVIDIA H100 80GB HBM3",
+      "heartbeat_interval_seconds": 240,
+      "heartbeat_stale_seconds": 720,
+      "review_threshold_h100_hours": 120.0
+    },
+    "selector": {
+      "deployment_score_matrix_allowed": false,
+      "deployment_top_k_allowed": false,
+      "equality_atol": 1e-05,
+      "frozen": true,
+      "interaction_rank": 32,
+      "key_dim": 960,
+      "memory_specific_prior": false,
+      "mu": 0.0,
+      "require_stored_score_equivalence": true,
+      "seed_directories": [
+        "seed_25071",
+        "seed_25072",
+        "seed_25073"
+      ],
+      "state_views": 10,
+      "transition_views": 10
+    },
+    "starting_head": "resolved_at_launch",
+    "task_split_manifest": "/lambda/nfs/rcmf-persist/project/runs/stage_c/state_conditioned_program_direct_7dg_20260821_001/preflight/a_task_split.json",
+    "training": {
+      "checkpoint_every_units": 25,
+      "epochs": [
+        1,
+        2
+      ],
+      "exact_resume": true,
+      "full_vs_shuffle_nll_weight": 0.1,
+      "full_vs_zero_nll_weight": 0.1,
+      "gradient_checkpointing": true,
+      "ground_truth_action_ce_weight": 0.05,
+      "max_grad_norm": 1.0,
+      "mixed_precision": "bfloat16",
+      "positive_bare_class_balance": true,
+      "raw_or_bare_policy_kl_weight": 1.0,
+      "reader_learning_rate": 0.0001,
+      "reader_residual_norm_weight": 0.001,
+      "teacher_token_ce_weight": 0.25,
+      "weight_decay": 0.0001,
+      "writer_learning_rate": 0.0001,
+      "writer_payload_norm_weight": 0.0001
+    },
+    "validation": {
+      "checkpoint_selection": "heldout_train_tasks_only",
+      "live_controls": [
+        "L0_zero",
+        "L1_correct",
+        "L2_key_payload_shuffle",
+        "L3_state_query_shuffle"
+      ],
+      "maximum_execution_drop": 0.05,
+      "minimum_positive_task_fraction": 0.5,
+      "teacher_forced_controls": [
+        "V0_zero",
+        "V1_correct",
+        "V2_key_payload_shuffle",
+        "V3_state_query_shuffle"
+      ]
+    },
+    "working_branch": "research/v6-rcmf-reproducible-3d-gated-pipeline"
+  },
+  "state": {
+    "history_steps": 4,
+    "include_latest_observation": true,
+    "include_system_prompt": false,
+    "include_task": true
+  },
+  "training": {
+    "effective_batch_size": 1,
+    "grad_clip": 0.5,
+    "hard_negative_rate": 0.25,
+    "lr_compiler": 1e-05,
+    "lr_encoder": 1e-05,
+    "lr_injector": 1e-05,
+    "memory_master_dtype": "fp32",
+    "optimizer": "adamw",
+    "precision": "bf16",
+    "seeds": [
+      1,
+      2,
+      3
+    ],
+    "support_size": 4,
+    "warmup_ratio": 0.03,
+    "weight_decay": 0.0
+  }
+}

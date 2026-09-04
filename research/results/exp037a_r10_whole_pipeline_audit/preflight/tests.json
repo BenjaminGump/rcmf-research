@@ -1,0 +1,42 @@
+{
+  "format": "exp037a_r10_test_summary_v1",
+  "lambda": {
+    "focused": {
+      "command": "python -m pytest -p no:cacheprovider -q tests/test_exp037a_r10_pipeline_hardening.py tests/test_exp037a_r10_14j_preflight.py",
+      "duration_seconds": 15.83,
+      "failed": 0,
+      "passed": 16,
+      "skipped": 0
+    },
+    "full": {
+      "command": "python -m pytest -p no:cacheprovider -q",
+      "duration_seconds": 33.27,
+      "failed": 0,
+      "passed": 934,
+      "skipped": 0
+    },
+    "python": "/home/ubuntu/venvs/rcmf-py311/bin/python"
+  },
+  "local": {
+    "focused": {
+      "command": "python -m pytest -p no:cacheprovider -q tests/test_exp037a_r10_pipeline_hardening.py tests/test_exp037a_r10_14j_preflight.py",
+      "duration_seconds": 39.76,
+      "failed": 0,
+      "passed": 16,
+      "skipped": 0
+    },
+    "full": {
+      "command": "python -m pytest -p no:cacheprovider -q",
+      "duration_seconds": 78.34,
+      "failed": 0,
+      "passed": 931,
+      "skipped": 3
+    },
+    "python": "C:/Users/Admin/miniconda3/envs/appworld_env/python.exe"
+  },
+  "long_scientific_run_launched": false,
+  "passed": true,
+  "process_start_pythonhashseed": "25101",
+  "scientific_stages_executed": 0,
+  "source_commit": "0e4015547da45802cc7b6ff3a9b92adce73077fc"
+}

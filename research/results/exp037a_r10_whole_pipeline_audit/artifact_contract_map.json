@@ -1,0 +1,455 @@
+{
+  "format": "exp037a_r10_whole_pipeline_logic_audit_v1",
+  "producers": [
+    {
+      "caller": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "declared_artifacts_sha256_sealed": true,
+      "identity_fields": [
+        "source_commit",
+        "run_uuid",
+        "run_root",
+        "pipeline_config_sha256",
+        "contract_sha256",
+        "stage_id",
+        "attempt_id"
+      ],
+      "producer": "write_stage_manifest",
+      "stage_population": 60,
+      "strict_validator_compatible": true
+    }
+  ],
+  "stage_artifacts": [
+    {
+      "outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "S00_environment_manifest"
+    },
+    {
+      "outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "S01_authoritative_corpus"
+    },
+    {
+      "outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "S02_task_and_parent_splits"
+    },
+    {
+      "outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "S03_transition_records"
+    },
+    {
+      "outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "S04_selector_supervision"
+    },
+    {
+      "outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "S05_transition_representations"
+    },
+    {
+      "outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "S05B_joint_source_contract_preflight"
+    },
+    {
+      "outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "S06_cv_folds_and_sampling"
+    },
+    {
+      "outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "S07_initial_parameter_snapshots"
+    },
+    {
+      "outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "S08_two_arm_contract"
+    },
+    {
+      "outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "S09_runtime_preflight_and_approval"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D00_state_representations"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D01_selector_candidate_cv"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D02_selector_candidate_selection"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D03_final_selector_ensemble"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D04_selector_factorization"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D05_selected_memory_manifest"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D06_paired_causal_outcomes"
+    },
+    {
+      "outputs": [
+        "d06_three_demo_reproduction_gate.json",
+        "gate.json",
+        "stage_result.json"
+      ],
+      "stage_id": "D06B_three_demo_causal_reproduction_gate"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D07_policy_teacher"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D08_zero_cache_and_training_units"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D08B_writer_reader_one_unit_smoke"
+    },
+    {
+      "outputs": [
+        "epoch_01.pt",
+        "epoch_01_stage_summary.json",
+        "stage_result.json"
+      ],
+      "stage_id": "D09_writer_reader_epoch_1"
+    },
+    {
+      "outputs": [
+        "epoch_01.pt",
+        "epoch_02.pt",
+        "training_summary.json",
+        "stage_result.json"
+      ],
+      "stage_id": "D10_writer_reader_epoch_2"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D11_heldout_teacher_forced"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D12_heldout_one_step"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D13_heldout_full_trajectory"
+    },
+    {
+      "outputs": [
+        "checkpoint_selection.json",
+        "stage_result.json"
+      ],
+      "stage_id": "D14_checkpoint_selection"
+    },
+    {
+      "outputs": [
+        "selected_401_field.json",
+        "selected_401_field.pt when deployable",
+        "stage_result.json"
+      ],
+      "stage_id": "D15_401_memory_field"
+    },
+    {
+      "outputs": [
+        "instant_add_report.json when deployable",
+        "complete_37_task_field.pt when deployable",
+        "stage_result.json"
+      ],
+      "stage_id": "D16_compile_and_add_98_memories"
+    },
+    {
+      "outputs": [
+        "validation_14b.json when deployable",
+        "stage_result.json"
+      ],
+      "stage_id": "D17_499_memory_deployment_field"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D18_common_one_demo_dev_bare"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D19_common_one_demo_dev_correct"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D20_common_one_demo_dev_shuffle"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "D21_historical_reproduction_analysis"
+    },
+    {
+      "outputs": [
+        "three_demo_reproduction_gate.json",
+        "gate.json",
+        "stage_result.json"
+      ],
+      "stage_id": "D22_three_demo_reproduction_gate"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "O00_state_representations"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "O01_selector_candidate_cv"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "O02_selector_candidate_selection"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "O03_final_selector_ensemble"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "O04_selector_factorization"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "O05_selected_memory_manifest"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "O06_paired_causal_outcomes"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "O07_policy_teacher"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "O08_zero_cache_and_training_units"
+    },
+    {
+      "outputs": [
+        "epoch_01.pt",
+        "epoch_01_stage_summary.json",
+        "stage_result.json"
+      ],
+      "stage_id": "O09_writer_reader_epoch_1"
+    },
+    {
+      "outputs": [
+        "epoch_01.pt",
+        "epoch_02.pt",
+        "training_summary.json",
+        "stage_result.json"
+      ],
+      "stage_id": "O10_writer_reader_epoch_2"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "O11_heldout_teacher_forced"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "O12_heldout_one_step"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "O13_heldout_full_trajectory"
+    },
+    {
+      "outputs": [
+        "checkpoint_selection.json",
+        "stage_result.json"
+      ],
+      "stage_id": "O14_checkpoint_selection"
+    },
+    {
+      "outputs": [
+        "selected_401_field.json",
+        "selected_401_field.pt when deployable",
+        "stage_result.json"
+      ],
+      "stage_id": "O15_401_memory_field"
+    },
+    {
+      "outputs": [
+        "instant_add_report.json when deployable",
+        "complete_37_task_field.pt when deployable",
+        "stage_result.json"
+      ],
+      "stage_id": "O16_compile_and_add_98_memories"
+    },
+    {
+      "outputs": [
+        "validation_14b.json when deployable",
+        "stage_result.json"
+      ],
+      "stage_id": "O17_499_memory_deployment_field"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "O18_common_one_demo_dev_correct"
+    },
+    {
+      "outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "stage_id": "O19_common_one_demo_dev_shuffle"
+    },
+    {
+      "outputs": [
+        "two_arm_paired_analysis.json",
+        "stage_result.json"
+      ],
+      "stage_id": "F00_two_arm_paired_analysis"
+    },
+    {
+      "outputs": [
+        "validation.json",
+        "stage_result.json"
+      ],
+      "stage_id": "F01_portability_validation"
+    },
+    {
+      "outputs": [
+        "index.json",
+        "stage_result.json"
+      ],
+      "stage_id": "F02_git_safe_audit_export"
+    },
+    {
+      "outputs": [
+        "final_record.json",
+        "stage_result.json"
+      ],
+      "stage_id": "F03_final_report_and_handoff"
+    }
+  ]
+}

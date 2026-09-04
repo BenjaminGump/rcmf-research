@@ -1,0 +1,47 @@
+{
+  "format": "exp037a_r10_checkpoint_resume_validation_14j_v1",
+  "passed": true,
+  "sealed_d09": {
+    "checks": {
+      "diagnostic_only": true,
+      "finite": true,
+      "frozen_dependencies": true,
+      "gradient_paths": true,
+      "not_14j_input": true,
+      "one_backward": true,
+      "one_optimizer_step": true,
+      "prepared": true,
+      "resume_passed": true,
+      "sealed_checkpoint_hash": true,
+      "source_unchanged": true,
+      "starts_after_576": true
+    },
+    "passed": true,
+    "preparation": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r9_d09_one_unit_resume_20260904_002/preparation_manifest.json",
+      "sha256": "9b605ee24f7d86e6b765884716e79dcd244578e1ccfb34d7567cd122a77ff960",
+      "size_bytes": 307032
+    },
+    "result": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r9_d09_one_unit_resume_20260904_002/arm/joint_training/checkpoints/diagnostic_one_unit_summary_14c.json",
+      "sha256": "187738f70aa0daebb9fdd5b9d5203abcf213dfc2af114133dba722b3bece76bb",
+      "size_bytes": 39498
+    },
+    "scientific_input_for_14j": false
+  },
+  "synthetic": {
+    "checks": {
+      "all_comparisons": true,
+      "cuda_exercised": true,
+      "fresh_process": true,
+      "passed": true,
+      "three_processes": true
+    },
+    "input": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r9_synthetic_resume_20260904_001/synthetic_resume_equivalence.json",
+      "sha256": "ad4be5c64f770481226b165e388d9e9daba1cd82fee1d8122621fc5734a91e44",
+      "size_bytes": 4521
+    },
+    "passed": true
+  }
+}

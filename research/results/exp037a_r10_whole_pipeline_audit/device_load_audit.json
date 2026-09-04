@@ -1,0 +1,208 @@
+{
+  "format": "exp037a_r10_whole_pipeline_logic_audit_v1",
+  "loads": [
+    {
+      "call": "torch.load(aggregate_path, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 516,
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(ensemble_path, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 785,
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(\n        target / \"representation_cache/multiview/state_multiview.pt\",\n        map_location=\"cpu\",\n        weights_only=False,\n    )",
+      "classification": "SAFE_AS_IS",
+      "line": 797,
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(\n        target / \"representation_cache/multiview/transition_multiview.pt\",\n        map_location=\"cpu\",\n        weights_only=False,\n    )",
+      "classification": "SAFE_AS_IS",
+      "line": 802,
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(target / \"data/rcmf_source_cache.pt\", map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 1522,
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(\n        target / \"representation_cache/multiview/state_multiview.pt\",\n        map_location=\"cpu\",\n        weights_only=False,\n    )",
+      "classification": "SAFE_AS_IS",
+      "line": 1523,
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(correct_path, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 1662,
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(shuffle_path, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 1663,
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(path, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 1727,
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(row_path, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 569,
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(correct_field, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 1308,
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(path, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 792,
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(shuffled_field, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 1319,
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(\n                checkpoint, map_location=\"cpu\", weights_only=False\n            )",
+      "classification": "SAFE_AS_IS",
+      "line": 1320,
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(\n            target / \"data/rcmf_source_cache.pt\",\n            map_location=\"cpu\",\n            weights_only=False,\n        )",
+      "classification": "SAFE_AS_IS",
+      "line": 1733,
+      "path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(paths[\"source_cache\"], map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 317,
+      "path": "scripts/run_rcmf_joint_full_bank_9a.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(paths[\"teacher\"], map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 321,
+      "path": "scripts/run_rcmf_joint_full_bank_9a.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(\n            checkpoint_path,\n            map_location=backend.device,\n            weights_only=False,\n        )",
+      "classification": "SAFE_AS_IS_AFTER_R9_CANONICALIZATION",
+      "line": 1170,
+      "path": "scripts/run_rcmf_joint_full_bank_9a.py",
+      "reason": "Training checkpoint tensors map to the active device; RNG tensors are canonicalized to CPU."
+    },
+    {
+      "call": "torch.load(\n            checkpoint_path, map_location=backend.device, weights_only=False\n        )",
+      "classification": "SAFE_AS_IS_AFTER_R9_CANONICALIZATION",
+      "line": 1565,
+      "path": "scripts/run_rcmf_joint_full_bank_9a.py",
+      "reason": "Training checkpoint tensors map to the active device; RNG tensors are canonicalized to CPU."
+    },
+    {
+      "call": "torch.load(writer_initial, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 410,
+      "path": "scripts/run_rcmf_joint_full_bank_9a.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(reader_initial, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 414,
+      "path": "scripts/run_rcmf_joint_full_bank_9a.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(checkpoint_path, map_location=device, weights_only=False)",
+      "classification": "SAFE_BUT_WASTEFUL",
+      "line": 697,
+      "path": "scripts/run_rcmf_joint_full_bank_live_9a.py",
+      "reason": "Only module/optimizer tensors are consumed; no CPU-only metadata API receives mapped tensors."
+    },
+    {
+      "call": "torch.load(slot_path, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 372,
+      "path": "scripts/run_rcmf_joint_full_bank_live_9a.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(checkpoint_path, map_location=backend.device, weights_only=False)",
+      "classification": "SAFE_BUT_WASTEFUL",
+      "line": 569,
+      "path": "scripts/run_rcmf_joint_full_bank_live_9a.py",
+      "reason": "Only module/optimizer tensors are consumed; no CPU-only metadata API receives mapped tensors."
+    },
+    {
+      "call": "torch.load(path, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 321,
+      "path": "scripts/run_rcmf_joint_full_bank_live_9a.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(paths[\"deployment\"], map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 979,
+      "path": "scripts/run_rcmf_joint_full_bank_first37_9a.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(ensemble_path, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 196,
+      "path": "scripts/run_rcmf_joint_full_bank_first37_9a.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(deployment_path, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 251,
+      "path": "scripts/run_rcmf_joint_full_bank_first37_9a.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    },
+    {
+      "call": "torch.load(path, map_location=\"cpu\", weights_only=False)",
+      "classification": "SAFE_AS_IS",
+      "line": 203,
+      "path": "scripts/run_rcmf_joint_full_bank_first37_9a.py",
+      "reason": "Payload is intentionally materialized on CPU before explicit placement."
+    }
+  ]
+}

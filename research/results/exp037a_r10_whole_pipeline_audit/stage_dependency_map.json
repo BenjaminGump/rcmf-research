@@ -1,0 +1,3130 @@
+{
+  "format": "exp037a_r10_whole_pipeline_logic_audit_v1",
+  "stages": [
+    {
+      "arm": "shared",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "S00_environment_manifest"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": true,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [],
+      "declared_outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "S01_authoritative_corpus",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "environment_manifest.json",
+          "producer": "preflight",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 0,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "S00_environment_manifest"
+    },
+    {
+      "arm": "shared",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "S01_authoritative_corpus"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": true,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "S00_environment_manifest"
+      ],
+      "declared_outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "S02_task_and_parent_splits",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "S00_environment_manifest",
+          "role": "ordering"
+        },
+        {
+          "artifact": "authoritative_source_manifest.json",
+          "producer": "preflight",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 1,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "S01_authoritative_corpus"
+    },
+    {
+      "arm": "shared",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "S02_task_and_parent_splits"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": true,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "S01_authoritative_corpus"
+      ],
+      "declared_outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "S03_transition_records",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "S01_authoritative_corpus",
+          "role": "ordering"
+        },
+        {
+          "artifact": "shared/parent_split.json",
+          "producer": "preflight",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 2,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "S02_task_and_parent_splits"
+    },
+    {
+      "arm": "shared",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "S03_transition_records"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": true,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "S02_task_and_parent_splits"
+      ],
+      "declared_outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "S04_selector_supervision",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "S02_task_and_parent_splits",
+          "role": "ordering"
+        },
+        {
+          "artifact": "shared/transitions.jsonl",
+          "producer": "preflight",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 3,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "S03_transition_records"
+    },
+    {
+      "arm": "shared",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "S04_selector_supervision"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": true,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "S03_transition_records"
+      ],
+      "declared_outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "S05_transition_representations",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "S03_transition_records",
+          "role": "ordering"
+        },
+        {
+          "artifact": "shared/labels.jsonl",
+          "producer": "preflight",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "shared/illegal_pairs.jsonl",
+          "producer": "preflight",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 4,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "S04_selector_supervision"
+    },
+    {
+      "arm": "shared",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "S05_transition_representations"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "S04_selector_supervision"
+      ],
+      "declared_outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "S05B_joint_source_contract_preflight",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "S04_selector_supervision",
+          "role": "ordering"
+        },
+        {
+          "artifact": "shared/transitions.jsonl",
+          "producer": "S03_transition_records",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 5,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "S05_transition_representations"
+    },
+    {
+      "arm": "shared",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "S05B_joint_source_contract_preflight"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "S05_transition_representations"
+      ],
+      "declared_outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "S06_cv_folds_and_sampling",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "S05_transition_representations",
+          "role": "ordering"
+        },
+        {
+          "artifact": "shared/representation_cache/multiview",
+          "producer": "S05_transition_representations",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 6,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "S05B_joint_source_contract_preflight"
+    },
+    {
+      "arm": "shared",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "S06_cv_folds_and_sampling"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "S05B_joint_source_contract_preflight"
+      ],
+      "declared_outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "S07_initial_parameter_snapshots",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "S05B_joint_source_contract_preflight",
+          "role": "ordering"
+        },
+        {
+          "artifact": "preflight/shared/labels.jsonl",
+          "producer": "S04_selector_supervision",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 7,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "S06_cv_folds_and_sampling"
+    },
+    {
+      "arm": "shared",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "S07_initial_parameter_snapshots"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "S06_cv_folds_and_sampling"
+      ],
+      "declared_outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "S08_two_arm_contract",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "S06_cv_folds_and_sampling",
+          "role": "ordering"
+        },
+        {
+          "artifact": "initialization_manifest.json",
+          "producer": "preflight",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 8,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "S07_initial_parameter_snapshots"
+    },
+    {
+      "arm": "shared",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "S08_two_arm_contract"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "S07_initial_parameter_snapshots"
+      ],
+      "declared_outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "S09_runtime_preflight_and_approval",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "S07_initial_parameter_snapshots",
+          "role": "ordering"
+        },
+        {
+          "artifact": "resolved arm configs",
+          "producer": "preflight",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 9,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "S08_two_arm_contract"
+    },
+    {
+      "arm": "shared",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "S09_runtime_preflight_and_approval"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "S08_two_arm_contract"
+      ],
+      "declared_outputs": [
+        "preflight/shared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D00_state_representations",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "S08_two_arm_contract",
+          "role": "ordering"
+        },
+        {
+          "artifact": "runtime_authorization.json",
+          "producer": "launcher",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 10,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "S09_runtime_preflight_and_approval"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D00_state_representations"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "S09_runtime_preflight_and_approval"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D01_selector_candidate_cv",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "S09_runtime_preflight_and_approval",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "S03_transition_records",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "S04_selector_supervision",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "S05_transition_representations",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "S06_cv_folds_and_sampling",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "S07_initial_parameter_snapshots",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "S08_two_arm_contract",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 11,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D00_state_representations"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D01_selector_candidate_cv"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D00_state_representations"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D02_selector_candidate_selection",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D00_state_representations",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D00_state_representations",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 12,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D01_selector_candidate_cv"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D02_selector_candidate_selection"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D01_selector_candidate_cv"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D03_final_selector_ensemble",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D01_selector_candidate_cv",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D01_selector_candidate_cv",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 13,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D02_selector_candidate_selection"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D03_final_selector_ensemble"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D02_selector_candidate_selection"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D04_selector_factorization",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D02_selector_candidate_selection",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D00_state_representations",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D02_selector_candidate_selection",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 14,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D03_final_selector_ensemble"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D04_selector_factorization"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D03_final_selector_ensemble"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D05_selected_memory_manifest",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D03_final_selector_ensemble",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D03_final_selector_ensemble",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 15,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D04_selector_factorization"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D05_selected_memory_manifest"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D04_selector_factorization"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D06_paired_causal_outcomes",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D04_selector_factorization",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D00_state_representations",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D04_selector_factorization",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 16,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D05_selected_memory_manifest"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D06_paired_causal_outcomes"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D05_selected_memory_manifest"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D06B_three_demo_causal_reproduction_gate",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D05_selected_memory_manifest",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D05_selected_memory_manifest",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 17,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D06_paired_causal_outcomes"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D06B_three_demo_causal_reproduction_gate"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D06_paired_causal_outcomes"
+      ],
+      "declared_outputs": [
+        "d06_three_demo_reproduction_gate.json",
+        "gate.json",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D07_policy_teacher",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D06_paired_causal_outcomes",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D06_paired_causal_outcomes",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 18,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D06B_three_demo_causal_reproduction_gate"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D07_policy_teacher"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D06B_three_demo_causal_reproduction_gate"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D08_zero_cache_and_training_units",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D06B_three_demo_causal_reproduction_gate",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D06_paired_causal_outcomes",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 19,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D07_policy_teacher"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D08_zero_cache_and_training_units"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D07_policy_teacher"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D08B_writer_reader_one_unit_smoke",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D07_policy_teacher",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D06_paired_causal_outcomes",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D07_policy_teacher",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "S05B_joint_source_contract_preflight",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 20,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D08_zero_cache_and_training_units"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D08B_writer_reader_one_unit_smoke"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D08_zero_cache_and_training_units"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D09_writer_reader_epoch_1",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D08_zero_cache_and_training_units",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D08_zero_cache_and_training_units",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 21,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D08B_writer_reader_one_unit_smoke"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D09_writer_reader_epoch_1"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "completed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D08B_writer_reader_one_unit_smoke"
+      ],
+      "declared_outputs": [
+        "epoch_01.pt",
+        "epoch_01_stage_summary.json",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D10_writer_reader_epoch_2",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D08B_writer_reader_one_unit_smoke",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D08_zero_cache_and_training_units",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 22,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D09_writer_reader_epoch_1"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D10_writer_reader_epoch_2"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "attempted_failed",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D09_writer_reader_epoch_1"
+      ],
+      "declared_outputs": [
+        "epoch_01.pt",
+        "epoch_02.pt",
+        "training_summary.json",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D11_heldout_teacher_forced",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D09_writer_reader_epoch_1",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D09_writer_reader_epoch_1",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 23,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D10_writer_reader_epoch_2"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D11_heldout_teacher_forced"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D10_writer_reader_epoch_2"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D12_heldout_one_step",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D10_writer_reader_epoch_2",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D10_writer_reader_epoch_2",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 24,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D11_heldout_teacher_forced"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D12_heldout_one_step"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D11_heldout_teacher_forced"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D13_heldout_full_trajectory",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D11_heldout_teacher_forced",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D10_writer_reader_epoch_2",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D11_heldout_teacher_forced",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 25,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D12_heldout_one_step"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D13_heldout_full_trajectory"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D12_heldout_one_step"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D14_checkpoint_selection",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D12_heldout_one_step",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D10_writer_reader_epoch_2",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D12_heldout_one_step",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 26,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D13_heldout_full_trajectory"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D14_checkpoint_selection"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D13_heldout_full_trajectory"
+      ],
+      "declared_outputs": [
+        "checkpoint_selection.json",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D15_401_memory_field",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D13_heldout_full_trajectory",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D11_heldout_teacher_forced",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D12_heldout_one_step",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D13_heldout_full_trajectory",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 27,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D14_checkpoint_selection"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D15_401_memory_field"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D14_checkpoint_selection"
+      ],
+      "declared_outputs": [
+        "selected_401_field.json",
+        "selected_401_field.pt when deployable",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D16_compile_and_add_98_memories",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D14_checkpoint_selection",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D12_heldout_one_step",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D14_checkpoint_selection",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 28,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D15_401_memory_field"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D16_compile_and_add_98_memories"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D15_401_memory_field"
+      ],
+      "declared_outputs": [
+        "instant_add_report.json when deployable",
+        "complete_37_task_field.pt when deployable",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D17_499_memory_deployment_field",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D15_401_memory_field",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D08_zero_cache_and_training_units",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D15_401_memory_field",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 29,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D16_compile_and_add_98_memories"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D17_499_memory_deployment_field"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D16_compile_and_add_98_memories"
+      ],
+      "declared_outputs": [
+        "validation_14b.json when deployable",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D18_common_one_demo_dev_bare",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D16_compile_and_add_98_memories",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D14_checkpoint_selection",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D16_compile_and_add_98_memories",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 30,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D17_499_memory_deployment_field"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D18_common_one_demo_dev_bare"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D17_499_memory_deployment_field"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D19_common_one_demo_dev_correct",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D17_499_memory_deployment_field",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D17_499_memory_deployment_field",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 31,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D18_common_one_demo_dev_bare"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D19_common_one_demo_dev_correct"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D18_common_one_demo_dev_bare"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D20_common_one_demo_dev_shuffle",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D18_common_one_demo_dev_bare",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D17_499_memory_deployment_field",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 32,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D19_common_one_demo_dev_correct"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D20_common_one_demo_dev_shuffle"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D19_common_one_demo_dev_correct"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D21_historical_reproduction_analysis",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D19_common_one_demo_dev_correct",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D17_499_memory_deployment_field",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 33,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D20_common_one_demo_dev_shuffle"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D21_historical_reproduction_analysis"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D20_common_one_demo_dev_shuffle"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "D22_three_demo_reproduction_gate",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D20_common_one_demo_dev_shuffle",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D18_common_one_demo_dev_bare",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D19_common_one_demo_dev_correct",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D20_common_one_demo_dev_shuffle",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 34,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D21_historical_reproduction_analysis"
+    },
+    {
+      "arm": "3d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "D22_three_demo_reproduction_gate"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D21_historical_reproduction_analysis"
+      ],
+      "declared_outputs": [
+        "three_demo_reproduction_gate.json",
+        "gate.json",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O00_state_representations",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D21_historical_reproduction_analysis",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D00_state_representations",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D01_selector_candidate_cv",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D02_selector_candidate_selection",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D03_final_selector_ensemble",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D04_selector_factorization",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D05_selected_memory_manifest",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D06_paired_causal_outcomes",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D07_policy_teacher",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D08_zero_cache_and_training_units",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D09_writer_reader_epoch_1",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D10_writer_reader_epoch_2",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D11_heldout_teacher_forced",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D12_heldout_one_step",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D13_heldout_full_trajectory",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D14_checkpoint_selection",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D15_401_memory_field",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D16_compile_and_add_98_memories",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D17_499_memory_deployment_field",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D18_common_one_demo_dev_bare",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D19_common_one_demo_dev_correct",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D20_common_one_demo_dev_shuffle",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D21_historical_reproduction_analysis",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D06B_three_demo_causal_reproduction_gate",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "D08B_writer_reader_one_unit_smoke",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 35,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "three_demo_reproduction_gate",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "D22_three_demo_reproduction_gate"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O00_state_representations"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D22_three_demo_reproduction_gate"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O01_selector_candidate_cv",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D22_three_demo_reproduction_gate",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "S03_transition_records",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "S04_selector_supervision",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "S05_transition_representations",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "S06_cv_folds_and_sampling",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "S07_initial_parameter_snapshots",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "S08_two_arm_contract",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 36,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O00_state_representations"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O01_selector_candidate_cv"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O00_state_representations"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O02_selector_candidate_selection",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O00_state_representations",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O00_state_representations",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 37,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O01_selector_candidate_cv"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O02_selector_candidate_selection"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O01_selector_candidate_cv"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O03_final_selector_ensemble",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O01_selector_candidate_cv",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O01_selector_candidate_cv",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 38,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O02_selector_candidate_selection"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O03_final_selector_ensemble"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O02_selector_candidate_selection"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O04_selector_factorization",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O02_selector_candidate_selection",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O00_state_representations",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O02_selector_candidate_selection",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 39,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O03_final_selector_ensemble"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O04_selector_factorization"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O03_final_selector_ensemble"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O05_selected_memory_manifest",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O03_final_selector_ensemble",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O03_final_selector_ensemble",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 40,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O04_selector_factorization"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O05_selected_memory_manifest"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O04_selector_factorization"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O06_paired_causal_outcomes",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O04_selector_factorization",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O00_state_representations",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O04_selector_factorization",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 41,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O05_selected_memory_manifest"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O06_paired_causal_outcomes"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O05_selected_memory_manifest"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O07_policy_teacher",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O05_selected_memory_manifest",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O05_selected_memory_manifest",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 42,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O06_paired_causal_outcomes"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O07_policy_teacher"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O06_paired_causal_outcomes"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O08_zero_cache_and_training_units",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O06_paired_causal_outcomes",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O06_paired_causal_outcomes",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 43,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O07_policy_teacher"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O08_zero_cache_and_training_units"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O07_policy_teacher"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O09_writer_reader_epoch_1",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O07_policy_teacher",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O06_paired_causal_outcomes",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O07_policy_teacher",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "S05B_joint_source_contract_preflight",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 44,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O08_zero_cache_and_training_units"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O09_writer_reader_epoch_1"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O08_zero_cache_and_training_units"
+      ],
+      "declared_outputs": [
+        "epoch_01.pt",
+        "epoch_01_stage_summary.json",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O10_writer_reader_epoch_2",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O08_zero_cache_and_training_units",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O08_zero_cache_and_training_units",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 45,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O09_writer_reader_epoch_1"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O10_writer_reader_epoch_2"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O09_writer_reader_epoch_1"
+      ],
+      "declared_outputs": [
+        "epoch_01.pt",
+        "epoch_02.pt",
+        "training_summary.json",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O11_heldout_teacher_forced",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O09_writer_reader_epoch_1",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O09_writer_reader_epoch_1",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 46,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O10_writer_reader_epoch_2"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O11_heldout_teacher_forced"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O10_writer_reader_epoch_2"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O12_heldout_one_step",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O10_writer_reader_epoch_2",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O10_writer_reader_epoch_2",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 47,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O11_heldout_teacher_forced"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O12_heldout_one_step"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O11_heldout_teacher_forced"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O13_heldout_full_trajectory",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O11_heldout_teacher_forced",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O10_writer_reader_epoch_2",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O11_heldout_teacher_forced",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 48,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O12_heldout_one_step"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O13_heldout_full_trajectory"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O12_heldout_one_step"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O14_checkpoint_selection",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O12_heldout_one_step",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O10_writer_reader_epoch_2",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O12_heldout_one_step",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 49,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O13_heldout_full_trajectory"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O14_checkpoint_selection"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O13_heldout_full_trajectory"
+      ],
+      "declared_outputs": [
+        "checkpoint_selection.json",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O15_401_memory_field",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O13_heldout_full_trajectory",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O11_heldout_teacher_forced",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O12_heldout_one_step",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O13_heldout_full_trajectory",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 50,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O14_checkpoint_selection"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O15_401_memory_field"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O14_checkpoint_selection"
+      ],
+      "declared_outputs": [
+        "selected_401_field.json",
+        "selected_401_field.pt when deployable",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O16_compile_and_add_98_memories",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O14_checkpoint_selection",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O12_heldout_one_step",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O14_checkpoint_selection",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 51,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O15_401_memory_field"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O16_compile_and_add_98_memories"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O15_401_memory_field"
+      ],
+      "declared_outputs": [
+        "instant_add_report.json when deployable",
+        "complete_37_task_field.pt when deployable",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O17_499_memory_deployment_field",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O15_401_memory_field",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O08_zero_cache_and_training_units",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O15_401_memory_field",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 52,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O16_compile_and_add_98_memories"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O17_499_memory_deployment_field"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O16_compile_and_add_98_memories"
+      ],
+      "declared_outputs": [
+        "validation_14b.json when deployable",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O18_common_one_demo_dev_correct",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O16_compile_and_add_98_memories",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O14_checkpoint_selection",
+          "role": "semantic_input"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O16_compile_and_add_98_memories",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 53,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O17_499_memory_deployment_field"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O18_common_one_demo_dev_correct"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O17_499_memory_deployment_field"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "O19_common_one_demo_dev_shuffle",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O17_499_memory_deployment_field",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O17_499_memory_deployment_field",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 54,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O18_common_one_demo_dev_correct"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O19_common_one_demo_dev_shuffle"
+      ],
+      "conditional_on": "D22_three_demo_reproduction_gate",
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "O18_common_one_demo_dev_correct"
+      ],
+      "declared_outputs": [
+        "stage-specific declared artifact set",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "F00_two_arm_paired_analysis",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "O18_common_one_demo_dev_correct",
+          "role": "ordering"
+        },
+        {
+          "artifact": "declared output artifact set",
+          "producer": "O17_499_memory_deployment_field",
+          "role": "semantic_input"
+        }
+      ],
+      "ordinal": 55,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "O19_common_one_demo_dev_shuffle"
+    },
+    {
+      "arm": "final",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "F00_two_arm_paired_analysis"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "D22_three_demo_reproduction_gate"
+      ],
+      "declared_outputs": [
+        "two_arm_paired_analysis.json",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "F01_portability_validation",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "D22_three_demo_reproduction_gate",
+          "role": "ordering"
+        },
+        {
+          "artifact": "gate and available dev summaries",
+          "producer": "D22 and O18/O19 when conditional arm ran",
+          "role": "terminal_analysis"
+        }
+      ],
+      "ordinal": 56,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "F00_two_arm_paired_analysis"
+    },
+    {
+      "arm": "final",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "F01_portability_validation"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "F00_two_arm_paired_analysis"
+      ],
+      "declared_outputs": [
+        "validation.json",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "F02_git_safe_audit_export",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "F00_two_arm_paired_analysis",
+          "role": "ordering"
+        },
+        {
+          "artifact": "analysis",
+          "producer": "F00_two_arm_paired_analysis",
+          "role": "ordering"
+        }
+      ],
+      "ordinal": 57,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "F01_portability_validation"
+    },
+    {
+      "arm": "final",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "F02_git_safe_audit_export"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "F01_portability_validation"
+      ],
+      "declared_outputs": [
+        "index.json",
+        "stage_result.json"
+      ],
+      "downstream_consumer": "F03_final_report_and_handoff",
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "F01_portability_validation",
+          "role": "ordering"
+        },
+        {
+          "artifact": "completion manifests",
+          "producer": "all executed stages",
+          "role": "audit"
+        }
+      ],
+      "ordinal": 58,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "F02_git_safe_audit_export"
+    },
+    {
+      "arm": "final",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "F03_final_report_and_handoff"
+      ],
+      "conditional_on": null,
+      "coverage": {
+        "formal_14h": "not_exercised",
+        "production_smoke": false,
+        "static_audit": true,
+        "synthetic_contract_test": true
+      },
+      "dag_dependencies": [
+        "F02_git_safe_audit_export"
+      ],
+      "declared_outputs": [
+        "final_record.json",
+        "stage_result.json"
+      ],
+      "downstream_consumer": null,
+      "hash_validation": "all declared files SHA256-validated by validate_stage_completion",
+      "identity_validation": "source/run UUID/root/config SHA/contract SHA",
+      "logical_inputs": [
+        {
+          "artifact": "completion.json",
+          "producer": "F02_git_safe_audit_export",
+          "role": "ordering"
+        },
+        {
+          "artifact": "analysis",
+          "producer": "F00_two_arm_paired_analysis",
+          "role": "final"
+        },
+        {
+          "artifact": "portability",
+          "producer": "F01_portability_validation",
+          "role": "final"
+        },
+        {
+          "artifact": "audit",
+          "producer": "F02_git_safe_audit_export",
+          "role": "final"
+        }
+      ],
+      "ordinal": 59,
+      "output_path_constructor": "rcmf.benchmarks.appworld.reproducible_stages_14b.formal_stage_output_paths(stage_id, run_root)",
+      "output_schema": "stage-specific payload plus strict output_manifest.json",
+      "output_validator": "completion_manifest",
+      "production_callable": "execute_stage",
+      "production_script": "scripts/run_rcmf_reproducible_stage_14b.py",
+      "resume_eligibility": "only after strict manifest, dependency, identity, and file-hash validation",
+      "retry_semantics": "only exit 75; maximum three frozen attempts",
+      "stage_id": "F03_final_report_and_handoff"
+    }
+  ]
+}

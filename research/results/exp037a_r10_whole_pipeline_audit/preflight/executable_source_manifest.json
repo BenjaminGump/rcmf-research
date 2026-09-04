@@ -1,0 +1,126 @@
+{
+  "files": {
+    "agents": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/AGENTS.md",
+      "sha256": "27ed78318bc97d06b05af1200a1800e9cb4168ca1dc79e441893056e9d2e31cd",
+      "size_bytes": 28960
+    },
+    "arm_1d_config": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/configs/pipeline/rcmf_appworld_arm_1d_14j.yaml",
+      "sha256": "af646fb8d8103fabea78caedd24aa6855fb77c9f65b2b91694849fdc223013c1",
+      "size_bytes": 368
+    },
+    "arm_3d_config": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/configs/pipeline/rcmf_appworld_arm_3d_14j.yaml",
+      "sha256": "8770e2d9bd6b801e900c0d6b8686532a57f86e5f66b0c921b561d182996019fa",
+      "size_bytes": 357
+    },
+    "authorization": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/rcmf/pipeline/authorization.py",
+      "sha256": "4f4f14d4dfae94c84860a18872988068bdb4b29f89460e36cd6e640b022b6ead",
+      "size_bytes": 3651
+    },
+    "checkpoint_resume_validator": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/scripts/validate_rcmf_checkpoint_resume_r9.py",
+      "sha256": "457c176f0c1a86e593d859a55930e79313a3c7b07869f017e19c0dbd1d5a1783",
+      "size_bytes": 10656
+    },
+    "checkpoint_training_runner": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/scripts/run_rcmf_joint_full_bank_9a.py",
+      "sha256": "15e7642dcfa88a68e7a91d86647e32ab2a5ed544cf679cb3090905af1f59b21a",
+      "size_bytes": 75430
+    },
+    "contracts": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/rcmf/pipeline/contracts.py",
+      "sha256": "b2677edb45ca1a8b175b1609ac0a2ac2ea62fa8163730ba1dad703578b016ff1",
+      "size_bytes": 5425
+    },
+    "d09_resume_preparer": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/scripts/prepare_exp037a_r9_d09_resume_smoke.py",
+      "sha256": "bef5f1b4f3b2ff9ea45a2e9548c05c504420cff644de0d7d02cedf31f81a6aa6",
+      "size_bytes": 6160
+    },
+    "formal_launcher": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/scripts/run_rcmf_reproducible_pipeline_14b.py",
+      "sha256": "fcac3c0302c2900e04d6124e560cd775ca4f2d24a5ef59cdfb6b73df407535f6",
+      "size_bytes": 5893
+    },
+    "formal_stage_runner": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/scripts/run_rcmf_reproducible_stage_14b.py",
+      "sha256": "3ffc45af74399d2e945c028c0c11671d9b5099ed2ba14a84dde4581be04bf15b",
+      "size_bytes": 6631
+    },
+    "manifest_identity": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/rcmf/pipeline/manifests.py",
+      "sha256": "e176bd377dc36e0e7ffa19e7996a91539821cb4c8f8bfe55b4abb6cdc89d9a63",
+      "size_bytes": 2924
+    },
+    "orchestrator": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/rcmf/pipeline/orchestrator.py",
+      "sha256": "6c432afcd8f75fd1fb27348400291d167ffefd0a20eb280fe4e4cd6a317bab81",
+      "size_bytes": 2757
+    },
+    "pipeline_config": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/configs/pipeline/rcmf_appworld_repro_14j.yaml",
+      "sha256": "470f7183adb8804540c46e146e2db9e359f09f67b43eb0d3e0fab153bedf41a9",
+      "size_bytes": 9032
+    },
+    "preflight_builder": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/scripts/prepare_rcmf_reproducible_pipeline_14j.py",
+      "sha256": "9c05fe2c684d145d2f082f2705408c699c46c88107c50eebc068dc67ba103118",
+      "size_bytes": 39868
+    },
+    "r10_14j_preflight_tests": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/tests/test_exp037a_r10_14j_preflight.py",
+      "sha256": "0ae1998f064e9c17376df2323e92515bbbdf840fea71d69b781aa57e89d6d052",
+      "size_bytes": 6430
+    },
+    "r10_pipeline_hardening_tests": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/tests/test_exp037a_r10_pipeline_hardening.py",
+      "sha256": "aa8ab5908e477ca20471c77b0690291a15fde9d3b93ea7836c06533b1b76f433",
+      "size_bytes": 13078
+    },
+    "r7_stage_identity_tests": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/tests/test_exp037a_r7_stage_manifest_identity.py",
+      "sha256": "f8c3606128fff6b3af7588ca99751ff6889e1fa1a6fbed6b52cba009a3d427eb",
+      "size_bytes": 13859
+    },
+    "r9_checkpoint_resume_tests": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/tests/test_exp037a_r9_checkpoint_resume.py",
+      "sha256": "e18860836146bd2230abeca7aac9fcd769a65db63bc7cdbcccc2708c2acf8f69",
+      "size_bytes": 6766
+    },
+    "real_path_smoke": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/scripts/smoke_exp037a_stage_manifest_path_14j.py",
+      "sha256": "f5c79c100d341d45ca2f246601f6cc417fd4054495afd57b5fe7cb0562e52c66",
+      "size_bytes": 12922
+    },
+    "scheduler": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/rcmf/pipeline/scheduler.py",
+      "sha256": "58daae046e2c54dae06e058e90a082c1722592eddef136a72732369f25b01c80",
+      "size_bytes": 20755
+    },
+    "stage_graph": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/rcmf/pipeline/stage_graph.py",
+      "sha256": "130beb3df3577d4aee67dc6ba6a2b6839e1ffc0173be77b7c00e8727594fefaf",
+      "size_bytes": 4431
+    },
+    "stage_manifest_producer": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "sha256": "4c2d5b5931e6c5efe53b4d9041b1948041039f791263bb3cf17f926a70bf4bef",
+      "size_bytes": 91847
+    },
+    "validators": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/rcmf/pipeline/validators.py",
+      "sha256": "1bc7f829f9b10d58097e8b4446d33ee43b927c09f7ade814b5e1157f7a9ee80b",
+      "size_bytes": 15505
+    },
+    "whole_pipeline_audit": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/scripts/audit_exp037a_pipeline_r10.py",
+      "sha256": "de880c23487efc40592e27b2217957bd4e72b80ab5303dd36fdfd5223f943f4c",
+      "size_bytes": 21779
+    }
+  },
+  "format": "exp037a_r10_executable_source_manifest_14j_v1",
+  "scientific_configuration_changes_from_r3": 0
+}

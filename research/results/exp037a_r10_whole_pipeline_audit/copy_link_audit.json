@@ -1,0 +1,22 @@
+{
+  "format": "exp037a_r10_whole_pipeline_logic_audit_v1",
+  "paths": [
+    {
+      "classification": "SAFE_AS_IS",
+      "helper": "_copy_exact",
+      "mechanism": "shutil.copy2"
+    },
+    {
+      "basis": "linked transition aggregate is read-only; no downstream in-place mutation found",
+      "classification": "SAFE_AS_IS",
+      "helper": "_link_or_copy_exact",
+      "mechanism": "os.link with copy fallback"
+    },
+    {
+      "basis": "D08B reads linked inputs and writes only to its isolated smoke root",
+      "classification": "SAFE_AS_IS",
+      "helper": "_ensure_read_only_link",
+      "mechanism": "symlink"
+    }
+  ]
+}

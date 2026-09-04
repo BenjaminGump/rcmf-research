@@ -1,0 +1,11 @@
+{
+  "anomaly_guard_not_runtime_target": true,
+  "authorization_status": "NOT_AUTHORIZED",
+  "format": "exp037a_r10_hard_cap_proposal_14j_v1",
+  "formula": "ceil_practical(max(2.0*47.75,1.25*92.5))",
+  "longest_permitted_branch": "branch_3d_passes_and_1d_executes",
+  "one_point_two_five_conservative_hours": 115.625,
+  "proposed_hard_cap_hours": 120.0,
+  "twice_expected_hours": 95.5,
+  "unrounded_required_hours": 115.625
+}

@@ -1,0 +1,15 @@
+{
+  "discard_parameters_after_validation": true,
+  "failure_blocks_d09": true,
+  "format": "exp037a_r10_writer_reader_smoke_contract_14j_v1",
+  "forward_backward_optimizer_steps": 1,
+  "initialization": "cloned_locked_initialization",
+  "isolated_initialization": true,
+  "maximum_training_units": 1,
+  "scientific_checkpoint_input": false,
+  "scientific_d09_restarts_from_untouched_initialization": true,
+  "smoke_parameters_discarded": true,
+  "stage_id": "D08B_writer_reader_one_unit_smoke",
+  "stop_before_d09_on_failure": true,
+  "uses_fresh_d08_inputs": true
+}
