@@ -75,6 +75,39 @@ def _rows(path: str | Path) -> list[dict[str, Any]]:
     return [dict(row) for row in read_jsonl(path)]
 
 
+def _formal_identity_from_environment(run_root: Path) -> dict[str, str]:
+    values = {
+        "run_uuid": os.environ.get("RCMF_PIPELINE_RUN_UUID", ""),
+        "pipeline_config_sha256": os.environ.get(
+            "RCMF_PIPELINE_CONFIG_SHA256", ""
+        ),
+        "contract_sha256": os.environ.get("RCMF_PIPELINE_CONTRACT_SHA256", ""),
+        "run_root": os.environ.get("RCMF_PIPELINE_RUN_ROOT", ""),
+    }
+    missing = sorted(key for key, value in values.items() if not value)
+    if missing:
+        raise PermissionError(f"Formal stage identity is incomplete: {missing}")
+    if Path(values["run_root"]).resolve(strict=False) != run_root.resolve(
+        strict=False
+    ):
+        raise PermissionError("Formal stage run root differs from scheduler identity")
+    return values
+
+
+def _strict_prior_stage_validation(
+    stage_id: str, run_root: Path, source_commit: str
+) -> dict[str, Any]:
+    identity = _formal_identity_from_environment(run_root)
+    return validate_stage_completion(
+        run_root / "stages" / stage_id,
+        source_commit,
+        expected_run_uuid=identity["run_uuid"],
+        expected_pipeline_config_sha256=identity["pipeline_config_sha256"],
+        expected_contract_sha256=identity["contract_sha256"],
+        expected_run_root=run_root,
+    )
+
+
 def _copy_exact(source: Path, target: Path) -> None:
     if not source.exists():
         raise FileNotFoundError(source)
@@ -150,6 +183,221 @@ def _arm_from_stage(stage_id: str) -> str | None:
 
 def _arm_config(run_root: Path, arm_id: str) -> Path:
     return run_root / "resolved_configs" / f"arm_{arm_id}.yaml"
+
+
+def _existing_files(*paths: Path) -> list[Path]:
+    return [path for path in paths if path.is_file()]
+
+
+def _tree_files(root: Path) -> list[Path]:
+    if not root.exists():
+        return []
+    return sorted(path for path in root.rglob("*") if path.is_file())
+
+
+def formal_stage_output_paths(stage_id: str, run_root: Path) -> list[Path]:
+    """Return immutable, resume-critical outputs produced by a formal stage."""
+    shared: dict[str, list[Path]] = {
+        "S00_environment_manifest": [run_root / "preflight/environment_manifest.json"],
+        "S01_authoritative_corpus": [
+            run_root / "preflight/authoritative_source_manifest.json"
+        ],
+        "S02_task_and_parent_splits": [run_root / "preflight/shared/parent_split.json"],
+        "S03_transition_records": [run_root / "preflight/shared/transitions.jsonl"],
+        "S04_selector_supervision": [
+            run_root / "preflight/shared/labels.jsonl",
+            run_root / "preflight/shared/illegal_pairs.jsonl",
+        ],
+        "S05_transition_representations": [
+            run_root / "shared/representation_cache/multiview/transition_multiview.pt",
+            run_root / "shared/representation_cache/multiview/transition_summary.json",
+            *_tree_files(
+                run_root / "shared/representation_cache/multiview/transition_rows"
+            ),
+        ],
+        "S05B_joint_source_contract_preflight": [
+            run_root / "preflight/shared/joint_source_contract_preflight_14c.json",
+            run_root / "preflight/shared/joint_source_contract_mismatches_14c.jsonl",
+        ],
+        "S06_cv_folds_and_sampling": [
+            run_root / "preflight/shared/cv_folds_and_sampling.json"
+        ],
+        "S07_initial_parameter_snapshots": [
+            run_root / "preflight/initialization_manifest.json",
+            *_tree_files(run_root / "preflight/initialization_snapshots"),
+        ],
+        "S08_two_arm_contract": [
+            run_root / "preflight/two_arm_contract.json",
+            run_root / "preflight/resolved_config_diff.json",
+        ],
+        "S09_runtime_preflight_and_approval": [run_root / "runtime_authorization.json"],
+    }
+    if stage_id in shared:
+        paths = shared[stage_id]
+    elif stage_id.startswith(("D", "O")):
+        arm_id = _arm_from_stage(stage_id)
+        if arm_id is None:
+            raise KeyError(stage_id)
+        target = arm_root(run_root, arm_id)
+        index = int(stage_id[1:3])
+        paths = []
+        if index == 0:
+            paths = [
+                target / "clean_query_signature_manifest.jsonl",
+                target / "clean_full_procedural_labels.jsonl",
+                target / "clean_full_illegal_pairs.jsonl",
+                target / "candidate_space_manifest.json",
+                target / "data_preparation_summary.json",
+                target / "representation_cache/multiview/state_multiview.pt",
+                target
+                / "representation_cache/multiview/clean_multiview_cache_summary.json",
+            ]
+        elif index == 1:
+            paths = _tree_files(target / "selector/a_only_cv")
+        elif index == 2:
+            paths = [target / "selector/candidate_selection.json"]
+        elif index == 3:
+            paths = [
+                target / "selector/ensemble_scores.pt",
+                target / "selector/selector_summary.json",
+                *_tree_files(target / "selector/seed_25071"),
+                *_tree_files(target / "selector/seed_25072"),
+                *_tree_files(target / "selector/seed_25073"),
+            ]
+        elif index == 4:
+            paths = [
+                target / "selector/factorization.pt",
+                target / "selector/factorization_audit.json",
+            ]
+        elif index == 5:
+            paths = [
+                target / "preflight/initial_panel.json",
+                target / "preflight/frozen_train_selections.jsonl",
+                target / "preflight/structured_feature_rows.jsonl",
+                target / "preflight/structured_feature_schema.json",
+                target / "preflight/feature_leakage_audit.json",
+                target / "preflight/selected_memory_summary.json",
+            ]
+        elif stage_id == "D06B_three_demo_causal_reproduction_gate":
+            paths = [
+                run_root / "gate/d06_three_demo_reproduction_gate.json",
+                run_root
+                / "stages/D06B_three_demo_causal_reproduction_gate/gate.json",
+            ]
+        elif index == 6:
+            paths = [
+                target / "paired_causal/condition_manifest.json",
+                target / "paired_causal/paired_outcomes.json",
+                *_tree_files(target / "paired_causal/condition_outputs"),
+                *_tree_files(target / "paired_causal/replay_missing"),
+            ]
+        elif index == 7:
+            paths = [
+                target / "structured_compiler/policy_teacher_cache.pt",
+                target / "structured_compiler/policy_teacher_report.json",
+                *_existing_files(
+                    target / "structured_compiler/mismatch_manifest.json"
+                ),
+            ]
+        elif index == 8 and stage_id != "D08B_writer_reader_one_unit_smoke":
+            paths = [
+                target / "data/rcmf_source_cache.pt",
+                target / "data/memory_provenance.jsonl",
+                target / "data/source_representation_audit.json",
+                target / "data/selector_decomposition_audit.json",
+                target / "data/key_payload_shuffle_manifest.json",
+                target / "data/full_bank_data_manifest.json",
+                target / "joint_training/training_unit_manifest.json",
+                target / "joint_training/state_query_shuffle_manifest.json",
+                target / "joint_training/zero_policy_nll_summary.json",
+                target / "runtime/static_counts.json",
+                target / "runtime/formal_gpu_preflight.json",
+                *_tree_files(target / "joint_training/zero_policy_nll"),
+            ]
+        elif stage_id == "D08B_writer_reader_one_unit_smoke":
+            paths = [
+                run_root
+                / "engineering_smoke/3d_writer_reader_one_unit/writer_reader_smoke_gate.json"
+            ]
+        elif index == 9:
+            paths = [
+                target / "joint_training/checkpoints/epoch_01.pt",
+                target / "joint_training/checkpoints/epoch_01_stage_summary.json",
+            ]
+        elif index == 10:
+            paths = [
+                target / "joint_training/checkpoints/epoch_01.pt",
+                target / "joint_training/checkpoints/epoch_02.pt",
+                target / "joint_training/training_summary.json",
+            ]
+        elif index == 11:
+            paths = [
+                target / "heldout_validation/teacher_forced_summary.json",
+                *_tree_files(target / "heldout_validation/teacher_forced"),
+            ]
+        elif index == 12:
+            paths = [
+                target / "heldout_validation/teacher_forced_zero_exact_summary.json",
+                *_tree_files(target / "heldout_validation/live_full_field"),
+            ]
+        elif index == 13:
+            paths = _tree_files(target / "heldout_validation/full_trajectory")
+        elif index == 14:
+            paths = [
+                target / "heldout_validation/live_full_field/checkpoint_selection.json"
+            ]
+        elif index == 15:
+            paths = _existing_files(
+                target / "deployment_field/selected_401_field.json",
+                target / "deployment_field/selected_401_field.pt",
+            )
+        elif index == 16:
+            paths = _existing_files(
+                target / "deployment_field/instant_add_report.json",
+                target / "deployment_field/complete_37_task_field.pt",
+            )
+        elif index == 17:
+            paths = _existing_files(target / "deployment_field/validation_14b.json")
+        elif arm_id == "3d" and index in (18, 19, 20):
+            condition = {
+                18: "B0_1D",
+                19: "FRESH3D_C_1DDEPLOY",
+                20: "FRESH3D_S_1DDEPLOY",
+            }[index]
+            paths = [
+                run_root
+                / f"evaluation/common_one_demo_dev/summaries/{condition}.json"
+            ]
+        elif arm_id == "3d" and index == 21:
+            paths = [run_root / "historical_comparison/three_demo.json"]
+        elif arm_id == "3d" and index == 22:
+            paths = [
+                run_root / "gate/three_demo_reproduction_gate.json",
+                run_root / "stages/D22_three_demo_reproduction_gate/gate.json",
+            ]
+        elif arm_id == "1d" and index in (18, 19):
+            condition = "FRESH1D_C_1DDEPLOY" if index == 18 else "FRESH1D_S_1DDEPLOY"
+            paths = [
+                run_root
+                / f"evaluation/common_one_demo_dev/summaries/{condition}.json"
+            ]
+    elif stage_id == "F00_two_arm_paired_analysis":
+        paths = [run_root / "analysis/two_arm_paired_analysis.json"]
+    elif stage_id == "F01_portability_validation":
+        paths = [run_root / "portability/validation.json"]
+    elif stage_id == "F02_git_safe_audit_export":
+        paths = [run_root / "audit/index.json"]
+    elif stage_id == "F03_final_report_and_handoff":
+        paths = [run_root / "final/final_record.json"]
+    else:
+        raise KeyError(f"No formal output contract for stage: {stage_id}")
+    missing = [str(path) for path in paths if not path.is_file()]
+    if missing:
+        raise FileNotFoundError(
+            f"Formal stage did not produce its declared artifacts: {missing[:5]}"
+        )
+    unique = {str(path.resolve(strict=False)): path for path in paths}
+    return [unique[key] for key in sorted(unique)]
 
 
 def _compatibility_inputs(config: Mapping[str, Any], run_root: Path) -> dict[str, Any]:
@@ -683,9 +931,10 @@ def _d06_reproduction_gate(
     target = arm_root(run_root, "3d")
     d06_stage = run_root / "stages/D06_paired_causal_outcomes"
     completion = _json(d06_stage / "completion.json")
-    if not bool(completion.get("passed")) or str(
-        completion.get("source_commit")
-    ) != source_commit:
+    strict = _strict_prior_stage_validation(
+        "D06_paired_causal_outcomes", run_root, source_commit
+    )
+    if not bool(completion.get("passed")) or not bool(strict.get("passed")):
         raise RuntimeError("Fresh D06 must be sealed before historical comparison")
     fresh_path = target / "paired_causal/paired_outcomes.json"
     fresh_selections_path = target / "preflight/frozen_train_selections.jsonl"
@@ -1412,6 +1661,25 @@ def _selected_401_field(run_root: Path, arm_id: str) -> dict[str, Any]:
     shuffle_path = live / f"field_artifacts/epoch_{epoch:02d}_key_payload_shuffle.pt"
     correct = torch.load(correct_path, map_location="cpu", weights_only=False)
     shuffled = torch.load(shuffle_path, map_location="cpu", weights_only=False)
+    checkpoint_sha = str(selected["checkpoint_sha256"])
+    checks = {
+        "correct_memory_count": int(correct.get("memory_count", -1)) == 401,
+        "shuffle_memory_count": int(shuffled.get("memory_count", -1)) == 401,
+        "correct_checkpoint": str(correct.get("checkpoint_sha256"))
+        == checkpoint_sha,
+        "shuffle_checkpoint": str(shuffled.get("checkpoint_sha256"))
+        == checkpoint_sha,
+        "correct_A_shape": tuple(correct["A"].shape) == (960, 8, 256),
+        "correct_B_shape": tuple(correct["B"].shape) == (8, 256),
+        "shuffle_A_shape": tuple(shuffled["A"].shape) == (960, 8, 256),
+        "shuffle_B_shape": tuple(shuffled["B"].shape) == (8, 256),
+        "finite": all(
+            bool(torch.isfinite(value).all())
+            for value in (correct["A"], correct["B"], shuffled["A"], shuffled["B"])
+        ),
+    }
+    if not all(checks.values()):
+        raise RuntimeError(f"Selected 401-memory field identity failed: {checks}")
     payload = {
         "format": "rcmf_selected_401_field_tensor_14b_v1",
         "arm": arm_id,
@@ -1435,6 +1703,7 @@ def _selected_401_field(run_root: Path, arm_id: str) -> dict[str, Any]:
         "field": file_identity(path),
         "correct_source": file_identity(correct_path),
         "shuffle_source": file_identity(shuffle_path),
+        "checks": checks,
         "passed": True,
     }
     atomic_write_json(target / "deployment_field/selected_401_field.json", result)
@@ -1456,17 +1725,43 @@ def _validate_deployment_field(run_root: Path, arm_id: str) -> dict[str, Any]:
     path = target / "deployment_field/complete_37_task_field.pt"
     report = target / "deployment_field/instant_add_report.json"
     payload = torch.load(path, map_location="cpu", weights_only=False)
+    report_payload = _json(report)
+    selected = selection["selected"]
+    checkpoint_path = Path(str(selected["checkpoint"]))
+    expected_memory_ids = sorted(
+        str(value)
+        for value in torch.load(
+            target / "data/rcmf_source_cache.pt",
+            map_location="cpu",
+            weights_only=False,
+        )["ordered_transition_ids"]
+    )
     checks = {
         "memory_count": int(payload["memory_count"]) == 499,
+        "memory_ids": list(payload.get("memory_ids", [])) == expected_memory_ids,
+        "memory_ids_unique": len(set(payload.get("memory_ids", []))) == 499,
         "A_shape": tuple(payload["A"].shape) == (960, 8, 256),
         "B_shape": tuple(payload["B"].shape) == (8, 256),
         "shuffle_A_shape": tuple(payload["shuffled_A"].shape) == (960, 8, 256),
+        "shuffle_B_shape": tuple(payload["shuffled_B"].shape) == (8, 256),
         "finite": all(
             bool(torch.isfinite(payload[name]).all())
             for name in ("A", "B", "shuffled_A", "shuffled_B")
         ),
-        "report_hash": str(_json(report)["deployment_field_sha256"])
+        "report_hash": str(report_payload["deployment_field_sha256"])
         == sha256_file(path),
+        "selected_checkpoint_exists": checkpoint_path.is_file(),
+        "selected_checkpoint_hash": checkpoint_path.is_file()
+        and sha256_file(checkpoint_path) == str(selected["checkpoint_sha256"]),
+        "payload_checkpoint": str(payload.get("checkpoint_sha256"))
+        == str(selected["checkpoint_sha256"]),
+        "report_checkpoint": str(report_payload.get("selected_checkpoint_sha256"))
+        == str(selected["checkpoint_sha256"]),
+        "instant_add_counts": int(report_payload.get("field_memory_count_before", -1))
+        == 401
+        and int(report_payload.get("new_memory_count", -1)) == 98
+        and int(report_payload.get("field_memory_count_after", -1)) == 499,
+        "no_retraining": report_payload.get("no_retraining_or_optimizer_step") is True,
     }
     result = {
         "format": "rcmf_deployment_field_validation_14b_v1",
@@ -1617,10 +1912,10 @@ def _three_demo_gate(
             stage_validations[stage_id] = False
             continue
         completion = _json(completion_path)
-        stage_validations[stage_id] = (
-            bool(completion.get("passed"))
-            and str(completion.get("source_commit")) == source_commit
-            and bool(validate_stage_completion(stage_dir, source_commit).get("passed"))
+        stage_validations[stage_id] = bool(completion.get("passed")) and bool(
+            _strict_prior_stage_validation(stage_id, run_root, source_commit).get(
+                "passed"
+            )
         )
     preflight = _json(run_root / "preflight/preflight_summary.json")
     source_manifest = _json(
@@ -1973,6 +2268,7 @@ def write_stage_manifest(
     started_utc: str,
     elapsed_seconds: float,
     run_root: Path,
+    output_artifacts: Sequence[Path] = (),
 ) -> Path:
     if str(stage_identity.get("stage_id")) != stage_id:
         raise ValueError("Stage identity does not match manifest stage")
@@ -1985,6 +2281,7 @@ def write_stage_manifest(
     for dependency in stage.dependencies:
         path = run_root / "stages" / dependency / "completion.json"
         dependency_rows.append(file_identity(path))
+    artifact_rows = [file_identity(path) for path in output_artifacts]
     manifest = {
         "format": PIPELINE_FORMAT,
         "schema_version": "14b_v1",
@@ -1996,7 +2293,8 @@ def write_stage_manifest(
         "started_utc": started_utc,
         "elapsed_seconds": elapsed_seconds,
         "input_completion_manifests": dependency_rows,
-        "outputs": [file_identity(result_path)],
+        "outputs": [file_identity(result_path), *artifact_rows],
+        "declared_artifact_count": len(artifact_rows),
         "passed": bool(result.get("passed", True)),
     }
     path = stage_dir / "output_manifest.json"

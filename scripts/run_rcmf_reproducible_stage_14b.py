@@ -15,6 +15,7 @@ import _bootstrap  # noqa: F401
 from rcmf.benchmarks.appworld.reproducible_stages_14b import (
     _arm_from_stage,
     execute_stage,
+    formal_stage_output_paths,
     initialize_runtime_layout,
     write_stage_manifest,
 )
@@ -158,6 +159,19 @@ def main() -> None:
             source_commit=args.source_commit,
             attempt_id=str(os.environ.get("RCMF_PIPELINE_ATTEMPT_ID", "manual")),
         )
+        manifest = write_stage_manifest(
+            stage_id=args.stage,
+            stage_dir=stage_dir,
+            stage_identity=identity,
+            arm=arm_id or ("shared" if args.stage.startswith("S") else "final"),
+            prompt_profile=prompt_profile,
+            result=result,
+            command=sys.argv,
+            started_utc=started_utc,
+            elapsed_seconds=time.perf_counter() - started,
+            run_root=args.run_root,
+            output_artifacts=formal_stage_output_paths(args.stage, args.run_root),
+        )
     except BaseException as exc:
         if isinstance(exc, (KeyboardInterrupt, SystemExit)):
             raise
@@ -169,18 +183,6 @@ def main() -> None:
             _failure_payload(identity, exc, recoverable=recoverable),
         )
         raise SystemExit(75 if recoverable else 65)
-    manifest = write_stage_manifest(
-        stage_id=args.stage,
-        stage_dir=stage_dir,
-        stage_identity=identity,
-        arm=arm_id or ("shared" if args.stage.startswith("S") else "final"),
-        prompt_profile=prompt_profile,
-        result=result,
-        command=sys.argv,
-        started_utc=started_utc,
-        elapsed_seconds=time.perf_counter() - started,
-        run_root=args.run_root,
-    )
     print(json.dumps({"stage": args.stage, "manifest": str(manifest)}, sort_keys=True))
 
 

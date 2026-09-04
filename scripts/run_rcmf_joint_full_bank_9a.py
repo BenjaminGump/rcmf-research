@@ -1033,6 +1033,19 @@ def _restore_checkpoint(
         raise ValueError(f"Full-field resume identity differs: {checks}")
     writer.load_state_dict(payload["writer_state_dict"])
     reader.load_state_dict(payload["reader_state_dict"])
+    restored_hashes = {
+        "writer": module_state_sha256(writer),
+        "reader": module_state_sha256(reader),
+    }
+    expected_hashes = {
+        "writer": str(payload.get("writer_sha256", "")),
+        "reader": str(payload.get("reader_sha256", "")),
+    }
+    if restored_hashes != expected_hashes:
+        raise ValueError(
+            f"Full-field resume module hashes differ: "
+            f"{restored_hashes} != {expected_hashes}"
+        )
     optimizer.load_state_dict(payload["optimizer_state_dict"])
     random.setstate(payload["python_random_state"])
     _restore_rng_states(payload)
@@ -1041,6 +1054,47 @@ def _restore_checkpoint(
         [dict(row) for row in payload["history"]],
         {str(key): float(value) for key, value in payload["shuffle_raw_nll"].items()},
     )
+
+
+def _validated_checkpoint_pointer(
+    latest: Mapping[str, Any],
+    *,
+    checkpoint_root: Path,
+    epoch_boundaries: Sequence[int],
+) -> Path:
+    required = {"checkpoint", "checkpoint_sha256", "completed_units", "epoch"}
+    missing = sorted(required - set(latest))
+    if missing:
+        raise ValueError(f"Latest checkpoint pointer is incomplete: {missing}")
+    checkpoint = Path(str(latest["checkpoint"])).resolve(strict=False)
+    root = checkpoint_root.resolve(strict=False)
+    if checkpoint.parent != root:
+        raise ValueError("Latest checkpoint pointer escapes the checkpoint root")
+    if not checkpoint.is_file():
+        raise FileNotFoundError(checkpoint)
+    expected_sha = str(latest["checkpoint_sha256"])
+    actual_sha = sha256_file(checkpoint)
+    if actual_sha != expected_sha:
+        raise ValueError(
+            f"Latest checkpoint pointer SHA256 differs: {actual_sha} != {expected_sha}"
+        )
+    completed = int(latest["completed_units"])
+    if completed <= 0 or completed > int(epoch_boundaries[-1]):
+        raise ValueError("Latest checkpoint completed-unit count is out of range")
+    expected_epoch = 1 if completed <= int(epoch_boundaries[0]) else 2
+    if int(latest["epoch"]) != expected_epoch:
+        raise ValueError("Latest checkpoint epoch disagrees with completed units")
+    expected_name = (
+        f"epoch_{expected_epoch:02d}.pt"
+        if completed in set(map(int, epoch_boundaries))
+        else "progress.pt"
+    )
+    if checkpoint.name != expected_name:
+        raise ValueError(
+            f"Latest checkpoint kind differs at this boundary: "
+            f"{checkpoint.name} != {expected_name}"
+        )
+    return checkpoint
 
 
 def _train(
@@ -1108,8 +1162,13 @@ def _train(
     shuffle_nll: dict[str, float] = {}
     if paths["latest_checkpoint"].exists():
         latest = _json(paths["latest_checkpoint"])
+        checkpoint_path = _validated_checkpoint_pointer(
+            latest,
+            checkpoint_root=paths["checkpoints"],
+            epoch_boundaries=epoch_boundaries,
+        )
         checkpoint = torch.load(
-            Path(str(latest["checkpoint"])),
+            checkpoint_path,
             map_location=backend.device,
             weights_only=False,
         )
@@ -1121,6 +1180,8 @@ def _train(
             unit_ids=unit_ids,
             source_hashes=source_hashes,
         )
+        if completed != int(latest["completed_units"]):
+            raise ValueError("Latest checkpoint pointer completed units differ from payload")
     resume_completed_units = completed
     attempt_start_module_hashes = {
         "writer": module_state_sha256(writer),
