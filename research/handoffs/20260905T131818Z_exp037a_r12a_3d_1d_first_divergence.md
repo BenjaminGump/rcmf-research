@@ -13,6 +13,7 @@ Date UTC: 2026-09-05T13:18:18Z
 ## Git And Run Identity
 
 - Starting records SHA: `53b534263e6bd8de3f1602fdfd5d99cfa9f88954`
+- Audit evidence commit: `9571d5a303bcd7f5bd45f43583d4e4252356ee16`
 - Frozen source: `0e4015547da45802cc7b6ff3a9b92adce73077fc`
 - Formal UUID: `rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001`
 - Formal root: `/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001`
