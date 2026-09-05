@@ -273,14 +273,31 @@ def sealed_formal_artifact_audit(
         if _json(completion).get("passed") is not True:
             continue
         stage_id = completion.parent.name
-        outputs = formal_stage_output_paths(stage_id, formal_root)
+        manifest_path = completion.parent / "output_manifest.json"
+        if not manifest_path.is_file():
+            raise FileNotFoundError(
+                f"Sealed completion lacks output manifest: {manifest_path}"
+            )
+        manifest = _json(manifest_path)
+        outputs = []
+        for expected in manifest.get("outputs", []):
+            path = Path(str(expected["path"]))
+            actual = file_identity(path)
+            if actual != expected:
+                raise ValueError(
+                    "Sealed output no longer matches its own manifest: "
+                    f"{path}"
+                )
+            outputs.append(path)
         rows.append(
             {
                 "stage_id": stage_id,
                 "completion": file_identity(completion),
+                "output_manifest": file_identity(manifest_path),
                 "artifacts": [file_identity(path) for path in outputs],
                 "artifact_count": len(outputs),
                 "all_declared_artifacts_exist": True,
+                "all_declared_artifact_hashes_match": True,
             }
         )
     return rows

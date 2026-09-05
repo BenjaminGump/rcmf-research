@@ -13,7 +13,7 @@ from rcmf.benchmarks.appworld.reproducible_stages_14b import (
     formal_stage_output_paths,
     write_stage_manifest,
 )
-from rcmf.pipeline.manifests import stage_identity_payload
+from rcmf.pipeline.manifests import file_identity, stage_identity_payload
 from rcmf.pipeline.stage_graph import build_exp037a_stage_graph
 from rcmf.pipeline.validators import validate_stage_completion
 from rcmf.training.oracle_decoder_5fc import module_state_sha256
@@ -338,7 +338,7 @@ def test_whole_pipeline_audit_covers_every_exact_stage_and_device_load() -> None
     assert all(row["classification"] != "UNCERTAIN" for row in device_load_audit())
 
 
-def test_sealed_formal_artifact_audit_uses_production_resolver(
+def test_sealed_formal_artifact_audit_uses_sealed_output_manifest(
     tmp_path: Path,
 ) -> None:
     run_root = tmp_path / "run"
@@ -346,12 +346,23 @@ def test_sealed_formal_artifact_audit_uses_production_resolver(
     stage_dir.mkdir(parents=True)
     artifact = run_root / "preflight/environment_manifest.json"
     atomic_write_json(artifact, {"environment": "sealed"})
+    result = stage_dir / "stage_result.json"
+    atomic_write_json(result, {"passed": True})
+    atomic_write_json(
+        stage_dir / "output_manifest.json",
+        {
+            "stage_id": "S00_environment_manifest",
+            "outputs": [file_identity(result), file_identity(artifact)],
+            "passed": True,
+        },
+    )
     atomic_write_json(stage_dir / "completion.json", {"passed": True})
     rows = sealed_formal_artifact_audit(run_root)
     assert len(rows) == 1
     assert rows[0]["stage_id"] == "S00_environment_manifest"
-    assert rows[0]["artifact_count"] == 1
-    assert rows[0]["artifacts"][0]["sha256"] == sha256_file(artifact)
+    assert rows[0]["artifact_count"] == 2
+    assert rows[0]["artifacts"][1]["sha256"] == sha256_file(artifact)
+    assert rows[0]["all_declared_artifact_hashes_match"] is True
 
 
 def test_sealed_formal_artifact_audit_excludes_failed_completion(
