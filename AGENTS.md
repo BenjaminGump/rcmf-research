@@ -471,17 +471,17 @@ sweeps, or ensemble training unless the user explicitly changes this policy.
   explicit user approval. The approved hard cap is an anomaly ceiling and is
   at least twice the expected complete runtime.
 
-### Sources Of Truth (Whole-Pipeline Hardening Launch Contract v5)
+### Sources Of Truth (Arm-Resolved Prompt Propagation Launch Contract v6)
 
 - Pipeline contract: `rcmf/pipeline/contracts.py`
 - Benchmark adapter protocol: `rcmf/pipeline/adapter.py`
 - AppWorld adapter: `rcmf/benchmarks/appworld/pipeline_adapter.py`
-- Final pipeline config: `configs/pipeline/rcmf_appworld_repro_14j.yaml`
+- Final pipeline config: `configs/pipeline/rcmf_appworld_repro_14k.yaml`
 - Final resolved arm sources:
-  `configs/pipeline/rcmf_appworld_arm_3d_14j.yaml` and
-  `configs/pipeline/rcmf_appworld_arm_1d_14j.yaml`
+  `configs/pipeline/rcmf_appworld_arm_3d_14k.yaml` and
+  `configs/pipeline/rcmf_appworld_arm_1d_14k.yaml`
 - Final preflight builder:
-  `scripts/prepare_rcmf_reproducible_pipeline_14j.py`
+  `scripts/prepare_rcmf_reproducible_pipeline_14k.py`
 - Active launcher: `scripts/run_rcmf_reproducible_pipeline_14b.py`
 - Authorization validator: `rcmf/pipeline/authorization.py`
 - Orchestrator and scheduler: `rcmf/pipeline/orchestrator.py` and
@@ -489,21 +489,32 @@ sweeps, or ensemble training unless the user explicitly changes this policy.
 - Stage graph and validators: `rcmf/pipeline/stage_graph.py` and
   `rcmf/pipeline/validators.py`
 - Final run UUID:
-  `rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001`
+  `rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001`
 - Final canonical Lambda root:
-  `/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001`
+  `/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001`
 - The 14b run is immutable failed-run evidence. The 14f package is immutable
   R4 preflight history. The 14g package is immutable R5/R6 preflight and
   pre-science launch-failure evidence. The 14h package is immutable R7/R8
   history and D10 checkpoint-resume failure evidence after D06B, D08B, and D09
   passed. None is an active launch source or resumable scientific input for
-  14i or 14j. The 14h D09 checkpoint may be used only for bounded diagnostic
-  resume validation and must not initialize 14i or 14j science.
+  later packages. The 14h D09 checkpoint may be used only for bounded
+  diagnostic resume validation and must not initialize later science.
 - The 14i `_001` root is immutable unlaunched R9 preflight history from the
   superseded launch-source freeze; it is not authorized or resumable input for
   later packages. The 14i `_002` root and launch source are immutable,
   unlaunched R9 preflight history superseded by R10 whole-pipeline executable
-  hardening; neither is an authorized or resumable scientific input for 14j.
+  hardening; neither is an authorized or resumable scientific input for later
+  packages.
+- The 14j root is immutable R10/R11 execution evidence: its fresh 3D arm
+  passed D06B, D08B, and D22, while its one-demo O06 stage failed because the
+  paired-causal runtime consumed the shared legacy `full_demo` profile instead
+  of the already-resolved `full_demo_first_only` arm profile. Its partial O06
+  outputs are diagnostic-only and no 14j scientific artifact is resumable input
+  for 14k.
+- The active 14k package preserves the legacy paired-causal generation
+  contract and overrides only its prompt profile from the resolved arm config.
+  The package remains `NOT_AUTHORIZED` until a new exact run-bound user
+  authorization is persisted.
 - The raw Lambda root and Git-safe audit index are frozen by the final
   preflight manifest; the structured handoff is published under
   `research/handoffs/`.
