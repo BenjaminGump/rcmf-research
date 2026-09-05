@@ -186,6 +186,19 @@ def test_14k_launch_source_manifest_includes_r12b_repair() -> None:
     } <= set(manifest["files"])
 
 
+def test_14k_preflight_requires_source_bound_evidence() -> None:
+    source = "a" * 40
+    smoke = {"source_commit": source}
+    tests = {"source_commit": source}
+    runtime = {"launch_source": source}
+    compatibility = {"candidate_launch_source": source}
+    assert smoke["source_commit"] == source
+    assert tests["source_commit"] == source
+    assert runtime["launch_source"] == source
+    assert compatibility["candidate_launch_source"] == source
+    assert compatibility["candidate_launch_source"] != "b" * 40
+
+
 def test_14k_effective_paired_generation_is_prompt_only() -> None:
     config = load_resolved(CONFIG_14K)
     replay = yaml.safe_load(REPLAY_CONFIG.read_text(encoding="utf-8"))

@@ -629,6 +629,22 @@ def build_preflight(
         raise ValueError("Technical smoke did not pass")
     if not bool(tests.get("passed")):
         raise ValueError("Required test suites did not pass")
+    evidence_identity_checks = {
+        "technical_smoke_source": smoke.get("source_commit")
+        == source_commit,
+        "tests_source": tests.get("source_commit") == source_commit,
+        "runtime_state_source": runtime_state.get("launch_source")
+        == source_commit,
+        "source_compatibility_candidate": source_compatibility.get(
+            "candidate_launch_source"
+        )
+        == source_commit,
+    }
+    if not all(evidence_identity_checks.values()):
+        raise ValueError(
+            "Launch-source evidence identity failed: "
+            f"{evidence_identity_checks}"
+        )
     synthetic_checks = {
         "passed": synthetic_resume.get("passed") is True,
         "fresh_process": synthetic_resume.get("fresh_resume_process") is True,
@@ -800,6 +816,7 @@ def build_preflight(
         "source_compatibility_passed": source_compatibility.get("passed")
         is True
         and not source_compatibility.get("production_path_differences", []),
+        **evidence_identity_checks,
     }
     if not all(r12b_checks.values()):
         raise ValueError(f"R12B repair validation failed: {r12b_checks}")
