@@ -3,6 +3,8 @@ from __future__ import annotations
 import copy
 import json
 from pathlib import Path
+import subprocess
+import sys
 
 import pytest
 import torch
@@ -299,3 +301,27 @@ def test_paired_stage_declares_effective_runtime_artifact(
         tmp_path / f"arms/{arm}/paired_causal/effective_runtime_config.json"
         in paths
     )
+
+
+def test_downstream_prompt_consumer_audit_has_no_formal_mismatch(
+    tmp_path: Path,
+) -> None:
+    output_root = tmp_path / "prompt-consumer-audit"
+    subprocess.run(
+        [
+            sys.executable,
+            "scripts/audit_exp037a_r12b_prompt_consumers.py",
+            "--output-root",
+            str(output_root),
+        ],
+        check=True,
+        cwd=Path.cwd(),
+    )
+    payload = json.loads(
+        (output_root / "prompt_consumer_audit.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert payload["passed"] is True
+    assert payload["formal_path_mismatch_count"] == 0
+    assert len(payload["rows"]) == 9
