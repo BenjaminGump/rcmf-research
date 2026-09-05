@@ -1,0 +1,62 @@
+{
+  "format": "exp037a_14j_o06_failure_v1",
+  "classification": "DETERMINISTIC_LIVE_CONTEXT_PREFLIGHT_MISMATCH",
+  "failed_stage": "O06_paired_causal_outcomes",
+  "failed_attempt_id": "O06_paired_causal_outcomes-1788596760065108009-r1",
+  "condition": {
+    "condition_key": "f0106e0a9f6ea5889b2aeda8ad24828bf208296aa879fd3c50704f2b19e0e65a",
+    "condition_name": "T1_selected_raw",
+    "prompt_kind": "raw_transition",
+    "state_example_id": "appworld:trace:229360a_3:step:27:line:382",
+    "state_task_id": "229360a_3",
+    "selected_transition_id": "60716ec9-9ca6-5011-9efc-15b0db10b2f0",
+    "selected_class_id": "procedure:e5ff4dfaa6f8c0c2c28189f169e2fa89e622bf88e1563b78b7daa8792d416c1d"
+  },
+  "preflight": {
+    "message_source": "stored_example_state_text",
+    "base_prompt_tokens": 18957,
+    "raw_prompt_tokens": 38075,
+    "memory_increment_tokens": 19118,
+    "context_limit": 40960,
+    "scoreable": true,
+    "over_context": false,
+    "base_prompt_sha256": "f1089f35da8801dd41defb54e0374b127165dc362af56b6bf5065a832fc1bc77",
+    "raw_prompt_sha256": "c19ceb6f729bc64cbebe264a4a45e9a4512da927a7bc7084927c20d63812d8df"
+  },
+  "live_bare": {
+    "message_source": "fresh_replay_actual_observations",
+    "prompt_tokens": 23809,
+    "prompt_sha256": "8746a3737ee9249a6209ee2922b1f85e48f68120df0b66a8c229271195a7ecdb",
+    "status": "complete",
+    "requested_max_new_tokens": 1024,
+    "effective_max_new_tokens": 1024,
+    "completion_tokens": 32,
+    "condition_elapsed_seconds": 8.358831997960806,
+    "generation_elapsed_seconds": 1.9306933181360364
+  },
+  "verified": {
+    "live_minus_preflight_base_tokens": 4852,
+    "runtime_raw_context_decision": "OVER_CONTEXT",
+    "raw_generation_started": false,
+    "raw_condition_output_exists": false,
+    "checkpoint_or_model_modified": false,
+    "optimizer_steps_in_o06": 0,
+    "backward_calls_in_o06": 0
+  },
+  "inference": {
+    "projected_live_raw_prompt_tokens": 42927,
+    "projected_over_limit_tokens": 1967,
+    "qualification": "The exact live raw token count was not persisted before fail-closed termination and was not regenerated during records publication."
+  },
+  "source_paths": {
+    "preflight_renderer": "rcmf/training/datasets.py:_appworld_messages_from_example",
+    "selection_preflight": "scripts/prepare_appworld_structured_rescue_7hr.py",
+    "live_renderer": "rcmf/training/procedural_causal_audit_7b.py:build_live_appworld_messages",
+    "runtime_guard": "scripts/run_procedural_causal_audit_7b.py:_run_condition",
+    "paired_caller": "scripts/run_appworld_train_causal_gate_7hr.py:_run_paired"
+  },
+  "resume_policy": {
+    "same_run_retry_safe": false,
+    "reason": "The deterministic stage is marked non-recoverable and lacks a valid output manifest; changing scoreability semantics requires a new reviewed source and authorization."
+  }
+}

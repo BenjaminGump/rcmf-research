@@ -1,0 +1,53 @@
+{
+  "decision": "INFRASTRUCTURE_IMPLEMENTATION_FAILURE",
+  "root_cause_classification": "DETERMINISTIC_LIVE_CONTEXT_PREFLIGHT_MISMATCH",
+  "scientific_result": {
+    "three_demo": "THREE_DEMO_REPRODUCTION_PASS",
+    "one_demo": "NOT_EVALUATED_COMPLETE",
+    "cross_arm_comparison": "NOT_REACHED"
+  },
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001",
+  "source_commit": "0e4015547da45802cc7b6ff3a9b92adce73077fc",
+  "records_reference": "5e57a92951812a23d052629eb7a7a5d30985cd78",
+  "pipeline_config_sha256": "470f7183adb8804540c46e146e2db9e359f09f67b43eb0d3e0fab153bedf41a9",
+  "contract_sha256": "2ff7810700abe99c53c298978e0c6f14d56f6cd0465d2c8065d3569e59abdafb",
+  "raw_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001",
+  "failed_stage": "O06_paired_causal_outcomes",
+  "failed_attempt_id": "O06_paired_causal_outcomes-1788596760065108009-r1",
+  "failure_utc": "2026-09-05T09:10:30.740411Z",
+  "attempts": {
+    "total": 43,
+    "complete": 42,
+    "failed_or_interrupted": 1,
+    "open": 0
+  },
+  "formal_wall_seconds": 70797.704594,
+  "formal_wall_hours": 19.666029053888888,
+  "three_demo_dev": {
+    "task_count": 57,
+    "bare_success": 12,
+    "correct_success": 17,
+    "shuffle_success": 11,
+    "absolute_effect_tasks": 5,
+    "specificity_effect_tasks": 6,
+    "historical_bare_success": 12,
+    "historical_correct_success": 17,
+    "historical_shuffle_success": 12
+  },
+  "one_demo_partial_o06": {
+    "fully_paired_states": 178,
+    "atomic_condition_outputs": 357,
+    "replay_missing_files": 3,
+    "last_fully_paired_label_counts": {
+      "HARMFUL": 13,
+      "NEUTRAL": 103,
+      "POSITIVE": 62
+    },
+    "sealed_stage_output": false,
+    "scientific_result": false
+  },
+  "source_changes": 0,
+  "scientific_configuration_changes": 0,
+  "new_run_launched": false,
+  "safe_next_action": "NEW_REVIEWED_SOURCE_AND_RUN_PACKAGE_REQUIRED"
+}

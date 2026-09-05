@@ -1,0 +1,30 @@
+{
+  "format": "exp037a_14j_o06_terminal_artifact_index_v1",
+  "raw_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001",
+  "raw_root_mutated_by_publication": false,
+  "raw_artifacts": [
+    {"path": "heartbeat.json", "size": 265, "sha256": "1f2a79ec03b7497cd2b26683a6212561d5147d7c52a2bea8013f046be7e662ea"},
+    {"path": "scheduler_state.json", "size": 31837, "sha256": "1d09fc6508717ebdaf8bb5fcc0c4d7587e54505b8fe0ab5a29279d07f2ec4d4c"},
+    {"path": "orchestrator_result.json", "size": 31837, "sha256": "1d09fc6508717ebdaf8bb5fcc0c4d7587e54505b8fe0ab5a29279d07f2ec4d4c"},
+    {"path": "attempts.jsonl", "size": 67073, "sha256": "f597dc24df792fd72ab6a989cff45aadd0f7801e89f05f6a539c6b0a867931e6"},
+    {"path": "logs/formal_launcher_stdout_stderr.log", "size": 29994, "sha256": "452f22aeddb06d121c48ff9c950c8e795bd2e54f3f3c8d29f5bf5ca6079ee25d"},
+    {"path": "gate/d06_three_demo_reproduction_gate.json", "size": 4085, "sha256": "01771d25a489b04240e809990699eac1c6563aed1325d9557959f44da8ff961e"},
+    {"path": "gate/three_demo_reproduction_gate.json", "size": 8723, "sha256": "1a1d3a72e45a58677a9fd6834848ed71801690dc16f36ccd4f3791edae06dbe9"},
+    {"path": "preflight/artifact_index.json", "size": 8925, "sha256": "8c0af8a6c1dbd4e1a95dfeba60a334924dcf4b453db6a633afbd46fadd98f46b"},
+    {"path": "runtime_authorization.json", "size": 2256, "sha256": "4676e9186034eb03d0b9e0b79e311793c8c2d6eed3b9e772ee0ffc51d2c1e62e"},
+    {"path": "stages/O06_paired_causal_outcomes/completion.json", "size": 881, "sha256": "8c7addc59349e0e97bcee4b5ac8355d165d0bcfa944d5ae5441916a6c93df8aa"},
+    {"path": "stages/O06_paired_causal_outcomes/failure.json", "size": 3548, "sha256": "b9fa06d62b05e0743b496d69376c0b574873d2c8d8c91d8f787e2f3bdfec7a99"},
+    {"path": "stages/O06_paired_causal_outcomes/process.json", "size": 519, "sha256": "5a9f26aeadf4af5bb94366ee7ff3fc434cad13c38925dc0943d0e445479a1a63"},
+    {"path": "stages/O06_paired_causal_outcomes/logs/stdout.log", "size": 26029, "sha256": "116b8ad395735bee772305024548225b1c83346759f567228ff555b30b1f8eb6"},
+    {"path": "stages/O06_paired_causal_outcomes/logs/stderr.log", "size": 1268, "sha256": "b994e6a534b4e41cac545d60b5614a50435423c701cd884a89a0017e4f3a398c"},
+    {"path": "arms/1d/paired_causal/condition_manifest.json", "size": 909112, "sha256": "018834a374bb4d7fbc6eb6b0d4a850323318773ace420005864644d700e6946e"},
+    {"path": "arms/1d/preflight/frozen_train_selections.jsonl", "size": 9400855, "sha256": "d96dc69ff5fb758b0a742c6435d141dcb99e2ad6a8e225062ca9dc557fc000f1"},
+    {"path": "arms/1d/paired_causal/condition_outputs/25e1e5cd4cfacc709b176a1fad0fc758615a13ded9437f6556084cbbe7978f48.json", "size": 58371, "sha256": "b2ae09db67b79d1920ab6ca6a6f4be079a366a614e1590b16357a70002cfa1c0", "git_safe": false},
+    {"path": "arms/1d/paired_causal/worker_logs/3f95f136fac2a23fa46ed5a22dfc9c6f06bf10750730f6f01a10974781608b36.json.stderr.log", "size": 291, "sha256": "e95cc2b4955ff51a0c2be52bca58ec30d2bba3a3f05dc6afc9f9e6bbb6fa4742"}
+  ],
+  "directory_inventories": [
+    {"path": "arms/1d/paired_causal/condition_outputs", "file_count": 357, "total_bytes": 7658591, "sorted_sha256sum_inventory_sha256": "abe88dbc1ca997b93cab467d2def2762664ad5b01ad2124610d1a0b3248a3f11"},
+    {"path": "arms/1d/paired_causal/replay_missing", "file_count": 3, "total_bytes": 4920, "sorted_sha256sum_inventory_sha256": "e342bf313f3d2b4aa66026b87fbc037f56970b982c1cd6dab1d61ec66952ffd3"}
+  ],
+  "git_safe_policy": "Raw model outputs and observations remain Lambda-only. Git contains identities, counts, hashes, source references, and summaries only."
+}

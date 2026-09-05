@@ -3182,3 +3182,29 @@ IMPLEMENTATION DEVIATIONS:
   POSIX-path display mismatch were corrected before final local/Lambda suites.
 - No scientific stage, selector training, representation rebuild, AppWorld
   generation, or GPU computation ran.
+
+## 2026-09-05 EXP-037A 14j O06 terminal decision
+
+VERIFIED:
+
+- D06B exactly reproduced the three-demo 366/98 and 129/300/35 causal-panel
+  contract; D08B passed; D22 returned `THREE_DEMO_REPRODUCTION_PASS`.
+- Conditional 1D O06 failed when a preflight-scoreable raw condition exceeded
+  the context limit under fresh replay observations. The stored-state
+  preflight base was 18,957 tokens and the live bare prompt was 23,809.
+- The O06 attempt is non-recoverable under the frozen contract and has no
+  valid output manifest. Partial rows are diagnostic only.
+
+DECISION:
+
+- Record `INFRASTRUCTURE_IMPLEMENTATION_FAILURE` with root cause
+  `DETERMINISTIC_LIVE_CONTEXT_PREFLIGHT_MISMATCH`.
+- Preserve the sealed three-demo positive-control result. Do not claim a
+  complete one-demo or cross-arm scientific result.
+- Do not retry or resume 14j. Any repair to scoreability/admission requires a
+  new reviewed source, run identity, and explicit authorization.
+
+IMPLEMENTATION DEVIATIONS:
+
+- None in this records-only publication. No source, config, scientific
+  artifact, authorization, or raw run file was modified.

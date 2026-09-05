@@ -1,0 +1,27 @@
+{
+  "format": "exp037a_14j_git_safe_audit_index_v1",
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001",
+  "source_commit": "0e4015547da45802cc7b6ff3a9b92adce73077fc",
+  "status": "TERMINAL_INFRASTRUCTURE_FAILURE",
+  "failed_stage": "O06_paired_causal_outcomes",
+  "three_demo_gate": "THREE_DEMO_REPRODUCTION_PASS",
+  "one_demo_complete": false,
+  "final_comparison_complete": false,
+  "raw_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001",
+  "git_safe_records": {
+    "report": "research/results/EXP_037A_14J_O06_TERMINAL_FAILURE.md",
+    "summary": "research/results/exp037a_14j_o06_terminal_failure/summary.json",
+    "stage_status": "research/results/exp037a_14j_o06_terminal_failure/stage_status.json",
+    "o06_failure": "research/results/exp037a_14j_o06_terminal_failure/o06_failure.json",
+    "attempts_summary": "research/results/exp037a_14j_o06_terminal_failure/attempts_summary.json",
+    "three_demo_gate_summary": "research/results/exp037a_14j_o06_terminal_failure/three_demo_gate_summary.json",
+    "artifact_index": "research/results/exp037a_14j_o06_terminal_failure/artifact_index.json"
+  },
+  "redaction": {
+    "raw_secret_bearing_outputs_committed": false,
+    "credentials_committed": false,
+    "jwt_committed": false,
+    "raw_hashes_retained": true
+  },
+  "independently_verified_scope": "The completed three-demo result and the O06 terminal failure are independently indexed. Partial one-demo O06 outputs are diagnostic only and are not a scientific result."
+}

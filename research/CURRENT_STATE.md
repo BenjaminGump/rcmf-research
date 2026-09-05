@@ -1,5 +1,37 @@
 # Current State
 
+## 2026-09-05 EXP-037A 14j Terminated At One-Demo O06
+
+VERIFIED:
+
+- The frozen 14j run completed 42 stages. D06B, D08B, and D22 passed; the
+  complete three-demo positive control produced one-demo-deployment dev counts
+  bare/correct/shuffle `12/17/11` and D22 returned
+  `THREE_DEMO_REPRODUCTION_PASS`.
+- The conditional one-demo arm completed O00-O05, then O06 failed at state
+  `appworld:trace:229360a_3:step:27:line:382`. O05 admitted its static raw
+  prompt at 38,075 tokens, but O06's live replay observations made the prompt
+  exceed the 40,960-token limit.
+- O06 has 357 atomic condition outputs but no valid output manifest or sealed
+  paired panel. O07-O19 and F00-F03 were not reached. There are 43 attempts:
+  42 complete, 1 failed, and 0 open.
+- The formal parent exited, the H100 is idle, and the raw 14j root remains
+  immutable.
+
+CURRENT DECISION:
+
+- `INFRASTRUCTURE_IMPLEMENTATION_FAILURE`
+- Root cause: `DETERMINISTIC_LIVE_CONTEXT_PREFLIGHT_MISMATCH`
+- Three-demo result: `THREE_DEMO_REPRODUCTION_PASS`
+- One-demo and final cross-arm results: `NOT_EVALUATED`
+- Do not retry/resume 14j. A reviewed new source/package and authorization are
+  required before further science.
+
+Full report:
+`research/results/EXP_037A_14J_O06_TERMINAL_FAILURE.md`.
+
+Last updated: 2026-09-05.
+
 ## 2026-09-04 EXP-037A-R10 Ready For Reauthorization
 
 VERIFIED:
