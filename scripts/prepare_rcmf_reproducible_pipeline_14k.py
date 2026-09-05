@@ -727,7 +727,7 @@ def build_preflight(
         )
         is True,
         "paired_smoke_one_demo": paired_smoke.get(
-            "effective_prompt_profile"
+            "effective_runtime_prompt_profile"
         )
         == "full_demo_first_only",
         "paired_smoke_two_fresh_conditions": paired_smoke.get(
@@ -735,7 +735,8 @@ def build_preflight(
         )
         == 2
         and paired_smoke.get("generated_condition_count") == 2
-        and paired_smoke.get("reused_condition_count") == 0,
+        and paired_smoke.get("generated_condition_count")
+        == paired_smoke.get("condition_count"),
         "paired_smoke_no_optimization": paired_smoke.get("optimizer_steps", 0)
         == 0
         and paired_smoke.get("backward_count", 0) == 0,
