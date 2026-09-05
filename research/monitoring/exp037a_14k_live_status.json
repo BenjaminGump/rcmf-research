@@ -1,0 +1,153 @@
+{
+  "attempts": {
+    "complete": 5,
+    "current_attempt_id": "S05_transition_representations-1788643285347007328-r1",
+    "current_command": [
+      "/home/ubuntu/venvs/rcmf-py311/bin/python",
+      "scripts/run_rcmf_reproducible_stage_14b.py",
+      "--stage",
+      "S05_transition_representations",
+      "--config",
+      "configs/pipeline/rcmf_appworld_repro_14k.yaml",
+      "--run-root",
+      "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001",
+      "--source-commit",
+      "004f866647cfabb38a141b88e6d83821df88c403"
+    ],
+    "current_stage": "S05_transition_representations",
+    "failed_or_interrupted": 0,
+    "failed_or_interrupted_attempt_ids": [],
+    "open": 1,
+    "open_attempt_ids": [
+      "S05_transition_representations-1788643285347007328-r1"
+    ],
+    "total": 6
+  },
+  "completed_stage_count": 5,
+  "completed_stages": [
+    "S00_environment_manifest",
+    "S01_authoritative_corpus",
+    "S02_task_and_parent_splits",
+    "S03_transition_records",
+    "S04_selector_supervision"
+  ],
+  "current_attempt_id": "S05_transition_representations-1788643285347007328-r1",
+  "current_stage": "S05_transition_representations",
+  "current_stage_progress_files": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/stages/S05_transition_representations/process.json",
+      "sha256": "ef8e49d874b27a99ca8ec5c87f6512297f603f372903a43fb89a81e33b2eb910",
+      "size_bytes": 523
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/stages/S05_transition_representations/representation_progress.json",
+      "sha256": "abf595b85ec515d8fbcbb35cfc14c5b3974404aca8643cfdfa7e6b04887c9db1",
+      "size_bytes": 425
+    }
+  ],
+  "evidence": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/heartbeat.json",
+      "sha256": "92959a463fe9badea3776a9376be155a5a12a24f0c40f86aa7d8213fce674453",
+      "size_bytes": 269
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/scheduler.lock",
+      "sha256": "0614eaa84b6151c39be6d1781b9c975746c71859f086eb6ade76bd34e2594e93",
+      "size_bytes": 128
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/scheduler_state.json",
+      "sha256": "b7735561a4795579da2c15cbac3b7b237fb941dc278ce5a153bf4337898ad2f6",
+      "size_bytes": 3773
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/attempts.jsonl",
+      "sha256": "442c2bb9a4e319d365f7ff638cec0ed216cde37a966d293a9f50c4192cd97f62",
+      "size_bytes": 8722
+    }
+  ],
+  "failure_files": [],
+  "formal_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001",
+  "formal_run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001",
+  "format": "exp037a_14k_read_only_status_bridge_v1",
+  "frozen_source_sha": "004f866647cfabb38a141b88e6d83821df88c403",
+  "gates": {
+    "D06B": {
+      "completion_exit_code": null,
+      "failure_present": false,
+      "result": {},
+      "state": "not_reached"
+    },
+    "D08B": {
+      "completion_exit_code": null,
+      "failure_present": false,
+      "result": {},
+      "state": "not_reached"
+    },
+    "D22": {
+      "completion_exit_code": null,
+      "failure_present": false,
+      "result": {},
+      "state": "not_reached"
+    },
+    "F03": {
+      "completion_exit_code": null,
+      "failure_present": false,
+      "result": {},
+      "state": "not_reached"
+    }
+  },
+  "gpu": {
+    "available": true,
+    "gpus": [
+      {
+        "memory_total_mib": 81559,
+        "memory_used_mib": 35207,
+        "name": "NVIDIA H100 80GB HBM3",
+        "utilization_percent": 84
+      }
+    ],
+    "telemetry_only": true
+  },
+  "heartbeat": {
+    "age_seconds": 68.220626,
+    "current_stage": "S05_transition_representations",
+    "pid": 790588,
+    "stale": false,
+    "stale_threshold_seconds": 720,
+    "utc": "2026-09-05T21:25:07.976954+00:00"
+  },
+  "invalid_completion_stages": [],
+  "last_updated_utc": "2026-09-05T21:26:16.928941+00:00",
+  "latest_completed_stage": "S04_selector_supervision",
+  "material_signature": "49b086f77c3cfda061e6c3d79b1d198adc65fa7226b75cc46d2ac58688a6f394",
+  "monitor_state": "RUNNING_HEALTHY",
+  "most_recent_failed_stage": null,
+  "nfs": {
+    "free_bytes": 3341906233786368,
+    "free_gib": 3112392.7177734375,
+    "total_bytes": 3342151081525248
+  },
+  "one_demo_started": false,
+  "orchestrator_result": null,
+  "parent_alive": true,
+  "parent_pid": 790588,
+  "parent_tmux": {
+    "exists": true,
+    "name": "exp037a_14k_formal",
+    "pane_pid": 790588
+  },
+  "poll_interval_seconds": 300,
+  "read_only_contract": {
+    "formal_root_writes_by_bridge": 0,
+    "gpu_zero_is_not_failure": true,
+    "scheduler_is_sole_progression_owner": true,
+    "write_roots": [
+      "/lambda/nfs/rcmf-persist/project/runs/monitoring/exp037a_14k",
+      "separate_git_worktree_only"
+    ]
+  },
+  "scheduler_lock_present": true,
+  "terminal": false
+}
