@@ -286,6 +286,7 @@ def formal_stage_output_paths(stage_id: str, run_root: Path) -> list[Path]:
             ]
         elif index == 6:
             paths = [
+                target / "paired_causal/effective_runtime_config.json",
                 target / "paired_causal/condition_manifest.json",
                 target / "paired_causal/paired_outcomes.json",
                 *_tree_files(target / "paired_causal/condition_outputs"),
@@ -903,6 +904,8 @@ def _paired_or_teacher_command(
         parent_attempt_id="pipeline",
     )
     command.extend(["--replay-config", str(REPLAY_CONFIG), "--phase", phase])
+    if not teacher:
+        command.extend(["--arm-id", arm_id])
     _run(command)
     output = (
         target / "structured_compiler/policy_teacher_cache.pt"

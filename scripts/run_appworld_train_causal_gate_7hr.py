@@ -4,6 +4,7 @@ import argparse
 import ast
 from collections import Counter
 from collections.abc import Mapping, Sequence
+import copy
 import hashlib
 import json
 import os
@@ -17,6 +18,9 @@ import torch
 import torch.nn.functional as F
 
 from rcmf.config import load_config
+from rcmf.benchmarks.appworld.paired_causal_runtime_14k import (
+    resolve_effective_paired_causal_runtime,
+)
 from rcmf.model.backends.hf_qwen import HFQwenBackend
 from rcmf.training.appworld_structured_rescue_7hr import (
     GLOBAL_SEED,
@@ -74,6 +78,7 @@ def _parse_args() -> argparse.Namespace:
         default=Path("configs/benchmark/stage_c_replay_clean_rebuild_7b.yaml"),
     )
     parser.add_argument("--artifact-dir", type=Path, required=True)
+    parser.add_argument("--arm-id", choices=("3d", "1d"))
     parser.add_argument("--phase", choices=("paired", "gate"), required=True)
     parser.add_argument("--attempt-id", required=True)
     parser.add_argument("--parent-attempt-id", default="none")
@@ -104,6 +109,8 @@ def _paths(settings: Mapping[str, Any], artifact_dir: Path) -> dict[str, Path]:
         "semantic_module": Path("rcmf/training/appworld_replay_clean_rebuild_7b.py"),
         "bridge_script": Path("scripts/appworld_live_one_step_bridge_7b.py"),
         "manifest": artifact_dir / "paired_causal/condition_manifest.json",
+        "effective_runtime": artifact_dir
+        / "paired_causal/effective_runtime_config.json",
         "outcomes": artifact_dir / "paired_causal/paired_outcomes.json",
         "outcome_report": artifact_dir / "paired_causal/report.md",
         "replay_missing_dir": artifact_dir / "paired_causal/replay_missing",
@@ -142,6 +149,7 @@ def _condition(
 def _build_manifest(
     panel: Mapping[str, Any],
     selections: Mapping[str, Mapping[str, Any]],
+    runtime_provenance: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     ordered_ids = list(panel["state_ids"]) + list(panel["expansion_order"])
     slots = []
@@ -175,6 +183,8 @@ def _build_manifest(
         "slots": slots,
         "conditions": conditions,
     }
+    if runtime_provenance is not None:
+        payload["paired_causal_runtime"] = dict(runtime_provenance)
     payload["manifest_sha256"] = canonical_sha256(payload)
     return payload
 
@@ -314,7 +324,8 @@ def _traceback_format_only_replay_missing(
 
 def _run_paired(
     *,
-    replay_cfg: Any,
+    replay: Mapping[str, Any],
+    runtime_provenance: Mapping[str, Any],
     settings: Mapping[str, Any],
     paths: Mapping[str, Path],
     artifact_dir: Path,
@@ -324,14 +335,13 @@ def _run_paired(
     panel = _json(paths["panel"])
     selections = {str(row["state_example_id"]): row for row in _rows(paths["selections"])}
     features = {str(row["state_example_id"]): row for row in _rows(paths["features"])}
-    manifest = _build_manifest(panel, selections)
+    manifest = _build_manifest(panel, selections, runtime_provenance)
     if paths["manifest"].exists():
         if _json(paths["manifest"]) != manifest:
             raise ValueError("Frozen paired-causal condition manifest changed")
     else:
         paths["manifest"].parent.mkdir(parents=True, exist_ok=True)
         atomic_write_json(paths["manifest"], manifest)
-    replay = replay_cfg.raw["stage_c_7b"]
     generation = replay["causal_audit"]["generation"]
     backend = HFQwenBackend(
         model_name=str(generation["model_name"]),
@@ -408,6 +418,7 @@ def _run_paired(
                     backend=backend,
                     semantic_path=paths["semantic_module"],
                     bridge_script=paths["bridge_script"],
+                    runtime_provenance=runtime_provenance,
                 )
             except BaseException as error:
                 missing = _traceback_format_only_replay_missing(
@@ -513,6 +524,7 @@ def _run_paired(
         "elapsed_seconds": time.perf_counter() - started,
         "rows": completed_rows,
         "minimum_label_gate_passed": passed,
+        "paired_causal_runtime": dict(runtime_provenance),
     }
     payload["maximum_state_space_exhausted"] = (
         payload["state_count"]
@@ -749,6 +761,8 @@ def main() -> None:
     cfg = load_config(args.config)
     replay_cfg = load_config(args.replay_config)
     settings = cfg.raw["stage_c_7hr"]
+    if bool(settings.get("fresh_pipeline_mode", False)) and args.arm_id is None:
+        raise ValueError("Fresh paired-causal execution requires an explicit arm ID")
     if int(settings["global_seed"]) != GLOBAL_SEED:
         raise ValueError("EXP-028A requires global seed 25101")
     if os.name != "nt" and not os.path.ismount(str(settings["persistent_root"])):
@@ -776,6 +790,8 @@ def main() -> None:
     if not _json(paths["runtime"])["automatic_launch_allowed"]:
         raise RuntimeError("Runtime preflight did not authorize GPU work")
     source_hashes = {name: sha256_file(paths[name]) for name in required}
+    source_hashes["arm_config"] = sha256_file(args.config)
+    source_hashes["replay_config"] = sha256_file(args.replay_config)
     with AttemptLedger(
         args.artifact_dir,
         run_uuid=str(settings["run_uuid"]),
@@ -794,8 +810,51 @@ def main() -> None:
         heartbeat_interval_s=float(settings["heartbeat_interval_seconds"]),
     ) as attempt:
         if args.phase == "paired":
+            resolved_arm_id = args.arm_id
+            if resolved_arm_id is None:
+                resolved_arm_id = (
+                    "3d"
+                    if str(settings["appworld"]["prompt_profile"]) == "full_demo"
+                    else "1d"
+                )
+            effective_replay, runtime_provenance = (
+                resolve_effective_paired_causal_runtime(
+                    replay_config=replay_cfg.raw,
+                    arm_config=cfg.raw,
+                    arm_id=resolved_arm_id,
+                    arm_config_path=str(args.config),
+                    arm_config_sha256=source_hashes["arm_config"],
+                    replay_config_path=str(args.replay_config),
+                    replay_config_sha256=source_hashes["replay_config"],
+                )
+            )
+            effective_payload = {
+                **dict(runtime_provenance),
+                "run_uuid": str(settings["run_uuid"]),
+                "effective_causal_generation": copy.deepcopy(
+                    effective_replay["causal_audit"]["generation"]
+                ),
+            }
+            if paths["effective_runtime"].exists():
+                if _json(paths["effective_runtime"]) != effective_payload:
+                    raise ValueError(
+                        "Frozen effective paired-causal runtime config changed"
+                    )
+            else:
+                paths["effective_runtime"].parent.mkdir(parents=True, exist_ok=True)
+                atomic_write_json(paths["effective_runtime"], effective_payload)
+            runtime_provenance = {
+                **dict(runtime_provenance),
+                "effective_runtime_artifact_path": str(
+                    paths["effective_runtime"]
+                ),
+                "effective_runtime_artifact_sha256": sha256_file(
+                    paths["effective_runtime"]
+                ),
+            }
             result = _run_paired(
-                replay_cfg=replay_cfg,
+                replay=effective_replay,
+                runtime_provenance=runtime_provenance,
                 settings=settings,
                 paths=paths,
                 artifact_dir=args.artifact_dir,

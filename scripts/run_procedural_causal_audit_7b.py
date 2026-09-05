@@ -233,6 +233,7 @@ def _run_condition(
     backend: Any,
     semantic_path: Path,
     bridge_script: Path,
+    runtime_provenance: Mapping[str, Any] | None = None,
 ) -> tuple[dict[str, Any], bool]:
     model_name = str(settings["causal_audit"]["generation"]["model_name"])
     if output_path.exists():
@@ -245,6 +246,10 @@ def _run_condition(
             corpus_lineage_sha256=corpus_lineage_sha256,
             model_name=model_name,
         )
+        if runtime_provenance is not None and row.get(
+            "paired_causal_runtime"
+        ) != dict(runtime_provenance):
+            raise ValueError("Condition checkpoint runtime provenance differs")
         return row, True
     started = time.perf_counter()
     contract = _state_contract(example, record)
@@ -383,6 +388,8 @@ def _run_condition(
         "backend_reported_generation_elapsed_ms": float(output.ttft_ms),
         "condition_elapsed_seconds": time.perf_counter() - started,
     }
+    if runtime_provenance is not None:
+        row["paired_causal_runtime"] = dict(runtime_provenance)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     atomic_write_json(output_path, row)
     validate_condition_checkpoint(
@@ -393,6 +400,10 @@ def _run_condition(
         corpus_lineage_sha256=corpus_lineage_sha256,
         model_name=model_name,
     )
+    if runtime_provenance is not None and row.get(
+        "paired_causal_runtime"
+    ) != dict(runtime_provenance):
+        raise ValueError("Condition checkpoint runtime provenance differs")
     return row, False
 
 

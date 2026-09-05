@@ -118,10 +118,20 @@ def _require(paths: Mapping[str, Path], names: Sequence[str]) -> None:
 
 
 def _render_and_count(tokenizer: Any, messages: Sequence[Mapping[str, str]]) -> tuple[str, int]:
-    rendered = tokenizer.apply_chat_template(
-        list(messages), tokenize=False, add_generation_prompt=True
-    )
-    tokens = tokenizer(rendered, add_special_tokens=False, truncation=False)["input_ids"]
+    try:
+        rendered = tokenizer.apply_chat_template(
+            list(messages),
+            tokenize=False,
+            add_generation_prompt=True,
+            enable_thinking=False,
+        )
+    except TypeError:
+        rendered = tokenizer.apply_chat_template(
+            list(messages), tokenize=False, add_generation_prompt=True
+        )
+    tokens = tokenizer(rendered, add_special_tokens=True, truncation=False)[
+        "input_ids"
+    ]
     return rendered, len(tokens)
 
 
