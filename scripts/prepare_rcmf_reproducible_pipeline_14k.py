@@ -715,12 +715,12 @@ def build_preflight(
         )
         == 499,
         "live_profile_wrong_full_demo_infeasible": live_profile.get(
-            "six_state_summary", {}
-        ).get("wrong_full_demo_infeasible_count")
+            "wrong_profile_over_context_count"
+        )
         == 6,
         "live_profile_correct_one_demo_feasible": live_profile.get(
-            "six_state_summary", {}
-        ).get("correct_one_demo_feasible_count")
+            "corrected_profile_feasible_count"
+        )
         == 6,
         "live_profile_formal_root_unchanged": live_profile.get(
             "formal_root_unchanged"
@@ -734,7 +734,7 @@ def build_preflight(
             "condition_count"
         )
         == 2
-        and paired_smoke.get("generation_count") == 2
+        and paired_smoke.get("generated_condition_count") == 2
         and paired_smoke.get("reused_condition_count") == 0,
         "paired_smoke_no_optimization": paired_smoke.get("optimizer_steps", 0)
         == 0
@@ -745,8 +745,8 @@ def build_preflight(
         is True,
         "full_o06_passed": o06_validation.get("passed") is True,
         "full_o06_one_demo": o06_validation.get(
-            "effective_prompt_profile"
-        )
+            "effective_runtime", {}
+        ).get("effective_runtime_prompt_profile")
         == "full_demo_first_only",
         "full_o06_fresh_conditions": o06_validation.get(
             "generated_condition_count"
@@ -757,9 +757,13 @@ def build_preflight(
             "paired_state_count"
         )
         == 407
-        and o06_validation.get("condition_count") == 814,
+        and (
+            o06_validation.get("generated_condition_count", 0)
+            + o06_validation.get("reused_condition_count", 0)
+        )
+        == 814,
         "full_o06_valid_panel_stop": o06_validation.get(
-            "minimum_per_label_gate_passed"
+            "minimum_label_gate_passed"
         )
         is True
         or o06_validation.get("maximum_state_space_exhausted") is True,
@@ -767,23 +771,24 @@ def build_preflight(
             "formal_root_unchanged"
         )
         is True,
-        "o07_one_demo": o07_smoke.get("prompt_profile")
+        "o07_one_demo": o07_smoke.get("arm_resolved_prompt_profile")
         == "full_demo_first_only",
         "o07_no_generation_or_optimization": o07_smoke.get(
-            "generation_count", 0
+            "qwen_generation_count", 0
         )
         == 0
         and o07_smoke.get("optimizer_steps", 0) == 0
         and o07_smoke.get("backward_count", 0) == 0,
         "o07_qwen_frozen": o07_smoke.get("qwen_frozen") is True,
         "d06_compatibility_all_conditions": d06_compatibility.get(
-            "matched_condition_count"
+            "available_condition_count"
         )
         == 928
+        and d06_compatibility.get("exact_prompt_match_count") == 928
         and d06_compatibility.get("mismatch_count") == 0,
         "d06_effective_diff_zero": d06_compatibility.get(
-            "three_demo_effective_generation_diff"
-        )
+            "effective_runtime", {}
+        ).get("three_demo_effective_generation_diff")
         == 0,
         "d06_formal_root_unchanged": d06_compatibility.get(
             "formal_root_unchanged"
@@ -1141,8 +1146,8 @@ def build_preflight(
         },
         "full_o06": {
             "paired_states": o06_validation.get("paired_state_count"),
-            "train_states": o06_validation.get("train_state_count"),
-            "heldout_states": o06_validation.get("heldout_state_count"),
+            "train_states": o06_validation.get("model_train_count"),
+            "heldout_states": o06_validation.get("heldout_count"),
             "label_counts": o06_validation.get("label_counts"),
             "static_over_context_count": o06_validation.get(
                 "static_over_context_count"
