@@ -1,0 +1,728 @@
+{
+  "context_limit": 40960,
+  "corrected_profile_feasible_count": 6,
+  "effective_runtime": {
+    "arm_config_path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/resolved_configs/arm_1d.yaml",
+    "arm_config_sha256": "412306f381532cf5cca8e06fd20faff276d86de1d707e119a799b795149dfb10",
+    "arm_id": "1d",
+    "arm_resolved_prompt_profile": "full_demo_first_only",
+    "changed_execution_fields": [
+      "prompt_profile"
+    ],
+    "effective_causal_generation_config_sha256": "178a9c8db84bddaac08d69ff80445adf22a73d4636f742abb705c722ff64413c",
+    "effective_replay_settings_sha256": "525b93314530e195acffd960eac37f95351e83b35549233be2b5b5d98827829b",
+    "effective_runtime_prompt_profile": "full_demo_first_only",
+    "field_ownership": {
+      "context_limit": "shared_required_equal",
+      "device_map": "legacy_paired_causal_contract",
+      "do_sample": "shared_required_equal",
+      "dtype": "legacy_paired_causal_contract",
+      "enable_thinking": "shared_required_equal",
+      "max_new_tokens": "legacy_paired_causal_contract",
+      "model_name": "shared_required_equal",
+      "prompt_profile": "arm_resolved_authoritative_override",
+      "temperature": "shared_required_equal",
+      "top_p": "shared_required_equal"
+    },
+    "format": "exp037a_effective_paired_causal_runtime_14k_v1",
+    "legacy_causal_generation_config_sha256": "2ba3ca93ebe6f5fe3339c786b0fc3a9748110df524ff2d6bfef5a25fdccb689b",
+    "legacy_replay_prompt_profile": "full_demo",
+    "profile_sources": {
+      "benchmark.prompt_profile": "full_demo_first_only",
+      "stage_c_11b.prompt_profile": "full_demo_first_only",
+      "stage_c_7c.generation.prompt_profile": "full_demo_first_only",
+      "stage_c_7hr.appworld.prompt_profile": "full_demo_first_only",
+      "stage_c_9a.appworld.prompt_profile": "full_demo_first_only"
+    },
+    "replay_config_path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r12b/configs/benchmark/stage_c_replay_clean_rebuild_7b.yaml",
+    "replay_config_sha256": "20d38ec8c3e016474200dc14bd86d3ab6ecf2526c513570758eb1dbd0a3a6150",
+    "shared_field_checks": {
+      "context_limit": {
+        "arm_value": 40960,
+        "equal": true,
+        "legacy_value": 40960
+      },
+      "do_sample": {
+        "arm_value": false,
+        "equal": true,
+        "legacy_value": false
+      },
+      "enable_thinking": {
+        "arm_value": false,
+        "equal": true,
+        "legacy_value": false
+      },
+      "model_name": {
+        "arm_value": "Qwen/Qwen3-8B",
+        "equal": true,
+        "legacy_value": "Qwen/Qwen3-8B"
+      },
+      "temperature": {
+        "arm_value": 0.0,
+        "equal": true,
+        "legacy_value": 0.0
+      },
+      "top_p": {
+        "arm_value": 1.0,
+        "equal": true,
+        "legacy_value": 1.0
+      }
+    },
+    "three_demo_effective_generation_diff": null
+  },
+  "elapsed_seconds": 38.498959643766284,
+  "formal_root_after": {
+    "file_count": 22434,
+    "sha256": "6eb6b3b1afa25b9837c49eea1033d09b909a35e6a509c0954fc8f1741a788e87"
+  },
+  "formal_root_before": {
+    "file_count": 22434,
+    "sha256": "6eb6b3b1afa25b9837c49eea1033d09b909a35e6a509c0954fc8f1741a788e87"
+  },
+  "formal_root_unchanged": true,
+  "format": "exp037a_r12b_known_target_and_six_state_live_profile_v1",
+  "qwen_generation_count": 0,
+  "rows": [
+    {
+      "effective_runtime_prompt_profile": "full_demo_first_only",
+      "profiles": {
+        "full_demo": {
+          "bare": {
+            "backend_tokenize_messages": 23809,
+            "generate_equivalent_input_tokens": 23809,
+            "message_array_sha256": "638621b842e712abedc19639db6137806b5bc9cdb0d65a3f3bfe76a41ee082b1",
+            "preflight_render_and_count": 23809,
+            "preflight_rendered_sha256": "8746a3737ee9249a6209ee2922b1f85e48f68120df0b66a8c229271195a7ecdb",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 23809,
+            "runtime_direct_add_special_tokens_true": 23809,
+            "runtime_rendered_sha256": "8746a3737ee9249a6209ee2922b1f85e48f68120df0b66a8c229271195a7ecdb"
+          },
+          "raw": {
+            "backend_tokenize_messages": 42927,
+            "generate_equivalent_input_tokens": 42927,
+            "message_array_sha256": "f45faf9b93d8774ab4dd8950f10ecf371981e4efef8033a2a707f6b6f4fcd701",
+            "preflight_render_and_count": 42927,
+            "preflight_rendered_sha256": "4b00cbd024111acf5fc2996f075b9a12266cd8a4d030edf380ce38c838284fd8",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 42927,
+            "runtime_direct_add_special_tokens_true": 42927,
+            "runtime_rendered_sha256": "4b00cbd024111acf5fc2996f075b9a12266cd8a4d030edf380ce38c838284fd8"
+          },
+          "raw_feasible": false,
+          "raw_headroom": -1967,
+          "raw_tokens": 42927
+        },
+        "full_demo_first_only": {
+          "bare": {
+            "backend_tokenize_messages": 18960,
+            "generate_equivalent_input_tokens": 18960,
+            "message_array_sha256": "723153a455d46e0255cd998aa12193f7de473e35fbb02bcb5d466f300b71985b",
+            "preflight_render_and_count": 18960,
+            "preflight_rendered_sha256": "a164f885e4bd5c7488be9b9cde832b2c75af9de674e16cbc7049316177ccf60d",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 18960,
+            "runtime_direct_add_special_tokens_true": 18960,
+            "runtime_rendered_sha256": "a164f885e4bd5c7488be9b9cde832b2c75af9de674e16cbc7049316177ccf60d"
+          },
+          "raw": {
+            "backend_tokenize_messages": 38078,
+            "generate_equivalent_input_tokens": 38078,
+            "message_array_sha256": "ef4f83e53cae9451aa8f0f572b9463fea0382ae0385e58d886628cf0d5a48652",
+            "preflight_render_and_count": 38078,
+            "preflight_rendered_sha256": "e7d4bd899a6646b0ac1051b2e5613b2eb6ec8548cafd8b447e91b9219197fe30",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 38078,
+            "runtime_direct_add_special_tokens_true": 38078,
+            "runtime_rendered_sha256": "e7d4bd899a6646b0ac1051b2e5613b2eb6ec8548cafd8b447e91b9219197fe30"
+          },
+          "raw_feasible": true,
+          "raw_headroom": 2882,
+          "raw_tokens": 38078
+        }
+      },
+      "qwen_generation_count": 0,
+      "replay": {
+        "appworld_diagnostic_experiment": "exp025b_live_8b905d19edeabff4460c5d93",
+        "appworld_diagnostic_output_root": "/lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root/experiments/outputs/exp025b_live_8b905d19edeabff4460c5d93",
+        "elapsed_seconds": 5.2481553559191525,
+        "history_semantic_v3_match": true,
+        "observation_count": 26,
+        "observation_sha256": [
+          "ff5817cd77773566f4cf7ca2ebbf3f5d3723d1179fdc6f2c7312dc8b9471050c",
+          "ee0485c6fdb5dcaf218e2ff493fc6e60a3c5e3dd39f99be5806612b633ea73d2",
+          "d5110d21e24d1c2be4d48f1061aadb628e7f1ef3e86c37e3d9b0ac09abdf4b1b",
+          "15f7ecf7427ee327b0cb356d438165ba239c6d42760507fc153b308555b5fad0",
+          "f94f9b9eed17ced34f2c361618346db139e388dab3445dd110111fccc96a673c",
+          "3220e4c9ca2ca7ec91abec09162632209d3a179b32757bfbe950234e765b5f29",
+          "18566a796b9e1d6c9b09a7d99734ce8b9a3caa715f93c5824119755e8702d7bc",
+          "a570d43be643ffe1d286f78925cddf0febe7a6894658b88c2dc6e33cf3a1613c",
+          "f89b02512cd922dc6745f426e252cf7e41506b5460315d549b686447cf2f4c6e",
+          "a3b13dd6a8b0b952be4952f04862240e6333638d5820189676ddd67b42dc30ff",
+          "a46f4daa58f919351f71ce6aedb15784e3781d2d2d61086be6dc80e86f81a510",
+          "d3b49ae48eceb5115e878737de3d61303cc3d0546a03d4ff5d81c66a2e53e4f4",
+          "7606643e35d53205de4086db71de099e2e6c57fb6ec4b687f21e8afff602cf8b",
+          "a542fb27ebc6f56ee8665d773454c80b0ddae5fd84b2d478414f689f85716d84",
+          "f94f9b9eed17ced34f2c361618346db139e388dab3445dd110111fccc96a673c",
+          "0bb848ba3847a089d66cf931999ba2544a45b5e18d1a96bceb9b7ec55b49208b",
+          "0f01a6af3cb9d72eeb79f7dff4919bcb90ddb7046ec7ff3d895770110f837c3c",
+          "a9e6f0e4ce89f17066895f4e08883a980a92ec43dbf16834f7135b5ac71b5205",
+          "0c72bb9f9433e691e7269d2cc755f9d819444f42c5096df39bf6d0ba921dfedd",
+          "cc95d1a8ef060c17c4038d55edbcaa2aab550c4a846ca6c362badb1f10bc7d8e",
+          "3373af7e78583f5a1bf1cb053b1ce135a1360384d8edd7cdeb5194ef6f49888c",
+          "e66c81b4492d82ca76d508d049842e8c6556fd22d229894345bec7927cffeb92",
+          "b712746d1faec0ece740227b035cb0fa428440772a58eb7e3597dfb547f5190b",
+          "1cf4b8ec6aaeffb840e11f6ef4f1b4a0c0df8480d938a4ea332161ca9d935266",
+          "0ecb4eb20778cfa94356321c35b8252c37e57197df48606adcc0633e132cc370",
+          "f21f60cc2655566bb6c180a5b7d3e9826f482eb73cb8e77edff81eb9bc3a166b"
+        ],
+        "prepared_state_fingerprint": {
+          "method": "public_ModelCollection.model_hashes",
+          "model_hash_count": 101,
+          "sha256": "ea3faed6d527e7288cad3843803e3a1321d709a99ee1d773c3b4c70fdba04290"
+        },
+        "qwen_generation_count": 0,
+        "ready": true,
+        "repeat": 2001,
+        "stderr": {
+          "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/live_profile/lambda_only_replay_repeat_2001.stderr.log",
+          "sha256": "e95cc2b4955ff51a0c2be52bca58ec30d2bba3a3f05dc6afc9f9e6bbb6fa4742",
+          "size_bytes": 291
+        },
+        "target_action_executed": false
+      },
+      "selected_transition_id": "60716ec9-9ca6-5011-9efc-15b0db10b2f0",
+      "state_id": "appworld:trace:229360a_3:step:27:line:382",
+      "target_action_execution_count": 0
+    },
+    {
+      "effective_runtime_prompt_profile": "full_demo_first_only",
+      "profiles": {
+        "full_demo": {
+          "bare": {
+            "backend_tokenize_messages": 19031,
+            "generate_equivalent_input_tokens": 19031,
+            "message_array_sha256": "09ad97474f6d479214ab17aa4118b9a248a72f3d66ffd0de5462269df7a64ede",
+            "preflight_render_and_count": 19031,
+            "preflight_rendered_sha256": "afb737191dc9b5cf4d7317a0704e00198b0a37eccfc0a75deec1e3cc7ed40c6c",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 19031,
+            "runtime_direct_add_special_tokens_true": 19031,
+            "runtime_rendered_sha256": "afb737191dc9b5cf4d7317a0704e00198b0a37eccfc0a75deec1e3cc7ed40c6c"
+          },
+          "raw": {
+            "backend_tokenize_messages": 42928,
+            "generate_equivalent_input_tokens": 42928,
+            "message_array_sha256": "619f131f6ed5f12ce54263f0a98031d58b05daf0279a880b1a6d439976f623c1",
+            "preflight_render_and_count": 42928,
+            "preflight_rendered_sha256": "faa32e6807a83f5523694b7116f26ea0395de07094f0e920cb2c20f20d9d2559",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 42928,
+            "runtime_direct_add_special_tokens_true": 42928,
+            "runtime_rendered_sha256": "faa32e6807a83f5523694b7116f26ea0395de07094f0e920cb2c20f20d9d2559"
+          },
+          "raw_feasible": false,
+          "raw_headroom": -1968,
+          "raw_tokens": 42928
+        },
+        "full_demo_first_only": {
+          "bare": {
+            "backend_tokenize_messages": 14182,
+            "generate_equivalent_input_tokens": 14182,
+            "message_array_sha256": "adae4bd48d9f06a44bf6c8c200f654c2e8184172ba81ae12f0a0a559dafc991d",
+            "preflight_render_and_count": 14182,
+            "preflight_rendered_sha256": "9e4020457d7c3bd281d7cdfcf3352d430de7efb2e6ba8917101ca05965a68c99",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 14182,
+            "runtime_direct_add_special_tokens_true": 14182,
+            "runtime_rendered_sha256": "9e4020457d7c3bd281d7cdfcf3352d430de7efb2e6ba8917101ca05965a68c99"
+          },
+          "raw": {
+            "backend_tokenize_messages": 38079,
+            "generate_equivalent_input_tokens": 38079,
+            "message_array_sha256": "8320be36cf0433b7986bed12cda077d908c6e497488a580b85e69ef12bf4735d",
+            "preflight_render_and_count": 38079,
+            "preflight_rendered_sha256": "a8154a172e5fc2b74cfb0648805eb145526c3bf34089c2abb663048e3fe842e8",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 38079,
+            "runtime_direct_add_special_tokens_true": 38079,
+            "runtime_rendered_sha256": "a8154a172e5fc2b74cfb0648805eb145526c3bf34089c2abb663048e3fe842e8"
+          },
+          "raw_feasible": true,
+          "raw_headroom": 2881,
+          "raw_tokens": 38079
+        }
+      },
+      "qwen_generation_count": 0,
+      "replay": {
+        "appworld_diagnostic_experiment": "exp025b_live_c51670576f0b1131d1d9e94b",
+        "appworld_diagnostic_output_root": "/lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root/experiments/outputs/exp025b_live_c51670576f0b1131d1d9e94b",
+        "elapsed_seconds": 4.652553512714803,
+        "history_semantic_v3_match": true,
+        "observation_count": 15,
+        "observation_sha256": [
+          "20af623a8c41686078ead133e908db1c125c05327141d8e7f10229cb9b251175",
+          "6f3aee15fb1c784c171265313391b76c088e06278fde4e4091faf830912464c0",
+          "3220e4c9ca2ca7ec91abec09162632209d3a179b32757bfbe950234e765b5f29",
+          "b278d33ea62b70b9019b81c53280b7b21828ff9671adb03716e6746b0c5256aa",
+          "a570d43be643ffe1d286f78925cddf0febe7a6894658b88c2dc6e33cf3a1613c",
+          "7b67287dda1668b037d7c5efecad89e2a14aec8d7b4701546379ba9837344a0c",
+          "a3b13dd6a8b0b952be4952f04862240e6333638d5820189676ddd67b42dc30ff",
+          "66f6a2c3ab30c42842df4233636953ebd539c0ad81cc672f4dab90865626d78f",
+          "237a33493b136c9f4916fffa5a29df5cc278764b92109be1569bfabc11eb7b66",
+          "e7734e6e05bdda8f4347857fb39a3769cc9bb60fbd9fdd70b676498c3b7deaaa",
+          "0f01a6af3cb9d72eeb79f7dff4919bcb90ddb7046ec7ff3d895770110f837c3c",
+          "a9e6f0e4ce89f17066895f4e08883a980a92ec43dbf16834f7135b5ac71b5205",
+          "73ef1be209061200cdaf9d7c159bf7ba3435af53aabb15be945bc5850e8bd53c",
+          "c56bc5361b726cf486562d85a6558a49055037fb3d0dfbbe29cef3e3a615b8a7",
+          "1b568c70541ac1b169916b346e9c051460966cc9797f137a21233236c8a100ed"
+        ],
+        "prepared_state_fingerprint": {
+          "method": "public_ModelCollection.model_hashes",
+          "model_hash_count": 101,
+          "sha256": "4283d0cb5b97b6fea8c104c7bc84d453cbfd584b6d59f22615b93082e64cd773"
+        },
+        "qwen_generation_count": 0,
+        "ready": true,
+        "repeat": 2002,
+        "stderr": {
+          "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/live_profile/lambda_only_replay_repeat_2002.stderr.log",
+          "sha256": "e95cc2b4955ff51a0c2be52bca58ec30d2bba3a3f05dc6afc9f9e6bbb6fa4742",
+          "size_bytes": 291
+        },
+        "target_action_executed": false
+      },
+      "selected_transition_id": "1b2b3a6a-d06e-512a-b9a6-d96a4c6304c1",
+      "state_id": "appworld:trace:229360a_2:step:16:line:354",
+      "target_action_execution_count": 0
+    },
+    {
+      "effective_runtime_prompt_profile": "full_demo_first_only",
+      "profiles": {
+        "full_demo": {
+          "bare": {
+            "backend_tokenize_messages": 29021,
+            "generate_equivalent_input_tokens": 29021,
+            "message_array_sha256": "42e7d75ba811191739aec8c430e15b43737790b32fcc7daa26461d391bc28ca9",
+            "preflight_render_and_count": 29021,
+            "preflight_rendered_sha256": "7d0f0430f134cbdeda62151a9e6f37ed2bff5abe71ff0812d32b842d6667a8c4",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 29021,
+            "runtime_direct_add_special_tokens_true": 29021,
+            "runtime_rendered_sha256": "7d0f0430f134cbdeda62151a9e6f37ed2bff5abe71ff0812d32b842d6667a8c4"
+          },
+          "raw": {
+            "backend_tokenize_messages": 44599,
+            "generate_equivalent_input_tokens": 44599,
+            "message_array_sha256": "0fe144007acea433b2dda49a0e6a0ef5cfdf458a077b87a56132a3046fc15ed0",
+            "preflight_render_and_count": 44599,
+            "preflight_rendered_sha256": "5cb2dbe7a14a5ff43ef28cdfe8f9d0799dede044db5dea27aa5b6c225e9742a2",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 44599,
+            "runtime_direct_add_special_tokens_true": 44599,
+            "runtime_rendered_sha256": "5cb2dbe7a14a5ff43ef28cdfe8f9d0799dede044db5dea27aa5b6c225e9742a2"
+          },
+          "raw_feasible": false,
+          "raw_headroom": -3639,
+          "raw_tokens": 44599
+        },
+        "full_demo_first_only": {
+          "bare": {
+            "backend_tokenize_messages": 24172,
+            "generate_equivalent_input_tokens": 24172,
+            "message_array_sha256": "e50a7f9a45c6818980d4a9f81e73dbf3d69602851f0e4292a0d7fb86b540b12e",
+            "preflight_render_and_count": 24172,
+            "preflight_rendered_sha256": "2e1cddeb24ffd66781d10adbb917af02f3fd6af33ba1c85d8e351d03f33ba416",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 24172,
+            "runtime_direct_add_special_tokens_true": 24172,
+            "runtime_rendered_sha256": "2e1cddeb24ffd66781d10adbb917af02f3fd6af33ba1c85d8e351d03f33ba416"
+          },
+          "raw": {
+            "backend_tokenize_messages": 39750,
+            "generate_equivalent_input_tokens": 39750,
+            "message_array_sha256": "67eb63c73cc3ba455ead37af8bc6230c3acd726906ea942dec2196a064bac399",
+            "preflight_render_and_count": 39750,
+            "preflight_rendered_sha256": "4cc3b22192662cce4dd1ab7a2e66eccee4fa9638753491e4b16fe252f9e848f0",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 39750,
+            "runtime_direct_add_special_tokens_true": 39750,
+            "runtime_rendered_sha256": "4cc3b22192662cce4dd1ab7a2e66eccee4fa9638753491e4b16fe252f9e848f0"
+          },
+          "raw_feasible": true,
+          "raw_headroom": 1210,
+          "raw_tokens": 39750
+        }
+      },
+      "qwen_generation_count": 0,
+      "replay": {
+        "appworld_diagnostic_experiment": "exp025b_live_e213be42d7d24964f71091da",
+        "appworld_diagnostic_output_root": "/lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root/experiments/outputs/exp025b_live_e213be42d7d24964f71091da",
+        "elapsed_seconds": 5.076501846313477,
+        "history_semantic_v3_match": true,
+        "observation_count": 19,
+        "observation_sha256": [
+          "c114b64a13a8e79321839c5a1285858d63f24abc5b0a84f0abe7f85f186c893d",
+          "e43b9cdb4b38b12c078e215ba3320c404c4da0b955423d30d94600d9377c7366",
+          "f3453db46a4b1c9950b9582dd60d24155501fe2452bca65d1efbfb19efa38467",
+          "e8c7a94c320447c68998bb2afb1c89bde8e67b97aa941a50dde8b0c6d1e7ed1b",
+          "0eec139d8d51bd33c4584fce3dc88923e9e341df8feb4cf683406d1eb2b836ca",
+          "e0df8f98ee339181f319a2964979a244e6fcd55c0a4d0a093abdc8bcaa2aa6bd",
+          "35d3219330e39607fd9e7fee44b9b04977b7a681fe73219b330e23450c73ff42",
+          "c114b64a13a8e79321839c5a1285858d63f24abc5b0a84f0abe7f85f186c893d",
+          "e43b9cdb4b38b12c078e215ba3320c404c4da0b955423d30d94600d9377c7366",
+          "f3453db46a4b1c9950b9582dd60d24155501fe2452bca65d1efbfb19efa38467",
+          "8ed28664c69a7fb880a34e9e11194e1cbaeb3e05ce0bbca529e26d2365db9936",
+          "0eec139d8d51bd33c4584fce3dc88923e9e341df8feb4cf683406d1eb2b836ca",
+          "e0df8f98ee339181f319a2964979a244e6fcd55c0a4d0a093abdc8bcaa2aa6bd",
+          "cfdbe0794e4ef09306a8050336a95be5d22784f4848b62937e5911a257381d89",
+          "f27b0bfe3bf25b87cd986b7b1e2dcbe92e98d3d4504f3c7363100868db623fa4",
+          "791440916e04d82dd2d80b1324b58f17f54008cf4dee33939faf0914d4e04335",
+          "d0801294f0c667d4e7625765a733496017fcbb603b65911838af5255f614696a",
+          "1ee0dbfbf9ef8103db20af610b0ee5de46fb94a75f0787d0713e6e3ae2abdd57",
+          "0e96de5acd03e60996fbe06a53db4d0adddb39665fbb1c022f733c8e0ffa2c98"
+        ],
+        "prepared_state_fingerprint": {
+          "method": "public_ModelCollection.model_hashes",
+          "model_hash_count": 101,
+          "sha256": "da18dfd18cde04c10a5b4ee42cd11cb4c08b97e272289442cba8c7e8db4710f5"
+        },
+        "qwen_generation_count": 0,
+        "ready": true,
+        "repeat": 2003,
+        "stderr": {
+          "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/live_profile/lambda_only_replay_repeat_2003.stderr.log",
+          "sha256": "e95cc2b4955ff51a0c2be52bca58ec30d2bba3a3f05dc6afc9f9e6bbb6fa4742",
+          "size_bytes": 291
+        },
+        "target_action_executed": false
+      },
+      "selected_transition_id": "46cd638d-ff2e-5291-8292-d217d52ae140",
+      "state_id": "appworld:trace:afc0fce_1:step:20:line:76",
+      "target_action_execution_count": 0
+    },
+    {
+      "effective_runtime_prompt_profile": "full_demo_first_only",
+      "profiles": {
+        "full_demo": {
+          "bare": {
+            "backend_tokenize_messages": 29468,
+            "generate_equivalent_input_tokens": 29468,
+            "message_array_sha256": "1f9d0d130a84bb49048fd3b490e095fcd84280765284038c84a65a1644228dc3",
+            "preflight_render_and_count": 29468,
+            "preflight_rendered_sha256": "d6f3bf18559f58819435ce215cd7c3fe95d6931dbcb2e604fdfc275508fc1d2f",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 29468,
+            "runtime_direct_add_special_tokens_true": 29468,
+            "runtime_rendered_sha256": "d6f3bf18559f58819435ce215cd7c3fe95d6931dbcb2e604fdfc275508fc1d2f"
+          },
+          "raw": {
+            "backend_tokenize_messages": 43347,
+            "generate_equivalent_input_tokens": 43347,
+            "message_array_sha256": "f68f52f5f65dbfb5f9418161536b46311affff1a7ee07be2108a7dfaf030518b",
+            "preflight_render_and_count": 43347,
+            "preflight_rendered_sha256": "4fbd9088956e443724e2cf4df75bfda3c8c9a781c3d25b2513ee8b86b266fbe5",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 43347,
+            "runtime_direct_add_special_tokens_true": 43347,
+            "runtime_rendered_sha256": "4fbd9088956e443724e2cf4df75bfda3c8c9a781c3d25b2513ee8b86b266fbe5"
+          },
+          "raw_feasible": false,
+          "raw_headroom": -2387,
+          "raw_tokens": 43347
+        },
+        "full_demo_first_only": {
+          "bare": {
+            "backend_tokenize_messages": 24619,
+            "generate_equivalent_input_tokens": 24619,
+            "message_array_sha256": "65c4cafab0f0fb25008234789928d9ce8d205929fb90b5bc937bbbf605c404ac",
+            "preflight_render_and_count": 24619,
+            "preflight_rendered_sha256": "d253992dd42b544dae5b11e5dc45f0a5fd0337353b0e8534a5f626638641080b",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 24619,
+            "runtime_direct_add_special_tokens_true": 24619,
+            "runtime_rendered_sha256": "d253992dd42b544dae5b11e5dc45f0a5fd0337353b0e8534a5f626638641080b"
+          },
+          "raw": {
+            "backend_tokenize_messages": 38498,
+            "generate_equivalent_input_tokens": 38498,
+            "message_array_sha256": "00fc7632b3f0249c7227f0f1cd27e46512ce0e2267fd4463875b46a4f8230689",
+            "preflight_render_and_count": 38498,
+            "preflight_rendered_sha256": "490d0a210236b20dad7e36151e2f4f062fe451db9f8d5e53c3ef2fa033c0e534",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 38498,
+            "runtime_direct_add_special_tokens_true": 38498,
+            "runtime_rendered_sha256": "490d0a210236b20dad7e36151e2f4f062fe451db9f8d5e53c3ef2fa033c0e534"
+          },
+          "raw_feasible": true,
+          "raw_headroom": 2462,
+          "raw_tokens": 38498
+        }
+      },
+      "qwen_generation_count": 0,
+      "replay": {
+        "appworld_diagnostic_experiment": "exp025b_live_21afad2a2795f247ce9d80ee",
+        "appworld_diagnostic_output_root": "/lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root/experiments/outputs/exp025b_live_21afad2a2795f247ce9d80ee",
+        "elapsed_seconds": 5.1277153179980814,
+        "history_semantic_v3_match": true,
+        "observation_count": 22,
+        "observation_sha256": [
+          "c114b64a13a8e79321839c5a1285858d63f24abc5b0a84f0abe7f85f186c893d",
+          "e43b9cdb4b38b12c078e215ba3320c404c4da0b955423d30d94600d9377c7366",
+          "f3453db46a4b1c9950b9582dd60d24155501fe2452bca65d1efbfb19efa38467",
+          "e8c7a94c320447c68998bb2afb1c89bde8e67b97aa941a50dde8b0c6d1e7ed1b",
+          "0eec139d8d51bd33c4584fce3dc88923e9e341df8feb4cf683406d1eb2b836ca",
+          "e0df8f98ee339181f319a2964979a244e6fcd55c0a4d0a093abdc8bcaa2aa6bd",
+          "35d3219330e39607fd9e7fee44b9b04977b7a681fe73219b330e23450c73ff42",
+          "c114b64a13a8e79321839c5a1285858d63f24abc5b0a84f0abe7f85f186c893d",
+          "e43b9cdb4b38b12c078e215ba3320c404c4da0b955423d30d94600d9377c7366",
+          "f3453db46a4b1c9950b9582dd60d24155501fe2452bca65d1efbfb19efa38467",
+          "8ed28664c69a7fb880a34e9e11194e1cbaeb3e05ce0bbca529e26d2365db9936",
+          "0eec139d8d51bd33c4584fce3dc88923e9e341df8feb4cf683406d1eb2b836ca",
+          "e0df8f98ee339181f319a2964979a244e6fcd55c0a4d0a093abdc8bcaa2aa6bd",
+          "cfdbe0794e4ef09306a8050336a95be5d22784f4848b62937e5911a257381d89",
+          "f27b0bfe3bf25b87cd986b7b1e2dcbe92e98d3d4504f3c7363100868db623fa4",
+          "791440916e04d82dd2d80b1324b58f17f54008cf4dee33939faf0914d4e04335",
+          "d0801294f0c667d4e7625765a733496017fcbb603b65911838af5255f614696a",
+          "1ee0dbfbf9ef8103db20af610b0ee5de46fb94a75f0787d0713e6e3ae2abdd57",
+          "0e96de5acd03e60996fbe06a53db4d0adddb39665fbb1c022f733c8e0ffa2c98",
+          "74131560c3459969b5ff555a3848230803bda2b27839fbcbf9aad0e470f7cb33",
+          "26b55cdae36d91193c8d569da86e4e834a0f83b6b51ca73ec97cd08b6a15fbc4",
+          "a84f9fb817a641b6884a99b33558bab146954db7de842f9c3b7db983de5cd07c"
+        ],
+        "prepared_state_fingerprint": {
+          "method": "public_ModelCollection.model_hashes",
+          "model_hash_count": 101,
+          "sha256": "da18dfd18cde04c10a5b4ee42cd11cb4c08b97e272289442cba8c7e8db4710f5"
+        },
+        "qwen_generation_count": 0,
+        "ready": true,
+        "repeat": 2004,
+        "stderr": {
+          "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/live_profile/lambda_only_replay_repeat_2004.stderr.log",
+          "sha256": "e95cc2b4955ff51a0c2be52bca58ec30d2bba3a3f05dc6afc9f9e6bbb6fa4742",
+          "size_bytes": 291
+        },
+        "target_action_executed": false
+      },
+      "selected_transition_id": "e2e6e7e9-6845-5b35-8b0c-452866492494",
+      "state_id": "appworld:trace:afc0fce_1:step:23:line:79",
+      "target_action_execution_count": 0
+    },
+    {
+      "effective_runtime_prompt_profile": "full_demo_first_only",
+      "profiles": {
+        "full_demo": {
+          "bare": {
+            "backend_tokenize_messages": 29541,
+            "generate_equivalent_input_tokens": 29541,
+            "message_array_sha256": "ab3f46a0996cbaa2dee68b8dc0286aee07db4af17f243efc1a84aa86b6a6233e",
+            "preflight_render_and_count": 29541,
+            "preflight_rendered_sha256": "98a5f3e28c8c252ea3de0f607cf0f88fe76a7c1ed0ee51116b08fff40576f43b",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 29541,
+            "runtime_direct_add_special_tokens_true": 29541,
+            "runtime_rendered_sha256": "98a5f3e28c8c252ea3de0f607cf0f88fe76a7c1ed0ee51116b08fff40576f43b"
+          },
+          "raw": {
+            "backend_tokenize_messages": 45119,
+            "generate_equivalent_input_tokens": 45119,
+            "message_array_sha256": "b468804f32a7b64d79727bd0488525339f4b89df833e10eee109517392f87b0d",
+            "preflight_render_and_count": 45119,
+            "preflight_rendered_sha256": "8fb0ee80b68a66eb93dd7149c4b034c4aecb2e4f22b044b78f11421cec7d284d",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 45119,
+            "runtime_direct_add_special_tokens_true": 45119,
+            "runtime_rendered_sha256": "8fb0ee80b68a66eb93dd7149c4b034c4aecb2e4f22b044b78f11421cec7d284d"
+          },
+          "raw_feasible": false,
+          "raw_headroom": -4159,
+          "raw_tokens": 45119
+        },
+        "full_demo_first_only": {
+          "bare": {
+            "backend_tokenize_messages": 24692,
+            "generate_equivalent_input_tokens": 24692,
+            "message_array_sha256": "a3bd14ad97b5327805448a321e71452188e2a091c7b5d70f5f660fc9b6fe9b44",
+            "preflight_render_and_count": 24692,
+            "preflight_rendered_sha256": "42adf09ab4c833054348bfe53c3be10e71b18b64fae67656bc91102f9818253c",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 24692,
+            "runtime_direct_add_special_tokens_true": 24692,
+            "runtime_rendered_sha256": "42adf09ab4c833054348bfe53c3be10e71b18b64fae67656bc91102f9818253c"
+          },
+          "raw": {
+            "backend_tokenize_messages": 40270,
+            "generate_equivalent_input_tokens": 40270,
+            "message_array_sha256": "07110a56a04c90d0c99d549113c13949fabf6de9ca34b5d55b55ad4ba3a1dbad",
+            "preflight_render_and_count": 40270,
+            "preflight_rendered_sha256": "089db85dadcc7dbf477b4e906307e1211ffee97a92913001aef94ede6ffd8d0a",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 40270,
+            "runtime_direct_add_special_tokens_true": 40270,
+            "runtime_rendered_sha256": "089db85dadcc7dbf477b4e906307e1211ffee97a92913001aef94ede6ffd8d0a"
+          },
+          "raw_feasible": true,
+          "raw_headroom": 690,
+          "raw_tokens": 40270
+        }
+      },
+      "qwen_generation_count": 0,
+      "replay": {
+        "appworld_diagnostic_experiment": "exp025b_live_deea796955cda4833a577d35",
+        "appworld_diagnostic_output_root": "/lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root/experiments/outputs/exp025b_live_deea796955cda4833a577d35",
+        "elapsed_seconds": 5.153299538884312,
+        "history_semantic_v3_match": true,
+        "observation_count": 23,
+        "observation_sha256": [
+          "c114b64a13a8e79321839c5a1285858d63f24abc5b0a84f0abe7f85f186c893d",
+          "e43b9cdb4b38b12c078e215ba3320c404c4da0b955423d30d94600d9377c7366",
+          "f3453db46a4b1c9950b9582dd60d24155501fe2452bca65d1efbfb19efa38467",
+          "e8c7a94c320447c68998bb2afb1c89bde8e67b97aa941a50dde8b0c6d1e7ed1b",
+          "0eec139d8d51bd33c4584fce3dc88923e9e341df8feb4cf683406d1eb2b836ca",
+          "e0df8f98ee339181f319a2964979a244e6fcd55c0a4d0a093abdc8bcaa2aa6bd",
+          "35d3219330e39607fd9e7fee44b9b04977b7a681fe73219b330e23450c73ff42",
+          "c114b64a13a8e79321839c5a1285858d63f24abc5b0a84f0abe7f85f186c893d",
+          "e43b9cdb4b38b12c078e215ba3320c404c4da0b955423d30d94600d9377c7366",
+          "f3453db46a4b1c9950b9582dd60d24155501fe2452bca65d1efbfb19efa38467",
+          "8ed28664c69a7fb880a34e9e11194e1cbaeb3e05ce0bbca529e26d2365db9936",
+          "0eec139d8d51bd33c4584fce3dc88923e9e341df8feb4cf683406d1eb2b836ca",
+          "e0df8f98ee339181f319a2964979a244e6fcd55c0a4d0a093abdc8bcaa2aa6bd",
+          "cfdbe0794e4ef09306a8050336a95be5d22784f4848b62937e5911a257381d89",
+          "f27b0bfe3bf25b87cd986b7b1e2dcbe92e98d3d4504f3c7363100868db623fa4",
+          "791440916e04d82dd2d80b1324b58f17f54008cf4dee33939faf0914d4e04335",
+          "d0801294f0c667d4e7625765a733496017fcbb603b65911838af5255f614696a",
+          "1ee0dbfbf9ef8103db20af610b0ee5de46fb94a75f0787d0713e6e3ae2abdd57",
+          "0e96de5acd03e60996fbe06a53db4d0adddb39665fbb1c022f733c8e0ffa2c98",
+          "74131560c3459969b5ff555a3848230803bda2b27839fbcbf9aad0e470f7cb33",
+          "26b55cdae36d91193c8d569da86e4e834a0f83b6b51ca73ec97cd08b6a15fbc4",
+          "a84f9fb817a641b6884a99b33558bab146954db7de842f9c3b7db983de5cd07c",
+          "9b925577e8076d41e433524b252471e769ac66e0d0f9bc2ffbe3d576e3b2acdb"
+        ],
+        "prepared_state_fingerprint": {
+          "method": "public_ModelCollection.model_hashes",
+          "model_hash_count": 101,
+          "sha256": "da18dfd18cde04c10a5b4ee42cd11cb4c08b97e272289442cba8c7e8db4710f5"
+        },
+        "qwen_generation_count": 0,
+        "ready": true,
+        "repeat": 2005,
+        "stderr": {
+          "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/live_profile/lambda_only_replay_repeat_2005.stderr.log",
+          "sha256": "e95cc2b4955ff51a0c2be52bca58ec30d2bba3a3f05dc6afc9f9e6bbb6fa4742",
+          "size_bytes": 291
+        },
+        "target_action_executed": false
+      },
+      "selected_transition_id": "46cd638d-ff2e-5291-8292-d217d52ae140",
+      "state_id": "appworld:trace:afc0fce_1:step:24:line:80",
+      "target_action_execution_count": 0
+    },
+    {
+      "effective_runtime_prompt_profile": "full_demo_first_only",
+      "profiles": {
+        "full_demo": {
+          "bare": {
+            "backend_tokenize_messages": 28841,
+            "generate_equivalent_input_tokens": 28841,
+            "message_array_sha256": "2b23bb0b28d00eb3f956cebfea1093fc1bedc1a241bad5027dd2a45ccf26583f",
+            "preflight_render_and_count": 28841,
+            "preflight_rendered_sha256": "c153513c8c561e3d9798eb015df6953e7e9d8842eed06ad5fa3fd276e802e25d",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 28841,
+            "runtime_direct_add_special_tokens_true": 28841,
+            "runtime_rendered_sha256": "c153513c8c561e3d9798eb015df6953e7e9d8842eed06ad5fa3fd276e802e25d"
+          },
+          "raw": {
+            "backend_tokenize_messages": 44419,
+            "generate_equivalent_input_tokens": 44419,
+            "message_array_sha256": "bb8fd39986b7fb4151b53e67811e6bf5abde6d9ed9cfeab810e636fca62f0f24",
+            "preflight_render_and_count": 44419,
+            "preflight_rendered_sha256": "a2acf6ddd54500c60b78a0214137edda1a2ab09113f12acd7acc48ef633b98d2",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 44419,
+            "runtime_direct_add_special_tokens_true": 44419,
+            "runtime_rendered_sha256": "a2acf6ddd54500c60b78a0214137edda1a2ab09113f12acd7acc48ef633b98d2"
+          },
+          "raw_feasible": false,
+          "raw_headroom": -3459,
+          "raw_tokens": 44419
+        },
+        "full_demo_first_only": {
+          "bare": {
+            "backend_tokenize_messages": 23992,
+            "generate_equivalent_input_tokens": 23992,
+            "message_array_sha256": "d71ca88a72d58deca5904f388970115dd61af4cf9356afccbea4765da384eddf",
+            "preflight_render_and_count": 23992,
+            "preflight_rendered_sha256": "d21e65d77c75ee84f5c16bbcad1109d20a8e1837bb8f5e415dbe86e8cf776402",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 23992,
+            "runtime_direct_add_special_tokens_true": 23992,
+            "runtime_rendered_sha256": "d21e65d77c75ee84f5c16bbcad1109d20a8e1837bb8f5e415dbe86e8cf776402"
+          },
+          "raw": {
+            "backend_tokenize_messages": 39570,
+            "generate_equivalent_input_tokens": 39570,
+            "message_array_sha256": "939b34681741d2301a715dc23164dfb9611731f8e6c6b95c8e04bede4d0142f3",
+            "preflight_render_and_count": 39570,
+            "preflight_rendered_sha256": "00c87b0cdd8a27225852f9b32d46654dfba92678e7ed54102ceeed161c9c2539",
+            "preflight_runtime_rendered_equal": true,
+            "runtime_direct_add_special_tokens_false": 39570,
+            "runtime_direct_add_special_tokens_true": 39570,
+            "runtime_rendered_sha256": "00c87b0cdd8a27225852f9b32d46654dfba92678e7ed54102ceeed161c9c2539"
+          },
+          "raw_feasible": true,
+          "raw_headroom": 1390,
+          "raw_tokens": 39570
+        }
+      },
+      "qwen_generation_count": 0,
+      "replay": {
+        "appworld_diagnostic_experiment": "exp025b_live_fa5e99f3ee9f39c021d0b93a",
+        "appworld_diagnostic_output_root": "/lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root/experiments/outputs/exp025b_live_fa5e99f3ee9f39c021d0b93a",
+        "elapsed_seconds": 4.6649727607145905,
+        "history_semantic_v3_match": true,
+        "observation_count": 17,
+        "observation_sha256": [
+          "c114b64a13a8e79321839c5a1285858d63f24abc5b0a84f0abe7f85f186c893d",
+          "e43b9cdb4b38b12c078e215ba3320c404c4da0b955423d30d94600d9377c7366",
+          "f3453db46a4b1c9950b9582dd60d24155501fe2452bca65d1efbfb19efa38467",
+          "e8c7a94c320447c68998bb2afb1c89bde8e67b97aa941a50dde8b0c6d1e7ed1b",
+          "0eec139d8d51bd33c4584fce3dc88923e9e341df8feb4cf683406d1eb2b836ca",
+          "e0df8f98ee339181f319a2964979a244e6fcd55c0a4d0a093abdc8bcaa2aa6bd",
+          "35d3219330e39607fd9e7fee44b9b04977b7a681fe73219b330e23450c73ff42",
+          "c114b64a13a8e79321839c5a1285858d63f24abc5b0a84f0abe7f85f186c893d",
+          "e43b9cdb4b38b12c078e215ba3320c404c4da0b955423d30d94600d9377c7366",
+          "f3453db46a4b1c9950b9582dd60d24155501fe2452bca65d1efbfb19efa38467",
+          "8ed28664c69a7fb880a34e9e11194e1cbaeb3e05ce0bbca529e26d2365db9936",
+          "0eec139d8d51bd33c4584fce3dc88923e9e341df8feb4cf683406d1eb2b836ca",
+          "e0df8f98ee339181f319a2964979a244e6fcd55c0a4d0a093abdc8bcaa2aa6bd",
+          "cfdbe0794e4ef09306a8050336a95be5d22784f4848b62937e5911a257381d89",
+          "f27b0bfe3bf25b87cd986b7b1e2dcbe92e98d3d4504f3c7363100868db623fa4",
+          "791440916e04d82dd2d80b1324b58f17f54008cf4dee33939faf0914d4e04335",
+          "d0801294f0c667d4e7625765a733496017fcbb603b65911838af5255f614696a"
+        ],
+        "prepared_state_fingerprint": {
+          "method": "public_ModelCollection.model_hashes",
+          "model_hash_count": 101,
+          "sha256": "da18dfd18cde04c10a5b4ee42cd11cb4c08b97e272289442cba8c7e8db4710f5"
+        },
+        "qwen_generation_count": 0,
+        "ready": true,
+        "repeat": 2006,
+        "stderr": {
+          "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/live_profile/lambda_only_replay_repeat_2006.stderr.log",
+          "sha256": "e95cc2b4955ff51a0c2be52bca58ec30d2bba3a3f05dc6afc9f9e6bbb6fa4742",
+          "size_bytes": 291
+        },
+        "target_action_executed": false
+      },
+      "selected_transition_id": "46cd638d-ff2e-5291-8292-d217d52ae140",
+      "state_id": "appworld:trace:afc0fce_1:step:18:line:74",
+      "target_action_execution_count": 0
+    }
+  ],
+  "state_count": 6,
+  "target_action_execution_count": 0,
+  "wrong_profile_over_context_count": 6
+}

@@ -1,0 +1,173 @@
+{
+  "arms": {
+    "1d": {
+      "arm_config_path": "configs/pipeline/rcmf_appworld_arm_1d_14k.yaml",
+      "arm_config_sha256": "db1e36c52f872f7b05f446e9c29620e295bbbfbb2e55703a6208b53bdbb5f05c",
+      "arm_id": "1d",
+      "arm_resolved_prompt_profile": "full_demo_first_only",
+      "changed_execution_fields": [
+        "prompt_profile"
+      ],
+      "effective_causal_generation_config_sha256": "178a9c8db84bddaac08d69ff80445adf22a73d4636f742abb705c722ff64413c",
+      "effective_replay_settings_sha256": "525b93314530e195acffd960eac37f95351e83b35549233be2b5b5d98827829b",
+      "effective_runtime_prompt_profile": "full_demo_first_only",
+      "field_ownership": {
+        "context_limit": "shared_required_equal",
+        "device_map": "legacy_paired_causal_contract",
+        "do_sample": "shared_required_equal",
+        "dtype": "legacy_paired_causal_contract",
+        "enable_thinking": "shared_required_equal",
+        "max_new_tokens": "legacy_paired_causal_contract",
+        "model_name": "shared_required_equal",
+        "prompt_profile": "arm_resolved_authoritative_override",
+        "temperature": "shared_required_equal",
+        "top_p": "shared_required_equal"
+      },
+      "format": "exp037a_effective_paired_causal_runtime_14k_v1",
+      "legacy_causal_generation_config_sha256": "2ba3ca93ebe6f5fe3339c786b0fc3a9748110df524ff2d6bfef5a25fdccb689b",
+      "legacy_replay_prompt_profile": "full_demo",
+      "profile_sources": {
+        "benchmark.prompt_profile": "full_demo_first_only",
+        "stage_c_11b.prompt_profile": "full_demo_first_only",
+        "stage_c_7c.generation.prompt_profile": "full_demo_first_only",
+        "stage_c_7hr.appworld.prompt_profile": "full_demo_first_only",
+        "stage_c_9a.appworld.prompt_profile": "full_demo_first_only"
+      },
+      "replay_config_path": "configs/benchmark/stage_c_replay_clean_rebuild_7b.yaml",
+      "replay_config_sha256": "20d38ec8c3e016474200dc14bd86d3ab6ecf2526c513570758eb1dbd0a3a6150",
+      "shared_field_checks": {
+        "context_limit": {
+          "arm_value": 40960,
+          "equal": true,
+          "legacy_value": 40960
+        },
+        "do_sample": {
+          "arm_value": false,
+          "equal": true,
+          "legacy_value": false
+        },
+        "enable_thinking": {
+          "arm_value": false,
+          "equal": true,
+          "legacy_value": false
+        },
+        "model_name": {
+          "arm_value": "Qwen/Qwen3-8B",
+          "equal": true,
+          "legacy_value": "Qwen/Qwen3-8B"
+        },
+        "temperature": {
+          "arm_value": 0.0,
+          "equal": true,
+          "legacy_value": 0.0
+        },
+        "top_p": {
+          "arm_value": 1.0,
+          "equal": true,
+          "legacy_value": 1.0
+        }
+      },
+      "three_demo_effective_generation_diff": null
+    },
+    "3d": {
+      "arm_config_path": "configs/pipeline/rcmf_appworld_arm_3d_14k.yaml",
+      "arm_config_sha256": "f43e849c817cb0c77b98042c8408e0055d48c966478bb5a055994cdb47e9f2c6",
+      "arm_id": "3d",
+      "arm_resolved_prompt_profile": "full_demo",
+      "changed_execution_fields": [],
+      "effective_causal_generation_config_sha256": "2ba3ca93ebe6f5fe3339c786b0fc3a9748110df524ff2d6bfef5a25fdccb689b",
+      "effective_replay_settings_sha256": "80c959aa8864469c9c178de6a9b0c567e2096fcb120ce76e02e17dcc87973cf4",
+      "effective_runtime_prompt_profile": "full_demo",
+      "field_ownership": {
+        "context_limit": "shared_required_equal",
+        "device_map": "legacy_paired_causal_contract",
+        "do_sample": "shared_required_equal",
+        "dtype": "legacy_paired_causal_contract",
+        "enable_thinking": "shared_required_equal",
+        "max_new_tokens": "legacy_paired_causal_contract",
+        "model_name": "shared_required_equal",
+        "prompt_profile": "arm_resolved_authoritative_override",
+        "temperature": "shared_required_equal",
+        "top_p": "shared_required_equal"
+      },
+      "format": "exp037a_effective_paired_causal_runtime_14k_v1",
+      "legacy_causal_generation_config_sha256": "2ba3ca93ebe6f5fe3339c786b0fc3a9748110df524ff2d6bfef5a25fdccb689b",
+      "legacy_replay_prompt_profile": "full_demo",
+      "profile_sources": {
+        "benchmark.prompt_profile": "full_demo",
+        "stage_c_11b.prompt_profile": "full_demo",
+        "stage_c_7c.generation.prompt_profile": "full_demo",
+        "stage_c_7hr.appworld.prompt_profile": "full_demo",
+        "stage_c_9a.appworld.prompt_profile": "full_demo"
+      },
+      "replay_config_path": "configs/benchmark/stage_c_replay_clean_rebuild_7b.yaml",
+      "replay_config_sha256": "20d38ec8c3e016474200dc14bd86d3ab6ecf2526c513570758eb1dbd0a3a6150",
+      "shared_field_checks": {
+        "context_limit": {
+          "arm_value": 40960,
+          "equal": true,
+          "legacy_value": 40960
+        },
+        "do_sample": {
+          "arm_value": false,
+          "equal": true,
+          "legacy_value": false
+        },
+        "enable_thinking": {
+          "arm_value": false,
+          "equal": true,
+          "legacy_value": false
+        },
+        "model_name": {
+          "arm_value": "Qwen/Qwen3-8B",
+          "equal": true,
+          "legacy_value": "Qwen/Qwen3-8B"
+        },
+        "temperature": {
+          "arm_value": 0.0,
+          "equal": true,
+          "legacy_value": 0.0
+        },
+        "top_p": {
+          "arm_value": 1.0,
+          "equal": true,
+          "legacy_value": 1.0
+        }
+      },
+      "three_demo_effective_generation_diff": 0
+    }
+  },
+  "checks": {
+    "one_demo_nonprompt_fields_match_legacy": true,
+    "one_demo_profile": true,
+    "one_demo_prompt_only_diff": true,
+    "three_demo_config_matches_legacy": true,
+    "three_demo_execution_diff_zero": true,
+    "three_demo_hash_matches_legacy": true,
+    "three_demo_profile": true
+  },
+  "format": "exp037a_r12b_effective_paired_generation_14k_v1",
+  "ownership": {
+    "arm_authoritative_override": "prompt_profile",
+    "legacy_owned": [
+      "max_new_tokens",
+      "dtype",
+      "device_map"
+    ],
+    "shared_baseline": "legacy causal-audit generation config",
+    "validated_equal": [
+      "model",
+      "context_limit",
+      "temperature",
+      "top_p",
+      "do_sample",
+      "enable_thinking"
+    ]
+  },
+  "passed": true,
+  "replay_config": {
+    "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r12b/configs/benchmark/stage_c_replay_clean_rebuild_7b.yaml",
+    "sha256": "20d38ec8c3e016474200dc14bd86d3ab6ecf2526c513570758eb1dbd0a3a6150",
+    "size_bytes": 6232
+  }
+}

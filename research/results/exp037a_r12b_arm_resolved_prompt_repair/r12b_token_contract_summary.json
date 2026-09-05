@@ -1,0 +1,44 @@
+{
+  "arms": {
+    "1d": {
+      "attempt_token_delta_counts": {
+        "4": 535
+      },
+      "base_token_delta_counts": {
+        "4": 499
+      },
+      "discrete_change_count": 0,
+      "discrete_change_state_ids": [],
+      "prompt_profile": "full_demo_first_only",
+      "sealed_recount_exact_count": 499,
+      "state_count": 499
+    },
+    "3d": {
+      "attempt_token_delta_counts": {
+        "4": 583
+      },
+      "base_token_delta_counts": {
+        "4": 499
+      },
+      "discrete_change_count": 0,
+      "discrete_change_state_ids": [],
+      "prompt_profile": "full_demo",
+      "sealed_recount_exact_count": 499,
+      "state_count": 499
+    }
+  },
+  "context_limit": 40960,
+  "formal_root_after": {
+    "file_count": 22434,
+    "sha256": "6eb6b3b1afa25b9837c49eea1033d09b909a35e6a509c0954fc8f1741a788e87"
+  },
+  "formal_root_before": {
+    "file_count": 22434,
+    "sha256": "6eb6b3b1afa25b9837c49eea1033d09b909a35e6a509c0954fc8f1741a788e87"
+  },
+  "formal_root_unchanged": true,
+  "format": "exp037a_r12b_token_contract_summary_v1",
+  "rows_sha256": "1d90aeaf5cc26923dc571158a8aa9b074dc0a663fb6e2373739613c6ee2879f7",
+  "total_state_arm_rows": 998,
+  "zero_discrete_changes": true
+}

@@ -1,0 +1,12 @@
+{
+  "contract_sha256": "eea5fb745ecd5041ed07e65be55d6a4a3b774caa67239e0d040100bcd9a8cce6",
+  "formal_execution_checkout": "004f866647cfabb38a141b88e6d83821df88c403",
+  "format": "exp037a_r10_launch_source_14k_v1",
+  "launch_source_sha": "004f866647cfabb38a141b88e6d83821df88c403",
+  "pipeline_config": {
+    "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r12b/configs/pipeline/rcmf_appworld_repro_14k.yaml",
+    "sha256": "f075eead4bd77e92546a876c24979e1882a2bfded5853624aa665ce93c84af69",
+    "size_bytes": 9078
+  },
+  "records_commit_is_not_executable_source": true
+}

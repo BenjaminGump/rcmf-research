@@ -1,5 +1,38 @@
 # Decisions and Deviations
 
+## 2026-09-05 EXP-037A-R12B arm-resolved prompt propagation repair
+
+VERIFIED:
+
+- The legacy paired-causal generation contract remains authoritative for all
+  non-prompt fields. A new resolver deep-copies it and obtains only the prompt
+  profile from the resolved arm config.
+- 3D behavior is exactly unchanged; 1D changes only from the erroneous
+  `full_demo` runtime profile to the preregistered `full_demo_first_only`.
+- Explicit `enable_thinking=False` adds four tokens but changes zero discrete
+  decisions over 499 states in either arm, satisfying the preregistered repair
+  gate.
+- Fresh isolated O06 and bounded O07 integration checks passed. O06 diagnostic
+  labels are not scientific results and cannot seed a formal run.
+
+DECISION:
+
+- Freeze `004f866647cfabb38a141b88e6d83821df88c403` and the fresh 14k
+  preflight package as `READY_FOR_14K_REAUTHORIZATION`.
+- Require a new exact run-bound authorization. The proposed 80-hour cap is not
+  permission to launch.
+- Preserve all 14j artifacts and its valid 3D result; never resume partial O06.
+
+IMPLEMENTATION DEVIATIONS:
+
+- The historical artifact audit was corrected to verify old stages against
+  their own sealed output manifests rather than current 14k declarations.
+- Disposable preflight attempts found and fail-closed on three record-builder
+  schema errors before the real 14k root existed. All were repaired and final
+  source-bound dry-run and real preflight builds passed.
+- Local pytest used a workspace-owned base temp directory because the default
+  Windows temp directory was inaccessible.
+
 ## 2026-09-05 EXP-037A-R12A 3D-vs-1D first-divergence audit
 
 VERIFIED:

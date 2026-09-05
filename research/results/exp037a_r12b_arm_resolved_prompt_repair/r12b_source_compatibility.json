@@ -1,0 +1,29 @@
+{
+  "all_differences": [
+    "AGENTS.md",
+    "configs/pipeline/rcmf_appworld_arm_1d_14k.yaml",
+    "configs/pipeline/rcmf_appworld_arm_3d_14k.yaml",
+    "configs/pipeline/rcmf_appworld_repro_14k.yaml",
+    "scripts/audit_exp037a_pipeline_r10.py",
+    "scripts/audit_exp037a_r12b_prompt_consumers.py",
+    "scripts/prepare_rcmf_reproducible_pipeline_14k.py",
+    "scripts/smoke_exp037a_r12b_o07_teacher.py",
+    "scripts/validate_exp037a_r12b_o06_diagnostic.py",
+    "tests/test_exp037a_r10_pipeline_hardening.py",
+    "tests/test_exp037a_r12b_14k_preflight.py",
+    "tests/test_exp037a_r12b_prompt_profile_repair.py"
+  ],
+  "candidate_launch_source": "004f866647cfabb38a141b88e6d83821df88c403",
+  "format": "exp037a_r12b_source_compatibility_v1",
+  "passed": true,
+  "production_path_differences": [],
+  "production_paths": [
+    "rcmf/benchmarks/appworld/paired_causal_runtime_14k.py",
+    "rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+    "scripts/prepare_appworld_structured_rescue_7hr.py",
+    "scripts/run_appworld_train_causal_gate_7hr.py",
+    "scripts/run_procedural_causal_audit_7b.py"
+  ],
+  "reference_validated_production_source": "ae4f6c24a6b11bac4e9b3079e1e6b8ae98ce2465",
+  "validated_r12b_production_behavior_unchanged_after_diagnostics": true
+}

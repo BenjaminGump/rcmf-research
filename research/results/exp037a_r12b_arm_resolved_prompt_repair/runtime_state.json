@@ -1,0 +1,20 @@
+{
+  "active_exp037a_processes": "",
+  "authorization_created": false,
+  "captured_utc": "2026-09-05T18:03:41.592259+00:00",
+  "diagnostic_checkout_dirty": false,
+  "diagnostic_checkout_head": "004f866647cfabb38a141b88e6d83821df88c403",
+  "formal_14j_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001",
+  "formal_14j_root_exists": true,
+  "format": "exp037a_r12b_runtime_state_v1",
+  "frozen_14j_checkout_dirty": false,
+  "frozen_14j_checkout_head": "0e4015547da45802cc7b6ff3a9b92adce73077fc",
+  "future_14k_root_existed_before_preflight": false,
+  "gpu_compute_processes": "",
+  "gpu_telemetry": "NVIDIA H100 80GB HBM3, 0 %, 0 MiB, 81559 MiB",
+  "launch_source": "004f866647cfabb38a141b88e6d83821df88c403",
+  "long_formal_run_launched": false,
+  "nfs_free": "Filesystem                            Size  Used Avail Use% Mounted on\n19ad24d0-75aa-4280-b8f1-808c35cf56f8  3.0P  223G  3.0P   1% /lambda/nfs/rcmf-persist",
+  "r12b_h100_scientific_active_hours": 0,
+  "tmux_sessions": "exp024a: 1 windows (created Sun Aug 16 18:04:38 2026)\nexp024r: 1 windows (created Mon Aug 17 01:07:24 2026)\nexp024r2: 1 windows (created Mon Aug 17 03:29:07 2026)\nexp024r3: 1 windows (created Mon Aug 17 08:21:26 2026)\nexp025b: 1 windows (created Mon Aug 17 16:43:05 2026)\nexp025cr: 1 windows (created Tue Aug 18 12:42:56 2026)\nexp025dg2: 1 windows (created Fri Aug 21 12:36:31 2026)\nexp027a_pairmlp: 1 windows (created Sat Aug 22 13:50:12 2026)\nexp027a_pairmlp_eval: 1 windows (created Sat Aug 22 17:36:42 2026)\nexp027a_pairmlp_u16: 1 windows (created Sat Aug 22 15:48:39 2026)\nexp031b_stage8d_l1_d1: 1 windows (created Thu Aug 27 15:12:52 2026)\nexp036a_smoke_002: 1 windows (created Mon Aug 31 04:55:56 2026)\nexp036c_b0: 1 windows (created Tue Sep  1 01:55:58 2026)\nexp037a_14h_status_bridge: 1 windows (created Fri Sep  4 02:25:06 2026)\nexp037a_14h_watchdog: 1 windows (created Fri Sep  4 00:16:25 2026)\nexp037a_14j_status_bridge: 1 windows (created Fri Sep  4 13:42:02 2026)"
+}

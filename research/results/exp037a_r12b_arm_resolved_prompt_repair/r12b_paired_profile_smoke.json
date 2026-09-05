@@ -1,0 +1,39 @@
+{
+  "backward_count": 0,
+  "condition_count": 2,
+  "diagnostic_only": true,
+  "effective_runtime_prompt_profile": "full_demo_first_only",
+  "elapsed_seconds": 20.764698709361255,
+  "formal_root_after": {
+    "file_count": 22434,
+    "sha256": "6eb6b3b1afa25b9837c49eea1033d09b909a35e6a509c0954fc8f1741a788e87"
+  },
+  "formal_root_before": {
+    "file_count": 22434,
+    "sha256": "6eb6b3b1afa25b9837c49eea1033d09b909a35e6a509c0954fc8f1741a788e87"
+  },
+  "formal_root_unchanged": true,
+  "format": "exp037a_r12b_paired_profile_smoke_v1",
+  "generated_condition_count": 2,
+  "optimizer_steps": 0,
+  "outputs": [
+    {
+      "condition_key": "669473bb2e3aa0683f971aaca1af59e175f7d2c30ea07ee51cd15bd8aba70584",
+      "condition_name": "T0_bare",
+      "output_path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/paired_profile_smoke/condition_outputs/25e1e5cd4cfacc709b176a1fad0fc758615a13ded9437f6556084cbbe7978f48.json",
+      "output_sha256": "972629c2aa398a1900fa73dd025f0b4e9160daaf0dd9dd28c0a2a0a4e82d0afe",
+      "prompt_sha256": "a164f885e4bd5c7488be9b9cde832b2c75af9de674e16cbc7049316177ccf60d",
+      "prompt_tokens": 18960
+    },
+    {
+      "condition_key": "f0106e0a9f6ea5889b2aeda8ad24828bf208296aa879fd3c50704f2b19e0e65a",
+      "condition_name": "T1_selected_raw",
+      "output_path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/paired_profile_smoke/condition_outputs/3f95f136fac2a23fa46ed5a22dfc9c6f06bf10750730f6f01a10974781608b36.json",
+      "output_sha256": "f7a4b44f5d0919b44705cf8ab2ae654529a88b68ea7e25ae514719a270acc2c6",
+      "prompt_sha256": "e7d4bd899a6646b0ac1051b2e5613b2eb6ec8548cafd8b447e91b9219197fe30",
+      "prompt_tokens": 38078
+    }
+  ],
+  "qwen_frozen": true,
+  "state_id": "appworld:trace:229360a_3:step:27:line:382"
+}

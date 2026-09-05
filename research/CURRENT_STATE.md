@@ -1,5 +1,37 @@
 # Current State
 
+## 2026-09-05 EXP-037A-R12B Ready For 14k Reauthorization
+
+VERIFIED:
+
+- The O06 prompt-profile propagation bug is repaired by an explicit effective
+  runtime resolver. 3D changes zero execution fields; 1D changes only the
+  already-preregistered profile to `full_demo_first_only`.
+- The exhaustive 499-state recount in both arms found zero scoreability,
+  selected-transition, over-context, or substitution changes after aligning
+  static token counting with runtime `enable_thinking=False` semantics.
+- Six known wrong-profile states are feasible under corrected 1D. A fresh
+  isolated O06 completed 407 pairs / 814 new conditions and strict validation;
+  its outcomes are diagnostic-only. O07 propagation smoke passed.
+- Sealed 3D compatibility is exact for 928/928 D06 condition prompts. The 14j
+  3D positive-control result remains valid.
+- Local full tests passed 952 with 3 skipped; Lambda full passed 955. Real
+  S00-S04 passed 5/5 and resume skipped 5/5.
+
+CURRENT DECISION:
+
+- `READY_FOR_14K_REAUTHORIZATION`.
+- Frozen launch source: `004f866647cfabb38a141b88e6d83821df88c403`.
+- 14k package: config `f075eead...`, contract `eea5fb74...`, artifact index
+  `d94770dc...`.
+- Authorization remains false. Proposed cap is 80 hours. No long formal run
+  was launched.
+
+Full report:
+`research/results/EXP_037A_R12B_ARM_RESOLVED_PROMPT_REPAIR.md`.
+
+Last updated: 2026-09-05.
+
 ## 2026-09-05 EXP-037A-R12A First Divergence Resolved
 
 VERIFIED:

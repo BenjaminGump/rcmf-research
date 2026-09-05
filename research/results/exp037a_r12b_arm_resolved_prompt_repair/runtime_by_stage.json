@@ -1,0 +1,98 @@
+{
+  "basis": [
+    "14j S00 through D22 measured wall: 16.601405 h",
+    "14j O00 through O05 measured wall after D22: 2.321830 h",
+    "R12B fresh repaired O06 measured wall: 1.577605 h",
+    "14j D09/D10 measured wall: 1.028789 h / 1.030807 h",
+    "14j D18/D19/D20 measured wall: 1.593341 h / 1.998636 h / 1.968076 h",
+    "unchanged 14j 3D stage timings provide the 1D downstream analogues"
+  ],
+  "format": "exp037a_r12b_runtime_by_stage_14k_v1",
+  "groups": [
+    {
+      "conservative_wall_hours": 0.75,
+      "expected_wall_hours": 0.25,
+      "gpu": "mixed",
+      "group": "shared_preflight_and_transition_representations",
+      "measured_14j_wall_hours": 0.135614,
+      "stages": "S00-S09"
+    },
+    {
+      "conservative_wall_hours": 4.0,
+      "expected_wall_hours": 2.4,
+      "gpu": "mixed",
+      "group": "three_demo_selector",
+      "measured_14j_wall_hours": 2.294682,
+      "stages": "D00-D05"
+    },
+    {
+      "conservative_wall_hours": 4.0,
+      "expected_wall_hours": 2.0,
+      "gpu": "mixed",
+      "group": "three_demo_paired_and_early_gate",
+      "measured_14j_d06_wall_hours": 1.910789,
+      "stages": "D06-D06B"
+    },
+    {
+      "conservative_wall_hours": 1.5,
+      "expected_wall_hours": 0.6,
+      "gpu": "mixed",
+      "group": "three_demo_teacher_prepare_and_smoke",
+      "measured_14j_wall_hours": 0.490681,
+      "stages": "D07-D08B"
+    },
+    {
+      "conservative_wall_hours": 12.0,
+      "expected_wall_hours": 6.1,
+      "gpu": "mixed",
+      "group": "three_demo_training_validation_and_fields",
+      "measured_14j_wall_hours": 6.166395,
+      "stages": "D09-D17"
+    },
+    {
+      "conservative_wall_hours": 11.5,
+      "expected_wall_hours": 5.6,
+      "gpu": "mixed",
+      "group": "three_demo_dev_and_final_gate",
+      "measured_14j_wall_hours": 5.563617,
+      "stages": "D18-D22"
+    },
+    {
+      "conservative_wall_hours": 4.0,
+      "expected_wall_hours": 2.4,
+      "gpu": "mixed",
+      "group": "conditional_one_demo_selector",
+      "measured_14j_wall_hours": 2.31506,
+      "stages": "O00-O05"
+    },
+    {
+      "conservative_wall_hours": 4.5,
+      "expected_wall_hours": 2.25,
+      "gpu": "mixed",
+      "group": "conditional_one_demo_paired_teacher_prepare",
+      "measured_r12b_o06_wall_hours": 1.577605,
+      "stages": "O06-O08"
+    },
+    {
+      "conservative_wall_hours": 12.0,
+      "expected_wall_hours": 6.1,
+      "gpu": "mixed",
+      "group": "conditional_one_demo_training_validation_and_fields",
+      "stages": "O09-O17"
+    },
+    {
+      "conservative_wall_hours": 8.0,
+      "expected_wall_hours": 4.0,
+      "gpu": "yes",
+      "group": "conditional_one_demo_dev",
+      "stages": "O18-O19"
+    },
+    {
+      "conservative_wall_hours": 0.5,
+      "expected_wall_hours": 0.25,
+      "gpu": "no",
+      "group": "final_analysis_and_reporting",
+      "stages": "F00-F03"
+    }
+  ]
+}

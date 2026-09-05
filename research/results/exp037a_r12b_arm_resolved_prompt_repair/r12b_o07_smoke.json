@@ -1,0 +1,34 @@
+{
+  "arm_resolved_prompt_profile": "full_demo_first_only",
+  "backward_count": 0,
+  "bare_generated_token_count": 25,
+  "bare_prompt_tokens": 4888,
+  "bare_response_text_sha256": "87146358fcf89251f8f843f92ffe1566dec8f40f9f8ef6db9417e2514c85e58a",
+  "condition_outputs": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/full_o06/arm_1d/paired_causal/condition_outputs/f09f581558a12a27401e44cdcfd139618fe4f041de6f4b4f401f3156b97df141.json",
+      "sha256": "fae78e2f715a23f1c46d3a125ec35a23eac1c1831eb8f0ddb5a9039168d9460b"
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/full_o06/arm_1d/paired_causal/condition_outputs/75347eb65f0bcc082afed05a96f1c2a2ce546f57b27238e3dd4eeb5515bb79bb.json",
+      "sha256": "756f065a6be65b38e67fd65cf5e905f74318bd45baa868885437c2275a717718"
+    }
+  ],
+  "diagnostic_only": true,
+  "elapsed_seconds": 2.0517240311019123,
+  "format": "exp037a_r12b_o07_teacher_smoke_v1",
+  "optimizer_steps": 0,
+  "paired_outcomes": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/full_o06/arm_1d/paired_causal/paired_outcomes.json",
+    "sha256": "4a07b615f16bd697afb9f3aa83d8c9de774a7ebfd13b99f376587ed0a4294c99"
+  },
+  "qwen_frozen": true,
+  "qwen_generation_count": 0,
+  "raw_generated_token_count": 27,
+  "raw_prompt_tokens": 15060,
+  "raw_response_text_sha256": "923bda43bffad79f35da61a3bbd7d3cb39cbbc3f80606052cc9b2f0ce2a43886",
+  "scientific_result_eligible": false,
+  "selected_transition_id": "d7afd6da-b6a3-53eb-a3bb-d042da33bf2e",
+  "state_id": "appworld:trace:b7a9ee9_3:step:7:line:186",
+  "top_k": 64
+}

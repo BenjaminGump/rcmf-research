@@ -1,0 +1,134 @@
+{
+  "evidence_checks": {
+    "deployment_is_common_one_demo": true,
+    "heldout_uses_arm_profile": true,
+    "paired_resolver_called": true,
+    "resolver_fail_closed": true,
+    "static_feature_bank_is_train_only": true,
+    "teacher_uses_arm_profile": true
+  },
+  "formal_path_mismatch_count": 0,
+  "format": "exp037a_r12b_downstream_prompt_consumer_audit_v1",
+  "passed": true,
+  "production_source_modified": false,
+  "rows": [
+    {
+      "classification": "ARM_RESOLVED_CORRECT",
+      "consumer": "run_appworld_train_causal_gate_7hr.py paired phase",
+      "prompt_source": "effective paired-causal resolver arm override",
+      "stages": [
+        "D06",
+        "O06"
+      ]
+    },
+    {
+      "classification": "ARM_RESOLVED_CORRECT",
+      "consumer": "run_appworld_structured_compiler_7hr.py teacher phase",
+      "prompt_source": "cfg.benchmark.prompt_profile",
+      "stages": [
+        "D07",
+        "O07"
+      ]
+    },
+    {
+      "classification": "ARM_RESOLVED_CORRECT",
+      "consumer": "prepare_rcmf_joint_full_bank_9a.py",
+      "prompt_source": "resolved stage_c_9a.appworld.prompt_profile",
+      "stages": [
+        "D08",
+        "O08"
+      ]
+    },
+    {
+      "classification": "SHARED_BUT_PROFILE_INDEPENDENT",
+      "consumer": "run_rcmf_joint_full_bank_9a.py training phases",
+      "prompt_source": "prebuilt arm-specific training units",
+      "stages": [
+        "D09",
+        "D10",
+        "O09",
+        "O10"
+      ]
+    },
+    {
+      "classification": "ARM_RESOLVED_CORRECT",
+      "consumer": "run_rcmf_joint_full_bank_9a.py teacher-forced validation",
+      "prompt_source": "resolved stage_c_9a.appworld.prompt_profile",
+      "stages": [
+        "D11",
+        "O11"
+      ]
+    },
+    {
+      "classification": "ARM_RESOLVED_CORRECT",
+      "consumer": "run_rcmf_joint_full_bank_live_9a.py and full trajectories",
+      "prompt_source": "resolved arm config",
+      "stages": [
+        "D12",
+        "D13",
+        "O12",
+        "O13"
+      ]
+    },
+    {
+      "classification": "SHARED_BUT_PROFILE_INDEPENDENT",
+      "consumer": "checkpoint selection and field construction",
+      "prompt_source": "sealed arm-specific validation and training artifacts",
+      "stages": [
+        "D14",
+        "D15",
+        "D16",
+        "D17",
+        "O14",
+        "O15",
+        "O16",
+        "O17"
+      ]
+    },
+    {
+      "classification": "ARM_RESOLVED_CORRECT",
+      "consumer": "common one-demo deployment evaluation",
+      "prompt_source": "preregistered common full_demo_first_only deployment profile",
+      "stages": [
+        "D18",
+        "D19",
+        "D20",
+        "O18",
+        "O19"
+      ]
+    },
+    {
+      "classification": "NOT_FORMAL_PATH",
+      "consumer": "StaticFeatureBank.feature compiler-train mismatch path",
+      "prompt_source": "historical full_demo literal",
+      "stages": []
+    }
+  ],
+  "sources": {
+    "paired_causal_runtime_14k.py": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r12b/rcmf/benchmarks/appworld/paired_causal_runtime_14k.py",
+      "sha256": "a54ca5463cc55570a66907cb18aa9ddd32de004a7b6e58cafa655342c02a22eb",
+      "size_bytes": 5928
+    },
+    "reproducible_stages_14b.py": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r12b/rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "sha256": "38ed1180782a0396d2721dea0b7442005d47585b424b3385fb2811e56cd89f5e",
+      "size_bytes": 91984
+    },
+    "run_appworld_structured_compiler_7hr.py": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r12b/scripts/run_appworld_structured_compiler_7hr.py",
+      "sha256": "3f1edc41752a4f1958ca8deec28217c6a40edfd57fc8a427297cbfcf266d425a",
+      "size_bytes": 44138
+    },
+    "run_appworld_train_causal_gate_7hr.py": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r12b/scripts/run_appworld_train_causal_gate_7hr.py",
+      "sha256": "6b8b96c8c02abe4ba4bc74d3734e0d1371a995316903140f524fa4739e0ad461",
+      "size_bytes": 37752
+    },
+    "run_rcmf_joint_full_bank_live_9a.py": {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r12b/scripts/run_rcmf_joint_full_bank_live_9a.py",
+      "sha256": "a52e40a95c0e09b1343310993a3acc872be9c0800fba6250d8a24d4b48ec77ac",
+      "size_bytes": 45593
+    }
+  }
+}

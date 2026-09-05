@@ -1,0 +1,55 @@
+{
+  "authorization_status": "NOT_AUTHORIZED",
+  "decision": "READY_FOR_14K_REAUTHORIZATION",
+  "diagnostic_only_one_demo": {
+    "generated_conditions": 814,
+    "heldout_states": 83,
+    "label_counts": {
+      "HARMFUL": 40,
+      "NEUTRAL": 247,
+      "POSITIVE": 120
+    },
+    "model_train_states": 324,
+    "paired_states": 407,
+    "replay_missing": 10,
+    "reused_conditions": 0,
+    "scientific_result": false,
+    "static_over_context": 11,
+    "wall_seconds": 5679.377638217062
+  },
+  "formal_package": {
+    "artifact_index_sha256": "d94770dc7e8114b63973d74cd14a40f721d92c2c25a5011a1ccbd92b947af448",
+    "config_sha256": "f075eead4bd77e92546a876c24979e1882a2bfded5853624aa665ce93c84af69",
+    "contract_sha256": "eea5fb745ecd5041ed07e65be55d6a4a3b774caa67239e0d040100bcd9a8cce6",
+    "launch_source_sha": "004f866647cfabb38a141b88e6d83821df88c403",
+    "root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001",
+    "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001"
+  },
+  "format": "exp037a_r12b_summary_v1",
+  "prompt_profile_repair": {
+    "one_demo_changed_execution_fields": [
+      "prompt_profile"
+    ],
+    "one_demo_effective_profile": "full_demo_first_only",
+    "three_demo_changed_execution_fields": [],
+    "three_demo_effective_profile": "full_demo"
+  },
+  "runtime": {
+    "expected_full_branch_hours": 32.0,
+    "expected_three_demo_fail_branch_hours": 18.0,
+    "full_branch_h100_hours": 29.0,
+    "full_branch_upper_hours": 64.0,
+    "proposed_hard_cap_hours": 80.0,
+    "three_demo_fail_h100_hours": 16.0,
+    "three_demo_fail_upper_hours": 36.0
+  },
+  "scientific_configuration_changes": 0,
+  "scientific_result": "NOT_EVALUATED_NEW_FORMAL_RUN",
+  "starting_sha": "b1145984db901de7ce90f8169a1bbe7f5ce4dea7",
+  "tests": {
+    "lambda_focused": "32 passed",
+    "lambda_full": "955 passed",
+    "local_focused": "32 passed",
+    "local_full": "952 passed, 3 skipped"
+  }
+}

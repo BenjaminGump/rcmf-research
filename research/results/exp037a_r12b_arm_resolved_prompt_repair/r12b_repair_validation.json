@@ -1,0 +1,99 @@
+{
+  "checks": {
+    "d06_compatibility_all_conditions": true,
+    "d06_effective_diff_zero": true,
+    "d06_formal_root_unchanged": true,
+    "downstream_consumers_passed": true,
+    "full_o06_complete_pairs": true,
+    "full_o06_formal_root_unchanged": true,
+    "full_o06_fresh_conditions": true,
+    "full_o06_one_demo": true,
+    "full_o06_passed": true,
+    "full_o06_valid_panel_stop": true,
+    "live_profile_correct_one_demo_feasible": true,
+    "live_profile_formal_root_unchanged": true,
+    "live_profile_wrong_full_demo_infeasible": true,
+    "o07_no_generation_or_optimization": true,
+    "o07_one_demo": true,
+    "o07_qwen_frozen": true,
+    "paired_smoke_formal_root_unchanged": true,
+    "paired_smoke_no_optimization": true,
+    "paired_smoke_one_demo": true,
+    "paired_smoke_two_fresh_conditions": true,
+    "runtime_state_source": true,
+    "source_compatibility_candidate": true,
+    "source_compatibility_passed": true,
+    "technical_smoke_source": true,
+    "tests_source": true,
+    "token_audit_1d_all_states": true,
+    "token_audit_3d_all_states": true,
+    "token_audit_zero_discrete_changes": true
+  },
+  "context_limit_changes": 0,
+  "d06b_d22_changes": 0,
+  "evidence": {
+    "d06_compatibility": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/d06_compatibility/d06_prompt_compatibility.json",
+      "sha256": "f9d61d4052276b2ecf765e0a292ac1f1fa7b1e785ea2b74c0f270f74cf3d2b0f",
+      "size_bytes": 482848
+    },
+    "downstream_prompt_consumers": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/downstream_prompt_consumer_audit/prompt_consumer_audit.json",
+      "sha256": "f891ffae31be4780de67958765a45d420d50794c3d80f663154fb9773fc180f1",
+      "size_bytes": 4309
+    },
+    "full_o06_validation": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/full_o06/validation/o06_validation.json",
+      "sha256": "6c4e52cb2b95c8015634499797d8cb2a11ab3a137e3e767d8005189aca58c2f0",
+      "size_bytes": 440637
+    },
+    "live_profile": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/live_profile/known_target_and_six_state_live_profile.json",
+      "sha256": "6a46d51c22737276d5eac63c9ddc2427198a533da400f9f83b1dd4c00dc83e2d",
+      "size_bytes": 39501
+    },
+    "o07_smoke": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/full_o06/o07_smoke/summary.json",
+      "sha256": "b60b709c44da6024885ef48fea29d2fa87092e8692b95c7d43ddacad9c4346bf",
+      "size_bytes": 1760
+    },
+    "paired_profile_smoke": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/paired_profile_smoke/summary.json",
+      "sha256": "ac3fe53f2724d1f76d375b8f4278cd17d70b4de913d2bc6ee0fbc3d64a405b6c",
+      "size_bytes": 1877
+    },
+    "source_compatibility": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r12b_source_compatibility_14k_20260906_003/source_compatibility.json",
+      "sha256": "0415028e8e238cd6f64d32537819292a0f25ebebfc9a64ec88ff64829b469743",
+      "size_bytes": 1272
+    },
+    "token_contract": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12b_prompt_profile_repair_20260905_001/prechange_token_audit/token_contract_summary.json",
+      "sha256": "cf57e2895c3acc58919043a7b340c82690b1dad2855c64102e33dc8c7c949672",
+      "size_bytes": 1205
+    }
+  },
+  "format": "exp037a_r12b_repair_validation_14k_v1",
+  "full_o06": {
+    "elapsed_seconds": null,
+    "heldout_states": 83,
+    "label_counts": {
+      "HARMFUL": 40,
+      "NEUTRAL": 247,
+      "POSITIVE": 120
+    },
+    "paired_states": 407,
+    "replay_missing_count": 10,
+    "scientific_result": false,
+    "static_over_context_count": 11,
+    "train_states": 324
+  },
+  "loss_training_changes": 0,
+  "memory_changes": 0,
+  "model_method_changes": 0,
+  "panel_rule_changes": 0,
+  "passed": true,
+  "production_behavior_change": "1D paired-causal runtime uses its preregistered full_demo_first_only profile",
+  "selector_changes": 0,
+  "three_demo_scientific_behavior_changes": 0
+}
