@@ -1,12 +1,12 @@
 {
   "attempts": {
-    "complete": 26,
-    "current_attempt_id": "D13_heldout_full_trajectory-1788562866305227526-r1",
+    "complete": 31,
+    "current_attempt_id": "D18_common_one_demo_dev_bare-1788568357565419591-r1",
     "current_command": [
       "/home/ubuntu/venvs/rcmf-py311/bin/python",
       "scripts/run_rcmf_reproducible_stage_14b.py",
       "--stage",
-      "D13_heldout_full_trajectory",
+      "D18_common_one_demo_dev_bare",
       "--config",
       "configs/pipeline/rcmf_appworld_repro_14j.yaml",
       "--run-root",
@@ -14,16 +14,16 @@
       "--source-commit",
       "0e4015547da45802cc7b6ff3a9b92adce73077fc"
     ],
-    "current_stage": "D13_heldout_full_trajectory",
+    "current_stage": "D18_common_one_demo_dev_bare",
     "failed_or_interrupted": 0,
     "failed_or_interrupted_attempt_ids": [],
     "open": 1,
     "open_attempt_ids": [
-      "D13_heldout_full_trajectory-1788562866305227526-r1"
+      "D18_common_one_demo_dev_bare-1788568357565419591-r1"
     ],
-    "total": 27
+    "total": 32
   },
-  "completed_stage_count": 26,
+  "completed_stage_count": 31,
   "completed_stages": [
     "S00_environment_manifest",
     "S01_authoritative_corpus",
@@ -50,22 +50,27 @@
     "D09_writer_reader_epoch_1",
     "D10_writer_reader_epoch_2",
     "D11_heldout_teacher_forced",
-    "D12_heldout_one_step"
+    "D12_heldout_one_step",
+    "D13_heldout_full_trajectory",
+    "D14_checkpoint_selection",
+    "D15_401_memory_field",
+    "D16_compile_and_add_98_memories",
+    "D17_499_memory_deployment_field"
   ],
-  "current_attempt_id": "D13_heldout_full_trajectory-1788562866305227526-r1",
-  "current_stage": "D13_heldout_full_trajectory",
+  "current_attempt_id": "D18_common_one_demo_dev_bare-1788568357565419591-r1",
+  "current_stage": "D18_common_one_demo_dev_bare",
   "current_stage_progress_files": [
     {
-      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/stages/D13_heldout_full_trajectory/process.json",
-      "sha256": "c3cbd4aa1b1d31e9e32b43bed39b96905b0dd253926cc3a7ebb1b62186ab01ee",
-      "size_bytes": 520
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/stages/D18_common_one_demo_dev_bare/process.json",
+      "sha256": "219860fa4350457891d172e90d1e465844ba0c803a9f66e483c4a916290893d8",
+      "size_bytes": 521
     }
   ],
   "evidence": [
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/heartbeat.json",
-      "sha256": "66b3c62a788abc4de9a919af959054f1d9ac50cfb7b97984dc749315631eb3df",
-      "size_bytes": 266
+      "sha256": "87a724d4179e2517953d6919015b04dc8e16adcc2e426f4410e4cffde8ab85db",
+      "size_bytes": 267
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/scheduler.lock",
@@ -74,13 +79,13 @@
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/scheduler_state.json",
-      "sha256": "b1827a97a37a6ddcebebaffb6a7b06373fc2ee674f904568e3ad2169dcc5797b",
-      "size_bytes": 19280
+      "sha256": "93337828242df2e3bb6728b1b0fe6b37cc2cabc9f750488e12e306ccfb647d6f",
+      "size_bytes": 22969
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/attempts.jsonl",
-      "sha256": "ab88e056074ce0f1cc40b60c509ef7d32983dece4ca22473451260a1a4f1c48a",
-      "size_bytes": 41668
+      "sha256": "8f58072ffb68aeb8fb967fc2d07854ad1ecf18870fb5398e3b8d612af958de2c",
+      "size_bytes": 49486
     }
   ],
   "failure_files": [],
@@ -124,31 +129,31 @@
     "gpus": [
       {
         "memory_total_mib": 81559,
-        "memory_used_mib": 78257,
+        "memory_used_mib": 25809,
         "name": "NVIDIA H100 80GB HBM3",
-        "utilization_percent": 41
+        "utilization_percent": 46
       }
     ],
     "telemetry_only": true
   },
   "heartbeat": {
-    "age_seconds": 208.150842,
-    "current_stage": "D13_heldout_full_trajectory",
+    "age_seconds": 88.083671,
+    "current_stage": "D18_common_one_demo_dev_bare",
     "pid": 743225,
     "stale": false,
     "stale_threshold_seconds": 720,
-    "utc": "2026-09-05T00:18:34.783876+00:00"
+    "utc": "2026-09-05T00:50:34.848810+00:00"
   },
   "invalid_completion_stages": [],
-  "last_updated_utc": "2026-09-05T00:22:12.097925+00:00",
-  "latest_completed_stage": "D12_heldout_one_step",
-  "material_signature": "d9cb889f6cbd7a3088c4542c33d310f07865a8088d76f3e0fb6af76fd9bede88",
+  "last_updated_utc": "2026-09-05T00:52:14.861336+00:00",
+  "latest_completed_stage": "D17_499_memory_deployment_field",
+  "material_signature": "4dd9fec272cb67e920913a68c2be60b6e18d8f0f54081d4fd9db97c16943f286",
   "monitor_state": "RUNNING_HEALTHY",
   "most_recent_failed_stage": null,
   "nfs": {
-    "free_bytes": 3343555428876288,
-    "free_gib": 3113928.650390625,
-    "total_bytes": 3343786658758656
+    "free_bytes": 3343541492252672,
+    "free_gib": 3113915.6708984375,
+    "total_bytes": 3343772968550400
   },
   "one_demo_started": false,
   "orchestrator_result": null,
