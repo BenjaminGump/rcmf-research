@@ -586,6 +586,7 @@ def build_preflight(
     r12b_consumer_audit_path: Path,
     r12b_source_compatibility_path: Path,
 ) -> dict[str, Any]:
+    raw_config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     config = load_resolved(config_path)
     method = config["pipeline"]
     run_root = Path(str(method["roots"]["run_root"]))
@@ -829,8 +830,12 @@ def build_preflight(
     arm_3d = build_arm_runtime_config(config, run_root, "3d")
     arm_1d = build_arm_runtime_config(config, run_root, "1d")
     replay_config = yaml.safe_load(REPLAY_CONFIG.read_text(encoding="utf-8"))
-    arm_3d_path = config_path.parent / str(config["arms"]["3d"]["include"])
-    arm_1d_path = config_path.parent / str(config["arms"]["1d"]["include"])
+    arm_3d_path = config_path.parent / str(
+        raw_config["arms"]["3d"]["include"]
+    )
+    arm_1d_path = config_path.parent / str(
+        raw_config["arms"]["1d"]["include"]
+    )
     effective_3d_config, effective_3d = (
         resolve_effective_paired_causal_runtime(
         replay_config=replay_config,
