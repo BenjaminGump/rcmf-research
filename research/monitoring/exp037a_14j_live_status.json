@@ -1,12 +1,12 @@
 {
   "attempts": {
-    "complete": 37,
-    "current_attempt_id": "O01_selector_candidate_cv-1788588886147513248-r1",
+    "complete": 39,
+    "current_attempt_id": "O03_final_selector_ensemble-1788593162247760217-r1",
     "current_command": [
       "/home/ubuntu/venvs/rcmf-py311/bin/python",
       "scripts/run_rcmf_reproducible_stage_14b.py",
       "--stage",
-      "O01_selector_candidate_cv",
+      "O03_final_selector_ensemble",
       "--config",
       "configs/pipeline/rcmf_appworld_repro_14j.yaml",
       "--run-root",
@@ -14,16 +14,16 @@
       "--source-commit",
       "0e4015547da45802cc7b6ff3a9b92adce73077fc"
     ],
-    "current_stage": "O01_selector_candidate_cv",
+    "current_stage": "O03_final_selector_ensemble",
     "failed_or_interrupted": 0,
     "failed_or_interrupted_attempt_ids": [],
     "open": 1,
     "open_attempt_ids": [
-      "O01_selector_candidate_cv-1788588886147513248-r1"
+      "O03_final_selector_ensemble-1788593162247760217-r1"
     ],
-    "total": 38
+    "total": 40
   },
-  "completed_stage_count": 37,
+  "completed_stage_count": 39,
   "completed_stages": [
     "S00_environment_manifest",
     "S01_authoritative_corpus",
@@ -61,22 +61,24 @@
     "D20_common_one_demo_dev_shuffle",
     "D21_historical_reproduction_analysis",
     "D22_three_demo_reproduction_gate",
-    "O00_state_representations"
+    "O00_state_representations",
+    "O01_selector_candidate_cv",
+    "O02_selector_candidate_selection"
   ],
-  "current_attempt_id": "O01_selector_candidate_cv-1788588886147513248-r1",
-  "current_stage": "O01_selector_candidate_cv",
+  "current_attempt_id": "O03_final_selector_ensemble-1788593162247760217-r1",
+  "current_stage": "O03_final_selector_ensemble",
   "current_stage_progress_files": [
     {
-      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/stages/O01_selector_candidate_cv/process.json",
-      "sha256": "f039c28520e662fcce582a1efb84f0e03cedc48931f1eb7268aeacb8764b7e72",
-      "size_bytes": 518
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/stages/O03_final_selector_ensemble/process.json",
+      "sha256": "a5a0efc57ca7b61106627e1bfe0a32ac4c3151669f5b33f16d9822336b7ac3f1",
+      "size_bytes": 520
     }
   ],
   "evidence": [
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/heartbeat.json",
-      "sha256": "048a43763b10af36860001350b997aaeea94fcc192fa1e4f3ad0a5031774938d",
-      "size_bytes": 264
+      "sha256": "63a80a3456f7dc7e8f7c7fe0dbf6533de3b195cf7b738439ba6e5591f79bf6e4",
+      "size_bytes": 266
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/scheduler.lock",
@@ -85,13 +87,13 @@
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/scheduler_state.json",
-      "sha256": "5d13a2ff19426e7ba8a69b0cdb0cd588bb1699387f36280d373b1b826f17abed",
-      "size_bytes": 27447
+      "sha256": "f7cbfb8a82885fbd840fdfbd3a5810b5da33a5a528835b5a6dcdcd9caec0e79d",
+      "size_bytes": 28935
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/attempts.jsonl",
-      "sha256": "30fec40a004ab8ca418846f78936c3903a8c681577fb81534b3321e10db8af1e",
-      "size_bytes": 58972
+      "sha256": "ade87a345821e9d6eb0cbbb5a0bcedbcb22b745e6b16743e581f66168c60434d",
+      "size_bytes": 62123
     }
   ],
   "failure_files": [],
@@ -138,31 +140,31 @@
     "gpus": [
       {
         "memory_total_mib": 81559,
-        "memory_used_mib": 1429,
+        "memory_used_mib": 1199,
         "name": "NVIDIA H100 80GB HBM3",
-        "utilization_percent": 32
+        "utilization_percent": 27
       }
     ],
     "telemetry_only": true
   },
   "heartbeat": {
-    "age_seconds": 207.404133,
-    "current_stage": "O01_selector_candidate_cv",
+    "age_seconds": 87.180293,
+    "current_stage": "O03_final_selector_ensemble",
     "pid": 743225,
     "stale": false,
     "stale_threshold_seconds": 720,
-    "utc": "2026-09-05T06:18:35.531718+00:00"
+    "utc": "2026-09-05T07:50:35.755139+00:00"
   },
   "invalid_completion_stages": [],
-  "last_updated_utc": "2026-09-05T06:22:16.949892+00:00",
-  "latest_completed_stage": "O00_state_representations",
-  "material_signature": "1b4b8d0df52b61ae2f07993871dae1d1bca2c2a5d15d2aaf7e4aa8e2f81a43bd",
+  "last_updated_utc": "2026-09-05T07:52:16.643657+00:00",
+  "latest_completed_stage": "O02_selector_candidate_selection",
+  "material_signature": "3688a80be443c47969a29a9c5a9407314939e7b34061c31ed0c5d767aaf9d01c",
   "monitor_state": "RUNNING_HEALTHY",
   "most_recent_failed_stage": null,
   "nfs": {
-    "free_bytes": 3341733619302400,
-    "free_gib": 3112231.9580078125,
-    "total_bytes": 3341967740108800
+    "free_bytes": 3341755060584448,
+    "free_gib": 3112251.9267578125,
+    "total_bytes": 3341989751816192
   },
   "one_demo_started": true,
   "orchestrator_result": null,
