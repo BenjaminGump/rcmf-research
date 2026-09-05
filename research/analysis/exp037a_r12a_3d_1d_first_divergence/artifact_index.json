@@ -1,0 +1,75 @@
+{
+  "formal_root_after": {
+    "file_count": 22434,
+    "sha256": "6eb6b3b1afa25b9837c49eea1033d09b909a35e6a509c0954fc8f1741a788e87"
+  },
+  "formal_root_before": {
+    "file_count": 22434,
+    "sha256": "6eb6b3b1afa25b9837c49eea1033d09b909a35e6a509c0954fc8f1741a788e87"
+  },
+  "formal_root_unchanged": true,
+  "format": "exp037a_r12a_artifact_index_v1",
+  "git_safe_files": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12a_3d_1d_first_divergence_20260905_001/audit_exp037a_14j_first_divergence.py",
+      "sha256": "c4b7e1cce725d83cc83f89df3e80f593b4db0c9188f5bca47a72e1b21d5923c9",
+      "size_bytes": 41513
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12a_3d_1d_first_divergence_20260905_001/audit_exp037a_14j_first_divergence_census_executed.py",
+      "sha256": "c4b7e1cce725d83cc83f89df3e80f593b4db0c9188f5bca47a72e1b21d5923c9",
+      "size_bytes": 41513
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12a_3d_1d_first_divergence_20260905_001/audit_exp037a_14j_first_divergence_final.py",
+      "sha256": "6a0bafc04f2de192d550c805459a5adf2d5bcdba38ad8ca6cdd707c7490a6bed",
+      "size_bytes": 44714
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12a_3d_1d_first_divergence_20260905_001/d05_o05_global_comparison.json",
+      "sha256": "57f7a503f943b1e8377a24e87693c8e5a009601b37b66d4d106fc05e71e5440a",
+      "size_bytes": 8578
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12a_3d_1d_first_divergence_20260905_001/d06_o06_traversal_comparison.json",
+      "sha256": "9d17961388c4fa0cd0d373781f84a5c5dcb07ab8d4e7f99b19603d71ddc2766f",
+      "size_bytes": 1055
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12a_3d_1d_first_divergence_20260905_001/input_artifact_index.json",
+      "sha256": "08fc90b028ff0a0e0b2ed9f144277cecf9e8ab974ffb2832057b167b2e8e68de",
+      "size_bytes": 8549
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12a_3d_1d_first_divergence_20260905_001/live_token_2x2.json",
+      "sha256": "381f9d79becf524670451f243373e6adcb3067c1bcbdc7436a4bb9c10e622a3c",
+      "size_bytes": 23730
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12a_3d_1d_first_divergence_20260905_001/phase_a_state_comparison.json",
+      "sha256": "b8d0ba5c6ac4e17c8d6911c05ededa8ef2f01c5facd9b63e8e45272ac44dbf4e",
+      "size_bytes": 9566
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12a_3d_1d_first_divergence_20260905_001/phase_b_target_manifest.json",
+      "sha256": "7420aafbb5a3bac0d0ae8cb356dda6bc5f3765f24a1e66b0d4ea75eb17fe4af6",
+      "size_bytes": 46767
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12a_3d_1d_first_divergence_20260905_001/targeted_census_rows.jsonl",
+      "sha256": "b105309f5ac0d4a8ce7b2cc9fa8dd48d034846938346cc303fdb9c717097bfae",
+      "size_bytes": 2518861
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12a_3d_1d_first_divergence_20260905_001/targeted_census_summary.json",
+      "sha256": "8901b4c2e588fba170d9b61302cbb9f195cf7a6e78b53e14267df5fdbbe7c4b9",
+      "size_bytes": 718
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12a_3d_1d_first_divergence_20260905_001/token_count_api_comparison.json",
+      "sha256": "d13b71be80de6cd24499d1d465addb67367d07f120c2867b3b972c2a30538d6f",
+      "size_bytes": 5895
+    }
+  ],
+  "lambda_only_stderr_count": 278
+}

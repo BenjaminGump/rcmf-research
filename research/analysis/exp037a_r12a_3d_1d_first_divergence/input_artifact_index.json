@@ -1,0 +1,147 @@
+{
+  "artifacts": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/3d/preflight/frozen_train_selections.jsonl",
+      "sha256": "23c6c8ea7800797706166c48fa846ca4533493379736c729a216cb57ba4df6ce",
+      "size_bytes": 9401237
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d/preflight/frozen_train_selections.jsonl",
+      "sha256": "d96dc69ff5fb758b0a742c6435d141dcb99e2ad6a8e225062ca9dc557fc000f1",
+      "size_bytes": 9400855
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/3d/preflight/initial_panel.json",
+      "sha256": "0bea33764b7fe8bada8ce7fb7b90a360e0ecb16e334ddc40b0b2db55981d4961",
+      "size_bytes": 25294
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d/preflight/initial_panel.json",
+      "sha256": "596e5aa64dd6e718808a0287ff369957eea9aa275a0f90e0a3fd519b58cdf267",
+      "size_bytes": 25293
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/3d/paired_causal/condition_manifest.json",
+      "sha256": "b4132b13386cd6d51bb259a10d75393a413bd9518337b8e75ad15869fdb8b681",
+      "size_bytes": 886640
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d/paired_causal/condition_manifest.json",
+      "sha256": "018834a374bb4d7fbc6eb6b0d4a850323318773ace420005864644d700e6946e",
+      "size_bytes": 909112
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/3d/paired_causal/paired_outcomes.json",
+      "sha256": "58a7ee9c0b92c7f1fa67c0fcba30b60709a909e4af52d10438eb3c709550b145",
+      "size_bytes": 3496030
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/gate/d06_three_demo_reproduction_gate.json",
+      "sha256": "01771d25a489b04240e809990699eac1c6563aed1325d9557959f44da8ff961e",
+      "size_bytes": 4085
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/gate/three_demo_reproduction_gate.json",
+      "sha256": "1a1d3a72e45a58677a9fd6834848ed71801690dc16f36ccd4f3791edae06dbe9",
+      "size_bytes": 8723
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/stages/O06_paired_causal_outcomes/failure.json",
+      "sha256": "b9fa06d62b05e0743b496d69376c0b574873d2c8d8c91d8f787e2f3bdfec7a99",
+      "size_bytes": 3548
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/stages/O06_paired_causal_outcomes/completion.json",
+      "sha256": "8c7addc59349e0e97bcee4b5ac8355d165d0bcfa944d5ae5441916a6c93df8aa",
+      "size_bytes": 881
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/stages/O06_paired_causal_outcomes/process.json",
+      "sha256": "5a9f26aeadf4af5bb94366ee7ff3fc434cad13c38925dc0943d0e445479a1a63",
+      "size_bytes": 519
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/stages/O06_paired_causal_outcomes/logs/stdout.log",
+      "sha256": "116b8ad395735bee772305024548225b1c83346759f567228ff555b30b1f8eb6",
+      "size_bytes": 26029
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/stages/O06_paired_causal_outcomes/logs/stderr.log",
+      "sha256": "b994e6a534b4e41cac545d60b5614a50435423c701cd884a89a0017e4f3a398c",
+      "size_bytes": 1268
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d/paired_causal/condition_outputs/25e1e5cd4cfacc709b176a1fad0fc758615a13ded9437f6556084cbbe7978f48.json",
+      "sha256": "b2ae09db67b79d1920ab6ca6a6f4be079a366a614e1590b16357a70002cfa1c0",
+      "size_bytes": 58371
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/shared/compat_exp025b/clean_cache_rebuild/transition_preflight/transition_manifest.jsonl",
+      "sha256": "7e9e41985ea8defbba57345e8008af4927bd71348e012a72333eda9ea0d03c7b",
+      "size_bytes": 26559237
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/shared/compat_exp025b/clean_procedural_audit/clean_signature_equivalence_manifest.json",
+      "sha256": "ca81fdbd2d76328c95e01373f6ebefd3d042c3ade1ab46e43af3ce37aa984f17",
+      "size_bytes": 300484
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/3d/representation_cache/multiview/state_rows/58c512e24946c841e27153022049e6ef04b23cfcfbfe2511d515deee0e4bca9a.pt",
+      "sha256": "7ce074f6a5a8c9c289305fc4423e39e4cf8f7b8c27d775d3cd0d8ce91adcf304",
+      "size_bytes": 351317
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/arms/1d/representation_cache/multiview/state_rows/58c512e24946c841e27153022049e6ef04b23cfcfbfe2511d515deee0e4bca9a.pt",
+      "sha256": "fe4208ee2a6e7db57f45ee13bdeda18f2840519c61f60b8087e6eaba274eb34a",
+      "size_bytes": 344725
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/resolved_configs/arm_3d.yaml",
+      "sha256": "2ee0cc346052478e417673ea9c8a0a0e3501fa856c2a6bc5dace06fb4c1e4696",
+      "size_bytes": 23638
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/resolved_configs/arm_1d.yaml",
+      "sha256": "412306f381532cf5cca8e06fd20faff276d86de1d707e119a799b795149dfb10",
+      "size_bytes": 23693
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/configs/benchmark/stage_c_replay_clean_rebuild_7b.yaml",
+      "sha256": "20d38ec8c3e016474200dc14bd86d3ab6ecf2526c513570758eb1dbd0a3a6150",
+      "size_bytes": 6232
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/rcmf/benchmarks/appworld/reproducible_stages_14b.py",
+      "sha256": "4c2d5b5931e6c5efe53b4d9041b1948041039f791263bb3cf17f926a70bf4bef",
+      "size_bytes": 91847
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/scripts/prepare_appworld_structured_rescue_7hr.py",
+      "sha256": "1f552260eebb773117550db2420224e30376a8965630ae519f594b9b772f0cb9",
+      "size_bytes": 33846
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/scripts/run_appworld_train_causal_gate_7hr.py",
+      "sha256": "94ca089a8254e7495436a8ab51f0af0c1073c2b938de84538c9c4cb1dc5f3675",
+      "size_bytes": 34906
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/scripts/run_procedural_causal_audit_7b.py",
+      "sha256": "cea2867227aa32072c071808cf75ef4fb682fe8ba09da7ebd344ed2ea8fdd376",
+      "size_bytes": 31947
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/rcmf/training/procedural_causal_audit_7b.py",
+      "sha256": "87f2ea91168bb42e3ab7c4a00e6da218644e1c1a76cb2dcb4946100772331a94",
+      "size_bytes": 14244
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10/rcmf/model/backends/hf_qwen.py",
+      "sha256": "7682201e3847ee157487f693378a61bd1c2ee611a14ae7b12df415fc3a4c4c95",
+      "size_bytes": 22569
+    }
+  ],
+  "formal_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001",
+  "format": "exp037a_r12a_input_artifact_index_v1",
+  "frozen_source_root": "/lambda/nfs/rcmf-persist/project-worktrees/exp037a-r10"
+}

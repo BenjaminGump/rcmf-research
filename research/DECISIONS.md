@@ -1,5 +1,48 @@
 # Decisions and Deviations
 
+## 2026-09-05 EXP-037A-R12A 3D-vs-1D first-divergence audit
+
+VERIFIED:
+
+- The earlier records-only inference that live observations added about 4.8k
+  tokens is superseded. Runtime live state text is one token shorter than the
+  equivalent stored-state rendering after using the same backend.
+- O05 reads the arm-resolved `full_demo_first_only` setting. O06 reads the
+  constant shared 7b replay config, whose causal-audit prompt is `full_demo`.
+  D05/D06 are aligned; O05/O06 are not.
+- The target has the same selected class and sole legal attempted memory in
+  both arms. D05 filters it at 42,924 tokens, O05 admits it at 38,075, and the
+  runtime-equivalent live counts are 42,927 versus 38,078.
+- The target is initial in both panels. D06 skipped it and O06 failed after
+  bare, so neither selector-memory divergence nor quota stopping explains the
+  target failure.
+- Across a 276-state targeted census, all 259 replay-ready rows retained their
+  static scoreability under the correct arm prompt. The erroneous full-demo
+  O06 path crosses the context boundary for six rows.
+
+DECISION:
+
+- Record Phase A as `THREE_DEMO_STATIC_FILTERED_STATE` and the first executable
+  divergence as `PROMPT_PROFILE_CONFIG_SOURCE_MISMATCH`.
+- Record `TOKEN_COUNT_CONTRACT_MISMATCH` as a secondary non-causal defect:
+  the preflight helper omits explicit `enable_thinking=False` and is four
+  tokens shorter than the runtime-equivalent backend for the audited arrays.
+- Preserve the sealed 3D positive-control result. Complete 1D and cross-arm
+  results remain `NOT_EVALUATED`.
+- Return `READY_FOR_SCOREABILITY_REPAIR_DESIGN`. The next reviewed task should
+  use Direction A: align runtime prompt-profile provenance and exact rendering
+  APIs without changing selector, panel, memories, context limit, or gates.
+- Do not implement production repair, typed runtime missingness, same-class
+  substitution, retry/resume, or a new run in R12A.
+
+IMPLEMENTATION DEVIATIONS:
+
+- The first audit-only known-state invocation failed before replay due to a
+  nonexistent `example.task_id` attribute; it was corrected to the existing
+  `example_task_id()` helper. Two final command starts failed before audit
+  initialization until the frozen `scripts/` directory was added to
+  `PYTHONPATH`. None touched the formal root or scientific behavior.
+
 ## 2026-09-04 EXP-037A-R10 whole-pipeline audit
 
 VERIFIED:

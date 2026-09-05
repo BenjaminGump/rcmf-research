@@ -1,5 +1,41 @@
 # Current State
 
+## 2026-09-05 EXP-037A-R12A First Divergence Resolved
+
+VERIFIED:
+
+- O05 correctly used the arm-resolved `full_demo_first_only` prompt, but O06
+  consumed the shared legacy replay config and therefore executed
+  `full_demo`. This prompt-profile config-source mismatch, not longer live
+  observations, caused the known 40,960-token failure.
+- For `appworld:trace:229360a_3:step:27:line:382`, D05 and O05 selected the
+  same class and sole legal memory. Runtime live raw counts are 42,927 under
+  `full_demo` and 38,078 under `full_demo_first_only`.
+- D05 statically filtered the state and D06 skipped it. O05 admitted it and
+  O06 reached it in the initial panel, wrote bare, then failed. Quota stopping
+  is not causal.
+- A 276-state targeted census produced 259 replay-ready rows. Correctly
+  profiled static/live scoreability matched 259/259; the erroneous full-demo
+  O06 path makes six rows over context. No full-499 census was required.
+- The four-token preflight/runtime chat-template difference is real but does
+  not alter the target's classification. The sealed 3D result remains valid.
+- No production repair, formal retry/resume, Qwen generation, target action,
+  or long run occurred. The 14j root remained unchanged.
+
+CURRENT DECISION:
+
+- `READY_FOR_SCOREABILITY_REPAIR_DESIGN`
+- Phase A: `THREE_DEMO_STATIC_FILTERED_STATE`
+- Recommended next direction: align O06 with the arm-resolved prompt profile
+  and unify the exact preflight/runtime renderer contract in a newly reviewed
+  repair task. Do not introduce typed missingness or memory substitution from
+  this evidence.
+
+Full report:
+`research/analysis/EXP_037A_R12A_3D_1D_FIRST_DIVERGENCE_AUDIT.md`.
+
+Last updated: 2026-09-05.
+
 ## 2026-09-05 EXP-037A 14j Terminated At One-Demo O06
 
 VERIFIED:

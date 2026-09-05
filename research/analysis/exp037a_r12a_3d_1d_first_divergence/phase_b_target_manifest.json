@@ -1,0 +1,1754 @@
+{
+  "category_counts": {
+    "one_demo_scoreable_three_demo_unscoreable": 16,
+    "one_demo_static_raw_headroom_le_6000": 17,
+    "one_demo_traversal_through_failure_plus_20": 207,
+    "selected_transition_differs": 94,
+    "three_demo_static_over_context": 27
+  },
+  "rows": [
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:07b42fd_1:step:1:line:455"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:07b42fd_1:step:2:line:456"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:07b42fd_1:step:3:line:457"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:07b42fd_1:step:6:line:460"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:07b42fd_1:step:8:line:462"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:07b42fd_1:step:9:line:463"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:07b42fd_2:step:10:line:473"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:07b42fd_2:step:2:line:465"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:07b42fd_2:step:4:line:467"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:07b42fd_2:step:6:line:469"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:07b42fd_2:step:8:line:471"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:07b42fd_2:step:9:line:472"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:07b42fd_3:step:1:line:474"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:07b42fd_3:step:2:line:475"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:07b42fd_3:step:3:line:476"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:07b42fd_3:step:4:line:477"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:07b42fd_3:step:7:line:480"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:229360a_2:step:10:line:348"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:229360a_2:step:11:line:349"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:229360a_2:step:14:line:352"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "one_demo_static_raw_headroom_le_6000",
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:229360a_2:step:16:line:354"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:229360a_2:step:2:line:340"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:229360a_2:step:3:line:341"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:229360a_2:step:9:line:347"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:229360a_3:step:10:line:365"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:229360a_3:step:13:line:368"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:229360a_3:step:16:line:371"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:229360a_3:step:17:line:372"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:229360a_3:step:18:line:373"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:229360a_3:step:21:line:376"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:229360a_3:step:22:line:377"
+    },
+    {
+      "categories": [
+        "one_demo_static_raw_headroom_le_6000"
+      ],
+      "state_id": "appworld:trace:229360a_3:step:23:line:378"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:229360a_3:step:25:line:380"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:229360a_3:step:26:line:381"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "one_demo_static_raw_headroom_le_6000",
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:229360a_3:step:27:line:382"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:229360a_3:step:28:line:383"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:229360a_3:step:8:line:363"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:229360a_3:step:9:line:364"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:27e1026_2:step:10:line:152"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:27e1026_2:step:11:line:153"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:27e1026_2:step:12:line:154"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:27e1026_2:step:3:line:145"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:27e1026_2:step:4:line:146"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:27e1026_2:step:5:line:147"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:27e1026_2:step:6:line:148"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:27e1026_2:step:7:line:149"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:27e1026_2:step:8:line:150"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:27e1026_2:step:9:line:151"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:287e338_1:step:1:line:117"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:287e338_1:step:3:line:119"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:287e338_1:step:5:line:121"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:287e338_1:step:7:line:123"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:287e338_1:step:8:line:124"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:287e338_2:step:3:line:127"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:287e338_2:step:4:line:128"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:287e338_2:step:5:line:129"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:287e338_2:step:6:line:130"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:287e338_2:step:7:line:131"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:287e338_2:step:8:line:132"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:287e338_2:step:9:line:133"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:287e338_3:step:2:line:135"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:287e338_3:step:3:line:136"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:287e338_3:step:4:line:137"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:287e338_3:step:6:line:139"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:287e338_3:step:8:line:141"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:287e338_3:step:9:line:142"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:34d9492_1:step:11:line:236"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:34d9492_1:step:12:line:237"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:34d9492_1:step:13:line:238"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:34d9492_1:step:14:line:239"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:34d9492_1:step:6:line:231"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:34d9492_1:step:8:line:233"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:34d9492_3:step:13:line:252"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:34d9492_3:step:14:line:253"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:34d9492_3:step:3:line:242"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:34d9492_3:step:4:line:243"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:34d9492_3:step:6:line:245"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:34d9492_3:step:9:line:248"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:3c13f5a_2:step:12:line:492"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:3c13f5a_2:step:18:line:498"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:3c13f5a_2:step:19:line:499"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:3c13f5a_2:step:20:line:500"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:3c13f5a_2:step:4:line:484"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:3c13f5a_2:step:5:line:485"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:3c13f5a_2:step:6:line:486"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:3c13f5a_2:step:8:line:488"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:6104387_3:step:12:line:52"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:6104387_3:step:13:line:53"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:6104387_3:step:14:line:54"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:6104387_3:step:15:line:55"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:6104387_3:step:16:line:56"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:6104387_3:step:2:line:42"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:6104387_3:step:9:line:49"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:76f2c72_1:step:13:line:204"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:76f2c72_1:step:14:line:205"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:76f2c72_1:step:3:line:194"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:76f2c72_1:step:4:line:195"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:76f2c72_1:step:7:line:198"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:76f2c72_1:step:9:line:200"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:76f2c72_2:step:10:line:215"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:76f2c72_2:step:5:line:210"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:76f2c72_2:step:6:line:211"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:76f2c72_2:step:7:line:212"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:76f2c72_2:step:9:line:214"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:76f2c72_3:step:10:line:225"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:76f2c72_3:step:2:line:217"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:76f2c72_3:step:3:line:218"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:76f2c72_3:step:4:line:219"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:76f2c72_3:step:5:line:220"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:76f2c72_3:step:8:line:223"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:771d8fc_1:step:12:line:426"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:771d8fc_1:step:13:line:427"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:771d8fc_1:step:14:line:428"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:771d8fc_1:step:3:line:417"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:771d8fc_1:step:4:line:418"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:771d8fc_1:step:6:line:420"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:771d8fc_1:step:8:line:422"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:771d8fc_2:step:11:line:439"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:771d8fc_2:step:12:line:440"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:771d8fc_2:step:13:line:441"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:771d8fc_2:step:14:line:442"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:771d8fc_2:step:2:line:430"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:771d8fc_2:step:3:line:431"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:771d8fc_2:step:5:line:433"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:771d8fc_2:step:6:line:434"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:771d8fc_2:step:7:line:435"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:771d8fc_2:step:9:line:437"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:7d7fbf6_1:step:10:line:393"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:7d7fbf6_1:step:2:line:385"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:7d7fbf6_1:step:3:line:386"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:7d7fbf6_1:step:6:line:389"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:7d7fbf6_1:step:9:line:392"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:7d7fbf6_3:step:12:line:414"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:7d7fbf6_3:step:3:line:405"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:7d7fbf6_3:step:4:line:406"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:7d7fbf6_3:step:5:line:407"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:7d7fbf6_3:step:6:line:408"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:7d7fbf6_3:step:7:line:409"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:7d7fbf6_3:step:9:line:411"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:82e2fac_1:step:10:line:10"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:82e2fac_1:step:3:line:3"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:82e2fac_1:step:4:line:4"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:82e2fac_1:step:5:line:5"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:82e2fac_1:step:6:line:6"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:82e2fac_1:step:8:line:8"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:aa8502b_1:step:11:line:609"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:aa8502b_1:step:12:line:610"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:aa8502b_1:step:3:line:601"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:aa8502b_1:step:4:line:602"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:aa8502b_1:step:5:line:603"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:aa8502b_1:step:6:line:604"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:aa8502b_1:step:8:line:606"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:aa8502b_2:step:10:line:620"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:aa8502b_2:step:11:line:621"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:aa8502b_2:step:12:line:622"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:aa8502b_2:step:13:line:623"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:aa8502b_2:step:14:line:624"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:aa8502b_2:step:4:line:614"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:aa8502b_2:step:5:line:615"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:aa8502b_2:step:6:line:616"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:aa8502b_2:step:8:line:618"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:10:line:66"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:11:line:67"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:12:line:68"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:13:line:69"
+    },
+    {
+      "categories": [
+        "one_demo_static_raw_headroom_le_6000"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:14:line:70"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:16:line:72"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:17:line:73"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "one_demo_static_raw_headroom_le_6000",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:18:line:74"
+    },
+    {
+      "categories": [
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:19:line:75"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "one_demo_static_raw_headroom_le_6000",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:20:line:76"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:21:line:77"
+    },
+    {
+      "categories": [
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:22:line:78"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "one_demo_static_raw_headroom_le_6000",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:23:line:79"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "one_demo_static_raw_headroom_le_6000",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:24:line:80"
+    },
+    {
+      "categories": [
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:25:line:81"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "one_demo_static_raw_headroom_le_6000",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:26:line:82"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "one_demo_static_raw_headroom_le_6000",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:27:line:83"
+    },
+    {
+      "categories": [
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:28:line:84"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "one_demo_static_raw_headroom_le_6000",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:29:line:85"
+    },
+    {
+      "categories": [
+        "one_demo_static_raw_headroom_le_6000",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:30:line:86"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "one_demo_static_raw_headroom_le_6000",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:31:line:87"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "one_demo_static_raw_headroom_le_6000",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:32:line:88"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:33:line:89"
+    },
+    {
+      "categories": [
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:34:line:90"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:35:line:91"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "one_demo_static_raw_headroom_le_6000",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:36:line:92"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:4:line:60"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:6:line:62"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:afc0fce_1:step:9:line:65"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:afc0fce_3:step:11:line:103"
+    },
+    {
+      "categories": [
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_3:step:12:line:104"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_3:step:15:line:107"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_3:step:16:line:108"
+    },
+    {
+      "categories": [
+        "one_demo_scoreable_three_demo_unscoreable",
+        "one_demo_static_raw_headroom_le_6000",
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs",
+        "three_demo_static_over_context"
+      ],
+      "state_id": "appworld:trace:afc0fce_3:step:21:line:113"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:afc0fce_3:step:22:line:114"
+    },
+    {
+      "categories": [
+        "one_demo_static_raw_headroom_le_6000",
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:afc0fce_3:step:23:line:115"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:afc0fce_3:step:24:line:116"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:afc0fce_3:step:6:line:98"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:afc0fce_3:step:9:line:101"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:b0a8eae_3:step:10:line:305"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:b0a8eae_3:step:11:line:306"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b0a8eae_3:step:17:line:312"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b0a8eae_3:step:3:line:298"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b0a8eae_3:step:6:line:301"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b0a8eae_3:step:8:line:303"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b0a8eae_3:step:9:line:304"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_1:step:10:line:164"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_1:step:11:line:165"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_1:step:1:line:155"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_1:step:2:line:156"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_1:step:3:line:157"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_1:step:5:line:159"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_1:step:6:line:160"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_1:step:8:line:162"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_2:step:10:line:175"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_2:step:14:line:179"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_2:step:2:line:167"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_2:step:3:line:168"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_2:step:4:line:169"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_2:step:5:line:170"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_2:step:9:line:174"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_3:step:2:line:181"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_3:step:3:line:182"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_3:step:4:line:183"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_3:step:7:line:186"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_3:step:8:line:187"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:b7a9ee9_3:step:9:line:188"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:c901732_1:step:13:line:575"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:c901732_1:step:3:line:565"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:c901732_1:step:4:line:566"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:c901732_1:step:5:line:567"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:c901732_1:step:6:line:568"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:c901732_1:step:7:line:569"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:c901732_1:step:8:line:570"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:c901732_3:step:10:line:585"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:c901732_3:step:15:line:590"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:c901732_3:step:3:line:578"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:c901732_3:step:4:line:579"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:c901732_3:step:5:line:580"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:c901732_3:step:8:line:583"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:cf6abd2_1:step:10:line:510"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:cf6abd2_1:step:2:line:502"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:cf6abd2_1:step:3:line:503"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:cf6abd2_1:step:6:line:506"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:cf6abd2_1:step:9:line:509"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:cf6abd2_2:step:12:line:522"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:cf6abd2_2:step:13:line:523"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:cf6abd2_2:step:1:line:511"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:cf6abd2_2:step:3:line:513"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:cf6abd2_2:step:7:line:517"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:cf6abd2_3:step:10:line:533"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:cf6abd2_3:step:2:line:525"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:cf6abd2_3:step:3:line:526"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:cf6abd2_3:step:4:line:527"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:cf6abd2_3:step:6:line:529"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:cf6abd2_3:step:7:line:530"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:cf6abd2_3:step:9:line:532"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:e7a10f8_1:step:10:line:543"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:e7a10f8_1:step:11:line:544"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:e7a10f8_1:step:1:line:534"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:e7a10f8_1:step:2:line:535"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:e7a10f8_1:step:3:line:536"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:e7a10f8_1:step:6:line:539"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:e7a10f8_1:step:7:line:540"
+    },
+    {
+      "categories": [
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:e7a10f8_1:step:8:line:541"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:e7a10f8_2:step:2:line:546"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:e7a10f8_2:step:3:line:547"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:e7a10f8_2:step:5:line:549"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:e7a10f8_2:step:6:line:550"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:e7a10f8_2:step:7:line:551"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:e7a10f8_3:step:10:line:561"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:e7a10f8_3:step:11:line:562"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20",
+        "selected_transition_differs"
+      ],
+      "state_id": "appworld:trace:e7a10f8_3:step:3:line:554"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:e7a10f8_3:step:5:line:556"
+    },
+    {
+      "categories": [
+        "one_demo_traversal_through_failure_plus_20"
+      ],
+      "state_id": "appworld:trace:e7a10f8_3:step:9:line:560"
+    }
+  ],
+  "selection_rule": "predeclared_r12a_targeted_census",
+  "union_count": 276
+}

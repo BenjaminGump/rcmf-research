@@ -1,0 +1,35 @@
+{
+  "D06": {
+    "executed_condition_outputs": 928,
+    "expanded_state_count": 220,
+    "final_expansion_ordinal_zero_based": 242,
+    "initial_completed_state_count": 244,
+    "initial_state_count": 256,
+    "labels": {
+      "HARMFUL": 35,
+      "NEUTRAL": 300,
+      "POSITIVE": 129
+    },
+    "maximum_state_space_exhausted": true,
+    "minimum_label_gate_passed": false,
+    "paired_rows": 464,
+    "replay_semantic_missing": 8,
+    "static_over_context_missing": 27
+  },
+  "O06": {
+    "completed_paired_rows": 178,
+    "condition_output_count": 357,
+    "failing_state_panel_part": "initial",
+    "failing_state_position_zero_based": 186,
+    "initial_state_count": 256,
+    "partial_labels": {
+      "HARMFUL": 13,
+      "NEUTRAL": 103,
+      "POSITIVE": 62
+    },
+    "replay_semantic_missing_before_failure": 3,
+    "states_remaining_after_failure": 312
+  },
+  "answer_label_evolution_caused_reach": false,
+  "reason": "Both arms must traverse every initial-panel state before quota stopping is eligible; the target is initial in both arms."
+}

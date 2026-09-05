@@ -1,0 +1,18 @@
+{
+  "elapsed_seconds": 3472.083468243014,
+  "full_499_census_run": false,
+  "one_demo_alternative_live_feasible_count": 0,
+  "one_demo_static_scoreable_live_infeasible_count": 0,
+  "production_o06_full_demo_profile_infeasible_count": 6,
+  "qwen_generation_count": 0,
+  "replay_failure_count": 17,
+  "replay_ready_count": 259,
+  "rows": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_exp037a_r12a_3d_1d_first_divergence_20260905_001/targeted_census_rows.jsonl",
+    "sha256": "b105309f5ac0d4a8ce7b2cc9fa8dd48d034846938346cc303fdb9c717097bfae",
+    "size_bytes": 2518861
+  },
+  "target_action_execution_count": 0,
+  "targeted_state_count": 276,
+  "three_demo_alternative_live_feasible_count": 0
+}

@@ -1,0 +1,230 @@
+{
+  "logical_state_count": 499,
+  "memory_token_distributions": {
+    "1d": {
+      "count": 488,
+      "maximum": 27816,
+      "mean": 11058.293032786885,
+      "median": 10172.0,
+      "minimum": 7446,
+      "q25": 9650,
+      "q75": 11994,
+      "q90": 14251,
+      "q95": 16341
+    },
+    "3d": {
+      "count": 472,
+      "maximum": 23897,
+      "mean": 11162.832627118643,
+      "median": 10172.0,
+      "minimum": 7446,
+      "q25": 9650,
+      "q75": 12241,
+      "q90": 14222,
+      "q95": 15091
+    }
+  },
+  "same_class_substitution": {
+    "1d": 54,
+    "3d": 43
+  },
+  "scoreability": {
+    "both_scoreable": 472,
+    "both_unscoreable": 11,
+    "one_demo_only": 16,
+    "same": 483,
+    "three_demo_only": 0
+  },
+  "selected_class": {
+    "different": 85,
+    "same": 414
+  },
+  "selected_transition": {
+    "different": 94,
+    "same_including_null": 405,
+    "same_non_null": 394
+  },
+  "state_universes_exact": true,
+  "top_20_one_minus_three_memory_tokens": [
+    {
+      "one_demo_memory_tokens": 27816,
+      "one_demo_transition_id": "5f8c0602-9601-5c9e-abc4-1b21af42ad90",
+      "one_minus_three_memory_tokens": 7533,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:afc0fce_3:step:6:line:98",
+      "three_demo_memory_tokens": 20283,
+      "three_demo_transition_id": "0ede8acf-d8a4-577a-949d-1216bc77013d"
+    },
+    {
+      "one_demo_memory_tokens": 18528,
+      "one_demo_transition_id": "5dd7808c-a1b5-5834-b5d6-f52f099dcbfc",
+      "one_minus_three_memory_tokens": 7504,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:287e338_2:step:7:line:131",
+      "three_demo_memory_tokens": 11024,
+      "three_demo_transition_id": "bdf08480-2081-5262-ac97-0a4e49e1b745"
+    },
+    {
+      "one_demo_memory_tokens": 16091,
+      "one_demo_transition_id": "a82d24a7-7c07-5fc5-a8fa-c00f9ee24890",
+      "one_minus_three_memory_tokens": 7144,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:229360a_3:step:21:line:376",
+      "three_demo_memory_tokens": 8947,
+      "three_demo_transition_id": "ddb98f24-d600-577b-bbdd-2c421cab2276"
+    },
+    {
+      "one_demo_memory_tokens": 16341,
+      "one_demo_transition_id": "80db1265-1f95-5960-b715-6ae187346f46",
+      "one_minus_three_memory_tokens": 6096,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:34d9492_3:step:13:line:252",
+      "three_demo_memory_tokens": 10245,
+      "three_demo_transition_id": "fb408c80-8e8b-5a87-a255-e92c97883638"
+    },
+    {
+      "one_demo_memory_tokens": 14120,
+      "one_demo_transition_id": "3748855b-d6c1-5710-89c2-6dd124064d19",
+      "one_minus_three_memory_tokens": 5746,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:c901732_1:step:7:line:569",
+      "three_demo_memory_tokens": 8374,
+      "three_demo_transition_id": "61a5883c-547a-5992-a266-20a18ec01b9e"
+    },
+    {
+      "one_demo_memory_tokens": 18528,
+      "one_demo_transition_id": "5dd7808c-a1b5-5834-b5d6-f52f099dcbfc",
+      "one_minus_three_memory_tokens": 4750,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:c901732_3:step:10:line:585",
+      "three_demo_memory_tokens": 13778,
+      "three_demo_transition_id": "83ca7c18-ca3d-5080-8dc3-a060620d1ade"
+    },
+    {
+      "one_demo_memory_tokens": 16559,
+      "one_demo_transition_id": "b4052c36-0639-517a-8ab4-31efa881a41d",
+      "one_minus_three_memory_tokens": 4396,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:e7a10f8_1:step:7:line:540",
+      "three_demo_memory_tokens": 12163,
+      "three_demo_transition_id": "cda99f77-762b-5c2f-bcd3-e289032cf464"
+    },
+    {
+      "one_demo_memory_tokens": 15091,
+      "one_demo_transition_id": "51014c29-a661-50de-ba60-aa2ee5e99518",
+      "one_minus_three_memory_tokens": 4372,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:76f2c72_3:step:8:line:223",
+      "three_demo_memory_tokens": 10719,
+      "three_demo_transition_id": "85c84892-494f-594a-9a3f-6aa47e78f3fc"
+    },
+    {
+      "one_demo_memory_tokens": 15091,
+      "one_demo_transition_id": "51014c29-a661-50de-ba60-aa2ee5e99518",
+      "one_minus_three_memory_tokens": 4372,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:3c13f5a_2:step:8:line:488",
+      "three_demo_memory_tokens": 10719,
+      "three_demo_transition_id": "85c84892-494f-594a-9a3f-6aa47e78f3fc"
+    },
+    {
+      "one_demo_memory_tokens": 9650,
+      "one_demo_transition_id": "97065af3-f710-5fc5-a3c5-c6c268f23c32",
+      "one_minus_three_memory_tokens": 2051,
+      "same_selected_class": true,
+      "state_id": "appworld:trace:afc0fce_1:step:30:line:86",
+      "three_demo_memory_tokens": 7599,
+      "three_demo_transition_id": "6dd45c6f-cde3-5154-b7e5-7d7f36827d82"
+    },
+    {
+      "one_demo_memory_tokens": 10556,
+      "one_demo_transition_id": "dd31b1a6-8275-5ef7-b976-b8b2a3104efe",
+      "one_minus_three_memory_tokens": 1609,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:287e338_3:step:8:line:141",
+      "three_demo_memory_tokens": 8947,
+      "three_demo_transition_id": "ddb98f24-d600-577b-bbdd-2c421cab2276"
+    },
+    {
+      "one_demo_memory_tokens": 12216,
+      "one_demo_transition_id": "acfa7881-5d45-5485-b49e-c7f4b5380e08",
+      "one_minus_three_memory_tokens": 1171,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:afc0fce_1:step:6:line:62",
+      "three_demo_memory_tokens": 11045,
+      "three_demo_transition_id": "2a8422ce-c2d8-51d4-b19b-d7741a67cae2"
+    },
+    {
+      "one_demo_memory_tokens": 12216,
+      "one_demo_transition_id": "acfa7881-5d45-5485-b49e-c7f4b5380e08",
+      "one_minus_three_memory_tokens": 1171,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:afc0fce_1:step:13:line:69",
+      "three_demo_memory_tokens": 11045,
+      "three_demo_transition_id": "2a8422ce-c2d8-51d4-b19b-d7741a67cae2"
+    },
+    {
+      "one_demo_memory_tokens": 14444,
+      "one_demo_transition_id": "d2371025-c443-5823-aea6-220bd3f11334",
+      "one_minus_three_memory_tokens": 565,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:afc0fce_3:step:9:line:101",
+      "three_demo_memory_tokens": 13879,
+      "three_demo_transition_id": "e2e6e7e9-6845-5b35-8b0c-452866492494"
+    },
+    {
+      "one_demo_memory_tokens": 10238,
+      "one_demo_transition_id": "61dfc8cd-2696-5235-9bc7-d0072274c929",
+      "one_minus_three_memory_tokens": 205,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:6104387_3:step:2:line:42",
+      "three_demo_memory_tokens": 10033,
+      "three_demo_transition_id": "001629b3-5715-5e40-b42a-b7d00dc82b7d"
+    },
+    {
+      "one_demo_memory_tokens": 10238,
+      "one_demo_transition_id": "61dfc8cd-2696-5235-9bc7-d0072274c929",
+      "one_minus_three_memory_tokens": 205,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:287e338_2:step:6:line:130",
+      "three_demo_memory_tokens": 10033,
+      "three_demo_transition_id": "001629b3-5715-5e40-b42a-b7d00dc82b7d"
+    },
+    {
+      "one_demo_memory_tokens": 14194,
+      "one_demo_transition_id": "51e1e798-e1c0-5a05-bc26-4b695df6c1ce",
+      "one_minus_three_memory_tokens": 49,
+      "same_selected_class": false,
+      "state_id": "appworld:trace:771d8fc_2:step:11:line:439",
+      "three_demo_memory_tokens": 14145,
+      "three_demo_transition_id": "ee95a0e8-d848-5a90-9838-d648d1033da5"
+    },
+    {
+      "one_demo_memory_tokens": 10993,
+      "one_demo_transition_id": "1e6461b4-33d9-5d8d-8b3f-9010f934494f",
+      "one_minus_three_memory_tokens": 0,
+      "same_selected_class": true,
+      "state_id": "appworld:trace:e7a10f8_3:step:9:line:560",
+      "three_demo_memory_tokens": 10993,
+      "three_demo_transition_id": "1e6461b4-33d9-5d8d-8b3f-9010f934494f"
+    },
+    {
+      "one_demo_memory_tokens": 10172,
+      "one_demo_transition_id": "d7afd6da-b6a3-53eb-a3bb-d042da33bf2e",
+      "one_minus_three_memory_tokens": 0,
+      "same_selected_class": true,
+      "state_id": "appworld:trace:e7a10f8_3:step:8:line:559",
+      "three_demo_memory_tokens": 10172,
+      "three_demo_transition_id": "d7afd6da-b6a3-53eb-a3bb-d042da33bf2e"
+    },
+    {
+      "one_demo_memory_tokens": 7978,
+      "one_demo_transition_id": "7123403d-4e8f-5760-8a64-3745c0c935df",
+      "one_minus_three_memory_tokens": 0,
+      "same_selected_class": true,
+      "state_id": "appworld:trace:e7a10f8_3:step:7:line:558",
+      "three_demo_memory_tokens": 7978,
+      "three_demo_transition_id": "7123403d-4e8f-5760-8a64-3745c0c935df"
+    }
+  ]
+}
