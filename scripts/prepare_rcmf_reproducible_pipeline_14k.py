@@ -871,9 +871,11 @@ def build_preflight(
             "changed_execution_fields"
         ]
         == ["prompt_profile"],
-        "three_demo_profile": effective_3d["effective_prompt_profile"]
+        "three_demo_profile": effective_3d[
+            "effective_runtime_prompt_profile"
+        ]
         == "full_demo",
-        "one_demo_profile": effective_1d["effective_prompt_profile"]
+        "one_demo_profile": effective_1d["effective_runtime_prompt_profile"]
         == "full_demo_first_only",
         "three_demo_config_matches_legacy": effective_3d_config[
             "causal_audit"
