@@ -1,12 +1,12 @@
 {
   "attempts": {
-    "complete": 17,
-    "current_attempt_id": "D06_paired_causal_outcomes-1788537443808495954-r1",
+    "complete": 26,
+    "current_attempt_id": "D13_heldout_full_trajectory-1788562866305227526-r1",
     "current_command": [
       "/home/ubuntu/venvs/rcmf-py311/bin/python",
       "scripts/run_rcmf_reproducible_stage_14b.py",
       "--stage",
-      "D06_paired_causal_outcomes",
+      "D13_heldout_full_trajectory",
       "--config",
       "configs/pipeline/rcmf_appworld_repro_14j.yaml",
       "--run-root",
@@ -14,16 +14,16 @@
       "--source-commit",
       "0e4015547da45802cc7b6ff3a9b92adce73077fc"
     ],
-    "current_stage": "D06_paired_causal_outcomes",
+    "current_stage": "D13_heldout_full_trajectory",
     "failed_or_interrupted": 0,
     "failed_or_interrupted_attempt_ids": [],
     "open": 1,
     "open_attempt_ids": [
-      "D06_paired_causal_outcomes-1788537443808495954-r1"
+      "D13_heldout_full_trajectory-1788562866305227526-r1"
     ],
-    "total": 18
+    "total": 27
   },
-  "completed_stage_count": 17,
+  "completed_stage_count": 26,
   "completed_stages": [
     "S00_environment_manifest",
     "S01_authoritative_corpus",
@@ -41,22 +41,31 @@
     "D02_selector_candidate_selection",
     "D03_final_selector_ensemble",
     "D04_selector_factorization",
-    "D05_selected_memory_manifest"
+    "D05_selected_memory_manifest",
+    "D06_paired_causal_outcomes",
+    "D06B_three_demo_causal_reproduction_gate",
+    "D07_policy_teacher",
+    "D08_zero_cache_and_training_units",
+    "D08B_writer_reader_one_unit_smoke",
+    "D09_writer_reader_epoch_1",
+    "D10_writer_reader_epoch_2",
+    "D11_heldout_teacher_forced",
+    "D12_heldout_one_step"
   ],
-  "current_attempt_id": "D06_paired_causal_outcomes-1788537443808495954-r1",
-  "current_stage": "D06_paired_causal_outcomes",
+  "current_attempt_id": "D13_heldout_full_trajectory-1788562866305227526-r1",
+  "current_stage": "D13_heldout_full_trajectory",
   "current_stage_progress_files": [
     {
-      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/stages/D06_paired_causal_outcomes/process.json",
-      "sha256": "8ec311da41a03d380a2706cf502fe80fb91458a5495093a1c1febfc987504065",
-      "size_bytes": 519
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/stages/D13_heldout_full_trajectory/process.json",
+      "sha256": "c3cbd4aa1b1d31e9e32b43bed39b96905b0dd253926cc3a7ebb1b62186ab01ee",
+      "size_bytes": 520
     }
   ],
   "evidence": [
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/heartbeat.json",
-      "sha256": "3be8b061164c824352ae657a46858ee4cd5b738bbaf9f4629df9869b05f0b509",
-      "size_bytes": 265
+      "sha256": "66b3c62a788abc4de9a919af959054f1d9ac50cfb7b97984dc749315631eb3df",
+      "size_bytes": 266
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/scheduler.lock",
@@ -65,13 +74,13 @@
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/scheduler_state.json",
-      "sha256": "77387eb313d754099ca274cff16986c89102e27a8d4b2993c4a2aaa092c9985c",
-      "size_bytes": 12656
+      "sha256": "b1827a97a37a6ddcebebaffb6a7b06373fc2ee674f904568e3ad2169dcc5797b",
+      "size_bytes": 19280
     },
     {
       "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14j_20260904_001/attempts.jsonl",
-      "sha256": "b589606c1b38cbbf2e2dd22be83448120c0977c4c52a3e0ad3617f6a17762319",
-      "size_bytes": 27565
+      "sha256": "ab88e056074ce0f1cc40b60c509ef7d32983dece4ca22473451260a1a4f1c48a",
+      "size_bytes": 41668
     }
   ],
   "failure_files": [],
@@ -81,16 +90,21 @@
   "frozen_source_sha": "0e4015547da45802cc7b6ff3a9b92adce73077fc",
   "gates": {
     "D06B": {
-      "completion_exit_code": null,
+      "completion_exit_code": 0,
       "failure_present": false,
-      "result": {},
-      "state": "not_reached"
+      "result": {
+        "decision": "D06_THREE_DEMO_REPRODUCTION_PASS",
+        "passed": true
+      },
+      "state": "passed"
     },
     "D08B": {
-      "completion_exit_code": null,
+      "completion_exit_code": 0,
       "failure_present": false,
-      "result": {},
-      "state": "not_reached"
+      "result": {
+        "passed": true
+      },
+      "state": "passed"
     },
     "D22": {
       "completion_exit_code": null,
@@ -110,31 +124,31 @@
     "gpus": [
       {
         "memory_total_mib": 81559,
-        "memory_used_mib": 29381,
+        "memory_used_mib": 78257,
         "name": "NVIDIA H100 80GB HBM3",
-        "utilization_percent": 100
+        "utilization_percent": 41
       }
     ],
     "telemetry_only": true
   },
   "heartbeat": {
-    "age_seconds": 29.149195,
-    "current_stage": "D06_paired_causal_outcomes",
+    "age_seconds": 208.150842,
+    "current_stage": "D13_heldout_full_trajectory",
     "pid": 743225,
     "stale": false,
     "stale_threshold_seconds": 720,
-    "utc": "2026-09-04T16:06:33.785277+00:00"
+    "utc": "2026-09-05T00:18:34.783876+00:00"
   },
   "invalid_completion_stages": [],
-  "last_updated_utc": "2026-09-04T16:07:06.858929+00:00",
-  "latest_completed_stage": "D05_selected_memory_manifest",
-  "material_signature": "d57b47c2b83916ce449ab3778fe93d48e92d4af6489c7d6cef769d10d87b2b51",
+  "last_updated_utc": "2026-09-05T00:22:12.097925+00:00",
+  "latest_completed_stage": "D12_heldout_one_step",
+  "material_signature": "d9cb889f6cbd7a3088c4542c33d310f07865a8088d76f3e0fb6af76fd9bede88",
   "monitor_state": "RUNNING_HEALTHY",
   "most_recent_failed_stage": null,
   "nfs": {
-    "free_bytes": 3344004401856512,
-    "free_gib": 3114346.7890625,
-    "total_bytes": 3344233603792896
+    "free_bytes": 3343555428876288,
+    "free_gib": 3113928.650390625,
+    "total_bytes": 3343786658758656
   },
   "one_demo_started": false,
   "orchestrator_result": null,
