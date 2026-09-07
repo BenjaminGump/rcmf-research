@@ -49,8 +49,8 @@ def main() -> None:
             in compiler
         ),
         "heldout_uses_arm_profile": (
-            "load_config(_arm_config(run_root, arm_id)).benchmark.prompt_profile"
-            in stages
+            "config = load_config(_arm_config(run_root, arm_id))" in stages
+            and "prompt_profile=str(config.benchmark.prompt_profile)" in stages
             and 'prompt_profile=str(settings["appworld"]["prompt_profile"])'
             in live
         ),
