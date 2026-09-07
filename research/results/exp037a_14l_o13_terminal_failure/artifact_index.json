@@ -1,0 +1,31 @@
+{
+  "format": "exp037a_14l_o13_terminal_failure_artifact_index_v1",
+  "git_safe": [
+    "research/results/EXP_037A_14L_O13_TERMINAL_FAILURE.md",
+    "research/results/exp037a_14l_o13_terminal_failure/summary.json"
+  ],
+  "lambda_evidence": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/stages/O13_heldout_full_trajectory/failure.json",
+      "sha256": "45882591f3248a97fd44e691e81eb006be8c36b6539fa23d5a12f941b7ba7d15"
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/stages/O13_heldout_full_trajectory/completion.json",
+      "sha256": "b59761bb2748e6d1a1799adacfb6e8cd8d65c9802d7a9733bf932f99ec027da1"
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/stages/O13_heldout_full_trajectory/process.json",
+      "sha256": "9a05f08e82ac47ed150822b75c7853256e09f208813c539239bcfbf0bfcfa1ef"
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/orchestrator_result.json",
+      "sha256": "e011a108fff025ea335cffa958c9d8fc02cf36abc5122da4d6a86eea252fa846"
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/resolved_configs/arm_1d.yaml",
+      "sha256": "f1164bcf6050c0a46e84c31ca70153dc2b64eef23bad1e0bbbdeb3d02971a087"
+    }
+  ],
+  "raw_artifacts_committed": false,
+  "secrets_committed": false
+}

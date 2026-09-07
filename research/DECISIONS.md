@@ -1,5 +1,30 @@
 # Decisions and Deviations
 
+## 2026-09-07 EXP-037A 14l O13 path-ownership failure
+
+VERIFIED:
+
+- O13's query-override helper hard-coded a continuation-local state-cache path
+  although the resolved continuation config authoritatively points to the
+  sealed 14k parent O00 cache.
+- The configured parent cache exists, matches SHA256 73943bc8..., and is in
+  the valid 922-artifact parent closure. The local path is absent by design.
+- O13 failed during setup before the first trajectory. O09-O12 and both epoch
+  checkpoints remain strict-valid.
+
+DECISION:
+
+- Classify as VERIFIED_CONTINUATION_STATE_CACHE_PATH_OWNERSHIP_MISMATCH.
+- Preserve 14l unchanged. Permit only a bounded path/provenance repair that
+  resolves configured ownership explicitly and leaves full-run behavior and
+  scientific mathematics unchanged.
+- A future formal package must use sealed 14k O07 as its parent boundary and
+  freshly produce O08-F03; 14l checkpoints/stages are diagnostic evidence only.
+
+IMPLEMENTATION DEVIATIONS:
+
+- None in this failure publication. No source/config repair, test, retry,
+  resume, or new run occurred.
 ## 2026-09-07 EXP-037A-R14B O08 count ownership and continuation
 
 VERIFIED:

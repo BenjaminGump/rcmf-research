@@ -1,0 +1,40 @@
+{
+  "classification": "VERIFIED_CONTINUATION_STATE_CACHE_PATH_OWNERSHIP_MISMATCH",
+  "config_sha256": "3a37b18611b23db7335a66bb8b51e80db116bb7b6df8ee7ac66f6b1b06d283e4",
+  "contract_sha256": "3a30f1ffba28f992d6c1dfa5821abb1f64ba3b6cfdfedd64a340f48654012ed9",
+  "failed_attempt_id": "O13_heldout_full_trajectory-1788777706792999587-r1",
+  "failed_stage": "O13_heldout_full_trajectory",
+  "failure_utc": "2026-09-07T10:41:49.174202+00:00",
+  "formal_status": "terminal_infrastructure_failure",
+  "o13_backward_count": 0,
+  "o13_optimizer_step_count": 0,
+  "o13_trajectory_execution_count": 0,
+  "parent_artifact_count": 922,
+  "parent_closure_sha256": "f5424356e1ae469f2533136c37e28d8864d43e83c26902ed136b164104f3b0b6",
+  "parent_state_cache_sha256": "73943bc85c2a1f4cf1c85a7c8c40dac4b5e954e63520530d91595be205c9a4fa",
+  "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001",
+  "run_uuid": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001",
+  "scientific_result": {
+    "cross_arm": "NOT_EVALUATED",
+    "one_demo_complete": "NOT_EVALUATED",
+    "three_demo_parent": "THREE_DEMO_REPRODUCTION_PASS"
+  },
+  "sealed_epoch_checkpoints": {
+    "epoch_01": "f354a2a66e871d50a798597e7eab311e627133a5e6797e11076fd8c2adae4213",
+    "epoch_02": "c4a9a604ec287785f966f85fa26a88e2d9c2618254af0dce8de8b54326722c21"
+  },
+  "source_commit": "95b355ab9f7419d86fb6045bcdc27ea8e27604bc",
+  "strict_valid_stages": [
+    "C00_parent_run_evidence_import",
+    "C01_o07_o08_boundary_validation",
+    "O08_zero_cache_and_training_units",
+    "O09_writer_reader_epoch_1",
+    "O10_writer_reader_epoch_2",
+    "O11_heldout_teacher_forced",
+    "O12_heldout_one_step"
+  ],
+  "training_backward_count": 1032,
+  "training_completed_units": 1032,
+  "verified": true
+}
+

@@ -1,5 +1,32 @@
 # Current State
 
+## 2026-09-07 EXP-037A 14l Terminal At O13
+
+VERIFIED:
+
+- The 14l continuation is terminal at O13_heldout_full_trajectory, attempt
+  O13_heldout_full_trajectory-1788777706792999587-r1, exit 65.
+- Exact classification is
+  VERIFIED_CONTINUATION_STATE_CACHE_PATH_OWNERSHIP_MISMATCH. The resolved
+  config correctly names the sealed 14k parent O00 state cache, but O13 bypassed
+  it and constructed an absent continuation-local path.
+- O13 failed before any trajectory task/condition, backward, or optimizer
+  action. C00/C01/O08-O12 remain strict-valid. Training completed 1032 units;
+  epoch-2 checkpoint SHA256 is c4a9a604....
+- The full 922-artifact parent boundary remains valid with closure
+  f5424356...; 14k D22 and O06/O07 checks still pass.
+
+CURRENT DECISION:
+
+- 14l is immutable and must not be resumed.
+- A path/provenance-only repair may proceed because Phase A exactly verified
+  the preregistered mechanism. Any replacement must start again from sealed
+  14k O07 and freshly produce O08-F03 under one new source.
+
+Full report:
+research/results/EXP_037A_14L_O13_TERMINAL_FAILURE.md.
+
+Last updated: 2026-09-07.
 ## 2026-09-07 EXP-037A-R14B Ready For 14l Continuation Authorization
 
 VERIFIED:
