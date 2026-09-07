@@ -26,6 +26,7 @@ def _args() -> argparse.Namespace:
     parser.add_argument("--diagnostic-root", type=Path, required=True)
     parser.add_argument("--task-id", required=True)
     parser.add_argument("--source-commit", required=True)
+    parser.add_argument("--attempt-id", required=True)
     return parser.parse_args()
 
 
@@ -112,7 +113,7 @@ def main() -> None:
         provenance=data_manifest,
         memory_count=401,
         source_commit=args.source_commit,
-        attempt_id="exp037a-r16-o13-integration-smoke",
+        attempt_id=args.attempt_id,
         deployment_bundle=False,
         query_overrides={args.task_id: overrides[args.task_id]},
     )
