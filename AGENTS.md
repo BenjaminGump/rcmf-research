@@ -556,3 +556,30 @@ sweeps, or ensemble training unless the user explicitly changes this policy.
   tests, parent closure, bounded diagnostics, runtime/storage preflight, a
   frozen launch source, and explicit user approval; no follow-on experiment
   or optimization starts automatically.
+
+## EXP-037A 14k-to-14m Continuation Charter v2
+
+- The 14l continuation is immutable terminal evidence. It produced strict-valid
+  O08-O12 outputs, then stopped before any O13 trajectory because the O13
+  state-query-shuffle helper assumed a continuation-local O00 state cache.
+  Those 14l outputs may be used only as read-only engineering diagnostics and
+  runtime anchors; they cannot initialize formal 14m science.
+- The active future continuation identity is
+  `rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002`, rooted at
+  `/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002`,
+  with sources `configs/pipeline/rcmf_appworld_continuation_14m.yaml`,
+  `configs/pipeline/rcmf_appworld_arm_1d_continuation_14m.yaml`, and
+  `scripts/prepare_exp037a_continuation_14m.py`.
+- Formal 14m again starts from the sealed 14k O07/O08 boundary and freshly
+  produces O08-F03 under one 14m source. It cannot import 14l checkpoints,
+  stages, completions, authorization, or scientific outputs, and it cannot use
+  the prohibited partial 14k O08 files.
+- Prompt-dependent upstream artifact ownership is resolved only through the
+  explicit arm configuration and sealed parent provenance. A continuation
+  consumer cannot substitute a guessed local path, search another run, or copy
+  an artifact merely to satisfy a local-path assumption; missing configured
+  inputs fail closed.
+- The 14k and 14l roots remain immutable. The September 25 deadline does not
+  relax scientific validity, hash/provenance validation, or explicit run-bound
+  authorization. No formal continuation or follow-on experiment starts
+  automatically.
