@@ -144,6 +144,10 @@ def validate_scoreable_population(
     )
     minimum_gate = all(labels[label] >= int(minimum_per_label) for label in CAUSAL_LABELS)
     exhausted = bool(outcomes.get("maximum_state_space_exhausted"))
+    exhausted_recomputed = (
+        len(rows) + len(over_context_ids) + len(replay_missing_rows)
+        == int(maximum_state_count)
+    )
     panel_complete = minimum_gate or exhausted
 
     checks = {
@@ -160,6 +164,11 @@ def validate_scoreable_population(
         "all_rows_in_fixed_task_split": task_membership_valid,
         "causal_labels_valid": set(labels) == CAUSAL_LABELS,
         "complete_bare_raw_pairs": complete_pairs,
+        "replay_missing_ids_unique": len(replay_missing_ids)
+        == len(replay_missing_rows),
+        "missing_types_disjoint": not bool(
+            replay_missing_ids & over_context_ids
+        ),
         "replay_missing_excluded": not bool(state_set & replay_missing_ids),
         "static_over_context_excluded": not bool(state_set & over_context_ids),
         "outcome_state_count_recomputed": int(outcomes.get("state_count", -1))
@@ -183,6 +192,8 @@ def validate_scoreable_population(
             outcomes.get("minimum_label_gate_passed")
         )
         == minimum_gate,
+        "maximum_state_space_flag_consistent": exhausted
+        == exhausted_recomputed,
         "maximum_state_count_valid": int(maximum_state_count) == 499,
         "teacher_order_exact": teacher_ids == state_ids,
         "teacher_state_ids_unique": len(teacher_ids) == len(set(teacher_ids)),

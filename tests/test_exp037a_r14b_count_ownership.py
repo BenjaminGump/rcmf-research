@@ -148,6 +148,9 @@ def test_dynamic_policy_rejects_exact_count_fields() -> None:
         ("teacher_ids", "teacher_order_exact"),
         ("bad_hash", "teacher_cache_binds_paired_outcomes"),
         ("panel", "panel_flags_consistent"),
+        ("false_exhaustion", "maximum_state_space_flag_consistent"),
+        ("duplicate_missing", "replay_missing_ids_unique"),
+        ("overlapping_missing", "missing_types_disjoint"),
     ],
 )
 def test_dynamic_policy_fails_closed_on_invalid_population(
@@ -187,6 +190,37 @@ def test_dynamic_policy_fails_closed_on_invalid_population(
     elif mutation == "panel":
         fixture["outcomes"]["minimum_label_gate_passed"] = False
         fixture["outcomes"]["maximum_state_space_exhausted"] = False
+    elif mutation == "false_exhaustion":
+        fixture["outcomes"]["maximum_state_space_exhausted"] = True
+    elif mutation == "duplicate_missing":
+        row = {
+            "state_example_id": "missing-state",
+            "state_task_id": fixture["train_tasks"][0],
+        }
+        fixture["outcomes"]["replay_semantic_missing_rows"] = [row, dict(row)]
+        fixture["outcomes"]["replay_semantic_missing_count"] = 2
+    elif mutation == "overlapping_missing":
+        state_id = fixture["selections"][-1]["state_example_id"]
+        fixture["selections"][-1]["scoreable"] = False
+        fixture["outcomes"]["rows"] = fixture["outcomes"]["rows"][:-1]
+        fixture["outcomes"]["state_count"] -= 1
+        fixture["outcomes"]["condition_count"] -= 2
+        fixture["outcomes"]["label_counts"]["HARMFUL"] -= 1
+        fixture["outcomes"]["replay_semantic_missing_rows"] = [
+            {
+                "state_example_id": state_id,
+                "state_task_id": fixture["heldout_tasks"][-1],
+            }
+        ]
+        fixture["outcomes"]["replay_semantic_missing_count"] = 1
+        fixture["teacher_cache"]["ordered_state_ids"] = (
+            fixture["teacher_cache"]["ordered_state_ids"][:-1]
+        )
+        fixture["teacher_cache"]["policy_rows"].pop(state_id)
+        fixture["teacher_cache"]["teacher_rows"].pop(state_id)
+        fixture["teacher_report"]["state_count"] -= 1
+        fixture["teacher_report"]["bare_policy_count"] -= 1
+        fixture["teacher_report"]["raw_policy_count"] -= 1
     contract = scoreable_count_contract(
         arm_id="1d", policy=SEALED_UPSTREAM_OUTCOMES
     )
