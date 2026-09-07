@@ -1,5 +1,37 @@
 # Current State
 
+## 2026-09-07 EXP-037A 14k Terminal At One-Demo O08
+
+VERIFIED:
+
+- The frozen 14k run is terminal at `O08_zero_cache_and_training_units`;
+  attempt `O08_zero_cache_and_training_units-1788717793178938884-r1`
+  exited 65, fatal/nonrecoverable, before O08 preflight, smoke, zero-cache, or
+  any writer/reader optimizer step.
+- Exact root cause is
+  `VERIFIED_STALE_THREE_DEMO_SCOREABLE_COUNT_CONTRACT`. The 1D preparation
+  path inherited historical 3D scoreable-count expectations 366/98. Fixed
+  task and memory checks passed; both scoreable-count checks failed.
+- D06B, D08B, D09/D10, and D22 passed. Three-demo dev remains
+  bare/correct/shuffle `12/17/11`. O00-O07 completed, but complete one-demo
+  training/dev and the cross-arm result are `NOT_EVALUATED`.
+- Attempts: 45 total, 44 complete, 0 open, 1 failed. Parent/tmux are gone and
+  the H100 is idle. The 14k root remains immutable.
+
+CURRENT DECISION:
+
+- `INFRASTRUCTURE_IMPLEMENTATION_FAILURE`.
+- Do not resume or retry 14k. A reviewed arm-resolved count-ownership repair,
+  fresh source/package/root, and new authorization are required.
+- No production repair or new run was performed while publishing this record.
+
+Full report:
+`research/results/EXP_037A_14K_O08_TERMINAL_FAILURE.md`.
+
+Last updated: 2026-09-07.
+
+# Current State
+
 ## 2026-09-05 EXP-037A-R12B Ready For 14k Reauthorization
 
 VERIFIED:
