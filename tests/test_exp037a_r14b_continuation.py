@@ -18,7 +18,11 @@ from rcmf.benchmarks.appworld.continuation_14l import (
     execute_parent_import,
     validate_parent_artifact_manifest,
 )
-from rcmf.benchmarks.appworld.reproducible_config_14b import build_arm_runtime_config
+from rcmf.benchmarks.appworld.reproducible_config_14b import (
+    build_arm_runtime_config,
+    pipeline_runtime_mode,
+)
+import rcmf.benchmarks.appworld.reproducible_stages_14b as reproducible_stages
 from rcmf.benchmarks.appworld.reproducible_stages_14b import (
     _final_stage,
     initialize_runtime_layout,
@@ -448,7 +452,17 @@ def test_continuation_runtime_layout_uses_sealed_parent_manifest_only(
         "pipeline": {
             "schema_version": "rcmf_reproducible_pipeline_continuation_14l_v1",
             "continuation": {
+                "format": "exp037a_o07_o08_continuation_contract_14l_v1",
+                "parent_run_uuid": "parent",
+                "parent_root": str(tmp_path / "parent"),
+                "parent_source_commit": "a" * 40,
+                "parent_pipeline_config_sha256": "b" * 64,
+                "parent_contract_sha256": "c" * 64,
                 "parent_artifact_manifest_path": str(parent_manifest),
+                "parent_artifact_manifest_sha256": "d" * 64,
+                "boundary": "after_O07_before_O08",
+                "parent_o08_partial_outputs_allowed": False,
+                "mutable_hardlinks_into_parent_allowed": False,
             },
         },
         "arms": {"1d": {"task_conditioned_prompt_profile": "full_demo_first_only"}},
@@ -457,7 +471,120 @@ def test_continuation_runtime_layout_uses_sealed_parent_manifest_only(
     result = initialize_runtime_layout(config, tmp_path)
 
     assert result["format"] == "rcmf_reproducible_continuation_runtime_layout_14l_v1"
+    assert result["runtime_mode"] == "continuation"
+    assert result["pipeline_schema_version"].endswith("continuation_14l_v1")
     assert result["compatibility_inputs"]["parent_scientific_inputs_copied"] is False
     assert set(result["resolved_configs"]) == {"1d"}
     assert not (tmp_path / "preflight/shared").exists()
     assert (tmp_path / "runtime_layout.json").is_file()
+
+
+def _runtime_dispatch_config(
+    tmp_path: Path, schema_version: str
+) -> dict[str, object]:
+    parent_manifest = tmp_path / "preflight/parent_artifact_manifest.json"
+    parent_manifest.parent.mkdir(parents=True, exist_ok=True)
+    parent_manifest.write_text("{}\n", encoding="utf-8")
+    resolved = tmp_path / "resolved_configs/arm_1d.yaml"
+    resolved.parent.mkdir(parents=True, exist_ok=True)
+    resolved.write_text("benchmark:\n  prompt_profile: full_demo_first_only\n", encoding="utf-8")
+    return {
+        "pipeline": {
+            "schema_version": schema_version,
+            "continuation": {
+                "format": "exp037a_o07_o08_continuation_contract_v1",
+                "parent_run_uuid": "parent",
+                "parent_root": str(tmp_path / "parent"),
+                "parent_source_commit": "a" * 40,
+                "parent_pipeline_config_sha256": "b" * 64,
+                "parent_contract_sha256": "c" * 64,
+                "parent_artifact_manifest_path": str(parent_manifest),
+                "parent_artifact_manifest_sha256": "d" * 64,
+                "boundary": "after_O07_before_O08",
+                "parent_o08_partial_outputs_allowed": False,
+                "mutable_hardlinks_into_parent_allowed": False,
+            },
+        },
+        "arms": {"1d": {"task_conditioned_prompt_profile": "full_demo_first_only"}},
+    }
+
+
+@pytest.mark.parametrize(
+    "schema_version",
+    [
+        "rcmf_reproducible_pipeline_continuation_14l_v1",
+        "rcmf_reproducible_pipeline_continuation_14m_v1",
+        "rcmf_reproducible_pipeline_continuation_future_v1",
+    ],
+)
+def test_continuation_runtime_dispatch_is_version_independent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, schema_version: str
+) -> None:
+    config = _runtime_dispatch_config(tmp_path, schema_version)
+    monkeypatch.setattr(
+        reproducible_stages,
+        "_compatibility_inputs",
+        lambda *_args, **_kwargs: pytest.fail(
+            "continuation must not initialize full-run compatibility inputs"
+        ),
+    )
+
+    assert pipeline_runtime_mode(config) == "continuation"
+    result = initialize_runtime_layout(config, tmp_path)
+
+    assert result["runtime_mode"] == "continuation"
+    assert result["pipeline_schema_version"] == schema_version
+    assert not (tmp_path / "preflight/shared/transitions.jsonl").exists()
+
+
+def test_full_run_runtime_dispatch_is_unchanged(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = {
+        "pipeline": {"schema_version": "rcmf_reproducible_pipeline_14k_v1"},
+        "arms": {"3d": {}, "1d": {}},
+    }
+    called = {"compatibility": 0}
+
+    def compatibility(*_args: object, **_kwargs: object) -> dict[str, object]:
+        called["compatibility"] += 1
+        return {"mode": "full-run-test"}
+
+    monkeypatch.setattr(reproducible_stages, "_compatibility_inputs", compatibility)
+    monkeypatch.setattr(
+        reproducible_stages,
+        "write_resolved_arm_config",
+        lambda path, *_args: Path(path).write_text("{}\n", encoding="utf-8"),
+    )
+
+    assert pipeline_runtime_mode(config) == "full_run"
+    result = initialize_runtime_layout(config, tmp_path)
+
+    assert called["compatibility"] == 1
+    assert result["compatibility_inputs"] == {"mode": "full-run-test"}
+    assert set(result["resolved_configs"]) == {"3d", "1d"}
+
+
+@pytest.mark.parametrize(
+    "mutator",
+    [
+        lambda config: config["pipeline"].pop("continuation"),
+        lambda config: config["pipeline"].__setitem__(
+            "schema_version", "rcmf_reproducible_pipeline_14k_v1"
+        ),
+        lambda config: config["pipeline"]["continuation"].pop("parent_root"),
+        lambda config: config["pipeline"]["continuation"].__setitem__(
+            "parent_o08_partial_outputs_allowed", True
+        ),
+    ],
+)
+def test_malformed_or_ambiguous_continuation_fails_closed(
+    tmp_path: Path, mutator: object
+) -> None:
+    config = _runtime_dispatch_config(
+        tmp_path, "rcmf_reproducible_pipeline_continuation_14m_v1"
+    )
+    mutator(config)  # type: ignore[operator]
+
+    with pytest.raises(ValueError):
+        pipeline_runtime_mode(config)

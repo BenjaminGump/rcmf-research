@@ -583,3 +583,33 @@ sweeps, or ensemble training unless the user explicitly changes this policy.
   relax scientific validity, hash/provenance validation, or explicit run-bound
   authorization. No formal continuation or follow-on experiment starts
   automatically.
+
+## EXP-037A 14k-to-14n Self-Healing Continuation Charter v3
+
+- The 14m continuation is immutable terminal evidence. It failed before C00
+  executed because version-specific runtime-layout dispatch treated its valid
+  continuation schema as a full run. It produced no scientific output and is
+  not a resumable input for later attempts.
+- Continuation runtime selection is semantic and version-independent. A
+  continuation schema and its explicit `pipeline.continuation` contract must
+  agree, all parent-boundary fields must be present, and malformed or ambiguous
+  configurations fail closed. A continuation may never fall through to
+  S-stage/full-run compatibility initialization.
+- The active replacement identity is
+  `rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003`, rooted at
+  `/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003`,
+  with sources `configs/pipeline/rcmf_appworld_continuation_14n.yaml`,
+  `configs/pipeline/rcmf_appworld_arm_1d_continuation_14n.yaml`, and
+  `scripts/prepare_exp037a_continuation_14n.py`.
+- Formal 14n again starts from the sealed 14k O07/O08 boundary and freshly
+  produces O08-F03. It cannot import 14l/14m scientific stages, checkpoints,
+  completions, authorization, or diagnostic outputs.
+- EXP-037A-R18 is standing user approval only for replacement attempts whose
+  failure and repair are positively classified as minor, non-scientific
+  infrastructure work. Each source-changing repair requires a new frozen
+  source, root, config, contract, parent closure, exact run-bound authorization,
+  and bounded production-path validation. Scientific or ambiguous failures and
+  any completed F03 result stop the loop for user review.
+- The scientific contract, one H100 allocation, seed `25101`, continuation
+  stage scope C00/C01/O08-O19/F00-F03, and maximum 32-hour per-attempt anomaly
+  cap remain unchanged. Failed roots and the sealed 14k parent remain immutable.

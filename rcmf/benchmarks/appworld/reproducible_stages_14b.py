@@ -18,6 +18,7 @@ import torch
 from rcmf.benchmarks.appworld.reproducible_config_14b import (
     arm_root,
     compatibility_parent_b,
+    pipeline_runtime_mode,
     write_resolved_arm_config,
 )
 from rcmf.benchmarks.appworld.continuation_14l import (
@@ -447,7 +448,7 @@ def initialize_runtime_layout(
 ) -> dict[str, Any]:
     ensure_dir(run_root / "resolved_configs")
     schema_version = str(config["pipeline"].get("schema_version", ""))
-    if schema_version.endswith("continuation_14l_v1"):
+    if pipeline_runtime_mode(config) == "continuation":
         if set(config.get("arms", {})) != {"1d"}:
             raise ValueError("EXP-037A continuation runtime must contain only arm 1d")
         resolved_path = run_root / "resolved_configs/arm_1d.yaml"
@@ -461,6 +462,8 @@ def initialize_runtime_layout(
             raise FileNotFoundError(parent_manifest_path)
         payload = {
             "format": "rcmf_reproducible_continuation_runtime_layout_14l_v1",
+            "runtime_mode": "continuation",
+            "pipeline_schema_version": schema_version,
             "compatibility_inputs": {
                 "mode": "sealed_parent_artifact_manifest",
                 "parent_artifact_manifest": file_identity(parent_manifest_path),

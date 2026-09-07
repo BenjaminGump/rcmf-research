@@ -18,6 +18,55 @@ from rcmf.benchmarks.appworld.scoreable_count_contract_14l import (
 )
 
 
+_CONTINUATION_REQUIRED_FIELDS = (
+    "format",
+    "parent_run_uuid",
+    "parent_root",
+    "parent_source_commit",
+    "parent_pipeline_config_sha256",
+    "parent_contract_sha256",
+    "parent_artifact_manifest_path",
+    "parent_artifact_manifest_sha256",
+    "boundary",
+    "parent_o08_partial_outputs_allowed",
+    "mutable_hardlinks_into_parent_allowed",
+)
+
+
+def pipeline_runtime_mode(config: Mapping[str, Any]) -> str:
+    """Classify a full or continuation runtime from its explicit contract."""
+    method = config.get("pipeline")
+    if not isinstance(method, Mapping):
+        raise ValueError("Pipeline configuration is missing")
+    schema_version = str(method.get("schema_version", ""))
+    schema_declares_continuation = "_continuation_" in schema_version
+    has_continuation_contract = "continuation" in method
+    if schema_declares_continuation != has_continuation_contract:
+        raise ValueError(
+            "Pipeline continuation schema and continuation contract disagree"
+        )
+    if not has_continuation_contract:
+        return "full_run"
+
+    continuation = method["continuation"]
+    if not isinstance(continuation, Mapping):
+        raise ValueError("Pipeline continuation contract must be a mapping")
+    missing = [
+        key
+        for key in _CONTINUATION_REQUIRED_FIELDS
+        if key not in continuation or continuation[key] in (None, "")
+    ]
+    if missing:
+        raise ValueError(f"Pipeline continuation contract is incomplete: {missing}")
+    if str(continuation["boundary"]) != "after_O07_before_O08":
+        raise ValueError("Pipeline continuation boundary is unsupported")
+    if continuation["parent_o08_partial_outputs_allowed"] is not False:
+        raise ValueError("Pipeline continuation cannot admit parent O08 partials")
+    if continuation["mutable_hardlinks_into_parent_allowed"] is not False:
+        raise ValueError("Pipeline continuation cannot mutate parent artifacts")
+    return "continuation"
+
+
 def arm_root(run_root: str | Path, arm_id: str) -> Path:
     if arm_id not in {"3d", "1d"}:
         raise ValueError(f"Unknown EXP-037A arm: {arm_id}")
@@ -64,12 +113,7 @@ def build_arm_runtime_config(
     expected_count_policy = (
         EXACT_REPRODUCTION if arm_id == "3d" else SEALED_UPSTREAM_OUTCOMES
     )
-    if (
-        str(pipeline["pipeline"].get("schema_version", "")).endswith(
-            "continuation_14l_v1"
-        )
-        and not count_policy_declared
-    ):
+    if pipeline_runtime_mode(pipeline) == "continuation" and not count_policy_declared:
         raise ValueError(f"Arm {arm_id} scoreable count policy is missing")
     if count_policy_declared and count_policy != expected_count_policy:
         raise ValueError(

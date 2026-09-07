@@ -33,6 +33,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", type=Path, required=True)
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--python", required=True)
+    parser.add_argument(
+        "--stop-after-c01",
+        action="store_true",
+        help="Exercise only C00/C01 through the production scheduler path.",
+    )
     return parser.parse_args()
 
 
@@ -122,7 +127,8 @@ def main() -> None:
         }
         if copied_initializations[name]["hardlinked"]:
             raise RuntimeError("Diagnostic initialization must be a byte copy")
-    stages = tuple(build_exp037a_continuation_stage_graph()[:3])
+    stage_count = 2 if args.stop_after_c01 else 3
+    stages = tuple(build_exp037a_continuation_stage_graph()[:stage_count])
     stage_scope_sha = content_sha256([stage.stage_id for stage in stages])
     config_sha = sha256_file(config_path)
     contract = PipelineContract(
@@ -233,7 +239,9 @@ def main() -> None:
         output_root / "arms/1d/data/scoreable_count_validation.json"
     )
     count_validation = (
-        _json(count_validation_path)
+        {"passed": True, "reason": "o08_not_in_diagnostic_scope"}
+        if args.stop_after_c01
+        else _json(count_validation_path)
         if count_validation_path.is_file()
         else {"passed": False, "reason": "not_produced"}
     )
@@ -264,6 +272,14 @@ def main() -> None:
         "stage_validations": stage_rows,
         "scientific_checkpoints": scientific_checkpoints,
         "optimizer_step_count": 0,
+        "backward_count": 0,
+        "stop_after_c01": bool(args.stop_after_c01),
+        "full_run_compatibility_inputs_created": (
+            output_root / "shared/compat_exp025b/clean_cache_rebuild"
+        ).exists(),
+        "preflight_shared_transitions_expected": (
+            output_root / "preflight/shared/transitions.jsonl"
+        ).exists(),
         "scientific_result": False,
     }
     atomic_write_json(output_root / "o08_diagnostic_summary.json", summary)
