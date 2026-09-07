@@ -10,4 +10,3 @@ prompt_dependent:
   rebuild_policy_teachers: false
   rebuild_zero_cache: true
   rebuild_training_units: true
-
