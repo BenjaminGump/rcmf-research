@@ -19,7 +19,10 @@ from rcmf.benchmarks.appworld.continuation_14l import (
     validate_parent_artifact_manifest,
 )
 from rcmf.benchmarks.appworld.reproducible_config_14b import build_arm_runtime_config
-from rcmf.benchmarks.appworld.reproducible_stages_14b import _final_stage
+from rcmf.benchmarks.appworld.reproducible_stages_14b import (
+    _final_stage,
+    initialize_runtime_layout,
+)
 from rcmf.pipeline.authorization import (
     validate_explicit_authorization,
     validate_runtime_authorization,
@@ -429,3 +432,32 @@ def test_parent_manifest_rejects_run_identity_mismatch(
     manifest["parent"][field] = value
     with pytest.raises(ValueError, match=failed_check):
         validate_parent_artifact_manifest(manifest, parent_root=parent)
+
+def test_continuation_runtime_layout_uses_sealed_parent_manifest_only(
+    tmp_path: Path,
+) -> None:
+    resolved = tmp_path / "resolved_configs/arm_1d.yaml"
+    resolved.parent.mkdir(parents=True)
+    resolved.write_text(
+        "benchmark:\n  prompt_profile: full_demo_first_only\n", encoding="utf-8"
+    )
+    parent_manifest = tmp_path / "preflight/parent_artifact_manifest.json"
+    parent_manifest.parent.mkdir(parents=True)
+    parent_manifest.write_text("{}\n", encoding="utf-8")
+    config = {
+        "pipeline": {
+            "schema_version": "rcmf_reproducible_pipeline_continuation_14l_v1",
+            "continuation": {
+                "parent_artifact_manifest_path": str(parent_manifest),
+            },
+        },
+        "arms": {"1d": {"task_conditioned_prompt_profile": "full_demo_first_only"}},
+    }
+
+    result = initialize_runtime_layout(config, tmp_path)
+
+    assert result["format"] == "rcmf_reproducible_continuation_runtime_layout_14l_v1"
+    assert result["compatibility_inputs"]["parent_scientific_inputs_copied"] is False
+    assert set(result["resolved_configs"]) == {"1d"}
+    assert not (tmp_path / "preflight/shared").exists()
+    assert (tmp_path / "runtime_layout.json").is_file()

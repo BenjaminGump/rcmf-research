@@ -446,6 +446,30 @@ def initialize_runtime_layout(
     config: Mapping[str, Any], run_root: Path
 ) -> dict[str, Any]:
     ensure_dir(run_root / "resolved_configs")
+    schema_version = str(config["pipeline"].get("schema_version", ""))
+    if schema_version.endswith("continuation_14l_v1"):
+        if set(config.get("arms", {})) != {"1d"}:
+            raise ValueError("EXP-037A continuation runtime must contain only arm 1d")
+        resolved_path = run_root / "resolved_configs/arm_1d.yaml"
+        if not resolved_path.is_file():
+            raise FileNotFoundError(resolved_path)
+        continuation = config["pipeline"].get("continuation", {})
+        parent_manifest_path = Path(
+            str(continuation.get("parent_artifact_manifest_path", ""))
+        )
+        if not parent_manifest_path.is_file():
+            raise FileNotFoundError(parent_manifest_path)
+        payload = {
+            "format": "rcmf_reproducible_continuation_runtime_layout_14l_v1",
+            "compatibility_inputs": {
+                "mode": "sealed_parent_artifact_manifest",
+                "parent_artifact_manifest": file_identity(parent_manifest_path),
+                "parent_scientific_inputs_copied": False,
+            },
+            "resolved_configs": {"1d": file_identity(resolved_path)},
+        }
+        atomic_write_json(run_root / "runtime_layout.json", payload)
+        return payload
     compat = _compatibility_inputs(config, run_root)
     resolved = {}
     for arm_id in ("3d", "1d"):

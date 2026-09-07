@@ -229,8 +229,13 @@ def main() -> None:
             expected_contract_sha256=contract_sha,
             expected_run_root=output_root,
         )
-    count_validation = _json(
+    count_validation_path = (
         output_root / "arms/1d/data/scoreable_count_validation.json"
+    )
+    count_validation = (
+        _json(count_validation_path)
+        if count_validation_path.is_file()
+        else {"passed": False, "reason": "not_produced"}
     )
     o08_manifest = output_root / "stages/O08_zero_cache_and_training_units/output_manifest.json"
     scientific_checkpoints = sorted(
@@ -253,7 +258,9 @@ def main() -> None:
         "parent_o08_partial_outputs_used": False,
         "copied_initializations": copied_initializations,
         "count_validation": count_validation,
-        "o08_output_manifest": file_identity(o08_manifest),
+        "o08_output_manifest": (
+            file_identity(o08_manifest) if o08_manifest.is_file() else None
+        ),
         "stage_validations": stage_rows,
         "scientific_checkpoints": scientific_checkpoints,
         "optimizer_step_count": 0,
