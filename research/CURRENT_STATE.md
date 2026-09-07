@@ -13,8 +13,10 @@ VERIFIED:
   path inherited historical 3D scoreable-count expectations 366/98. Fixed
   task and memory checks passed; both scoreable-count checks failed.
 - D06B, D08B, D09/D10, and D22 passed. Three-demo dev remains
-  bare/correct/shuffle `12/17/11`. O00-O07 completed, but complete one-demo
-  training/dev and the cross-arm result are `NOT_EVALUATED`.
+  bare/correct/shuffle `12/17/11`. O00-O07 completed. Formal O06 sealed 407
+  pairs (324 train / 83 heldout; labels 120/247/40 positive/neutral/harmful),
+  and O07 consumed the same 407 states. Complete one-demo training/dev and the
+  cross-arm result are `NOT_EVALUATED`.
 - Attempts: 45 total, 44 complete, 0 open, 1 failed. Parent/tmux are gone and
   the H100 is idle. The 14k root remains immutable.
 

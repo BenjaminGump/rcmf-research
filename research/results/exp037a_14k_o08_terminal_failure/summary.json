@@ -47,5 +47,33 @@
   },
   "repair_implemented": false,
   "retry_or_resume": false,
-  "formal_root_modified": false
+  "formal_root_modified": false,
+  "independently_verified_utc": "2026-09-07T03:33:06Z",
+  "verified_one_demo_upstream": {
+    "o06": {
+      "paired_states": 407,
+      "train": 324,
+      "heldout": 83,
+      "conditions": 814,
+      "labels": {
+        "POSITIVE": 120,
+        "NEUTRAL": 247,
+        "HARMFUL": 40
+      },
+      "static_over_context": 11,
+      "replay_semantic_missing": 10,
+      "generated_conditions": 814,
+      "reused_conditions": 0,
+      "strict_validator": "PASS",
+      "output_manifest_sha256": "b8d19a081d836863061c89557758f8b4ba52032400e57c4956eab4d7e20fc41f"
+    },
+    "o07": {
+      "state_count": 407,
+      "bare_policy_count": 407,
+      "raw_policy_count": 407,
+      "strict_validator": "PASS",
+      "output_manifest_sha256": "52a8c0262d946d7f5393ad00bae955715c98f537ae4980dede91b3072d3a5acd",
+      "teacher_cache_sha256": "05dd1d1ea94044a0a165eeb0749a76d55ed48a62423a14d55ae615b706210ed4"
+    }
+  }
 }

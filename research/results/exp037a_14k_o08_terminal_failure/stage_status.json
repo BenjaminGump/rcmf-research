@@ -16,7 +16,31 @@
   "output_manifest_present": false,
   "valid_upstream": {
     "three_demo_complete": true,
-    "one_demo_stages_complete_through": "O07_policy_teacher"
+    "one_demo_stages_complete_through": "O07_policy_teacher",
+    "O06": {
+      "paired_states": 407,
+      "train": 324,
+      "heldout": 83,
+      "labels": {
+        "POSITIVE": 120,
+        "NEUTRAL": 247,
+        "HARMFUL": 40
+      },
+      "validator_passed": true
+    },
+    "O07": {
+      "state_count": 407,
+      "validator_passed": true
+    }
   },
-  "downstream_status": "NOT_REACHED"
+  "downstream_status": "NOT_REACHED",
+  "failed_before": [
+    "O08 preflight",
+    "O08 smoke",
+    "zero-cache",
+    "training-unit manifest",
+    "writer/reader checkpoint",
+    "backward",
+    "optimizer step"
+  ]
 }

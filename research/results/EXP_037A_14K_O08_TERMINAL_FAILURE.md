@@ -80,8 +80,9 @@ The production stage wrapper records the exception through
 The failure is a producer/consumer contract mismatch at the arm boundary.
 
 1. Fresh one-demo O06 completed and sealed its prompt-dependent paired causal
-   panel under `full_demo_first_only`; O07 then completed from that fresh O06
-   output.
+   panel under `full_demo_first_only`: 407 paired states, split 324 model-train
+   and 83 heldout-train-validation, with labels 120 POSITIVE, 247 NEUTRAL, and
+   40 HARMFUL. O07 then completed from exactly those 407 fresh states.
 2. `_joint_prepare()` correctly applies the exact D06 reproduction prerequisite
    only to the 3D arm.
 3. It nevertheless invokes the same legacy
@@ -99,11 +100,19 @@ invariant. It is actually the exact 3D positive-control outcome contract. A
 fresh 1D panel is prompt-dependent and its completed train/heldout counts must
 come from its own sealed O06 output.
 
-The prior isolated R12B diagnostic, generated under the same repaired one-demo
-prompt contract, produced 407 paired rows split 324 train / 83 heldout. That is
-supporting evidence for the mismatch, but this report does not substitute those
-diagnostic counts for the formal O06 rows. The Lambda traceback independently
-proves that both formal scoreable-count comparisons differed from 366/98.
+The sealed formal O06 artifact directly reports 407 paired rows / 814 freshly
+generated conditions, split 324 train / 83 heldout. It also records 11 static
+over-context rows, 10 replay-semantic missing rows, 160 expansion states,
+`minimum_label_gate_passed=true`, and
+`maximum_state_space_exhausted=false`. Its SHA256 is
+`36b101f00da81f652bc621f9c60568402a961a5b042940eb7ae11012f1988a04`.
+The independent R12B diagnostic had the same 407 and 324/83 counts, but the
+formal result above is the evidence used for this failure diagnosis.
+
+Formal O07 reports 407 bare policies and 407 raw policies, with 120 raw
+positive selections and 287 bare neutral/harmful selections. The cache SHA256
+is `05dd1d1ea94044a0a165eeb0749a76d55ed48a62423a14d55ae615b706210ed4`.
+This proves the producer and immediate downstream consumer agreed before O08.
 
 ## O08 partial outputs
 
@@ -113,6 +122,11 @@ O08 stopped during the prepare substep. It created these partial files under
 - `memory_provenance.jsonl` (1,520,488 bytes);
 - `rcmf_source_cache.pt` (69,828,848 bytes);
 - `key_payload_shuffle_manifest.json` (272,329 bytes).
+
+Their SHA256 values are respectively
+`b67be115f8612ad87c29f68cac4e12903810a83dd9b8e6f1c3edb9bc7e974188`,
+`c9f46a933355f84003dd9d7ed5114fc89b53cd3d66a639d620c27f25387c1eca`,
+and `8e85888c5c05c890b8eb6526aaf25f764813b48aab0b84eb5b9a982567a5d51c`.
 
 It did not create a valid O08 `output_manifest.json` or `validator.json`.
 No `full_bank_data_manifest.json`, zero cache, training-unit manifest, or
@@ -136,15 +150,15 @@ VERIFIED:
 - Fresh 3D dev bare/correct/shuffle: `12/17/11` of 57.
 - Corrected one-demo O06 and O07 completed with strict stage validation before
   the O08 consumer assertion.
+- Formal one-demo O06 produced exactly 407 paired states (324/83 split) and
+  O07 consumed exactly the same 407 state population.
 - O08 failure is pre-optimization infrastructure logic, not a model outcome.
 - The formal root remains preserved and the run is terminal.
 
 INFERENCE:
 
-- Formal one-demo O06 is expected to reproduce the R12B isolated 407-row,
-  324/83 split because source/config/seed and prompt contract are deterministic.
-  Exact formal counts were not copied into this Git-safe record and must be
-  read from the sealed formal O06 artifact for any later repair validation.
+- None is needed for the terminal root-cause classification. A future repair's
+  scientific outcome remains unknown until a newly authorized run executes.
 
 UNVERIFIED / NOT EVALUATED:
 

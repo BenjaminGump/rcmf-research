@@ -13,7 +13,16 @@
     "root_cause": "VERIFIED_STALE_THREE_DEMO_SCOREABLE_COUNT_CONTRACT",
     "report": "research/results/EXP_037A_14K_O08_TERMINAL_FAILURE.md",
     "artifact_index": "research/results/exp037a_14k_o08_terminal_failure/artifact_index.json",
-    "artifact_index_sha256": "6d586fb0ade414d36bd388eeb68e040cb7469d887a2f0fbf1ffcb0de5dc47e8e"
+    "artifact_index_sha256": "c1ded6204c1e46a26754212b1bbb92252d62cc40574776b9fc26b8d8b43d4331",
+    "independent_recheck_handoff": "research/handoffs/20260907T033306Z_exp037a_14k_o08_terminal_failure_independent_recheck.md",
+    "formal_one_demo_o06_counts": {
+      "paired": 407,
+      "train": 324,
+      "heldout": 83,
+      "POSITIVE": 120,
+      "NEUTRAL": 247,
+      "HARMFUL": 40
+    }
   },
   "raw_lambda_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001",
   "raw_artifacts_remain_lambda_only": true,

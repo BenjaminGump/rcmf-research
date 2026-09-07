@@ -25,12 +25,41 @@
     "line": 611,
     "exception": "RuntimeError"
   },
-  "actual_formal_o06_counts_in_this_git_record": "NOT_EXTRACTED",
   "supporting_deterministic_diagnostic_counts": {
     "paired": 407,
     "train": 324,
     "heldout": 83,
-    "role": "supporting_only_not_formal_input"
+    "role": "independent_diagnostic_exact_count_match_not_formal_input"
   },
-  "next_action": "new reviewed source/package/authorization; never resume 14k"
+  "next_action": "new reviewed source/package/authorization; never resume 14k",
+  "actual_formal_o06_counts": {
+    "paired": 407,
+    "train": 324,
+    "heldout": 83,
+    "conditions": 814,
+    "labels": {
+      "POSITIVE": 120,
+      "NEUTRAL": 247,
+      "HARMFUL": 40
+    },
+    "initial_state_count": 256,
+    "initial_completed_state_count": 247,
+    "expanded_state_count": 160,
+    "over_context_missing_count": 11,
+    "replay_semantic_missing_count": 10,
+    "generated_conditions": 814,
+    "reused_conditions": 0,
+    "minimum_label_gate_passed": true,
+    "maximum_state_space_exhausted": false,
+    "paired_outcomes_sha256": "36b101f00da81f652bc621f9c60568402a961a5b042940eb7ae11012f1988a04"
+  },
+  "actual_formal_o07": {
+    "state_count": 407,
+    "bare_policy_count": 407,
+    "raw_policy_count": 407,
+    "selected_raw_positive_count": 120,
+    "selected_bare_neutral_harmful_count": 287,
+    "cache_path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/arms/1d/structured_compiler/policy_teacher_cache.pt",
+    "cache_sha256": "05dd1d1ea94044a0a165eeb0749a76d55ed48a62423a14d55ae615b706210ed4"
+  }
 }

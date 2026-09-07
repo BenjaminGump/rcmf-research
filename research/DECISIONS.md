@@ -5,7 +5,9 @@
 VERIFIED:
 
 - Fresh one-demo O06/O07 completed under the corrected
-  `full_demo_first_only` path.
+  `full_demo_first_only` path. O06 sealed 407 paired states split 324/83
+  train/heldout with labels 120/247/40 positive/neutral/harmful; O07 consumed
+  the same 407-state population.
 - The shared legacy joint-data preparation script unconditionally required
   historical 3D paired-state counts 366 train / 98 heldout for both arms.
 - The formal O08 traceback proves task and memory invariants passed while both
