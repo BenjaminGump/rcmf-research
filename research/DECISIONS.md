@@ -1,5 +1,38 @@
 # Decisions and Deviations
 
+## 2026-09-07 EXP-037A 14k O08 stale count contract
+
+VERIFIED:
+
+- Fresh one-demo O06/O07 completed under the corrected
+  `full_demo_first_only` path.
+- The shared legacy joint-data preparation script unconditionally required
+  historical 3D paired-state counts 366 train / 98 heldout for both arms.
+- The formal O08 traceback proves task and memory invariants passed while both
+  scoreable-count checks failed. The failure occurred before zero-cache or
+  optimization.
+
+DECISION:
+
+- Classify as `INFRASTRUCTURE_IMPLEMENTATION_FAILURE`, specifically
+  `VERIFIED_STALE_THREE_DEMO_SCOREABLE_COUNT_CONTRACT`.
+- Preserve exact 366/98 enforcement for the 3D reproduction gate.
+- Do not treat 366/98 as an a-priori 1D invariant. Any future repair must
+  derive 1D train/heldout paired counts from its own strict O06 artifact while
+  preserving the 29/8 split, O06/O07 ID equality, panel-completion rule, and
+  401/98 memory counts.
+- Do not resume 14k or reuse its authorization. A new source/package and user
+  approval are required.
+
+IMPLEMENTATION DEVIATIONS:
+
+- None. This publication changed research records only. Production source,
+  configs, AGENTS.md, the formal root, and the failed run were not modified.
+- No tests were run because no executable code changed and this task was a
+  read-only failure forensic plus records publication.
+
+# Decisions and Deviations
+
 ## 2026-09-05 EXP-037A-R12B arm-resolved prompt propagation repair
 
 VERIFIED:
