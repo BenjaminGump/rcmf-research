@@ -31,8 +31,6 @@ IMPLEMENTATION DEVIATIONS:
 - No tests were run because no executable code changed and this task was a
   read-only failure forensic plus records publication.
 
-# Decisions and Deviations
-
 ## 2026-09-05 EXP-037A-R12B arm-resolved prompt propagation repair
 
 VERIFIED:
