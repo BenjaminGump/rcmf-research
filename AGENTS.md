@@ -518,3 +518,41 @@ sweeps, or ensemble training unless the user explicitly changes this policy.
 - The raw Lambda root and Git-safe audit index are frozen by the final
   preflight manifest; the structured handoff is published under
   `research/handoffs/`.
+
+## EXP-037A 14k-to-14l Continuation Charter v1
+
+- The RCMF problem, intended contribution, scientific method, evaluation
+  contract, and success criteria remain unchanged. The 14k three-demo result
+  and one-demo stages O00-O07 are sealed parent evidence under source
+  `004f866647cfabb38a141b88e6d83821df88c403`.
+- The valid continuation boundary is after O07 and before O08. The 14l
+  continuation owns newly produced O08-O19 and final F00-F03 records only; it
+  must not launch or fabricate S00-S09, D00-D22, or O00-O07 stages.
+- The parent 14k root is immutable. Parent evidence may be consumed only after
+  exact source, run, config, contract, stage-completion, dependency, and file
+  hash validation. Parent completion files retain their original identity and
+  cannot be copied into the continuation stage namespace.
+- The failed parent O08 files `memory_provenance.jsonl`,
+  `rcmf_source_cache.pt`, and `key_payload_shuffle_manifest.json` are
+  prohibited continuation inputs. Every O08 and later scientific output must
+  be freshly written under the continuation root.
+- Three-demo scoreable counts remain the exact positive-control contract
+  `366/98`. One-demo O08 uses the explicit `sealed_upstream_outcomes` policy:
+  its train and heldout counts are derived from strict-valid sealed O06/O07
+  artifacts and are not fixed to either `366/98` or the observed `324/83`.
+- Any final result must be labelled cross-source, provenance-validated
+  continuation evidence with the boundary stated explicitly. A positive or
+  scientifically borderline comparison requires a later single-source fresh
+  full run before a final paper-level claim; no such run starts automatically.
+- The active future continuation identity is
+  `rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001`, rooted at
+  `/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001`,
+  with sources `configs/pipeline/rcmf_appworld_continuation_14l.yaml`,
+  `configs/pipeline/rcmf_appworld_arm_1d_continuation_14l.yaml`, and
+  `scripts/prepare_exp037a_continuation_14l.py`.
+- The continuation requires a new run-bound authorization scoped exactly to
+  the sealed O07/O08 boundary through O19 and final reporting. Parent and
+  full-run authorizations cannot be inherited. Compute may begin only after
+  tests, parent closure, bounded diagnostics, runtime/storage preflight, a
+  frozen launch source, and explicit user approval; no follow-on experiment
+  or optimization starts automatically.
