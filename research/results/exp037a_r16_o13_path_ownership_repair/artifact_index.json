@@ -1,0 +1,192 @@
+{
+  "schema_version": "exp037a_r16_git_safe_artifact_index_v1",
+  "generated_utc": "2026-09-07T13:50:06.7707129Z",
+  "launch_source_sha": "a8cd3b6e5457b858e0e4705913b2283dfaf99a0f",
+  "decision": "READY_FOR_14M_AUTHORIZATION",
+  "artifacts": [
+    {
+      "path": "research/handoffs/20260907T134033Z_exp037a_r16_o13_path_ownership_repair.md",
+      "size_bytes": 8507,
+      "sha256": "c36676d8adac2db21fc5226d9442657bf97428e228f981ffc00a0fae2da6acc2"
+    },
+    {
+      "path": "research/results/EXP_037A_R16_O13_PATH_OWNERSHIP_REPAIR.md",
+      "size_bytes": 9529,
+      "sha256": "0cb62d3d4ea7c4654788f4bda117acd5657af80356e60064901a8356b0e56ffb"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/o13_integration_smoke.json",
+      "size_bytes": 4407,
+      "sha256": "d45f34761afbda893b58f77596faee5cfd8255b8692e597c6a3cedcd916f4d95"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/o13_no_generation_path_diagnostic.json",
+      "size_bytes": 4679,
+      "sha256": "847e9c1e93cdd1eb0644f93e06752be77d8b673bba01c817bc5d86833af5a031"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/path_ownership_audit.json",
+      "size_bytes": 6600,
+      "sha256": "9d742daaee5ec538bae63202800651967f29d4441cfc27fd679515e10701c319"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/artifact_index.json",
+      "size_bytes": 4472,
+      "sha256": "c972f782b532182f909694c855cbbb6de5038be79efa7dd191d1bf7fdcc1b5b6"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/authorization_request.json",
+      "size_bytes": 1398,
+      "sha256": "82eb6b4c6a75ba094020aeb0e4318925be28a346b4c20bbfa763785efc11db6e"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/continuation_boundary_manifest.json",
+      "size_bytes": 30821,
+      "sha256": "b50b8ae339da8b2d98f5ba1af233ff83562f379d49e4d06a89ceeb1a80a228e1"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/count_ownership_contract.json",
+      "size_bytes": 590,
+      "sha256": "eee60ed88a776af36de90ba4dec0120cebee7be9182df108f754aabeefaf1cdb"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/initialization_copies.json",
+      "size_bytes": 1483,
+      "sha256": "52f4bed1fc07f971bfef8dc654c476dc7352f9e0ec7843b54e5c10f59decade4"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/o08_diagnostic.json",
+      "size_bytes": 26646,
+      "sha256": "23b8a92288a4dfbe24a81b13d77c748a7c18e3924391f5fd9dc32306645f75ed"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/o09_one_unit_smoke.json",
+      "size_bytes": 3147,
+      "sha256": "f562991dff0336851fc337811afe9fb08c5b11db442a923ae5f1e5782c7b3c4b"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/o13_integration_smoke.json",
+      "size_bytes": 4407,
+      "sha256": "d45f34761afbda893b58f77596faee5cfd8255b8692e597c6a3cedcd916f4d95"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/o13_path_diagnostic.json",
+      "size_bytes": 4679,
+      "sha256": "847e9c1e93cdd1eb0644f93e06752be77d8b673bba01c817bc5d86833af5a031"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/parent_artifact_manifest.json",
+      "size_bytes": 498787,
+      "sha256": "95e10d58f4f30df71cf050cffa62040de47b98c2a36dde3febcf08b5dd7e1d60"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/parent_run_identity.json",
+      "size_bytes": 620,
+      "sha256": "e126476287378f540ed7e3e46861c51ae98d9c278e50fc168883094f1375133a"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/path_ownership_audit.json",
+      "size_bytes": 6379,
+      "sha256": "9790e8a833e143a88c4985b6835c963008a3212ce2d1f756f7ef976601f347bd"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/preflight_summary.json",
+      "size_bytes": 2312,
+      "sha256": "d10b51122872d925c829a58712344dc24a8a4d5495cb18057652bc2ccbce8c2c"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/resolved_arm_1d.yaml",
+      "size_bytes": 24283,
+      "sha256": "181909c7cd0ecbfa95e6783158427c62352442453c7ff60c7d87aa212381fe99"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/restart_plan.json",
+      "size_bytes": 452,
+      "sha256": "a8f6636408886e21959e2bd44d4acd503156fbdd8b934b8efbb860f755c40ab7"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/run_identity.json",
+      "size_bytes": 765,
+      "sha256": "78a9a4b9b0ecdd79e190921a09a457a7a0894b9555b031ea857c07ea91584c81"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/runtime_estimate.json",
+      "size_bytes": 1190,
+      "sha256": "30c6e739243e8d147de5b77a829b06ace69d2195fe836db944c27de617c9df03"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/runtime_preflight.json",
+      "size_bytes": 1635,
+      "sha256": "a1f94ebb846b1e97643df85a06cbb78f449d5a720bf0c4668ed03d957eea5345"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/runtime_state.json",
+      "size_bytes": 584,
+      "sha256": "e16a4586f4df6d579ad28d51cf9579e4ea3cf4515e86575b4d1e37f407eb3c0e"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/scientific_diff.json",
+      "size_bytes": 1583,
+      "sha256": "df00883a1a41de247e4e57f65d6b54bcdb5210eae64d6ab9c8bd70efc4420cb7"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/scientific_invariants.json",
+      "size_bytes": 698,
+      "sha256": "6b2fef618bf5d0266e28af46cb1ea0acf577e1abffd064e1000b8dcb6c7f9e84"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/stage_dag.json",
+      "size_bytes": 11737,
+      "sha256": "e00df7b19d525bf8a317cbd9332f08bdacf4a4e1aa3ef47243d839f6402849be"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/stale_constant_audit.json",
+      "size_bytes": 13607,
+      "sha256": "8c6455f3aed0ef9b2623082618a049db1ef6403813d7adf7fbb91b2e0a6adbdd"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/preflight/tests.json",
+      "size_bytes": 1554,
+      "sha256": "1b1a10f919f424c9ec761a25dc46a7dae44f30a2f3f362bea3d0f9bb8c16a71f"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/runtime_estimate.json",
+      "size_bytes": 1234,
+      "sha256": "bca03b09309ffc777ac2c33ff262ec2f643c5aa3aca4fe180dd6176ddb077c46"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/runtime_state.json",
+      "size_bytes": 605,
+      "sha256": "a2ea3e835de5faf8a71239ff848cc5778ef530548c9e22b7f418568fdfb3c91b"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/scientific_diff.json",
+      "size_bytes": 1623,
+      "sha256": "58178cf8cb75ab7163855f6ea4b2f5af76158ab8c595f615343e5019c3a80180"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/summary.json",
+      "size_bytes": 2914,
+      "sha256": "114feb003020e15d7e7247958504107d523521b6416d8dfb770b3bbc31939f6e"
+    },
+    {
+      "path": "research/results/exp037a_r16_o13_path_ownership_repair/tests.json",
+      "size_bytes": 1613,
+      "sha256": "f8219233f8d4c4ddd409c343c7c503314ee00156ff6e5093d2b3f01eb4cbb748"
+    }
+  ],
+  "lambda_only_evidence": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r16_o13_path_20260907_002",
+      "role": "no_generation_path_diagnostic"
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r16_o13_smoke_20260907_003",
+      "role": "bounded_o13_integration_smoke"
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002",
+      "role": "unauthorized_14m_preflight"
+    }
+  ]
+}

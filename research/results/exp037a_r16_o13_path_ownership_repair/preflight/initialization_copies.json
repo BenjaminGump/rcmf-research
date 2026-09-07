@@ -1,0 +1,30 @@
+{
+  "reader_initial.pt": {
+    "byte_identical": true,
+    "continuation_copy": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002/preflight/initialization_snapshots/reader_initial.pt",
+      "sha256": "d9813fe66df24e67912f8505de38c8df1fd850c370b8cdf512df029b0e6ca319",
+      "size_bytes": 71454221
+    },
+    "hardlinked": false,
+    "parent": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/preflight/initialization_snapshots/reader_initial.pt",
+      "sha256": "d9813fe66df24e67912f8505de38c8df1fd850c370b8cdf512df029b0e6ca319",
+      "size_bytes": 71454221
+    }
+  },
+  "writer_initial.pt": {
+    "byte_identical": true,
+    "continuation_copy": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002/preflight/initialization_snapshots/writer_initial.pt",
+      "sha256": "6f60556e6969011e58853ca08d2e70e4570fb69927ec0bb60a10c16cbde7f4ae",
+      "size_bytes": 35808177
+    },
+    "hardlinked": false,
+    "parent": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/preflight/initialization_snapshots/writer_initial.pt",
+      "sha256": "6f60556e6969011e58853ca08d2e70e4570fb69927ec0bb60a10c16cbde7f4ae",
+      "size_bytes": 35808177
+    }
+  }
+}

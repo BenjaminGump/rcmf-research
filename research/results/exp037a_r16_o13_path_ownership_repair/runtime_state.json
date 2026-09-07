@@ -1,0 +1,22 @@
+{
+  "format": "exp037a_r16_runtime_state_v1",
+  "captured_utc": "2026-09-07T13:30:31Z",
+  "h100": {
+    "name": "NVIDIA H100 80GB HBM3",
+    "utilization_percent": 0,
+    "memory_used_mib": 0,
+    "memory_total_mib": 81559,
+    "scientific_active_time_r16_hours": 0
+  },
+  "nfs_free_gib": 3090238,
+  "formal_tmux": {
+    "exp037a_14k_formal": "absent",
+    "exp037a_14l_continuation": "absent"
+  },
+  "diagnostic_tmux": "absent",
+  "active_formal_processes": 0,
+  "safe_to_terminate": true,
+  "fourteen_k_worktree_clean": true,
+  "fourteen_l_worktree_clean": true,
+  "passed": true
+}

@@ -1,0 +1,156 @@
+{
+  "appworld_trajectory_count": 0,
+  "arm": "1d",
+  "backward_count": 0,
+  "checks": {
+    "all_tasks_mapped": true,
+    "all_tensors_finite": true,
+    "heldout_task_count": true,
+    "local_o00_cache_not_required": true,
+    "repeat_identity_exact": true,
+    "state_cache_unchanged": true
+  },
+  "format": "exp037a_r16_o13_no_generation_path_diagnostic_v1",
+  "optimizer_step_count": 0,
+  "overrides": {
+    "76f2c72_1": {
+      "query_dtype": "torch.float32",
+      "query_finite": true,
+      "query_sha256": "b35f9308fc856e685ab21c16b0717b72ebdf413cc96d1bf2e7050200b685ac83",
+      "query_shape": [
+        960
+      ],
+      "state_dtype": "torch.float32",
+      "state_finite": true,
+      "state_sha256": "164b7b8955f355c19728a928bcb0bfe7711c04312528e1f36efd49bce61d2d3d",
+      "state_shape": [
+        10,
+        4096
+      ]
+    },
+    "76f2c72_2": {
+      "query_dtype": "torch.float32",
+      "query_finite": true,
+      "query_sha256": "c293e264f308e24748a5d70bd9c0b15bc7b9cb2ee2931157ec60abd2fcc1da1f",
+      "query_shape": [
+        960
+      ],
+      "state_dtype": "torch.float32",
+      "state_finite": true,
+      "state_sha256": "dd45a5ba21f5f46870c6870e518b1ff29049dfc2a0e26bee58908f3aeadbf671",
+      "state_shape": [
+        10,
+        4096
+      ]
+    },
+    "7d7fbf6_1": {
+      "query_dtype": "torch.float32",
+      "query_finite": true,
+      "query_sha256": "2687903cc21ef81a40c3257ccf6547d0058672bda1cfe40eced460139fb95c2c",
+      "query_shape": [
+        960
+      ],
+      "state_dtype": "torch.float32",
+      "state_finite": true,
+      "state_sha256": "898914c069f38112e40d86d10a9b9ffa7edd232cf669f8267bf40413b581988a",
+      "state_shape": [
+        10,
+        4096
+      ]
+    },
+    "b7a9ee9_2": {
+      "query_dtype": "torch.float32",
+      "query_finite": true,
+      "query_sha256": "e9660c4000eea78494120ee3bdcf620493d89e947b30258ef826ca4773f45129",
+      "query_shape": [
+        960
+      ],
+      "state_dtype": "torch.float32",
+      "state_finite": true,
+      "state_sha256": "e22b2753e40699b943c649a1f082bce6c840428205e18b0c1a1a4c62798aba74",
+      "state_shape": [
+        10,
+        4096
+      ]
+    },
+    "c901732_1": {
+      "query_dtype": "torch.float32",
+      "query_finite": true,
+      "query_sha256": "1687059e21657ce893d3e9c3e0c71c55d178579209e83c367394410db209e299",
+      "query_shape": [
+        960
+      ],
+      "state_dtype": "torch.float32",
+      "state_finite": true,
+      "state_sha256": "41fb97af8b0d8a96325c45bcdf09b575574413c62277ae637beea30f11010b0b",
+      "state_shape": [
+        10,
+        4096
+      ]
+    },
+    "c901732_3": {
+      "query_dtype": "torch.float32",
+      "query_finite": true,
+      "query_sha256": "5c9227622e519aacf36f827347083137e6d90c45bdf8b3e557c0dddf9fa48ab5",
+      "query_shape": [
+        960
+      ],
+      "state_dtype": "torch.float32",
+      "state_finite": true,
+      "state_sha256": "20949fb3acadee33ce292807dfe08e06bc36b799ecc49ae866af3effa44a567b",
+      "state_shape": [
+        10,
+        4096
+      ]
+    },
+    "e7a10f8_1": {
+      "query_dtype": "torch.float32",
+      "query_finite": true,
+      "query_sha256": "dae92e9ad63c1bbb4b209793486f79f66f531817dbaa3db8c4fa7daebb425ef5",
+      "query_shape": [
+        960
+      ],
+      "state_dtype": "torch.float32",
+      "state_finite": true,
+      "state_sha256": "3d14ba7e65a215567e648f4a3288c9dedc9bd31b6a0e6a9c2b0ea6817ec3702b",
+      "state_shape": [
+        10,
+        4096
+      ]
+    },
+    "e7a10f8_3": {
+      "query_dtype": "torch.float32",
+      "query_finite": true,
+      "query_sha256": "48848f1f000d592a2a9a22e464dd30a9340bbf8476ddc3faa3ea93b1b73bf1a0",
+      "query_shape": [
+        960
+      ],
+      "state_dtype": "torch.float32",
+      "state_finite": true,
+      "state_sha256": "be954d0eea6af6340381b3c770c4f27b6b802b370a1086c4b5d3c425f5494cad",
+      "state_shape": [
+        10,
+        4096
+      ]
+    }
+  },
+  "passed": true,
+  "qwen_generation_count": 0,
+  "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001",
+  "state_cache": {
+    "opened_for_writing": false,
+    "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/arms/1d/representation_cache/multiview/state_multiview.pt",
+    "sha256_after": "73943bc85c2a1f4cf1c85a7c8c40dac4b5e954e63520530d91595be205c9a4fa",
+    "sha256_before": "73943bc85c2a1f4cf1c85a7c8c40dac4b5e954e63520530d91595be205c9a4fa"
+  },
+  "task_ids": [
+    "76f2c72_1",
+    "76f2c72_2",
+    "7d7fbf6_1",
+    "b7a9ee9_2",
+    "c901732_1",
+    "c901732_3",
+    "e7a10f8_1",
+    "e7a10f8_3"
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "attempt_start_module_hashes": {
+    "reader": "28f046bd45cbb9ccf64760143a9ea4afc9314ecf11a4aa96c8fdc1c25b5f267b",
+    "writer": "1a876e124b8a120b17bb0ecbdbfe36e1c1b2a6d892a265812d0d5dd5c1ea1a01"
+  },
+  "attempts_ledger": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o09_one_unit_20260907_001/arms/1d/attempts.jsonl",
+    "sha256": "bee77558cd68cb0aa70767d81a21a341f38b4e278b44dc5dbe32b95a2f016ddb",
+    "size_bytes": 4674
+  },
+  "backward_count_this_attempt": 1,
+  "checkpoint_disposition": {
+    "checkpoint_exists_after_discard": false,
+    "checkpoint_identity_before_discard": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o09_one_unit_20260907_001/arms/1d/joint_training/checkpoints/progress.pt",
+      "sha256": "1b323072864cc0dd8840412334d759b9c70ce5136cca1a90adc72b5f06f4e459",
+      "size_bytes": 321875715
+    },
+    "diagnostic_only": true,
+    "disposition": "updated_parameters_and_pointer_deleted_after_hash_recording",
+    "format": "exp037a_r14b_o09_diagnostic_checkpoint_disposition_v1",
+    "latest_pointer_exists_after_discard": false,
+    "latest_pointer_identity_before_discard": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o09_one_unit_20260907_001/arms/1d/joint_training/latest_checkpoint.json",
+      "sha256": "2d96cadd275f8d57fdbaffe8fef3d7c44dd0390ed7a3749bf28f8d6b1951a582",
+      "size_bytes": 287
+    },
+    "scientific_checkpoint_input_allowed": false,
+    "scientific_result": false
+  },
+  "checks": {
+    "attempt_closed_successfully": true,
+    "completed_one_unit": true,
+    "gradients_finite": true,
+    "losses_finite": true,
+    "one_backward_this_attempt": true,
+    "one_optimizer_step_this_attempt": true,
+    "optimizer_state_nonempty": true,
+    "parent_closure_unchanged": true,
+    "qwen_frozen": true,
+    "reader_gradient_nonzero": true,
+    "requested_one_unit": true,
+    "selector_frozen": true,
+    "summary_passed": true,
+    "writer_gradient_nonzero": true
+  },
+  "completed_global_unit_ids": [
+    "e1:appworld:trace:cf6abd2_1:step:10:line:510::correct"
+  ],
+  "diagnostic_only": true,
+  "final_module_hashes": {
+    "reader": "452ff19ac5d6afd5e785598f69bf16c1f296cc19842834830bcfeae7631b873a",
+    "writer": "4ba8eacfd377406bec43dfffed222b8ebb9f7ff6a258bd8d5899ff5c2dd2d60a"
+  },
+  "format": "exp037a_r14b_o09_one_unit_diagnostic_result_v1",
+  "one_unit_summary": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o09_one_unit_20260907_001/arms/1d/joint_training/checkpoints/diagnostic_one_unit_summary_14c.json",
+    "sha256": "3be34114bf854896aa38460d59e655dfb4d174eaad525654771362d405423165",
+    "size_bytes": 2344
+  },
+  "optimizer_step_count_this_attempt": 1,
+  "parent_artifact_closure_sha256_after": "f5424356e1ae469f2533136c37e28d8864d43e83c26902ed136b164104f3b0b6",
+  "parent_o08_partial_outputs_used": false,
+  "parent_root_unchanged": true,
+  "passed": true,
+  "runtime_seconds_from_metric": 1.8109939601272345,
+  "scientific_input_allowed": false,
+  "scientific_result": false,
+  "source_commit": "ffd6a22fc938f2737faafc1df4e6da5e58a51518"
+}

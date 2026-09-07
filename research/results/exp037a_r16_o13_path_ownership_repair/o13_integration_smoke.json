@@ -1,0 +1,75 @@
+{
+  "appworld_full_trajectory_count": 1,
+  "arm": "1d",
+  "backward_count": 0,
+  "checks": {
+    "fixture_hashes_unchanged": true,
+    "fresh_diagnostic_output": true,
+    "one_demo_prompt": true,
+    "one_task_completed": true,
+    "parent_state_cache_unchanged": true,
+    "state_query_override_used": true,
+    "trajectory_executed": true
+  },
+  "condition": "R16_E2_H3",
+  "counts": {
+    "completion_action": 1,
+    "execution_exception": 0,
+    "premature_completion": 0,
+    "repeated_action": 1,
+    "repeated_invalid_action": 0
+  },
+  "diagnostic_root": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r16_o13_smoke_20260907_003",
+  "elapsed_seconds": 72.01927524572238,
+  "fixture_paths": {
+    "arm_config": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/resolved_configs/arm_1d.yaml",
+    "checkpoint": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/arms/1d/joint_training/checkpoints/epoch_02.pt",
+    "correct_field": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/arms/1d/heldout_validation/live_full_field/field_artifacts/epoch_02_correct.pt",
+    "data_manifest": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/arms/1d/data/full_bank_data_manifest.json",
+    "shuffled_field": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/arms/1d/heldout_validation/live_full_field/field_artifacts/epoch_02_key_payload_shuffle.pt",
+    "source_cache": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/arms/1d/data/rcmf_source_cache.pt",
+    "state_cache": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/arms/1d/representation_cache/multiview/state_multiview.pt"
+  },
+  "fixture_run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001",
+  "fixture_sha256_after": {
+    "arm_config": "f1164bcf6050c0a46e84c31ca70153dc2b64eef23bad1e0bbbdeb3d02971a087",
+    "checkpoint": "c4a9a604ec287785f966f85fa26a88e2d9c2618254af0dce8de8b54326722c21",
+    "correct_field": "d32aa33f71de7ddd8c452849a615cf5f9776b3a97cf2899c0e5a53fef41cf1fd",
+    "data_manifest": "224861de0d7170c89432adc4f9edd35e0f555b91b09a8222095b869c20d85450",
+    "shuffled_field": "793cf8585b635303c38fb7039ceb284d3ff2d0264ef9b167cdf1253acca4334c",
+    "source_cache": "0a6665477d63c8a9d617665e4048a232717181a1334966b06ae5a0534f47c29c",
+    "state_cache": "73943bc85c2a1f4cf1c85a7c8c40dac4b5e954e63520530d91595be205c9a4fa"
+  },
+  "fixture_sha256_before": {
+    "arm_config": "f1164bcf6050c0a46e84c31ca70153dc2b64eef23bad1e0bbbdeb3d02971a087",
+    "checkpoint": "c4a9a604ec287785f966f85fa26a88e2d9c2618254af0dce8de8b54326722c21",
+    "correct_field": "d32aa33f71de7ddd8c452849a615cf5f9776b3a97cf2899c0e5a53fef41cf1fd",
+    "data_manifest": "224861de0d7170c89432adc4f9edd35e0f555b91b09a8222095b869c20d85450",
+    "shuffled_field": "793cf8585b635303c38fb7039ceb284d3ff2d0264ef9b167cdf1253acca4334c",
+    "source_cache": "0a6665477d63c8a9d617665e4048a232717181a1334966b06ae5a0534f47c29c",
+    "state_cache": "73943bc85c2a1f4cf1c85a7c8c40dac4b5e954e63520530d91595be205c9a4fa"
+  },
+  "format": "exp037a_r16_o13_integration_smoke_v1",
+  "heldout_task_ids": [
+    "76f2c72_1",
+    "76f2c72_2",
+    "7d7fbf6_1",
+    "b7a9ee9_2",
+    "c901732_1",
+    "c901732_3",
+    "e7a10f8_1",
+    "e7a10f8_3"
+  ],
+  "optimizer_step_count": 0,
+  "passed": true,
+  "prompt_profile": "full_demo_first_only",
+  "qwen_trajectory_count": 1,
+  "scientific_eligibility": "diagnostic_only_never_formal_input",
+  "source_commit": "c09838df5da95d9c7f8e0b5a6a2e62bb7081a54e",
+  "step_count": 19,
+  "summary_path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r16_o13_smoke_20260907_003/trajectory/summaries/R16_E2_H3.json",
+  "task_id": "76f2c72_1",
+  "task_result_path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r16_o13_smoke_20260907_003/trajectory/conditions/R16_E2_H3/task_results/76f2c72_1.json",
+  "task_success": false,
+  "terminal_error": null
+}

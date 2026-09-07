@@ -1,0 +1,41 @@
+{
+  "audit_only_source_changes": [
+    "scripts/audit_exp037a_r12b_prompt_consumers.py",
+    "scripts/audit_exp037a_r16_o13_path_ownership.py",
+    "scripts/run_exp037a_r16_o13_integration_smoke.py"
+  ],
+  "base_source": "95b355ab9f7419d86fb6045bcdc27ea8e27604bc",
+  "checks": {
+    "checkpoint_selection_rule_change": 0,
+    "context_limit_change": 0,
+    "evaluation_task_set_change": 0,
+    "fourteen_l_outputs_used_as_fourteen_m_inputs": false,
+    "learning_rate_change": 0,
+    "loss_change": 0,
+    "o00_o12_scientific_behavior_change": 0,
+    "panel_rule_change": 0,
+    "path_provenance_only": true,
+    "prompt_change": 0,
+    "selector_change": 0,
+    "state_query_shuffle_mathematics_change": 0,
+    "three_demo_behavior_change": 0,
+    "training_data_change": 0,
+    "writer_reader_architecture_change": 0
+  },
+  "diagnostic_backward_count": 0,
+  "diagnostic_optimizer_steps": 0,
+  "format": "exp037a_r16_scientific_diff_v1",
+  "intended_behavior_change": "continuation O13 resolves configured prompt-dependent state_cache ownership instead of assuming continuation-local O00 output",
+  "launch_source": "a8cd3b6e5457b858e0e4705913b2283dfaf99a0f",
+  "package_files_added": [
+    "configs/pipeline/rcmf_appworld_continuation_14m.yaml",
+    "configs/pipeline/rcmf_appworld_arm_1d_continuation_14m.yaml",
+    "scripts/prepare_exp037a_continuation_14m.py",
+    "tests/test_exp037a_r16_o13_path_ownership.py",
+    "tests/test_exp037a_r16_14m_preflight.py"
+  ],
+  "passed": true,
+  "production_files_changed": [
+    "rcmf/benchmarks/appworld/reproducible_stages_14b.py"
+  ]
+}

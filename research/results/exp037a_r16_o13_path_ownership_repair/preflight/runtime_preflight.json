@@ -1,0 +1,52 @@
+{
+  "authorization_status": "NOT_AUTHORIZED",
+  "authorized_to_launch": false,
+  "conservative_additional_storage_gib": 10,
+  "conservative_h100_active_hours": 19.5,
+  "conservative_wall_hours": 20.0,
+  "expected_additional_storage_gib": 5,
+  "expected_h100_active_hours": 9.3,
+  "expected_stage_hours": {
+    "C00_C01": 0.01,
+    "F00_F03": 0.05,
+    "O08": 0.08,
+    "O09": 0.44,
+    "O10": 0.44,
+    "O11": 0.21,
+    "O12": 1.52,
+    "O13": 1.55,
+    "O14_O17": 0.02,
+    "O18": 2.1,
+    "O19": 2.05
+  },
+  "expected_wall_hours": 9.5,
+  "explicit_approval_required": true,
+  "explicit_user_approval_required": true,
+  "format": "exp037a_continuation_runtime_preflight_14m_v1",
+  "hard_cap_rationale": "round up above max(2x9.5=19,1.25x20=25)",
+  "measured_14l_seconds": {
+    "C00": 9.3055,
+    "C01": 22.5281,
+    "O08": 275.5919,
+    "O09": 1569.306,
+    "O10": 1571.01,
+    "O11": 731.7612,
+    "O12": 5444.6816
+  },
+  "measured_anchor_sum_hours": 8.46,
+  "measured_o08_o12_subtotal_hours": 2.6734,
+  "measured_o13_smoke_seconds": 72.0193,
+  "monetary_cost": "MONETARY_COST_NOT_AVAILABLE",
+  "passed": true,
+  "proposed_hard_cap_hours": 32,
+  "recommended_hard_cap_hours": 32.0,
+  "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002",
+  "run_uuid": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002",
+  "sealed_14k_anchors_hours": {
+    "D13_full_heldout_trajectories": 1.5316,
+    "D19_dev_correct": 2.0447,
+    "D20_dev_shuffle": 1.9754
+  },
+  "source_commit": "a8cd3b6e5457b858e0e4705913b2283dfaf99a0f",
+  "workload_reduced": false
+}

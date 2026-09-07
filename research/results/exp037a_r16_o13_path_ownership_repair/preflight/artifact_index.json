@@ -1,0 +1,129 @@
+{
+  "artifacts": [
+    {
+      "path": "preflight/authorization_request.json",
+      "sha256": "82eb6b4c6a75ba094020aeb0e4318925be28a346b4c20bbfa763785efc11db6e",
+      "size_bytes": 1398
+    },
+    {
+      "path": "preflight/continuation_boundary_manifest.json",
+      "sha256": "b50b8ae339da8b2d98f5ba1af233ff83562f379d49e4d06a89ceeb1a80a228e1",
+      "size_bytes": 30821
+    },
+    {
+      "path": "preflight/count_ownership_contract.json",
+      "sha256": "eee60ed88a776af36de90ba4dec0120cebee7be9182df108f754aabeefaf1cdb",
+      "size_bytes": 590
+    },
+    {
+      "path": "preflight/initialization_copies.json",
+      "sha256": "52f4bed1fc07f971bfef8dc654c476dc7352f9e0ec7843b54e5c10f59decade4",
+      "size_bytes": 1483
+    },
+    {
+      "path": "preflight/initialization_snapshots/reader_initial.pt",
+      "sha256": "d9813fe66df24e67912f8505de38c8df1fd850c370b8cdf512df029b0e6ca319",
+      "size_bytes": 71454221
+    },
+    {
+      "path": "preflight/initialization_snapshots/writer_initial.pt",
+      "sha256": "6f60556e6969011e58853ca08d2e70e4570fb69927ec0bb60a10c16cbde7f4ae",
+      "size_bytes": 35808177
+    },
+    {
+      "path": "preflight/o08_diagnostic.json",
+      "sha256": "23b8a92288a4dfbe24a81b13d77c748a7c18e3924391f5fd9dc32306645f75ed",
+      "size_bytes": 26646
+    },
+    {
+      "path": "preflight/o09_one_unit_smoke.json",
+      "sha256": "f562991dff0336851fc337811afe9fb08c5b11db442a923ae5f1e5782c7b3c4b",
+      "size_bytes": 3147
+    },
+    {
+      "path": "preflight/o13_integration_smoke.json",
+      "sha256": "d45f34761afbda893b58f77596faee5cfd8255b8692e597c6a3cedcd916f4d95",
+      "size_bytes": 4407
+    },
+    {
+      "path": "preflight/o13_path_diagnostic.json",
+      "sha256": "847e9c1e93cdd1eb0644f93e06752be77d8b673bba01c817bc5d86833af5a031",
+      "size_bytes": 4679
+    },
+    {
+      "path": "preflight/parent_artifact_manifest.json",
+      "sha256": "95e10d58f4f30df71cf050cffa62040de47b98c2a36dde3febcf08b5dd7e1d60",
+      "size_bytes": 498787
+    },
+    {
+      "path": "preflight/parent_run_identity.json",
+      "sha256": "e126476287378f540ed7e3e46861c51ae98d9c278e50fc168883094f1375133a",
+      "size_bytes": 620
+    },
+    {
+      "path": "preflight/path_ownership_audit.json",
+      "sha256": "9790e8a833e143a88c4985b6835c963008a3212ce2d1f756f7ef976601f347bd",
+      "size_bytes": 6379
+    },
+    {
+      "path": "preflight/restart_plan.json",
+      "sha256": "a8f6636408886e21959e2bd44d4acd503156fbdd8b934b8efbb860f755c40ab7",
+      "size_bytes": 452
+    },
+    {
+      "path": "preflight/run_identity.json",
+      "sha256": "78a9a4b9b0ecdd79e190921a09a457a7a0894b9555b031ea857c07ea91584c81",
+      "size_bytes": 765
+    },
+    {
+      "path": "preflight/runtime_estimate.json",
+      "sha256": "30c6e739243e8d147de5b77a829b06ace69d2195fe836db944c27de617c9df03",
+      "size_bytes": 1190
+    },
+    {
+      "path": "preflight/runtime_preflight.json",
+      "sha256": "a1f94ebb846b1e97643df85a06cbb78f449d5a720bf0c4668ed03d957eea5345",
+      "size_bytes": 1635
+    },
+    {
+      "path": "preflight/runtime_state.json",
+      "sha256": "e16a4586f4df6d579ad28d51cf9579e4ea3cf4515e86575b4d1e37f407eb3c0e",
+      "size_bytes": 584
+    },
+    {
+      "path": "preflight/scientific_diff.json",
+      "sha256": "df00883a1a41de247e4e57f65d6b54bcdb5210eae64d6ab9c8bd70efc4420cb7",
+      "size_bytes": 1583
+    },
+    {
+      "path": "preflight/scientific_invariants.json",
+      "sha256": "6b2fef618bf5d0266e28af46cb1ea0acf577e1abffd064e1000b8dcb6c7f9e84",
+      "size_bytes": 698
+    },
+    {
+      "path": "preflight/stage_dag.json",
+      "sha256": "e00df7b19d525bf8a317cbd9332f08bdacf4a4e1aa3ef47243d839f6402849be",
+      "size_bytes": 11737
+    },
+    {
+      "path": "preflight/stale_constant_audit.json",
+      "sha256": "8c6455f3aed0ef9b2623082618a049db1ef6403813d7adf7fbb91b2e0a6adbdd",
+      "size_bytes": 13607
+    },
+    {
+      "path": "preflight/tests.json",
+      "sha256": "1b1a10f919f424c9ec761a25dc46a7dae44f30a2f3f362bea3d0f9bb8c16a71f",
+      "size_bytes": 1554
+    },
+    {
+      "path": "resolved_configs/arm_1d.yaml",
+      "sha256": "181909c7cd0ecbfa95e6783158427c62352442453c7ff60c7d87aa212381fe99",
+      "size_bytes": 24283
+    }
+  ],
+  "formal_attempts_present": false,
+  "format": "exp037a_continuation_preflight_artifact_index_14m_v1",
+  "run_uuid": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002",
+  "runtime_authorization_present": false,
+  "scientific_stages_present": false
+}

@@ -1,0 +1,415 @@
+{
+  "arms": {
+    "1d": {
+      "arm_id": "1d",
+      "artifact_prefix": "arms/1d",
+      "run_id": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002-1d",
+      "task_conditioned_prompt_profile": "full_demo_first_only"
+    }
+  },
+  "global_seed": 25101,
+  "hard_cap_hours": 32.0,
+  "metadata": {
+    "authorization_mode": "o07_o08_continuation",
+    "authorization_scope": "continue_from_sealed_14k_o07_boundary_through_o19_and_final_reporting",
+    "authorization_version": "exp037a_run_bound_authorization_14m_v1",
+    "canonical_run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002",
+    "maximum_recoverable_attempts_per_stage": 3,
+    "parent_artifact_manifest_sha256": "95e10d58f4f30df71cf050cffa62040de47b98c2a36dde3febcf08b5dd7e1d60",
+    "parent_contract_sha256": "eea5fb745ecd5041ed07e65be55d6a4a3b774caa67239e0d040100bcd9a8cce6",
+    "parent_pipeline_config_sha256": "f075eead4bd77e92546a876c24979e1882a2bfded5853624aa665ce93c84af69",
+    "parent_run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001",
+    "parent_source_commit": "004f866647cfabb38a141b88e6d83821df88c403",
+    "pipeline_config_path": "configs/pipeline/rcmf_appworld_continuation_14m.yaml",
+    "pipeline_config_sha256": "c8b5af07f72cd64472fa47fabd3f339d640f80ddb30cbd2fd0c8db41bee6f9f0",
+    "recoverable_retry_delay_seconds": 60.0,
+    "require_run_bound_authorization": true,
+    "stage_scope_sha256": "3581cf1caded5a5aeba300b538117a4771afd64eb33b5c423c033fa1ac1397d7",
+    "strict_stage_identity": true
+  },
+  "run_uuid": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002",
+  "schema_version": "rcmf_reproducible_pipeline_continuation_14m_v1",
+  "shared_initialization": {
+    "reader_initial.pt": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002/preflight/initialization_snapshots/reader_initial.pt",
+    "writer_initial.pt": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002/preflight/initialization_snapshots/writer_initial.pt"
+  },
+  "source_commit": "a8cd3b6e5457b858e0e4705913b2283dfaf99a0f",
+  "stages": [
+    {
+      "arm": "continuation",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "C00_parent_run_evidence_import"
+      ],
+      "conditional_on": null,
+      "dependencies": [],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "C00_parent_run_evidence_import",
+      "uses_gpu": false,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "continuation",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "C01_o07_o08_boundary_validation"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "C00_parent_run_evidence_import"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "C01_o07_o08_boundary_validation",
+      "uses_gpu": false,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O08_zero_cache_and_training_units"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "C01_o07_o08_boundary_validation"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "O08_zero_cache_and_training_units",
+      "uses_gpu": true,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O09_writer_reader_epoch_1"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "O08_zero_cache_and_training_units"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "O09_writer_reader_epoch_1",
+      "uses_gpu": true,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O10_writer_reader_epoch_2"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "O09_writer_reader_epoch_1"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "O10_writer_reader_epoch_2",
+      "uses_gpu": true,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O11_heldout_teacher_forced"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "O10_writer_reader_epoch_2"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "O11_heldout_teacher_forced",
+      "uses_gpu": true,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O12_heldout_one_step"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "O11_heldout_teacher_forced"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "O12_heldout_one_step",
+      "uses_gpu": true,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O13_heldout_full_trajectory"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "O12_heldout_one_step"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "O13_heldout_full_trajectory",
+      "uses_gpu": true,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O14_checkpoint_selection"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "O13_heldout_full_trajectory"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "O14_checkpoint_selection",
+      "uses_gpu": false,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O15_401_memory_field"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "O14_checkpoint_selection"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "O15_401_memory_field",
+      "uses_gpu": false,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O16_compile_and_add_98_memories"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "O15_401_memory_field"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "O16_compile_and_add_98_memories",
+      "uses_gpu": false,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O17_499_memory_deployment_field"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "O16_compile_and_add_98_memories"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "O17_499_memory_deployment_field",
+      "uses_gpu": false,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O18_common_one_demo_dev_correct"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "O17_499_memory_deployment_field"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "O18_common_one_demo_dev_correct",
+      "uses_gpu": true,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "1d",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "O19_common_one_demo_dev_shuffle"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "O18_common_one_demo_dev_correct"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "O19_common_one_demo_dev_shuffle",
+      "uses_gpu": true,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "final",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "F00_two_arm_paired_analysis"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "O19_common_one_demo_dev_shuffle"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "F00_two_arm_paired_analysis",
+      "uses_gpu": false,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "final",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "F01_portability_validation"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "F00_two_arm_paired_analysis"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "F01_portability_validation",
+      "uses_gpu": false,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "final",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "F02_git_safe_audit_export"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "F01_portability_validation"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "F02_git_safe_audit_export",
+      "uses_gpu": false,
+      "validator": "completion_manifest"
+    },
+    {
+      "arm": "final",
+      "command": [
+        "{python}",
+        "scripts/run_rcmf_reproducible_stage_14b.py",
+        "--stage",
+        "F03_final_report_and_handoff"
+      ],
+      "conditional_on": null,
+      "dependencies": [
+        "F02_git_safe_audit_export"
+      ],
+      "expected_outputs": [
+        "output_manifest.json",
+        "validator.json"
+      ],
+      "scientific": true,
+      "stage_id": "F03_final_report_and_handoff",
+      "uses_gpu": false,
+      "validator": "completion_manifest"
+    }
+  ]
+}

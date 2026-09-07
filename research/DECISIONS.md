@@ -3381,3 +3381,35 @@ IMPLEMENTATION DEVIATIONS:
 
 - None in this records-only publication. No source, config, scientific
   artifact, authorization, or raw run file was modified.
+## 2026-09-07 EXP-037A-R16 O13 path-ownership repair
+
+VERIFIED:
+
+- 14l O13 failed before trajectory execution because its heldout
+  state-query-shuffle helper bypassed the configured parent-owned state cache
+  and constructed a nonexistent continuation-local O00 path.
+- O09-O12, both epoch checkpoints, and the 922-file 14k parent closure remain
+  strict-valid. They are sealed evidence only and are not formal 14m inputs.
+- The minimal resolver uses only the explicit arm config, fails closed when the
+  configured input is absent, and leaves full-run behavior and all scientific
+  mathematics unchanged.
+- No additional reachable path-ownership defect was found from O13 through
+  F03. Bounded no-generation and one-task integration diagnostics passed.
+
+DECISION:
+
+- `READY_FOR_14M_AUTHORIZATION`.
+- Freeze source `a8cd3b6e5457b858e0e4705913b2283dfaf99a0f` and prepare fresh
+  continuation UUID `rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002`.
+- Keep 14m `NOT_AUTHORIZED`; require later explicit approval for its proposed
+  32-hour cap. Do not launch automatically.
+
+IMPLEMENTATION DEVIATIONS:
+
+- The Windows sandbox `apply_patch` helper could not read existing files.
+  Existing-file edits used guarded exact-match PowerShell replacements after
+  repeated helper failures; new files used `apply_patch`.
+- Two initial integration-smoke wrappers failed after/before the diagnostic
+  trajectory because of a wrong diagnostic result path and a reused AppWorld
+  attempt identity. Both are preserved as diagnostic evidence; fresh `_003`
+  passed. No production or scientific artifact was reused.

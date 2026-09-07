@@ -1,0 +1,11 @@
+{
+  "boundary": "after_O07_before_O08",
+  "contract_sha256": "eea5fb745ecd5041ed07e65be55d6a4a3b774caa67239e0d040100bcd9a8cce6",
+  "format": "exp037a_parent_run_identity_14m_v1",
+  "parent_o08_partial_outputs_used": false,
+  "parent_root_immutable": true,
+  "pipeline_config_sha256": "f075eead4bd77e92546a876c24979e1882a2bfded5853624aa665ce93c84af69",
+  "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001",
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001",
+  "source_commit": "004f866647cfabb38a141b88e6d83821df88c403"
+}

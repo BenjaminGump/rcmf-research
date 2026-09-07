@@ -2896,3 +2896,27 @@ Decision:
 - Scientific decision: `STOP`. Fresh one-demo selector retraining does not rescue complete-trajectory memory-specific behavior under the frozen pipeline.
 - The independently verified Git-safe audit contains 114 task-condition traces and 3,132 step rows. Index SHA256 is `c4bea6d3fb4c7ab2fef2f489bb626b8b5a0fee75f1dca06d24ff59a744daa802`; secret leaks are zero.
 - No follow-on selector, calibration, architecture, retrieval, first37/test run, or V5 tag was started.
+### EXP-037A-R16 O13 Path Ownership Repaired; 14m Awaiting Authorization
+
+- Lambda forensics independently classified the sealed 14l O13 failure as
+  `VERIFIED_CONTINUATION_STATE_CACHE_PATH_OWNERSHIP_MISMATCH`. O13 failed
+  before trajectory execution because `_heldout_query_overrides()` assumed a
+  continuation-local O00 state cache instead of using the arm-resolved sealed
+  parent input.
+- The path/provenance-only repair passed an 8-task zero-generation diagnostic,
+  a fresh one-task 19-step O13 integration trajectory, local full tests
+  (`996 passed, 3 skipped`), and Lambda full tests (`999 passed`).
+- Frozen launch source is `a8cd3b6e5457b858e0e4705913b2283dfaf99a0f`
+  at `archive/exp037a-r16-launch-source-a8cd3b6`.
+- Fresh 14m UUID is
+  `rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002`; it again uses
+  the sealed 14k O07 boundary and will freshly produce O08-F03. No 14l stage,
+  checkpoint, completion, or authorization is a 14m input.
+- 14m config/contract/parent-manifest/artifact-index SHA256 values are
+  `c8b5af07f72cd64472fa47fabd3f339d640f80ddb30cbd2fd0c8db41bee6f9f0`,
+  `e00df7b19d525bf8a317cbd9332f08bdacf4a4e1aa3ef47243d839f6402849be`,
+  `95e10d58f4f30df71cf050cffa62040de47b98c2a36dde3febcf08b5dd7e1d60`,
+  and `c972f782b532182f909694c855cbbb6de5038be79efa7dd191d1bf7fdcc1b5b6`.
+- Decision: `READY_FOR_14M_AUTHORIZATION`. Authorization remains false. The
+  proposed cap is 32 hours; expected/conservative wall time is 9.5/20.0 hours.
+  No long formal run was launched.

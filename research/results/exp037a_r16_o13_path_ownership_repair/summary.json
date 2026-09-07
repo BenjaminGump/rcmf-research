@@ -1,0 +1,69 @@
+{
+  "decision": "READY_FOR_14M_AUTHORIZATION",
+  "diagnosis": "VERIFIED_CONTINUATION_STATE_CACHE_PATH_OWNERSHIP_MISMATCH",
+  "scientific_configuration_changes": 0,
+  "long_formal_run_launched": false,
+  "starting_records_sha": "d15bfe586cee5980009acad7475ad6aaf7e3d686",
+  "failure_record_sha": "b1b6e84696c5942c1897bb53eade4d66829d3eed",
+  "repair_implementation_sha": "b9a5db2ceaaf5cc766c9cb312d35f17fcf3e9216",
+  "launch_source_sha": "a8cd3b6e5457b858e0e4705913b2283dfaf99a0f",
+  "archive_ref": "archive/exp037a-r16-launch-source-a8cd3b6",
+  "failed_14l": {
+    "run_uuid": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001",
+    "stage": "O13_heldout_full_trajectory",
+    "attempt": "O13_heldout_full_trajectory-1788777706792999587-r1",
+    "exit_code": 65,
+    "trajectory_executions": 0,
+    "backward_count": 0,
+    "optimizer_step_count": 0
+  },
+  "diagnostics": {
+    "no_generation_path": {
+      "status": "PASS",
+      "heldout_tasks": 8,
+      "sha256": "847e9c1e93cdd1eb0644f93e06752be77d8b673bba01c817bc5d86833af5a031"
+    },
+    "o13_integration_smoke": {
+      "status": "PASS",
+      "task_id": "76f2c72_1",
+      "trajectory_steps": 19,
+      "backward_count": 0,
+      "optimizer_step_count": 0,
+      "sha256": "d45f34761afbda893b58f77596faee5cfd8255b8692e597c6a3cedcd916f4d95"
+    },
+    "path_ownership_audit": {
+      "repaired_defects": 1,
+      "additional_reachable_defects": 0,
+      "ambiguous_sites": 0,
+      "unresolved_sites": 0
+    }
+  },
+  "tests": {
+    "local_focused": "26 passed",
+    "local_full": "996 passed, 3 skipped",
+    "lambda_focused": "26 passed",
+    "lambda_full": "999 passed"
+  },
+  "package_14m": {
+    "run_uuid": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002",
+    "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002",
+    "config_sha256": "c8b5af07f72cd64472fa47fabd3f339d640f80ddb30cbd2fd0c8db41bee6f9f0",
+    "contract_sha256": "e00df7b19d525bf8a317cbd9332f08bdacf4a4e1aa3ef47243d839f6402849be",
+    "stage_scope_sha256": "3581cf1caded5a5aeba300b538117a4771afd64eb33b5c423c033fa1ac1397d7",
+    "parent_manifest_sha256": "95e10d58f4f30df71cf050cffa62040de47b98c2a36dde3febcf08b5dd7e1d60",
+    "parent_closure_sha256": "f5424356e1ae469f2533136c37e28d8864d43e83c26902ed136b164104f3b0b6",
+    "preflight_artifact_index_sha256": "c972f782b532182f909694c855cbbb6de5038be79efa7dd191d1bf7fdcc1b5b6",
+    "authorization_request_sha256": "82eb6b4c6a75ba094020aeb0e4318925be28a346b4c20bbfa763785efc11db6e",
+    "authorization_status": "NOT_AUTHORIZED"
+  },
+  "runtime": {
+    "expected_wall_hours": 9.5,
+    "conservative_wall_hours": 20.0,
+    "expected_h100_hours": 9.3,
+    "conservative_h100_hours": 19.5,
+    "expected_storage_gib": 5,
+    "conservative_storage_gib": 10,
+    "proposed_hard_cap_hours": 32,
+    "explicit_approval_required": true
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "all_final_suites_passed": true,
+  "attempts": [
+    {
+      "duration_seconds": 6.24,
+      "environment": "local",
+      "passed": true,
+      "result": "26 passed",
+      "scope": "focused final"
+    },
+    {
+      "duration_seconds": 86.425,
+      "environment": "local",
+      "failure": "stale R12B static source predicate only",
+      "passed": false,
+      "result": "995 passed, 3 skipped, 1 failed",
+      "scope": "full pre-fix"
+    },
+    {
+      "duration_seconds": 78.861,
+      "environment": "local",
+      "passed": true,
+      "result": "996 passed, 3 skipped",
+      "scope": "full final"
+    },
+    {
+      "duration_seconds": 3.66,
+      "environment": "Lambda H100",
+      "passed": true,
+      "result": "26 passed",
+      "scope": "focused final"
+    },
+    {
+      "duration_seconds": 38.91,
+      "environment": "Lambda H100",
+      "passed": true,
+      "result": "999 passed",
+      "scope": "full final"
+    }
+  ],
+  "diagnostics": [
+    {
+      "duration_seconds": 2.57,
+      "name": "O13 no-generation path",
+      "result": "PASS",
+      "root": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r16_o13_path_20260907_002"
+    },
+    {
+      "duration_seconds": 75.67,
+      "name": "O13 one-task full-trajectory integration",
+      "result": "PASS",
+      "root": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r16_o13_smoke_20260907_003",
+      "steps": 19,
+      "task_id": "76f2c72_1"
+    }
+  ],
+  "format": "exp037a_r16_tests_v1",
+  "passed": true,
+  "process_start_pythonhashseed": 25101
+}
