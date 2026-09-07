@@ -13,7 +13,7 @@
     "root_cause": "VERIFIED_STALE_THREE_DEMO_SCOREABLE_COUNT_CONTRACT",
     "report": "research/results/EXP_037A_14K_O08_TERMINAL_FAILURE.md",
     "artifact_index": "research/results/exp037a_14k_o08_terminal_failure/artifact_index.json",
-    "artifact_index_sha256": "91e1ff5e5326bcb1fd624fb25ee97c3c047c61af71dcff62ab737fdc0c26cf5a"
+    "artifact_index_sha256": "6d586fb0ade414d36bd388eeb68e040cb7469d887a2f0fbf1ffcb0de5dc47e8e"
   },
   "raw_lambda_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001",
   "raw_artifacts_remain_lambda_only": true,
