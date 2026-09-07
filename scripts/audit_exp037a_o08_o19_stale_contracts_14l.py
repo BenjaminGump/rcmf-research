@@ -31,6 +31,11 @@ PATTERN = re.compile(
     r"|scoreable_train_state_count|scoreable_heldout_state_count"
     r"|(?<![A-Za-z0-9_])full_demo(?!_first_only)"
 )
+OBSERVED_ONE_DEMO_COUNTS = {"324", "83", "407", "120", "247"}
+COUNT_CONTEXT = re.compile(
+    r"scoreable|paired|label|model_train|heldout.*count|state_count",
+    flags=re.IGNORECASE,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -118,6 +123,23 @@ def build_audit() -> dict[str, Any]:
                         "reachable_stage_scope": "O08-O19_or_shared_helper",
                     }
                 )
+    production_observed_counts = []
+    for path in TARGETS:
+        for line_number, line in enumerate(
+            path.read_text(encoding="utf-8").splitlines(), start=1
+        ):
+            if not COUNT_CONTEXT.search(line):
+                continue
+            for token in sorted(OBSERVED_ONE_DEMO_COUNTS):
+                if re.search(rf"(?<![0-9]){token}(?![0-9])", line):
+                    production_observed_counts.append(
+                        {
+                            "path": str(path),
+                            "line": line_number,
+                            "token": token,
+                            "context": line.strip(),
+                        }
+                    )
     counts: dict[str, int] = {}
     for row in rows:
         key = str(row["classification"])
@@ -144,8 +166,8 @@ def build_audit() -> dict[str, Any]:
         "rows": rows,
         "classification_counts": dict(sorted(counts.items())),
         "unresolved_defects": defects,
-        "production_one_demo_exact_outcome_constants": [],
-        "passed": not defects,
+        "production_one_demo_exact_outcome_constants": production_observed_counts,
+        "passed": not defects and not production_observed_counts,
     }
 
 
