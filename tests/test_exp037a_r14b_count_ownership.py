@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import copy
+import inspect
+from pathlib import Path
 
 import pytest
 
@@ -264,3 +266,17 @@ def test_live_manifest_rejects_empty_heldout_population() -> None:
     ]
     with pytest.raises(ValueError, match="nonempty heldout"):
         build_live_manifest(outcomes=train_rows, state_shuffle={})
+
+def test_smoke_uses_canonical_static_counts_path_key(tmp_path: Path) -> None:
+    from scripts.run_rcmf_joint_full_bank_9a import _paths, _smoke
+
+    paths = _paths(
+        {
+            "parent_exp025b": str(tmp_path / "b"),
+            "parent_exp028a": str(tmp_path / "a"),
+        },
+        tmp_path / "artifacts",
+    )
+    assert "static_counts" in paths
+    assert "runtime_counts" not in paths
+    assert '_json(paths["static_counts"])' in inspect.getsource(_smoke)

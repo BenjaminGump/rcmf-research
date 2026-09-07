@@ -771,7 +771,7 @@ def _smoke(
         raise RuntimeError(f"Full-bank smoke gradient contract failed: {second}")
     backward_seconds = float(timings[-1])
     no_grad_seconds = float(forward_seconds or backward_seconds / 2.0)
-    static_counts = _json(paths["runtime_counts"])
+    static_counts = _json(paths["static_counts"])
     training_seconds = (
         int(static_counts["maximum_training_backwards"]) * backward_seconds
     )
