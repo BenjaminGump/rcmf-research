@@ -1,0 +1,146 @@
+{
+  "attempts": {
+    "complete": 3,
+    "current_attempt_id": "O09_writer_reader_epoch_1-1788768383858593125-r1",
+    "current_command": [
+      "/home/ubuntu/venvs/rcmf-py311/bin/python",
+      "scripts/run_rcmf_reproducible_stage_14b.py",
+      "--stage",
+      "O09_writer_reader_epoch_1",
+      "--config",
+      "configs/pipeline/rcmf_appworld_continuation_14l.yaml",
+      "--run-root",
+      "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001",
+      "--source-commit",
+      "95b355ab9f7419d86fb6045bcdc27ea8e27604bc"
+    ],
+    "current_stage": "O09_writer_reader_epoch_1",
+    "failed_or_interrupted": 0,
+    "failed_or_interrupted_attempt_ids": [],
+    "open": 1,
+    "open_attempt_ids": [
+      "O09_writer_reader_epoch_1-1788768383858593125-r1"
+    ],
+    "total": 4
+  },
+  "completed_stage_count": 3,
+  "completed_stages": [
+    "C00_parent_run_evidence_import",
+    "C01_o07_o08_boundary_validation",
+    "O08_zero_cache_and_training_units"
+  ],
+  "current_attempt_id": "O09_writer_reader_epoch_1-1788768383858593125-r1",
+  "current_stage": "O09_writer_reader_epoch_1",
+  "current_stage_progress_files": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/stages/O09_writer_reader_epoch_1/process.json",
+      "sha256": "03ddff93485666f862028b612c2f460b4741c3256ddbade51fae2e19a989c58b",
+      "size_bytes": 530
+    }
+  ],
+  "evidence": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/heartbeat.json",
+      "sha256": "8d447c50447c0b7c149726864b984bb051350e6e311338536a52df57150dfd7f",
+      "size_bytes": 277
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/scheduler.lock",
+      "sha256": "d529c93b79113da2a742721c482c298ed46d7ddb2977d2f392269187ed6d7176",
+      "size_bytes": 133
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/scheduler_state.json",
+      "sha256": "e9b79732b25e17b90cff587a84d13cc5a66348f114bca823378667d06fea21a4",
+      "size_bytes": 2394
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/attempts.jsonl",
+      "sha256": "599e58f09e168e05cbb52a23f801671b3614a7d59719190fab5dc8abff82bd77",
+      "size_bytes": 5785
+    }
+  ],
+  "failure_files": [],
+  "formal_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001",
+  "formal_run_uuid": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001",
+  "format": "exp037a_14l_continuation_read_only_status_bridge_v1",
+  "frozen_source_sha": "95b355ab9f7419d86fb6045bcdc27ea8e27604bc",
+  "gates": {
+    "D06B": {
+      "completion_exit_code": null,
+      "failure_present": false,
+      "result": {},
+      "state": "not_reached"
+    },
+    "D08B": {
+      "completion_exit_code": null,
+      "failure_present": false,
+      "result": {},
+      "state": "not_reached"
+    },
+    "D22": {
+      "completion_exit_code": null,
+      "failure_present": false,
+      "result": {},
+      "state": "not_reached"
+    },
+    "F03": {
+      "completion_exit_code": null,
+      "failure_present": false,
+      "result": {},
+      "state": "not_reached"
+    }
+  },
+  "gpu": {
+    "available": true,
+    "gpus": [
+      {
+        "memory_total_mib": 81559,
+        "memory_used_mib": 38829,
+        "name": "NVIDIA H100 80GB HBM3",
+        "utilization_percent": 100
+      }
+    ],
+    "telemetry_only": true
+  },
+  "heartbeat": {
+    "age_seconds": 200.475473,
+    "current_stage": "O08_zero_cache_and_training_units",
+    "pid": 832724,
+    "stale": false,
+    "stale_threshold_seconds": 720,
+    "utc": "2026-09-07T08:05:15.649079+00:00"
+  },
+  "invalid_completion_stages": [],
+  "last_updated_utc": "2026-09-07T08:08:36.589182+00:00",
+  "latest_completed_stage": "O08_zero_cache_and_training_units",
+  "material_signature": "40348f83d11703d9b360b7aad3bf6804430f2812f519002ef4b7eea901761fa6",
+  "monitor_state": "RUNNING_HEALTHY",
+  "most_recent_failed_stage": null,
+  "nfs": {
+    "free_bytes": 3317682833195008,
+    "free_gib": 3089832.91796875,
+    "total_bytes": 3317944645844992
+  },
+  "one_demo_started": true,
+  "orchestrator_result": null,
+  "parent_alive": true,
+  "parent_pid": 832724,
+  "parent_tmux": {
+    "exists": true,
+    "name": "exp037a_14l_continuation",
+    "pane_pid": 832724
+  },
+  "poll_interval_seconds": 300,
+  "read_only_contract": {
+    "formal_root_writes_by_bridge": 0,
+    "gpu_zero_is_not_failure": true,
+    "scheduler_is_sole_progression_owner": true,
+    "write_roots": [
+      "/lambda/nfs/rcmf-persist/project/runs/monitoring/exp037a_14l",
+      "separate_git_worktree_only"
+    ]
+  },
+  "scheduler_lock_present": true,
+  "terminal": false
+}
