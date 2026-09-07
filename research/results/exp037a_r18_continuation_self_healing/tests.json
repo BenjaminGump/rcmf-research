@@ -1,0 +1,37 @@
+{
+  "commands": [
+    {
+      "environment": "Windows appworld_env Python 3.11.14; PYTHONHASHSEED=25101",
+      "result": "32 passed",
+      "scope": "focused local",
+      "seconds": 5.66
+    },
+    {
+      "environment": "Windows appworld_env Python 3.11.14; PYTHONHASHSEED=25101",
+      "result": "1008 passed, 3 skipped",
+      "scope": "full local",
+      "seconds": 75.65
+    },
+    {
+      "environment": "Lambda /home/ubuntu/venvs/rcmf-py311/bin/python; PYTHONHASHSEED=25101",
+      "result": "32 passed",
+      "scope": "focused Lambda/CUDA",
+      "seconds": 3.27
+    },
+    {
+      "environment": "Lambda /home/ubuntu/venvs/rcmf-py311/bin/python; PYTHONHASHSEED=25101",
+      "result": "1011 passed",
+      "scope": "full Lambda/CUDA",
+      "seconds": 38.05
+    },
+    {
+      "environment": "Lambda production EventDrivenScheduler and subprocess stage runner",
+      "result": "C00/C01 2/2 strict PASS",
+      "scope": "bounded production-path diagnostic",
+      "seconds": 31.1102
+    }
+  ],
+  "initial_windows_environment_issue": "The first invocation could not use conda from PATH, and the first direct-Python invocation encountered a stale pytest temp-directory ACL. The same suite passed with the known appworld_env interpreter and an isolated --basetemp; no test was waived.",
+  "passed": true,
+  "process_start_pythonhashseed": 25101
+}

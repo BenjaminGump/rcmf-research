@@ -1,0 +1,36 @@
+{
+  "baseline_source": "a8cd3b6e5457b858e0e4705913b2283dfaf99a0f",
+  "checks": {
+    "causal_panel_change": 0,
+    "checkpoint_selection_change": 0,
+    "evaluation_change": 0,
+    "field_mathematics_change": 0,
+    "global_seed_change": 0,
+    "initialization_change": 0,
+    "loss_change": 0,
+    "model_or_tokenizer_change": 0,
+    "parent_boundary_change": 0,
+    "prompt_change": 0,
+    "selector_change": 0,
+    "task_or_split_change": 0,
+    "training_rule_change": 0,
+    "writer_reader_architecture_change": 0
+  },
+  "config_sections_exact": {
+    "evaluation": "b1032daad7012deff1f14018314aa2953d3f719827a9080b2b4104e9f85380c7",
+    "expected": "4d647155979ede208aa3b1b003f4c7d49a058e7775723c1c1987ce43af9edf5f",
+    "historical_comparison": "c4fd853a56ee1183328b971b688075a3203cce106eec845af3605e7660f80c8c",
+    "memory": "82da2481d64f61ebace23becebe87039156ce5dddd1a46258fea4d9402ae35f1",
+    "prompt_assets": "0f4e49e7d7cda6a01dbcf24f0fbe5a9d0342d0dcad9ceaebbf021453c001c380",
+    "reader": "e8e44c3dd934ca846e0e9887f325ebb2506bfe85346f2e217bfa2e0ae92a86d9",
+    "reproduction_contract": "84d3ed895c56924f085bf9a423f2c0c2657a7582c724192cc95984f09a8b6451",
+    "selector": "a8ee19cbf50b96dc378919c03153db79aa88605dadde020af7750d9dcb01d45e",
+    "training": "5a8531e6c11bfbf5859c8e2226eba53862f701157ebee11fb90b631f7bd5380b"
+  },
+  "continuation_arm_config_equal_ignoring_run_id": true,
+  "continuation_arm_config_semantic_sha256": "03d69b5c9d0bb5edd67bb733160ac267f8dfff6f9b8218ebfe57778e4b25e7d7",
+  "intended_behavior_change": "Continuation/full-run routing is derived from and validated against the explicit continuation contract rather than a historical schema-version suffix.",
+  "launch_source": "98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f",
+  "passed": true,
+  "scientific_configuration_changes": 0
+}

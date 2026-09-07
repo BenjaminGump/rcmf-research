@@ -1,0 +1,16 @@
+{
+  "artifact_index_sha256": "562c0fe02f70ec893b24c14dc14e36713a52b779771989cc2a520262bd30dfae",
+  "authorization_status": "NOT_AUTHORIZED",
+  "config_sha256": "6e4be2be11e608436f5b5ebfdeee45d94a61f2831c841be72cd97e8050107e01",
+  "contract_sha256": "e479889fba498401e50ff7f309668629c3745d8ea5d91d84d8600c62986e61c7",
+  "format": "exp037a_r18_14n_prelaunch_audit_index_v1",
+  "lambda_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003",
+  "launch_source": "98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f",
+  "parent_artifact_count": 922,
+  "parent_closure_sha256": "f5424356e1ae469f2533136c37e28d8864d43e83c26902ed136b164104f3b0b6",
+  "passed": true,
+  "report": "research/results/EXP_037A_R18_CONTINUATION_SEMANTIC_DISPATCH_REPAIR.md",
+  "run_uuid": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003",
+  "scientific_result": "NOT_EVALUATED",
+  "structured_handoff": "research/handoffs/20260907T160253Z_exp037a_r18_continuation_semantic_dispatch_repair.md"
+}

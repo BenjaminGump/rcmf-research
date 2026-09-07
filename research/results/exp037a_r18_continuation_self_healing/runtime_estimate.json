@@ -1,0 +1,14 @@
+{
+  "conservative_additional_storage_gib": 10,
+  "conservative_h100_active_hours": 19.5,
+  "conservative_wall_hours": 20.0,
+  "expected_additional_storage_gib": 5,
+  "expected_h100_active_hours": 9.3,
+  "expected_wall_hours": 9.5,
+  "format": "exp037a_r18_14n_runtime_estimate_v1",
+  "hard_cap_hours": 32,
+  "measurement_basis": "Unchanged R16 workload and measured 14l stage anchors; R18 changes only pre-science continuation dispatch.",
+  "monetary_cost": "MONETARY_COST_NOT_AVAILABLE",
+  "passed": true,
+  "workload_changed": false
+}

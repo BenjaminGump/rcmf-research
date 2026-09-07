@@ -1,0 +1,39 @@
+{
+  "classification": "VERIFIED_MINOR_NONSCIENTIFIC_INFRASTRUCTURE_DEFECT",
+  "failed_run_uuid": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002",
+  "failed_source": "a8cd3b6e5457b858e0e4705913b2283dfaf99a0f",
+  "findings": [
+    {
+      "disposition": "REPAIRED_REACHABLE_FORMAL_PATH",
+      "location": "rcmf/benchmarks/appworld/reproducible_stages_14b.py:initialize_runtime_layout",
+      "new_behavior": "central semantic continuation contract validation",
+      "old_behavior": "continuation dispatch required schema suffix continuation_14l_v1"
+    },
+    {
+      "disposition": "REPAIRED_REACHABLE_FORMAL_PATH",
+      "location": "rcmf/benchmarks/appworld/reproducible_config_14b.py:build_arm_runtime_config",
+      "new_behavior": "central semantic continuation contract validation",
+      "old_behavior": "continuation count-policy requirement used the same 14l suffix"
+    },
+    {
+      "behavior": "dispatches on contract metadata authorization_mode=o07_o08_continuation",
+      "disposition": "SAFE_SEMANTIC_DISPATCH",
+      "location": "rcmf/pipeline/authorization.py"
+    },
+    {
+      "behavior": "uses the validated pipeline.continuation mapping and does not fall through to full-run initialization",
+      "disposition": "SAFE_SEMANTIC_PRESENCE_CHECK",
+      "location": "rcmf/benchmarks/appworld/reproducible_stages_14b.py:_joint_prepare/_final_stage"
+    },
+    {
+      "behavior": "version literals identify immutable packages or fixtures only",
+      "disposition": "NOT_FORMAL_RUNTIME_DISPATCH",
+      "location": "versioned configs, preflight builders, tests, and historical audit scripts"
+    }
+  ],
+  "full_run_behavior_unchanged": true,
+  "malformed_or_ambiguous_continuation_fails_closed": true,
+  "no_other_reachable_version_specific_dispatch": true,
+  "passed": true,
+  "repair_source": "98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f"
+}

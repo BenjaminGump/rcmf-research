@@ -1,0 +1,38 @@
+{
+  "backward_count": 0,
+  "contract_sha256": "7b45f0d20b6cf7e1a3ada5c7b7432a0ff403e420ecb898cfcf6439b31e01639c",
+  "diagnostic_root": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r18_c00_c01_20260907_001",
+  "format": "exp037a_r18_production_c00_c01_diagnostic_v1",
+  "full_run_compatibility_inputs_created": false,
+  "optimizer_step_count": 0,
+  "parent_artifact_count": 922,
+  "parent_artifact_manifest_sha256": "c4cc6501982ec2b8ff9bc7061ad5ed649476d69ad606ac3e39229f16c8768a62",
+  "parent_closure_after_sha256": "f5424356e1ae469f2533136c37e28d8864d43e83c26902ed136b164104f3b0b6",
+  "parent_closure_before_sha256": "f5424356e1ae469f2533136c37e28d8864d43e83c26902ed136b164104f3b0b6",
+  "parent_root_unchanged": true,
+  "passed": true,
+  "pipeline_config_sha256": "1347a32a19081391fddf1bb62de884c04e7c27f3506f4110dc1a1ddd4838e3de",
+  "preflight_shared_transitions_expected": false,
+  "run_uuid": "exp037a_r14b_o08_production_path_diagnostic",
+  "runtime_layout": {
+    "pipeline_schema_version": "rcmf_reproducible_pipeline_continuation_14n_v1",
+    "runtime_mode": "continuation",
+    "sha256": "0f9484466be4e4fc31899db0a19ab83831d44c1921dcb3b31420511951d752f5"
+  },
+  "source_commit": "98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f",
+  "stages": {
+    "C00_parent_run_evidence_import": {
+      "elapsed_seconds": 6.287421124987304,
+      "exit_code": 0,
+      "output_manifest_sha256": "4d3df420f12deee996496e2e58bf1be1d9aff3fa324a2b70d200b0b1ffb396aa",
+      "strict_validator_passed": true
+    },
+    "C01_o07_o08_boundary_validation": {
+      "elapsed_seconds": 19.338233589194715,
+      "exit_code": 0,
+      "output_manifest_sha256": "d8968dd74f068b64f9cf264d617c4e21f91bf3aa7cc68dd11070779586f5d93b",
+      "strict_validator_passed": true
+    }
+  },
+  "summary_sha256": "35a8bdedf2c49b01460a10f2da88198577f9bd3f43f4ddc7e16064140416ca5c"
+}

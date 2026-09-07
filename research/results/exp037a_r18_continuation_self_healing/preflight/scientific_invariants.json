@@ -1,0 +1,26 @@
+{
+  "causal_panel": {
+    "initial": 256,
+    "maximum": 499,
+    "minimum_per_label": 40
+  },
+  "continuation_dispatch_repair_only": true,
+  "count_ownership_repair_only": true,
+  "evaluation_changed": false,
+  "format": "exp037a_continuation_scientific_invariants_14n_v1",
+  "generation_changed": false,
+  "losses_changed": false,
+  "memory_counts": {
+    "deployment": 499,
+    "heldout_parent": 98,
+    "model_training": 401
+  },
+  "o00_o12_scientific_behavior_change": 0,
+  "parent_o00_o07_behavior_change": 0,
+  "path_ownership_repair_only": true,
+  "prompt_profile": "full_demo_first_only",
+  "selector_changed": false,
+  "state_query_shuffle_definition_changed": false,
+  "three_demo_behavior_change": 0,
+  "writer_reader_epochs": 2
+}

@@ -3438,3 +3438,37 @@ IMPLEMENTATION DEVIATIONS:
 
 - None. R17 made no executable, scientific, config, parent, or Lambda-root
   repair. This commit publishes Git-safe failure records only.
+
+## 2026-09-07 EXP-037A-R18 semantic continuation dispatch repair
+
+VERIFIED:
+
+- The 14m C00 failure is a minor non-scientific routing defect: two reachable
+  code paths identified continuation status through the historical
+  `continuation_14l_v1` schema suffix.
+- One semantic classifier now requires agreement between the continuation
+  schema and explicit `pipeline.continuation` contract, validates the O07/O08
+  boundary and parent immutability flags, and rejects missing or ambiguous
+  contracts before runtime setup.
+- A real C00/C01 production-path diagnostic passed strict validation and kept
+  the 922-file parent closure unchanged. Full-run dispatch remains covered and
+  unchanged.
+- Scientific config sections and the resolved 1D arm are identical to the
+  frozen 14m method after removing run identity. No prompt, model, data,
+  selector, training, field, evaluator, metric, or gate changed.
+
+DECISION:
+
+- Classify the repair as `VERIFIED_MINOR_NONSCIENTIFIC_INFRASTRUCTURE_DEFECT`.
+- Freeze source `98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f` and use fresh
+  continuation UUID `rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003`.
+- Under the explicit R18 standing approval, a fresh exact 14n run-bound
+  authorization may be persisted and launched after records publication.
+- Preserve 14m and all older roots immutably; do not reuse their authorization
+  or scientific outputs.
+
+IMPLEMENTATION DEVIATIONS:
+
+- Initial Windows test invocations encountered an unavailable `conda` PATH and
+  a stale pytest temp-directory ACL. The same tests were rerun in the known
+  `appworld_env` interpreter with an isolated `--basetemp`; no test was waived.

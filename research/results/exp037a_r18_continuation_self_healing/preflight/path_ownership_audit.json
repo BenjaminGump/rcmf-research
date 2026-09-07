@@ -1,0 +1,222 @@
+{
+  "additional_reachable_same_class_defects": 0,
+  "ambiguous_ownership_count": 0,
+  "defects_repaired": 1,
+  "defects_verified": 1,
+  "format": "exp037a_r16_downstream_path_ownership_audit_v1",
+  "full_run_behavior_unchanged": true,
+  "launch_source": "a8cd3b6e5457b858e0e4705913b2283dfaf99a0f",
+  "parent_o08_partials_excluded": true,
+  "passed": true,
+  "rows": [
+    {
+      "input": "full_bank_data_manifest",
+      "ownership": "CONTINUATION_OWNED_OUTPUT",
+      "path_source": "arms/1d/data/full_bank_data_manifest.json",
+      "producer": "O08",
+      "resolver": "arm_root(run_root, arm_id)",
+      "stages": [
+        "O13"
+      ],
+      "status": "SAFE"
+    },
+    {
+      "input": "state_query_source_cache",
+      "ownership": "CONTINUATION_OWNED_OUTPUT",
+      "path_source": "arms/1d/data/rcmf_source_cache.pt",
+      "producer": "O08",
+      "resolver": "arm_root(run_root, arm_id)",
+      "stages": [
+        "O13"
+      ],
+      "status": "SAFE"
+    },
+    {
+      "input": "state_cache",
+      "ownership": "SEALED_PARENT_INPUT",
+      "path_source": "stage_c_9a.prompt_dependent_inputs.state_cache",
+      "producer": "parent O00",
+      "resolved_path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/arms/1d/representation_cache/multiview/state_multiview.pt",
+      "resolver": "_resolved_prompt_dependent_input",
+      "sha256": "73943bc85c2a1f4cf1c85a7c8c40dac4b5e954e63520530d91595be205c9a4fa",
+      "stages": [
+        "O13"
+      ],
+      "status": "REPAIRED_SAFE"
+    },
+    {
+      "input": "epoch_fields",
+      "ownership": "CONTINUATION_OWNED_OUTPUT",
+      "path_source": "arms/1d/heldout_validation/live_full_field/field_artifacts",
+      "producer": "O12",
+      "stages": [
+        "O13"
+      ],
+      "status": "SAFE"
+    },
+    {
+      "input": "epoch_checkpoints",
+      "ownership": "CONTINUATION_OWNED_OUTPUT",
+      "path_source": "arms/1d/joint_training/checkpoints",
+      "producer": "O09/O10",
+      "stages": [
+        "O13"
+      ],
+      "status": "SAFE"
+    },
+    {
+      "input": "full_trajectory_summary",
+      "ownership": "CONTINUATION_OWNED_OUTPUT",
+      "path_source": "arms/1d/heldout_validation/full_trajectory/summary.json",
+      "producer": "O13",
+      "stages": [
+        "O14"
+      ],
+      "status": "SAFE"
+    },
+    {
+      "input": "heldout_selection_inputs",
+      "ownership": "CONTINUATION_OWNED_OUTPUT",
+      "path_source": "arms/1d/heldout_validation/live_full_field",
+      "producer": "O11/O12",
+      "stages": [
+        "O14"
+      ],
+      "status": "SAFE"
+    },
+    {
+      "input": "selected_checkpoint_and_fields",
+      "ownership": "CONTINUATION_OWNED_OUTPUT",
+      "path_source": "arms/1d/heldout_validation/live_full_field",
+      "producer": "O12/O14",
+      "stages": [
+        "O15"
+      ],
+      "status": "SAFE"
+    },
+    {
+      "input": "source_cache_shuffle_and_selected_checkpoint",
+      "ownership": "CONTINUATION_OWNED_OUTPUT",
+      "path_source": "arms/1d/data + arms/1d/deployment_field + arms/1d/joint_training",
+      "producer": "O08/O10/O14/O15",
+      "stages": [
+        "O16"
+      ],
+      "status": "SAFE"
+    },
+    {
+      "input": "deployment_field_and_instant_add_report",
+      "ownership": "CONTINUATION_OWNED_OUTPUT",
+      "path_source": "arms/1d/deployment_field",
+      "producer": "O16",
+      "stages": [
+        "O17"
+      ],
+      "status": "SAFE"
+    },
+    {
+      "input": "deployment_field_and_selected_checkpoint",
+      "ownership": "CONTINUATION_OWNED_OUTPUT",
+      "path_source": "arms/1d/deployment_field + arms/1d/heldout_validation",
+      "producer": "O14/O17",
+      "stages": [
+        "O18",
+        "O19"
+      ],
+      "status": "SAFE"
+    },
+    {
+      "input": "three_demo_condition_summaries",
+      "ownership": "SEALED_PARENT_INPUT",
+      "path_source": "pipeline.continuation.parent_root/evaluation/common_one_demo_dev",
+      "producer": "parent D18-D20",
+      "resolver": "pipeline.continuation.parent_root",
+      "stages": [
+        "F00"
+      ],
+      "status": "SAFE"
+    },
+    {
+      "input": "one_demo_condition_summaries",
+      "ownership": "CONTINUATION_OWNED_OUTPUT",
+      "path_source": "current run_root/evaluation/common_one_demo_dev",
+      "producer": "O18/O19",
+      "stages": [
+        "F00"
+      ],
+      "status": "SAFE"
+    },
+    {
+      "input": "parent_artifact_manifest",
+      "ownership": "SEALED_PARENT_INPUT",
+      "path_source": "pipeline.continuation.parent_artifact_manifest_path",
+      "producer": "14m preflight",
+      "resolver": "explicit continuation config",
+      "stages": [
+        "F02",
+        "F03"
+      ],
+      "status": "SAFE"
+    },
+    {
+      "input": "three_demo_gate",
+      "ownership": "SEALED_PARENT_INPUT",
+      "path_source": "pipeline.continuation.parent_root/gate",
+      "producer": "parent D22",
+      "resolver": "pipeline.continuation.parent_root",
+      "stages": [
+        "F03"
+      ],
+      "status": "SAFE"
+    },
+    {
+      "input": "parent O08 partials",
+      "ownership": "FORBIDDEN_PARENT_PARTIAL",
+      "path_source": "three prohibited relative paths",
+      "producer": "failed parent O08",
+      "stages": [
+        "O08",
+        "O09",
+        "O10",
+        "O11",
+        "O12",
+        "O13",
+        "O14",
+        "O15",
+        "O16",
+        "O17",
+        "O18",
+        "O19",
+        "F00",
+        "F01",
+        "F02",
+        "F03"
+      ],
+      "status": "EXCLUDED_BY_922_ARTIFACT_CLOSURE"
+    },
+    {
+      "input": "state_cache",
+      "ownership": "CONTINUATION_OWNED_OUTPUT",
+      "path_source": "arm-resolved stage_c_9a.prompt_dependent_inputs.state_cache",
+      "producer": "same-run D00/O00",
+      "resolver": "_resolved_prompt_dependent_input",
+      "stages": [
+        "fresh full-run D13/O13"
+      ],
+      "status": "FULL_RUN_BEHAVIOR_UNCHANGED"
+    },
+    {
+      "input": "local factorization state cache",
+      "ownership": "CONTINUATION_OWNED_OUTPUT",
+      "path_source": "target/representation_cache/multiview/state_multiview.pt",
+      "producer": "O00",
+      "stages": [
+        "O04 only"
+      ],
+      "status": "NOT_REACHABLE_IN_14M_CONTINUATION_SCOPE"
+    }
+  ],
+  "scientific_semantics_changed": false,
+  "scope": "reachable O13 through F03 plus shared O08-O12 helpers",
+  "unresolved_defect_count": 0
+}

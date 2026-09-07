@@ -2937,3 +2937,29 @@ Decision:
   Parent evidence remains immutable and valid.
 - The 14m root and authorization are terminal evidence and must not be reused.
   No retry, resume, source repair, or monitor bridge was started in R17.
+
+### EXP-037A-R18 Semantic Continuation Dispatch Repaired; 14n Preflight Passed
+
+- The R17 failure was independently reproduced as
+  `CONTINUATION_SCHEMA_VERSION_DISPATCH_MISMATCH`. Both reachable literal-14l
+  dispatch sites now use one fail-closed semantic continuation-contract
+  classifier; malformed or ambiguous configs cannot fall into full-run setup.
+- Frozen launch source is `98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f`
+  at `archive/exp037a-r18-launch-source-98f917d`. Local full tests passed
+  `1008` with `3` skips; Lambda full CUDA tests passed `1011`.
+- A real Lambda scheduler/subprocess/stage-runner diagnostic completed C00 and
+  C01 with strict-valid manifests. It created no full-run compatibility input,
+  expected no shared transitions, and performed zero backward/optimizer work.
+- Fresh replacement UUID is
+  `rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003`. Config,
+  contract, parent-manifest, artifact-index, and authorization-request SHA256
+  values are `6e4be2be11e608436f5b5ebfdeee45d94a61f2831c841be72cd97e8050107e01`,
+  `e479889fba498401e50ff7f309668629c3745d8ea5d91d84d8600c62986e61c7`,
+  `c4cc6501982ec2b8ff9bc7061ad5ed649476d69ad606ac3e39229f16c8768a62`,
+  `562c0fe02f70ec893b24c14dc14e36713a52b779771989cc2a520262bd30dfae`,
+  and `8c3d5b5c45c23a5a0c5246856a3e317a48f1cfdf9cbff5394d19a5598c2a77f2`.
+- The 922-file parent closure remains exact at
+  `f5424356e1ae469f2533136c37e28d8864d43e83c26902ed136b164104f3b0b6`.
+  Scientific configuration changes are zero. The preflight request remains
+  `NOT_AUTHORIZED`; R18 standing approval permits a new exact run-bound 14n
+  authorization and autonomous continuation after this records freeze.

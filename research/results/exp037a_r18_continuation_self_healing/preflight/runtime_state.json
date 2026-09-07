@@ -1,0 +1,17 @@
+{
+  "active_formal_processes": 0,
+  "captured_utc": "2026-09-07T16:05:48Z",
+  "failed_14m_formal_tmux_present": false,
+  "format": "exp037a_r18_prelaunch_runtime_state_v1",
+  "h100": {
+    "memory_total_mib": 81559,
+    "memory_used_mib": 0,
+    "name": "NVIDIA H100 80GB HBM3",
+    "scientific_active_time_r18_prelaunch_hours": 0,
+    "utilization_percent": 0
+  },
+  "nfs_free_gib": 3090871,
+  "passed": true,
+  "replacement_formal_tmux_present": false,
+  "safe_to_launch": true
+}

@@ -1,0 +1,12 @@
+{
+  "contract_sha256": "e479889fba498401e50ff7f309668629c3745d8ea5d91d84d8600c62986e61c7",
+  "format": "exp037a_continuation_run_identity_14n_v1",
+  "pipeline_config_path": "configs/pipeline/rcmf_appworld_continuation_14n.yaml",
+  "pipeline_config_sha256": "6e4be2be11e608436f5b5ebfdeee45d94a61f2831c841be72cd97e8050107e01",
+  "root_existed_before_preflight": false,
+  "root_prior_entries": [],
+  "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003",
+  "run_uuid": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003",
+  "source_commit": "98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f",
+  "stage_scope_sha256": "3581cf1caded5a5aeba300b538117a4771afd64eb33b5c423c033fa1ac1397d7"
+}

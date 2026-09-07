@@ -1,0 +1,322 @@
+{
+  "classification_counts": {
+    "DYNAMIC_ARM_OUTPUT": 4,
+    "THREE_DEMO_REPRODUCTION_ONLY": 15,
+    "TRUE_SHARED_INVARIANT": 3,
+    "UNREACHABLE_HISTORY": 2
+  },
+  "files": [
+    {
+      "path": "configs\\benchmark\\stage_c_rcmf_joint_full_bank_9a.yaml",
+      "sha256": "b5189f9c1dc67ca5d7f501b82cba78cb64432bd46a356ab59639c1cea9ca4909"
+    },
+    {
+      "path": "configs\\pipeline\\rcmf_appworld_continuation_14l.yaml",
+      "sha256": "3a37b18611b23db7335a66bb8b51e80db116bb7b6df8ee7ac66f6b1b06d283e4"
+    },
+    {
+      "path": "configs\\pipeline\\rcmf_appworld_arm_1d_continuation_14l.yaml",
+      "sha256": "e893a985db3ebd042888a2eadeb43eb8f03c7468005a02ba76760d7c6f27cfea"
+    },
+    {
+      "path": "rcmf\\benchmarks\\appworld\\reproducible_config_14b.py",
+      "sha256": "121b696587d487c19974e308955be8a5dbe6a93283fc57ff5d9fb34ed85c964b"
+    },
+    {
+      "path": "rcmf\\benchmarks\\appworld\\reproducible_stages_14b.py",
+      "sha256": "0b3fb93fa203221a7c34723db87fb7dbaaa7d7bbcca5384361034f2477a9657a"
+    },
+    {
+      "path": "rcmf\\benchmarks\\appworld\\scoreable_count_contract_14l.py",
+      "sha256": "da33b0f9042846f0366781813b95b0ae0645a3d08dc18f879e993f54bff6341a"
+    },
+    {
+      "path": "scripts\\prepare_rcmf_joint_full_bank_9a.py",
+      "sha256": "0f654b4da4e9042a648c0ed69b8a4e15224e7848557ef449b153a2fbb6927076"
+    },
+    {
+      "path": "scripts\\run_rcmf_joint_full_bank_9a.py",
+      "sha256": "5bb888c7c17fda191a49fca9316af5416ca1fd20197d57984c982f5eed6b8999"
+    },
+    {
+      "path": "scripts\\run_rcmf_joint_full_bank_live_9a.py",
+      "sha256": "8fbf7ee4644f94b8a2466c71659504a3ab329121b3ce9f97d14804d7461faec7"
+    },
+    {
+      "path": "scripts\\run_rcmf_joint_full_bank_first37_9a.py",
+      "sha256": "f4ab033d16d4119158e6626a2243565131a84d462a57980f427bcc26b3583c5b"
+    }
+  ],
+  "format": "exp037a_o08_o19_stale_contract_audit_14l_v1",
+  "passed": true,
+  "production_one_demo_exact_outcome_constants": [],
+  "rows": [
+    {
+      "classification": "TRUE_SHARED_INVARIANT",
+      "context": "heldout_memory_count: 98",
+      "file_sha256": "b5189f9c1dc67ca5d7f501b82cba78cb64432bd46a356ab59639c1cea9ca4909",
+      "line": 32,
+      "path": "configs\\benchmark\\stage_c_rcmf_joint_full_bank_9a.yaml",
+      "rationale": "98 heldout-parent ledger memories",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "98"
+    },
+    {
+      "classification": "DYNAMIC_ARM_OUTPUT",
+      "context": "scoreable_train_state_count: 366",
+      "file_sha256": "b5189f9c1dc67ca5d7f501b82cba78cb64432bd46a356ab59639c1cea9ca4909",
+      "line": 33,
+      "path": "configs\\benchmark\\stage_c_rcmf_joint_full_bank_9a.yaml",
+      "rationale": "name is handled by the typed arm policy",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "scoreable_train_state_count"
+    },
+    {
+      "classification": "THREE_DEMO_REPRODUCTION_ONLY",
+      "context": "scoreable_train_state_count: 366",
+      "file_sha256": "b5189f9c1dc67ca5d7f501b82cba78cb64432bd46a356ab59639c1cea9ca4909",
+      "line": 33,
+      "path": "configs\\benchmark\\stage_c_rcmf_joint_full_bank_9a.yaml",
+      "rationale": "sealed three-demo positive-control expectation or audit label",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "366"
+    },
+    {
+      "classification": "DYNAMIC_ARM_OUTPUT",
+      "context": "scoreable_heldout_state_count: 98",
+      "file_sha256": "b5189f9c1dc67ca5d7f501b82cba78cb64432bd46a356ab59639c1cea9ca4909",
+      "line": 34,
+      "path": "configs\\benchmark\\stage_c_rcmf_joint_full_bank_9a.yaml",
+      "rationale": "name is handled by the typed arm policy",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "scoreable_heldout_state_count"
+    },
+    {
+      "classification": "THREE_DEMO_REPRODUCTION_ONLY",
+      "context": "scoreable_heldout_state_count: 98",
+      "file_sha256": "b5189f9c1dc67ca5d7f501b82cba78cb64432bd46a356ab59639c1cea9ca4909",
+      "line": 34,
+      "path": "configs\\benchmark\\stage_c_rcmf_joint_full_bank_9a.yaml",
+      "rationale": "three-demo paired-state count, not a continuation input",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "98"
+    },
+    {
+      "classification": "THREE_DEMO_REPRODUCTION_ONLY",
+      "context": "expected_train_paired_states: 366",
+      "file_sha256": "b5189f9c1dc67ca5d7f501b82cba78cb64432bd46a356ab59639c1cea9ca4909",
+      "line": 40,
+      "path": "configs\\benchmark\\stage_c_rcmf_joint_full_bank_9a.yaml",
+      "rationale": "sealed three-demo positive-control expectation or audit label",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "366"
+    },
+    {
+      "classification": "THREE_DEMO_REPRODUCTION_ONLY",
+      "context": "expected_heldout_paired_states: 98",
+      "file_sha256": "b5189f9c1dc67ca5d7f501b82cba78cb64432bd46a356ab59639c1cea9ca4909",
+      "line": 41,
+      "path": "configs\\benchmark\\stage_c_rcmf_joint_full_bank_9a.yaml",
+      "rationale": "three-demo paired-state count, not a continuation input",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "98"
+    },
+    {
+      "classification": "THREE_DEMO_REPRODUCTION_ONLY",
+      "context": "prompt_profile: full_demo",
+      "file_sha256": "b5189f9c1dc67ca5d7f501b82cba78cb64432bd46a356ab59639c1cea9ca4909",
+      "line": 137,
+      "path": "configs\\benchmark\\stage_c_rcmf_joint_full_bank_9a.yaml",
+      "rationale": "legacy three-demo reference or exact positive-control profile",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "full_demo"
+    },
+    {
+      "classification": "THREE_DEMO_REPRODUCTION_ONLY",
+      "context": "expected_parent_split_sha256: 0c6707f61f3fa62847c1abea366b44e4fd50c206f773fa6e79a5e8ffe433c615",
+      "file_sha256": "3a37b18611b23db7335a66bb8b51e80db116bb7b6df8ee7ac66f6b1b06d283e4",
+      "line": 70,
+      "path": "configs\\pipeline\\rcmf_appworld_continuation_14l.yaml",
+      "rationale": "sealed three-demo positive-control expectation or audit label",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "366"
+    },
+    {
+      "classification": "THREE_DEMO_REPRODUCTION_ONLY",
+      "context": "expected_train_completed: 366",
+      "file_sha256": "3a37b18611b23db7335a66bb8b51e80db116bb7b6df8ee7ac66f6b1b06d283e4",
+      "line": 87,
+      "path": "configs\\pipeline\\rcmf_appworld_continuation_14l.yaml",
+      "rationale": "sealed three-demo positive-control expectation or audit label",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "366"
+    },
+    {
+      "classification": "THREE_DEMO_REPRODUCTION_ONLY",
+      "context": "expected_heldout_completed: 98",
+      "file_sha256": "3a37b18611b23db7335a66bb8b51e80db116bb7b6df8ee7ac66f6b1b06d283e4",
+      "line": 88,
+      "path": "configs\\pipeline\\rcmf_appworld_continuation_14l.yaml",
+      "rationale": "three-demo paired-state count, not a continuation input",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "98"
+    },
+    {
+      "classification": "THREE_DEMO_REPRODUCTION_ONLY",
+      "context": "POSITIVE: 129",
+      "file_sha256": "3a37b18611b23db7335a66bb8b51e80db116bb7b6df8ee7ac66f6b1b06d283e4",
+      "line": 90,
+      "path": "configs\\pipeline\\rcmf_appworld_continuation_14l.yaml",
+      "rationale": "sealed three-demo positive-control expectation or audit label",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "129"
+    },
+    {
+      "classification": "THREE_DEMO_REPRODUCTION_ONLY",
+      "context": "NEUTRAL: 300",
+      "file_sha256": "3a37b18611b23db7335a66bb8b51e80db116bb7b6df8ee7ac66f6b1b06d283e4",
+      "line": 91,
+      "path": "configs\\pipeline\\rcmf_appworld_continuation_14l.yaml",
+      "rationale": "sealed three-demo positive-control expectation or audit label",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "300"
+    },
+    {
+      "classification": "THREE_DEMO_REPRODUCTION_ONLY",
+      "context": "HARMFUL: 35",
+      "file_sha256": "3a37b18611b23db7335a66bb8b51e80db116bb7b6df8ee7ac66f6b1b06d283e4",
+      "line": 92,
+      "path": "configs\\pipeline\\rcmf_appworld_continuation_14l.yaml",
+      "rationale": "sealed three-demo positive-control expectation or audit label",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "35"
+    },
+    {
+      "classification": "THREE_DEMO_REPRODUCTION_ONLY",
+      "context": "heldout_parent_memories: 98",
+      "file_sha256": "3a37b18611b23db7335a66bb8b51e80db116bb7b6df8ee7ac66f6b1b06d283e4",
+      "line": 116,
+      "path": "configs\\pipeline\\rcmf_appworld_continuation_14l.yaml",
+      "rationale": "historical D06 audit reference retained outside O08 count ownership",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "98"
+    },
+    {
+      "classification": "THREE_DEMO_REPRODUCTION_ONLY",
+      "context": "full_demo_raw_sha256: dd74c379c97031a062ba79b2b82d3992ec3b38870792f53d86821544f994c4c3",
+      "file_sha256": "3a37b18611b23db7335a66bb8b51e80db116bb7b6df8ee7ac66f6b1b06d283e4",
+      "line": 121,
+      "path": "configs\\pipeline\\rcmf_appworld_continuation_14l.yaml",
+      "rationale": "legacy three-demo reference or exact positive-control profile",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "full_demo"
+    },
+    {
+      "classification": "DYNAMIC_ARM_OUTPUT",
+      "context": "full_bank[\"expected\"].pop(\"scoreable_train_state_count\", None)",
+      "file_sha256": "121b696587d487c19974e308955be8a5dbe6a93283fc57ff5d9fb34ed85c964b",
+      "line": 257,
+      "path": "rcmf\\benchmarks\\appworld\\reproducible_config_14b.py",
+      "rationale": "removed for 1D dynamic policy or retained only by exact 3D baseline",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "scoreable_train_state_count"
+    },
+    {
+      "classification": "DYNAMIC_ARM_OUTPUT",
+      "context": "full_bank[\"expected\"].pop(\"scoreable_heldout_state_count\", None)",
+      "file_sha256": "121b696587d487c19974e308955be8a5dbe6a93283fc57ff5d9fb34ed85c964b",
+      "line": 258,
+      "path": "rcmf\\benchmarks\\appworld\\reproducible_config_14b.py",
+      "rationale": "removed for 1D dynamic policy or retained only by exact 3D baseline",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "scoreable_heldout_state_count"
+    },
+    {
+      "classification": "THREE_DEMO_REPRODUCTION_ONLY",
+      "context": "\"completed_366_98\": d06_gate.get(\"counts\", {}).get(",
+      "file_sha256": "0b3fb93fa203221a7c34723db87fb7dbaaa7d7bbcca5384361034f2477a9657a",
+      "line": 1061,
+      "path": "rcmf\\benchmarks\\appworld\\reproducible_stages_14b.py",
+      "rationale": "sealed three-demo positive-control expectation or audit label",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "366"
+    },
+    {
+      "classification": "THREE_DEMO_REPRODUCTION_ONLY",
+      "context": "\"completed_366_98\": d06_gate.get(\"counts\", {}).get(",
+      "file_sha256": "0b3fb93fa203221a7c34723db87fb7dbaaa7d7bbcca5384361034f2477a9657a",
+      "line": 1061,
+      "path": "rcmf\\benchmarks\\appworld\\reproducible_stages_14b.py",
+      "rationale": "three-demo paired-state count, not a continuation input",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "98"
+    },
+    {
+      "classification": "TRUE_SHARED_INVARIANT",
+      "context": "and int(report_payload.get(\"new_memory_count\", -1)) == 98",
+      "file_sha256": "0b3fb93fa203221a7c34723db87fb7dbaaa7d7bbcca5384361034f2477a9657a",
+      "line": 1820,
+      "path": "rcmf\\benchmarks\\appworld\\reproducible_stages_14b.py",
+      "rationale": "98 heldout-parent ledger memories",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "98"
+    },
+    {
+      "classification": "TRUE_SHARED_INVARIANT",
+      "context": "if len(heldout_ids) != 98:",
+      "file_sha256": "8fbf7ee4644f94b8a2466c71659504a3ab329121b3ce9f97d14804d7461faec7",
+      "line": 714,
+      "path": "scripts\\run_rcmf_joint_full_bank_live_9a.py",
+      "rationale": "structural 98-memory ledger identity",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "98"
+    },
+    {
+      "classification": "UNREACHABLE_HISTORY",
+      "context": "\"prompt_profile\": \"full_demo\",",
+      "file_sha256": "f4ab033d16d4119158e6626a2243565131a84d462a57980f427bcc26b3583c5b",
+      "line": 157,
+      "path": "scripts\\run_rcmf_joint_full_bank_first37_9a.py",
+      "rationale": "shared helper default is overridden by the formal arm-resolved caller",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "full_demo"
+    },
+    {
+      "classification": "UNREACHABLE_HISTORY",
+      "context": "prompt_profile: str = \"full_demo\",",
+      "file_sha256": "f4ab033d16d4119158e6626a2243565131a84d462a57980f427bcc26b3583c5b",
+      "line": 344,
+      "path": "scripts\\run_rcmf_joint_full_bank_first37_9a.py",
+      "rationale": "shared helper default is overridden by the formal arm-resolved caller",
+      "reachable_stage_scope": "O08-O19_or_shared_helper",
+      "token": "full_demo"
+    }
+  ],
+  "searched_tokens": [
+    366,
+    98,
+    464,
+    784,
+    129,
+    300,
+    35,
+    "scoreable_train_state_count",
+    "scoreable_heldout_state_count",
+    "full_demo"
+  ],
+  "stage_scope": [
+    "O08",
+    "O09",
+    "O10",
+    "O11",
+    "O12",
+    "O13",
+    "O14",
+    "O15",
+    "O16",
+    "O17",
+    "O18",
+    "O19"
+  ],
+  "unresolved_defects": []
+}

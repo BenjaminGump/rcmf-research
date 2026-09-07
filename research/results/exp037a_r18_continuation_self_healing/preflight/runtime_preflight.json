@@ -1,0 +1,21 @@
+{
+  "authorization_status": "NOT_AUTHORIZED",
+  "authorized_to_launch": false,
+  "conservative_additional_storage_gib": 10,
+  "conservative_h100_active_hours": 19.5,
+  "conservative_wall_hours": 20.0,
+  "expected_additional_storage_gib": 5,
+  "expected_h100_active_hours": 9.3,
+  "expected_wall_hours": 9.5,
+  "explicit_user_approval_required": true,
+  "format": "exp037a_continuation_runtime_preflight_14n_v1",
+  "hard_cap_hours": 32,
+  "measurement_basis": "Unchanged R16 workload and measured 14l stage anchors; R18 changes only pre-science continuation dispatch.",
+  "monetary_cost": "MONETARY_COST_NOT_AVAILABLE",
+  "passed": true,
+  "recommended_hard_cap_hours": 32.0,
+  "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003",
+  "run_uuid": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003",
+  "source_commit": "98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f",
+  "workload_changed": false
+}
