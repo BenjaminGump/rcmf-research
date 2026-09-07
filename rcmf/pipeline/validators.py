@@ -322,6 +322,7 @@ def validate_stage_completion(
     expected_pipeline_config_sha256: str | None = None,
     expected_contract_sha256: str | None = None,
     expected_run_root: str | Path | None = None,
+    write_validator: bool = True,
 ) -> dict[str, Any]:
     root = Path(stage_dir)
     output_manifest_path = root / "output_manifest.json"
@@ -376,5 +377,9 @@ def validate_stage_completion(
         "checks": checks,
         "output_manifest_sha256": sha256_file(output_manifest_path),
     }
-    validator_path.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if write_validator:
+        validator_path.write_text(
+            json.dumps(result, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
     return result

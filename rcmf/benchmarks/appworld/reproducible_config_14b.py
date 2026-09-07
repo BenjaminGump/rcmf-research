@@ -11,6 +11,11 @@ from rcmf.benchmarks.appworld.reproduction_contract_14e import (
     resolved_causal_panel_contract,
     validate_post_d06_expectations_are_not_panel_inputs,
 )
+from rcmf.benchmarks.appworld.scoreable_count_contract_14l import (
+    EXACT_REPRODUCTION,
+    SEALED_UPSTREAM_OUTCOMES,
+    scoreable_count_contract,
+)
 
 
 def arm_root(run_root: str | Path, arm_id: str) -> Path:
@@ -54,6 +59,23 @@ def build_arm_runtime_config(
     prompt_profile = str(
         pipeline["arms"][arm_id]["task_conditioned_prompt_profile"]
     )
+    count_policy_declared = "scoreable_count_policy" in pipeline["arms"][arm_id]
+    count_policy = str(pipeline["arms"][arm_id].get("scoreable_count_policy", ""))
+    expected_count_policy = (
+        EXACT_REPRODUCTION if arm_id == "3d" else SEALED_UPSTREAM_OUTCOMES
+    )
+    if (
+        str(pipeline["pipeline"].get("schema_version", "")).endswith(
+            "continuation_14l_v1"
+        )
+        and not count_policy_declared
+    ):
+        raise ValueError(f"Arm {arm_id} scoreable count policy is missing")
+    if count_policy_declared and count_policy != expected_count_policy:
+        raise ValueError(
+            f"Arm {arm_id} scoreable count policy differs: "
+            f"{count_policy or '<missing>'} != {expected_count_policy}"
+        )
     expected = pipeline["pipeline"]["expected"]
     method = pipeline["pipeline"]
 
@@ -150,14 +172,41 @@ def build_arm_runtime_config(
         **panel_contract,
         "task_split_manifest": str(method["roots"]["approved_downstream_split"]),
     }
-    panel_independence = validate_post_d06_expectations_are_not_panel_inputs(
-        method, panel_contract
-    )
+    if count_policy_declared and count_policy == SEALED_UPSTREAM_OUTCOMES:
+        panel_independence = {
+            "format": "exp037a_dynamic_arm_panel_independence_14l_v1",
+            "checks": {
+                "panel_initial_is_historical_contract": int(
+                    panel_contract["initial_state_count"]
+                )
+                == 256,
+                "panel_maximum_is_historical_contract": int(
+                    panel_contract["maximum_state_count"]
+                )
+                == 499,
+                "panel_minimum_is_historical_contract": int(
+                    panel_contract["minimum_per_label"]
+                )
+                == 40,
+                "post_d06_counts_are_absent": "downstream_train_states"
+                not in expected
+                and "downstream_heldout_states" not in expected,
+            },
+        }
+        panel_independence["passed"] = all(
+            panel_independence["checks"].values()
+        )
+        causal["panel"].pop("post_d06_reproduction_expectation", None)
+        causal["panel"]["scoreable_count_policy"] = count_policy
+    else:
+        panel_independence = validate_post_d06_expectations_are_not_panel_inputs(
+            method, panel_contract
+        )
+        causal["panel"]["post_d06_reproduction_expectation"] = (
+            panel_independence["post_d06_expected_completed"]
+        )
     if not panel_independence["passed"]:
         raise ValueError(f"Causal-panel independence gate failed: {panel_independence}")
-    causal["panel"]["post_d06_reproduction_expectation"] = (
-        panel_independence["post_d06_expected_completed"]
-    )
     causal["runtime"] = {
         **causal["runtime"],
         "review_threshold_h100_hours": configured_hard_cap_hours(method),
@@ -193,7 +242,25 @@ def build_arm_runtime_config(
         ),
         "selector_ensemble_sha256": "fresh_stage_output",
         "model_name": str(method["roots"]["model_snapshot"]),
+        "deployment_dev_task_count": int(expected["dev_tasks"]),
     }
+    if count_policy_declared:
+        if count_policy == EXACT_REPRODUCTION:
+            post_d06 = method["reproduction_contract"]["post_d06_reproduction_gate"]
+            full_bank["scoreable_count_contract"] = scoreable_count_contract(
+                arm_id=arm_id,
+                policy=count_policy,
+                expected_train=int(post_d06["expected_train_completed"]),
+                expected_heldout=int(post_d06["expected_heldout_completed"]),
+            )
+        else:
+            full_bank["expected"].pop("scoreable_train_state_count", None)
+            full_bank["expected"].pop("scoreable_heldout_state_count", None)
+            full_bank["scoreable_count_contract"] = scoreable_count_contract(
+                arm_id=arm_id,
+                policy=count_policy,
+            )
+        full_bank["causal_panel_contract"] = dict(panel_contract)
     full_bank["selector"] = {
         **full_bank["selector"],
         "require_stored_score_equivalence": True,

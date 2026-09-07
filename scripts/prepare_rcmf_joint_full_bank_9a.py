@@ -25,6 +25,9 @@ from rcmf.training.rcmf_joint_full_bank_9a import (
     tensor_sha256,
 )
 from rcmf.training.state_conditioned_transition_6b import AttemptLedger
+from rcmf.benchmarks.appworld.scoreable_count_contract_14l import (
+    validate_scoreable_population,
+)
 from rcmf.utils.serialization import atomic_write_json, sha256_file, sha256_text
 
 
@@ -134,6 +137,9 @@ def _paths(settings: Mapping[str, Any], artifact_dir: Path) -> dict[str, Path]:
         "outcomes": parent_a / "paired_causal/paired_outcomes.json",
         "teacher_cache": parent_a
         / "structured_compiler/policy_teacher_cache.pt",
+        "teacher_report": parent_a
+        / "structured_compiler/policy_teacher_report.json",
+        "selections": parent_a / "preflight/frozen_train_selections.jsonl",
         "task_split": Path(str(settings["task_split_manifest"])),
         "corpus_summary": corpus / "summary.json",
         "corpus_validation": corpus / "structural_validation.json",
@@ -144,12 +150,19 @@ def _paths(settings: Mapping[str, Any], artifact_dir: Path) -> dict[str, Path]:
         "selector_audit": artifact_dir / "data/selector_decomposition_audit.json",
         "shuffle_manifest": artifact_dir / "data/key_payload_shuffle_manifest.json",
         "data_manifest": artifact_dir / "data/full_bank_data_manifest.json",
+        "count_validation": artifact_dir / "data/scoreable_count_validation.json",
         "runtime_counts": artifact_dir / "runtime/static_counts.json",
         "run_manifest": artifact_dir / "run_manifest.json",
     }
     overrides = settings.get("prompt_dependent_inputs", {})
     if overrides:
-        for name in ("state_cache", "outcomes", "teacher_cache"):
+        for name in (
+            "state_cache",
+            "outcomes",
+            "teacher_cache",
+            "teacher_report",
+            "selections",
+        ):
             if name in overrides:
                 paths[name] = Path(str(overrides[name]))
     return paths
@@ -338,6 +351,8 @@ def main() -> None:
         "selector_ensemble",
         "outcomes",
         "teacher_cache",
+        "teacher_report",
+        "selections",
         "task_split",
         "corpus_summary",
         "corpus_validation",
@@ -563,10 +578,25 @@ def main() -> None:
             if row["model_split"] == "heldout_train_validation"
         ]
         teacher = torch.load(
-            paths["teacher_cache"], map_location="cpu", weights_only=False
+            paths["teacher_cache"], map_location="cpu", weights_only=True
         )
-        if set(teacher["ordered_state_ids"]) != outcome_ids:
-            raise ValueError("Policy teacher cache and paired outcome IDs differ")
+        teacher_report = _json(paths["teacher_report"])
+        selection_rows = _rows(paths["selections"])
+        panel_contract = settings.get("causal_panel_contract", {})
+        population_validation = validate_scoreable_population(
+            contract=settings.get("scoreable_count_contract", {}),
+            outcomes=outcomes,
+            teacher_cache=teacher,
+            teacher_report=teacher_report,
+            selection_rows=selection_rows,
+            train_task_ids=train_tasks,
+            heldout_task_ids=heldout_tasks,
+            minimum_per_label=int(panel_contract.get("minimum_per_label", -1)),
+            maximum_state_count=int(panel_contract.get("maximum_state_count", -1)),
+            outcomes_sha256=sha256_file(paths["outcomes"]),
+            teacher_cache_sha256=sha256_file(paths["teacher_cache"]),
+        )
+        atomic_write_json(paths["count_validation"], population_validation)
 
         parent_counts = Counter(
             str(row["parent_memory_id"]) for row in transitions
@@ -602,10 +632,7 @@ def main() -> None:
             == int(expected["complete_train_memory_count"]),
             "heldout_memories": len(heldout_memories)
             == int(expected["heldout_memory_count"]),
-            "scoreable_train": len(train_outcomes)
-            == int(expected["scoreable_train_state_count"]),
-            "scoreable_heldout": len(heldout_outcomes)
-            == int(expected["scoreable_heldout_state_count"]),
+            "scoreable_population_contract": bool(population_validation["passed"]),
         }
         if not all(count_checks.values()):
             raise RuntimeError(f"Prepared data counts differ: {count_checks}")
@@ -625,6 +652,10 @@ def main() -> None:
                 "model_training_labels": dict(sorted(labels_train.items())),
                 "heldout_labels": dict(sorted(labels_heldout.items())),
             },
+            "scoreable_count_contract": dict(
+                settings["scoreable_count_contract"]
+            ),
+            "scoreable_population_validation": population_validation,
             "rho_by_transition_id": rho,
             "same_task_exclusion": "subtract_precompiled_task_accumulator",
             "source_cache": str(paths["source_cache"]),
@@ -642,6 +673,7 @@ def main() -> None:
             "decision_branch": "rcmf_source_representation_valid",
             "checks": checks,
             "count_checks": count_checks,
+            "scoreable_population_validation": population_validation,
             "memory_count": len(provenance_rows),
             "view_shape": list(memory_views.shape),
             "view_names": expected_view_names[:4],
@@ -701,7 +733,10 @@ def main() -> None:
             "maximum_training_backwards": units_per_epoch * 2,
             "teacher_forced_heldout_forwards": len(heldout_outcomes) * 4 * 2,
             "heldout_live_conditions": len(heldout_outcomes) * 4 * 2,
-            "conditional_first37_conditions": 37 * 3,
+            "deployment_dev_conditions": int(
+                expected["deployment_dev_task_count"]
+            )
+            * 3,
             "per_memory_compilations_total": len(transitions),
             "field_A_shape": [KEY_DIM, SLOT_COUNT, 256],
             "field_A_float32_bytes": KEY_DIM * SLOT_COUNT * 256 * 4,
@@ -728,6 +763,7 @@ def main() -> None:
                     "selector_audit",
                     "shuffle_manifest",
                     "data_manifest",
+                    "count_validation",
                     "runtime_counts",
                 )
             },

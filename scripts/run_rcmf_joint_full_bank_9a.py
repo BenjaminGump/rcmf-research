@@ -641,9 +641,20 @@ def _preflight(
         "field_B_shape": [8, 256],
         "field_float32_bytes": 7_864_320 + 8_192,
         "backward_count": int(units["backward_count"]),
-        "teacher_forced_heldout_conditions": 784,
-        "heldout_live_conditions": 784,
-        "conditional_first37_conditions": 111,
+        "teacher_forced_heldout_conditions": int(
+            data["data_manifest"]["counts"]["heldout_query_states_scoreable"]
+        )
+        * 4
+        * 2,
+        "heldout_live_conditions": int(
+            data["data_manifest"]["counts"]["heldout_query_states_scoreable"]
+        )
+        * 4
+        * 2,
+        "deployment_dev_conditions": int(
+            settings["expected"]["deployment_dev_task_count"]
+        )
+        * 3,
         "unit_manifest_sha256": sha256_file(paths["units"]),
         "state_shuffle_manifest_sha256": sha256_file(paths["state_shuffle"]),
         "state_shuffle_fixed_points": int(state_shuffle["fixed_point_count"]),
@@ -760,25 +771,42 @@ def _smoke(
         raise RuntimeError(f"Full-bank smoke gradient contract failed: {second}")
     backward_seconds = float(timings[-1])
     no_grad_seconds = float(forward_seconds or backward_seconds / 2.0)
-    training_seconds = 1152 * backward_seconds
-    zero_cache_seconds = 464 * no_grad_seconds
-    teacher_validation_seconds = 784 * no_grad_seconds
+    static_counts = _json(paths["runtime_counts"])
+    training_seconds = (
+        int(static_counts["maximum_training_backwards"]) * backward_seconds
+    )
+    zero_cache_seconds = (
+        int(static_counts["scoreable_train_states"])
+        + int(static_counts["scoreable_heldout_states"])
+    ) * no_grad_seconds
+    teacher_validation_seconds = (
+        int(static_counts["teacher_forced_heldout_forwards"]) * no_grad_seconds
+    )
     prior_one_step_seconds = 1504.6966795157641 / 180.0
-    heldout_live_seconds = 784 * prior_one_step_seconds
-    prior_first37_correct = 8992.449618292972
-    prior_first37_shuffle = 5990.844518950209
-    expected_first37_seconds = prior_first37_correct + 2.0 * prior_first37_shuffle
+    heldout_live_seconds = (
+        int(static_counts["heldout_live_conditions"]) * prior_one_step_seconds
+    )
+    prior_dev_correct_seconds_per_task = 8992.449618292972 / 37.0
+    prior_dev_shuffle_seconds_per_task = 5990.844518950209 / 37.0
+    expected_dev_seconds = int(
+        settings["expected"]["deployment_dev_task_count"]
+    ) * (
+        prior_dev_correct_seconds_per_task
+        + 2.0 * prior_dev_shuffle_seconds_per_task
+    )
     expected_seconds = (
         training_seconds
         + zero_cache_seconds
         + teacher_validation_seconds
         + heldout_live_seconds
-        + expected_first37_seconds
+        + expected_dev_seconds
     )
     conservative_seconds = (
         1.25 * (training_seconds + zero_cache_seconds + teacher_validation_seconds)
         + 1.20 * heldout_live_seconds
-        + 3.0 * prior_first37_correct
+        + 3.0
+        * int(settings["expected"]["deployment_dev_task_count"])
+        * prior_dev_correct_seconds_per_task
     )
     threshold = float(settings["runtime"]["review_threshold_h100_hours"])
     automatic = expected_seconds / 3600.0 <= threshold and conservative_seconds / 3600.0 <= threshold

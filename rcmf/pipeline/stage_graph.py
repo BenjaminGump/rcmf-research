@@ -138,3 +138,33 @@ def build_exp037a_stage_graph() -> tuple[StageSpec, ...]:
         rows.append(_stage(stage_id, "final", final_dependency))
         final_dependency = stage_id
     return tuple(rows)
+
+
+CONTINUATION_BOUNDARY_STAGES = (
+    "C00_parent_run_evidence_import",
+    "C01_o07_o08_boundary_validation",
+)
+
+CONTINUATION_ONE_DEMO_STAGES = tuple(
+    stage_id for stage_id in ONE_DEMO_STAGES if int(stage_id[1:3]) >= 8
+)
+
+
+def build_exp037a_continuation_stage_graph() -> tuple[StageSpec, ...]:
+    stage_ids = (
+        *CONTINUATION_BOUNDARY_STAGES,
+        *CONTINUATION_ONE_DEMO_STAGES,
+        *FINAL_STAGES,
+    )
+    rows: list[StageSpec] = []
+    previous: str | None = None
+    for stage_id in stage_ids:
+        if stage_id.startswith("C"):
+            arm = "continuation"
+        elif stage_id.startswith("O"):
+            arm = "1d"
+        else:
+            arm = "final"
+        rows.append(_stage(stage_id, arm, previous))
+        previous = stage_id
+    return tuple(rows)

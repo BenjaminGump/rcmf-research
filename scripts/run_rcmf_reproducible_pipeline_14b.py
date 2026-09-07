@@ -99,9 +99,11 @@ def _authorize(
         "authorized": True,
         "authorization_status": "AUTHORIZED",
         "granted_by_user": True,
-        "full_pipeline_authorized": True,
-        "d06_or_later_authorized": True,
-        "one_demo_authorized": True,
+        "full_pipeline_authorized": approval.get("full_pipeline_authorized") is True,
+        "d06_or_later_authorized": approval.get("d06_or_later_authorized") is True,
+        "one_demo_authorized": approval.get("one_demo_authorized") is True,
+        "continuation_authorized": approval.get("continuation_authorized", False)
+        is True,
         "previous_200_hour_authorization_inherited": False,
         "authorization_source": "explicit_run_bound_user_authorization",
         "authorized_at_utc": existing.get("authorized_at_utc")
@@ -123,6 +125,16 @@ def _authorize(
         "gate_to_one_demo_target_seconds": 60,
         "monitor_is_scheduler": False,
     }
+    if str(contract.metadata.get("authorization_mode")) == "o07_o08_continuation":
+        payload.update(
+            {
+                "parent_artifact_manifest_sha256": str(
+                    approval["parent_artifact_manifest_sha256"]
+                ),
+                "parent_run_uuid": str(approval["parent_run_uuid"]),
+                "stage_scope_sha256": str(approval["stage_scope_sha256"]),
+            }
+        )
     atomic_write_json(existing_path, payload)
     return payload
 

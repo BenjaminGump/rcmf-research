@@ -49,6 +49,12 @@ ARM_DIFF_ALLOWLIST = {
     "stage_c_9a.prompt_dependent_inputs.state_cache",
     "stage_c_9a.prompt_dependent_inputs.teacher_cache",
     "stage_c_9a.run_uuid",
+    "stage_c_9a.scoreable_count_contract.arm_id",
+    "stage_c_9a.scoreable_count_contract.policy",
+    "stage_c_9a.scoreable_count_contract.expected_train_paired_states",
+    "stage_c_9a.scoreable_count_contract.expected_heldout_paired_states",
+    "stage_c_9a.expected.scoreable_train_state_count",
+    "stage_c_9a.expected.scoreable_heldout_state_count",
 }
 
 

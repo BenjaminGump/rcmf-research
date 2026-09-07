@@ -27,16 +27,12 @@ def _run_bound_checks(
     pipeline_config_sha256: str,
 ) -> dict[str, bool]:
     expected_scope = str(contract.metadata.get("authorization_scope", ""))
-    expected_version = str(
-        contract.metadata.get("authorization_version", "")
-    )
-    return {
+    expected_version = str(contract.metadata.get("authorization_version", ""))
+    mode = str(contract.metadata.get("authorization_mode", "full_pipeline"))
+    checks = {
         "authorization_status": payload.get("authorization_status") == "AUTHORIZED",
         "authorized": payload.get("authorized") is True,
         "granted_by_user": payload.get("granted_by_user") is True,
-        "full_pipeline_authorized": payload.get("full_pipeline_authorized") is True,
-        "d06_or_later_authorized": payload.get("d06_or_later_authorized") is True,
-        "one_demo_authorized": payload.get("one_demo_authorized") is True,
         "run_uuid": str(payload.get("run_uuid")) == contract.run_uuid,
         "run_root": canonical_path(str(payload.get("run_root", "")))
         == canonical_path(run_root),
@@ -62,6 +58,65 @@ def _run_bound_checks(
         )
         is False,
     }
+    if mode == "full_pipeline":
+        checks.update(
+            {
+                "full_pipeline_authorized": payload.get(
+                    "full_pipeline_authorized"
+                )
+                is True,
+                "d06_or_later_authorized": payload.get(
+                    "d06_or_later_authorized"
+                )
+                is True,
+                "one_demo_authorized": payload.get("one_demo_authorized")
+                is True,
+                "continuation_not_authorized": payload.get(
+                    "continuation_authorized", False
+                )
+                is False,
+            }
+        )
+    elif mode == "o07_o08_continuation":
+        expected_parent_manifest = str(
+            contract.metadata.get("parent_artifact_manifest_sha256", "")
+        )
+        expected_parent_uuid = str(contract.metadata.get("parent_run_uuid", ""))
+        expected_stage_scope = str(contract.metadata.get("stage_scope_sha256", ""))
+        checks.update(
+            {
+                "continuation_authorized": payload.get(
+                    "continuation_authorized"
+                )
+                is True,
+                "full_pipeline_not_authorized": payload.get(
+                    "full_pipeline_authorized"
+                )
+                is False,
+                "d06_or_later_not_authorized": payload.get(
+                    "d06_or_later_authorized"
+                )
+                is False,
+                "one_demo_authorized": payload.get("one_demo_authorized")
+                is True,
+                "parent_artifact_manifest_sha256": str(
+                    payload.get("parent_artifact_manifest_sha256", "")
+                )
+                == expected_parent_manifest
+                and bool(expected_parent_manifest),
+                "parent_run_uuid": str(payload.get("parent_run_uuid", ""))
+                == expected_parent_uuid
+                and bool(expected_parent_uuid),
+                "stage_scope_sha256": str(
+                    payload.get("stage_scope_sha256", "")
+                )
+                == expected_stage_scope
+                and bool(expected_stage_scope),
+            }
+        )
+    else:
+        checks["authorization_mode_known"] = False
+    return checks
 
 
 def validate_explicit_authorization(

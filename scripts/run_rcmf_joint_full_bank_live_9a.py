@@ -127,8 +127,8 @@ def build_live_manifest(*, outcomes: Sequence[Mapping[str, Any]], state_shuffle:
         (dict(row) for row in outcomes if str(row["model_split"]) == "heldout_train_validation"),
         key=lambda row: (str(row["state_task_id"]), int(row["state_step_id"]), str(row["state_example_id"])),
     )
-    if len(heldout) != 98:
-        raise ValueError("EXP-031A live validation requires 98 heldout states")
+    if not heldout:
+        raise ValueError("Live validation requires nonempty heldout states")
     conditions = []
     for epoch in (1, 2):
         for row in heldout:
@@ -162,8 +162,13 @@ def build_live_manifest(*, outcomes: Sequence[Mapping[str, Any]], state_shuffle:
         "test_normal_outcomes_used": False,
         "conditions": conditions,
     }
-    if len(conditions) != 784 or len({str(row["condition_key"]) for row in conditions}) != 784:
-        raise ValueError("EXP-031A live condition accounting differs")
+    expected_conditions = 2 * len(heldout) * len(CONTROLS)
+    if (
+        len(conditions) != expected_conditions
+        or len({str(row["condition_key"]) for row in conditions})
+        != expected_conditions
+    ):
+        raise ValueError("Live condition accounting differs from sealed heldout rows")
     payload["manifest_sha256"] = canonical_sha256(payload)
     return payload
 
@@ -617,7 +622,7 @@ def _validate_live(
             "epoch": epoch,
             "checkpoint": str(checkpoint_path),
             "checkpoint_sha256": checkpoint_sha,
-            "state_count": 98,
+            "state_count": len({str(row["source_state_id"]) for row in epoch_rows}),
             "condition_count": len(epoch_rows),
             "metrics": summary,
             "classification": classify_live_checkpoint(summary),

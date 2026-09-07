@@ -163,7 +163,14 @@ def main() -> None:
             stage_id=args.stage,
             stage_dir=stage_dir,
             stage_identity=identity,
-            arm=arm_id or ("shared" if args.stage.startswith("S") else "final"),
+            arm=arm_id
+            or (
+                "shared"
+                if args.stage.startswith("S")
+                else "continuation"
+                if args.stage.startswith("C")
+                else "final"
+            ),
             prompt_profile=prompt_profile,
             result=result,
             command=sys.argv,

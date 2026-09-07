@@ -1,0 +1,13 @@
+arm_id: 1d
+task_conditioned_prompt_profile: full_demo_first_only
+scoreable_count_policy: sealed_upstream_outcomes
+artifact_prefix: arms/1d
+run_id: rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001-1d
+prompt_dependent:
+  rebuild_state_representations: false
+  rebuild_selected_memories: false
+  rebuild_paired_outcomes: false
+  rebuild_policy_teachers: false
+  rebuild_zero_cache: true
+  rebuild_training_units: true
+

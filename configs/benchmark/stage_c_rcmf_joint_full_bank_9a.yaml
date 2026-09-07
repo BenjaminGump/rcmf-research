@@ -33,6 +33,18 @@ stage_c_9a:
     scoreable_train_state_count: 366
     scoreable_heldout_state_count: 98
 
+  scoreable_count_contract:
+    format: exp037a_scoreable_count_contract_14l_v1
+    arm_id: 3d
+    policy: exact_reproduction
+    expected_train_paired_states: 366
+    expected_heldout_paired_states: 98
+
+  causal_panel_contract:
+    initial_state_count: 256
+    maximum_state_count: 499
+    minimum_per_label: 40
+
   memory:
     source_layer: final_layer
     source_view_names:

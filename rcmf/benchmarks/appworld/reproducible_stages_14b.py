@@ -20,6 +20,10 @@ from rcmf.benchmarks.appworld.reproducible_config_14b import (
     compatibility_parent_b,
     write_resolved_arm_config,
 )
+from rcmf.benchmarks.appworld.continuation_14l import (
+    execute_boundary_validation,
+    execute_parent_import,
+)
 from rcmf.config import load_config
 from rcmf.factory import build_backend
 from rcmf.pipeline.manifests import content_sha256, file_identity
@@ -197,6 +201,15 @@ def _tree_files(root: Path) -> list[Path]:
 
 def formal_stage_output_paths(stage_id: str, run_root: Path) -> list[Path]:
     """Return immutable, resume-critical outputs produced by a formal stage."""
+    continuation: dict[str, list[Path]] = {
+        "C00_parent_run_evidence_import": [
+            run_root / "continuation/parent_artifact_manifest_runtime.json",
+            run_root / "continuation/parent_run_evidence_import.json",
+        ],
+        "C01_o07_o08_boundary_validation": [
+            run_root / "continuation/boundary_validation.json"
+        ],
+    }
     shared: dict[str, list[Path]] = {
         "S00_environment_manifest": [run_root / "preflight/environment_manifest.json"],
         "S01_authoritative_corpus": [
@@ -232,7 +245,9 @@ def formal_stage_output_paths(stage_id: str, run_root: Path) -> list[Path]:
         ],
         "S09_runtime_preflight_and_approval": [run_root / "runtime_authorization.json"],
     }
-    if stage_id in shared:
+    if stage_id in continuation:
+        paths = continuation[stage_id]
+    elif stage_id in shared:
         paths = shared[stage_id]
     elif stage_id.startswith(("D", "O")):
         arm_id = _arm_from_stage(stage_id)
@@ -308,6 +323,7 @@ def formal_stage_output_paths(stage_id: str, run_root: Path) -> list[Path]:
                 target / "data/selector_decomposition_audit.json",
                 target / "data/key_payload_shuffle_manifest.json",
                 target / "data/full_bank_data_manifest.json",
+                target / "data/scoreable_count_validation.json",
                 target / "joint_training/training_unit_manifest.json",
                 target / "joint_training/state_query_shuffle_manifest.json",
                 target / "joint_training/zero_policy_nll_summary.json",
@@ -992,7 +1008,22 @@ def _joint_prepare(
     attempt_id: str,
 ) -> dict[str, Any]:
     prerequisites: dict[str, Any] = {}
-    if arm_id == "3d":
+    continuation = config["pipeline"].get("continuation")
+    if continuation and arm_id == "1d":
+        boundary = _json(run_root / "continuation/boundary_validation.json")
+        if not bool(boundary.get("passed")):
+            raise RuntimeError("Continuation O07/O08 boundary did not pass")
+        prerequisites = {
+            "checks": dict(boundary["checks"]),
+            "continuation_boundary": file_identity(
+                run_root / "continuation/boundary_validation.json"
+            ),
+            "parent_artifact_manifest": file_identity(
+                Path(str(continuation["parent_artifact_manifest_path"]))
+            ),
+            "parent_o08_partial_outputs_used": False,
+        }
+    elif arm_id == "3d":
         d06_gate = _require_d06_reproduction_gate(run_root)
         source_gate = _json(
             run_root
@@ -2012,30 +2043,88 @@ def _three_demo_gate(
     return gate
 
 
+def _summary_task_order(row: Mapping[str, Any]) -> list[str]:
+    for key in ("ordered_task_ids", "task_ids"):
+        if isinstance(row.get(key), Sequence) and not isinstance(
+            row.get(key), (str, bytes)
+        ):
+            return [str(value) for value in row[key]]
+    success = row.get("success_by_task", {})
+    if isinstance(success, Mapping):
+        return [str(value) for value in success]
+    return []
+
+
 def _final_stage(stage_id: str, config: Mapping[str, Any], run_root: Path) -> dict[str, Any]:
-    gate = _json(run_root / "gate/three_demo_reproduction_gate.json")
-    summaries_root = run_root / "evaluation/common_one_demo_dev/summaries"
+    continuation = config["pipeline"].get("continuation")
+    parent_root = (
+        Path(str(continuation["parent_root"]))
+        if continuation
+        else run_root
+    )
+    gate = _json(parent_root / "gate/three_demo_reproduction_gate.json")
+    parent_summaries = (
+        parent_root / "evaluation/common_one_demo_dev/summaries"
+    )
+    current_summaries = run_root / "evaluation/common_one_demo_dev/summaries"
     if stage_id == "F00_two_arm_paired_analysis":
-        names = [
-            "B0_1D",
-            "FRESH3D_C_1DDEPLOY",
-            "FRESH3D_S_1DDEPLOY",
-        ]
-        if gate["continue_to_one_demo"]:
-            names.extend(("FRESH1D_C_1DDEPLOY", "FRESH1D_S_1DDEPLOY"))
-        rows = {name: _json(summaries_root / f"{name}.json") for name in names}
+        paths = {
+            "B0_1D": parent_summaries / "B0_1D.json",
+            "FRESH3D_C_1DDEPLOY": parent_summaries
+            / "FRESH3D_C_1DDEPLOY.json",
+            "FRESH3D_S_1DDEPLOY": parent_summaries
+            / "FRESH3D_S_1DDEPLOY.json",
+        }
+        include_one_demo = bool(gate["continue_to_one_demo"])
+        if continuation:
+            include_one_demo = True
+        if include_one_demo:
+            paths.update(
+                {
+                    "FRESH1D_C_1DDEPLOY": current_summaries
+                    / "FRESH1D_C_1DDEPLOY.json",
+                    "FRESH1D_S_1DDEPLOY": current_summaries
+                    / "FRESH1D_S_1DDEPLOY.json",
+                }
+            )
+        rows = {name: _json(path) for name, path in paths.items()}
+        task_orders = {name: _summary_task_order(row) for name, row in rows.items()}
+        reference_order = next(iter(task_orders.values()))
+        if not reference_order or any(
+            order != reference_order for order in task_orders.values()
+        ):
+            raise ValueError("Cross-arm dev task identities or ordering differ")
         result = {
-            "format": "rcmf_two_arm_paired_analysis_14b_v1",
+            "format": (
+                "rcmf_two_arm_continuation_analysis_14l_v1"
+                if continuation
+                else "rcmf_two_arm_paired_analysis_14b_v1"
+            ),
             "gate": gate["decision"],
             "conditions": {
                 name: {
                     "success_count": int(row.get("success_count", 0)),
                     "success_ids": list(row.get("success_ids", [])),
+                    "source": file_identity(paths[name]),
                 }
                 for name, row in rows.items()
             },
+            "ordered_task_ids": reference_order,
+            "task_order_exact_across_conditions": True,
             "test_normal_run": False,
         }
+        if continuation:
+            result["provenance"] = {
+                "execution_form": "cross_source_provenance_validated_continuation",
+                "parent_run_uuid": str(continuation["parent_run_uuid"]),
+                "parent_source_commit": str(continuation["parent_source_commit"]),
+                "parent_boundary": "after_O07_before_O08",
+                "parent_artifact_manifest": file_identity(
+                    Path(str(continuation["parent_artifact_manifest_path"]))
+                ),
+                "parent_o08_partial_outputs_used": False,
+                "single_source_fresh_s00_f03_rerun": False,
+            }
         atomic_write_json(run_root / "analysis/two_arm_paired_analysis.json", result)
         return result
     if stage_id == "F01_portability_validation":
@@ -2064,17 +2153,30 @@ def _final_stage(stage_id: str, config: Mapping[str, Any], run_root: Path) -> di
                 }
             )
         result = {
-            "format": "rcmf_git_safe_audit_index_14b_v1",
+            "format": (
+                "rcmf_git_safe_continuation_audit_index_14l_v1"
+                if continuation
+                else "rcmf_git_safe_audit_index_14b_v1"
+            ),
             "run_uuid": config["pipeline"]["run_uuid"],
             "stage_completions": stage_rows,
             "raw_lambda_root": str(run_root),
             "typed_redaction_required_before_git_export": True,
             "raw_secrets_committed": False,
         }
+        if continuation:
+            result["parent_artifact_manifest"] = file_identity(
+                Path(str(continuation["parent_artifact_manifest_path"]))
+            )
+            result["parent_stage_completions_rewritten"] = False
         atomic_write_json(run_root / "audit/index.json", result)
         return result
     result = {
-        "format": "rcmf_reproducible_pipeline_final_record_14b_v1",
+        "format": (
+            "rcmf_reproducible_pipeline_continuation_final_record_14l_v1"
+            if continuation
+            else "rcmf_reproducible_pipeline_final_record_14b_v1"
+        ),
         "run_uuid": config["pipeline"]["run_uuid"],
         "source_commit": _json(run_root / "runtime_authorization.json")["source_commit"],
         "three_demo_gate": gate,
@@ -2084,9 +2186,17 @@ def _final_stage(stage_id: str, config: Mapping[str, Any], run_root: Path) -> di
         "audit": file_identity(run_root / "audit/index.json"),
         "no_follow_on_started": True,
     }
+    if continuation:
+        result["continuation"] = {
+            "parent_run_uuid": str(continuation["parent_run_uuid"]),
+            "parent_source_commit": str(continuation["parent_source_commit"]),
+            "boundary": "after_O07_before_O08",
+            "parent_o08_partial_outputs_used": False,
+            "single_source_fresh_s00_f03_rerun": False,
+            "positive_or_borderline_requires_single_source_confirmation": True,
+        }
     atomic_write_json(run_root / "final/final_record.json", result)
     return result
-
 
 def execute_stage(
     *,
@@ -2098,6 +2208,10 @@ def execute_stage(
     attempt_id: str,
 ) -> dict[str, Any]:
     arm_id = _arm_from_stage(stage_id)
+    if stage_id == "C00_parent_run_evidence_import":
+        return execute_parent_import(config, run_root)
+    if stage_id == "C01_o07_o08_boundary_validation":
+        return execute_boundary_validation(config, run_root)
     if stage_id == "S00_environment_manifest":
         return _json(run_root / "preflight/environment_manifest.json")
     if stage_id == "S01_authoritative_corpus":
@@ -2278,10 +2392,21 @@ def write_stage_manifest(
     result_path = stage_dir / "stage_result.json"
     atomic_write_json(result_path, dict(result))
     dependency_rows = []
-    from rcmf.pipeline.stage_graph import build_exp037a_stage_graph
+    contract_path = run_root / "preflight/stage_dag.json"
+    if contract_path.is_file():
+        contract = _json(contract_path)
+        stage_row = next(
+            row for row in contract["stages"] if row["stage_id"] == stage_id
+        )
+        dependencies = tuple(stage_row.get("dependencies", []))
+    else:
+        from rcmf.pipeline.stage_graph import build_exp037a_stage_graph
 
-    stage = next(row for row in build_exp037a_stage_graph() if row.stage_id == stage_id)
-    for dependency in stage.dependencies:
+        stage = next(
+            row for row in build_exp037a_stage_graph() if row.stage_id == stage_id
+        )
+        dependencies = stage.dependencies
+    for dependency in dependencies:
         path = run_root / "stages" / dependency / "completion.json"
         dependency_rows.append(file_identity(path))
     artifact_rows = [file_identity(path) for path in output_artifacts]
