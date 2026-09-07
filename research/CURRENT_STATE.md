@@ -30,8 +30,6 @@ Full report:
 
 Last updated: 2026-09-07.
 
-# Current State
-
 ## 2026-09-05 EXP-037A-R12B Ready For 14k Reauthorization
 
 VERIFIED:
