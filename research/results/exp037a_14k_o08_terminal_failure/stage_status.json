@@ -1,0 +1,22 @@
+{
+  "format": "exp037a_14k_stage_status_v1",
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001",
+  "source_commit": "004f866647cfabb38a141b88e6d83821df88c403",
+  "completed_stage_count": 44,
+  "latest_completed_stage": "O07_policy_teacher",
+  "failed_stage": "O08_zero_cache_and_training_units",
+  "failed_attempt_id": "O08_zero_cache_and_training_units-1788717793178938884-r1",
+  "completion": {
+    "passed": false,
+    "exit_code": 65,
+    "recoverable": false,
+    "validator_reason": "missing_output_manifest"
+  },
+  "validator_json_present": false,
+  "output_manifest_present": false,
+  "valid_upstream": {
+    "three_demo_complete": true,
+    "one_demo_stages_complete_through": "O07_policy_teacher"
+  },
+  "downstream_status": "NOT_REACHED"
+}
