@@ -1,0 +1,10 @@
+{
+  "C00_C01": "cheap_repeatable_read_only_parent_validation",
+  "O08": "rebuild_from_scratch_under_continuation_source",
+  "O09_O10": "strict_atomic_checkpoint_resume_contract",
+  "completed_stage_skip": "strict_new_run_identity_and_hash_validation_only",
+  "format": "exp037a_continuation_restart_plan_14l_v1",
+  "parent_artifacts_mutated": false,
+  "parent_artifacts_recomputed": false,
+  "parent_completion_files_copied_into_continuation": false
+}

@@ -1,0 +1,2137 @@
+{
+  "arm": "1d",
+  "attempt_id": "O08_zero_cache_and_training_units-1788761740527812982-r1",
+  "command": [
+    "scripts/run_rcmf_reproducible_stage_14b.py",
+    "--stage",
+    "O08_zero_cache_and_training_units",
+    "--config",
+    "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/preflight/diagnostic_pipeline.yaml",
+    "--run-root",
+    "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003",
+    "--source-commit",
+    "ffd6a22fc938f2737faafc1df4e6da5e58a51518"
+  ],
+  "contract_sha256": "be20db10a6ae56d169172042021b065540981f9ffa23832e44c61c5fdc8f736d",
+  "declared_artifact_count": 419,
+  "elapsed_seconds": 267.1849231882952,
+  "format": "rcmf_reproducible_stage_output_14b_v1",
+  "input_completion_manifests": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/stages/C01_o07_o08_boundary_validation/completion.json",
+      "sha256": "a50f061300ff9f5883136e8f43f120d70b55fef1741cb0214e20d734fa366b32",
+      "size_bytes": 1255
+    }
+  ],
+  "outputs": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/stages/O08_zero_cache_and_training_units/stage_result.json",
+      "sha256": "32843e5de67f48bf7f7e69bc4ab9ef4e5e350b2e8d5aef19facace28d3f11134",
+      "size_bytes": 1775
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/data/full_bank_data_manifest.json",
+      "sha256": "eb016db620e92500460402bdc140a59af7d5a5b5a99ea59bfb56c5fb0413e8da",
+      "size_bytes": 56724
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/data/key_payload_shuffle_manifest.json",
+      "sha256": "8e85888c5c05c890b8eb6526aaf25f764813b48aab0b84eb5b9a982567a5d51c",
+      "size_bytes": 272329
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/data/memory_provenance.jsonl",
+      "sha256": "b67be115f8612ad87c29f68cac4e12903810a83dd9b8e6f1c3edb9bc7e974188",
+      "size_bytes": 1520488
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/data/rcmf_source_cache.pt",
+      "sha256": "611b3af25fe205ec865dc2f1601f0265533d8dcacd69ab10fba2b57d4a5cd298",
+      "size_bytes": 69828848
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/data/scoreable_count_validation.json",
+      "sha256": "2c2984411f80d26b6da07b58c3b3da20ae72e81a39ab894f0f586e1309d20e6f",
+      "size_bytes": 21656
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/data/selector_decomposition_audit.json",
+      "sha256": "b464c248a23868b941345978bc06261a5eef8ed438bb5cf64397b1ba527d042a",
+      "size_bytes": 1682
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/data/source_representation_audit.json",
+      "sha256": "caccbeea8f03b1597644831b9fc4056d69bad305d36aca59ffdcb3600161d13e",
+      "size_bytes": 23675
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/state_query_shuffle_manifest.json",
+      "sha256": "34a4b361c41bd41c10a222176971465f6367dfb08255641f87793ba9cfc24cba",
+      "size_bytes": 115846
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/training_unit_manifest.json",
+      "sha256": "b70072df07853b8cb1c66f35fd00d4a88947b596a05b82cce3800ce2ef979e67",
+      "size_bytes": 210231
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/003b286a66927d27fa26cf586d000457805c2483859c71f55d70a2bd8756340c.json",
+      "sha256": "2c822c898ce72f0eb7fd3ea0291d96fd9419eaac47f2490c758bbd33981d806d",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/02b40933563c716704df86f609c8e98f65a46f8eca89b7dcf0f2b8531b482fd7.json",
+      "sha256": "b42d767b0c5fe78b735edcf8c6771620ae9ac42ddbbd0080ba877aa1cf6ffb05",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/02e86308ea682f6f7c5b94a151654d1c1a7012e00a52de39cbe2f1aa3f928d4f.json",
+      "sha256": "687ed3628dd4f007db067783810656c43a3a8425d35080d680318c23c5cd1594",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0316c42c2c307b3d61ab9de0ea8c99eace5f2ca913090b5c2cd6e57affcc6299.json",
+      "sha256": "d10dd677fae7c9069e5a4de571ed409e951f16f2d7064ee6a956d17e3c93f26b",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/03311821445d3928e469dd48abed9413eb6aca2e789c458a324ca023de1a0c05.json",
+      "sha256": "58733b2b896cf1ee77de1c8f0f6733ae919537a61ad3920573ae810bb541724a",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/03da8094dd9e88ad2d6c43f26f8522aaae6509b7e87391faaa63d87812342b90.json",
+      "sha256": "9453f866df998bcd8b5b6957e5e4940d10edd4ac041bd0adfe658385f0527619",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/04e3ea34365ef1e6a09a4bffb085f5fe4bdeb0bfab0b49b1cf7bc67eea52dc2f.json",
+      "sha256": "4ee54cfe604dd74e7194c3871efb3794e46d9bfb38e72f9cf84446684fb0a7e3",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/04ed7834513332286c29d71e2d388310cfa027bd37a29aa1f9ea3a950c139f55.json",
+      "sha256": "483a5d321a310a64b7fbe2efdc664fe4012eaf8d43068889714f8e62d39d0432",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/06324e0b45f97e46dca96deb8cd47b6febff8542f826ecbb46ccb42f42d6122c.json",
+      "sha256": "cf24e2d926717519bc1bfbf3f95d46e1403cf8bd606cabf67e0a72326419e5e3",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/071814ad59bf54e6695947bed9e6a069bee72066da9ba84128e279d870df3d29.json",
+      "sha256": "f7c5b16793d7b7e3e0dbcfcae6ddee59b42be98f9dccf1dad00f869849a31fb1",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/07509b0715f8affddf9b29df50f8bb8859b75f551e5911a4cae0b9f59bf1edc1.json",
+      "sha256": "8c11da58e019edb300e3484f3a7ade26deb1c4af8766d034df76dfac676be063",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/07808d35a3618ce696b2f0b77e4d6d7c2f5b1002b3dfdfb6e44087fc15f83bd0.json",
+      "sha256": "a5ca673a48e412df1a29b9b51628010a34194d938a471e4987a4dbc0006b1d33",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/07f498e6c232573c1c6db5281791a7ca869c6ac9bdb3438776dd6442ee6cb812.json",
+      "sha256": "e36c228a017d68f830b853402eb641c8ada6eab7c5bfc3d856a52bfdbfdc6515",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/08248977dd1935acd6b1a24df1665344bbd513845cbf1f7ba89ca55cfc4e0b51.json",
+      "sha256": "1ae54e86fa9042c56515b2766c244633cb70390d0a8ca111c7185ce3cf0c3dee",
+      "size_bytes": 419
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/08288afe822af4b930dac5106660cf86b804eb79f20dcf062fb823cee5888d68.json",
+      "sha256": "7a3a1789f5443b3a71d5b2d7874bbc5f46d863154d59628f77c62f879b89cf24",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/084932cfed831ad15c8f41e95cf6aee794786189928fb3e4e41459a2af2c9b46.json",
+      "sha256": "e9881270c92a62ece536467c5ec55a49e8ee3656e67ae48d3228e07619225066",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0915550b2a436abe89dd71eb6dcebecb89c957a8f7925739f1a6d256b18e4d82.json",
+      "sha256": "20aef94b3c708264bd27c4c93f7212b48bc106ec80d79961d51fc3f3cf623812",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0955b42a4835676a78e6f18d6ca3424160fdeede037fef1111231fc6ac48e1e6.json",
+      "sha256": "b6f9e68f58616d3720198e019458c4126d2ce245d6f0432d619f256316f5d103",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0964504a5380f5b97b092043b42a2fe494ac4e3492e3ee000024d992b08ebcaf.json",
+      "sha256": "3617274c104cc2c5ce6a54a33f45f8becd0e4894d097207f569f3be2386ded8d",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/09768ddb811e2787433bf9afeae1f8fda90f550beb3753c7b91fe0f6f48771c1.json",
+      "sha256": "6eccc52eca8fcd98f5501d9d50a500eb355dd1e3bbe9ced56f1f56306b0fff41",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0a2762709271a28533a3593c43388f490313f26c1a044d0eba55266b3fcf0b45.json",
+      "sha256": "5019759ec03ebb0aca7f5d4bd192f6b6bcd44116ce946d01bb475e64e34ab12c",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0af4cd162d5588f46e037e76e531cff3c86f486106a730456d71fc5901271db3.json",
+      "sha256": "5176e64ec173446a195c601c7317f9dfac17fd245fd4afd89904177f11f940f9",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0b8803b54dcb8d96b4586f220c338064bb37d46eed592e999cf9bbd1bd120108.json",
+      "sha256": "4cb3bc22a0e08017132ea0e4d90b6fcf09d8abbbb12474f62ce2b10572334eb5",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0c1fe829a39fb40622f8cac412282834c5bc1a1c718d6fb7e9b10a5dc6de14cf.json",
+      "sha256": "82f9f645d24309960747b0fc466d8f1a9918a3833d5e44a8fccc2ccc9f161b38",
+      "size_bytes": 434
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0c3ff4b510ef192d97cc8eff91b3613cfb965282df70b07c1ab5f56757cd69ac.json",
+      "sha256": "37746a030cf4a5f1ddd54889eb350598cfd8f3510aa80dd782ecbeecaefc1e3b",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0c59557265e94fcca6f0754edee100f2522999948ca37519e0a7bde973ebebaa.json",
+      "sha256": "e1465b4e014cc5b72a0ac49b9b1f536943c33791c844d5cb0ac494dc470d9d22",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0cb933e6a36f2a3dcb147e841d977dbe9fe8b4119698cdcd3692c36531f3eeb6.json",
+      "sha256": "0524845e05b88f3590d81d2f65e25b38b30856f1b4a200021f621deeaccd6b92",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0d32b9dc055922d37fbe2906a33590ec65034d11409f5c3dbdf6257cf52cc6eb.json",
+      "sha256": "b31d39d689234320d7652f289f63bde2eae4596d1b3a90e407b2592116e4a4d3",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0e520f56d1b467ea89c669a979bcaa859b7546ef811000e2707b86c9fcb7f180.json",
+      "sha256": "2e89ea78096f7d888d76a9dd12f3849c60ad6198bec20bbba8653fad541d5161",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0e671ca4d808670ac9f6b42e367be5b5a9ee2f0f3a351267f505291a0e005144.json",
+      "sha256": "68c0d1e1b3afcb14e35f665ac9de345c654015beb394d99427370ab3ebdb5f15",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0ed3936b0efba1c5f64e1db9ce3bf7efbe262267f79d2e6f0c6fa5275b41d460.json",
+      "sha256": "516e9daef21bbae18ada41fdf28671d2aeb72ad7b69331662a8e9f58ee40bd7f",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0ed8dc76ab391a480044a08429912e4684b1109c98cae1169f61fb991ce9bf51.json",
+      "sha256": "198f6a6a11a5b223bf4bb2ac5fbbbed58db57ff8aa0663ecdc832571df149220",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/0efb499ffd3d7b7103a6ad03665ad909b77cd678bb25faf799ac1d6d24620ea4.json",
+      "sha256": "8a727efa5721a083972d536c79cf93f4ab43d5825b1ef9a7ee2843c541491ea7",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/100fb863dcbec8251caf6e04e5792c2abc94dc8ba2a0515c73875260c265b265.json",
+      "sha256": "4c2f2379e682ba019e58bdad876266b63e1cd919cd68f2e6e3cc3b584fadc29d",
+      "size_bytes": 438
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/10995eac45cae324a1787fb1bf667e7309e938ca593a7b87185622ac6245e646.json",
+      "sha256": "88b42372259f0307fafc2725c194d9f05cb05fc509ba35bd040def677c1e3b4d",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/10d56ce9e4248b1023f5236c7cede5156b15cc7e33aafe375f85a0cc077f2a95.json",
+      "sha256": "920c2c8b534050b6b91dc4e50c7199fe37529efa0bb35e3167e28985fd3128a0",
+      "size_bytes": 419
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/10ee48e3d6e55aedd5268124239b39a51dcd463fb47da84f2117377c591ffee8.json",
+      "sha256": "f9b563a87b1eb15f473df41840c565717b9157c81d62f58bd0f879ca2b7191a8",
+      "size_bytes": 430
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/1288882444a9902dfa9db02311f9f6b48dc747b0a2d7a0985766f3b087a792e4.json",
+      "sha256": "e9f077e9400fa90cbd85e94152f85aefa8258cd36fc2800a4184dd98a4305f39",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/1334a817119c3f5e0a56925121fa39428676062cf7c1024ab58318e8228a3d35.json",
+      "sha256": "421d686fc7f4ce6900faa7883a1880195de35702deb5bb4d28c9a2cca257a9a5",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/13e21c01e3e4024fa6d405fc2f932d369c4ab79f0ce7c49d7a83c94ab0268048.json",
+      "sha256": "ae05f4808a4910191fb0f2a394630f91b67e37b2203e5e4eaefe0ef606f77ad0",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/14000c70a1c1c1272572ed86ba9584b28eb3d27894485f272786253322d47573.json",
+      "sha256": "3790eb0defddbc34d207715f3c33e35f65655f1151e29b5dc66b087c87872316",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/14047afdf4fa9377c5d2e56b2bad4b1f22e04958226dd8f910ac58165e7eaba3.json",
+      "sha256": "a16398d4a007ee676b369d90781db281283d32514c20ffe22bd1d19015cb3fa4",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/143d2edafb7150b59f768c7201fba16e4750dd379d6adeb1f34f8565d0553586.json",
+      "sha256": "3f6284a789a42e144d60213b0568a98b02bfaea2cac6e1e0640cbbdbac00facd",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/15ae28fb75b0ec4b66de723553cf5d7c557b04c821edc73379985ac8fd0ff3c7.json",
+      "sha256": "4621a755ef58f1baa77d2af9405f2c5455386f1768eb0091f1be895fafddb41d",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/15cacc73cb4ffece21beea526b90d6b7a27ec92278dcafc8d43b3f55de04f251.json",
+      "sha256": "4e75d4cd8be4ed823d4ed969eb0739abb38d06157e9614f08d4e4574c70ad898",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/1614b44036eca5e4fdd09d55cfd029308b1843cae331422d4829796bf7168cfb.json",
+      "sha256": "80818a1ac8f073bcce283aa531768e4fd1e8b276296069cba024abd868b42e7a",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/181e38c7cb047e82deedd3048e15e501b9c445e26cbfb640d1ac4a06def229e2.json",
+      "sha256": "115a14c12949a4e4fcf2f2dc9f092ff187e0b2bcd6f72c289b026a7fb5313c3e",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/18a2cb41799b4ca79642c002784e67c014f69140544b770635f075c1fc85b5a4.json",
+      "sha256": "3b000e0f49345f69d08dbd70c56980c3a61b0e90769d7a72e0b496b630dfec8a",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/18f839edf792145c6a26325b6b62aeed403d8949e9a00121ff3e73502bcbac70.json",
+      "sha256": "7ed8e24dbe7a70d2ff73812d1dfc8a2f1e4cceb616c293949fd2ddc19033e47e",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/19023e129e59b0125b0cfd3ed9f141a905b0ba02c86e1f0d2dbb2cabcbaed0c1.json",
+      "sha256": "4a4ba56a78edf954797d2cab637534841b92856c807dbfe077207659a46ef724",
+      "size_bytes": 434
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/1984ddc19ac2c6ee916add9a8740d832c74e01988d6e1eedf7a20fc13b3e4536.json",
+      "sha256": "d2909f160f01dfce73e57784a9108c369a52ceb24cf1474ca48a67b830fa121c",
+      "size_bytes": 429
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/1a02a7d94fe9a062c4987ccd7c0a9237ac962f177653c7d5a8c5a64ca383e6d4.json",
+      "sha256": "85044f2dcc40f7c05ce4b5e81fb9182f6fd333436ed76c7c93e3bf36d5e84d14",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/1a5ba5538a9db584f93c2620f7c169f0b2bc942f9f173a17eba8ee79dbc1789b.json",
+      "sha256": "2f81290d1576d024771d514993b1e375d8d676cd35973e8c7a8dbf92e39e5560",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/1b595c8ba2e617aab0abf496d41d9545513d5468dca05714da301a790aea837b.json",
+      "sha256": "ef1fdacaa1c939e70d7572fb60d0f50e6e26fd76e4bc123ab8ef36f4e8817b40",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/1c3ac1c59f59255b4e1ecfb55c170db1dd375f040086445a610617a20b8f75c9.json",
+      "sha256": "271a9590345dc5554b428f8a36079865e1abf3223a3324efc3146b046aaca0dc",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/1d23c14e118508fcd291887496a749342df3a314d1222ff36c7624b012945393.json",
+      "sha256": "12cc76f4ccd7fe2413c0a385e85e680c02dec8ad669af0ba9a858e548330d082",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/1fe249e3607470055da346a387032d2138c38e0d81c7dc13c2a8540a38994e5c.json",
+      "sha256": "dec666f9aa8b7c4bd1b289e1199b63259398a24b3e738fa4620f1a7668d0c02b",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/208694bb9d8819132857962e46e4d16e35c58dbc40eb4c77da2da6b303dfd653.json",
+      "sha256": "8c6b3a8279db7e6e7726c4077006950a87cca524adcfae07ba76deb905e64329",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/21209a05d9b5c34bb536280ce0750fd2610ecc292015a70d3b04773be0d71354.json",
+      "sha256": "aee0f29ed8f5fcc5e141aec5ddc2d2ff69ad12293b7c1556821437637444a8c1",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/214f9d014215a588d71ff89bbd68598d223d96bf823042ccf3e32068b4241c1c.json",
+      "sha256": "5c754af1fe1c1ec88effa6f6143c55de4f513f7c343c917aff033ba8a4d5527e",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/222208ed8f4616235f7e86e8d2c15ec16465a4d4522f0d10409a844730cbf1d1.json",
+      "sha256": "d4ea4cccd2f72eee8df5d34fc1e886b74d88fe548b3ade9352bb035cba07fc97",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/22ff9ff0ab2dc449703b7f5696a26eb88aed77f6b6e926c4767ee9b2b7b2b05f.json",
+      "sha256": "720a2b5a6efbba36f8aa4ace3d8d026f0cc5922b3a7d1aef15c5fa1b9ec5a259",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/239a5221b376bc26d34da4b7942effdfdf701e9a1fa96a105ac5fddde0c9c595.json",
+      "sha256": "230e348ae77d930fcf1513fa3a49d68380f447023109f9da2592fd1eb38617fd",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/23adf997857e2ccc19a19379678df5af6e7d2763bb80c0a264a9760734634442.json",
+      "sha256": "ccee5659c72b371e521fd547c545252bd568f69c6b680de78949583d62a50e28",
+      "size_bytes": 435
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/243eeea36370c3f3b79a28f70e20a822c3344288ee9fc7deb38bbd58fba6f9cc.json",
+      "sha256": "de5dd8798f545e390b246424f4670dd4292c8d1b98c29597724a6f0e2f31b70b",
+      "size_bytes": 434
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/2440f201d0a0362e86f2cc0714729f10586149d9069959537576aed0f1f1c003.json",
+      "sha256": "034656edfd6c890e846ac8404ef10eab7b136f08daf136748298be1e0c071aeb",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/26c3643da36ccde0ad9bfe8b5b87d88974e67eba746b8becad7fbb4608d29ab8.json",
+      "sha256": "9c4c406fe128db541ca54b04f939853593fc1b82390f5c0d0da253c719b8e7ac",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/272bd4ff0b06078afab8c43c0c0aa271c92627fe7a0ea6eb9a98b2925157f2e4.json",
+      "sha256": "115b43677b9ef8fc469558672da35820a80d1897b806489f9e6a8ccb2c850b2b",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/27be785809aa266f9869ee6f99981b5d406d6297e536061f6985040fb31115c0.json",
+      "sha256": "77cc36c15322c288f72c53eecf282961f0e557a9617e308a72b4188ed65a3f79",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/281d69cc8fbf704247cf6681abbc475f3704f74fc77a3c2d23afe24241c06e46.json",
+      "sha256": "72a30585a48a3f000ac5822a8af127f1cf0102dc0ccc6d412b28dccedf3c7e25",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/2acb155847aa74f2434310d19118ae7a0ade073946ab44b66ca38beef8a31996.json",
+      "sha256": "e8ef5e44b0825c938364877d4dfbf4df9ae6a28cddc25b673ee58560d85fb5eb",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/2b7419da8a37c264efc97e787ab2452418fcc9ec2916bd252e54eebbe1c02c41.json",
+      "sha256": "f47b3ee8c35abbd0f8ad6451d2c726049c80838fc55a57e13261340b7e1fddc9",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/2c1c06e2abb043fab51cbb8633fef95f792073e746f41e1b6243720fc0951e74.json",
+      "sha256": "32e487a08812079bbf8f2868b45daed26bee9eaa950e2caf03d49bfa67aecc57",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/2c2af74d7d4cd2187daa08a52fd9e2bb6b91ce2b5804b24c13d458de97098277.json",
+      "sha256": "2080045f1a467d1fd948ad80e0cdb215e3e52aec3737d853573f08876d4bb57a",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/2d1aafda1ed934ff51ad5cc1a7863fba9581d9327e75a85ff6ecdc80c60378e6.json",
+      "sha256": "32c27ef4a289b2171f80966a2a6438ac9357b7519675720a89bd9fdce111e630",
+      "size_bytes": 438
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/2e4a9394b9c72f8f93349a9571e0c189079175c47622841825f66686c6800b18.json",
+      "sha256": "4ec7ccaac3480e25dfb0582ee44e18e9d29064df9b84fdcb7f79ed3d36fa3c6e",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3010fc4164dcb3622be728087874a26abacf18cd9d8b0ed6349cbd97c74a80ec.json",
+      "sha256": "1dca473d21347c0458bd1ee27902658ee070adeda9336917b8ee8d063928b585",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/30181aaeb11b6753def18b1cd41512d109061800479385e7ed8a119fb173aa04.json",
+      "sha256": "a8499f2a5a5fb23206669decb320019813b7fe2ca60cb639818097c4f99f4973",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/30308dac11b11071999bd11603d29623f85435e4f8d2eb36d63f182388f806e6.json",
+      "sha256": "e3c1b11a195d921665f28cb9e2ab754000cdd673259be6e05a7365c0b2659f65",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/308374cf86731c41502cd1215ec9c7c881048096bf4842a8fe7810ef7bd6757d.json",
+      "sha256": "ee976997f4cf55164dc303e8c4bc7aa6e67654ffd67e789553d7d00d74e71d59",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3343262b3f7a90dbb5fa53901845866647fc4f0e435644289db58d072a758ef0.json",
+      "sha256": "eb377afe86c58edc9f7a35a7827f54830bd4f842f3f28d56217c184e00465e52",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/336f67ce085570092880a59ffeea8c02d19c0572c01b7c64653627cdfbae4318.json",
+      "sha256": "e3ae4043cc814eae46fa292d5fefb86fa1efda26a0ccebb48d751ba8d3ed3cb9",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/340bc32b13602761ef821745c213fbdc101d1815d815ed412d1d878c3d6de976.json",
+      "sha256": "9b3305c0d88dddaf82b086f1ee329e7d92160d9bafb77b7aaf5e52bd183572f3",
+      "size_bytes": 434
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/34475eac88803fc49d01a4e42de5644f3064f6238f1f6b6490eb228a73a62893.json",
+      "sha256": "f3bed3682a016f4f562bad3c52c5c400c92f73260883b879d6054d1acb9345a5",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/34572b3fd6dce6291d1fd1d9e84f10650e05c0865ffe458b29933e3b15440d92.json",
+      "sha256": "caed7b9e916747daf5521aea788565cb077f6920fe71e9d43989a193201d2617",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3504e5a89ee7276362cfd23315aacb5c449705ff6bd6a334de3aea67f0ffc72b.json",
+      "sha256": "fac9aabf769be7202fd5bdddeba24c8f765a59d746af993761f825c48520eaf8",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/356fd739aede422f43a03d64a28727e12b79a27f4cfeb43e41b148997f1f2182.json",
+      "sha256": "43f2f90e1f5faaeab7074f453b2ab06a9462ab94e60f1cf6d53dc90386c7d442",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3572db52c5c9220bff02391d6fc1df2fa0a18a934fb12d8aafb160a4d34b900a.json",
+      "sha256": "ea44e09ce28051c71fdcc0b30153fdf108980584c52ec61494e3e200a06d4b48",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/35b7ee46bb7f7d30a2cd5ad866f505e02696ec9bb09b442e8d8ddc25d8b8adf3.json",
+      "sha256": "d361ae3200174a60d615bb238a0a3788457c2c363ba71907706e22a9a1afd3aa",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/36c55ecd7b93071a0920871ec576fc84ff0f0701b93d73243b763f825748e7e7.json",
+      "sha256": "f79f82e1a0295b9655160cb7597397df6b3c2f2441fb9614da9bdc28e7975134",
+      "size_bytes": 429
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/37da1555db818e717a4b069d2c9a4082847ef8641f4e00b4ed17df8a90ad5d39.json",
+      "sha256": "1862d08f44a661c9a6968c2ebde4d48550bfd7514e67b93901309f69ca30f8cd",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3884e83b2dd03d88030b68585d339e30bbe58b3f2fc73694679a15d3b8f8bcdc.json",
+      "sha256": "81697c0b7d403b8fab593d0aabd3e3836adfdb5730d6b1cb2ffb1f41e1ffc46a",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/38ab4ed4429526128f466a66e54cb0e4e203b406f67c704d5cb4e3fc4ed17297.json",
+      "sha256": "8cbaddd6a4ceedcfb11bf81d20891ee9344e300339c5640afd1119f2da32d0fc",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3942c9a4a856c7fd5a0c0ceb8cbf31e04d11d257d147cccfee94042ee25df49e.json",
+      "sha256": "556d91f0fce5445123a2eebfe62631ee7fbe2c5898a3c22c2be770331fa2d601",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/39a017ac3209da147f4a389b29edf57207cd1ead29b05f095be30257b63f5bbc.json",
+      "sha256": "60d8adcf1dd9c2c7d2060a6e3c8b0b28341fc2f93bbdfd1b721a5c8efd4edefe",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/39b956237cf782a498cfd4eddbf02ba63f3f52f02be5675fc7bbb4bb2b8e3bbb.json",
+      "sha256": "a4275341ae43420d678d25952ef6fc0833de4cd3080727e893b9274e10555bf5",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3a7171cb0d4b9d4c440b2469fdeb539113932644b2348f79bad877023dae37e6.json",
+      "sha256": "6fab03e4050c7ca2bdc091a674a404dca356c846a9a58a88d0ceb8f1cf99a4a4",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3b5d5a9e1e64afc0524d4ae98992697767ddbd42da692950ee30fde3695f5d81.json",
+      "sha256": "1c480d84ba6e9d712bd295354c156175a436b7c294828cbc5de90190f068104d",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3c35997e37dc5326b48e989b90e7f22fae59d93b4581781bab176e60f821b24e.json",
+      "sha256": "5057524daccecb289faa8bd69b25b60b3d76195d9c77cc594e8d6078c69ed409",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3ccee33b53f0f83677b8e85d5d32a3b39a333bf34636194b88212712f0fdf08d.json",
+      "sha256": "d7e4b2fbefd9f55d0516b50a4b1059923782e92e693f60449c8319cfe11d3a77",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3d27906a60e6d8a138371dda0785faeec323c07fc42cb1cfa4eb79fa46457446.json",
+      "sha256": "11fe1aae5a834aa1247efca9d6b6d5370ed63f359eaff3f2802b73765f293b16",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3d39d6af9eddf7543e3c82212fa8d780eac56077d1687d191b567e448e660e3f.json",
+      "sha256": "92fe21b6ba42ae73a7f75d3fd716cb5566af5916926fb1c5b4fba9d26dc0869b",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3d54d81405edcf8984334a72c427217e872449f8bff71d0d8367a9094cb162d4.json",
+      "sha256": "764091c5f9ffc0ca8940d5d1fa7b510a63a574dae7cc59282fbb9aa34ffc3b07",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3d9f2e9989fdb066c473968d6a40f3457836460f856b93b9f82e9b320b741c24.json",
+      "sha256": "f2c9c0df3654e37446f5fe8783411c9ace5c00d444a9b3816406057a12d780ca",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3db1dc72f87ecc5ee1414d36a048794fc90733968dbbe59fa70ca3ce06f2bc2b.json",
+      "sha256": "f84795fcbaf6adf946626a4ac54ba8a9afbd772066811c7934ad90df8111fad4",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3dbd46921e34c250c1fa054756520c74c412346fd9534855dba97023ff3eebcd.json",
+      "sha256": "db9e3c845d24f8684b55276e94857b38973541adc4236d4a4db7c2067ff3774c",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3e8641a3cc0d516b34bc98d7682d2645adafb1908408ba23d78f1568731559e9.json",
+      "sha256": "e989ee0055a29f9ef768693e12c40b4fea4998a0c087619cfde6071b46855cb4",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3e8a2c41e24405d3aa8a0d464b618079fb52348b232d12a46e9b5ccf8a716f9c.json",
+      "sha256": "1efe132cecd10d975bc03b619e3ad36d5d360c52a39c4b0ec91a46cddb50ed5d",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3ea75dcb1a425523ae4ff48834f54cab8ad33c5204e9046af05c31d76a0fb1e0.json",
+      "sha256": "3a5ea0e52400af7df39c2ca42e26ca13172137b19308706e9dd8c3db2b7a469b",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3f17efd343088797e8bc444e2b1a0ea0fb332cfbd2c0ac394f0124a0d8d2200c.json",
+      "sha256": "30f05e225d97ad87e02c657cd29eb1fbbfb59bf5c7244f7fc34ac84d98b2622f",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/3fad44589e11937b587459ac71e0345c319eeebb6c5b02df2116de654537fe5b.json",
+      "sha256": "5841866a32adfa4b521f69a5c12754b5c5c446e3afc5807c702b2311dbd867cd",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/400c5e9c62eae7869ed75789bfc6628961c71ea704161161c0d1f35e6f0a3ef2.json",
+      "sha256": "19e6f3099d4bb5f81e9fc32b7ee79173fc3a31bf8e686964b216bf74b44ccce4",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/40bdccefd180384bc3bdf058356140eab6cc28b2034ea7b4be84237bce8e2049.json",
+      "sha256": "1a003e848c224c80db2109a63386c591e37c6f1ef25daf5b57a4b1939680224f",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/4178b8b70e59ba9d9792e7713762d3f8e0da644a3f1249330a845b073ba81e3f.json",
+      "sha256": "2e7a65e32b8ba90f2c044f56af1dbd0d298e19b9962199321ad118c82f371abb",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/43b4a5bccf0d2605e485c27b1029a94567f7e9a19d3880d5b9262619be21780d.json",
+      "sha256": "7766e0844be28d625b070974bc12cd3668c9ad1a615551c8905528c6dbfde806",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/440418035400ac0f43708fc8c3d16451352fc0a7b9813d2108b21387513d5c28.json",
+      "sha256": "86812e9fa99126189d88704a66cb540bdc405550e64d6e18cac73f8f1f039783",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/44a7b9e11023363273184b9015579a73da75711b2d53d7f7872391a9e8dc4d82.json",
+      "sha256": "081e5d8d2ce2742056361bcbabf97ae4ff926a8b89834bfdfe01179a42fedbc8",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/44d0b854863f6ccbb5a538c2ce0976bc331875297dcb90608f4f32a4ed5c5f10.json",
+      "sha256": "7eed677ec25d9ed74ce6a885f647f6cb3998f8955ab9ba34ae929d85a345d201",
+      "size_bytes": 430
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/44f519629ed153ab639d62cd6be4cc88aeff47a4eff306a9363f49ad68bd0043.json",
+      "sha256": "9b0d49502fd3678575490bf6d153e8abd1a2b6d4e1fd3608a0631109ef669927",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/4584b0577b82920898280ff599aa8474a592795b7870599f0c6216dab2402c77.json",
+      "sha256": "89253eedfadd33244d4f31050dd0c142d47f43afb343d7b938419a2c051c76ff",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/4596ac785b74ae9b0d112feb86a73683d9dee09fbef8279420f9075759b67f72.json",
+      "sha256": "96919a11bbcfb07c1f863a6cf0127bb4c909436e0d1c38922f13d03d5c6727a4",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/45e1f2781e0a443c3a7cfec397650f17a22d7da3aab11a36a741e7b2a1a1e3df.json",
+      "sha256": "58e7bc96fd3c38895f213d17c3e82b79c8c74db4aae4de670120ef717d1882f4",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/46075a48f7e3ddec1581b127e5c325fa7fc6de384fc031a13618025c73202f14.json",
+      "sha256": "ea8244e512c8aa0c474579a64668d11a59b1a4a029764c5b2ed65216e4bbc6bd",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/465dd5f8f32a163a2417308d730b3e8c7368334e6ebc2292fa6846b09fd949a7.json",
+      "sha256": "f0ffca4d1d64b34b6a3f580137350cf9c4ccb9a98f83761a7be0395add2014c6",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/46bc4e72282fa275d19125998f45dd5b873ca973bbbebf6ceea0275a73f63a14.json",
+      "sha256": "84c408a5149d4a1a791a458cd528f288e95ddbc1bb13de0429a52c535ca78029",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/46c5d876c344bdbfb964508ad55817c289825dce1ab4f5cb2cc2c3eae277416b.json",
+      "sha256": "6421fab5ee00292ddb9c3f9139a7e7c8f18dc75398077649ba8727faac00f09f",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/470dbb1070085915778e7d04bebc767eeca6097ce59556e6c457e37ac3fbe5c8.json",
+      "sha256": "62f59f12162ae721b19de17b301eda996fa8936f711dc79687d47a4d2632a5a5",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/47ac1e2f6140879ac4285f4eed3e959f5a1466405937ab525dd58a678a3e7f13.json",
+      "sha256": "00621dd0c39019b58e32cc15d42518511097a42d05ea7dd2cc33ba8d2b69d0f9",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/47ec599d49e488ea429cc5bcf3254a502244c7a7f21402c0c437cb6866f4c0cc.json",
+      "sha256": "65d46bbcca6aaa14af394811445c8a0c8d6f2fef4ba76d5fcfd1de90a014d25c",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/4948f21e2094d2cdfb804570c60268a29ba17fa8f1ee3a3395bf5acbc0e75292.json",
+      "sha256": "9f39a2b050c4cb342002a3366df80123ba5a9c60eeb93369291be0d0e1d5c59b",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/496f95cb26a551ca0fae43747f8bb219b1300c9ffec3c20da71008dcb470d600.json",
+      "sha256": "5809dd44db16dbb08e75b6b77ca0c377c6cf2f62710268c2f15bb4bcd6b6233d",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/4a197321d958f465c80a3bb15f6216c7c4185dba1879725d017375b25fe77ba5.json",
+      "sha256": "c40c1796aed14cc02aca223be75d02dbedeff6e348ced8758e3d4a5117bcc0b2",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/4bfef0f383fc118455935e6dae2a844e092ae20663ae99c210d4178f9d7b3682.json",
+      "sha256": "26b95e2fd8b7a09af218c0ec221bcca36adda150af5e3249493109a60a283590",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/4cb3586ded05bcad5d57e6a1a1e86404f4a4bb3b3dece4630daeb71b911fb860.json",
+      "sha256": "9e07f6ef5f2ad5674362a80ead65d4c84304837aed958095e0f9ffbcb109666f",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/4d564ab71e0e362aa4e88d05fb622b03a73be0692ca91decd51c99a392771b3d.json",
+      "sha256": "19a28246a6c7a950b9dc0ca9912c0c12a74a04f99721d7bd6a4310328aa932ab",
+      "size_bytes": 434
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/4daf6b8ae745712e0a6a99ebfe1e4d577fcc3641c73d831a56cced003dc86f97.json",
+      "sha256": "6641fb591ae2fd57e990e1cd2d31f00237d336e59dec07ff2919917d5c998ae4",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/4ef3347de85fd79f7d421dbb561b5baff9fabbf659f0b685ec1657bd625e249c.json",
+      "sha256": "fbb69598c4775a48a5327757baa9f2452115fc10714838448e4b45cd4c30f75c",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/4f1bddc9e8089b5fc3947a35b44a7e11c988bb7d9540c698bff2bb6ae12a2605.json",
+      "sha256": "3597514ebbe074a454c561700b4f5f5d892ffc53b5e76ef43f51ec06eafa811f",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/4f61f584d5dea89fb9978281fe6b0de53f916dbcc36e0cc3b099de4235f62260.json",
+      "sha256": "457a2c8c80b5609c307de2f9fff49856c2ffd5d046ea1f1f04dfcb291e809bb4",
+      "size_bytes": 429
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/512a9ea368bfdb00c81ea1804789f42719f60c0a1273d2472c1eb59034a4b1b5.json",
+      "sha256": "92212f13daa2eeb5815998f6bf24a69909993a2428ee99826e1a2696c13f8537",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/5133e2ec088a759a70aebc98e83124befd307abac58139414d3cdd7401d6972c.json",
+      "sha256": "ed7b33f576145d8aa2fdf0d678cc5ca824710595aa7fe6cb747249fb5f0f71a0",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/51c99e726d69eaae7c9fe4157ad422f02cf5a20825027d16dc0818a54342ace7.json",
+      "sha256": "ddf03f5333a051b71735ec99e593cbe30f69dd8cd2511bc9e7d54752353bf116",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/520845e2d0bac6c55e465fa01db0998e89de54c1ec65e4854045e55c65d01e0c.json",
+      "sha256": "bb6aa91c3ac70c8b325320116eb9ad709e59195abc7663666f9e96e4c1600f94",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/52116c8084adfbe26991b33c8688686be5de44c955c5f479cef3c9ae72601de2.json",
+      "sha256": "480a5cbc681250589f631462c599f0d8cd0c1e18e610d8f19c5a34f29529bebf",
+      "size_bytes": 430
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/522c8c4b28e463bca83f26791c7cc1c66e8d237679b679f22da649523bdcdcb7.json",
+      "sha256": "2ac2966a0ac65a667366e3edced9d81b648342852546c956e3000e44c9fb4b33",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/52c783d6bc2f038c758701c24207510b1da5ede6f9afc142e869de8c7b0b2424.json",
+      "sha256": "ba83dcd9cd41ab76d4c56646a334f2273d9056673bbf82091c239e30f50954b0",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/54cd3597440d3aedfd488b6c98b216e54bc14977f5b69322d15260261b580302.json",
+      "sha256": "77839fe24a4a4897e965e3ff9ba47b29dad93b515653c4fd219d3dc6445938d9",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/54ea44336bf4c48131e38f638c455c85138bd383c41b9743f77e8e8f5988de40.json",
+      "sha256": "fd0d1e746a16889d3deac944cd294a95435ab80c2bf37e3d2264d16e67b0c4ab",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/5607cc7e7aa7f4ed9e4ae378d030fd9df62c0174200124710732649240a1bcac.json",
+      "sha256": "1587c4f8071d979470268eba6e89750d39fb6a517bc0014104ced94cd766c9e0",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/5688ed5e3258b8fe781b9e2aae5ad193cac19905e3798f9703ac8c3f3538c0df.json",
+      "sha256": "961285266cfa3e4cad49ec16b906212081a5a3af79a414c41b52c319e327a02e",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/57c9d3943807ea2b8d45d3047b372aceb8a6b33c012d504435bec198e785a155.json",
+      "sha256": "352ba3bbfbf3f3e3a54cb6f4e8a27fcb0b83aa2b2ac080922ff57cab8f0a8797",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/58178526269e934421a90a6c9f31ce88cd126f190aa485de864fb98bc2047ceb.json",
+      "sha256": "9affa056fbd0e7713e4c5b241c5aeffd8334101505bc8f3decfee82f06b64d83",
+      "size_bytes": 417
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/58187c99920a4df71bd894d7d156640461260f8b9c57502894948c5eb55c17c9.json",
+      "sha256": "0ea3e4d400115c0bf4ed3a2d1c49a4d919428ebebe10e392a7e5acbb9f0b50db",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/5851a6c74ceb6e0929ee1288f651e3c88fc00e4df8d15e934cb9fc320bcc3657.json",
+      "sha256": "85220e6f7adba9357c282662200ba29788c41ef68c91118d18e5f3a53f4bd85f",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/58c512e24946c841e27153022049e6ef04b23cfcfbfe2511d515deee0e4bca9a.json",
+      "sha256": "f62d163ce533bde31b71b9ec808aed23f261c3edceea1e579ee7f274da162874",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/58dc5efe77f95cfba81bde2d83330372653693c914525ba360243d1c26df6b5c.json",
+      "sha256": "28b3d1171841e2ade0a48df71a779c5dd5dd2b0e7a84bbe71d321848c34c26d8",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/59489c3ea30f5d9001aea5aa1c407fc313b4cffd505a3ccc52a32ecb73a4d1e6.json",
+      "sha256": "39e7a1871914a8c9f021518fc01bfd8b709b70ad6938e0e4f9641eaa2a8b1209",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/5b7ec8d30c994397c5eea4acc8db94b72817fc22de28a5cd0851c3f53a1d3c0f.json",
+      "sha256": "a5808fa4920d97d8b07196a19234137cb5ab917274dd50beb4f87d1d8a0ad4ae",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/5bf6d608bcc66beef445920252b3bc114f2c32d7c22a4ffea451c54fba6e3da0.json",
+      "sha256": "875eb8301156d8ac52765d3e1fa07c739a6b3cafcf6035da5de89119dd2b4025",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/5c764871e966b9bfcadef448705b1f045a0330c8da2e8bca7a51196c4f4e505d.json",
+      "sha256": "9813cf7debb2c2f5fad1eb807156f5f427c1be66ba01d59dfe274f7d541f816e",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/5d390310734f5aa9b79306b535ab1387745ca6479077352377bbef53db01f120.json",
+      "sha256": "baf914b0e02d47f765df8e2295d8edf5490bbd689b24272290e7428938da3cfd",
+      "size_bytes": 429
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/5d4d31c48cf79ac51b027c0ae355b6836b7c8a7e173c6948d733dd0f7921550f.json",
+      "sha256": "c638d08703242fd5168929e3dd2c99a536fb1d729456681f39fc93c5cddeb46c",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/5ea2567789b7207d2798e763384ee9adeeae4628a0b0bcd8bb8ec72fdd0b069c.json",
+      "sha256": "1baceb53cf1d5dd0de3448606da6120dcb660798888b6cc8ad55c28f96415458",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/5f595a7f8db439a1a2b26bbc61b42794aaf0343a61ff3f11ae835939cbce1a1e.json",
+      "sha256": "6119ae6744e1f2b13143a7bca623769d0f05c27a689c80fbe9bdcae35187d51b",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/5f5ab949dff58c3d821e42a9edaa3a475c4414153941d233ac1918525780c3c4.json",
+      "sha256": "117e3d174a163691d80667a0f85afda3532ecd7422b79ca4785f0c25cd4b12f9",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/60fe68789edf180a601f52cb1fbb7d015fe86c9831e1ab086b5ce4ca36de93cf.json",
+      "sha256": "1bbea23125f74774444c056e3dc6a40f20671628103491a095cc36ea32bff9ce",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/61a63fc13a8ea6b7b0ce7df00afeee345e502afa2f47e96890ee3456bbea09ec.json",
+      "sha256": "330e7b63d3edfdb1030acdcd1e8e3dada2001c721bea28712650506b5f53de11",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/63fbe52deb55a9eda823b31c4ceec82a6b067cd13ef3b67032cc3582cab9e8fa.json",
+      "sha256": "da3a5f504108870a3c21b1a7654ba112c495a6bb39d3a1e5cf27ce44c5a295f9",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/64911ee0d7314a82870a1b4b47b77a1af148fbbb0086e79c86f676bb5832aebf.json",
+      "sha256": "980ccfcdd39045ba4d568a66a4ca9f3c2cbbe897afcf1da6ab100408e1456f42",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/649722568d4f6201a547d037e2deb788e3a412fdece9efd46b12f83776f015cd.json",
+      "sha256": "02af31a8bc2ebc7ef5598fc37c61cff91a510966f2d59a36e29727e482bd69f2",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/6522c38a6dfcbbdf4228cb5cbb4bcfb3bf5174066e5be13cd4e3dc186a598669.json",
+      "sha256": "daae1372c496916d3d9b63ace1cf892c92edf3c3fd49c76bdb4a949d20aeff5a",
+      "size_bytes": 418
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/66536a77dfbc83fb8762c147060510c5c0887cfa47d1075542f859863c4c3b09.json",
+      "sha256": "dfeeeb6748499a2d770b93c58cbc5472a95e09b7d834c1c4d046254ef45a9d7d",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/66a4625d1837f10625cc8952de6399671972eb17c4407283056078af7fc71a44.json",
+      "sha256": "460b077ba6e28eebbb55f43cefd65ce8859e97c7360f3d32a699870c22ba1122",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/66ca836d7bb576c467bc63d4077765eb92011259b3df4db1bf8f2eb168678989.json",
+      "sha256": "4ca9425c53f0c79cedc83107e460da39c57a43d12ec53d6198e94a5e4f916afa",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/6795cd363aebcdfac5d752a20008bcfed3b426ce8f39bb78732d1dbf9adc808d.json",
+      "sha256": "69a08a2478aa95b2feca1dd4c72043258de64f337067a82d3aee8cdccbc3981a",
+      "size_bytes": 435
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/685301ed1c5d82f4ce3c04ef7d848e243f3fe02da7d828159e4fd2541244a830.json",
+      "sha256": "e7e1fa3983dece1c67d395caf25acb7fe5e0e785bdf10b7c39df12b8ad3d9c3d",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/688f93ce4d0b738322f6461f6ff100096f9853c07619aaec5ca88c260c894a2c.json",
+      "sha256": "8bb01baf74b0de84fc337823b97648797b8749805826b9515316ee67f31b96e0",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/69038bc6b761c1dd656e4b31a9787dfd8ac5e98006abcbd96e42e19f0ff15dbe.json",
+      "sha256": "042b9d837435c91a016cf3d3e7d3d64c3448995ac0eedbc582f904225714478d",
+      "size_bytes": 429
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/692049979e0e8f128e46718fff32f9abc5057c443fa573c1421ceb15a765590e.json",
+      "sha256": "236ca8827d4899016b6da4a83ccdf68a6058b61c0715b759dd2da6cf1711b0b3",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/693a38cfb57d00132536b0a1fb57f760d870db7b2903de836025fc2d63a29cb9.json",
+      "sha256": "b123b398df34ffcc30f47b58fd87d5ba3a443a8009ed7d0e7e25199d5ffbd34f",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/69de99bb1d3d9ced4adb09359ff33eb28aa3e3940cc7c78dfd6d81af9bea75ad.json",
+      "sha256": "ff7af41b3467b6da831265c6372a4b7542453b139836e4bd0d196ccf1f8a3618",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/69f72d7be8ef5d679cc5a1114f4f713124381e7dc094c933893921ce1dd6cda1.json",
+      "sha256": "e5067b2c837cda936b8d66c538ae81857d2427c0fea1e4a50f64b631c7a2bfc9",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/6a21e0cc17b9fafc66df40bd87c29c7010bb98941505d27675828beac2802d62.json",
+      "sha256": "eeb228989cfd16e95e70441dbbeeed20f5c87da3b9100a2075cb7f47c72b7ee2",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/6a25fdb47bb1d38f18adfb4d92a216a14371d86e9f3b4d8ea3f189daefe41859.json",
+      "sha256": "2fb5c35e032681a97ca6b27c6524e473d394a7d2ba4a3aed3ad9d6d236ceefc1",
+      "size_bytes": 429
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/6a5d3aabf0a3bbbe2fe75d32c53f9b93180dd7d06856665b51c88f578842140e.json",
+      "sha256": "d54dff4161fc908638e0d76ef6efca836a8d78a84547fea18a0a31e3b2809103",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/6ac441227bbcffc8a39d388cabb20c669ec9a2993d24c7175919a11caca8d434.json",
+      "sha256": "96eaf8333fbb2de02260c43f876ded3c814f3f990d8ef4dfef404aae49a7d17f",
+      "size_bytes": 428
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/6af2d0eacda1abb97ad3fa135cda18900d9747e6f7eb29799ff0e73b7d2559d7.json",
+      "sha256": "7cd7f7d4bd6ced3451072638c148387b0d40ab5ace15fa73928fe69e6946b49d",
+      "size_bytes": 430
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/6bbc002ec46751f2eeb4dfb6dfa0c5b9fb9a780eb78bc392ab4ad16bd2b5c70d.json",
+      "sha256": "14009ec955f4a0702578016e44a4cafc432b8480ed5e70bc3ef1ee0937e0d855",
+      "size_bytes": 429
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/6e2fd69f97df2c59d0041f8e1d551b76b1f5d9d338a508a5e8431c6f0291a75f.json",
+      "sha256": "ff8bf6765fe18ef4bb0839be20bc48fc2b801e5da4869f5372b3aa85345c9d65",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/6e67ba5e52c3d49799e907d8a43ea136652719b6eb9259fcdd6122a3ac8ba4b6.json",
+      "sha256": "d5ca801edefccf53d081b1c82ef3db46d8dda09fc0ae2d874b282a6cc5db1cb3",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/700c9ae14d07647a850c58e76b52fdbf4d93e97e1223b4a6c3a40d36a0fad08f.json",
+      "sha256": "d3874fee65735b55751fd8148f03f98aa6b398c76f77c9873eb10baa19fffa02",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/709885302b50524b3e0492544c1eb25c24278577169449a3f6d4c748fb5f3490.json",
+      "sha256": "9b9cc55fae6063de07951c5ee5356a3397efb630ae25d3b3f55c8abe8efa2e76",
+      "size_bytes": 419
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/70db081f194a6d86c1835254dcbba876d599519f8d414a5684f45ac4a94ef072.json",
+      "sha256": "816448740eb86ced1533cf54b0575992e8193e45071280b4e43e066eedf2b323",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/71164c05a2f9c48001b9837e76a7bb17576ddf5f3e1491513ecdf5d881199c87.json",
+      "sha256": "014a907fc4f9c7f4915373718823f1ac5519eac4c2f27cb6f9da8f42fa2242a4",
+      "size_bytes": 435
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/7134fe49541afa741f43af313d49a34524bde9c94191e032be9abdbf385bed29.json",
+      "sha256": "e5b32b8d94b3e05754d20ff6ef2adf01fa6aea8383642359d1197def1c3307d8",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/718e824ba9c4eb6f8d9057ab3f0ad9ec52e1875fb5327f9fe5104bfb715291ae.json",
+      "sha256": "6d5dab71559a88929e1a7c2de2a57111c0fd8ec49970db2ea7c0428980429a82",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/719744b77febd00d924898d4953a88e6983ff21f7b02eb4cd556516f1a90ebaa.json",
+      "sha256": "357549ef06dfdcfd7860ffc8d2d249e96c0fcafb711b30ba4895435a7ec34087",
+      "size_bytes": 430
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/71eb57c5f46cc31523d359a5d72e09895d3bac92bc442f7485bd1803cd399da9.json",
+      "sha256": "28dac4cbae0b7cafb37a46ebedd8cbfa2f4d04a9297ed2f8e9ab0477ff39e7ff",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/72e2a4afc39f46a4035b06c2f801aa2f39b5202acf25be6235f7a5d4b342ddb7.json",
+      "sha256": "018da2e39c0aaa59ad5b91c0c6877717453b7518d388344e3e83d200184d0bd9",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/72ea4428e323c93fbdf7d30444f50fca41400d682aae7911e8ab0fbac3767971.json",
+      "sha256": "b595e3c46e551067835f1cf2875b12d1d20040fa3a3746fc0bb58c488a699f86",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/72fc964051e8e42c0f4aec7301271ad3938022d1db56c50a69d950f800391eb5.json",
+      "sha256": "99fd11cdf516ce9393d0db9e72b54f7d2562661de660ff98c915e8e1f8ac86c9",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/73de649960e749f62f4254f3980fa12d397f5254a10afd5701c7195281126d3f.json",
+      "sha256": "b2ec740012caf23bbbb22366b67e03d3332277c32af19a0f27fd66e8ad68a890",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/75b8230f9e3b7bac69d7a0442da0ca360a0647651717c740460177521cdbd023.json",
+      "sha256": "8203a8f8a1e2ec93b3a116155ee633162f3d6950042538cc2cbec939cd67287d",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/763e458307958ecb6f77538d8670c54d0db2e7063bc3fe9cf915279e13029da7.json",
+      "sha256": "ed1941919298023ed02864fe639007d7b371e5b0236023acafcde8921239f466",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/78613a5ab3b7f5620a71b15f8ead35718b5a9da9f1144b8b2a1d67995081e9ae.json",
+      "sha256": "b8f4a50587a0ab4528e898862335188f2bbe665f7ffb02e4d86b7675e65884b3",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/793290e68ee7079e48da28f91d507365c4ec57814d110c155e641a744ff67609.json",
+      "sha256": "c02c0b82ef62cf9c5d9a45d64589cd98168b87829d7f90db0e3c56b4c44a7611",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/7a2c4ce8f564e5a993f724805536660917b2c4a3bb4ebc89f3beff5e735ee267.json",
+      "sha256": "4a6109644c27674aaaa9d75728e9e0ad1b65897453457ceaafdb5f301ee9ed75",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/7ad809c9053805e37a5d0539a62b39e79ed3895323b83553acd955f27a575286.json",
+      "sha256": "597bec69ca91c638d46089e265f27441d9db809eec17e1cdf36c5e0b15aed882",
+      "size_bytes": 430
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/7afbc99ba76de8ccf5c637d39f730487803448e4147401823396c2b2296b6c37.json",
+      "sha256": "4b305423d8ba6526420f65e4ba87087ea6c04ea8c304946234c0db999f8a6f93",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/7afcc53e670f6c5952ba3ecb19e75a146a01e2801bdb8556e09b4586320bd3db.json",
+      "sha256": "529746dbb780b14eb2310b0675d1de0cb66a6c8275d6917e12e1ddda3fdd86d8",
+      "size_bytes": 435
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/7d297506b06b1415c1480c09c346fbfbf25b14aeb82e52a55a88e4244ed70372.json",
+      "sha256": "272b14c3718b15c350724e62df42f5dac4201924e5ae434821fbdeb900181895",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/7db3955d6ec40cc4e4904d2f9cbcb09997f24a6b4e936de4a13ba543b1f51d67.json",
+      "sha256": "515292da0ca81fe65c9ef375e856340c09f66a93eb4c7654d7576466037c690f",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/7dcc80d40bebe2a0b46b9e4d43db53ead745c33cfb3bd237c8bcfbd33e3aa477.json",
+      "sha256": "18dd3233cb7000aca998173791f6c5f511a9d30dda41565ea3d271ab172ed2b5",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/7e0839286bc88fbd8ef83841f9efb74594d824ed5f20ddac3aebde7aa4af36a5.json",
+      "sha256": "c3d549d0bd8806fc9dcf94089549d85733c6bbb9a71a1118de5405a747b14694",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/7e4dbb27a48760fae3bcb342491f1f7c968d43045dbb265af7192c4e3bfde2b7.json",
+      "sha256": "6f70bc362d5d622ff2e14ed3ea9a904a5a457053da2edec706a2a0674ddc2367",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/7e5e7806f6127d48427c015532f5b3d9927e3b7075d666220e6ad8f6714cd576.json",
+      "sha256": "87741bd47b3b6afd79330c0b058060749a01e3c0d1b3cb90ecb9827b387bf8b6",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/7e929995cc03e3382254eb9e7ba91b77b377ddd279352e27a25bcdde4a6ee1c0.json",
+      "sha256": "8799ce4eab775200426a25cc6d551997f820c5439ebd911d9d154de598c83c07",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/7eace24e7749d5bbd30a1fa958a8a3f1c3df9f8de009f1f0fd95c94b5b3d6363.json",
+      "sha256": "fc6861ab5ebd2ce3ee0575e10e48936554bc4045daf91f09b98b7af32cfab20b",
+      "size_bytes": 426
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/7ecb7cafb09c782f20858c88c512def1055b9067a25d4e982e3bf16905267b5f.json",
+      "sha256": "20991ceb1ee412eb31c618167686f063802ade112c71b9b516e78e281a28674a",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/7ed9b6447cf7ff49e9a49a59ed60722ebe88f2f72f90babd4e6d50db700500a4.json",
+      "sha256": "023a612921c9029bd582d2bf46969d2b2570d9cdef7f840b350b98e0ed8c830d",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/81439b1118149c519bde00fec780e5b9a9746014fbbf86ee3a39dd370d0fd52d.json",
+      "sha256": "4f12efcbdda09770331eda744a80c77846f9d20dafb4a24bc87a15adf2d5a667",
+      "size_bytes": 435
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/83af4704a331716e65a0b4ef6a71a80c0d700c48bb4b980058c30e7deea71185.json",
+      "sha256": "1db5168c4f88cce0fe8c6bfc074ec74323687473cf0014444ae3d7acd1427cfa",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/858551e434e885fd6dbcca87f70cbc9e798902dab2a909c8e81c87fd715d842a.json",
+      "sha256": "18ca915ba1d6a7841c2a6b1ab3db78c039d164f75c2b3a3e5d895532137b254c",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/85a0eded7404b39c8198d89ddd7ca1334ad59106f155891b1537e4717ff67df3.json",
+      "sha256": "a9f90fc986e8d9aad285fedc07acf749be5efe8a55dffe39c163d8cf68e75dbd",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/8691c48d3a78a4acf3be5a4cfea2805021457e6722a1574365b3864c9475bc59.json",
+      "sha256": "42c0fd65824d358043a611e7213bf4742326d6b2cd7e5f1c7ae35e96d1e5b5aa",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/88f78bb0014d5597d7ee4c172fbc0ca1d20bf4d8265f004c6316c2d797754a8c.json",
+      "sha256": "7ab05e3df99b83439e0a746b6f97d82174555b44ef0d1091ffa05348234b5935",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/89ae990ff5885ccb50a374f7ced441018d68f279c5b14db983ff9ff85e72227b.json",
+      "sha256": "f983afaae5e1f8614fe3327733ae09bc81b3c9d8f8a613b2fdfa4dfb4636fdc8",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/89af9afcb81c914af9fe0cc38e2169bdb87a228a2b31f725c17abed8a0a6fdc4.json",
+      "sha256": "8ee8b6637f2ff87dfe5aa61b027a9f2577eca55155de129bfab2773818dbaafb",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/89bb24eea7a648cd803e499efe8d7155cc638072cfc71d8a94c2f96d577f00c5.json",
+      "sha256": "90d5a8742241faaa3ac85a61373f70b8fdbf3d747bc6f82d2a781926cef2cd38",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/89f2a93f991541887e8e21fafdca850a43c1aea99ed55bacf9c80d7955507ab3.json",
+      "sha256": "27597f1a4ff420a8c5ba30a97dda3fd4f9f8402b1664d25ada4574a843b0acec",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/8b4380f3c256c5c8882b1b6a40123a5779680425bdcc8ddf8e583c46977f2eb2.json",
+      "sha256": "6fbe3422b1dbcbd3de22af6ca7d0507c90ef4741880fa8b9cb626b3b3e232092",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/8b7076b685e73382e20ae8b785e9bb0a9dec2634a21d3e1998a4eeb89cfa3f96.json",
+      "sha256": "57eefe23c934b3045e38fa90281cde50eb6b3a9fe05bcad30b78494bbc7b19bf",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/8b93b3b3cea48887a2653625a457d123138aa22bb1ade455d303dfd1f09b19ca.json",
+      "sha256": "aff260733aa04b2906b463d0e3962b713bc441d5723345db5b79764a49b79040",
+      "size_bytes": 430
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/8bab92a17deb36284f6d6b3454562620b56568a78bdf72b3e6cf08fa1806dc68.json",
+      "sha256": "f4316d03b8c49d0902ea05281cba2e913598ff398f67ca1e550e350d956feacb",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/8c8e5528f428e3fb2a8af594961321feea4729e94f3053f04afc46dae96cd4d1.json",
+      "sha256": "dde6c7e440a2b4834c9ba981dc4435d7811b8c760b14b7bc5a207dfb6c62aec7",
+      "size_bytes": 435
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/8cc168e1ba51f9b9a1fcaeea00ddbaea28b022f65eae927ddc0883685bdad8c3.json",
+      "sha256": "c9dc83900903239e6bde4f81aae8e7d42730a9800504ddc756382dce1a9e9943",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/8cf83bd6393af1ea6ca22751be2e238ae84aec8fa825ffa5b395a9931dbe71d4.json",
+      "sha256": "56e5a43b1f7a3b8c2e9da9cc5d317e6ab87dacadfcf8b590bd874cecfade3b5b",
+      "size_bytes": 429
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/8de6a59ea2e581dcea2597fb46a4838dbaf4f53478a869d3a2cdfa7a84eb8297.json",
+      "sha256": "27bc6090624f7486f17ca778b71694eabdd972c577bfd50667ab08ca899489db",
+      "size_bytes": 426
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/8dfcb0a8ab9168cf61467c86704f5b7dd024651b69e3358990456989723fd412.json",
+      "sha256": "4daf19c1c8e673f328bc0ab17a343d4ff89cb5776c455281e5b77fbbb8a99ec6",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/8e3af84e30975b295c86cc252d380591be4951920f01a8c427840ebf5622eac4.json",
+      "sha256": "c588205ada48d621023ba092c1007ad8d169207e25a9d38bef43ee0148a7d640",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/8f2b3925c558ac0eded0db7698f57c58ffe68469d1354bc8f684ac72477326a1.json",
+      "sha256": "6411d8db2c06ff32f50ac2abb8097e41542d665a2c119860a58adf9c7005aaa0",
+      "size_bytes": 435
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/9076dfd191896ff56754008b1a57e801fb8f3b223b62fc0cebbfc90accac4ba7.json",
+      "sha256": "e9b5622b057e37a820d6c5abc629495d17a553302e782eff1af8ab3a7e349222",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/90dafcac2f96dde4984bee42c8289d92c72356b0f729dd6d4beea8df282f1665.json",
+      "sha256": "29942af9c37081f2ab47f9b0ce70c6f16e097bdb80259fae58e944beaff288e9",
+      "size_bytes": 419
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/92931673548aa64c5f93b25b195f6bae5ae5a7e97a6e9ee7d4d7063e6e147468.json",
+      "sha256": "3c509080df7e5710822a20b3a7e24f5c37d56a6bfbe222f04d1637e089c5523c",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/9305a583db011afe67a65ad107836adb3f5e8f1a2971c275b5c97f64182c4594.json",
+      "sha256": "192aab8f9fca4833fe51c23cb931a13b7c2d43f9e3b4ccb071910f8825179827",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/93c9d7c342064b65e5fdb3c0c39cb1fe31f9ca38605ddbff8bd5b1468ad36197.json",
+      "sha256": "251c85972b6b71cb6dde28cf2dc40b0227966840550b791618849f82c43b2d51",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/94255cbdfd22c967055dc3cfdc13564b63496ef3ea167f9d4b493092b6f5ec08.json",
+      "sha256": "c2a0e64a05f22d6e6262c97aa460340591dc9db98a5f83b9dcca977f567f1e41",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/94b9b4c340a2eb188b68f268d052f27308177dda12c8a9445658bd9f2e884b85.json",
+      "sha256": "3655f1e950251c8504fd0eb5d5e73c3302f6d7ee23abdf03dfbba50f0dcb77c1",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/95ce0d8174fbd252e3a195fe1d98787acfe0e7374b42b05b7d28e18c2089d634.json",
+      "sha256": "facde69e5bad5b55723a12caba282b207981855c6fed9970632aa27d5c30f261",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/961296afc5685b2f8330cd3e7beeedc04ebf61263ed590a58b93ebcf60696ac6.json",
+      "sha256": "1209271e8f2e1f57f51f494e3ce6a89ebf49c3bbbc0a43648b3a4df86e511782",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/9691c4c90a595957f8594720d7fa69922306e65469d1ce3f62451858b7bc5d25.json",
+      "sha256": "ac82e53344e8d1dde04e9d3861927587f0393f130ffa71c847277877b4bf9e81",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/97107acd943c84527abef5af603a0e7b0dce11e0eb82a29c2d1be4ca7054a37f.json",
+      "sha256": "aa503e45913e31595c8aaaaba7cd05b7ee85b02cc005190cc7fc9ecfb96c53e2",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/982f15d9ea4c8343d8205b1c5afe02f9cc0ce346ce1897a92449a9f9bbf813d4.json",
+      "sha256": "d5a23a71abcd585a1f505a8f3ea754d49ed4921dc680f1817f09b0e983b257c4",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/98957b07735806c9571c83669421ff300be8e275355275729cf431744b136bfe.json",
+      "sha256": "7515b5cad406174863aefff57feef633ec367d3bcbd88ce5fe65821154da6ba8",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/999c524468da5dbefab524ca25d933480fee2c1c09c0e852e61f9bfccd7c1890.json",
+      "sha256": "0d6614ad6bdee3d8e54f8e023ce525b2d455cb9fab1ff296e797edcdc4386814",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/99d92ec5cff18c35e81bfb24d236a860cdc1c8002de3594acce610175acc0663.json",
+      "sha256": "8251becbb8acd2f3c605ec6582d30bc84df8781b17bf118e0e969048d7dab5b6",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/9b7df697536579808c34fc3c9e525cf4259f027bdf8bf7f7117828870efa584c.json",
+      "sha256": "9ad3ca34c734076bedd2f74f80ddbfba7dfde54b97d4eeb4b5377aabe6cd2a6f",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/9bb767d7aa4a98d53a7c7dcd027e11070f5af83e8c98101b2790804b443de581.json",
+      "sha256": "c54c212f806b7ef973d549cd61e17931e7f47e6731c1a452c239bfdff373ef10",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/9bbfbec5020cb80eb6b9479d711b21d8e11545e0cd007e96af42799f7c2becfb.json",
+      "sha256": "39d0bcff81eecf1fdd6fdc33b787a14b5c1cc610615683ca882e21e40be8aef4",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/9be47cc55116eb3ebbab192d9af605e85de0c4438c0391e2a8e88897d335dc08.json",
+      "sha256": "e3a44f46e9f01163ca73e8d1351c41cf3a6e390e1f64b4d7588e5503369806a3",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/9be94fd9c9a6a9fe707aaf2d68fee7771cc1d5e4d5dc8d9aa0a029037e50fd48.json",
+      "sha256": "44d33f12864a5a56dba877f13b03966fe5ecd303a66a3de85b1114e8daa3d2a3",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/9beaa404378131072ad087546ad7535309c156c7566b0d3d90a7a23fb52f5848.json",
+      "sha256": "d7efbd5f18dbccfa70f287469dc0f8a0860adf2fd573952423a275dc31a94bed",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/9df84ba460ca0ab959567f193aa596e074b460fc2200dee0ad88086529e12c82.json",
+      "sha256": "917794c53a61f000ecc0342a182eba4d2996e9ca22a73ce3309cf2f28a5bcea3",
+      "size_bytes": 435
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/9f047c58d72e20daacda0a0a430a196f43443b90eaeadc7066d83693938780aa.json",
+      "sha256": "15dfe9c5b72a68f090208eca73d6abf8be6ba5892adcae19fa8ca148971062c1",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a06678c5fea4e22e928490c4c82dc116bd6b4a14563d2fbbcaa1b4c45ffdd433.json",
+      "sha256": "8124aa6e6ddb1c6aa36c26ab602a34ca3d4021e7ede3de1a074a175bbf39e454",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a11d49a0ffef8c05e28f15657652e8484c6a922ae3a3f17390f85ba8b9e20f8c.json",
+      "sha256": "8639f8bcddc885ff97ef7b3569f7134ec83645bbe4f82bcf3677aff245aed4f1",
+      "size_bytes": 430
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a1946a6f4da19fb0dbd9b25ef4db498eecba5a45007b801fb9ee497ef07feed6.json",
+      "sha256": "ae13b6cf01a4352b966375c4bcd8d9e4ab5529dbd43ebcf7548a6e2d57ba36f4",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a213d126dc2f8a5221afa3f9066db9eda3a4dea14356613f2b6deb0ccbc2f72b.json",
+      "sha256": "b9f4f511a5a1a3a69e2a620a7819d497e5246d6a250d1a6b61febbccf80f7c02",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a216eb8c5480f6e2b4c25f40e519d6081a4e027eab128647b2ca2cf1b09d375f.json",
+      "sha256": "1b9ed706476cdd58c8487d00e07c9475da7d77c1e99fdc80ab3fe5be467343f1",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a25ef3965fdcb4745082c6fd006e822f3f9acffb1e2683ff08b4c6294e93a682.json",
+      "sha256": "eac56bbdb637dfce3b7cf573b6647f449f797311e58fb476365ebe56d36c6d1b",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a2c23b789ad2d357eb4e18d669a160b3992d60feeedc79b8daef3548082b8137.json",
+      "sha256": "9453b3b72e3b14446068626599239f6c7d60d70764e3b05582ee1177cb68ea9b",
+      "size_bytes": 429
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a2de07d457dfec97b12df79718deb52099a8e53551fa4a9735c7e714c87d385e.json",
+      "sha256": "e69c9d173e96fed23d8d7ff585b6f4bd7b1e3acc11860358e9ab8055ec9db2e9",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a45108aa814f740878be5e3d81b458807ffe66b5dae9ce8cea2bc349c1fda30b.json",
+      "sha256": "cc687e7b6a0d8cb2f97adfc6f69b0526525f97bf32df35c89775575ce1d6b873",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a4bd08444e527bf6130b9360a59c1f002c1af07886524267666b979f658c2d16.json",
+      "sha256": "638df43dd3741bed2a02b8a3ab31282bd4f30dee0ae2a85375f25345806e8a8e",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a512d34a99b9b9d105a65a0cb5d4209c43d075c479b27343f9490a7218b2ef8d.json",
+      "sha256": "960f71d864debc9e6835ec9356617310c3c133aab3376e73adc1777031e2a2c7",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a62cd1a58aa64685be3f3de5a739a81092afafc0b36a137aab8002b15d220cfd.json",
+      "sha256": "ad7ff8f393c9eaff7d7b537d042e383455e454a712d3d1f751d7c102c8f367fd",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a71bbf1fe8e37f207204b64ac21f040ce52997a152fec382b880b3b823918cb6.json",
+      "sha256": "3c94b8321b57e26ee1732f88ce83c0027082024175caffc9edb640723fde4dff",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a8f94792711ea4d2947dd647d55aec91ed7711ec4017e1bcc739ca4c4e00a490.json",
+      "sha256": "edc06d15aaf35477713b5b085125942bdfe27be3264dfb0b95f246e0e2a05325",
+      "size_bytes": 426
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a96935bee670490727e6a6a32843da5202db7b158e8f5f550bdd2d44e80f046b.json",
+      "sha256": "6aa5a0673b9d256dcc5a3aaad4fb627543cda275a6477e6d6dc2f60b6549ac19",
+      "size_bytes": 429
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a9a39fbd377d1450cf8fa2d26d34e6b924255afd467d3252acf98c427ce59256.json",
+      "sha256": "344fb3e002c81aeb7376cf0069b34cea499133be104eb7da670f2634ffb8e64b",
+      "size_bytes": 429
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a9bd8ff8212b6fe5f994fd46b31f42c516649bb3ce8079c5597f4eb342da0cee.json",
+      "sha256": "c8b80d0572d3abcb13c1ee78629b9225e793f486372e6cb0206b2726824314c8",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/a9de2db49a630ca9ad140d1126be52389139c6b7656ef797e5690ccab2f8a413.json",
+      "sha256": "8946e5e69b83e7636932a9d34007f6d8afc37674589452d94cbf78fb7b5e616f",
+      "size_bytes": 429
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/aad5360c7e86817b460b3d08a794b1d87e189507283c88775f99552688393cc2.json",
+      "sha256": "9ebe79d52acf9d1b2479d26bc0c7f6a3662b84775475e73a48643b014fa90b10",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ab2df23c4548fa7a6b353ec169da124e21bdbc9d0112b0d975c3b1a7020e893a.json",
+      "sha256": "61bd515a9711cedd7aa1e8c1e20d32f4c395a2f0e95c156cb11025b4ab097eec",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ac02a24a4598a91128723f2421c6afa0279b0f59b38411dfe7fcecc84d67301e.json",
+      "sha256": "14d50191e446adbdecdbbf81b9535a3572136920195624af92cc7763160aff40",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ac4b9b7d74d6c03cd1188e40edf8494272b072c239dd87524f1a28f53af7cfe7.json",
+      "sha256": "bedee890a44f5b4a0bdf4b8dd12f9e0221c230b937d3961063f105e414fe91d7",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/acbd244336d0a603e9d0a52423176702a93f0dc31355fee2e6f5aa919eb810d8.json",
+      "sha256": "804e494cce431406b48cfad4d0e0c03a9f9e44afa52c52e0fbaf38e895f0a61d",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ad094f339be4bcb9b6dedb885f4f6d5024f769c1d8cba74969ad04bd557d493d.json",
+      "sha256": "e3f85c1502da2e2ca89fc9b6a279091a2901d172aedf85c5beb1202891e5dca9",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ad2e479d9f5d875c9477503bd9465dd4094eb9f2fea0de8cd4341a99d4c9438b.json",
+      "sha256": "696c57cdb659f2df0b29f504a49746e273f2f829abbdaa3d4642559bd7cbe9eb",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/adb89aefe45ae31d1fef2842264415940b68c0d5ccc441d2142ca08bb4724c63.json",
+      "sha256": "33bd5b279535fc371328a6084aa45f0026db81095b574433e1c7a38e4d2bcc1c",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/aeec9f33fae5e307294783932795768bb2f4a903c503b622941ed95c570f0d11.json",
+      "sha256": "a4eebd5a28925592664f70ff217aa20edb36669322f6c7b7aec41c34f69174b5",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/af950f2be552fa5b1ff9bcaa2841a6e222132afff480c18531f3441890772bf5.json",
+      "sha256": "4e0a23a3d50209947f6953559974e93299a5edc1589418f11a613a039939f59f",
+      "size_bytes": 417
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b05255ebbf980c2ed176fa9aa975262d09753c4a294974b11eec2b90ad4e93cd.json",
+      "sha256": "3086a30fda717c7c274a7edff8d17036e1439a958cc6ace6cd6bcab5b2d41ab1",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b0bcba3c792fdcb1d2bb0e16c793e265b828ffb63f18da26ceebaa2af20336b3.json",
+      "sha256": "6350a4332df82903074694c3ff5c456b6bac6be5b2206a340fb564953267de0b",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b0e1acff90e8c447add0c50a9b9156992d3b605b6cb975fc2b081a5cdca3e8c9.json",
+      "sha256": "e6d6e39be49f2262692f9c380114eef70bf786d32428bb2fe6488f81185e5a6e",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b28a334b2a986fd02ea39a0fa4b7c2e9dcfddabe3b9002c1b79025f8e2533c99.json",
+      "sha256": "8bb125aa88c0360125b00a59c813eb528d90bda3746dc7d35c868eef349e6706",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b296af7ad2bf2cd58ed86d4bb164b31860aeacdc51f5f55a0e8ff2753b4db789.json",
+      "sha256": "d6fa99b8f43fa8c4e52f7d2877b2947ac939dfcc96cdcdd194015e8bf13a8178",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b33f053feec78675ae9ecee7ae406430639b21ba380534fd7c83bb8aa4582a16.json",
+      "sha256": "55f1b70c263e2ca3f53d96b01a272c33b5ce6900082aae3344ecef33d2882e20",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b50b1305a6722fa80a07ded6206e499544383001642147c85c87c016004b857c.json",
+      "sha256": "66a1ba25874b7bfd96bd528f65b80da0ef35347881f8b010d48fbe5bd290f95d",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b54e40c35b3bd8da9af53383bf13e9e23e74945dd300808a4cc9fc4b5137ff99.json",
+      "sha256": "e6e06cd86f1a51ad645e2a1ca293d569caa7b2687914ed59b4941be24b970ca2",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b5511453d08a8f57f2f77c1c06ac1c4010ffb537803193c18c1409654d11c64b.json",
+      "sha256": "39e8cd3a33555bd2b8d8b8225ed29ed79ac4ec08cf97bc8259c924475bfb90e0",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b5f075ec57188377908a7ca92e7ad56cf81ec0f6f3302526511866b7befe9e12.json",
+      "sha256": "6615b105298e0de8b5abbca26ec778bdc2c91916ae25e7f510101a8cee5e1553",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b706e6f7aea744fc3c927cdc600c1d1856c684731875ef0a7a9fa0317c4acee4.json",
+      "sha256": "7a2d751abaece010f2a6f3270e7cf91b12a62504cb42bb163e67cd4ea2214496",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b71d7228541a0424f39589193c26326b8fe9aa6a7aec662ed31ee62815db07fc.json",
+      "sha256": "ff816ca16eb49ca8183e3b8cd10083af6270d679adb66db7740873d47f7bb82c",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b7cbadb222c38540f231a3d30d231080319766c79bfa3a7afb97f21a8b35c02e.json",
+      "sha256": "fe42a8c2878fc41e63b9ea3a7620871822b8bd313a87db6e7a3a82c85c10d284",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b876c5e41bfceb0790a6dc7f17b8dec2377ce2beacc0fd5b251dd63245ff36fd.json",
+      "sha256": "8cedd07258c6fd081d93b6b1a8eeed765a8c236928c9ec8ef0bd2c3284bda8e6",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b8b7e9fbc2226b68e36e70c1942264b51e22cdf3946db3ed20ba8b04dfb6370b.json",
+      "sha256": "3312a2249c9c39bd6a43e8b6d2e569e7bc87cf9a60c4c96a931747f77677d589",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/b9b0536069deca44bb9c9f418551e463ed9af2dfa90cf1e12d6c29eeaca2d418.json",
+      "sha256": "4b8a6fa8f590a1d4d89e9ad2f6b8b8b5a3276128f627ac51c7f7e9f37af6d4cd",
+      "size_bytes": 429
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ba38549b3219ac9f20419d85ab18fd100e2081ad62aac9f2e1d90c93655d43d0.json",
+      "sha256": "34590ecdbc4ab9c8865e9ffdf562b9445c4aa23eae56cfef43964266e4bd983a",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/bbae0e0abe119c5c06d6b75cc7e7e541cb0794cb119b5f853d349dcfce392a9b.json",
+      "sha256": "2706022f9e6b59d97bf0efd060a42ca090d03569ff6bdcdcfb86510946dc481e",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/bc8a2773f054bde17d788ef85ba1f10c948d6a5e055a85a114f7162a477b0a3d.json",
+      "sha256": "19e6d9a1960f98c6be8b60c508e047af85a99e351b085e329881f503b9db1201",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/bcd3caf6986499046dd516bbe56090a44e0f87e9e7710c829029bf04b29dd637.json",
+      "sha256": "81d12a861ab03447f04c79c073cd8cae00ea8540f5000d4661f519efbab2df83",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/bd8b04939bbc80ea190a45d6a4ec060234f491ff140d84704bd7d72ef888ce45.json",
+      "sha256": "678183f2e86ed8639dfa49d4f1637d6da767627455dc81438407a57c9ec8fa1e",
+      "size_bytes": 430
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/bdbd56011677f6c5e905588f941a6e56f2577d54f19dd6c4a6082d4c26097355.json",
+      "sha256": "c3cb1b0d236697217c611d93300d156e3e2bf7ef38c3f264d55f2b86975be519",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/be6f16c4aad4c01543dc1b7c395036c632862eb934ddb2feb0d73223ac214cc9.json",
+      "sha256": "b676c0d55135ed85b0b68879068c4a4e18836b850881abf118267700c4c67fc7",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/c0a1db87aabbac63f410a268ba08d066a79954325ee1d75ea79a981bb614e5ad.json",
+      "sha256": "c69b0fd25154ca2f4dde9b7cf379b3d6e2bbaff3948f8d7840a245a8423964f5",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/c13c2c026b834db690cd7656e78272bba033554d3f41fa343427067f61f1707b.json",
+      "sha256": "d0b0f06ab3287bdb7e33a0b6e39678b7b7d53dc1cdff0526cebecc9e0ca5b801",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/c3c17b5b07dd3542fbd74bb88fb5aaa799117be7df371fa57c73392d91c575aa.json",
+      "sha256": "e3d0279388dd259df2340ad3f2d41dc9bbc49ce35468905b4d851e3967f05425",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/c473fc91ea5487cf51117b93b45ddd3827aba1089c3bec31089298c157fdf79a.json",
+      "sha256": "6bb8bbb44ca29a8e23ab89ab7b9edaf09268945a99ba715f2807c68fd8ea51c2",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/c4a0799e3dc82fb19ae3dafa12cc2f285f3e3837f7d0da7c0ced8022987d99c1.json",
+      "sha256": "4e3b2dda9f924a7a388692ab25df7104bd524871643701c087f4ec801150ddac",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/c4a5784e6ad108df3370f58ee48c8e61fd129f03cb2ec1fa7f35166f8d053b52.json",
+      "sha256": "5c90310d3cf5bfc63bfae93013ceb365c2cab9b5c47a91010f4a139f93c1e4ae",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/c8267d79b177ffb3fe950b062f38e9fdaebd587fbf597c76ced5b7dbbc828aee.json",
+      "sha256": "21c051eeda4cf4bfc574fad9c777b15fb1952aef7a3d2d2ec1d4b2c32fbd7cdd",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/c863caf32e56795f6f0ec0a4af54e5f3c507c726b1a0945528387a30da77abeb.json",
+      "sha256": "752b3f5dbe0de3c683148faaaa805d0b97e940d4379b70a3672a89b184125ce8",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/c98734e2bb999f7dc75e523b1c0e436f41f7656438d3198ce6cf67fb910ce790.json",
+      "sha256": "27b5deca4f3885b04d6657b5eda7390efa739748e464c4ee845de676ab1bce10",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ca6e54b0dab1141261b522037f290c693c6b79fec41049ea086e4b09044e18b2.json",
+      "sha256": "7e37206f303f096a560480129520625e00d656804f5f6881aa5a47b9e5d5f580",
+      "size_bytes": 435
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/cb4e0e69854c15a11590a21d01eba09628c46a236dc2c4663ecd8ef5b02fa433.json",
+      "sha256": "7317df66f1c8cb14b903a4790c8da76e831548b1859d9a14a0e1d0c65a900394",
+      "size_bytes": 419
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/cb6233f867c7e1075674b00a4cc9b0cfb5e757fa698ddaae76e5e05a9a932bb0.json",
+      "sha256": "46f878da3935060dd9416c0f1ed76021eec632013621fd691e287c48171648f7",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/cc5e9f9db4a464ca09e175a281285742717c49805ca726bf654300a7cfb4e1ba.json",
+      "sha256": "c0edba135600bfe0d1a896890fe826cfb8c3a3174939e08d251355644376fc56",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ce8ad72e145dba42f6eac6417bd5d717499c787feaf9e7cea800d2d361c699de.json",
+      "sha256": "e82365ffe7c8be2585a0caea8892e0c57df7d855d206bf22282b6649422608eb",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ceabf713c3a82ca75accdea7fab8adda8e7fe75761cc65bb6db375f6c411d3e6.json",
+      "sha256": "5a958c7cca4bc4516bb01fc542cf4a22b1dd703ad32ce3559204d7f76960146d",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/cec6e9d238c1842fe338d6545064c103d310c6f7f2be2b5db6847e41ab997d3f.json",
+      "sha256": "6ea4476a9804b5a493eee7b6f27ed356c15b30ed10eac5ced21288edcad8873c",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d0b2a696c6fa1b4fab747729e264bf339cba4957c92a777347b98b0dd0472bb3.json",
+      "sha256": "19b8b92aa2b3762608570abd0af76e1522c659841a781e47b6dfe98e7c7d0251",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d0d342ab3dc3ef25c0bcff780a89878c647c62242f56bd5a31f2c043afeb7715.json",
+      "sha256": "e5bb0f80a703985c12a3925641a033def09fa8bcbcd91cd429775886c40c3725",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d24d65a4a4fca4a43bc56ea7cc7bbeea952fba79673544fe8af8391b6e5fc2da.json",
+      "sha256": "b6da511f5668325314d8a12832736177f45cde598546047d28709eedb35565c3",
+      "size_bytes": 419
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d289711704c9ed7481aba76c2eae93ed4af2ecce67721fd5b3fd6aa5ea6335c3.json",
+      "sha256": "bebf8f2fc2005f3a277a47640972bd514200d849ffe4439750de332508dc5544",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d3a0f6559f21189a37cddd96ed163ea756ca97ca00ab728438a976e2f01c0e6f.json",
+      "sha256": "0d326ec47a3343e5e451746e29c552ad5114b369c73e2e49980b7e74aa3c9293",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d435396eda767da6317d0c582b1a557178311b4df3fe559faa334d430bd0b285.json",
+      "sha256": "368d583cfab8ba5c34d41132bbe8428c007a43321a82ceaf38501fd626c9f3ba",
+      "size_bytes": 435
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d4d0adccad312c5dd90af08e112446819a4e06c489dc9eba5d552fbfbfff94b7.json",
+      "sha256": "f56b6f6018f85090dc3e9eb96b1c8107e87dddc847e15000c5e8e60b522ab938",
+      "size_bytes": 430
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d521f1ff3c44545ca773ba710b1435fa494dce214452bed30bc72d2c0414d521.json",
+      "sha256": "50a4824901d604dba73bb831a6734bf4fec11ba5b95f68aedd484074b6c6c36d",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d5fb1d0e3264725e5c87163ff2d01bd8caa871a705fa15895c6e910f9ba22e8b.json",
+      "sha256": "c0741099a4d065455e23f7f6fcbf91710a2d6c4c837b96b39a9c86169ef03dce",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d697534184db45b38c8ba4d0cc264addb1f8c15471bac46d45bc242f28edbccc.json",
+      "sha256": "3ba1891074152afd958565f2c233db6e77566a0765c92aee6042f71c7b7cd191",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d6c795fbb20c232e62c6e3aa5020dc63cb5a3b594167302ca4436f6fa47f07b0.json",
+      "sha256": "bca7b4a0c795504d8451a9308816d4518fd8e5516fc7b11246b57157b7a740cf",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d726af063919883c45f52890124b50887c0858b73d2257e77bfadc1eacda3aae.json",
+      "sha256": "97165407bcfe58ffa3c14e35540958cc9d1b9ce4ec08d5e76cc9f903ef2bb71c",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d748c73ee21e7b3919b79f105c09c6d3e73b6d9bda293cc20d99f11276153bf1.json",
+      "sha256": "a97dbb9f82f349421516094116ead5da10a9ff320c44ee276cc5728c44c9083e",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d8d5e606f444ff745df9a225deba9ad7043c0b4040a5f1b9b3a30b6ecd70dc7e.json",
+      "sha256": "30dc2502e0541659c12380d70461a565b0948ad65e1faa69a7e52f36ac9834eb",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d9cf2c9ab096edfcd6b939e58abe966ae56adaacbf4c0dfe96cddb476f908d93.json",
+      "sha256": "e35f2b44db6fa3b68d18a7ce0d1626c51ff86866083da0fcaab18c2d46af101c",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/d9fab9e360f8ff25e6430e86425fdd693ae5d8b9dbe47f303ae3db21f7ccd1da.json",
+      "sha256": "1c55817be953d8ae970cba597118de08e06faf967771a93a121f89189bd5ef97",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/da69ca98124dc3af2c8067f90319209e46d4ac2294e0f3d29327d24c5f6368e4.json",
+      "sha256": "1a8a9ff95524a978eb2e94a2838b2d3aeaebebcb0b47ca24a4e770eef78e4948",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/db957eee3ec355f472effe9b17bc0bb3ed605a20f7dc1e6fddc2bc81c8089291.json",
+      "sha256": "5c252c439143d866e73d2556c5d7036c0bbc7f064078ce6523e9705841eace61",
+      "size_bytes": 435
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/dbf4403ff19a70ffcb41262c489041443abe2a2e76264ad16045dde0ab00a8ab.json",
+      "sha256": "b0423a6649b85c8e629ceb9303083ee0cb341efbb0f19d29c99c3631c7fecd97",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/dc106b244045281efd9bf2aab9b13dbf3a2c5bd1f511f88c642244bf5aa7018a.json",
+      "sha256": "01ab938da735c182c2286d0b8c877b009f5a8297040afbc7d5e29c27c2bb4541",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/dcf091befde20a953af26f48bb1ba50a45b514523f940b95629d5bb33775edae.json",
+      "sha256": "5c3dffc75f15340592b5e6d51c1ac67a608aafa341d76b66f7333187dbda4998",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/dd109d03f1da5364b78cf66230736c0bd9174a86b34f58e322c0eba1bc64f425.json",
+      "sha256": "744e5af6db53b1f1cf9d9241c97a4ee85b2b0063c9d0ceeb273b09d0f695e09a",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/dd4a232a1e5cb7f3ebcf5fc663daf70e69d166789a933d0c8cbbd18493148318.json",
+      "sha256": "1a9b3a3c34e79cd46b227492db0579c6ff5824054bbfb40e24a3b1bb7e9c51fd",
+      "size_bytes": 426
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/dd6dc09029f1afd92a0cccca16e776d5f9fc8f5f8d19914ed396a3902715dda0.json",
+      "sha256": "91fea7d044c68814048f332af627ad796da10b89dc1419400c77c423f71bdaa0",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ddd99eae9a425bc7dcb41d31a0b24a0d9e3905d800ade0e0574a67134b4e485d.json",
+      "sha256": "f339154a104a624eeb3d9504c911ce6837878bcfd9f8a7051cb4a8bdd34afbe0",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/df02a2a2a980955dacb603f0acf03b9b341817de87ad75a0b7a8db560d545509.json",
+      "sha256": "09c0c791817350c6689bbf136631666e10272be2fa197d1feba5e7bf574aa323",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e04a5ce09d3aa9309640560291a62156f3df4199a9ad7dc0e403eb7e9d84527f.json",
+      "sha256": "9944fdc8813b990678c5acb537e4b222e4ad0373ee5732dd69bfaf056ebe3af9",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e07d3f187e24da57f06559e9dce4c4f568efd2ba48f64d6ff3bb5acd3ae87b84.json",
+      "sha256": "ae5b2506416cc9c9dc29c8fddd66a486d146ef0a8506daca66a65a7128d46865",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e1981e413dcf465f172f09b7a2394175fedbcb377306ac7ae25a28686b1576e8.json",
+      "sha256": "e46991dca2469a95da500bdb6f724c072e64507b690f917d08e991428f5e8a74",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e199b83ec78527227c6c1a743017ba4f2213641b02d9c062c738b0d311472b39.json",
+      "sha256": "b7310ec5cbabbfcc230b9a2c40ed4c00d5285dfeaf854615dbe5e8cdbd7021bf",
+      "size_bytes": 429
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e1e5779705e376326901550d7acb3d8f220afa1425485756a36fb09651d748f0.json",
+      "sha256": "cf83a76e043c4cd06b5896d7ad39f3b2c8f6fa4dd8e1be195a3e1f1f9b7481f2",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e3260b77887f3ce5a3014107c9c1f84f425a8b8e81e5d346ef33c28125a1c0fe.json",
+      "sha256": "878c2736c0cfbdf1cb89f41b642a29e5f819d647285ae720bb0e1f2a250c7586",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e4e634fd217ef0e5262e8b312637ec56c91d118c28b47a27fd883ebd081686a9.json",
+      "sha256": "1832536128d1003cccded8c9aad601a236dfa77bc5c6fff3dda7ad2eaa15be9f",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e57209bda5e18f73d43c9c363527a81c77c959f17eab4607f23816e883f69517.json",
+      "sha256": "cd4567e47003c9bf96501bdbd3528208b1c653398b8830584e9d1e448953c934",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e5724a6522f565f2aa894eb4ae4d8d758be7dd5f1bc142f16962b5ded3d37250.json",
+      "sha256": "48724c9f0b96d24d2c0428b53ff061773c537721dfe581852538e72c5fd2f2e3",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e5d6a03d06911864b604361f165586e43fa74798ef0a882529148efd875afd1f.json",
+      "sha256": "cd3c26dad17084503760e6e290e89a93f875c1f04893495a2ea6486bfc3c2e40",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e63a77e412f5a0bccf42af7c5dfe1524bba8c03d40b2e0d73c92d29c957ca35c.json",
+      "sha256": "d7361726c24e32bd7eade5f4ea50b1d319b20cd2c9c0e014b0cc7918f9893ee3",
+      "size_bytes": 430
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e75c4d7d66929aba4543d21bd27ffd2643fa70b53feba5ab5ac830421a74799e.json",
+      "sha256": "d5801ff89f63b27f94e37636aae7359efff779ad2d9c4d10978ed3757c3afe4d",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e777aa81ae105d291c8e19cbfb0425effa389a597161f323d15639038c930127.json",
+      "sha256": "4c7f9b15fb603ca56e6b040f4b4f8e69b4e12d85da9a47a877122bb9a082a63d",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e7d9cc6d3d58c93750b72dd8d2241e4003b1d117918aa389ed5110833d15722e.json",
+      "sha256": "1e004cee87fd462c64db72ecb691b79b8c01670d4763b6750bc92a9acfc2dd67",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e81ae373b1a78661058ab40e87333929372afb57c6694e3acb6389be54a7e9b0.json",
+      "sha256": "e7bb93ff78b761b3abb43b836c953f4d5e91e16d1835b50bb0a53ce90a22261e",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e821d76f8dc9a9529089dc81dbf24c0d6ee4bf4d759e026be78566ef13d97750.json",
+      "sha256": "6de23e845ed22f8ef35236b36fe7a6530b7e9514737ba23919e4438028fab713",
+      "size_bytes": 432
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e82b5e3290aa4ee461b474315782c0629c2f9728b2809df61efbb9ba23cc2113.json",
+      "sha256": "8ab8eb180ec4068d81b038ae72cacb83291955cb0d61fa0f342ea3046601e790",
+      "size_bytes": 434
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e84805020f870a9e68fa4f73501d3719cbd32627e3d5263f87f08bf84a1fb07b.json",
+      "sha256": "328e1050eeb9f2772a2a0bd80bf943100a9efd30b98da4dc7e0ebee62581f904",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e915350c73061fb95c34e9e29b5b00567ef81c57fdb00890b10869fc731ebcff.json",
+      "sha256": "07a26a307a11c045e918a238955e19943a5ab64b16d8e324e0d33149c7792853",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/e921c02dc03bbbae2c609fe65497d72784a9b427448a7c3f6daeb0387c9d5a1b.json",
+      "sha256": "011c5e0effe93f7605c21a7e1a59b51b41f9ec798620e2daab1501985007cb10",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/eb243c22952fd71ad722f788e060bf913e9de509c4550dbcc6fb8ce00c8d7bb3.json",
+      "sha256": "9d785000cf5753ad87dcea714795eac273c7de563b2e0c9ea0c5ceb1b35e93b3",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/eb3b9980f2c43bb938f1935ff632084914a3eb3e8cb4afc5132ca6ca4a626f4d.json",
+      "sha256": "d9729b508e09914b342f70c6100c5c2ca463693c0f1762dd2af3bcfa50fed8d2",
+      "size_bytes": 433
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/eb46c69a656b2c44db82c96e3765b327dd79a12a44a42870131877c8616e225b.json",
+      "sha256": "14f20d599f33b4a140bee8b15379619d8e7b83d292cb4c1570285799380b85da",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ebf6faa6bc4a9ad3355e8785d3e96bbe96965633c5dc514f306bda9ad13b0a9e.json",
+      "sha256": "d14aef31e9c58385beb92ded6fe04832cdec0955539ad7d18a0028e05661b573",
+      "size_bytes": 431
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ec8b631e843c22b26f5284c94bf1e3193e633f6d19d6996f2d23d95aa12ad01c.json",
+      "sha256": "ceabb7e1a0bab4f37de1e4f6ec1d4e69907e027c1d81e61489577b9d5a85d73d",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/eca4e9f9e7c80434e5fb167cc0bc483ce179165db2d55709b1be23f1a96fabb6.json",
+      "sha256": "dad4cdac2e9181bd68c53bc4acaa5911380652ec7597d0deaf29efc6f36d56bf",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ecbf06fd7bec74cbfc4b1cd3e9ed4a1dc01fef51f2dfb51e7138a7737734fca6.json",
+      "sha256": "b9be0a06f7138702268303c1b5939fd11d4618b401b05109a01473f3a014f27e",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ed34570bc1fd615cbfe92ce128e03ce1a04a28321efbbb4293c3967d5025b813.json",
+      "sha256": "fb19fbcda6a8e5c1f24ee57e62ed583afc5c841340914eaf9ab369d34d514ee2",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ed58ca7dc6c8d0d7b9ad9ec0ee7585a93f8a376c9f1d6f4ed789e338cd309c79.json",
+      "sha256": "8a5e99b513a94a59ca0a0a77346e9361b356455b72c97a1c661f1255af6faf98",
+      "size_bytes": 436
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ed7656da28275b3f0ca0bb4469b6d74119359d2001afdd8472cc2f41d4346672.json",
+      "sha256": "e509ebe8d33a3080f19edce48c6bc1fd1251434765483186d8215cec1381198b",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ee8150a6f3c0dcff08f538ca617818dc94e9c30611b07d87ec08533008597bbf.json",
+      "sha256": "11d38772c3a54d25b6677d7e1ecd526f7032a9a0dc63540095109bce8cb8108f",
+      "size_bytes": 424
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/ef8d16196577619ba82db3184c2d081621cdf06e123e2c6105a6b770161a7d1e.json",
+      "sha256": "9c36192ef710be6ec33082799c1fa1d1cec33758948258fd0f9182780c54c08c",
+      "size_bytes": 430
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/f004d2b6d73ffd9e93372accf7019bcbcb05823b8b0379fb822cf97b4ac39396.json",
+      "sha256": "a2040758fcf2fedeb841d368348dc3c5e7cfa1595d50f198999573c41c1deca8",
+      "size_bytes": 435
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/f13b35fa7bd5a216ab6fe835a17eccc686971561361dc727db7ec7541ba6ddf6.json",
+      "sha256": "39c1ac6941353d5f98a17b2366736fdbb61d0c2a040d29ff8a4656e649545b53",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/f2a99f236398ac9a8be3020703a34544daded425e2766bccd7c94f94a7a735ad.json",
+      "sha256": "fed547753d7ca73c621e04779cfa9fe431e0962777e8b4335255c2cae933daa1",
+      "size_bytes": 435
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/f3e039a1040e6427c2c9094e0af087fe29e9c42ca847bb193c72f29cce02a500.json",
+      "sha256": "eff56d0ae5b24e2362a6a484dd0cd453cc75d0d5e786013f23fe7b2f95057063",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/f420f0bba0db55f76e42b79b647b2fedb00ef14ee60f407c79913acbcbabe940.json",
+      "sha256": "41575e3d9873662d48b5177a098d76a1a5b344a5313aacf7a08bc36739a6400e",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/f5405589013d02ec594750e533f13428b6db7f2ef0e236539dee6a02fb7c1ecd.json",
+      "sha256": "46e52192ab5bc0c4d7b629f0e62087acf581534cea3f94953106892e113008f3",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/f733b353fc0ad294f4ea4018fe5fc2d49e9f2af6ee22829e0b3f43c536f78e1b.json",
+      "sha256": "940c578c30360b09e7a68652e4a56a60914fe59867c323e8c9584b7c2939096e",
+      "size_bytes": 422
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/f7a61209a6c3908add07b81b8a919666ab1b071a20cda3fbc359802a9c53e07b.json",
+      "sha256": "e390e5f2fe58853a295818e9663dfbfbd2c5d59dc21492e8237996ba232340a7",
+      "size_bytes": 430
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/f7b6f519c376e389fbb5fa4ac1e48dee5018cf64f3eab74328e1a447af0e1a67.json",
+      "sha256": "db5eb5aa46097b5ad2d68241924decb76fe49b48e0bd4382982ec60240133fa8",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/f7ca5129afda2c28a80fa23ca231ac1a75d0762f093bae2f7b732055d9d5874e.json",
+      "sha256": "4b101962ac45a1b0f4eb2ba198f83e367d3805c30b7b7c015c85ffbfec6565f4",
+      "size_bytes": 434
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/f8f526b73c6e79f792dd1afdcfa1370f4218f3f93c20e3ab11bcc35f16de888b.json",
+      "sha256": "79b66e3500f8bb8cb5167cc2ae07a40939f45d67c82fa9da015e85dbc5ef7844",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/fc0e7c93c74a6e47a002a64da6d5ad3552aa080b7aa237eee1e5bbc8ecb7613f.json",
+      "sha256": "2bde2fb6bd76e6bd8fbe36e889b1f8a6a444d67d0fd5d7f6c1e1e04ba1ea8789",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/fc39adeb71f45ded76a6d80f0e171d756bbeefb194d4b1441ed2084f7dc83d8d.json",
+      "sha256": "86abc094b127df549368838b9cc62f137ab5ed9b2c47305bfbeba60a429586de",
+      "size_bytes": 423
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/fc97086ab226628a57c6a60d7c89e319b48b458781c9009f6add8b82b98ef454.json",
+      "sha256": "ce74375b5a2f942c67f4443898dc37625fda0b5173420faa4b8e71787bbb1890",
+      "size_bytes": 425
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/fce4fc902e66b39e68cdb39cc67c6a2bbc235d2e2247ef6e6c4cb292efddd650.json",
+      "sha256": "0315677288eebe41d0e2ea6ba1a1261151a4812251e4fa9172b2ee5aa2b8992a",
+      "size_bytes": 420
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/fd06c08ec331d66bd759c3fd48cf598bc7bce327b6b801563e4d7544039dd141.json",
+      "sha256": "393f33dc003423fa3837f20fe2959a8a527066270d62501893fdfe1b43a904d1",
+      "size_bytes": 435
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/fddfa8713e1d54873be1a3b9c462b798738ff21e458501c7cae885f5cdd22f9d.json",
+      "sha256": "4b0a7ff3907276e4713aa13cc922e41b218f6f6c63cc6683ae850d9b852aeb06",
+      "size_bytes": 421
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll/feb1729a643d6fa30d8246ea5493582038409a5ae0337e4d2af04306148c19c6.json",
+      "sha256": "2085c6d920d284f1e2a8a53512bfa1d7d28e0a13c39a2dc6c3a713051d2f59d4",
+      "size_bytes": 437
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/joint_training/zero_policy_nll_summary.json",
+      "sha256": "8732c68a91c2c518b84b738ecb3e776ad372315cf7bef93450cdbbfcc54ab62d",
+      "size_bytes": 309
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/runtime/formal_gpu_preflight.json",
+      "sha256": "2352e45c652219526e86ff2c34d7ba8c68d027cec2962d4d3b2897c99ddcaf21",
+      "size_bytes": 3945
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003/arms/1d/runtime/static_counts.json",
+      "sha256": "2f4ed4adb775488567b57f49e4d6331a55b888d7f39863084a8f52e03ece495f",
+      "size_bytes": 774
+    }
+  ],
+  "passed": true,
+  "pipeline_config_sha256": "ed3813888d5ad4c22ed3edec69c14eb5fffd948648c799814a2883ceef45b3ba",
+  "prompt_profile": "full_demo_first_only",
+  "run_root": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o08_20260907_003",
+  "run_uuid": "exp037a_r14b_o08_production_path_diagnostic",
+  "schema_version": "14b_v1",
+  "source_commit": "ffd6a22fc938f2737faafc1df4e6da5e58a51518",
+  "stage_id": "O08_zero_cache_and_training_units",
+  "started_utc": "2026-09-07T06:15:42.760359+00:00"
+}

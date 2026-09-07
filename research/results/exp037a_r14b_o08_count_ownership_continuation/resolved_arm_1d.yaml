@@ -1,0 +1,653 @@
+experiment:
+  name: rcmf_reproducible_pipeline_14b_1d
+  version: rcmf_reproducible_pipeline_arm_14b_v1
+  seed: 25101
+model:
+  backend: hf_qwen
+  name: Qwen/Qwen3-8B
+  dtype: bfloat16
+  freeze_backbone: true
+  enable_thinking: false
+  device_map: null
+memory:
+  enabled: true
+  rank: 64
+  program_dim: 128
+  normalization: mass
+  store_per_memory_delta: true
+  eps: 1.0e-06
+encoder:
+  type: qwen_hidden
+  hidden_size: 512
+  num_layers: 2
+  num_heads: 8
+  intermediate_size: 2048
+  dropout: 0.1
+  shared_state_experience_encoder: false
+  max_state_tokens: null
+  max_experience_tokens: null
+  train_token_embedding: false
+address:
+  mode: topk_softmax
+  topk: 4
+  use_utility_loss: true
+compiler:
+  shared_encoder: true
+  use_write_strength: true
+  use_failed_trajectories: false
+  version: rcmf-v1
+injector:
+  type: additive_token
+  num_prefix_tokens: 4
+  initial_scale: 0.1
+  position: last_user_k
+  num_tokens: 4
+loss:
+  action: true
+  utility: false
+  rank: false
+  sparse: false
+  orthogonal: false
+  interference: false
+  teacher_distillation: false
+  lambda_utility: 1.0
+  lambda_rank: 0.2
+  lambda_sparse: 0.01
+  lambda_orthogonal: 0.01
+  lambda_interference: 0.1
+  lambda_distill: 0.0
+training:
+  optimizer: adamw
+  lr_compiler: 1.0e-05
+  lr_injector: 1.0e-05
+  lr_encoder: 1.0e-05
+  weight_decay: 0.0
+  warmup_ratio: 0.03
+  grad_clip: 0.5
+  precision: bf16
+  memory_master_dtype: fp32
+  effective_batch_size: 1
+  seeds:
+  - 1
+  - 2
+  - 3
+  support_size: 4
+  hard_negative_rate: 0.25
+benchmark:
+  name: appworld
+  splits:
+    train: train
+    dev: dev
+    test: test_normal
+  max_steps: 50
+  max_context_turns: 40
+  task_limit: null
+  prompt_profile: full_demo_first_only
+state:
+  include_task: true
+  include_latest_observation: true
+  history_steps: 4
+  include_system_prompt: false
+data:
+  output_dir: runs/appworld/prepared
+  allow_test_ground_truth: false
+stage_c_9a:
+  run_uuid: rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001-1d
+  artifact_dir: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/arms/1d
+  persistent_root: /lambda/nfs/rcmf-persist
+  starting_head: resolved_at_launch
+  archive_branch: archive/v4-exp030a-selected-memory-proxy
+  working_branch: research/v6-rcmf-exp037a-o08-count-ownership-continuation
+  global_seed: 25101
+  parent_exp025b: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/shared/compat_exp025b
+  parent_exp025c: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/arms/1d
+  parent_exp025cr: runs/stage_c/signature_balanced_field_7cr_20260818_001
+  parent_exp028a: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/arms/1d
+  reconciled_corpus_dir: /lambda/nfs/rcmf-persist/project/runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  task_split_manifest: /lambda/nfs/rcmf-persist/project/runs/stage_c/state_conditioned_program_direct_7dg_20260821_001/preflight/a_task_split.json
+  expected:
+    structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+    replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+    selector_ensemble_sha256: fresh_stage_output
+    model_name: Qwen/Qwen3-8B
+    train_task_count: 29
+    heldout_task_count: 8
+    complete_train_memory_count: 401
+    heldout_memory_count: 98
+    deployment_dev_task_count: 57
+  memory:
+    source_layer: final_layer
+    source_view_names:
+    - source_task_goal
+    - pre_action_state
+    - complete_action
+    - post_action_observation
+    pooling_rules:
+    - token_mean
+    - final_token
+    input_dim: 4096
+    writer_hidden_dim: 512
+    payload_dim: 256
+    slot_count: 8
+    pooling_type_embedding: learned_shared_mean_final
+    full_transition_global_excluded: true
+    arbitrary_truncation_allowed: false
+    token_subsampling_allowed: false
+    cache_dtype: float32
+  selector:
+    frozen: true
+    seed_directories:
+    - seed_25071
+    - seed_25072
+    - seed_25073
+    state_views: 10
+    transition_views: 10
+    interaction_rank: 32
+    key_dim: 960
+    equality_atol: 1.0e-05
+    memory_specific_prior: false
+    mu: 0.0
+    deployment_score_matrix_allowed: false
+    deployment_top_k_allowed: false
+    require_stored_score_equivalence: true
+  field:
+    version: rcmf_reversible_full_bank_field_9a_v1
+    key_dim: 960
+    slot_count: 8
+    payload_dim: 256
+    A_shape:
+    - 960
+    - 8
+    - 256
+    B_shape:
+    - 8
+    - 256
+    accumulator_dtype: float32
+    parent_weighting: parent_normalized
+    training_same_task_exclusion: direct_task_accumulator_subtraction
+    runtime_memory_scan_allowed: false
+  reader:
+    version: rcmf_standard_field_cross_attention_reader_9a_v1
+    insertion_layers:
+    - 7
+    - 14
+    - 21
+    - 28
+    model_dim: 4096
+    payload_dim: 256
+    attention_dim: 512
+    heads: 8
+    head_dim: 64
+    query_projection: trainable_independent
+    key_projection: trainable_independent
+    value_projection: trainable_independent
+    output_projection: trainable_zero_initialized
+    self_attention_kv_append: false
+    slot_causal_mask: false
+  training:
+    epochs:
+    - 1
+    - 2
+    writer_learning_rate: 0.0001
+    reader_learning_rate: 0.0001
+    weight_decay: 0.0001
+    max_grad_norm: 1.0
+    raw_or_bare_policy_kl_weight: 1.0
+    teacher_token_ce_weight: 0.25
+    ground_truth_action_ce_weight: 0.05
+    full_vs_zero_nll_weight: 0.1
+    full_vs_shuffle_nll_weight: 0.1
+    reader_residual_norm_weight: 0.001
+    writer_payload_norm_weight: 0.0001
+    positive_bare_class_balance: true
+    gradient_checkpointing: true
+    mixed_precision: bfloat16
+    checkpoint_every_units: 25
+    exact_resume: true
+  validation:
+    teacher_forced_controls:
+    - V0_zero
+    - V1_correct
+    - V2_key_payload_shuffle
+    - V3_state_query_shuffle
+    live_controls:
+    - L0_zero
+    - L1_correct
+    - L2_key_payload_shuffle
+    - L3_state_query_shuffle
+    checkpoint_selection: heldout_train_tasks_only
+    maximum_execution_drop: 0.05
+    minimum_positive_task_fraction: 0.5
+  appworld:
+    legacy_python: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    legacy_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+    one_step_bridge_script: scripts/appworld_live_one_step_bridge_7b.py
+    full_bridge_script: scripts/appworld_full_agent_bridge_7f.py
+    prompt_profile: full_demo_first_only
+    max_context_turns: 40
+    max_steps: 50
+    max_api_calls_per_interaction: 100
+    max_new_tokens: 512
+    context_limit: 40960
+    temperature: 0.0
+    top_p: 1.0
+    do_sample: false
+    enable_thinking: false
+    worker_timeout_seconds: 600
+  first37:
+    task_manifest_config: configs/benchmark/stage_c_deep_residual_amortization_7f.yaml
+    task_manifest_section: stage_c_7f.first37.task_ids
+    condition_ids:
+    - D0
+    - D1
+    - D2
+    expected_task_count: 37
+    expected_condition_count: 111
+    complete_field_memory_count: 499
+    measured_bare_h100_hours: 0.769878765447235
+    correct_field_multiplier_expected: 2.0
+    correct_field_multiplier_conservative: 3.0
+    expected_git_safe_audit_bytes: 1500000000
+    expected_lambda_raw_audit_bytes: 4000000000
+  audit:
+    git_safe_root: research/audits/rcmf_exp031a_one_demo_retrain_11b_20260829_001
+    lambda_raw_root: runs/stage_c/rcmf_exp031a_one_demo_retrain_11b_20260829_001/audits
+    format: detailed_generation_interaction_audit_11b_v1
+  runtime:
+    review_threshold_h100_hours: 32.0
+    heartbeat_interval_seconds: 240
+    heartbeat_stale_seconds: 720
+    hardware_required: NVIDIA H100 80GB HBM3
+  prompt_dependent_inputs:
+    state_cache: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/arms/1d/representation_cache/multiview/state_multiview.pt
+    outcomes: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/arms/1d/paired_causal/paired_outcomes.json
+    teacher_cache: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/arms/1d/structured_compiler/policy_teacher_cache.pt
+    teacher_report: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/arms/1d/structured_compiler/policy_teacher_report.json
+    selections: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/arms/1d/preflight/frozen_train_selections.jsonl
+  scoreable_count_contract:
+    format: exp037a_scoreable_count_contract_14l_v1
+    arm_id: 1d
+    policy: sealed_upstream_outcomes
+  causal_panel_contract:
+    initial_state_count: 256
+    maximum_state_count: 499
+    minimum_per_label: 40
+stage_c_11a:
+  run_uuid: rcmf_exp031a_one_demo_dev_11a_20260829_001
+  artifact_dir: runs/stage_c/rcmf_exp031a_one_demo_dev_11a_20260829_001
+  persistent_root: /lambda/nfs/rcmf-persist
+  source_head: b04d49d2ce9af305a004bb8bee2a3fc469e53927
+  source_branch: research/v5-rcmf-onpolicy-trajectory-distillation
+  working_branch: research/v5-rcmf-one-demo-dev-eval
+  exp031a_source_head: 57d2a3479ff292dd8f89bdd0ea9f9417abc42a48
+  global_seed: 25101
+  prompt:
+    profile: full_demo_first_only
+    retained_demo_instruction: How many playlists do I have in Spotify?
+    original_full_prompt_sha256: dd74c379c97031a062ba79b2b82d3992ec3b38870792f53d86821544f994c4c3
+    original_structured_messages_sha256: f9a6937120b7da883c60e9b5e9187290bf71d3d68b0182640487b705f4cb3734
+    one_demo_prompt_sha256: a0a8d3b2e10f167dba5dcab5ad62fa8f6737629b813d2d0e27af4872bef9e27b
+    one_demo_structured_messages_sha256: 90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe
+    original_message_count: 74
+    one_demo_message_count: 20
+  immutable_exp031a:
+    artifact_root: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001
+    checkpoint: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/joint_training/checkpoints/epoch_02.pt
+    checkpoint_sha256: d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1
+    deployment_field: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/deployment_field/complete_37_task_field.pt
+    deployment_field_sha256: 5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e
+    instant_add_report: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/deployment_field/instant_add_report.json
+    data_manifest: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/full_bank_data_manifest.json
+    memory_provenance: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/memory_provenance.jsonl
+    shuffle_manifest: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001/data/key_payload_shuffle_manifest.json
+    selector_ensemble: runs/stage_c/signature_balanced_field_7c_20260818_001/selector/ensemble_scores.pt
+    selector_ensemble_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f
+    memory_count: 499
+  dev:
+    dataset_name: dev
+    expected_task_count: 57
+    condition_order:
+    - D0
+    - D1
+    - D2
+    expected_condition_count: 171
+    authoritative_success: evaluation.success
+  smoke:
+    dataset_name: train
+    task_count: 2
+    max_steps: 2
+  runtime:
+    review_threshold_hours: 18.0
+    heartbeat_interval_seconds: 240
+    heartbeat_stale_seconds: 720
+    sequential_conditions: true
+    hardware_required: NVIDIA H100 80GB HBM3
+    expected_git_safe_audit_bytes: 2200000000
+    expected_lambda_raw_audit_bytes: 6500000000
+stage_c_7hr:
+  run_uuid: rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001-1d
+  artifact_dir: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/arms/1d
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  starting_head: 78f8e2e674709775b8a2a9b92297d255ec0e73c3
+  archive_branch: archive/v4-generic-memory-specific-amortization-failed
+  working_branch: research/v4-appworld-structured-rescue
+  parent_exp025b: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/shared/compat_exp025b
+  parent_exp025c: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/arms/1d
+  parent_exp025cr: runs/stage_c/signature_balanced_field_7cr_20260818_001
+  parent_exp025d: runs/stage_c/state_conditioned_program_direct_7dg_20260821_001
+  parent_exp027b: runs/stage_c/memory_specific_deep_amortization_7g_20260823_001
+  reconciled_corpus_dir: /lambda/nfs/rcmf-persist/project/runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  expected_replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+  expected_structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+  expected_selector_sha256: fresh_stage_output
+  expected_exp027b_checkpoint_sha256: 8af2d1068ee0059c79edf740920f9d506b8a880459ff53656b449f767e5dffda
+  expected_model_name: Qwen/Qwen3-8B
+  appworld:
+    legacy_python: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    legacy_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+    full_bridge_script: scripts/appworld_full_agent_bridge_7f.py
+    one_step_bridge_script: scripts/appworld_live_one_step_bridge_7b.py
+    semantic_module: rcmf/training/appworld_replay_clean_rebuild_7b.py
+    prompt_profile: full_demo_first_only
+    max_context_turns: 40
+    max_steps: 50
+    max_new_tokens: 512
+    context_limit: 40960
+    temperature: 0.0
+    top_p: 1.0
+    enable_thinking: false
+    max_api_calls_per_interaction: 100
+    worker_timeout_seconds: 600
+  panel:
+    initial_state_count: 256
+    maximum_state_count: 499
+    minimum_per_label: 40
+    model_train_task_count: 29
+    heldout_train_validation_task_count: 8
+    task_split_manifest: /lambda/nfs/rcmf-persist/project/runs/stage_c/state_conditioned_program_direct_7dg_20260821_001/preflight/a_task_split.json
+    action_strata:
+    - authentication
+    - read_query
+    - write_mutation
+    - api_documentation
+    - completion
+    - python_reasoning
+    - api_other
+    quantile_count: 4
+    post_d06_reproduction_expectation:
+      model_train: 366
+      heldout: 98
+  feature_contract:
+    version: appworld_deployment_structured_features_7hr_v1
+    context_limit: 40960
+    parent_step_buckets:
+    - 0
+    - 3
+    - 8
+    forbidden_fields:
+    - target_action
+    - target_observation
+    - ground_truth_next_app
+    - ground_truth_next_api
+    - procedural_tier
+    - exact_api_match
+    - paired_outcome
+    - task_id
+    - state_id
+    - transition_id
+    - signature_class_id
+    - first37_outcome
+  gate:
+    hidden_dim: 64
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    epoch_checkpoints:
+    - 50
+    - 100
+    - 200
+    calibration_temperatures:
+    - 0.5
+    - 0.75
+    - 1.0
+    - 1.25
+    - 1.5
+    - 2.0
+    activation_thresholds:
+    - 0.5
+    - 0.6
+    - 0.7
+    - 0.8
+    - 0.9
+    maximum_harmful_probability: 0.25
+    minimum_activation_rate: 0.05
+    maximum_activation_rate: 0.6
+    maximum_harmful_activation_rate: 0.2
+    minimum_positive_prevalence_lift: 0.1
+    maximum_execution_drop: 0.02
+  compiler:
+    selected_layer_indices:
+    - 7
+    - 14
+    - 21
+    - 28
+    token_count: 4
+    program_dim: 256
+    structured_hidden_dim: 128
+    ratio_budget_per_layer: 1.0
+    structured_learning_rate: 0.0001
+    decoder_learning_rate: 1.0e-06
+    beta_learning_rate: 0.0001
+    weight_decay: 0.0001
+    checkpoint_updates:
+    - 2
+    - 4
+    maximum_updates_per_pair: 4
+    max_grad_norm: 1.0
+    top_k: 64
+    policy_kl_weight: 1.0
+    teacher_token_ce_weight: 0.25
+    ground_truth_ce_weight: 0.05
+    ratio_restraint_weight: 0.001
+  first37:
+    matched_bare_success: 8
+    always_on_raw_success: 5
+    matched_bare_summary: runs/stage_c/memory_specific_deep_amortization_7g_20260823_001/phase_a_matched_bare_first37/summary.json
+    always_on_raw_summary: runs/stage_c/deep_residual_amortization_7f_20260822_001/phase_a_first37_v3/summary.json
+  runtime:
+    review_threshold_h100_hours: 80.0
+    one_step_generation_seconds_expected: 7.85
+    one_step_generation_seconds_conservative: 12.0
+    policy_forward_seconds_expected: 1.85
+    policy_forward_seconds_conservative: 3.5
+    backward_seconds_expected: 2.4
+    backward_seconds_conservative: 4.0
+    first37_expected_hours: 1.3
+    first37_conservative_hours: 2.2
+    projected_bytes_per_condition: 2359296
+    projected_bytes_per_checkpoint: 650000000
+  heartbeat_interval_seconds: 240
+  fresh_pipeline_mode: true
+stage_c_11b:
+  run_uuid: rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001-1d
+  artifact_dir: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001/arms/1d
+  persistent_root: /lambda/nfs/rcmf-persist
+  global_seed: 25101
+  source_head: a2c41652bfea380cfef89df0bee0e4d919458982
+  source_branch: research/v5-rcmf-one-demo-dev-eval
+  working_branch: research/v5-rcmf-one-demo-retrain
+  prompt_profile: full_demo_first_only
+  expected:
+    retained_demo_sha256: 32348a5889682499b1cc17b7dced74dd706db12b6e248c1e6c7dfba5e50ed713
+    initial_prompt_asset_sha256: 90c375658628663fbe5b5110e8efc619b2edab229a6d9a64d4e253d2e559ddbe
+    structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+    replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+    selector_ensemble_sha256: c7ca61bb67e3862204ca38a7c3d9cba432b4d6cdadf42b01255a9e623956611f
+    old_checkpoint_sha256: d11e9d8ea28348148dd8919144c64ea69dbf187864a0e42fbdcc69f32241a5f1
+    old_deployment_field_sha256: 5fe48fc206c592fdbe899a2b4923b4eccc950210fd4a843de681c77c573e0b5e
+    old_dev_audit_sha256: 1616378ab22874c21d4f9bff84db52078ed4d9533b4d86cac79014adb7a09b72
+    train_state_count: 366
+    heldout_state_count: 98
+    memory_count: 499
+    dev_task_count: 57
+    dev_task_list_sha256: c6aad8dca959d9c54537555dd6c3a4ececdd55390029511ab7971550d796e463
+  immutable:
+    exp031a_root: runs/stage_c/rcmf_joint_full_bank_9a_20260826_001
+    old_outcomes: runs/stage_c/appworld_structured_gate_compiler_7hr_20260823_001/paired_causal/paired_outcomes.json
+    old_state_cache: runs/stage_c/signature_balanced_field_7c_20260818_001/representation_cache/multiview/state_multiview.pt
+    transition_cache: runs/stage_c/signature_balanced_field_7c_20260818_001/representation_cache/multiview/transition_multiview.pt
+    selector_root: runs/stage_c/signature_balanced_field_7c_20260818_001/selector
+    selector_ensemble: runs/stage_c/signature_balanced_field_7c_20260818_001/selector/ensemble_scores.pt
+    exp033a_root: runs/stage_c/rcmf_exp031a_one_demo_dev_11a_20260829_001
+    exp033a_audit_index: research/audits/rcmf_exp031a_one_demo_dev_11a_20260829_001/index.json
+  runtime:
+    review_threshold_hours: 18.0
+    heartbeat_interval_seconds: 240
+    heartbeat_stale_seconds: 720
+    hardware_required: NVIDIA H100 80GB HBM3
+    expected_git_safe_audit_bytes: 2400000000
+    expected_lambda_raw_audit_bytes: 8000000000
+stage_c_7c:
+  run_uuid: rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001-1d
+  artifact_dir: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/arms/1d
+  persistent_root: /lambda/nfs/rcmf-persist
+  parent_exp025b: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/shared/compat_exp025b
+  reconciled_corpus_dir: /lambda/nfs/rcmf-persist/project/runs/appworld/appworld_successful_trajectory_identity_reconciled_v1_20260817_001
+  expected_structural_lineage_sha256: f3389f8ddcc2de5f7b7807a6a8ef37ca38d3df3cde4155f01220240e65140dbb
+  expected_replay_lineage_sha256: 5f15f47422b561c295a166681eb5d62698d9c708d4559278fcf7b823383a28a1
+  source:
+    starting_head: d2dd315260906aa1aec71ff4fc9e58f297c506b1
+    branch: research/v4-identity-reconciled-corpus
+  expected:
+    train_tasks: 37
+    validation_tasks: 9
+    train_decisions: 499
+    validation_decisions: 139
+    train_transitions: 499
+    signature_classes: 150
+    duplicate_transitions: 349
+    duplicate_classes: 54
+    api_documentation_transitions: 210
+    audit_states: 45
+    old_conditions: 323
+    parent_split_train: 29
+    parent_split_heldout: 8
+  multiview_cache:
+    model_name: Qwen/Qwen3-8B
+    dtype: bfloat16
+    renderer_version: state_transition_multiview_spans_6c_v1
+    old_state_cache: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/forbidden_historical_state_cache.pt
+    old_transition_cache: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/forbidden_historical_transition_cache.pt
+    output_root: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/arms/1d/representation_cache/multiview
+    expected_recomputed_states: 638
+    expected_reused_states: 0
+    expected_recomputed_transitions: 499
+    expected_reused_transitions: 0
+    review_threshold_h100_hours: 12.0
+    runtime_seconds_per_new_row:
+      best: 1.5
+      expected: 3.5
+      conservative: 8.0
+    artifact_bytes_per_row: 700000
+    fresh_rebuild_without_old_cache: true
+  selector:
+    layer: final_layer
+    state_views: 10
+    transition_views: 10
+    input_dim: 4096
+    projection_dim: 64
+    interaction_rank: 32
+    batch_states: 8
+    maximum_pair_samples_per_state: 256
+    maximum_hard_samples_per_state: 128
+    cv_folds: 3
+    cv_seed: 25071
+    weight_decay: 0.0001
+    checkpoint_interval_epochs: 10
+    candidates:
+    - name: balanced_lr3e4_e60_t1
+      learning_rate: 0.0003
+      epochs: 60
+      temperature: 1.0
+      listwise_weight: 1.0
+      pairwise_weight: 1.0
+      hard_negative_weight: 0.5
+      exact_api_weight: 0.1
+      stage_weight: 0.1
+    - name: balanced_lr1e4_e120_t075
+      learning_rate: 0.0001
+      epochs: 120
+      temperature: 0.75
+      listwise_weight: 1.0
+      pairwise_weight: 1.0
+      hard_negative_weight: 0.5
+      exact_api_weight: 0.1
+      stage_weight: 0.1
+    - name: hard_lr3e4_e120_t075
+      learning_rate: 0.0003
+      epochs: 120
+      temperature: 0.75
+      listwise_weight: 1.0
+      pairwise_weight: 0.75
+      hard_negative_weight: 0.75
+      exact_api_weight: 0.1
+      stage_weight: 0.1
+    final_seeds:
+    - 25071
+    - 25072
+    - 25073
+    bootstrap_samples: 10000
+    bootstrap_seed: 25073
+    initialization_root: /lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/preflight/initialization_snapshots
+  gates:
+    strict_b:
+      ndcg4_gain: 0.05
+      tier34_recall4: 0.5
+      exact_api_recall4: 0.6
+      same_intent_pairwise_accuracy: 0.65
+      state_shuffle_drop: 0.08
+      transition_shuffle_drop: 0.08
+      positive_tasks: 6
+    deployment_e:
+      ndcg4_gain: 0.05
+      tier34_recall4: 0.6
+      exact_api_recall4: 0.65
+      top1_tier34_coverage: 0.7
+      state_shuffle_drop: 0.08
+      transition_shuffle_drop: 0.08
+      positive_tasks: 6
+    behavior:
+      oracle_retention: 0.7
+      maximum_execution_drop: 0.05
+      positive_tasks: 6
+      content_gain: 0.05
+  legacy:
+    executable: /home/ubuntu/venvs/appworld-0.1.0-replay-py311-click817/bin/python
+    appworld_root: /lambda/nfs/rcmf-persist/appworld_legacy/0.1.0/root
+  replay:
+    random_seed: 100
+    max_interactions: 1000
+    max_api_calls_per_interaction: 1000
+    subprocess_timeout_seconds: 600
+  generation:
+    model_name: Qwen/Qwen3-8B
+    dtype: bfloat16
+    device_map: null
+    temperature: 0.0
+    top_p: 1.0
+    do_sample: false
+    enable_thinking: false
+    max_new_tokens: 1024
+    context_limit: 40960
+    prompt_profile: full_demo_first_only
+    review_threshold_h100_hours: 12.0
+    seconds_per_new_condition:
+      best: 2.0
+      expected: 4.0
+      conservative: 8.0
+    replay_seconds_per_condition:
+      best: 2.0
+      expected: 5.0
+      conservative: 10.0
+    artifact_bytes_per_condition: 2359296
+  heartbeat_interval_seconds: 240

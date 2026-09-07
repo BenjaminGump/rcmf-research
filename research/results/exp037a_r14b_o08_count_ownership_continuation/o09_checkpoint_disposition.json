@@ -1,0 +1,19 @@
+{
+  "checkpoint_exists_after_discard": false,
+  "checkpoint_identity_before_discard": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o09_one_unit_20260907_001/arms/1d/joint_training/checkpoints/progress.pt",
+    "sha256": "1b323072864cc0dd8840412334d759b9c70ce5136cca1a90adc72b5f06f4e459",
+    "size_bytes": 321875715
+  },
+  "diagnostic_only": true,
+  "disposition": "updated_parameters_and_pointer_deleted_after_hash_recording",
+  "format": "exp037a_r14b_o09_diagnostic_checkpoint_disposition_v1",
+  "latest_pointer_exists_after_discard": false,
+  "latest_pointer_identity_before_discard": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o09_one_unit_20260907_001/arms/1d/joint_training/latest_checkpoint.json",
+    "sha256": "2d96cadd275f8d57fdbaffe8fef3d7c44dd0390ed7a3749bf28f8d6b1951a582",
+    "size_bytes": 287
+  },
+  "scientific_checkpoint_input_allowed": false,
+  "scientific_result": false
+}

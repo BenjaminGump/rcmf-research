@@ -1,0 +1,61 @@
+{
+  "all_enabled_loss_terms_finite": true,
+  "all_losses_finite": true,
+  "attempt_start_module_hashes": {
+    "reader": "28f046bd45cbb9ccf64760143a9ea4afc9314ecf11a4aa96c8fdc1c25b5f267b",
+    "writer": "1a876e124b8a120b17bb0ecbdbfe36e1c1b2a6d892a265812d0d5dd5c1ea1a01"
+  },
+  "backward_count": 1,
+  "backward_count_this_attempt": 1,
+  "checkpoint": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r14b_o09_one_unit_20260907_001/arms/1d/joint_training/checkpoints/progress.pt",
+    "sha256": "1b323072864cc0dd8840412334d759b9c70ce5136cca1a90adc72b5f06f4e459"
+  },
+  "completed_global_unit_ids": [
+    "e1:appworld:trace:cf6abd2_1:step:10:line:510::correct"
+  ],
+  "completed_units": 1,
+  "diagnostic_stop_present_in_scientific_config": false,
+  "final_module_hashes": {
+    "reader": "452ff19ac5d6afd5e785598f69bf16c1f296cc19842834830bcfeae7631b873a",
+    "writer": "4ba8eacfd377406bec43dfffed222b8ebb9f7ff6a258bd8d5899ff5c2dd2d60a"
+  },
+  "format": "rcmf_joint_full_bank_one_unit_diagnostic_14c_v1",
+  "global_seed": 25101,
+  "metrics": [
+    {
+      "enabled_loss_terms_finite": true,
+      "field_A_norm": 26.718095779418945,
+      "ground_truth_ce": 0.012748433277010918,
+      "loss": 0.0025804713368415833,
+      "margin_shuffle": 0.0,
+      "margin_zero": 0.0,
+      "payload_norm": 0.20367364585399628,
+      "policy_kl": 0.0003720889217220247,
+      "post_step_reader_parameters_finite": true,
+      "post_step_writer_parameters_finite": true,
+      "reader_gradient_nonzero": true,
+      "seconds": 1.8109939601272345,
+      "slot_norm": 45.254737854003906,
+      "teacher_token_ce": 0.012748433277010918,
+      "trainable_gradients_finite": true,
+      "writer_gradient_nonzero": true
+    }
+  ],
+  "optimizer_state_nonempty": true,
+  "optimizer_state_saved": true,
+  "optimizer_step_count_this_attempt": 1,
+  "passed": true,
+  "post_step_parameters_finite": true,
+  "qwen_frozen_and_gradient_free": true,
+  "reader_gradient_nonzero": true,
+  "requested_maximum_units": 1,
+  "scientific_result": false,
+  "selector_tensor_hashes": {
+    "keys": "13b3796ac4cf06497bbd42b2bdb868c48543336d8f6941b46acb326b440e5c65",
+    "queries": "83e7899b98e0881b5e4d3173bcf997ed44e18840eeae8ffda9d028cfa29f9a7a"
+  },
+  "selector_tensors_frozen": true,
+  "trainable_gradients_finite": true,
+  "writer_gradient_nonzero": true
+}

@@ -1,0 +1,20 @@
+{
+  "active_formal_continuation_processes": 0,
+  "active_formal_continuation_tmux": false,
+  "active_scientific_gpu_processes": 0,
+  "captured_utc": "2026-09-07T06:48:01Z",
+  "continuation_root_absent_before_preflight": true,
+  "existing_exp037a_status_bridges_are_read_only_history": true,
+  "format": "exp037a_r14b_runtime_state_v1",
+  "gpu_memory_total_mib": 81559,
+  "gpu_memory_used_mib": 0,
+  "gpu_utilization_percent": 0,
+  "hardware": "NVIDIA H100 80GB HBM3",
+  "legacy_python_present": true,
+  "legacy_root_present": true,
+  "nfs_available_gib": 3089802,
+  "nfs_mounted": true,
+  "nfs_use_percent": 1,
+  "passed": true,
+  "rcmf_python_present": true
+}

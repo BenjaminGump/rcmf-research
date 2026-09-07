@@ -1,5 +1,44 @@
 # Decisions and Deviations
 
+## 2026-09-07 EXP-037A-R14B O08 count ownership and continuation
+
+VERIFIED:
+
+- Historical 3D paired-state outcomes 366/98 remain exact positive-control
+  requirements, while one-demo O08 now uses the typed
+  `sealed_upstream_outcomes` policy and derives counts only after strict O06/O07
+  validation.
+- The repaired code contains no production success criterion for 324/83, 407,
+  or 120/247/40. The fixed 29/8 task split, panel 256/499/40 rule, and
+  401/98/499 memory structure remain enforced.
+- Fresh O08 production-path and isolated one-unit O09 diagnostics passed. The
+  parent 14k closure remained unchanged and its failed O08 partials were
+  excluded.
+- The continuation DAG contains only C00/C01, O08-O19, and F00-F03. It does
+  not fabricate parent completions or rerun S/D/O00-O07 stages.
+
+DECISION:
+
+- Freeze `95b355ab9f7419d86fb6045bcdc27ea8e27604bc` as the 14l
+  continuation launch source and return
+  `READY_FOR_14L_CONTINUATION_AUTHORIZATION`.
+- Keep the continuation `NOT_AUTHORIZED`; require a fresh authorization bound
+  to its source, UUID/root, config/contract, parent manifest, stage scope, and
+  proposed 32-hour anomaly cap.
+- Label any future result cross-source continuation evidence. A positive or
+  borderline result requires later single-source fresh confirmation before a
+  final paper-level claim.
+
+IMPLEMENTATION DEVIATIONS:
+
+- Two O08 diagnostics failed closed before optimization and exposed a
+  continuation runtime-layout assumption and a diagnostic smoke key mismatch;
+  both received minimal non-scientific fixes and focused regressions before the
+  passing `_003` run.
+- The Windows `apply_patch` helper could not update existing files, so guarded
+  exact PowerShell edits were used and verified by complete local/Lambda suites.
+- No reliable Lambda hourly price was available; monetary cost is not guessed.
+
 ## 2026-09-07 EXP-037A 14k O08 stale count contract
 
 VERIFIED:

@@ -1,0 +1,35 @@
+{
+  "format": "exp037a_r14b_tests_v1",
+  "lambda_environment": "/home/ubuntu/venvs/rcmf-py311/bin/python",
+  "local_environment": "C:\\Users\\Admin\\miniconda3\\envs\\appworld_env\\python.exe",
+  "passed": true,
+  "process_start_pythonhashseed": 25101,
+  "runs": [
+    {
+      "command": "python -m pytest -q tests/test_exp037a_r14b_count_ownership.py tests/test_exp037a_r14b_continuation.py tests/test_exp037a_r9_checkpoint_resume.py tests/test_exp037a_r7_stage_manifest_identity.py tests/test_exp037a_r10_pipeline_hardening.py tests/test_exp037a_d08_repair_14c.py",
+      "duration_seconds": 71.15,
+      "name": "local_focused",
+      "result": "88 passed, 1 skipped"
+    },
+    {
+      "command": "python -m pytest -q tests/test_exp037a_r14b_count_ownership.py tests/test_exp037a_r14b_continuation.py tests/test_exp037a_r9_checkpoint_resume.py tests/test_exp037a_r7_stage_manifest_identity.py tests/test_exp037a_r10_pipeline_hardening.py tests/test_exp037a_d08_repair_14c.py",
+      "duration_seconds": 28.12,
+      "name": "lambda_focused_cuda",
+      "result": "89 passed"
+    },
+    {
+      "command": "python -m pytest -q --basetemp C:\\gbz\\pytest-r14b-final\\full",
+      "duration_seconds": 93.25,
+      "name": "local_full",
+      "result": "987 passed, 3 skipped",
+      "warning": "pytest cache directory was not writable; test basetemp was writable and all assertions passed"
+    },
+    {
+      "command": "python -m pytest -q",
+      "duration_seconds": 37.19,
+      "name": "lambda_full_cuda",
+      "result": "990 passed"
+    }
+  ],
+  "unresolved_failures": []
+}

@@ -1,0 +1,39 @@
+{
+  "conservative_h100_active_hours": 19.5,
+  "conservative_storage_gib": 10.0,
+  "conservative_wall_hours": 20.0,
+  "continuation_may_exceed_18_hours_conservatively": true,
+  "expected_h100_active_hours": 9.3,
+  "expected_storage_gib": 5.0,
+  "expected_wall_hours": 9.5,
+  "explicit_user_authorization_required": true,
+  "format": "exp037a_r14b_continuation_runtime_estimate_v1",
+  "hard_cap_formula": "round_up_practical(max(2*9.5, 1.25*20.0)) = round_up_practical(25.0) = 32",
+  "individual_diagnostic_exceeds_18_hours": false,
+  "monetary_cost": "MONETARY_COST_NOT_AVAILABLE",
+  "passed": true,
+  "proposed_hard_cap_hours": 32.0,
+  "scaling": {
+    "O08": "fresh measured repaired diagnostic",
+    "bare_dev": "reused only as sealed parent comparison evidence; not rerun",
+    "dev": "full measured 57-task D19/D20 times retained for one-demo correct/shuffle",
+    "heldout": "83/98 sealed heldout-state ratio applied to parent D11-D13",
+    "training": "516/576 measured unit-count ratio applied to sealed parent D09/D10"
+  },
+  "stage_anchors": {
+    "O08_measured_diagnostic_seconds": 270.38,
+    "O09_one_unit_total_process_seconds": 18.826,
+    "O09_one_unit_training_seconds": 1.811,
+    "continuation_1d_heldout_states": 83,
+    "continuation_1d_units_per_epoch": 516,
+    "parent_3d_heldout_states": 98,
+    "parent_3d_units_per_epoch": 576,
+    "parent_D09_epoch_1_seconds": 3713.237,
+    "parent_D10_epoch_2_seconds": 3711.235,
+    "parent_D11_heldout_teacher_forced_seconds": 1528.848,
+    "parent_D12_heldout_one_step_seconds": 7410.659,
+    "parent_D13_heldout_full_trajectory_seconds": 5511.251,
+    "parent_D19_dev_correct_seconds": 7360.83,
+    "parent_D20_dev_shuffle_seconds": 7111.469
+  }
+}

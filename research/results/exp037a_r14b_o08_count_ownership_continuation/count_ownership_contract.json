@@ -1,0 +1,21 @@
+{
+  "fixed_memory_counts": {
+    "deployment": 499,
+    "heldout_parent": 98,
+    "model_training": 401
+  },
+  "format": "exp037a_count_ownership_contract_14l_v1",
+  "one_demo": {
+    "arm_id": "1d",
+    "format": "exp037a_scoreable_count_contract_14l_v1",
+    "policy": "sealed_upstream_outcomes"
+  },
+  "one_demo_observed_parent_counts_are_not_success_criteria": true,
+  "three_demo": {
+    "arm_id": "3d",
+    "expected_heldout_paired_states": 98,
+    "expected_train_paired_states": 366,
+    "format": "exp037a_scoreable_count_contract_14l_v1",
+    "policy": "exact_reproduction"
+  }
+}

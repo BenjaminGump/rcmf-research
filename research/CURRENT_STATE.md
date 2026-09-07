@@ -1,5 +1,41 @@
 # Current State
 
+## 2026-09-07 EXP-037A-R14B Ready For 14l Continuation Authorization
+
+VERIFIED:
+
+- The stale three-demo O08 count-ownership defect is repaired with explicit
+  policies: 3D remains exact 366/98; 1D derives its paired population from
+  strict-valid sealed O06/O07 artifacts and does not require 366/98 or encode
+  the observed 324/83.
+- The production-path O08 diagnostic passed C00/C01/O08 and rebuilt 420 hashed
+  outputs from the sealed 14k O07 boundary. It derived 407 pairs split 324/83,
+  preserved the 29/8 task and 401/98/499 memory contracts, ran zero optimizer
+  steps, and produced no scientific checkpoint.
+- An isolated O09 smoke completed exactly one unit, backward, and optimizer
+  step with finite loss/gradients and frozen Qwen/selector. Its updated
+  checkpoint was deleted after hash recording.
+- The O08-O19 stale-contract audit found no unresolved reachable defect. Local
+  full tests passed 987 with 3 skipped; Lambda/CUDA full passed 990.
+- The parent 14k 922-artifact closure remained exactly `f5424356...`; D22 and
+  O00-O07 remain sealed and strict-valid. Parent O08 partial outputs were not
+  used.
+
+CURRENT DECISION:
+
+- `READY_FOR_14L_CONTINUATION_AUTHORIZATION`.
+- Launch source: `95b355ab9f7419d86fb6045bcdc27ea8e27604bc`.
+- Continuation UUID:
+  `rcmf_reproducible_1d_continuation_from_14k_o08_20260907_001`.
+- Config `3a37b186...`, contract `3a30f1ff...`, artifact index `60db055b...`.
+- Authorization remains false. Expected/conservative wall is 9.5/20h;
+  proposed anomaly cap is 32h. No long continuation run was launched.
+
+Full report:
+`research/results/EXP_037A_R14B_O08_COUNT_OWNERSHIP_CONTINUATION.md`.
+
+Last updated: 2026-09-07.
+
 ## 2026-09-07 EXP-037A 14k Terminal At One-Demo O08
 
 VERIFIED:
