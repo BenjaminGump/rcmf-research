@@ -1,0 +1,26 @@
+{
+  "format": "exp037a_14k_attempts_summary_v1",
+  "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001",
+  "total": 45,
+  "complete": 44,
+  "open": 0,
+  "failed_or_interrupted": 1,
+  "failed_attempts": [
+    {
+      "attempt_id": "O08_zero_cache_and_training_units-1788717793178938884-r1",
+      "stage_id": "O08_zero_cache_and_training_units",
+      "exit_code": 65,
+      "recoverable": false
+    }
+  ],
+  "terminal": true,
+  "formal_parent_pid": 790588,
+  "formal_parent_alive": false,
+  "formal_tmux": "absent",
+  "gpu": {
+    "name": "NVIDIA H100 80GB HBM3",
+    "utilization_percent": 0,
+    "memory_used_mib": 0,
+    "memory_total_mib": 81559
+  }
+}
