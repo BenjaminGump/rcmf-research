@@ -119,7 +119,7 @@ def main() -> None:
     elapsed = time.perf_counter() - started
     task_result = (
         diagnostic_root
-        / "trajectory/R16_E2_H3/task_results"
+        / "trajectory/conditions/R16_E2_H3/task_results"
         / f"{args.task_id}.json"
     )
     row = _json(task_result)
