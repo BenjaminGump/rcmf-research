@@ -167,3 +167,11 @@ this defect changes executable count-ownership logic and therefore requires:
 7. a fresh run UUID/root and new authorization.
 
 No repair was implemented in this publication task.
+
+
+## Publication
+
+This Git-safe failure record is published on branch
+`research/v6-rcmf-exp037a-14k-o08-failure-records`. Production source and
+configuration remain byte-identical to frozen launch source
+`004f866647cfabb38a141b88e6d83821df88c403`.
