@@ -1,0 +1,36 @@
+{
+  "format": "exp037a_14k_o08_root_cause_v1",
+  "classification": "VERIFIED_STALE_THREE_DEMO_SCOREABLE_COUNT_CONTRACT",
+  "failed_checks": {
+    "train_tasks": true,
+    "heldout_tasks": true,
+    "train_memories": true,
+    "heldout_memories": true,
+    "scoreable_train": false,
+    "scoreable_heldout": false
+  },
+  "configured_expected": {
+    "scoreable_train_state_count": 366,
+    "scoreable_heldout_state_count": 98,
+    "complete_train_memory_count": 401,
+    "heldout_memory_count": 98
+  },
+  "ownership_error": "Historical/fresh-3D reproduction outcome counts were enforced as shared one-demo preparation invariants.",
+  "producer": "fresh formal O06 paired causal outcomes under full_demo_first_only",
+  "consumer": "scripts/prepare_rcmf_joint_full_bank_9a.py main count_checks",
+  "orchestration_path": "rcmf/benchmarks/appworld/reproducible_stages_14b.py::_joint_prepare",
+  "traceback_location": {
+    "file": "scripts/prepare_rcmf_joint_full_bank_9a.py",
+    "function": "main",
+    "line": 611,
+    "exception": "RuntimeError"
+  },
+  "actual_formal_o06_counts_in_this_git_record": "NOT_EXTRACTED",
+  "supporting_deterministic_diagnostic_counts": {
+    "paired": 407,
+    "train": 324,
+    "heldout": 83,
+    "role": "supporting_only_not_formal_input"
+  },
+  "next_action": "new reviewed source/package/authorization; never resume 14k"
+}
