@@ -1574,12 +1574,30 @@ def _run_task_set(
     return summary
 
 
+def _resolved_prompt_dependent_input(
+    run_root: Path, arm_id: str, name: str
+) -> Path:
+    config = load_config(_arm_config(run_root, arm_id))
+    inputs = config.raw.get("stage_c_9a", {}).get("prompt_dependent_inputs")
+    if not isinstance(inputs, Mapping):
+        raise ValueError("Prompt-dependent input ownership is not configured")
+    value = inputs.get(name)
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"Prompt-dependent input is missing: {name}")
+    path = Path(value).resolve(strict=False)
+    if not path.is_file():
+        raise FileNotFoundError(
+            f"Configured prompt-dependent input is missing: {name}: {path}"
+        )
+    return path
+
+
 def _heldout_query_overrides(
-    target: Path, task_ids: Sequence[str]
+    target: Path, state_cache_path: Path, task_ids: Sequence[str]
 ) -> dict[str, tuple[torch.Tensor, torch.Tensor]]:
     source = torch.load(target / "data/rcmf_source_cache.pt", map_location="cpu", weights_only=False)
     state_cache = torch.load(
-        target / "representation_cache/multiview/state_multiview.pt",
+        state_cache_path,
         map_location="cpu",
         weights_only=False,
     )
@@ -1613,9 +1631,13 @@ def _heldout_full_trajectories(
     task_ids = [str(value) for value in data["heldout_task_ids"]]
     if len(task_ids) != 8:
         raise ValueError("Heldout complete-trajectory task count differs")
+    config = load_config(_arm_config(run_root, arm_id))
+    state_cache_path = _resolved_prompt_dependent_input(
+        run_root, arm_id, "state_cache"
+    )
     live = target / "heldout_validation/live_full_field"
     output_root = target / "heldout_validation/full_trajectory"
-    overrides = _heldout_query_overrides(target, task_ids)
+    overrides = _heldout_query_overrides(target, state_cache_path, task_ids)
     summaries = []
     for epoch in (1, 2):
         correct = live / f"field_artifacts/epoch_{epoch:02d}_correct.pt"
@@ -1636,9 +1658,7 @@ def _heldout_full_trajectories(
                     condition_id=f"E{epoch}_{suffix}",
                     condition_name=f"epoch_{epoch}_{name}",
                     field_control=control,
-                    prompt_profile=str(
-                        load_config(_arm_config(run_root, arm_id)).benchmark.prompt_profile
-                    ),
+                    prompt_profile=str(config.benchmark.prompt_profile),
                     correct_field=correct,
                     shuffled_field=shuffled,
                     checkpoint=checkpoint,
