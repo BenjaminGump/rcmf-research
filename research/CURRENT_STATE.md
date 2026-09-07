@@ -2920,3 +2920,20 @@ Decision:
 - Decision: `READY_FOR_14M_AUTHORIZATION`. Authorization remains false. The
   proposed cap is 32 hours; expected/conservative wall time is 9.5/20.0 hours.
   No long formal run was launched.
+
+### EXP-037A-R17 14m Stopped at C00 Before Science
+
+- Exact 14m authorization validated and the frozen source
+  `a8cd3b6e5457b858e0e4705913b2283dfaf99a0f` launched, but C00 failed after
+  2.685 seconds with exit 65 before its stage callable or any scientific work.
+- Root cause is `CONTINUATION_SCHEMA_VERSION_DISPATCH_MISMATCH`: the 14m
+  schema did not match the runtime layout's literal `continuation_14l_v1`
+  suffix check, so execution incorrectly entered full-run compatibility setup
+  and requested absent `preflight/shared/transitions.jsonl`.
+- Completed stages, backward passes, and optimizer steps are all zero. O08 and
+  all later continuation science remain `NOT_EVALUATED`.
+- The 922-file 14k parent closure was revalidated after failure at SHA256
+  `f5424356e1ae469f2533136c37e28d8864d43e83c26902ed136b164104f3b0b6`.
+  Parent evidence remains immutable and valid.
+- The 14m root and authorization are terminal evidence and must not be reused.
+  No retry, resume, source repair, or monitor bridge was started in R17.

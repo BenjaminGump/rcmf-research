@@ -1,0 +1,36 @@
+{
+  "audit_status": "terminal_infrastructure_failure_before_science",
+  "completed_stage_count": 0,
+  "contract_sha256": "e00df7b19d525bf8a317cbd9332f08bdacf4a4e1aa3ef47243d839f6402849be",
+  "evidence": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002/stages/C00_parent_run_evidence_import/failure.json",
+      "sha256": "1d7a6d3578508d5848207ff37afed4936886278d3cd6aba2a3cce8b489b6b553"
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002/stages/C00_parent_run_evidence_import/completion.json",
+      "sha256": "8de5d91df123e626cb87708ad9d6b7e8b2df60ffacd7f74f7c24b305a1cecd05"
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002/attempts.jsonl",
+      "sha256": "827dc084ada5bdd8783640de3eae62e71d9cfc4240cb93f78527257b7a3d82c2"
+    },
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002/orchestrator_result.json",
+      "sha256": "2feb28bd26e989d767fa4d86cd5f8afb4a1e4fa95953f466eadec8cbf1251ccc"
+    }
+  ],
+  "explicit_authorization_sha256": "3b9c68e155c49cfd96c2b222dab401ceab0699936c6511d53471cf0f73c2f736",
+  "failed_attempt": "C00_parent_run_evidence_import-1788793548718278731-r1",
+  "failed_stage": "C00_parent_run_evidence_import",
+  "format": "exp037a_git_safe_terminal_audit_index_v1",
+  "launch_source": "a8cd3b6e5457b858e0e4705913b2283dfaf99a0f",
+  "parent_artifact_count": 922,
+  "parent_closure_sha256": "f5424356e1ae469f2533136c37e28d8864d43e83c26902ed136b164104f3b0b6",
+  "pipeline_config_sha256": "c8b5af07f72cd64472fa47fabd3f339d640f80ddb30cbd2fd0c8db41bee6f9f0",
+  "root_cause": "CONTINUATION_SCHEMA_VERSION_DISPATCH_MISMATCH",
+  "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002",
+  "run_uuid": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_002",
+  "runtime_authorization_sha256": "f99e0ae3775dce7da1bd3b779afad7b24fbfe68f4ad13bfdc97c5e3f86509e42",
+  "scientific_result": "NOT_EVALUATED"
+}

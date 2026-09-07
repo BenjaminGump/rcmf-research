@@ -3413,3 +3413,28 @@ IMPLEMENTATION DEVIATIONS:
   trajectory because of a wrong diagnostic result path and a reused AppWorld
   attempt identity. Both are preserved as diagnostic evidence; fresh `_003`
   passed. No production or scientific artifact was reused.
+
+## 2026-09-07 EXP-037A-R17 14m C00 terminal failure
+
+VERIFIED:
+
+- Explicit and runtime authorization were valid and exactly run-bound.
+- The production stage runner failed before C00 dispatch because the 14m
+  schema version did not satisfy the literal continuation-14l runtime-layout
+  suffix check. It fell through to full-run compatibility initialization and
+  raised `FileNotFoundError` for continuation-local shared transitions.
+- Zero stages completed and zero scientific backward/optimizer operations ran.
+- The 14k parent closure remained valid at 922/922 files after failure.
+
+DECISION:
+
+- Classify the run as `FORMAL_EXP037A_14M_CONTINUATION_TERMINAL_FAILURE` with
+  root cause `CONTINUATION_SCHEMA_VERSION_DISPATCH_MISMATCH`.
+- Do not retry, resume, or patch 14m under the R17 authorization.
+- Any repair requires a new reviewed source/package/root and new explicit
+  authorization. One-demo and cross-arm science remain `NOT_EVALUATED`.
+
+IMPLEMENTATION DEVIATIONS:
+
+- None. R17 made no executable, scientific, config, parent, or Lambda-root
+  repair. This commit publishes Git-safe failure records only.
