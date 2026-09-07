@@ -1,0 +1,51 @@
+{
+  "format": "exp037a_14k_o08_terminal_failure_summary_v1",
+  "recorded_utc": "2026-09-07T01:26:08Z",
+  "decision": "INFRASTRUCTURE_IMPLEMENTATION_FAILURE",
+  "root_cause": "VERIFIED_STALE_THREE_DEMO_SCOREABLE_COUNT_CONTRACT",
+  "scientific_result": {
+    "three_demo": "THREE_DEMO_REPRODUCTION_PASS",
+    "one_demo": "NOT_EVALUATED",
+    "cross_arm": "NOT_EVALUATED"
+  },
+  "run_identity": {
+    "source_commit": "004f866647cfabb38a141b88e6d83821df88c403",
+    "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001",
+    "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001",
+    "pipeline_config_sha256": "f075eead4bd77e92546a876c24979e1882a2bfded5853624aa665ce93c84af69",
+    "contract_sha256": "eea5fb745ecd5041ed07e65be55d6a4a3b774caa67239e0d040100bcd9a8cce6",
+    "preflight_artifact_index_sha256": "d94770dc7e8114b63973d74cd14a40f721d92c2c25a5011a1ccbd92b947af448"
+  },
+  "terminal": {
+    "failed_stage": "O08_zero_cache_and_training_units",
+    "failed_attempt_id": "O08_zero_cache_and_training_units-1788717793178938884-r1",
+    "failed_subcommand": "scripts/prepare_rcmf_joint_full_bank_9a.py",
+    "exit_code": 65,
+    "recoverable": false,
+    "failure_utc": "2026-09-06T18:03:21.266688Z",
+    "attempts": {
+      "total": 45,
+      "complete": 44,
+      "open": 0,
+      "failed_or_interrupted": 1
+    },
+    "latest_completed_stage": "O07_policy_teacher",
+    "formal_parent_alive": false,
+    "formal_tmux_present": false,
+    "monitor_state": "TERMINAL_INFRASTRUCTURE_FAILURE"
+  },
+  "gates": {
+    "D06B": "D06_THREE_DEMO_REPRODUCTION_PASS",
+    "D08B": "PASS",
+    "D22": "THREE_DEMO_REPRODUCTION_PASS",
+    "F03": "NOT_REACHED"
+  },
+  "optimization": {
+    "o08_backward_count": 0,
+    "o08_optimizer_step_count": 0,
+    "checkpoint_created": false
+  },
+  "repair_implemented": false,
+  "retry_or_resume": false,
+  "formal_root_modified": false
+}
