@@ -1,0 +1,26 @@
+{
+  "backward_count": 1032,
+  "checkpoints": [
+    {
+      "epoch": 1,
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/arms/1d/joint_training/checkpoints/epoch_01.pt",
+      "sha256": "c3bc33f38dd0ea58e368c38f582775c355902bb9a01671f21e4e485add9daf2c"
+    },
+    {
+      "epoch": 2,
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/arms/1d/joint_training/checkpoints/epoch_02.pt",
+      "sha256": "1db373ba6399aac1adcd6fd721a05e79f3a9acfc39d8a03f2e0a5d8c49ea1457"
+    }
+  ],
+  "completed_units": 1032,
+  "elapsed_seconds_this_attempt": 1555.7870819400996,
+  "epoch_count": 2,
+  "every_scientific_forward_used_complete_task_legal_field": true,
+  "format": "rcmf_joint_full_bank_training_summary_9a_v1",
+  "global_seed": 25101,
+  "passed": true,
+  "qwen_frozen_and_gradient_free": true,
+  "reader_parameters": 17860608,
+  "runtime_memory_retrieval_used": false,
+  "writer_parameters": 8949760
+}

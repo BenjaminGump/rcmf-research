@@ -1,0 +1,196 @@
+{
+  "conditions": {
+    "B0_1D": {
+      "source": {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/evaluation/common_one_demo_dev/summaries/B0_1D.json",
+        "sha256": "25bdf754c59887f2ace15543ece19146d87d654f2dc847dbf34393224ef44d0d",
+        "size_bytes": 4137
+      },
+      "success_count": 12,
+      "success_ids": [
+        "23cf851_1",
+        "23cf851_2",
+        "23cf851_3",
+        "57c3486_2",
+        "6171bbc_2",
+        "6171bbc_3",
+        "6bdbc26_1",
+        "6bdbc26_2",
+        "6bdbc26_3",
+        "b119b1f_1",
+        "fac291d_1",
+        "fac291d_3"
+      ]
+    },
+    "FRESH1D_C_1DDEPLOY": {
+      "source": {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/summaries/FRESH1D_C_1DDEPLOY.json",
+        "sha256": "a6ef090732d88e20cc543ba22fa5c1eb34b9550293cabedc3a7ced6d7fd37776",
+        "size_bytes": 4164
+      },
+      "success_count": 8,
+      "success_ids": [
+        "23cf851_1",
+        "23cf851_2",
+        "23cf851_3",
+        "6171bbc_2",
+        "6171bbc_3",
+        "6bdbc26_3",
+        "6c2c621_3",
+        "b119b1f_1"
+      ]
+    },
+    "FRESH1D_S_1DDEPLOY": {
+      "source": {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/summaries/FRESH1D_S_1DDEPLOY.json",
+        "sha256": "87a5c1a9289153c05897c498e2fdcb3f6511d76dbe8c9953c6f9244c552f13f9",
+        "size_bytes": 4324
+      },
+      "success_count": 18,
+      "success_ids": [
+        "23cf851_1",
+        "23cf851_2",
+        "23cf851_3",
+        "396c5a2_1",
+        "396c5a2_2",
+        "396c5a2_3",
+        "6171bbc_3",
+        "6bdbc26_1",
+        "6bdbc26_2",
+        "6c2c621_2",
+        "6c2c621_3",
+        "b119b1f_1",
+        "b119b1f_3",
+        "d4e9306_2",
+        "d4e9306_3",
+        "fac291d_1",
+        "fac291d_2",
+        "fac291d_3"
+      ]
+    },
+    "FRESH3D_C_1DDEPLOY": {
+      "source": {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/evaluation/common_one_demo_dev/summaries/FRESH3D_C_1DDEPLOY.json",
+        "sha256": "812c4a1c54acab1b6571650405e9ff4b5b045a7785914e34479a3d1a276cdb75",
+        "size_bytes": 4298
+      },
+      "success_count": 17,
+      "success_ids": [
+        "0d8a4ee_2",
+        "23cf851_1",
+        "23cf851_2",
+        "23cf851_3",
+        "396c5a2_1",
+        "396c5a2_2",
+        "6171bbc_1",
+        "6bdbc26_1",
+        "6bdbc26_2",
+        "6bdbc26_3",
+        "6c2c621_1",
+        "6c2c621_2",
+        "b119b1f_2",
+        "b119b1f_3",
+        "d4e9306_2",
+        "df61dc5_1",
+        "fac291d_2"
+      ]
+    },
+    "FRESH3D_S_1DDEPLOY": {
+      "source": {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001/evaluation/common_one_demo_dev/summaries/FRESH3D_S_1DDEPLOY.json",
+        "sha256": "89249edf5d5c987bc92a1237bc2ca86c5ca4e22f00e7200684397322192ffb1a",
+        "size_bytes": 4175
+      },
+      "success_count": 11,
+      "success_ids": [
+        "23cf851_1",
+        "23cf851_2",
+        "23cf851_3",
+        "396c5a2_3",
+        "6bdbc26_1",
+        "6bdbc26_2",
+        "6bdbc26_3",
+        "6c2c621_1",
+        "6c2c621_2",
+        "6c2c621_3",
+        "b119b1f_2"
+      ]
+    }
+  },
+  "format": "rcmf_two_arm_continuation_analysis_14l_v1",
+  "gate": "THREE_DEMO_REPRODUCTION_PASS",
+  "ordered_task_ids": [
+    "0d8a4ee_1",
+    "0d8a4ee_2",
+    "0d8a4ee_3",
+    "23cf851_1",
+    "23cf851_2",
+    "23cf851_3",
+    "37a8675_1",
+    "37a8675_2",
+    "37a8675_3",
+    "383cbac_1",
+    "383cbac_2",
+    "383cbac_3",
+    "396c5a2_1",
+    "396c5a2_2",
+    "396c5a2_3",
+    "3ab5b8b_1",
+    "3ab5b8b_2",
+    "3ab5b8b_3",
+    "4ec8de5_1",
+    "4ec8de5_2",
+    "4ec8de5_3",
+    "4fab96f_1",
+    "4fab96f_2",
+    "4fab96f_3",
+    "50e1ac9_1",
+    "50e1ac9_2",
+    "50e1ac9_3",
+    "530b157_1",
+    "530b157_2",
+    "530b157_3",
+    "57c3486_1",
+    "57c3486_2",
+    "57c3486_3",
+    "6171bbc_1",
+    "6171bbc_2",
+    "6171bbc_3",
+    "68ee2c9_1",
+    "68ee2c9_2",
+    "68ee2c9_3",
+    "6bdbc26_1",
+    "6bdbc26_2",
+    "6bdbc26_3",
+    "6c2c621_1",
+    "6c2c621_2",
+    "6c2c621_3",
+    "b119b1f_1",
+    "b119b1f_2",
+    "b119b1f_3",
+    "d4e9306_1",
+    "d4e9306_2",
+    "d4e9306_3",
+    "df61dc5_1",
+    "df61dc5_2",
+    "df61dc5_3",
+    "fac291d_1",
+    "fac291d_2",
+    "fac291d_3"
+  ],
+  "provenance": {
+    "execution_form": "cross_source_provenance_validated_continuation",
+    "parent_artifact_manifest": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/preflight/parent_artifact_manifest.json",
+      "sha256": "c4cc6501982ec2b8ff9bc7061ad5ed649476d69ad606ac3e39229f16c8768a62",
+      "size_bytes": 498787
+    },
+    "parent_boundary": "after_O07_before_O08",
+    "parent_o08_partial_outputs_used": false,
+    "parent_run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001",
+    "parent_source_commit": "004f866647cfabb38a141b88e6d83821df88c403",
+    "single_source_fresh_s00_f03_rerun": false
+  },
+  "task_order_exact_across_conditions": true,
+  "test_normal_run": false
+}

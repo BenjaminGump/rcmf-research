@@ -1,0 +1,45 @@
+{
+  "caveats": [
+    "The official dev split is exposed development data.",
+    "The one-demo result is a cross-source provenance-validated continuation, not a single-source fresh S00-F03 run.",
+    "Exact McNemar p-values are descriptive terminal analyses and do not introduce a new selection threshold."
+  ],
+  "comparisons": {
+    "one_demo_correct_minus_bare": {
+      "correct_only": 1,
+      "delta_successes": -4,
+      "exact_mcnemar_p_two_sided": 0.21875,
+      "reference_only": 5
+    },
+    "one_demo_correct_minus_one_demo_shuffle": {
+      "correct_only": 2,
+      "delta_successes": -10,
+      "exact_mcnemar_p_two_sided": 0.012939453125,
+      "shuffle_only": 12
+    },
+    "one_demo_correct_minus_three_demo_correct": {
+      "one_demo_only": 4,
+      "delta_successes": -9,
+      "exact_mcnemar_p_two_sided": 0.049041748046875,
+      "three_demo_only": 13
+    },
+    "three_demo_correct_minus_bare": {
+      "correct_only": 11,
+      "delta_successes": 5,
+      "exact_mcnemar_p_two_sided": 0.332305908203125,
+      "reference_only": 6
+    },
+    "three_demo_correct_minus_three_demo_shuffle": {
+      "correct_only": 8,
+      "delta_successes": 6,
+      "exact_mcnemar_p_two_sided": 0.109375,
+      "shuffle_only": 2
+    }
+  },
+  "format": "exp037a_r18_terminal_paired_effects_v1",
+  "interpretation": {
+    "classification": "NEGATIVE_ONE_DEMO_MEMORY_SPECIFICITY_RESULT",
+    "inference": "The one-demo correct field does not reproduce the positive absolute or matched-shuffle-specific direction of the three-demo positive control.",
+    "verified_basis": "One-demo correct is 8/57 versus bare 12/57 and matched shuffle 18/57."
+  }
+}

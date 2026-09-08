@@ -2963,3 +2963,27 @@ Decision:
   Scientific configuration changes are zero. The preflight request remains
   `NOT_AUTHORIZED`; R18 standing approval permits a new exact run-bound 14n
   authorization and autonomous continuation after this records freeze.
+
+### EXP-037A-R18 Formal 14n Continuation Complete
+
+- R18 standing approval was persisted as a fresh 14n-only authorization and
+  the replacement continuation ran from frozen source
+  `98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f`.
+- All 18 stages C00/C01, O08-O19, and F00-F03 passed strict validation on their
+  first attempt. Formal wall time was `9.134601 h`; no retry or follow-on run
+  occurred.
+- The 922-file parent closure remains exact at
+  `f5424356e1ae469f2533136c37e28d8864d43e83c26902ed136b164104f3b0b6`.
+  Parent O08 partials and failed-run artifacts were not used.
+- One-demo training completed 1,032 units and selected epoch 1. The validated
+  499-memory deployment field SHA256 is
+  `3bda71b91f7e1f5147a8399c5fdcb41207869ffbd5f0236bfbdecaa88d4c4110`.
+- Official-dev success counts are shared bare `12/57`, fresh 3D correct
+  `17/57`, fresh 3D shuffle `11/57`, fresh 1D correct `8/57`, and fresh 1D
+  shuffle `18/57`.
+- The one-demo correct field is `-4/57` versus bare and `-10/57` versus its
+  matched shuffle. This is a clearly negative one-demo memory-specificity
+  result, with the limitation that it is cross-source provenance-validated
+  continuation evidence rather than a single-source S00-F03 run.
+- EXP-037A stops for scientific review. No confirmation, optimization,
+  ablation, or other follow-on experiment is authorized or running.

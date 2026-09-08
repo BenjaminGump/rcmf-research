@@ -1,0 +1,38 @@
+{
+  "attempts": {
+    "complete": 18,
+    "failed_or_interrupted": 0,
+    "open": 0,
+    "total": 18
+  },
+  "format": "exp037a_r18_14n_terminal_stage_validation_v1",
+  "parent_validation": {
+    "artifact_closure_sha256": "f5424356e1ae469f2533136c37e28d8864d43e83c26902ed136b164104f3b0b6",
+    "artifact_count": 922,
+    "all_checks_passed": true
+  },
+  "production_validator": "rcmf.pipeline.validators.validate_stage_completion",
+  "stage_count": 18,
+  "stage_ids": [
+    "C00_parent_run_evidence_import",
+    "C01_o07_o08_boundary_validation",
+    "O08_zero_cache_and_training_units",
+    "O09_writer_reader_epoch_1",
+    "O10_writer_reader_epoch_2",
+    "O11_heldout_teacher_forced",
+    "O12_heldout_one_step",
+    "O13_heldout_full_trajectory",
+    "O14_checkpoint_selection",
+    "O15_401_memory_field",
+    "O16_compile_and_add_98_memories",
+    "O17_499_memory_deployment_field",
+    "O18_common_one_demo_dev_correct",
+    "O19_common_one_demo_dev_shuffle",
+    "F00_two_arm_paired_analysis",
+    "F01_portability_validation",
+    "F02_git_safe_audit_export",
+    "F03_final_report_and_handoff"
+  ],
+  "strict_failures": [],
+  "strict_passed": 18
+}

@@ -3472,3 +3472,33 @@ IMPLEMENTATION DEVIATIONS:
 - Initial Windows test invocations encountered an unavailable `conda` PATH and
   a stale pytest temp-directory ACL. The same tests were rerun in the known
   `appworld_env` interpreter with an isolated `--basetemp`; no test was waived.
+
+## 2026-09-08 EXP-037A-R18 formal 14n terminal decision
+
+VERIFIED:
+
+- The fresh 14n continuation completed all 18 authorized C00/C01, O08-O19,
+  and F00-F03 stages with strict validation, zero failed attempts, and the
+  922-file parent closure unchanged.
+- One-demo correct/shuffle completed `8/57` and `18/57`; the shared bare and
+  sealed three-demo correct/shuffle conditions are `12/57`, `17/57`, and
+  `11/57`.
+- The one-demo correct field is `-4/57` versus bare and `-10/57` versus its
+  matched shuffle. Exact paired discordances for correct versus shuffle are
+  `2` correct-only and `12` shuffle-only.
+- The result is explicitly cross-source, provenance-validated continuation
+  evidence. Parent O08 partials and 14l/14m scientific outputs were not used.
+
+DECISION:
+
+- Record
+  `FORMAL_EXP037A_14N_CONTINUATION_COMPLETE_NEGATIVE_ONE_DEMO_RESULT`.
+- Interpret the completed one-demo result as negative for the intended
+  memory-specific causal direction: correct underperforms both controls.
+- Stop the R18 self-healing loop at F03. Do not automatically run a
+  single-source confirmation, optimization, ablation, or follow-on experiment.
+
+IMPLEMENTATION DEVIATIONS:
+
+- None after the frozen 14n launch source. Monitoring wrote only to its
+  separate monitoring root. Scientific configuration changes remained zero.

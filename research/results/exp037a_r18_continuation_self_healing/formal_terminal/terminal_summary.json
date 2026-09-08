@@ -1,0 +1,108 @@
+{
+  "authorization": {
+    "explicit_authorization_path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/preflight/explicit_user_authorization.json",
+    "explicit_authorization_sha256": "dd8ccaab2be4bd33ad88f9d1746f758060fa6dd44ef71feb16214d28a6e747f8",
+    "hard_cap_hours": 32,
+    "runtime_authorization_path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/runtime_authorization.json",
+    "runtime_authorization_sha256": "3039410968805ed1e671db21363300256733232e827c372b2a8103a2ae9854f1",
+    "runtime_validator_passed": true,
+    "scope": "continue_from_sealed_14k_o07_boundary_through_o19_and_final_reporting",
+    "standing_user_approval_source": "EXP-037A-R18"
+  },
+  "formal_identity": {
+    "archive_ref": "archive/exp037a-r18-launch-source-98f917d",
+    "contract_sha256": "e479889fba498401e50ff7f309668629c3745d8ea5d91d84d8600c62986e61c7",
+    "pipeline_config_sha256": "6e4be2be11e608436f5b5ebfdeee45d94a61f2831c841be72cd97e8050107e01",
+    "run_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003",
+    "run_uuid": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003",
+    "source_commit": "98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f",
+    "stage_scope_sha256": "3581cf1caded5a5aeba300b538117a4771afd64eb33b5c423c033fa1ac1397d7"
+  },
+  "format": "exp037a_r18_14n_formal_terminal_summary_v1",
+  "inferences": {
+    "paper_level_status": "cross_source_continuation_evidence_not_single_source_confirmation",
+    "scientific_direction": "NEGATIVE_ONE_DEMO_MEMORY_SPECIFICITY_RESULT",
+    "scientific_direction_basis": "The fresh one-demo correct field underperformed both the shared bare condition and its matched key-payload-shuffled control."
+  },
+  "parent": {
+    "artifact_count": 922,
+    "artifact_manifest_sha256": "c4cc6501982ec2b8ff9bc7061ad5ed649476d69ad606ac3e39229f16c8768a62",
+    "closure_sha256": "f5424356e1ae469f2533136c37e28d8864d43e83c26902ed136b164104f3b0b6",
+    "d22": "THREE_DEMO_REPRODUCTION_PASS",
+    "immutable_after_run": true,
+    "o08_partial_outputs_used": false,
+    "run_uuid": "rcmf_reproducible_3d_gate_1d_pipeline_14k_20260905_001",
+    "source_commit": "004f866647cfabb38a141b88e6d83821df88c403"
+  },
+  "runtime": {
+    "end_utc": "2026-09-08T01:26:13.547861+00:00",
+    "h100_active_time": "not measured independently; O08-O19 stage-wall proxy is 9.119377 hours",
+    "h100_terminal_memory_mib": 0,
+    "h100_terminal_utilization_percent": 0,
+    "monetary_cost": "MONETARY_COST_NOT_AVAILABLE",
+    "o08_o19_stage_wall_seconds": 32829.758693901356,
+    "start_utc": "2026-09-07T16:18:08.983597+00:00",
+    "wall_hours": 9.134601184444445,
+    "wall_seconds": 32884.564264
+  },
+  "scientific_outputs": {
+    "backward_count": 1032,
+    "deployment_field": {
+      "memory_count": 499,
+      "sha256": "3bda71b91f7e1f5147a8399c5fdcb41207869ffbd5f0236bfbdecaa88d4c4110"
+    },
+    "field_401_sha256": "bec6ae119ffd858a07eeafafbb65f55e42b39a0f71d224c3dd128afae0cf22af",
+    "one_demo_causal_population": {
+      "heldout": 83,
+      "labels": {
+        "HARMFUL": 40,
+        "NEUTRAL": 247,
+        "POSITIVE": 120
+      },
+      "paired_states": 407,
+      "train": 324
+    },
+    "optimizer_step_count": 1032,
+    "optimizer_step_count_evidence": "The production loop performs one optimizer.step() for each completed unit; 1032 completed units and 1032 backward passes were sealed.",
+    "selected_checkpoint": {
+      "classification": "STRONG",
+      "epoch": 1,
+      "sha256": "c3bc33f38dd0ea58e368c38f582775c355902bb9a01671f21e4e485add9daf2c"
+    },
+    "training_units": 1032
+  },
+  "status": {
+    "attempts_complete": 18,
+    "attempts_failed": 0,
+    "attempts_open": 0,
+    "completed_stage_count": 18,
+    "failed_stage": null,
+    "f03_passed": true,
+    "follow_on_started": false,
+    "orchestrator_status": "complete",
+    "strict_stage_validations_passed": 18,
+    "terminal": true
+  },
+  "verified_dev_results": {
+    "shared_bare": {
+      "success_count": 12,
+      "task_count": 57
+    },
+    "three_demo_correct": {
+      "success_count": 17,
+      "task_count": 57
+    },
+    "three_demo_shuffle": {
+      "success_count": 11,
+      "task_count": 57
+    },
+    "one_demo_correct": {
+      "success_count": 8,
+      "task_count": 57
+    },
+    "one_demo_shuffle": {
+      "success_count": 18,
+      "task_count": 57
+    }
+  }
+}

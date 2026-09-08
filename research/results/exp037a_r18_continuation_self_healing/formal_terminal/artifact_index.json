@@ -1,0 +1,74 @@
+{
+  "artifacts": [
+    {
+      "path": "formal_audit_index.json",
+      "sha256": "52cd18fb150aa2390104056e29362c37419a1fb6ed273d2a5161286b7ef8babb",
+      "size_bytes": 7100
+    },
+    {
+      "path": "formal_final_record.json",
+      "sha256": "531ba157c1f42d64c40161124d70121e9ea18e35922d01c26b2b86e8b8d89054",
+      "size_bytes": 10754
+    },
+    {
+      "path": "instant_add_report.json",
+      "sha256": "b5b19ca2af06334679b52172ba7cce88770801ac32e5f65f9baafa2857d2ef4a",
+      "size_bytes": 1680
+    },
+    {
+      "path": "one_demo_correct_summary.json",
+      "sha256": "a6ef090732d88e20cc543ba22fa5c1eb34b9550293cabedc3a7ced6d7fd37776",
+      "size_bytes": 4164
+    },
+    {
+      "path": "one_demo_shuffle_summary.json",
+      "sha256": "87a5c1a9289153c05897c498e2fdcb3f6511d76dbe8c9953c6f9244c552f13f9",
+      "size_bytes": 4324
+    },
+    {
+      "path": "orchestrator_result.json",
+      "sha256": "81b2946c4bc8325c45142058f4c3a05ccd2a9ef01e42f72104467b0d6e477dc0",
+      "size_bytes": 13377
+    },
+    {
+      "path": "paired_effects.json",
+      "sha256": "9626881b7ee1c2efb7d94431934f377667f6f6953a18e1c046d069ac8cd6cf8f",
+      "size_bytes": 1653
+    },
+    {
+      "path": "stage_validation.json",
+      "sha256": "d7a95f26c6262c01eed67e195c923b9765f31b470c1bfe32875c5d8661752e5e",
+      "size_bytes": 1158
+    },
+    {
+      "path": "terminal_summary.json",
+      "sha256": "99f21a85c799d506001d66edd6942a85871db8fa3330971bbdf1d408a0c7e251",
+      "size_bytes": 4530
+    },
+    {
+      "path": "training_summary.json",
+      "sha256": "289827f6f272b0d2bf6cddb8584ded777f9e514ab242be395bbdc2160312eb31",
+      "size_bytes": 1065
+    },
+    {
+      "path": "two_arm_paired_analysis.json",
+      "sha256": "fb8a6d79b48bb80fc1719efeb30e9a753a7bcbab4e04e07469d8f3d3ed0cbc92",
+      "size_bytes": 5436
+    }
+  ],
+  "external_records": [
+    {
+      "path": "research/results/EXP_037A_R18_FORMAL_14N_TERMINAL_RESULT.md",
+      "sha256": "7f215d468e792bc5642099a33247a1948728909ac6dba36a5641efeec227b99c",
+      "size_bytes": 6575
+    },
+    {
+      "path": "research/handoffs/20260908T014023Z_exp037a_r18_formal_14n_terminal_result.md",
+      "sha256": "61d7dc839db263b5aad833b2753b4409edf8b2b56087b15bb0da3370ebf8a017",
+      "size_bytes": 3595
+    }
+  ],
+  "format": "exp037a_r18_14n_terminal_artifact_index_v1",
+  "lambda_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003",
+  "run_uuid": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003"
+}
