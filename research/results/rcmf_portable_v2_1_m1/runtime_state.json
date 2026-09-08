@@ -1,0 +1,13 @@
+{
+  "active_pilot_or_scientific_process": false,
+  "format": "rcmf_portable_v2_1_runtime_state_v1",
+  "h100_memory_mib": 0,
+  "h100_total_memory_mib": 81559,
+  "h100_utilization_percent": 0,
+  "lambda_execution_source": "0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158",
+  "lambda_worktree_clean": true,
+  "nfs_free": "approximately 3.0 PiB",
+  "nfs_mounted": true,
+  "safe_to_leave_idle": true,
+  "verified_utc": "2026-09-08T17:33:33Z"
+}

@@ -3573,3 +3573,32 @@ IMPLEMENTATION DEVIATIONS:
 - Because a commit cannot embed its own SHA, the records commit binds the
   frozen source SHA in docs/task metadata. No code, config, test, or AGENTS
   content changes after the final source freeze.
+
+## 2026-09-08 RCMF Portable Canonical V2.1 M1
+
+VERIFIED:
+
+- Strict records, capability probes, dataset/config/executor bindings,
+  terminal-checkpoint ownership, and dynamic release gates pass focused and
+  full local/Lambda validation.
+- The real AppWorld pilot executed P00-P11, 20 backward and optimizer steps,
+  checkpoint validation, a reversible 499-memory field, Qwen generation, and
+  typed evaluation under the 8-hour cap.
+- Generic core remains dataset-independent. Writer/field/reader mathematics
+  and formal 14n/R19 evidence are unchanged.
+
+DECISION:
+
+- Freeze `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158` at
+  `archive/rcmf-portable-canonical-v2_1-0ca0101`.
+- Classify the pilot as `ENGINEERING_EXECUTABLE_INTEGRATION_EVIDENCE`; its task
+  outcome is neither an acceptance threshold nor a scientific result.
+- Record `READY_FOR_PARALLEL_DATASET_ADAPTATION_V2_1`. ALFWorld/WebShop may
+  begin isolated bounded environment/data/replay adaptation, not science.
+
+IMPLEMENTATION DEVIATIONS:
+
+- Pilot `_001` exposed a wrapper assumption about a nonexistent `loss` history
+  key; `_002` exposed a one-line local-variable rename error. Each used a fresh
+  root, was preserved, minimally repaired, and regression-tested. Neither
+  initialized successful `_003`.

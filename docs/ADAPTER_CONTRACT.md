@@ -1,4 +1,4 @@
-# Reproducible Benchmark Adapter V2
+# Reproducible Benchmark Adapter V2.1
 
 The sole authoritative interface for new RCMF ports is
 `ReproducibleBenchmarkAdapterV2` in
@@ -36,6 +36,11 @@ hashes source/run/config/profile/adapter/dependency/input/output identities.
 AppWorld V2.1 provides a legacy-compatibility executor that wraps reviewed
 production functions. ALFWorld and WebShop must provide compact adapters and
 handler bindings, not edited copies of the full pipeline.
+
+The bounded AppWorld V2.1 pilot exercised every P00-P11 executor boundary,
+including real optimizer work, terminal-checkpoint validation, field algebra,
+generation, and evaluation. This proves the executable binding for AppWorld;
+it does not claim ALFWorld/WebShop executor support or scientific validity.
 
 ## Methods
 

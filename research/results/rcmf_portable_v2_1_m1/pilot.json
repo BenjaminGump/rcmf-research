@@ -1,0 +1,52 @@
+{
+  "backward_count": 20,
+  "checkpoint_sha256": "872653bf586be1fdeca9bb7ee3d50a26cd525ffebb87f1ef677495a64423a1a8",
+  "classification": "ENGINEERING_EXECUTABLE_INTEGRATION_EVIDENCE",
+  "completed_phase_count": 12,
+  "dataset_profile_sha256": "ff57e0a102e81b1ce076c179cf3e134e595ef5cc65a9bf7a726ce02320fa16b6",
+  "elapsed_seconds": 317.89736616564915,
+  "evaluation": {
+    "accuracy_threshold": null,
+    "environment_reached": true,
+    "official_dev_task_ids": ["530b157_3"],
+    "summary_sha256": "0a5245e542627c946c687438cfd519c2cddd12c63a89c0c7558ff7334b59f17c",
+    "task_count": 1,
+    "typed_result": true
+  },
+  "field": {
+    "A_shape": [960, 8, 256],
+    "B_shape": [8, 256],
+    "add_count": 499,
+    "finite": true,
+    "memory_count": 499,
+    "read_count": 1,
+    "remove_count": 1,
+    "restore_count": 1,
+    "reversible_exact": true,
+    "sha256": "c4ae7181bcff27858089ae2eb8bd0198a418e9ba439db57aa319939412a5c643"
+  },
+  "format": "rcmf_portable_v2_1_appworld_executable_pilot_record_v1",
+  "h100_active_hours_upper_bound": 0.08830482393490253,
+  "optimizer_step_count": 20,
+  "parent_inputs_unchanged": true,
+  "prompt_profile": "full_demo",
+  "root": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_portable_v2_1_appworld_3demo_pilot_20260909_003",
+  "run_uuid": "rcmf_portable_v2_1_appworld_3demo_pilot_20260909_003",
+  "scientific_result": false,
+  "source_commit": "0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158",
+  "specification_sha256": "836011dd4b315c1b2277dacf7dede00c9f2e4d1053d7450524df2ee326efaf96",
+  "summary_sha256": "3d30bc1693304d18928138af6f938ed51b233beabc2744e7abe62618aa742fd2",
+  "training": {
+    "elapsed_seconds": 162.3336428590119,
+    "epochs": 1,
+    "heldout_fixture_states": 2,
+    "labels": {"HARMFUL": 4, "NEUTRAL": 4, "POSITIVE": 4},
+    "terminal_loss": 0.32304854588292076,
+    "training_states": 12,
+    "training_units": 20
+  },
+  "wrapper_attempts": [
+    {"classification": "VERIFIED_MINOR_NONSCIENTIFIC_WRAPPER_DEFECT", "root_suffix": "_001", "training_units_completed": 20},
+    {"classification": "VERIFIED_MINOR_NONSCIENTIFIC_WRAPPER_DEFECT", "root_suffix": "_002", "training_units_completed": 20}
+  ]
+}

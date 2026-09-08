@@ -1,0 +1,27 @@
+{
+  "adapter_protocol": "rcmf_reproducible_benchmark_adapter_v2",
+  "format": "rcmf_portable_v2_1_capability_proof_v1",
+  "probe_boundary": "before model loading or training",
+  "probed_methods": [
+    "list_tasks",
+    "trajectory_sources",
+    "successful_trajectories",
+    "transition_records",
+    "decision_states",
+    "render_messages",
+    "count_runtime_tokens",
+    "build_selector_supervision",
+    "causal_conditions",
+    "compare_causal_outcomes",
+    "create_runtime",
+    "replay_to_state",
+    "validate_action",
+    "execute_action",
+    "evaluate_task",
+    "redact_audit_record"
+  ],
+  "required_capabilities_are_phase_scoped": true,
+  "runtime_factory_required_for_interactive_claim": true,
+  "status": "PASS",
+  "token_counter_required_for_counting_claim": true
+}

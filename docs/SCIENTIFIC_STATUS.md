@@ -1,10 +1,12 @@
 # Scientific Status
 
-Last verified: `2026-09-08T13:44:52Z`.
+Last verified: `2026-09-08T17:33:33Z`.
 
 Portable canonical V2.1 is an engineering hardening milestone. Its bounded
-AppWorld three-demo pilot, if completed, is executable integration evidence
-only and has no accuracy threshold. It does not alter or supersede formal 14n
+AppWorld three-demo pilot completed all 12 portable phases, including real
+training, field operations, Qwen generation, and typed AppWorld evaluation.
+This is executable integration evidence only and has no accuracy threshold.
+It does not alter or supersede formal 14n
 or the post-hoc R19 checkpoint diagnostic. ALFWorld and WebShop remain
 `NOT_EVALUATED`; adapter fixtures and readiness checks are not scientific
 results.
@@ -16,6 +18,9 @@ results.
 - ReAct ALFWorld and WebShop prompt assets are pinned and hash-verified.
 - AppWorld compatibility and ALFWorld-like/WebShop-like bounded conformance are
   required release gates.
+- Portable V2.1 local full tests passed `1070` with `3` skips; Lambda/CUDA full
+  tests passed `1073`. The bounded AppWorld pilot passed P00-P11 with 20/20
+  backward/optimizer steps and strict manifests.
 
 ## Scientifically Supported
 

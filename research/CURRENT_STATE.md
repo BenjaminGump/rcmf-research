@@ -3031,3 +3031,21 @@ Decision:
 - Decision: `READY_FOR_PARALLEL_DATASET_ADAPTATION`. The shuffle anomaly is
   deferred until after the 2026-09-25 submission. No scientific or shuffle run
   was launched.
+
+### RCMF Portable V2.1 M1 Executable Integration Verified
+
+- Source `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158` is frozen at
+  `archive/rcmf-portable-canonical-v2_1-0ca0101`.
+- V2.1 adds strict record closure, selected-phase capability proof, hashed
+  dataset/config/adapter/executor binding, externally owned terminal-checkpoint
+  counts, and evidence-derived release gates. Generic core has zero benchmark
+  imports or benchmark-name/version dispatch.
+- Final local full tests passed `1070` with `3` skips; Lambda/CUDA passed
+  `1073`. The 39-row ownership inventory has zero unresolved reachable defects.
+- Real bounded AppWorld pilot `_003` completed P00-P11 in `317.897 s`: 12 train
+  states, 20 units, 20 backward/optimizer steps, valid checkpoint, exact
+  reversible 499-memory field, real Qwen generation, and typed evaluation.
+- Pilot `_001` and `_002` are immutable wrapper-failure evidence and were not
+  reused. No full AppWorld science or ALFWorld/WebShop science ran.
+- Decision: `READY_FOR_PARALLEL_DATASET_ADAPTATION_V2_1`. ALFWorld and WebShop
+  remain `NOT_EVALUATED` and begin with bounded environment/data/replay work.

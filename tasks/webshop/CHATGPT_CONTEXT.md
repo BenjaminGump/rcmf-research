@@ -2,18 +2,18 @@
 
 - Document role: WebShop conversation bootstrap cache; not a source of truth.
 - Development base records SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`.
-- Canonical executable ancestor SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`.
-- Canonical archive ref: `archive/rcmf-portable-canonical-v2-ea152c7`.
-- Bootstrap generated at SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`.
-- Generated-from commit: `ca799ffa5692678081d69f4994e470267def4ec5`.
-- Canonical source SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`.
-- Last verified UTC: `2026-09-08T13:44:52Z`.
-- Base canonical SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`.
-- Adapter version: `webshop:portable-v1-pending` / protocol
+- Canonical executable ancestor SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
+- Canonical archive ref: `archive/rcmf-portable-canonical-v2_1-0ca0101`.
+- Bootstrap generated at SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
+- Generated-from commit: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
+- Canonical source SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
+- Last verified UTC: `2026-09-08T17:33:33Z`.
+- Base canonical SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
+- Adapter version: `webshop:portable-v2_1-pending` / protocol
   `rcmf_reproducible_benchmark_adapter_v2`.
-- Branch/worktree/run namespace: future `adapt/webshop-v1`, dedicated worktree,
+- Branch/worktree/run namespace: future `adapt/webshop-v2_1`, dedicated worktree,
   `/lambda/nfs/rcmf-persist/project/runs/webshop/<uuid>`, unique server port.
-- Latest relevant handoff: `research/handoffs/20260908T134452Z_rcmf_portable_v2_m1.md`.
+- Latest relevant handoff: `research/handoffs/20260908T173333Z_rcmf_portable_v2_1_m1.md`.
 
 Independently verify the latest pushed GitHub state, archive, canonical
 manifest, and task state before treating this cache as current.
@@ -43,7 +43,8 @@ Verified: source repo commit
 `64fa2a5c15c7daa698b9ac93f5bb5437b634c9bd`; exact ReAct profile
 `react_official_one_demo_v1` AST-extracted from commit
 `6bdb3a1fd38b8188fc7ba4102969fe483df8fdc9`; action-grammar renderer and
-portable continuous-reward mock conformance. Prompt source/profile is
+portable continuous-reward mock conformance. Portable V2.1's real AppWorld
+pilot also passed all shared executor boundaries, but this does not validate WebShop. Prompt source/profile is
 `assets/prompts/source_manifests/react_webshop.json`. Planned sources keep the
 setup human sample, full human archive, IL/model archive, and training-metadata
 oracle separate. Exact reward `1.0` is full success; partial reward is not.

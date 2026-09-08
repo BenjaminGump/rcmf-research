@@ -1,0 +1,15 @@
+{
+  "format": "rcmf_portable_v2_1_test_evidence_v1",
+  "process_start_python_hash_seed": 25101,
+  "runs": [
+    {"environment": "local appworld_env", "result": "57 passed", "scope": "portable focused candidate"},
+    {"environment": "local appworld_env", "result": "28 passed", "scope": "final regression focused"},
+    {"environment": "Lambda CUDA", "result": "28 passed", "scope": "final regression focused"},
+    {"duration_seconds": 106.95, "environment": "local appworld_env", "result": "1070 passed, 3 skipped", "scope": "final full"},
+    {"duration_seconds": 35.55, "environment": "Lambda CUDA", "result": "1073 passed", "scope": "final full"},
+    {"duration_seconds": 0.21, "environment": "local appworld_env", "result": "5 passed", "scope": "records/bootstrap/release validation"}
+  ],
+  "dynamic_release_validation": "PASS",
+  "unresolved_failures": 0,
+  "waived_failures": 0
+}

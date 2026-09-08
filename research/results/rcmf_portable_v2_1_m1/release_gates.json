@@ -1,0 +1,18 @@
+{
+  "format": "rcmf_portable_v2_1_release_gates_v1",
+  "gates": {
+    "benchmark_name_dispatch": {"evidence_class": "MACHINE_COMPUTED", "value": 0},
+    "executor_bindings": {"evidence_class": "MACHINE_COMPUTED", "value": 1},
+    "failed_required_conformance_tests": {"evidence_class": "TEST_BOUND", "value": 0},
+    "generic_core_direct_benchmark_imports": {"evidence_class": "MACHINE_COMPUTED", "value": 0},
+    "historical_outcome_counts_in_generic_success_conditions": {"evidence_class": "MACHINE_COMPUTED", "value": 0},
+    "prompt_assets_without_source_commit_hash_license": {"evidence_class": "MACHINE_COMPUTED", "value": 0},
+    "required_test_files_missing": {"evidence_class": "MACHINE_COMPUTED", "value": 0},
+    "silent_adapter_fallback_paths": {"evidence_class": "MACHINE_COMPUTED", "value": 0},
+    "unowned_runtime_paths": {"evidence_class": "MACHINE_COMPUTED", "value": 0},
+    "unresolved_reachable_defects": {"evidence_class": "MACHINE_COMPUTED", "value": 0},
+    "version_specific_continuation_dispatch": {"evidence_class": "MACHINE_COMPUTED", "value": 0}
+  },
+  "ownership_entry_count": 39,
+  "passed": true
+}

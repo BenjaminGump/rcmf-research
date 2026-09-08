@@ -1,0 +1,14 @@
+{
+  "checkpoint_content_verified_before_deserialization": true,
+  "checkpoint_pointer_hash_required": true,
+  "configured_terminal_epoch_only": true,
+  "expected_units_owner": "strict-valid upstream training-unit manifest or frozen run policy",
+  "extra_epochs_rejected": true,
+  "format": "rcmf_portable_v2_1_terminal_checkpoint_policy_v1",
+  "intermediate_epoch_records_required": true,
+  "metric_selection": false,
+  "missing_epoch_records_rejected": true,
+  "no_fallback": true,
+  "status": "PASS",
+  "tensor_finiteness_required": true
+}

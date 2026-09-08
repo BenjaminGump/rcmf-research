@@ -1,0 +1,12 @@
+{
+  "archive_ref": "archive/rcmf-portable-canonical-v2_1-0ca0101",
+  "branch": "platform/rcmf-portable-canonical-v2_1",
+  "canonical_executable_ancestor": "ea152c7393056d9f8502bdef87b0b0c34d1f1d89",
+  "development_base_records_sha": "a3969f56a2020db5dbaed661cab1f0db6acfaee1",
+  "format": "rcmf_portable_v2_1_source_identity_v1",
+  "source_sha": "0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158",
+  "worktrees": {
+    "lambda": "/lambda/nfs/rcmf-persist/project-worktrees/portable-v2_1",
+    "local": "C:\\gbz\\RCMF_portable_v2_1"
+  }
+}

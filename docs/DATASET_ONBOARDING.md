@@ -50,3 +50,10 @@ Parallel ports use separate worktrees, branches, NFS roots, environments,
 ports, and task state files. No shared mutable cache is allowed. Begin from
 `tasks/<dataset>/STATE.md`; historical failure reports are demand-loaded via
 `docs/FAILURE_MODES.md`.
+
+The executable base for new ports is source
+`0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`, frozen at
+`archive/rcmf-portable-canonical-v2_1-0ca0101`. The AppWorld pilot proves the
+shared executor contract can reach real training and evaluation; each new
+dataset still owns its environment, records, replay, prompts, reward, and
+phase handlers.

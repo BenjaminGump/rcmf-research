@@ -1,0 +1,18 @@
+{
+  "format": "rcmf_portable_v2_1_schema_contract_v1",
+  "invariants": [
+    "required text rejects null, non-string, empty, and whitespace-only values",
+    "every record requires the exact supported schema version",
+    "task IDs, trajectory IDs, transition IDs, and state IDs are unique in their declared scope",
+    "split mappings agree with TaskRecord.split",
+    "trajectory task and split resolve to exactly one declared task",
+    "trajectory provenance resolves to one declared source",
+    "trajectory steps are contiguous and ordered",
+    "transition task, parent trajectory, and step identities agree",
+    "decision-state task and prompt profile agree with the run policy",
+    "success, terminal status, and replay status combinations are coherent",
+    "continuous rewards and optional binary success remain valid"
+  ],
+  "scientific_semantics_changed": false,
+  "status": "PASS"
+}

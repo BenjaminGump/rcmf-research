@@ -1,10 +1,10 @@
 # WebShop Portable-V2 Adaptation Brief
 
 - Development base records SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`
-- Canonical executable ancestor SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`
-- Canonical archive ref: `archive/rcmf-portable-canonical-v2-ea152c7`
-- Bootstrap generated at SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`
-- Last verified UTC: `2026-09-08T13:44:52Z`
+- Canonical executable ancestor SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`
+- Canonical archive ref: `archive/rcmf-portable-canonical-v2_1-0ca0101`
+- Bootstrap generated at SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`
+- Last verified UTC: `2026-09-08T17:33:33Z`
 
 Start by reading `AGENTS.md`, `docs/PIPELINE.md`,
 `docs/ADAPTER_CONTRACT.md`, `docs/datasets/WEBSHOP_READINESS.md`, and
@@ -15,7 +15,7 @@ editing.
 Implement only under `rcmf/benchmarks/webshop/`,
 `configs/datasets/webshop_v1.yaml`, `assets/prompts/webshop/`,
 `tasks/webshop/`, and WebShop tests/entrypoints unless a proven core defect
-requires review. Use branch `adapt/webshop-v1`, a separate worktree,
+requires review. Use branch `adapt/webshop-v2_1`, a separate worktree,
 environment/process namespace, unique WebShop server port, and NFS root
 `/lambda/nfs/rcmf-persist/project/runs/webshop/<uuid>`.
 

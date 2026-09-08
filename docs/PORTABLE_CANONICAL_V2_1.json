@@ -1,0 +1,47 @@
+{
+  "adapter_protocol_version": "rcmf_reproducible_benchmark_adapter_v2",
+  "archive_ref": "archive/rcmf-portable-canonical-v2_1-0ca0101",
+  "canonical_executable_ancestor_sha": "0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158",
+  "checkpoint_policy": "terminal_completed_epoch",
+  "core_version": "rcmf_portable_canonical_v2_1",
+  "date": "2026-09-08",
+  "format": "rcmf_portable_canonical_release_v2_1",
+  "new_dataset_scientific_status": {
+    "alfworld": "NOT_EVALUATED",
+    "webshop": "NOT_EVALUATED"
+  },
+  "ownership_inventory": {
+    "entry_count": 39,
+    "path": "docs/audits/PORTABLE_V2_OWNERSHIP_INVENTORY.jsonl",
+    "sha256": "38bb6f7c1cf8ed679c5cac1cb5ae834a76d306d28bfa0dcbc6edc31982435d91",
+    "unresolved_reachable_defects": 0
+  },
+  "pipeline_config": {
+    "dataset_profile_path": "configs/datasets/appworld_portable_v2_1.yaml",
+    "dataset_profile_sha256": "ff57e0a102e81b1ce076c179cf3e134e595ef5cc65a9bf7a726ce02320fa16b6",
+    "path": "configs/pipeline/rcmf_portable_canonical_v2_1.yaml",
+    "sha256": "48e784ad3a806da5bf66e3f78af7d9c159651c44f3db916294ab2488b8037f0c",
+    "stage_graph_sha256": "42eb720c76fb5c8f58d4c0d12a7860d1f7ecde186e246c0667d5c202767c93bb"
+  },
+  "pilot": {
+    "classification": "ENGINEERING_EXECUTABLE_INTEGRATION_EVIDENCE",
+    "passed": true,
+    "root": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_portable_v2_1_appworld_3demo_pilot_20260909_003",
+    "run_uuid": "rcmf_portable_v2_1_appworld_3demo_pilot_20260909_003",
+    "specification_sha256": "836011dd4b315c1b2277dacf7dede00c9f2e4d1053d7450524df2ee326efaf96",
+    "summary_sha256": "3d30bc1693304d18928138af6f938ed51b233beabc2744e7abe62618aa742fd2"
+  },
+  "source_sha": "0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158",
+  "status": "ENGINEERING_VERIFIED_PORTABLE_CANONICAL_V2_1",
+  "test_results": {
+    "lambda_full": "1073 passed",
+    "lambda_focused": "28 passed",
+    "local_full": "1070 passed, 3 skipped",
+    "local_focused": "28 passed",
+    "status": "PASS"
+  },
+  "v2_0_ancestor": {
+    "archive_ref": "archive/rcmf-portable-canonical-v2-ea152c7",
+    "source_sha": "ea152c7393056d9f8502bdef87b0b0c34d1f1d89"
+  }
+}

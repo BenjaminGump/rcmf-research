@@ -1,0 +1,25 @@
+{
+  "adapter_factory": "rcmf.benchmarks.appworld.portable_adapter_v2:create_appworld_portable_adapter_v2_1",
+  "config_path": "configs/pipeline/rcmf_portable_canonical_v2_1.yaml",
+  "config_sha256": "48e784ad3a806da5bf66e3f78af7d9c159651c44f3db916294ab2488b8037f0c",
+  "dataset_profile_path": "configs/datasets/appworld_portable_v2_1.yaml",
+  "dataset_profile_sha256": "ff57e0a102e81b1ce076c179cf3e134e595ef5cc65a9bf7a726ce02320fa16b6",
+  "executor_factory": "rcmf.benchmarks.appworld.portable_executor_v2_1:create_appworld_portable_executor_v2_1",
+  "format": "rcmf_portable_v2_1_config_executor_contract_v1",
+  "generic_benchmark_dispatch": false,
+  "manifest_identity_fields": [
+    "source_commit",
+    "run_uuid",
+    "run_root",
+    "pipeline_config_sha256",
+    "dataset_profile_sha256",
+    "adapter_identity",
+    "phase_id",
+    "dependency_manifest_hashes",
+    "input_artifact_hashes",
+    "output_artifact_hashes"
+  ],
+  "phase_count": 12,
+  "stage_graph_sha256": "42eb720c76fb5c8f58d4c0d12a7860d1f7ecde186e246c0667d5c202767c93bb",
+  "status": "PASS"
+}

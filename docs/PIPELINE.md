@@ -1,10 +1,10 @@
 # RCMF Portable Canonical Pipeline V2.1
 
-Status: `V2_1_EXECUTABLE_HARDENING_IN_PROGRESS` until the contracts, full test
-suites, and bounded AppWorld executable pilot described here pass. This is not
+Status: `ENGINEERING_VERIFIED_PORTABLE_CANONICAL_V2_1`. The contracts, full
+test suites, and bounded AppWorld executable pilot passed. This is not
 cross-dataset scientific validation.
 
-Canonical source SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`. Historical scientific evidence remains
+Canonical source SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`. Historical scientific evidence remains
 at formal 14n source `98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f`
 and R19 diagnostic source `2a7f371f378eab42e42629a4fd5275e18b2814ce`.
 
@@ -142,10 +142,12 @@ capability proof, hashed dataset/config/executor binding, externally owned
 terminal-checkpoint counts, and evidence-classed dynamic release gates. It
 does not alter writer/field/read mathematics or historical AppWorld evidence.
 
-The authorized V2.1 AppWorld pilot is a bounded real executable integration
-check: 8-32 paired states, at most 64 one-epoch training units, real
-backward/optimizer work, real field operations, and 1-4 deterministic dev
-tasks. It has no accuracy threshold and is never a scientific result.
+The V2.1 AppWorld pilot completed all P00-P11 boundaries on 12 deterministic
+paired training states (four per label), 20 one-epoch units, 20 backward and
+20 optimizer steps, a real 499-memory field add/remove/restore/read cycle, and
+one deterministic official-dev task through real Qwen generation and the real
+evaluator. It finished in 317.90 seconds. It has no accuracy threshold and is
+engineering integration evidence, never a scientific result.
 
 ## Known Limitations
 

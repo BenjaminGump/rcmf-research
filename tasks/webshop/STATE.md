@@ -1,14 +1,14 @@
 # WebShop State
 
 - Development base records SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`
-- Canonical executable ancestor SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`
-- Canonical archive ref: `archive/rcmf-portable-canonical-v2-ea152c7`
-- Bootstrap generated at SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`
-- Last verified UTC: `2026-09-08T13:44:52Z`
-- Base canonical SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`
-- Adapter version: `webshop:portable-v1-pending` against
+- Canonical executable ancestor SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`
+- Canonical archive ref: `archive/rcmf-portable-canonical-v2_1-0ca0101`
+- Bootstrap generated at SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`
+- Last verified UTC: `2026-09-08T17:33:33Z`
+- Base canonical SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`
+- Adapter version: `webshop:portable-v2_1-pending` against
   `rcmf_reproducible_benchmark_adapter_v2`
-- Branch/worktree: future `adapt/webshop-v1` in a dedicated worktree
+- Branch/worktree: future `adapt/webshop-v2_1` in a dedicated worktree
 - Run namespace: `/lambda/nfs/rcmf-persist/project/runs/webshop/<uuid>`
 - Objective: adapt portable RCMF to pinned WebShop text sessions/rewards.
 - Verified: upstream repository commit
@@ -33,7 +33,7 @@
   reward-1.0 replay, index identity, leakage, token counts, bare smoke, runtime.
 - Next action: bounded source/archive/license and environment inspection, then
   replay the small official sample without model generation.
-- Latest handoff: portable-v2 canonical handoff in `research/handoffs/`.
+- Latest handoff: `research/handoffs/20260908T173333Z_rcmf_portable_v2_1_m1.md`.
 - Approval stop: large corpus acquisition, scientific generation/training, or
   a run plausibly over 18 hours requires review/explicit authorization.
 - Prohibited: partial reward as full success, evaluation leakage, guessed IL

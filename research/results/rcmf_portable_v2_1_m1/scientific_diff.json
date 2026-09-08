@@ -1,0 +1,15 @@
+{
+  "appworld_formal_14n_result": "UNCHANGED",
+  "appworld_r19_result": "UNCHANGED",
+  "evaluation_accuracy_claim": false,
+  "field_algebra_changes": 0,
+  "format": "rcmf_portable_v2_1_scientific_diff_v1",
+  "full_appworld_scientific_run_launched": false,
+  "model_changes": 0,
+  "prompt_scientific_changes": 0,
+  "selector_scientific_changes": 0,
+  "training_objective_changes": 0,
+  "writer_reader_mathematics_changes": 0,
+  "alfworld_scientific_result": "NOT_EVALUATED",
+  "webshop_scientific_result": "NOT_EVALUATED"
+}

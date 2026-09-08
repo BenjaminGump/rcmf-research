@@ -1,0 +1,28 @@
+{
+  "format": "rcmf_portable_v2_1_artifact_index_v1",
+  "generated_utc": "2026-09-08T17:33:33Z",
+  "git_safe_artifacts": [
+    {"path": "docs/PORTABLE_CANONICAL_V2_1.json", "sha256": "6f52827c07237c695c9d374ebdc4b9457010cae9cb534029a31d38b0a28b56a6", "size_bytes": 2136},
+    {"path": "research/results/RCMF_PORTABLE_V2_1_M1.md", "sha256": "116914a233d3d777ab26a171d5d5b7616be6290b4a001c5b36fbb906b1e77131", "size_bytes": 5538},
+    {"path": "research/handoffs/20260908T173333Z_rcmf_portable_v2_1_m1.md", "sha256": "29ac3f81845638ddaac1cbd5ed0fec607d557c5157621add4d9758cbf0ecb4ca", "size_bytes": 2894},
+    {"path": "research/results/rcmf_portable_v2_1_m1/capability_proof.json", "sha256": "a5d7a385bf58ff4825f98251986633547589c1f2cf2b36629c71621b822d5057", "size_bytes": 787},
+    {"path": "research/results/rcmf_portable_v2_1_m1/checkpoint_policy.json", "sha256": "26d8943df54bd94f8d37f93459e1676b76029ef4e6a1ecb780c52196629aff21", "size_bytes": 542},
+    {"path": "research/results/rcmf_portable_v2_1_m1/config_executor_contract.json", "sha256": "5c65dd5bfec59bbc59e646a6227561fd0723fa2fdea76853b54a37d1f5b89a31", "size_bytes": 1066},
+    {"path": "research/results/rcmf_portable_v2_1_m1/dataset_next_actions.json", "sha256": "00507838ab439708441e597a555b0f68c4801a388029315aaeb4fe87147e9a05", "size_bytes": 732},
+    {"path": "research/results/rcmf_portable_v2_1_m1/pilot.json", "sha256": "18fde143564191b2d9fe9c0db54ebce4a79ec6cf5658ece33ed8c3b69471b67c", "size_bytes": 2171},
+    {"path": "research/results/rcmf_portable_v2_1_m1/release_gates.json", "sha256": "660f79d5baa7ef2cc04cd4d6688dbdd5492211c2191b8fa7f97f77c99bc5af89", "size_bytes": 1130},
+    {"path": "research/results/rcmf_portable_v2_1_m1/runtime_state.json", "sha256": "54393f3f6388668affb72c1d88909c8e6164d031b06e9a503de4ffeb12dbd31a", "size_bytes": 432},
+    {"path": "research/results/rcmf_portable_v2_1_m1/schema_contract.json", "sha256": "8f54815e5d93233113f9773fb9104acabfa87a116f96c455fa84eb0d3ca58863", "size_bytes": 899},
+    {"path": "research/results/rcmf_portable_v2_1_m1/scientific_diff.json", "sha256": "036e9128b2dc2f86fa7773446cd3ef421b1c8c817c012d8117729973c3e45d46", "size_bytes": 523},
+    {"path": "research/results/rcmf_portable_v2_1_m1/source_identity.json", "sha256": "71c44a68ca642be810e229a7740f2061fe5819223995ee970a7e3a70437f9301", "size_bytes": 530},
+    {"path": "research/results/rcmf_portable_v2_1_m1/tests.json", "sha256": "8c87cc7baf3f17d9353a1e25405122c4887bd418f5cfff87d969916645f372c4", "size_bytes": 890}
+  ],
+  "lambda_only_artifacts": [
+    {"path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_portable_v2_1_appworld_3demo_pilot_20260909_003/pilot_specification.json", "sha256": "836011dd4b315c1b2277dacf7dede00c9f2e4d1053d7450524df2ee326efaf96"},
+    {"path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_portable_v2_1_appworld_3demo_pilot_20260909_003/pilot_summary.json", "sha256": "3d30bc1693304d18928138af6f938ed51b233beabc2744e7abe62618aa742fd2"},
+    {"path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_portable_v2_1_appworld_3demo_pilot_20260909_003/arms/3d/joint_training/checkpoints/epoch_01.pt", "sha256": "872653bf586be1fdeca9bb7ee3d50a26cd525ffebb87f1ef677495a64423a1a8"},
+    {"path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_portable_v2_1_appworld_3demo_pilot_20260909_003/deployment/pilot_field.pt", "sha256": "c4ae7181bcff27858089ae2eb8bd0198a418e9ba439db57aa319939412a5c643"},
+    {"path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/rcmf_portable_v2_1_appworld_3demo_pilot_20260909_003/evaluation/summaries/PILOT_D1.json", "sha256": "0a5245e542627c946c687438cfd519c2cddd12c63a89c0c7558ff7334b59f17c"}
+  ],
+  "source_commit": "0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158"
+}

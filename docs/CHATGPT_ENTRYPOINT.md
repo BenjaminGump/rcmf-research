@@ -2,13 +2,13 @@
 
 - Document role: compact project bootstrap cache; not a primary source.
 - Development base records SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`.
-- Canonical executable ancestor SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`.
-- Canonical archive ref: `archive/rcmf-portable-canonical-v2-ea152c7`.
-- Bootstrap generated at SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`.
-- Generated-from commit: `ca799ffa5692678081d69f4994e470267def4ec5`.
-- Canonical source SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`.
-- Last verified UTC: `2026-09-08T13:44:52Z`.
-- Latest relevant handoff: `research/handoffs/20260908T134452Z_rcmf_portable_v2_m1.md`.
+- Canonical executable ancestor SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
+- Canonical archive ref: `archive/rcmf-portable-canonical-v2_1-0ca0101`.
+- Bootstrap generated at SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
+- Generated-from commit: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
+- Canonical source SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
+- Last verified UTC: `2026-09-08T17:33:33Z`.
+- Latest relevant handoff: `research/handoffs/20260908T173333Z_rcmf_portable_v2_1_m1.md`.
 
 Independently verify the latest pushed GitHub branch, commit, and canonical
 manifest before relying on this cache.
@@ -46,10 +46,12 @@ memories remain authoritative. Production forbids runtime retrieval/top-k,
 FAISS, per-memory scoring, raw-memory query prompts, result-tuned gates,
 truncation/subsampling, and evaluation-led selection.
 
-Portable canonical v2 is an engineering base with one adapter contract and a
-prospective final-configured-epoch deployment policy. AppWorld provides sealed
-historical scientific evidence. ALFWorld and WebShop have pinned prompt sources
-and readiness plans but no scientific RCMF result.
+Portable canonical V2.1 is an engineering-verified base with strict record
+closure, bounded capability proof, dataset/config/executor binding, externally
+owned terminal-checkpoint counts, and evidence-derived release gates. A real
+bounded AppWorld pilot traversed P00-P11, training, field algebra, Qwen, and the
+evaluator. It is not a scientific result. ALFWorld and WebShop have pinned
+prompt sources and readiness plans but no scientific RCMF result.
 
 Verified: formal AppWorld 14n completed; its one-demo epoch-1 result is negative,
 and R19 epoch 2 is post-hoc mixed/inconclusive. Unverified: cross-dataset

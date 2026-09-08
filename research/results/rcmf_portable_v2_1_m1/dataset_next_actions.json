@@ -1,0 +1,15 @@
+{
+  "alfworld": {
+    "branch": "adapt/alfworld-v2_1",
+    "next_bounded_task": "verify the isolated environment/data/license identities and replay a few official training expert plans through TextWorld without Qwen or RCMF training",
+    "scientific_status": "NOT_EVALUATED"
+  },
+  "base_archive": "archive/rcmf-portable-canonical-v2_1-0ca0101",
+  "base_source": "0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158",
+  "format": "rcmf_portable_v2_1_dataset_next_actions_v1",
+  "webshop": {
+    "branch": "adapt/webshop-v2_1",
+    "next_bounded_task": "verify source/archive licenses and an isolated server/data/index, then replay the small official human sample without Qwen or RCMF training",
+    "scientific_status": "NOT_EVALUATED"
+  }
+}

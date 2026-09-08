@@ -2,13 +2,13 @@
 
 - Document role: exact list of compact files to add to the RCMF ChatGPT project.
 - Development base records SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`.
-- Canonical executable ancestor SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`.
-- Canonical archive ref: `archive/rcmf-portable-canonical-v2-ea152c7`.
-- Bootstrap generated at SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`.
-- Generated-from commit: `ca799ffa5692678081d69f4994e470267def4ec5`.
-- Canonical source SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`.
-- Last verified UTC: `2026-09-08T13:44:52Z`.
-- Latest relevant handoff: `research/handoffs/20260908T134452Z_rcmf_portable_v2_m1.md`.
+- Canonical executable ancestor SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
+- Canonical archive ref: `archive/rcmf-portable-canonical-v2_1-0ca0101`.
+- Bootstrap generated at SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
+- Generated-from commit: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
+- Canonical source SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
+- Last verified UTC: `2026-09-08T17:33:33Z`.
+- Latest relevant handoff: `research/handoffs/20260908T173333Z_rcmf_portable_v2_1_m1.md`.
 
 Independently verify the latest pushed GitHub state and canonical manifest
 before using these bootstrap caches.
