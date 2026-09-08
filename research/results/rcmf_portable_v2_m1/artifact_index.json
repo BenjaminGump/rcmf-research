@@ -1,0 +1,22 @@
+{
+  "format": "rcmf_portable_v2_m1_artifact_index_v1",
+  "source_sha": "ea152c7393056d9f8502bdef87b0b0c34d1f1d89",
+  "archive_ref": "archive/rcmf-portable-canonical-v2-ea152c7",
+  "artifacts": [
+    {"path":"configs/pipeline/rcmf_portable_canonical_v2.yaml","sha256":"f8ed4d006d19d7de2432a1360d621211a3e8506e63fba6a486f27e3ea130bf19","role":"canonical pipeline config"},
+    {"path":"docs/PORTABLE_CANONICAL_V2.json","sha256":"dc9380cd685d090391d835e9cdaaf37b0257c5ff277d880949a9e9e497fa7c94","role":"canonical version manifest"},
+    {"path":"docs/audits/PORTABLE_V2_OWNERSHIP_INVENTORY.jsonl","sha256":"774657878708f41739692b5d6a8786eb8a8f8d785f30df2dc0eb23ee974f453d","role":"ownership inventory"},
+    {"path":"research/results/RCMF_PORTABLE_V2_M1.md","sha256":"05f7bf371d9a350c7c132e57b12f7dde08fde4ee448e9bd8510f624f40b9153f","role":"human report"},
+    {"path":"research/handoffs/20260908T134452Z_rcmf_portable_v2_m1.md","sha256":"18bcd97464d6b1d59d7a648d97de0e276c59cf2fbf7cf5f5abfcc1d0a68008f1","role":"structured handoff"},
+    {"path":"research/results/rcmf_portable_v2_m1/environment_inspection.json","sha256":"785bf64119e56d9bb3815c6d4a7ebe495276c00b0e473155901c3bb91c9ad3fb","role":"environment evidence"},
+    {"path":"research/results/rcmf_portable_v2_m1/ownership_summary.json","sha256":"e665f3c7799600dadc9aaa22321c5166f8d740203c3eddf740cffeb819898202","role":"ownership summary"},
+    {"path":"research/results/rcmf_portable_v2_m1/portability_gates.json","sha256":"6e0332f8d04aa7ba82cee055257fa32c940b2df1d0ef4cbd80cddce7f6580bcd","role":"quantitative gates"},
+    {"path":"research/results/rcmf_portable_v2_m1/preflight_summary.json","sha256":"8c329c59c1fbe1ab55412bf667fff6ff74edc451e0178b2d9b65ca98aaf8a9a8","role":"decision summary"},
+    {"path":"research/results/rcmf_portable_v2_m1/prompt_tokenizer_validation.json","sha256":"73e6c1059eff3b4bf46db476f43d08d7750eb934064409185f04d99221581c62","role":"prompt renderer/tokenizer evidence"},
+    {"path":"research/results/rcmf_portable_v2_m1/scientific_diff.json","sha256":"818916c2d382e22939323f7e6ad15182d9cfe25fc6d3c976d7a6d787ff54d9d4","role":"scientific and legacy compatibility diff"},
+    {"path":"research/results/rcmf_portable_v2_m1/tests.json","sha256":"160f9a5f6eb78195852b66a84e6588f3bdea1578b7db9261423424a1cc83618d","role":"test evidence"}
+  ],
+  "raw_scientific_artifacts_committed": false,
+  "secret_scan_findings": 0,
+  "passed": true
+}

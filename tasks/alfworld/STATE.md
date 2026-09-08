@@ -1,6 +1,6 @@
 # ALFWorld State
 
-- Base canonical SHA: `PORTABLE_CANONICAL_SOURCE_SHA`
+- Base canonical SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`
 - Adapter version: `alfworld:portable-v1-pending` against
   `rcmf_reproducible_benchmark_adapter_v2`
 - Branch/worktree: future `adapt/alfworld-v1` in a dedicated worktree
@@ -34,4 +34,3 @@
 - Prohibited: THOR low actions treated as text without replay, evaluation data
   in corpus, unknown provenance, copied AppWorld stages, shared mutable roots.
 - Dirty/uncommitted status: verify independently before creating the worktree.
-

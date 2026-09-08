@@ -3,7 +3,7 @@
 Start by reading `AGENTS.md`, `docs/PIPELINE.md`,
 `docs/ADAPTER_CONTRACT.md`, `docs/datasets/WEBSHOP_READINESS.md`, and
 `tasks/webshop/STATE.md`. Base the worktree on
-`PORTABLE_CANONICAL_SOURCE_SHA`; independently verify the archive/commit before
+`ea152c7393056d9f8502bdef87b0b0c34d1f1d89`; independently verify the archive/commit before
 editing.
 
 Implement only under `rcmf/benchmarks/webshop/`,

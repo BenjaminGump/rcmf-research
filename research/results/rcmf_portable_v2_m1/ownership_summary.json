@@ -1,0 +1,20 @@
+{
+  "format": "rcmf_portable_v2_ownership_summary_v1",
+  "inventory": "docs/audits/PORTABLE_V2_OWNERSHIP_INVENTORY.jsonl",
+  "inventory_sha256": "774657878708f41739692b5d6a8786eb8a8f8d785f30df2dc0eb23ee974f453d",
+  "entry_count": 39,
+  "counts_by_class": {
+    "CONFIGURED_RUN_POLICY": 5,
+    "CORE_MATHEMATICAL_INVARIANT": 6,
+    "DATASET_ADAPTER_FACT": 6,
+    "DEFECT": 9,
+    "EXTERNAL_ENVIRONMENT_DEPENDENCY": 3,
+    "LEGACY_UNREACHABLE_HISTORY": 3,
+    "REPRODUCTION_PROFILE_ONLY": 2,
+    "UPSTREAM_DERIVED_ARTIFACT_VALUE": 5
+  },
+  "repaired_defect_entries": 9,
+  "unresolved_reachable_defects": 0,
+  "accepted_reproduction_only_constants": 2,
+  "passed": true
+}

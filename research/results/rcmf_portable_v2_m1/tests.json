@@ -1,0 +1,53 @@
+{
+  "format": "rcmf_portable_v2_m1_tests_v1",
+  "process_start_pythonhashseed": "25101",
+  "source_sha": "ea152c7393056d9f8502bdef87b0b0c34d1f1d89",
+  "local": {
+    "environment": "conda appworld_env; Python 3.11.14; Windows",
+    "focused": {
+      "command": "conda run -n appworld_env python -m pytest -p no:cacheprovider --basetemp <isolated> tests/test_portable_v2_checkpoint_policy.py tests/test_portable_v2_contract.py tests/test_portable_v2_appworld_and_boundaries.py tests/test_portable_v2_prompt_renderers.py tests/test_portable_v2_core_invariants.py tests/test_portable_v2_release_documents.py",
+      "passed": 33,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 9.25
+    },
+    "full": {
+      "command": "conda run -n appworld_env python -m pytest -p no:cacheprovider --basetemp <isolated-system-temp>",
+      "passed": 1041,
+      "failed": 0,
+      "skipped": 3,
+      "duration_seconds": 272.28
+    }
+  },
+  "lambda": {
+    "environment": "/home/ubuntu/venvs/rcmf-py311/bin/python; Python 3.11.15; NVIDIA H100 80GB HBM3 available",
+    "worktree": "/lambda/nfs/rcmf-persist/project-worktrees/portable-v2-m1",
+    "focused": {
+      "command": "/home/ubuntu/venvs/rcmf-py311/bin/python -m pytest -p no:cacheprovider --basetemp /tmp/<isolated> tests/test_portable_v2_checkpoint_policy.py tests/test_portable_v2_contract.py tests/test_portable_v2_appworld_and_boundaries.py tests/test_portable_v2_prompt_renderers.py tests/test_portable_v2_core_invariants.py tests/test_portable_v2_release_documents.py",
+      "passed": 33,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 1.27
+    },
+    "full": {
+      "command": "/home/ubuntu/venvs/rcmf-py311/bin/python -m pytest -p no:cacheprovider --basetemp /tmp/<isolated>",
+      "passed": 1044,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 34.65
+    },
+    "tokenizer": {
+      "command": "/home/ubuntu/venvs/rcmf-py311/bin/python scripts/validate_portable_prompt_tokenizer.py --local-files-only",
+      "passed_profiles": 7,
+      "failed_profiles": 0,
+      "model_loaded": false,
+      "generation_executed": false
+    }
+  },
+  "preliminary_environment_failures": [
+    "One preliminary local full run had a Windows temporary-directory os.replace ACL failure after 1039 passes; the exact failed legacy test passed in an isolated system temp directory and the final full suite passed.",
+    "The first Lambda source candidate omitted docs/datasets because a broad datasets/ ignore rule hid local files; Lambda release tests detected it, tracking was repaired, and all final-source suites passed."
+  ],
+  "scientific_execution": false,
+  "passed": true
+}

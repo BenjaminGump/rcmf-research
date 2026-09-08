@@ -1,0 +1,20 @@
+{
+  "format": "rcmf_portable_v2_portability_gates_v1",
+  "source_sha": "ea152c7393056d9f8502bdef87b0b0c34d1f1d89",
+  "generic_core_direct_appworld_imports": 0,
+  "unresolved_reachable_defects": 0,
+  "unowned_runtime_paths": 0,
+  "historical_outcome_counts_in_generic_success_conditions": 0,
+  "version_specific_continuation_dispatch_in_generic_runtime": 0,
+  "silent_adapter_fallback_paths": 0,
+  "prompt_assets_without_source_commit_hash_license": 0,
+  "dataset_states_without_trajectory_source_plan": 0,
+  "dataset_states_without_evaluation_split_plan": 0,
+  "failed_required_conformance_tests": 0,
+  "appworld_compatibility_fixture": "PASS",
+  "alfworld_like_mock": "PASS",
+  "webshop_like_mock": "PASS",
+  "generic_dag_variants": 2,
+  "generic_dag_stage_count_each": 12,
+  "passed": true
+}

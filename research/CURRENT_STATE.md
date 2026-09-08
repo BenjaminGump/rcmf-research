@@ -3007,3 +3007,27 @@ Decision:
 - The formal 14n epoch-1 result and checkpoint selection remain unchanged. No
   follow-on experiment, alternate epoch, seed, permutation, or training was
   launched.
+
+### RCMF Portable V2 M1 Engineering Base Frozen
+
+- Portable canonical source is
+  `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`, frozen at
+  `archive/rcmf-portable-canonical-v2-ea152c7`.
+- `ReproducibleBenchmarkAdapterV2` is the sole new-dataset adapter contract;
+  generic core imports no benchmark packages and derives paths/counts from
+  strict manifests rather than AppWorld outcomes.
+- Prospective deployment policy is `terminal_completed_epoch`: final configured
+  epoch only, strict-valid, no metric selection, and no fallback. Historical
+  14n/R19 checkpoint semantics and results are unchanged.
+- Ownership inventory contains 39 rows; all 9 reachable defect rows are
+  repaired and unresolved reachable defects are zero. All ten quantitative
+  portability violation counts are zero.
+- Local focused/full passed `33` and `1041` tests with 3 local skips. Lambda
+  focused/full passed `33` and `1044` tests with CUDA available. Seven pinned
+  ALFWorld/WebShop prompt-family/profile tokenizer checks matched exactly.
+- Status is `ENGINEERING_VERIFIED_PORTABLE_CANONICAL_BASE`, not scientific
+  validation. No ALFWorld/WebShop environment, official-trajectory corpus,
+  split, replay, or scientific result is yet sealed.
+- Decision: `READY_FOR_PARALLEL_DATASET_ADAPTATION`. The shuffle anomaly is
+  deferred until after the 2026-09-25 submission. No scientific or shuffle run
+  was launched.

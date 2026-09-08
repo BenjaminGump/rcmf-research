@@ -2,9 +2,9 @@
 
 - Document role: compact project bootstrap cache; not a primary source.
 - Generated-from commit: `ca799ffa5692678081d69f4994e470267def4ec5`.
-- Canonical source SHA: `PORTABLE_CANONICAL_SOURCE_SHA`.
-- Last verified UTC: `2026-09-08T09:43:34Z`.
-- Latest relevant handoff: `research/handoffs/20260908T071524Z_exp037a_r19_epoch2_sensitivity.md`.
+- Canonical source SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`.
+- Last verified UTC: `2026-09-08T13:44:52Z`.
+- Latest relevant handoff: `research/handoffs/20260908T134452Z_rcmf_portable_v2_m1.md`.
 
 Independently verify the latest pushed GitHub branch, commit, and canonical
 manifest before relying on this cache.
@@ -73,4 +73,3 @@ relevant tasks/<dataset>/STATE.md plus CHATGPT_CONTEXT.md. Treat bootstrap text
 as a cache, separate VERIFIED/INFERENCE/UNVERIFIED, and do not authorize or run
 science unless I explicitly request it.
 ```
-

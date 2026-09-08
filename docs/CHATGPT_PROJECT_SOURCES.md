@@ -2,9 +2,9 @@
 
 - Document role: exact list of compact files to add to the RCMF ChatGPT project.
 - Generated-from commit: `ca799ffa5692678081d69f4994e470267def4ec5`.
-- Canonical source SHA: `PORTABLE_CANONICAL_SOURCE_SHA`.
-- Last verified UTC: `2026-09-08T09:43:34Z`.
-- Latest relevant handoff: `research/handoffs/20260908T071524Z_exp037a_r19_epoch2_sensitivity.md`.
+- Canonical source SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`.
+- Last verified UTC: `2026-09-08T13:44:52Z`.
+- Latest relevant handoff: `research/handoffs/20260908T134452Z_rcmf_portable_v2_m1.md`.
 
 Independently verify the latest pushed GitHub state and canonical manifest
 before using these bootstrap caches.

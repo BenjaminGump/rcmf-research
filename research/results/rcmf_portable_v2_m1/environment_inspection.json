@@ -1,0 +1,21 @@
+{
+  "format": "rcmf_portable_v2_environment_inspection_v1",
+  "verified_utc": "2026-09-08T13:44:52Z",
+  "lambda": {
+    "nfs_mount": "/lambda/nfs/rcmf-persist",
+    "nfs_type": "virtiofs",
+    "nfs_free_reported": "3.0P",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "gpu_utilization_percent": 0,
+    "gpu_memory_used_mib": 0,
+    "scientific_processes_active": 0,
+    "monitor_processes_present": true,
+    "alfworld_importable": false,
+    "webshop_importable": false,
+    "gym_importable": false,
+    "installation_attempted": false,
+    "formal_14n_root_written_by_m1": false
+  },
+  "h100_scientific_active_time_hours": 0,
+  "passed": true
+}

@@ -2,14 +2,14 @@
 
 - Document role: WebShop conversation bootstrap cache; not a source of truth.
 - Generated-from commit: `ca799ffa5692678081d69f4994e470267def4ec5`.
-- Canonical source SHA: `PORTABLE_CANONICAL_SOURCE_SHA`.
-- Last verified UTC: `2026-09-08T09:43:34Z`.
-- Base canonical SHA: `PORTABLE_CANONICAL_SOURCE_SHA`.
+- Canonical source SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`.
+- Last verified UTC: `2026-09-08T13:44:52Z`.
+- Base canonical SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`.
 - Adapter version: `webshop:portable-v1-pending` / protocol
   `rcmf_reproducible_benchmark_adapter_v2`.
 - Branch/worktree/run namespace: future `adapt/webshop-v1`, dedicated worktree,
   `/lambda/nfs/rcmf-persist/project/runs/webshop/<uuid>`, unique server port.
-- Latest relevant handoff: `research/handoffs/20260908T071524Z_exp037a_r19_epoch2_sensitivity.md`.
+- Latest relevant handoff: `research/handoffs/20260908T134452Z_rcmf_portable_v2_m1.md`.
 
 Independently verify the latest pushed GitHub state, archive, canonical
 manifest, and task state before treating this cache as current.
@@ -66,4 +66,3 @@ license, environment, archive-provenance, and small-sample replay inspection.
 Do not run Qwen, train RCMF, download/commit the full corpus without review, or
 guess IL provenance. Report VERIFIED/UNVERIFIED facts and update STATE.
 ```
-

@@ -4,7 +4,7 @@
     "records_commit": "137b68f443c8cc7b02814bd97123a416e139da87",
     "source_commit": "98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f"
   },
-  "archive_ref": "archive/rcmf-portable-canonical-v2-PORTABLE_CANONICAL_SOURCE_SHORT",
+  "archive_ref": "archive/rcmf-portable-canonical-v2-ea152c7",
   "authority_order": [
     "sealed primary artifacts and source code at the specified commit",
     "canonical version manifest and docs/PIPELINE.md",
@@ -16,6 +16,16 @@
   "core_version": "rcmf_portable_canonical_v2",
   "date": "2026-09-08",
   "format": "rcmf_portable_canonical_release_v2",
+  "ownership_inventory": {
+    "path": "docs/audits/PORTABLE_V2_OWNERSHIP_INVENTORY.jsonl",
+    "sha256": "774657878708f41739692b5d6a8786eb8a8f8d785f30df2dc0eb23ee974f453d",
+    "unresolved_reachable_defects": 0
+  },
+  "pipeline_config": {
+    "path": "configs/pipeline/rcmf_portable_canonical_v2.yaml",
+    "sha256": "f8ed4d006d19d7de2432a1360d621211a3e8506e63fba6a486f27e3ea130bf19",
+    "stage_graph_sha256": "6d06c358ecc8ad4f6caa4b1196082fecc0ca5d7de7d4405f3d488950202752a9"
+  },
   "known_limitations": [
     "ALFWorld environment, data, trajectory replay, and scientific behavior are unverified",
     "WebShop environment, data, trajectory replay, and scientific behavior are unverified",
@@ -36,10 +46,15 @@
     "records_commit": "ca799ffa5692678081d69f4994e470267def4ec5",
     "source_commit": "2a7f371f378eab42e42629a4fd5275e18b2814ce"
   },
-  "source_sha": "PORTABLE_CANONICAL_SOURCE_SHA",
+  "source_sha": "ea152c7393056d9f8502bdef87b0b0c34d1f1d89",
   "status": "ENGINEERING_VERIFIED_PORTABLE_CANONICAL_BASE",
   "test_results": {
     "binding": "research/results/rcmf_portable_v2_m1/tests.json",
-    "status": "PENDING_SOURCE_FREEZE"
+    "lambda_full": "1044 passed",
+    "lambda_focused": "33 passed",
+    "local_full": "1041 passed, 3 skipped",
+    "local_focused": "33 passed",
+    "prompt_tokenizer": "7/7 passed without model loading or generation",
+    "status": "PASS"
   }
 }

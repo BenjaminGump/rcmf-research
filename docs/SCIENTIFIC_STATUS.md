@@ -1,6 +1,6 @@
 # Scientific Status
 
-Last verified: `PORTABLE_V2_LAST_VERIFIED_UTC`.
+Last verified: `2026-09-08T13:44:52Z`.
 
 ## Engineering Verified
 

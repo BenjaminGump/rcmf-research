@@ -1,6 +1,6 @@
 # Dataset Task State
 
-- Base canonical SHA: `PORTABLE_CANONICAL_SOURCE_SHA`
+- Base canonical SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`
 - Adapter version: `rcmf_reproducible_benchmark_adapter_v2`
 - Branch/worktree: set a dedicated `adapt/<dataset>-v1` worktree
 - Run namespace: `/lambda/nfs/rcmf-persist/project/runs/<dataset>/<uuid>`
@@ -16,4 +16,3 @@
 - Prohibited: science before preflight/approval, core edits without coordination,
   shared mutable roots, evaluation leakage, unknown provenance, silent fallback.
 - Dirty/uncommitted status: verify with `git status --short` before work.
-

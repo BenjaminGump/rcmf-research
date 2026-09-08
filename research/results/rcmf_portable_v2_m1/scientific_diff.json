@@ -1,0 +1,27 @@
+{
+  "format": "rcmf_portable_v2_scientific_diff_v1",
+  "historical_formal_14n_changed": false,
+  "r19_posthoc_diagnostic_changed": false,
+  "writer_field_reader_mathematics_changed": false,
+  "memory_complexity_contract_changed": false,
+  "historical_runner_deleted_or_repurposed": false,
+  "new_dataset_scientific_results": 0,
+  "prospective_policy_changes": [
+    {
+      "name": "deployment_checkpoint_policy",
+      "old_historical_behavior": "heldout proxy selected among completed epochs",
+      "portable_v2_behavior": "terminal_completed_epoch",
+      "scientific_policy_revision": true,
+      "retroactive": false,
+      "metric_selection": false,
+      "fallback": false
+    },
+    {
+      "name": "dataset_ownership",
+      "portable_v2_behavior": "adapter facts and strict upstream manifests own counts, paths, splits, actions, rewards, prompts, and provenance",
+      "scientific_policy_revision": false
+    }
+  ],
+  "shuffle_anomaly_status": "DEFERRED_UNTIL_AFTER_2026-09-25_SUBMISSION",
+  "passed": true
+}

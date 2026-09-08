@@ -3532,3 +3532,44 @@ IMPLEMENTATION DEVIATIONS:
 
 - Added one diagnostic-only wrapper around frozen production field/evaluation
   functions. No production scientific code or formal artifact changed.
+
+## 2026-09-08 RCMF Portable Canonical V2 M1
+
+VERIFIED:
+
+- The production memory mechanism remains feed-forward per-memory write,
+  reversible fixed-shape whole-bank field, bank-size-independent read, frozen
+  Qwen, and no runtime retrieval or raw-memory query text.
+- One versioned adapter protocol now owns dataset identity, splits,
+  trajectories/provenance, replay, opaque actions, prompts/token counts,
+  reward/success, evaluation, and redaction. Generic core has no benchmark
+  import or default adapter.
+- A 39-row ownership audit has zero unresolved reachable defects. Local and
+  Lambda focused/full suites and AppWorld/ALFWorld-like/WebShop-like
+  conformance passed.
+
+DECISION:
+
+- Freeze `ea152c7393056d9f8502bdef87b0b0c34d1f1d89` as
+  `archive/rcmf-portable-canonical-v2-ea152c7` and use it as the base for
+  separate ALFWorld and WebShop adaptation worktrees.
+- Prospectively use `terminal_completed_epoch`: deploy only the complete,
+  finite, hash/identity-valid final configured epoch. Diagnostics cannot select
+  an epoch and no earlier fallback is allowed.
+- Preserve historical 14n epoch-1 selection and R19 epoch-2 post-hoc result.
+  Defer further matched-shuffle investigation until after 2026-09-25.
+- Label v2 `ENGINEERING_VERIFIED_PORTABLE_CANONICAL_BASE`; do not claim
+  cross-dataset scientific validation before actual ALFWorld/WebShop results.
+
+IMPLEMENTATION DEVIATIONS:
+
+- A preliminary Windows full-suite run hit a temporary-directory ACL failure;
+  the exact test and final full suite passed in isolated system temp roots.
+- Lambda release tests caught `docs/datasets/` hidden by a broad ignore rule;
+  both readiness docs were tracked before the final source freeze.
+- A preflight review replaced a nonexistent generic runner name with the
+  explicit fail-closed `{portable_phase_executor}` adapter binding. The earlier
+  `e726f56` candidate archive remains preserved but is superseded.
+- Because a commit cannot embed its own SHA, the records commit binds the
+  frozen source SHA in docs/task metadata. No code, config, test, or AGENTS
+  content changes after the final source freeze.

@@ -3,8 +3,7 @@
 Status: `ENGINEERING_VERIFIED_PORTABLE_CANONICAL_BASE` after the release gates
 listed here pass. This is not cross-dataset scientific validation.
 
-Canonical source SHA: `PORTABLE_CANONICAL_SOURCE_SHA` (bound in the canonical
-version manifest after source freeze). Historical scientific evidence remains
+Canonical source SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`. Historical scientific evidence remains
 at formal 14n source `98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f`
 and R19 diagnostic source `2a7f371f378eab42e42629a4fd5275e18b2814ce`.
 

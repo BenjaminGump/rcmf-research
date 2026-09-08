@@ -1,6 +1,6 @@
 # WebShop State
 
-- Base canonical SHA: `PORTABLE_CANONICAL_SOURCE_SHA`
+- Base canonical SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`
 - Adapter version: `webshop:portable-v1-pending` against
   `rcmf_reproducible_benchmark_adapter_v2`
 - Branch/worktree: future `adapt/webshop-v1` in a dedicated worktree
@@ -34,4 +34,3 @@
 - Prohibited: partial reward as full success, evaluation leakage, guessed IL
   provenance, result-tuned oracle, shared server port/root, copied AppWorld stages.
 - Dirty/uncommitted status: verify independently before creating the worktree.
-

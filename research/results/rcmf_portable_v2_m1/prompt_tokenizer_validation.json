@@ -1,0 +1,18 @@
+{
+  "add_generation_prompt": true,
+  "enable_thinking": false,
+  "format": "rcmf_portable_prompt_tokenizer_validation_v1",
+  "generation_executed": false,
+  "model": "Qwen/Qwen3-8B",
+  "model_loaded": false,
+  "rows": [
+    {"dataset":"alfworld","task_family":"look_at_obj","tokens":1367,"direct_tokens":1367,"render_sha256":"534d10b73b69ad838ac3469a14b37933305886d9862b2933ada8e004c86249d6","count_contract_equal":true},
+    {"dataset":"alfworld","task_family":"pick_and_place","tokens":1137,"direct_tokens":1137,"render_sha256":"bdeb9aa95001d8f657282b12494c49c3eb934a724bd21f3c1af78203b519cb64","count_contract_equal":true},
+    {"dataset":"alfworld","task_family":"pick_clean_then_place","tokens":1574,"direct_tokens":1574,"render_sha256":"952592b9177186f57e29febfd23b61d230bd3f7c15545fc38194e796a4336ead","count_contract_equal":true},
+    {"dataset":"alfworld","task_family":"pick_cool_then_place","tokens":1593,"direct_tokens":1593,"render_sha256":"94ed9ce1793c0fa3033e3d006a9d5d6bf152da27d21f54a85c77e4fc329810da","count_contract_equal":true},
+    {"dataset":"alfworld","task_family":"pick_heat_then_place","tokens":1378,"direct_tokens":1378,"render_sha256":"d20bc94c72be2fb699db1ca979eb496fb6a2e8aed417274d76ca00f274a8dd3f","count_contract_equal":true},
+    {"dataset":"alfworld","task_family":"pick_two_obj","tokens":1395,"direct_tokens":1395,"render_sha256":"e930f259231068451fac8bf9bf6444f5a785e87bac4edf5a3248831617242136","count_contract_equal":true},
+    {"dataset":"webshop","profile":"react_official_one_demo_v1","tokens":572,"direct_tokens":572,"render_sha256":"d95b9bca5899914d02ea01eff967b934029c70d64408f04558e3b6d44f6b7c75","count_contract_equal":true}
+  ],
+  "passed": true
+}

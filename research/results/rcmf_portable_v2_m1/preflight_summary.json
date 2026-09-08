@@ -1,0 +1,18 @@
+{
+  "format": "rcmf_portable_v2_m1_preflight_summary_v1",
+  "decision": "READY_FOR_PARALLEL_DATASET_ADAPTATION",
+  "source_sha": "ea152c7393056d9f8502bdef87b0b0c34d1f1d89",
+  "archive_ref": "archive/rcmf-portable-canonical-v2-ea152c7",
+  "pipeline_config": "configs/pipeline/rcmf_portable_canonical_v2.yaml",
+  "pipeline_config_sha256": "f8ed4d006d19d7de2432a1360d621211a3e8506e63fba6a486f27e3ea130bf19",
+  "stage_graph_sha256": "6d06c358ecc8ad4f6caa4b1196082fecc0ca5d7de7d4405f3d488950202752a9",
+  "checkpoint_policy": "terminal_completed_epoch",
+  "status": "ENGINEERING_VERIFIED_PORTABLE_CANONICAL_BASE",
+  "scientifically_validated_across_datasets": false,
+  "alfworld_scientific_status": "NOT_EVALUATED",
+  "webshop_scientific_status": "NOT_EVALUATED",
+  "authorized_to_launch_science": false,
+  "long_scientific_run_launched": false,
+  "shuffle_experiment_launched": false,
+  "passed": true
+}
