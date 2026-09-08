@@ -9,6 +9,8 @@ artifacts/
 datasets/
 !configs/datasets/
 !configs/datasets/*.yaml
+!docs/datasets/
+!docs/datasets/*.md
 models/
 checkpoints/
 tensorboard/
