@@ -6,6 +6,7 @@ from pathlib import Path
 import sys
 
 import pytest
+import torch
 import yaml
 
 from rcmf.benchmarks.appworld.portable_adapter_v2 import (
@@ -377,7 +378,7 @@ def test_real_executor_manifest_binds_inputs_dependencies_outputs_and_identity(t
 
 
 def test_pilot_checkpoint_loss_accepts_production_epoch_summary(
-    monkeypatch: pytest.MonkeyPatch,
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     monkeypatch.syspath_prepend(str(ROOT / "scripts"))
     sys.modules.pop("run_rcmf_portable_v2_1_appworld_pilot", None)
@@ -389,3 +390,24 @@ def test_pilot_checkpoint_loss_accepts_production_epoch_summary(
     assert _checkpoint_losses({"history": [{"loss": 0.5}]}) == [0.5]
     with pytest.raises(RuntimeError, match="no loss statistic"):
         _checkpoint_losses({"history": [{"epoch": 1}]})
+
+    from run_rcmf_portable_v2_1_appworld_pilot import Pilot
+
+    checkpoint = tmp_path / "joint_training/checkpoints/epoch_01.pt"
+    checkpoint.parent.mkdir(parents=True)
+    torch.save({"history": [{"recent_mean_loss": 0.25}]}, checkpoint)
+    evidence = tmp_path / "phase_evidence.json"
+    evidence.write_text("{}", encoding="utf-8")
+
+    class Fixture:
+        artifact = tmp_path
+
+        @staticmethod
+        def _evidence(phase: PortablePhase, payload: dict[str, object]) -> Path:
+            assert phase == PortablePhase.EPOCH_DIAGNOSTICS
+            assert payload["terminal_loss"] == 0.25
+            return evidence
+
+    context = type("Context", (), {"phase": PortablePhase.EPOCH_DIAGNOSTICS})()
+    work = Pilot.phase_epoch_diagnostics(Fixture(), context)
+    assert work.operations == ({"operation": "epoch_diagnostics", "count": 1},)

@@ -460,7 +460,11 @@ class Pilot:
                 "metric_selected": False,
             },
         )
-        return PortablePhaseWork(({"operation": "epoch_diagnostics", "count": max(1, len(history))},), {"evidence": evidence}, {})
+        return PortablePhaseWork(
+            ({"operation": "epoch_diagnostics", "count": len(losses)},),
+            {"evidence": evidence},
+            {},
+        )
 
     def phase_terminal_checkpoint(self, context: PortablePhaseContext) -> PortablePhaseWork:
         checkpoint = self.artifact / "joint_training/checkpoints/epoch_01.pt"
