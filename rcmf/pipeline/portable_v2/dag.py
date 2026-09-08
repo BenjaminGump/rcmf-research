@@ -64,7 +64,7 @@ def build_portable_v2_stage_graph(policy: PortableRunPolicy) -> tuple[StageSpec,
         import_stage = StageSpec(
             stage_id="P00C_sealed_upstream_boundary_validation",
             arm="portable",
-            command=("{python}", "scripts/run_rcmf_portable_v2.py", "--phase", "boundary"),
+            command=("{portable_phase_executor}", "--phase", "boundary"),
             validator="portable_v2_manifest",
             expected_outputs=("stage_manifest.json",),
         )
@@ -80,8 +80,7 @@ def build_portable_v2_stage_graph(policy: PortableRunPolicy) -> tuple[StageSpec,
                 arm="portable",
                 dependencies=(previous,) if previous else (),
                 command=(
-                    "{python}",
-                    "scripts/run_rcmf_portable_v2.py",
+                    "{portable_phase_executor}",
                     "--phase",
                     phase.name.lower(),
                 ),

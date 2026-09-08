@@ -432,3 +432,5 @@ def test_portable_stage_graph_uses_terminal_validation_and_no_selection() -> Non
     ids = [stage.stage_id for stage in graph]
     assert "P09_terminal_checkpoint_validation" in ids
     assert all("checkpoint_selection" not in stage_id for stage_id in ids)
+    assert all(stage.command[0] == "{portable_phase_executor}" for stage in graph)
+    assert all("run_rcmf_portable_v2.py" not in stage.command for stage in graph)

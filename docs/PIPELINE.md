@@ -94,6 +94,12 @@ Normal adaptation is limited to `rcmf/benchmarks/<dataset>/`,
 dataset tests/entrypoints. The portable core cannot import benchmark packages
 and has no fallback adapter.
 
+The stage graph deliberately emits the fail-closed
+`{portable_phase_executor}` command placeholder. A dataset adaptation must bind
+that placeholder to its reviewed entrypoint before any scientific launch;
+portable v2 does not ship a no-op runner that could manufacture successful
+stage manifests.
+
 ## Provenance And Relocation
 
 Artifacts resolve by logical name, explicit owner (`CURRENT_RUN`,
