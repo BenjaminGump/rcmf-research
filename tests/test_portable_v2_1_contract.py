@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import replace
 import json
 from pathlib import Path
+import sys
 
 import pytest
 import yaml
@@ -373,3 +374,18 @@ def test_real_executor_manifest_binds_inputs_dependencies_outputs_and_identity(t
             expected=identity,
             phase=PortablePhase.SUCCESSFUL_CORPUS,
         )
+
+
+def test_pilot_checkpoint_loss_accepts_production_epoch_summary(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.syspath_prepend(str(ROOT / "scripts"))
+    sys.modules.pop("run_rcmf_portable_v2_1_appworld_pilot", None)
+    from run_rcmf_portable_v2_1_appworld_pilot import _checkpoint_losses
+
+    assert _checkpoint_losses(
+        {"history": [{"epoch": 1, "recent_mean_loss": 0.25}]}
+    ) == [0.25]
+    assert _checkpoint_losses({"history": [{"loss": 0.5}]}) == [0.5]
+    with pytest.raises(RuntimeError, match="no loss statistic"):
+        _checkpoint_losses({"history": [{"epoch": 1}]})

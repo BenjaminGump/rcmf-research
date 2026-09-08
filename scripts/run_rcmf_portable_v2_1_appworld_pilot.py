@@ -80,6 +80,24 @@ def _json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _checkpoint_losses(payload: Mapping[str, Any]) -> list[float]:
+    history = payload.get("history")
+    if not isinstance(history, list) or not history:
+        raise RuntimeError("pilot checkpoint has no epoch history")
+    losses = []
+    for row in history:
+        if not isinstance(row, Mapping):
+            raise RuntimeError("pilot checkpoint history row is not a mapping")
+        value = row.get("loss", row.get("recent_mean_loss"))
+        if value is None:
+            raise RuntimeError("pilot checkpoint history row has no loss statistic")
+        loss = float(value)
+        if not bool(torch.isfinite(torch.tensor(loss))):
+            raise RuntimeError("pilot checkpoint history loss is nonfinite")
+        losses.append(loss)
+    return losses
+
+
 def _stable_rows(rows: list[dict[str, Any]], label: str, count: int) -> list[dict[str, Any]]:
     candidates = [row for row in rows if str(row.get("label")) == label]
     ordered = sorted(
@@ -427,12 +445,21 @@ class Pilot:
         return PortablePhaseWork(({"operation": "backward_and_optimizer_step", "count": 20},), {"checkpoint": checkpoint, "evidence": evidence}, {})
 
     def phase_epoch_diagnostics(self, context: PortablePhaseContext) -> PortablePhaseWork:
-        summary = _json(self.artifact / "joint_training/checkpoints/epoch_01_stage_summary.json")
-        history = summary.get("history", summary.get("epoch_history", []))
-        losses = [float(row["loss"]) for row in history if "loss" in row]
-        if losses and not all(torch.isfinite(torch.tensor(losses))):
-            raise RuntimeError("pilot epoch loss is nonfinite")
-        evidence = self._evidence(context.phase, {"finite_losses": True, "history_rows": len(history), "metric_selected": False})
+        checkpoint = torch.load(
+            self.artifact / "joint_training/checkpoints/epoch_01.pt",
+            map_location="cpu",
+            weights_only=False,
+        )
+        losses = _checkpoint_losses(checkpoint)
+        evidence = self._evidence(
+            context.phase,
+            {
+                "finite_losses": True,
+                "history_rows": len(losses),
+                "terminal_loss": losses[-1],
+                "metric_selected": False,
+            },
+        )
         return PortablePhaseWork(({"operation": "epoch_diagnostics", "count": max(1, len(history))},), {"evidence": evidence}, {})
 
     def phase_terminal_checkpoint(self, context: PortablePhaseContext) -> PortablePhaseWork:
@@ -471,7 +498,7 @@ class Pilot:
             "finite": True,
             "identity": identity,
             "completed_units": 20,
-            "terminal_loss": float(payload["history"][-1]["loss"]),
+            "terminal_loss": _checkpoint_losses(payload)[-1],
         }
         pointer = {
             "format": CHECKPOINT_POINTER_VERSION,
