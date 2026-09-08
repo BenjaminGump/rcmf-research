@@ -2,6 +2,13 @@
 
 Last verified: `2026-09-08T13:44:52Z`.
 
+Portable canonical V2.1 is an engineering hardening milestone. Its bounded
+AppWorld three-demo pilot, if completed, is executable integration evidence
+only and has no accuracy threshold. It does not alter or supersede formal 14n
+or the post-hoc R19 checkpoint diagnostic. ALFWorld and WebShop remain
+`NOT_EVALUATED`; adapter fixtures and readiness checks are not scientific
+results.
+
 ## Engineering Verified
 
 - Formal AppWorld 14n completed all 18 continuation stages with strict hashes.

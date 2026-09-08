@@ -1,17 +1,21 @@
 from __future__ import annotations
 
-from dataclasses import asdict
-import hashlib
 from pathlib import Path
 from typing import Any
 
 from rcmf.pipeline.manifests import content_sha256
 from rcmf.pipeline.portable_v2.adapter import (
     ReproducibleBenchmarkAdapterV2,
+    probe_adapter_capabilities,
+    required_capabilities_for_phases,
     validate_adapter_capabilities,
 )
-from rcmf.pipeline.portable_v2.dag import PortableRunPolicy, portable_stage_graph_manifest
-from rcmf.pipeline.portable_v2.schemas import ensure_no_split_leakage
+from rcmf.pipeline.portable_v2.dag import (
+    PortableRunPolicy,
+    phases_for_policy,
+    portable_stage_graph_manifest,
+)
+from rcmf.pipeline.portable_v2.schemas import validate_record_closure
 from rcmf.utils.serialization import atomic_write_json
 
 
@@ -24,20 +28,27 @@ def run_manifest_only_conformance(
     """Exercise the complete contract surface without model execution or training."""
     root = Path(run_root).resolve(strict=False)
     root.mkdir(parents=True, exist_ok=False)
-    capability_report = validate_adapter_capabilities(adapter)
+    required = required_capabilities_for_phases(
+        phase.value for phase in phases_for_policy(policy)
+    )
+    capability_report = probe_adapter_capabilities(
+        adapter, prompt_profile=policy.prompt_profile, required=required
+    )
     tasks_by_split = adapter.list_tasks()
     tasks = tuple(task for split in tasks_by_split.values() for task in split)
-    ensure_no_split_leakage(tasks)
     task_by_id = {task.task_id: task for task in tasks}
     sources = tuple(adapter.trajectory_sources())
     for source in sources:
         source.validate()
     training_splits = sorted({split for source in sources for split in source.training_splits})
     trajectories = []
+    trajectories_by_split = {}
     transitions = []
     states = []
     for split in training_splits:
-        for trajectory in adapter.successful_trajectories(split):
+        split_trajectories = tuple(adapter.successful_trajectories(split))
+        trajectories_by_split[split] = split_trajectories
+        for trajectory in split_trajectories:
             trajectory.validate()
             if not trajectory.success:
                 raise ValueError("successful trajectory provider emitted an unsuccessful row")
@@ -49,10 +60,14 @@ def run_manifest_only_conformance(
             trajectories.append(trajectory)
             transitions.extend(adapter.transition_records(task, trajectory))
             states.extend(adapter.decision_states(task, trajectory, policy.prompt_profile))
-    for transition in transitions:
-        transition.validate()
-    for state in states:
-        state.validate()
+    closure = validate_record_closure(
+        tasks_by_split=tasks_by_split,
+        trajectory_sources=sources,
+        trajectories_by_split=trajectories_by_split,
+        transitions=transitions,
+        decision_states=states,
+        prompt_profile=policy.prompt_profile,
+    )
     supervision = adapter.build_selector_supervision(states, transitions)
     rendered = []
     for state in states:
@@ -100,6 +115,7 @@ def run_manifest_only_conformance(
         "format": "rcmf_portable_manifest_only_conformance_v2",
         "root": str(root),
         "capability_report": capability_report,
+        "record_closure": closure,
         "stage_count": len(completed),
         "completed_stages": completed,
         "counts": {

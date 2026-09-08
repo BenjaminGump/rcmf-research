@@ -1,6 +1,10 @@
 # ALFWorld ChatGPT Context
 
 - Document role: ALFWorld conversation bootstrap cache; not a source of truth.
+- Development base records SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`.
+- Canonical executable ancestor SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`.
+- Canonical archive ref: `archive/rcmf-portable-canonical-v2-ea152c7`.
+- Bootstrap generated at SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`.
 - Generated-from commit: `ca799ffa5692678081d69f4994e470267def4ec5`.
 - Canonical source SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`.
 - Last verified UTC: `2026-09-08T13:44:52Z`.

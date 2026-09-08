@@ -7,7 +7,7 @@ from typing import Any
 from rcmf.pipeline.contracts import StageSpec
 
 
-PORTABLE_CORE_VERSION = "rcmf_portable_canonical_v2"
+PORTABLE_CORE_VERSION = "rcmf_portable_canonical_v2_1"
 
 
 class PortableRunMode(str, Enum):
@@ -16,6 +16,7 @@ class PortableRunMode(str, Enum):
 
 
 class PortablePhase(str, Enum):
+    SEALED_UPSTREAM_BOUNDARY = "P00C_sealed_upstream_boundary_validation"
     PROVENANCE = "P00_environment_and_data_provenance"
     SUCCESSFUL_CORPUS = "P01_successful_trajectory_corpus"
     MEMORY_LEDGER = "P02_memory_transition_ledger"
@@ -50,29 +51,38 @@ class PortableRunPolicy:
             and self.continuation_from is None
         ):
             raise ValueError("continuations require a semantic phase boundary")
+        if self.continuation_from == PortablePhase.SEALED_UPSTREAM_BOUNDARY:
+            raise ValueError("continuation boundary must name an upstream data phase")
 
 
-def build_portable_v2_stage_graph(policy: PortableRunPolicy) -> tuple[StageSpec, ...]:
+PIPELINE_PHASES = tuple(
+    phase for phase in PortablePhase if phase != PortablePhase.SEALED_UPSTREAM_BOUNDARY
+)
+
+
+def phases_for_policy(policy: PortableRunPolicy) -> tuple[PortablePhase, ...]:
     policy.validate()
-    phases = list(PortablePhase)
+    phases = list(PIPELINE_PHASES)
     if policy.run_mode == PortableRunMode.SEALED_UPSTREAM_CONTINUATION:
         assert policy.continuation_from is not None
         start = phases.index(policy.continuation_from) + 1
         phases = phases[start:]
         if not phases:
             raise ValueError("continuation boundary leaves no phases to execute")
-        import_stage = StageSpec(
-            stage_id="P00C_sealed_upstream_boundary_validation",
-            arm="portable",
-            command=("{portable_phase_executor}", "--phase", "boundary"),
-            validator="portable_v2_manifest",
-            expected_outputs=("stage_manifest.json",),
-        )
-        rows = [import_stage]
-        previous = import_stage.stage_id
-    else:
-        rows = []
-        previous = None
+    return tuple(phases)
+
+
+def execution_phases_for_policy(policy: PortableRunPolicy) -> tuple[PortablePhase, ...]:
+    phases = phases_for_policy(policy)
+    if policy.run_mode == PortableRunMode.SEALED_UPSTREAM_CONTINUATION:
+        return (PortablePhase.SEALED_UPSTREAM_BOUNDARY, *phases)
+    return phases
+
+
+def build_portable_v2_stage_graph(policy: PortableRunPolicy) -> tuple[StageSpec, ...]:
+    phases = list(execution_phases_for_policy(policy))
+    rows = []
+    previous = None
     for phase in phases:
         rows.append(
             StageSpec(
@@ -80,11 +90,17 @@ def build_portable_v2_stage_graph(policy: PortableRunPolicy) -> tuple[StageSpec,
                 arm="portable",
                 dependencies=(previous,) if previous else (),
                 command=(
-                    "{portable_phase_executor}",
+                    "{python}",
+                    "-m",
+                    "rcmf.pipeline.portable_v2.run_phase",
+                    "--config",
+                    "{pipeline_config}",
+                    "--context",
+                    "{portable_phase_context}",
                     "--phase",
                     phase.name.lower(),
                 ),
-                validator="portable_v2_manifest",
+                validator="portable_v2_1_manifest",
                 scientific=phase
                 in {
                     PortablePhase.PAIRED_OUTCOMES,
@@ -111,7 +127,7 @@ def build_portable_v2_stage_graph(policy: PortableRunPolicy) -> tuple[StageSpec,
 def portable_stage_graph_manifest(policy: PortableRunPolicy) -> dict[str, Any]:
     stages = build_portable_v2_stage_graph(policy)
     return {
-        "format": "rcmf_portable_stage_graph_v2",
+        "format": "rcmf_portable_stage_graph_v2_1",
         "core_version": PORTABLE_CORE_VERSION,
         "run_policy": {
             "run_mode": policy.run_mode.value,

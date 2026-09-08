@@ -7,7 +7,7 @@ from pathlib import Path
 from rcmf.benchmarks.appworld.pipeline_adapter import AppWorldReproduciblePipelineAdapter
 from rcmf.benchmarks.appworld.portable_adapter_v2 import AppWorldPortableAdapterV2
 from rcmf.benchmarks.appworld.prompt import build_appworld_messages
-from rcmf.pipeline.portable_v2.adapter import validate_adapter_capabilities
+from rcmf.pipeline.portable_v2.adapter import AdapterCapability, validate_adapter_capabilities
 from rcmf.pipeline.portable_v2.conformance import run_manifest_only_conformance
 from rcmf.pipeline.portable_v2.dag import PortableRunMode, PortableRunPolicy
 from rcmf.pipeline.portable_v2.prompts import PromptAssetManifest
@@ -23,6 +23,22 @@ from rcmf.pipeline.portable_v2.schemas import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+class _Runtime:
+    def __init__(self, task: TaskRecord) -> None:
+        self.task = task
+        self.actions = []
+
+    def execute(self, action: str) -> str:
+        self.actions.append(action)
+        return "done"
+
+    def evaluate(self) -> object:
+        return type("Evaluation", (), {"success": True})()
+
+    def close(self) -> None:
+        pass
 
 
 def test_generic_pipeline_has_no_dataset_imports_or_name_dispatch() -> None:
@@ -94,7 +110,11 @@ def test_appworld_portable_adapter_matches_legacy_renderer_on_golden_fixture(
     assert adapter.count_runtime_tokens(actual, "full_demo_first_only") == len(
         json.dumps(list(expected), sort_keys=True)
     )
-    assert validate_adapter_capabilities(adapter)["passed"]
+    assert validate_adapter_capabilities(
+        adapter,
+        {AdapterCapability.STATE_RENDERING, AdapterCapability.RUNTIME_TOKEN_COUNTING},
+    )["passed"]
+    assert AdapterCapability.INTERACTIVE_RUNTIME not in adapter.capabilities()
 
 
 def test_appworld_compatibility_adapter_traverses_complete_generic_dag(tmp_path: Path) -> None:
@@ -140,6 +160,7 @@ def test_appworld_compatibility_adapter_traverses_complete_generic_dag(tmp_path:
         task_records={"train": (task,)},
         trajectory_records={"train": (trajectory,)},
         token_counter=lambda messages, profile: len(json.dumps(list(messages), sort_keys=True)),
+        runtime_factory=_Runtime,
     )
     result = run_manifest_only_conformance(
         adapter=adapter,

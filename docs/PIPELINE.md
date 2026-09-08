@@ -1,7 +1,8 @@
-# RCMF Portable Canonical Pipeline V2
+# RCMF Portable Canonical Pipeline V2.1
 
-Status: `ENGINEERING_VERIFIED_PORTABLE_CANONICAL_BASE` after the release gates
-listed here pass. This is not cross-dataset scientific validation.
+Status: `V2_1_EXECUTABLE_HARDENING_IN_PROGRESS` until the contracts, full test
+suites, and bounded AppWorld executable pilot described here pass. This is not
+cross-dataset scientific validation.
 
 Canonical source SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`. Historical scientific evidence remains
 at formal 14n source `98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f`
@@ -36,7 +37,9 @@ Authoritative implementation anchors:
 - Artifact ownership: `rcmf/pipeline/portable_v2/artifacts.py`
 - Semantic DAG: `rcmf/pipeline/portable_v2/dag.py`
 - Terminal checkpoint: `rcmf/pipeline/portable_v2/checkpoint_policy.py`
-- Manifest-only conformance: `rcmf/pipeline/portable_v2/conformance.py`
+- Executor contract: `rcmf/pipeline/portable_v2/executor.py`
+- Generic phase entrypoint: `rcmf/pipeline/portable_v2/run_phase.py`
+- Capability conformance: `rcmf/pipeline/portable_v2/conformance.py`
 - Frozen-tokenizer prompt validation: `scripts/validate_portable_prompt_tokenizer.py`
 - AppWorld wrapper: `rcmf/benchmarks/appworld/portable_adapter_v2.py`
 
@@ -60,10 +63,12 @@ must use portable v2 rather than copying those benchmark-specific stages.
 | P10 deployment field | P09 checkpoint and permitted ledger | training field, feed-forward additions, matched controls | exact IDs, finite fixed shapes, reversible add/remove and permutation checks |
 | P11 official evaluation/reporting | adapter official split, P10 fields, fixed generation config | per-task audit, aggregate result, final provenance | exact task order/count from manifest; no post-hoc tuning |
 
-Each stage writes an immutable typed manifest whose dependency hashes bind its
-inputs. A downstream consumer recomputes paths/counts/IDs from that strict-valid
-manifest. Historical observed values are never promoted into generic success
-conditions.
+Each phase is run through the versioned portable executor contract and writes
+an immutable typed manifest whose dependency and input hashes bind its inputs.
+The manifest also binds source commit, run UUID/root, config and dataset
+profile hashes, adapter identity, phase ID, and every output hash. A downstream
+consumer recomputes paths/counts/IDs from that strict-valid manifest.
+Historical observed values are never promoted into generic success conditions.
 
 ## Training And Checkpoints
 
@@ -74,10 +79,12 @@ may use a hash-valid intermediate checkpoint. A later phase may use only the
 complete epoch-boundary artifact its contract names.
 
 Portable deployment uses `terminal_completed_epoch`: if configured epochs are
-`N`, deployment must use epoch `N`. Missing, incomplete, nonfinite, stale,
-wrong-identity, wrong-unit-count, or hash-invalid epoch `N` fails closed, even
-if an earlier checkpoint is valid. Per-epoch diagnostics remain visible but
-are not selectors.
+`N`, deployment must use epoch `N`. The expected unit count is owned by a
+strict-valid upstream training-unit manifest, not repeated as producer-owned
+checkpoint metadata. Missing intermediate epochs, extra epochs, incomplete or
+nonfinite state, a stale identity, a pointer/content hash mismatch, or a wrong
+externally derived unit count fails closed before deserialization. Per-epoch
+diagnostics remain visible but are not selectors.
 
 ## Core Versus Adapter
 
@@ -93,11 +100,17 @@ Normal adaptation is limited to `rcmf/benchmarks/<dataset>/`,
 dataset tests/entrypoints. The portable core cannot import benchmark packages
 and has no fallback adapter.
 
-The stage graph deliberately emits the fail-closed
-`{portable_phase_executor}` command placeholder. A dataset adaptation must bind
-that placeholder to its reviewed entrypoint before any scientific launch;
-portable v2 does not ship a no-op runner that could manufacture successful
-stage manifests.
+V2.1 binds a loadable adapter-owned phase-executor factory in the validated
+pipeline config. The generic core invokes it through one benchmark-independent
+entrypoint and rejects missing phase support, empty work evidence, empty
+outputs, and invalid manifests before launch. AppWorld has a thin legacy
+compatibility executor; ALFWorld and WebShop do not claim execution support
+until their own adapters and phase handlers exist.
+
+Capabilities are required by the selected semantic phase graph. A declaration
+is accepted only after a bounded probe exercises the claimed adapter methods;
+token counting and interactive runtime cannot be claimed without configured
+implementations. The probe runs before model loading or training.
 
 ## Provenance And Relocation
 
@@ -120,6 +133,19 @@ task/split/memory counts, action grammar, prompt examples, reward type,
 environment reset semantics, and official metric. They may not vary the
 writer/field/read mathematics, introduce retrieval, put raw memories in the
 query, tune on evaluation, or silently reinterpret missing provenance.
+
+## V2.0 And V2.1
+
+V2.0 source `ea152c7393056d9f8502bdef87b0b0c34d1f1d89` is the immutable
+declarative canonical ancestor. V2.1 adds strict record closure, executable
+capability proof, hashed dataset/config/executor binding, externally owned
+terminal-checkpoint counts, and evidence-classed dynamic release gates. It
+does not alter writer/field/read mathematics or historical AppWorld evidence.
+
+The authorized V2.1 AppWorld pilot is a bounded real executable integration
+check: 8-32 paired states, at most 64 one-epoch training units, real
+backward/optimizer work, real field operations, and 1-4 deterministic dev
+tasks. It has no accuracy threshold and is never a scientific result.
 
 ## Known Limitations
 

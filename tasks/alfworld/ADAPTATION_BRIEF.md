@@ -1,9 +1,15 @@
 # ALFWorld Portable-V2 Adaptation Brief
 
+- Development base records SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`
+- Canonical executable ancestor SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`
+- Canonical archive ref: `archive/rcmf-portable-canonical-v2-ea152c7`
+- Bootstrap generated at SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`
+- Last verified UTC: `2026-09-08T13:44:52Z`
+
 Start by reading `AGENTS.md`, `docs/PIPELINE.md`,
 `docs/ADAPTER_CONTRACT.md`, `docs/datasets/ALFWORLD_READINESS.md`, and
 `tasks/alfworld/STATE.md`. Base the worktree on
-`ea152c7393056d9f8502bdef87b0b0c34d1f1d89`; independently verify the archive/commit before
+the current canonical executable ancestor above; independently verify the archive/commit before
 editing.
 
 Implement only under `rcmf/benchmarks/alfworld/`,

@@ -1,0 +1,25 @@
+schema_version: rcmf_dataset_profile_v2_1
+benchmark: appworld
+adapter_identity: rcmf.benchmarks.appworld.portable_adapter_v2:create_appworld_portable_adapter_v2_1
+status: executable_compatibility_pilot
+dataset_version: appworld-0.1.0
+environment_version: appworld-0.1.0
+action_semantics: python_code
+reward_semantics: official_binary_success
+prompt_profiles:
+  full_demo: dd74c379c97031a062ba79b2b82d3992ec3b38870792f53d86821544f994c4c3
+  full_demo_first_only: a0a8d3b2e10f167dba5dcab5ad62fa8f6737629b813d2d0e27af4872bef9e27b
+trajectory_source:
+  provenance: OFFICIAL_MODEL_OR_IL
+  policy: replay_validated_successful_training_trajectories
+splits:
+  training: train
+  heldout_training: manifest_defined
+  official_evaluation: dev
+ownership:
+  tasks: adapter
+  trajectories: adapter
+  prompt_assets: dataset_profile
+  phase_semantics: portable_core
+  environment_operations: adapter
+  scientific_artifacts: current_run

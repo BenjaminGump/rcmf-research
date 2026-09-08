@@ -32,9 +32,14 @@ REQUIRED_FIELDS = (
 )
 
 
-def validate_ownership_inventory(path: str | Path) -> dict[str, Any]:
+def validate_ownership_inventory(
+    path: str | Path, *, repo_root: str | Path | None = None
+) -> dict[str, Any]:
+    inventory_path = Path(path).resolve()
+    root = Path(repo_root).resolve() if repo_root is not None else inventory_path.parents[2]
     rows = []
-    with Path(path).open("r", encoding="utf-8") as handle:
+    missing_evidence: list[str] = []
+    with inventory_path.open("r", encoding="utf-8") as handle:
         for line_number, line in enumerate(handle, 1):
             if not line.strip():
                 continue
@@ -43,6 +48,18 @@ def validate_ownership_inventory(path: str | Path) -> dict[str, Any]:
             if missing:
                 raise ValueError(f"ownership row {line_number} is missing {missing}")
             row["classification"] = OwnershipClass(row["classification"]).value
+            source = root / str(row["source_file"])
+            if not source.exists():
+                missing_evidence.append(str(row["source_file"]))
+            evidence = str(row["validation_evidence"])
+            for referenced in set(
+                __import__("re").findall(
+                    r"(?:tests|rcmf|scripts|configs|docs)/[A-Za-z0-9_./-]+\.(?:py|yaml|json|jsonl|md)",
+                    evidence,
+                )
+            ):
+                    if not any(root.glob(referenced)):
+                        missing_evidence.append(referenced)
             rows.append(row)
     if not rows:
         raise ValueError("ownership inventory is empty")
@@ -55,9 +72,14 @@ def validate_ownership_inventory(path: str | Path) -> dict[str, Any]:
     ]
     if unresolved:
         raise RuntimeError(f"ownership inventory has {len(unresolved)} unresolved defects")
+    if missing_evidence:
+        raise FileNotFoundError(
+            f"ownership inventory evidence paths are missing: {sorted(set(missing_evidence))}"
+        )
     return {
         "entry_count": len(rows),
         "counts_by_class": dict(sorted(Counter(row["classification"] for row in rows).items())),
         "unresolved_reachable_defects": len(unresolved),
+        "missing_evidence_paths": 0,
         "passed": True,
     }

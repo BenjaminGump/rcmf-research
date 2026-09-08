@@ -6,6 +6,7 @@ from rcmf.pipeline.portable_v2.adapter import (
     PromptProfile,
     ReproducibleBenchmarkAdapterV2,
     TrajectorySource,
+    probe_adapter_capabilities,
     validate_adapter_capabilities,
 )
 from rcmf.pipeline.portable_v2.checkpoint_policy import (
@@ -47,5 +48,6 @@ __all__ = [
     "TrajectoryStep",
     "TransitionRecord",
     "build_portable_v2_stage_graph",
+    "probe_adapter_capabilities",
     "validate_adapter_capabilities",
 ]

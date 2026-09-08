@@ -1,5 +1,10 @@
 # WebShop State
 
+- Development base records SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`
+- Canonical executable ancestor SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`
+- Canonical archive ref: `archive/rcmf-portable-canonical-v2-ea152c7`
+- Bootstrap generated at SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`
+- Last verified UTC: `2026-09-08T13:44:52Z`
 - Base canonical SHA: `ea152c7393056d9f8502bdef87b0b0c34d1f1d89`
 - Adapter version: `webshop:portable-v1-pending` against
   `rcmf_reproducible_benchmark_adapter_v2`

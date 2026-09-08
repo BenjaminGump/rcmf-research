@@ -9,13 +9,33 @@ but no second portable protocol may compete with it.
 
 `identity()` returns benchmark, benchmark version, adapter protocol version,
 environment version, data version, determinism, opaque-action semantics, and
-reward semantics. `capabilities()` must explicitly include every capability
-needed by the requested pipeline. `validate_adapter_capabilities()` fails before
-work when any capability is absent.
+reward semantics. `capabilities()` may declare only methods backed by their
+runtime prerequisites. The selected phase graph derives its own required
+capability set; `probe_adapter_capabilities()` then exercises those methods on
+a bounded fixture before model loading or training.
 
 Required capabilities are stable splits, official trajectories,
 reset-and-replay, state/transition rendering, runtime token counting, causal
 supervision, interactive runtime, official evaluation, and audit redaction.
+
+Optional capabilities are not globally mandatory. For example, a provenance
+phase does not require interactive runtime, while a causal or evaluation phase
+does. A token-count claim requires a configured exact counter, and an
+interactive-runtime claim requires a configured runtime factory.
+
+## Phase Executor Binding
+
+The dataset profile and pipeline config bind an exact adapter factory and an
+exact `PortablePhaseExecutorV2` factory. The portable core owns the P00-P11
+semantic DAG and never dispatches on benchmark names. The adapter-owned
+executor maps each supported semantic phase to bounded real work and cannot
+change dependencies or manufacture a pass manifest: every invocation must
+return nonempty work evidence and output artifacts, and the generic wrapper
+hashes source/run/config/profile/adapter/dependency/input/output identities.
+
+AppWorld V2.1 provides a legacy-compatibility executor that wraps reviewed
+production functions. ALFWorld and WebShop must provide compact adapters and
+handler bindings, not edited copies of the full pipeline.
 
 ## Methods
 
@@ -88,4 +108,3 @@ Conformance is exercised by real AppWorld-shaped golden fixtures and two
 variable mocks: ALFWorld-like reset-and-replay/binary reward and WebShop-like
 continuous reward/action grammar. The same generic DAG must accept all without
 source edits, including relocated full and continuation roots.
-

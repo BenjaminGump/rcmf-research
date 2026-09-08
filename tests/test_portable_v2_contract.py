@@ -396,7 +396,7 @@ def test_replay_failure_cannot_enter_successful_conformance_corpus(tmp_path: Pat
             yield replace(row, replay_status=ReplayStatus.FAILED)
 
     adapter.successful_trajectories = failed  # type: ignore[method-assign]
-    with pytest.raises(ValueError, match="without replay validation"):
+    with pytest.raises(ValueError, match="replay validated"):
         run_manifest_only_conformance(
             adapter=adapter,
             policy=PortableRunPolicy(PortableRunMode.FULL, "p", 1, 25101),
@@ -432,5 +432,5 @@ def test_portable_stage_graph_uses_terminal_validation_and_no_selection() -> Non
     ids = [stage.stage_id for stage in graph]
     assert "P09_terminal_checkpoint_validation" in ids
     assert all("checkpoint_selection" not in stage_id for stage_id in ids)
-    assert all(stage.command[0] == "{portable_phase_executor}" for stage in graph)
-    assert all("run_rcmf_portable_v2.py" not in stage.command for stage in graph)
+    assert all(stage.command[:3] == ("{python}", "-m", "rcmf.pipeline.portable_v2.run_phase") for stage in graph)
+    assert all(stage.validator == "portable_v2_1_manifest" for stage in graph)

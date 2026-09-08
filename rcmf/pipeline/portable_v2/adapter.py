@@ -9,8 +9,10 @@ from rcmf.pipeline.portable_v2.schemas import (
     EvaluationResult,
     ProvenanceClass,
     TaskRecord,
+    TerminalStatus,
     TrajectoryRecord,
     TransitionRecord,
+    validate_record_closure,
 )
 
 
@@ -30,7 +32,92 @@ class AdapterCapability(str, Enum):
     AUDIT_REDACTION = "audit_redaction"
 
 
-PORTABLE_PIPELINE_REQUIRED_CAPABILITIES = frozenset(AdapterCapability)
+PHASE_REQUIRED_CAPABILITIES: Mapping[str, frozenset[AdapterCapability]] = {
+    "P00C_sealed_upstream_boundary_validation": frozenset(),
+    "P00_environment_and_data_provenance": frozenset({AdapterCapability.STABLE_SPLITS}),
+    "P01_successful_trajectory_corpus": frozenset(
+        {AdapterCapability.STABLE_SPLITS, AdapterCapability.OFFICIAL_TRAJECTORIES}
+    ),
+    "P02_memory_transition_ledger": frozenset(
+        {AdapterCapability.OFFICIAL_TRAJECTORIES, AdapterCapability.TRANSITION_RENDERING}
+    ),
+    "P03_state_and_transition_representations": frozenset(
+        {AdapterCapability.STATE_RENDERING, AdapterCapability.TRANSITION_RENDERING}
+    ),
+    "P04_addressing_selector_supervision": frozenset({AdapterCapability.CAUSAL_SUPERVISION}),
+    "P05_paired_causal_outcomes": frozenset(
+        {
+            AdapterCapability.RESET_AND_REPLAY,
+            AdapterCapability.RUNTIME_TOKEN_COUNTING,
+            AdapterCapability.CAUSAL_SUPERVISION,
+            AdapterCapability.INTERACTIVE_RUNTIME,
+        }
+    ),
+    "P06_policy_teacher_and_training_units": frozenset(
+        {AdapterCapability.STATE_RENDERING, AdapterCapability.CAUSAL_SUPERVISION}
+    ),
+    "P07_writer_reader_training": frozenset(),
+    "P08_per_epoch_diagnostics": frozenset(
+        {AdapterCapability.INTERACTIVE_RUNTIME, AdapterCapability.OFFICIAL_EVALUATION}
+    ),
+    "P09_terminal_checkpoint_validation": frozenset(),
+    "P10_deployment_field": frozenset(),
+    "P11_official_evaluation_and_reporting": frozenset(
+        {
+            AdapterCapability.STATE_RENDERING,
+            AdapterCapability.RUNTIME_TOKEN_COUNTING,
+            AdapterCapability.INTERACTIVE_RUNTIME,
+            AdapterCapability.OFFICIAL_EVALUATION,
+            AdapterCapability.AUDIT_REDACTION,
+        }
+    ),
+}
+
+PORTABLE_PIPELINE_REQUIRED_CAPABILITIES = frozenset(
+    item for requirements in PHASE_REQUIRED_CAPABILITIES.values() for item in requirements
+)
+
+CAPABILITY_PREREQUISITES: Mapping[
+    AdapterCapability, frozenset[AdapterCapability]
+] = {
+    AdapterCapability.OFFICIAL_TRAJECTORIES: frozenset(
+        {AdapterCapability.STABLE_SPLITS}
+    ),
+    AdapterCapability.TRANSITION_RENDERING: frozenset(
+        {
+            AdapterCapability.STABLE_SPLITS,
+            AdapterCapability.OFFICIAL_TRAJECTORIES,
+        }
+    ),
+    AdapterCapability.STATE_RENDERING: frozenset(
+        {
+            AdapterCapability.STABLE_SPLITS,
+            AdapterCapability.OFFICIAL_TRAJECTORIES,
+        }
+    ),
+    AdapterCapability.RUNTIME_TOKEN_COUNTING: frozenset(
+        {AdapterCapability.STATE_RENDERING}
+    ),
+    AdapterCapability.CAUSAL_SUPERVISION: frozenset(
+        {
+            AdapterCapability.STATE_RENDERING,
+            AdapterCapability.TRANSITION_RENDERING,
+        }
+    ),
+    AdapterCapability.INTERACTIVE_RUNTIME: frozenset(
+        {AdapterCapability.TRANSITION_RENDERING}
+    ),
+    AdapterCapability.RESET_AND_REPLAY: frozenset(
+        {AdapterCapability.STATE_RENDERING, AdapterCapability.INTERACTIVE_RUNTIME}
+    ),
+    AdapterCapability.OFFICIAL_EVALUATION: frozenset(
+        {AdapterCapability.STABLE_SPLITS, AdapterCapability.INTERACTIVE_RUNTIME}
+    ),
+}
+
+
+class CapabilityProofError(RuntimeError):
+    """A declared adapter capability could not be exercised."""
 
 
 @dataclass(frozen=True)
@@ -55,7 +142,8 @@ class BenchmarkIdentity:
             "action_semantics",
             "reward_semantics",
         ):
-            if not str(getattr(self, name)):
+            value = getattr(self, name)
+            if not isinstance(value, str) or not value.strip():
                 raise ValueError(f"{name} must be non-empty")
         if self.adapter_version != ADAPTER_PROTOCOL_VERSION:
             raise ValueError(
@@ -167,7 +255,8 @@ def validate_adapter_capabilities(
     unknown = [item for item in declared if not isinstance(item, AdapterCapability)]
     if unknown:
         raise TypeError(f"adapter declared unknown capabilities: {unknown}")
-    missing = frozenset(required) - declared
+    required_set = _expand_capabilities(required)
+    missing = required_set - declared
     if missing:
         raise RuntimeError(
             "adapter capability preflight failed: "
@@ -186,4 +275,194 @@ def validate_adapter_capabilities(
         "capabilities": sorted(item.value for item in declared),
         "prompt_profiles": sorted(profiles),
         "passed": True,
+    }
+
+
+def required_capabilities_for_phases(phases: Iterable[str]) -> frozenset[AdapterCapability]:
+    required: set[AdapterCapability] = set()
+    for phase in phases:
+        try:
+            required.update(PHASE_REQUIRED_CAPABILITIES[str(phase)])
+        except KeyError as exc:
+            raise CapabilityProofError(f"unknown portable phase: {phase}") from exc
+    return _expand_capabilities(required)
+
+
+def _expand_capabilities(
+    capabilities: Iterable[AdapterCapability],
+) -> frozenset[AdapterCapability]:
+    expanded = set(capabilities)
+    while True:
+        before = len(expanded)
+        for capability in tuple(expanded):
+            expanded.update(CAPABILITY_PREREQUISITES.get(capability, ()))
+        if len(expanded) == before:
+            return frozenset(expanded)
+
+
+def probe_adapter_capabilities(
+    adapter: ReproducibleBenchmarkAdapterV2,
+    *,
+    prompt_profile: str,
+    required: Iterable[AdapterCapability] = PORTABLE_PIPELINE_REQUIRED_CAPABILITIES,
+) -> dict[str, Any]:
+    """Exercise each requested capability on one bounded adapter-owned fixture."""
+    required_set = _expand_capabilities(required)
+    declaration = validate_adapter_capabilities(adapter, required_set)
+    tasks_by_split: Mapping[str, Sequence[TaskRecord]] = {}
+    sources: tuple[TrajectorySource, ...] = ()
+    trajectories: tuple[TrajectoryRecord, ...] = ()
+    transitions: tuple[TransitionRecord, ...] = ()
+    states: tuple[DecisionStateRecord, ...] = ()
+    task: TaskRecord | None = None
+    trajectory: TrajectoryRecord | None = None
+    split: str | None = None
+    profile_capabilities = {
+        AdapterCapability.STATE_RENDERING,
+        AdapterCapability.RUNTIME_TOKEN_COUNTING,
+        AdapterCapability.CAUSAL_SUPERVISION,
+    }
+    if AdapterCapability.STABLE_SPLITS in required_set:
+        tasks_by_split = adapter.list_tasks()
+        if not tasks_by_split:
+            raise CapabilityProofError("list_tasks returned no splits")
+    profiles = adapter.prompt_profiles()
+    if required_set & profile_capabilities and prompt_profile not in profiles:
+        raise CapabilityProofError(f"prompt profile is unavailable: {prompt_profile}")
+    if AdapterCapability.OFFICIAL_TRAJECTORIES in required_set:
+        sources = tuple(adapter.trajectory_sources())
+        training_splits = sorted(
+            {value for source in sources for value in source.training_splits}
+        )
+        if not training_splits:
+            raise CapabilityProofError("trajectory sources declare no training splits")
+        split = training_splits[0]
+        trajectories = tuple(adapter.successful_trajectories(split))
+        if not trajectories:
+            raise CapabilityProofError(
+                f"successful trajectory probe is empty for split {split}"
+            )
+        task_index = {
+            row.task_id: row for rows in tasks_by_split.values() for row in rows
+        }
+        trajectory = trajectories[0]
+        try:
+            task = task_index[trajectory.task_id]
+        except KeyError as exc:
+            raise CapabilityProofError("probe trajectory references an unknown task") from exc
+    if AdapterCapability.TRANSITION_RENDERING in required_set:
+        assert task is not None and trajectory is not None
+        transitions = tuple(adapter.transition_records(task, trajectory))
+        if not transitions:
+            raise CapabilityProofError("transition conversion probe returned no rows")
+    if AdapterCapability.STATE_RENDERING in required_set:
+        assert task is not None and trajectory is not None
+        states = tuple(adapter.decision_states(task, trajectory, prompt_profile))
+        if not states:
+            raise CapabilityProofError("state conversion probe returned no rows")
+    if transitions and states:
+        assert split is not None
+        validate_record_closure(
+            tasks_by_split=tasks_by_split,
+            trajectory_sources=sources,
+            trajectories_by_split={split: trajectories},
+            transitions=transitions,
+            decision_states=states,
+            prompt_profile=prompt_profile,
+        )
+    messages: Sequence[Mapping[str, str]] = ()
+    tokens: int | None = None
+    if AdapterCapability.STATE_RENDERING in required_set:
+        assert states
+        messages = adapter.render_messages(states[0], prompt_profile)
+        if not messages:
+            raise CapabilityProofError("prompt rendering returned no messages")
+    if AdapterCapability.RUNTIME_TOKEN_COUNTING in required_set:
+        if not messages:
+            messages = adapter.render_messages(states[0], prompt_profile)
+        tokens = adapter.count_runtime_tokens(messages, prompt_profile)
+        if not isinstance(tokens, int) or tokens <= 0:
+            raise CapabilityProofError("runtime token counter returned an invalid count")
+    if AdapterCapability.CAUSAL_SUPERVISION in required_set:
+        assert states and transitions
+        supervision = adapter.build_selector_supervision(states, transitions)
+        if not supervision:
+            raise CapabilityProofError("selector supervision probe returned no rows")
+        conditions = adapter.causal_conditions(states[0], transitions[0], prompt_profile)
+        if len(conditions) < 2:
+            raise CapabilityProofError("causal condition probe did not return a pair")
+    bare = EvaluationResult(
+        task_id=task.task_id if task is not None else "capability-probe",
+        raw_reward=0.0,
+        binary_success=False,
+        terminal_status=TerminalStatus.FAILURE,
+        steps=0,
+        exceptions=(),
+        benchmark_metrics={},
+        audit_references=(),
+    )
+    conditioned = EvaluationResult(
+        task_id=task.task_id if task is not None else "capability-probe",
+        raw_reward=1.0,
+        binary_success=True,
+        terminal_status=TerminalStatus.SUCCESS,
+        steps=1,
+        exceptions=(),
+        benchmark_metrics={},
+        audit_references=(),
+    )
+    if AdapterCapability.CAUSAL_SUPERVISION in required_set:
+        comparison = adapter.compare_causal_outcomes(bare, conditioned)
+        if not isinstance(comparison, Mapping):
+            raise CapabilityProofError("causal outcome comparison is not a mapping")
+
+    runtime = None
+    runtime_required = bool(
+        required_set
+        & {
+            AdapterCapability.RESET_AND_REPLAY,
+            AdapterCapability.INTERACTIVE_RUNTIME,
+            AdapterCapability.OFFICIAL_EVALUATION,
+        }
+    )
+    if runtime_required:
+        if task is None or not states or not transitions:
+            raise CapabilityProofError("runtime probe prerequisites were not produced")
+        try:
+            runtime = adapter.create_runtime(task)
+            replay = adapter.replay_to_state(runtime, states[0])
+            action = transitions[0].action
+            validation = adapter.validate_action(action, runtime)
+            execution = adapter.execute_action(runtime, action)
+            evaluation = adapter.evaluate_task(runtime, task)
+            evaluation.validate()
+            for name, value in (
+                ("replay_to_state", replay),
+                ("action validation", validation),
+                ("action execution", execution),
+            ):
+                if not isinstance(value, Mapping):
+                    raise CapabilityProofError(f"{name} probe is not a mapping")
+        finally:
+            if runtime is not None:
+                closer = getattr(runtime, "close", None)
+                if callable(closer):
+                    closer()
+    if AdapterCapability.AUDIT_REDACTION in required_set:
+        redacted = adapter.redact_audit_record(
+            {"task_id": task.task_id if task is not None else "capability-probe", "secret": "fixture"}
+        )
+        if not isinstance(redacted, Mapping):
+            raise CapabilityProofError("audit redaction probe is not a mapping")
+    return {
+        **declaration,
+        "required_capabilities": sorted(item.value for item in required_set),
+        "probed_task_id": task.task_id if task is not None else None,
+        "probed_trajectory_id": trajectory.trajectory_id if trajectory is not None else None,
+        "token_count": tokens,
+        "transition_count": len(transitions),
+        "decision_state_count": len(states),
+        "runtime_exercised": runtime_required,
+        "model_loaded": False,
+        "training_executed": False,
     }

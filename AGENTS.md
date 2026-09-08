@@ -266,3 +266,22 @@ is deferred until after the 2026-09-25 submission.
 Portable canonical v2 is an engineering base. ALFWorld and WebShop have pinned
 prompt sources and adaptation plans but no scientific RCMF result. Their task
 states are the only current entry points for that future work.
+
+## Portable Canonical V2.1 Hardening Charter
+
+V2.1 preserves the V2.0 writer, reversible field, fixed-size read, reader,
+scientific data semantics, and evaluation ownership. It hardens execution only:
+
+- records require the exact schema and complete task/trajectory/transition/state closure;
+- capabilities are phase-scoped and must pass bounded executable probes;
+- config binds a hashed dataset profile, adapter, executor, prompt asset,
+  run-root template, and every safety field without fallback;
+- every real phase manifest binds source, run, config, dataset, adapter,
+  dependencies, inputs, and outputs;
+- checkpoint unit counts come from a strict upstream unit manifest;
+- release gates identify machine, test, manual, or not-evaluated evidence.
+
+The bounded AppWorld three-demo pilot is engineering integration evidence only:
+at most 20 epoch-1 training units and one deterministically selected dev task,
+with no accuracy gate. It cannot replace formal 14n/R19 evidence. No ALFWorld
+or WebShop scientific run starts under this charter.

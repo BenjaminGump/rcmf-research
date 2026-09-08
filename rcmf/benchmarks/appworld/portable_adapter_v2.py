@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Mapping, Sequence
+from dataclasses import dataclass
+import json
+from pathlib import Path
 from typing import Any
 
 from rcmf.benchmarks.appworld.pipeline_adapter import AppWorldReproduciblePipelineAdapter
@@ -27,6 +30,9 @@ from rcmf.pipeline.portable_v2.schemas import (
 
 TokenCounter = Callable[[Sequence[Mapping[str, str]], str], int]
 RuntimeFactory = Callable[[TaskRecord], Any]
+
+APPWORLD_FULL_DEMO_ASSET_SHA256 = "dd74c379c97031a062ba79b2b82d3992ec3b38870792f53d86821544f994c4c3"
+APPWORLD_ONE_DEMO_ASSET_SHA256 = "a0a8d3b2e10f167dba5dcab5ad62fa8f6737629b813d2d0e27af4872bef9e27b"
 
 
 class AppWorldPortableAdapterV2:
@@ -74,7 +80,25 @@ class AppWorldPortableAdapterV2:
         )
 
     def capabilities(self) -> frozenset[AdapterCapability]:
-        return frozenset(AdapterCapability)
+        capabilities = {
+            AdapterCapability.STABLE_SPLITS,
+            AdapterCapability.OFFICIAL_TRAJECTORIES,
+            AdapterCapability.STATE_RENDERING,
+            AdapterCapability.TRANSITION_RENDERING,
+            AdapterCapability.CAUSAL_SUPERVISION,
+            AdapterCapability.AUDIT_REDACTION,
+        }
+        if self._token_counter is not None:
+            capabilities.add(AdapterCapability.RUNTIME_TOKEN_COUNTING)
+        if self._runtime_factory is not None:
+            capabilities.update(
+                {
+                    AdapterCapability.RESET_AND_REPLAY,
+                    AdapterCapability.INTERACTIVE_RUNTIME,
+                    AdapterCapability.OFFICIAL_EVALUATION,
+                }
+            )
+        return frozenset(capabilities)
 
     def list_tasks(self) -> Mapping[str, Sequence[TaskRecord]]:
         if self._task_records is not None:
@@ -97,11 +121,22 @@ class AppWorldPortableAdapterV2:
 
     def trajectory_sources(self) -> Sequence[TrajectorySource]:
         splits = tuple(sorted(self._trajectory_records)) or ("train",)
+        injected = next(
+            (row for rows in self._trajectory_records.values() for row in rows), None
+        )
         return (
             TrajectorySource(
                 source_id="appworld_replay_validated_corpus",
-                provenance=ProvenanceClass.OFFICIAL_MODEL_OR_IL,
-                source_identity={"corpus_root": str(self.legacy.corpus_root)},
+                provenance=(
+                    injected.provenance
+                    if injected is not None
+                    else ProvenanceClass.OFFICIAL_MODEL_OR_IL
+                ),
+                source_identity=(
+                    dict(injected.source_identity)
+                    if injected is not None
+                    else {"corpus_root": str(self.legacy.corpus_root)}
+                ),
                 training_splits=splits,
             ),
         )
@@ -336,3 +371,77 @@ class AppWorldPortableAdapterV2:
 
     def redact_audit_record(self, record: Mapping[str, Any]) -> Mapping[str, Any]:
         return self.legacy.redact_audit_record(record)
+
+
+@dataclass
+class _CapabilityProbeEvaluation:
+    success: bool = True
+
+
+class _CapabilityProbeRuntime:
+    def __init__(self, task: TaskRecord) -> None:
+        self.task = task
+        self.actions: list[str] = []
+
+    def execute(self, action: str) -> str:
+        self.actions.append(action)
+        return "Output:\n```\nprobe-ok\n```"
+
+    def evaluate(self) -> _CapabilityProbeEvaluation:
+        return _CapabilityProbeEvaluation(success=True)
+
+    def close(self) -> None:
+        return None
+
+
+def create_appworld_portable_adapter_v2_1() -> AppWorldPortableAdapterV2:
+    """Create the bounded preflight fixture; formal data/runtime are injected later."""
+    task = TaskRecord(
+        benchmark="appworld",
+        dataset_version="appworld-0.1.0",
+        split="train",
+        task_id="portable-v2.1-capability-probe",
+        instruction="Now here is the task:\nTask: exercise the adapter boundary",
+        lineage_keys=("appworld:portable-v2.1-capability-probe",),
+        source_identity={"fixture": "portable-v2.1"},
+    )
+    trajectory = TrajectoryRecord(
+        trajectory_id="portable-v2.1-capability-probe-trajectory",
+        task_id=task.task_id,
+        provenance=ProvenanceClass.OFFICIAL_MODEL_OR_IL,
+        source_identity={"fixture": "portable-v2.1"},
+        steps=(
+            TrajectoryStep(
+                step_index=0,
+                pre_action_state="probe-state",
+                action="print('probe')",
+                post_action_observation="Output:\n```\nprobe-ok\n```",
+                raw_reward=1.0,
+                terminal_status=TerminalStatus.SUCCESS,
+            ),
+        ),
+        raw_reward=1.0,
+        success=True,
+        terminal_status=TerminalStatus.SUCCESS,
+        replay_status=ReplayStatus.VALIDATED,
+        environment_identity={"fixture": "portable-v2.1"},
+        metadata={"goal": task.instruction},
+    )
+    legacy = AppWorldReproduciblePipelineAdapter(
+        corpus_root=Path("."), legacy_root=Path("."), split_names=()
+    )
+    return AppWorldPortableAdapterV2(
+        legacy,
+        dataset_version="appworld-0.1.0",
+        environment_version="appworld-0.1.0",
+        prompt_manifest_hashes={
+            "full_demo": APPWORLD_FULL_DEMO_ASSET_SHA256,
+            "full_demo_first_only": APPWORLD_ONE_DEMO_ASSET_SHA256,
+        },
+        task_records={"train": (task,)},
+        trajectory_records={"train": (trajectory,)},
+        token_counter=lambda messages, profile: len(
+            json.dumps({"messages": list(messages), "profile": profile}, sort_keys=True)
+        ),
+        runtime_factory=_CapabilityProbeRuntime,
+    )

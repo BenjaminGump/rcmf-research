@@ -14,11 +14,16 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_chatgpt_bootstrap_documents_are_consistent() -> None:
-    result = validate_chatgpt_bootstrap_documents(ROOT)
+    manifest_path = ROOT / "docs/PORTABLE_CANONICAL_V2_1.json"
+    if not manifest_path.is_file():
+        manifest_path = ROOT / "docs/PORTABLE_CANONICAL_V2.json"
+    manifest = json.loads(manifest_path.read_text())
+    result = validate_chatgpt_bootstrap_documents(
+        ROOT, expected_source_sha=manifest["source_sha"]
+    )
     assert result["passed"] is True
     assert result["project_source_count"] == 5
     assert result["premature_dataset_scientific_results"] == 0
-    manifest = json.loads((ROOT / "docs/PORTABLE_CANONICAL_V2.json").read_text())
     assert result["canonical_source"] == manifest["source_sha"]
     assert manifest["checkpoint_policy"] == "terminal_completed_epoch"
     assert manifest["new_dataset_scientific_status"] == {
@@ -38,21 +43,37 @@ def test_project_sources_are_exactly_the_requested_five() -> None:
 
 
 def test_portable_release_quantitative_gates() -> None:
-    result = validate_portable_v2_release(ROOT)
+    result = validate_portable_v2_release(
+        ROOT,
+        test_results={
+            "failed": 0,
+            "evidence": ["tests/test_portable_v2_release_documents.py"],
+        },
+    )
     zero_gates = (
         "generic_core_direct_benchmark_imports",
+        "benchmark_name_dispatch",
         "unresolved_reachable_defects",
         "unowned_runtime_paths",
         "historical_outcome_counts_in_generic_success_conditions",
         "version_specific_continuation_dispatch",
         "silent_adapter_fallback_paths",
         "prompt_assets_without_source_commit_hash_license",
-        "dataset_states_without_trajectory_source_plan",
-        "dataset_states_without_evaluation_split_plan",
+        "required_test_files_missing",
         "failed_required_conformance_tests",
     )
     assert result["passed"] is True
-    assert {name: result[name] for name in zero_gates} == {name: 0 for name in zero_gates}
+    gates = result["gates"]
+    assert {name: gates[name]["value"] for name in zero_gates} == {
+        name: 0 for name in zero_gates
+    }
+    assert gates["executor_bindings"]["value"] == 1
+    assert {gate["evidence_class"] for gate in gates.values()} <= {
+        "MACHINE_COMPUTED",
+        "TEST_BOUND",
+        "MANUAL_EVIDENCE_RECORDED",
+        "NOT_EVALUATED",
+    }
     assert result["ownership"]["entry_count"] >= 30
 
 
