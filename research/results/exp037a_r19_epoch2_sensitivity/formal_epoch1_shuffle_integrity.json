@@ -1,0 +1,704 @@
+{
+  "checkpoint_sha256": "c3bc33f38dd0ea58e368c38f582775c355902bb9a01671f21e4e485add9daf2c",
+  "checks": {
+    "checkpoint_hash": true,
+    "condition_task_sets_match": true,
+    "correct_and_shuffle_differ": true,
+    "correct_condition": true,
+    "deployment_count": true,
+    "deployment_ids": true,
+    "deployment_ids_unique": true,
+    "finite_fields": true,
+    "formal_selected_epoch_1": true,
+    "same_B_normalizer": true,
+    "sealed_fixed_point_count": true,
+    "selected_401_checkpoint": true,
+    "selected_401_count": true,
+    "shuffle_condition": true,
+    "shuffle_fixed_points": true,
+    "shuffle_key_bijection": true,
+    "shuffle_payload_bijection": true,
+    "shuffle_row_count": true,
+    "task_files_not_hardlinked": true
+  },
+  "correct": {
+    "checks": {
+      "all_rows_complete": true,
+      "all_task_files": true,
+      "field_control": true,
+      "fresh_rows": true,
+      "generation_contract": true,
+      "memory_count": true,
+      "model_identity": true,
+      "prompt_profile": true,
+      "row_condition": true,
+      "row_task_identity": true,
+      "runtime_retrieval": true,
+      "summary_condition": true,
+      "summary_count_recomputed": true,
+      "summary_success_recomputed": true,
+      "task_count": true,
+      "task_order": true
+    },
+    "condition": "correct",
+    "condition_id": "FRESH1D_C_1DDEPLOY",
+    "passed": true,
+    "success_count": 8,
+    "success_ids": [
+      "23cf851_1",
+      "23cf851_2",
+      "23cf851_3",
+      "6171bbc_2",
+      "6171bbc_3",
+      "6bdbc26_3",
+      "6c2c621_3",
+      "b119b1f_1"
+    ],
+    "summary": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/summaries/FRESH1D_C_1DDEPLOY.json",
+      "sha256": "a6ef090732d88e20cc543ba22fa5c1eb34b9550293cabedc3a7ced6d7fd37776",
+      "size_bytes": 4164
+    },
+    "task_outputs": [
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/50e1ac9_1.json",
+        "sha256": "b5f6b6ddd032d851d401e60262c19266bdc903c9223769a2a77a120fdf88fb52",
+        "size_bytes": 3626625
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/50e1ac9_2.json",
+        "sha256": "0b2c63ad05ed4b2bd668bcbe3a2128cbfe6eaae1362457794e072d8ad21d2a58",
+        "size_bytes": 3973612
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/50e1ac9_3.json",
+        "sha256": "4ba2b269be05f0db6593ee67e63461d2e80b58248db1869c501cd9fdf9dd2d52",
+        "size_bytes": 3726793
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/fac291d_1.json",
+        "sha256": "32dc3bd1bf0a0dfb534d5838676d8761c2ea9feda7e3c851b6c22b37c92bb4a0",
+        "size_bytes": 3981074
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/fac291d_2.json",
+        "sha256": "7c3af842acbea032ef82c295de95d31e8ad6c1033d868ec519be5ed0fdaf7c2a",
+        "size_bytes": 3627773
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/fac291d_3.json",
+        "sha256": "87c92d5b8c4416cf7f935f71a20b8f09f6f226794d618065add8463c149c7593",
+        "size_bytes": 3984402
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/530b157_1.json",
+        "sha256": "7f54d0b83964b32ac10955d0679b662337961cb0c6ba2afeb8db291cb4ac5cd0",
+        "size_bytes": 6570794
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/530b157_2.json",
+        "sha256": "139ace0aeb15fe694ce6a10aa90d59e6fecb51dbab0071ec170db3f7d3a194e3",
+        "size_bytes": 1023118
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/530b157_3.json",
+        "sha256": "1151c4bd4785ff189be175afd4e29b8cb88e01e0381b1b390407fce9bff1dae2",
+        "size_bytes": 2067459
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/4ec8de5_1.json",
+        "sha256": "c6a439eecc3e64db20baf4abab3f01a3993761dc549f65588b74635571e6f2c8",
+        "size_bytes": 3623362
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/4ec8de5_2.json",
+        "sha256": "f4bf9c659f12af8805942d63cb1c283f752d6887c8b5bf05efea20fc97a41e27",
+        "size_bytes": 3987018
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/4ec8de5_3.json",
+        "sha256": "11afcacb412dec787b9e08b35ea68b44383fe28f7e03fd35ffb4b968528bc6ab",
+        "size_bytes": 3989121
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/b119b1f_1.json",
+        "sha256": "a57681f3b96d1e1d54150ebbc6f3e0836d02df12e84f641daaac578d260d931d",
+        "size_bytes": 536526
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/b119b1f_2.json",
+        "sha256": "21d3ca5e95044385169a730667a47d4209c8f0bb428e0511371dc4077018eefe",
+        "size_bytes": 3924269
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/b119b1f_3.json",
+        "sha256": "c79d3f3f84ed1b827b0fdb9e610cbbe25f5840333cab14eec96a40be42d48aa6",
+        "size_bytes": 3638509
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/d4e9306_1.json",
+        "sha256": "82ce78e1057ec8893ada7391606a22dd198a54d8c91f2080bbf5e0ae25051d85",
+        "size_bytes": 765812
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/d4e9306_2.json",
+        "sha256": "97173a7179cf13dfdc3566f72570964b8287b3b22e1e54a7b5b37c335aa52cac",
+        "size_bytes": 743917
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/d4e9306_3.json",
+        "sha256": "0512de7b442811ca54c82fb2ec3948160468bd0bc6ddb55bd90bbf79d7f78122",
+        "size_bytes": 915129
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/0d8a4ee_1.json",
+        "sha256": "e22ef21bd1310d0a63cf17c2dd377bcab8f3c06c782ab0b37003f259dbf800ab",
+        "size_bytes": 4428861
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/0d8a4ee_2.json",
+        "sha256": "d4a048993a984c58bc3d0cd41a2163927357d92396525faff8baed76aa1132c1",
+        "size_bytes": 1772185
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/0d8a4ee_3.json",
+        "sha256": "4b31109bc92902d90de070a0a0f9e1b2cea234c270d2cda9c700a87b24de2885",
+        "size_bytes": 1310617
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/37a8675_1.json",
+        "sha256": "92803eafe690934481a50aadce058ecb3d60082a6b693a952ec56acef737b0c5",
+        "size_bytes": 16086972
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/37a8675_2.json",
+        "sha256": "00cadc96e0b23d34507715bbe7b43d8d40726f1aff80e0833f9a7beac46dc71e",
+        "size_bytes": 3379631
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/37a8675_3.json",
+        "sha256": "ad317ffb8a893c4532ea152852e0286d5519363031097c38a61b0bfe2c512507",
+        "size_bytes": 16086216
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/3ab5b8b_1.json",
+        "sha256": "d7852cd89b6b1b4963ffd64799bb75bd0e6be81b247aad55016966aefe01ec9a",
+        "size_bytes": 8411444
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/3ab5b8b_2.json",
+        "sha256": "a176f4986d6f8f30be49f2c3166f149e41b905051bf5f53fb88263196d355bcc",
+        "size_bytes": 3912159
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/3ab5b8b_3.json",
+        "sha256": "94f35d849e619a81b924cbe2533fefaec58e280dbe0595e931382c6dfa520eee",
+        "size_bytes": 1057047
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/df61dc5_1.json",
+        "sha256": "4568bea0f2d4c31a6123cde6b9ade687e89e48cf0f648e83142e46877dc994b5",
+        "size_bytes": 2675849
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/df61dc5_2.json",
+        "sha256": "7af8cdfd5d173457e1e30f638a67f55257fa68b9d0ffc5474dd759b4ee095bdb",
+        "size_bytes": 5055310
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/df61dc5_3.json",
+        "sha256": "500dfaae584174a802df77d11643a1bb2f85fb7c6249ca2fe90e9af06e701e16",
+        "size_bytes": 6832326
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/383cbac_1.json",
+        "sha256": "c53c5b3ab4651bcca9f8d0c1c1b04757d9cf6146ac57861d8809c9d89f3f5205",
+        "size_bytes": 1583011
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/383cbac_2.json",
+        "sha256": "9a8485a0e62cd6b4e4b8a533b4bf9e9e5b67299eb29d9d32edde953b5f1306e7",
+        "size_bytes": 6092293
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/383cbac_3.json",
+        "sha256": "a4c608d12004a26c267876e7fba742a07be0082e4d8669813dd4402ea8420d3f",
+        "size_bytes": 1778334
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/23cf851_1.json",
+        "sha256": "c88396e2916dde22d61dbb831250393f85bb27b94f49c3a995c98ee244b53c06",
+        "size_bytes": 753758
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/23cf851_2.json",
+        "sha256": "57c41f2aa55345b617ada2634ddda2feeb099ae2df7cfb6d849dd3c353021a4b",
+        "size_bytes": 755956
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/23cf851_3.json",
+        "sha256": "593eaf9f21f4d9226c94cda9efb13a6779b315430a22e57646aba8686c14dcbd",
+        "size_bytes": 804031
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/57c3486_1.json",
+        "sha256": "3ee0003b7937d71aa5920a4241d4df73bd0781b6c9175ab6483045d2cc372285",
+        "size_bytes": 1217690
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/57c3486_2.json",
+        "sha256": "1d02ed44fabd3ee49ca39c9604e65b4a45ef1a8ca29462e672e3a5a07e104450",
+        "size_bytes": 647123
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/57c3486_3.json",
+        "sha256": "a50d4d47909e64dce47f466eea745707d512f380e2af6d4c80c6b6a460dfec8b",
+        "size_bytes": 2610171
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/68ee2c9_1.json",
+        "sha256": "e240f4517ae2a7396e87a7af8bf35fe3fb701cc443af9daa42cf935204b45ee3",
+        "size_bytes": 12251400
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/68ee2c9_2.json",
+        "sha256": "a7dc3d1d7de9b48521c3cb175e68df88b046d31f33a958b44087171df6e884c6",
+        "size_bytes": 1302879
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/68ee2c9_3.json",
+        "sha256": "71e202ba84d376db16d6660286e352e903bed14b1ecb4a82226405c7d90cc8ac",
+        "size_bytes": 9410451
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/6bdbc26_1.json",
+        "sha256": "ebb545ba42f8cb8887ef403a7b845da3f67c7e04fa5d9d0f0bbfff7ae092cd9a",
+        "size_bytes": 3979356
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/6bdbc26_2.json",
+        "sha256": "f9e35ccc7d4f579b799b95704661bbb66d1fec432fb6defd65e4db34271c018b",
+        "size_bytes": 3977155
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/6bdbc26_3.json",
+        "sha256": "ea23ab673e8c9fe2288b278275151864f68e12c59e5944ff95c558498de19418",
+        "size_bytes": 574245
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/6171bbc_1.json",
+        "sha256": "1eb790485f2348d1576d48531a00834d97b59f8f0f8b898c8aa60d15e4f8f2b5",
+        "size_bytes": 3747769
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/6171bbc_2.json",
+        "sha256": "50c31472f8266ea9e2a17cf799cb68c031000f96f97a5d6e863922d26814b447",
+        "size_bytes": 1187187
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/6171bbc_3.json",
+        "sha256": "9542096a29f6655cbdb0bb792431847e1db987237c0c27e6b5e537db2de6a17a",
+        "size_bytes": 930459
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/6c2c621_1.json",
+        "sha256": "d6cb2e74f7fc0f5f9c3d002ec85f1d36a48b5a23170fc74eac72a86f3b202d36",
+        "size_bytes": 1576513
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/6c2c621_2.json",
+        "sha256": "00e243914a665eb4be2a7f34fd29635a9def5909878eb4b95aa8dec61b3b67aa",
+        "size_bytes": 6890916
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/6c2c621_3.json",
+        "sha256": "f53ac89380708cfb3564590aa8b46d221a877410670e1b6dda0ea99ee8f3c123",
+        "size_bytes": 1543172
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/396c5a2_1.json",
+        "sha256": "20f0e92c0e3458a2f8bb990580e5a571620e8b338e834451523610020131eec9",
+        "size_bytes": 7592688
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/396c5a2_2.json",
+        "sha256": "59a62ad3380ab624eab7ac4e5acda908758cc0e534fdfb40ed9064b20ccc2a15",
+        "size_bytes": 7269051
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/396c5a2_3.json",
+        "sha256": "4dad6e352d40a2bf2e566cff2e17e66af270a3c80b7377aa45251b502ad90ec5",
+        "size_bytes": 7648821
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/4fab96f_1.json",
+        "sha256": "daef782ffaaff17a188f106ee9424df38be2b7629e0f5b0db88707b8413e3c2b",
+        "size_bytes": 971215
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/4fab96f_2.json",
+        "sha256": "3d9714aa43e138b496f621bb1ab8334731d12c492c23af8f5d6f798a448a3dc6",
+        "size_bytes": 958782
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_C_1DDEPLOY/task_results/4fab96f_3.json",
+        "sha256": "67136361119fecb47f3160d4205c8cde522799d0c99a0c062a5168754e1983e8",
+        "size_bytes": 1030004
+      }
+    ]
+  },
+  "deployment_field": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/arms/1d/deployment_field/complete_37_task_field.pt",
+    "sha256": "3bda71b91f7e1f5147a8399c5fdcb41207869ffbd5f0236bfbdecaa88d4c4110",
+    "size_bytes": 123031610
+  },
+  "fixed_point_count": 0,
+  "format": "exp037a_r19_formal_epoch1_shuffle_integrity_v1",
+  "key_sha256": "6cbaf15f3e65ba46cdd1a68116b1641b1a1e9f004427a325f5174793d7f81659",
+  "memory_count": 499,
+  "memory_id_sha256": "6cbaf15f3e65ba46cdd1a68116b1641b1a1e9f004427a325f5174793d7f81659",
+  "passed": true,
+  "payload_sha256": "709b026f6be873e6ab6b86c0e9dccef8841d90dc6a7db9051c90a9291d0e60ff",
+  "permutation_file": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/arms/1d/data/key_payload_shuffle_manifest.json",
+    "sha256": "8e85888c5c05c890b8eb6526aaf25f764813b48aab0b84eb5b9a982567a5d51c",
+    "size_bytes": 272329
+  },
+  "permutation_sha256": "96f1f3784c73e45bc9036b40aa83f43eca8e03b39995cd6f9fc29cd7790c7db2",
+  "shuffle": {
+    "checks": {
+      "all_rows_complete": true,
+      "all_task_files": true,
+      "field_control": true,
+      "fresh_rows": true,
+      "generation_contract": true,
+      "memory_count": true,
+      "model_identity": true,
+      "prompt_profile": true,
+      "row_condition": true,
+      "row_task_identity": true,
+      "runtime_retrieval": true,
+      "summary_condition": true,
+      "summary_count_recomputed": true,
+      "summary_success_recomputed": true,
+      "task_count": true,
+      "task_order": true
+    },
+    "condition": "shuffle",
+    "condition_id": "FRESH1D_S_1DDEPLOY",
+    "passed": true,
+    "success_count": 18,
+    "success_ids": [
+      "23cf851_1",
+      "23cf851_2",
+      "23cf851_3",
+      "396c5a2_1",
+      "396c5a2_2",
+      "396c5a2_3",
+      "6171bbc_3",
+      "6bdbc26_1",
+      "6bdbc26_2",
+      "6c2c621_2",
+      "6c2c621_3",
+      "b119b1f_1",
+      "b119b1f_3",
+      "d4e9306_2",
+      "d4e9306_3",
+      "fac291d_1",
+      "fac291d_2",
+      "fac291d_3"
+    ],
+    "summary": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/summaries/FRESH1D_S_1DDEPLOY.json",
+      "sha256": "87a5c1a9289153c05897c498e2fdcb3f6511d76dbe8c9953c6f9244c552f13f9",
+      "size_bytes": 4324
+    },
+    "task_outputs": [
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/50e1ac9_1.json",
+        "sha256": "595f162bc582b6d4a91eec946e8388549c81de48905636f05b9ffcab58846c4f",
+        "size_bytes": 4621031
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/50e1ac9_2.json",
+        "sha256": "a227b3d9229157d77d0455a2c1cc9e080dcf5a4a07ec0396cfabae337c86b14e",
+        "size_bytes": 5828508
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/50e1ac9_3.json",
+        "sha256": "c08199586d4ffdf7cddb20b65b83f4279ce94829e6e5518dede788171b90475c",
+        "size_bytes": 9442733
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/fac291d_1.json",
+        "sha256": "2dce2fae30494f7b985609f3724360b6d661087a58fed291ea00ae6971d2d12c",
+        "size_bytes": 1511160
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/fac291d_2.json",
+        "sha256": "18a3bb0e3aedffa9262fe03cad292f15eba294ac88bc9adc12d1fc9dede77bb4",
+        "size_bytes": 1165146
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/fac291d_3.json",
+        "sha256": "b6dd6f6968fc3f292503cde24418552be96fe14f2c0f11792d34256caa3381d8",
+        "size_bytes": 1513099
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/530b157_1.json",
+        "sha256": "e884b1d26fa56157cd9983865aa15253e5b2ce3c5478262c7f73406977ac6fc3",
+        "size_bytes": 1381148
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/530b157_2.json",
+        "sha256": "adea7fc272c7d63318af71cbc5f7b8cbdddec8aa3a777d881d27f4b971c37044",
+        "size_bytes": 4853282
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/530b157_3.json",
+        "sha256": "7c0287c9b87384ad0dee6fcb803dea2a4381666b18e30edfc75ad0d6efa4424c",
+        "size_bytes": 1563651
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/4ec8de5_1.json",
+        "sha256": "46e320eca71225a96d0b51b0e7eefc6511333b11b7d959e8866b8e0359658192",
+        "size_bytes": 1158779
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/4ec8de5_2.json",
+        "sha256": "976f8de76901bd95962eec457631daf2fd749036855322e4204c138af46e0616",
+        "size_bytes": 1189295
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/4ec8de5_3.json",
+        "sha256": "b636cf11b651f01872962a7e460817247b4eb0ceda3b20d80f147ad762aabcee",
+        "size_bytes": 1093370
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/b119b1f_1.json",
+        "sha256": "ee92edeab3f034491fb21d7e2db6c1061bb764cf777fab1c86739190390b8f49",
+        "size_bytes": 802236
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/b119b1f_2.json",
+        "sha256": "270f2a1b7be00bd8b80ec8ed0a17ab1d84a1ef81baf527c031d96b00e4fcd842",
+        "size_bytes": 814105
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/b119b1f_3.json",
+        "sha256": "0deb6028da51e7c4698a6b4ef81f2f47a4024636f2d556458b9c8a2b175186d3",
+        "size_bytes": 1211212
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/d4e9306_1.json",
+        "sha256": "3d25dec9a85b6d5ee760b6e4717908a654728f8adad38d7a86fb39fc3abac63c",
+        "size_bytes": 914518
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/d4e9306_2.json",
+        "sha256": "6b6e3aa8778b0763ffd314d3d94573a84549a8066d5171557033e74a9553cb53",
+        "size_bytes": 1080273
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/d4e9306_3.json",
+        "sha256": "0e012790b0f2dd86d26406467f5bcc566bd06d5377a39c6b6f49d9dd17bc8dd1",
+        "size_bytes": 1183127
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/0d8a4ee_1.json",
+        "sha256": "7769ae7e61580c7714aeb757beb1280ca70751627985ad0fabe0d653140cac59",
+        "size_bytes": 725425
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/0d8a4ee_2.json",
+        "sha256": "e1968a28b944533aac2e64af8bae249115cfb20fd199f1aaddbfc91b9211c80c",
+        "size_bytes": 4550372
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/0d8a4ee_3.json",
+        "sha256": "fd6dbd83b535b0209044e87652fa530f2dabb18a9523a23c10bf83dcf0426405",
+        "size_bytes": 7532032
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/37a8675_1.json",
+        "sha256": "37d72cafdaa956a6c83c76ad34e2774c53f69fb34330774ea642958da0865cd1",
+        "size_bytes": 6493235
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/37a8675_2.json",
+        "sha256": "f11f85ad2074d13892bf9645e584465f7429274f370e3e1c49c8418f72755f3e",
+        "size_bytes": 6388162
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/37a8675_3.json",
+        "sha256": "604327ffbee8df1646d9c4fdc4304fe28caa47e7ac5eb3bbeb49ce5ef810bb40",
+        "size_bytes": 8698403
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/3ab5b8b_1.json",
+        "sha256": "f2b6d330a40165d80d8783d5e7535deaa2afe791d5d5b36f94d978bd04ca62b9",
+        "size_bytes": 1300480
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/3ab5b8b_2.json",
+        "sha256": "9930ef701f1627935fa5fe84ce6177431b1ebbaa64efb455abc711125717ca5b",
+        "size_bytes": 983541
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/3ab5b8b_3.json",
+        "sha256": "aa848a22ac40e4c784fccc7b7ea639511155aacaa7ff240b0033bc941c3bda25",
+        "size_bytes": 641745
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/df61dc5_1.json",
+        "sha256": "c14d65b77bc59daf75ed0aaea16cb2fae1515b2401186d46ce8f44ac37a43b4c",
+        "size_bytes": 9229232
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/df61dc5_2.json",
+        "sha256": "682b047310a65cf1af0985eba64a3367618a555bacda0f2b4e5ffcf5a2daf54d",
+        "size_bytes": 5720875
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/df61dc5_3.json",
+        "sha256": "e1483c456d80fcbe3f43e7cb0cc23e20c3703458ae0821bbe55b2adfdbba4aac",
+        "size_bytes": 8314228
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/383cbac_1.json",
+        "sha256": "febd4f2467fa400eca20cd004bfa98484e9419d35b34fd1819488e8b70582790",
+        "size_bytes": 5960278
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/383cbac_2.json",
+        "sha256": "484624107941f03bcaa9f8fd078f6d995d45d2afb8dea28200ef027cfea977e1",
+        "size_bytes": 6853821
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/383cbac_3.json",
+        "sha256": "c7011d811aeb9f14ad7415483277b77f35e40c22790b3785ef1c88723a090983",
+        "size_bytes": 5899054
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/23cf851_1.json",
+        "sha256": "00073fbe5a78f1ced0011332d6106734a2ffd5dd8986ba3a1f86b86ba1fb2e68",
+        "size_bytes": 600628
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/23cf851_2.json",
+        "sha256": "6b8886067c1cde1f677934d15ac6dbfd76a733fea7856aa3b01022c6252c9d3e",
+        "size_bytes": 465455
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/23cf851_3.json",
+        "sha256": "9d7ba02afbbe96a066f84be9071c385bbe45ee2b816b015c7e953e8efebdd8a1",
+        "size_bytes": 1208387
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/57c3486_1.json",
+        "sha256": "7587842ffbcaccf17c029835b80f3de4f53fd9b616fe891bb8b2504f48ededf9",
+        "size_bytes": 7683798
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/57c3486_2.json",
+        "sha256": "b9e1f992ca9f13038c3fb0d69c463559c483de1bb564c9a90ffde4e8354bd733",
+        "size_bytes": 1717494
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/57c3486_3.json",
+        "sha256": "08f3dfca750733fd7a17f7be31aca6191a8f38fd2e3915803660fbe797ca5b7d",
+        "size_bytes": 887298
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/68ee2c9_1.json",
+        "sha256": "b87deae146a14b9f7914d45ae5c6c89bf8a443817aa90ee774c2bb504b56ee0f",
+        "size_bytes": 10865801
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/68ee2c9_2.json",
+        "sha256": "59c8d54978c20759807db3618dd4d9e1d03c83ff5c2953fb900455c16b2fa6e7",
+        "size_bytes": 10225889
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/68ee2c9_3.json",
+        "sha256": "53d01e51584fc4079fb0b1a90b2e4138f7d7f93754743c6fdf1de633b2240b66",
+        "size_bytes": 9959340
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/6bdbc26_1.json",
+        "sha256": "f7ee9af9e057d94ba4517edf34cfbfce3c3fb2495a32028c541eec95a4a1cd3a",
+        "size_bytes": 980407
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/6bdbc26_2.json",
+        "sha256": "49654bd9d6f86d5103e71e5ee6385f326fa74c563b9071b84fb81eb08f043d1a",
+        "size_bytes": 567467
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/6bdbc26_3.json",
+        "sha256": "38794213179e43f7afaf7f37f54bfd3970c46b5ce3ae34000ab740b36a8be4a6",
+        "size_bytes": 14298314
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/6171bbc_1.json",
+        "sha256": "11d7d9db06806014d1bcf33f690086b5bbaf88dea1d303da33d8fe947b4c616d",
+        "size_bytes": 1381474
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/6171bbc_2.json",
+        "sha256": "dff9804eea2736299118ec299ad222144d579ec4fa1276f6bebfe4fff2520415",
+        "size_bytes": 1272284
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/6171bbc_3.json",
+        "sha256": "35248533baf2e1dfd9880abdd79fd8e393e3cfc5a42e1fad7a72426f66f3daea",
+        "size_bytes": 1451876
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/6c2c621_1.json",
+        "sha256": "fecd19a56599ae6d0379ac1401899703de2d44d0a5dd8f1df6aec39d62406ddc",
+        "size_bytes": 4950208
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/6c2c621_2.json",
+        "sha256": "3eef62a1f0cf2f66f8f7fd70d2900b616f4732e87aab3ae6e41bd4a9e7e5bdc1",
+        "size_bytes": 1353526
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/6c2c621_3.json",
+        "sha256": "922ca30d37161ebcff94a7726f355c664b471056de668e7adcc0af1461b1d3be",
+        "size_bytes": 1708949
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/396c5a2_1.json",
+        "sha256": "50d02135b0b22ae0bade5d5d81f712dc918b6147770aad23a030b1f8694fca3e",
+        "size_bytes": 1572557
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/396c5a2_2.json",
+        "sha256": "fc39c4e49663bfb2548275692124bc38e7d60079c0e33275ce8c0ccf3d74b8d7",
+        "size_bytes": 3211444
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/396c5a2_3.json",
+        "sha256": "ecacc1dfef5cecc3638e2b03f4a1e2706a8289e801284652ca1f61cd9034f9d8",
+        "size_bytes": 1314628
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/4fab96f_1.json",
+        "sha256": "2fab9538e36804ae88794a168a110c1528c1ba7b02fc13885bfc7b3bbdb69387",
+        "size_bytes": 6589029
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/4fab96f_2.json",
+        "sha256": "d991c8c051c5efff7f2fa7ff4c35df5e79c1dbd20c6c0434e72e1ecc0e00e1fd",
+        "size_bytes": 819334
+      },
+      {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/evaluation/common_one_demo_dev/conditions/FRESH1D_S_1DDEPLOY/task_results/4fab96f_3.json",
+        "sha256": "5f7445eeda7f170a77d3b881d4cc3a30861340198fb7d6086a94071e51451da6",
+        "size_bytes": 880997
+      }
+    ]
+  }
+}

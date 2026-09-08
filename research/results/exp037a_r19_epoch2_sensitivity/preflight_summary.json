@@ -1,0 +1,66 @@
+{
+  "checkpoint_hashes": {
+    "1": "c3bc33f38dd0ea58e368c38f582775c355902bb9a01671f21e4e485add9daf2c",
+    "2": "1db373ba6399aac1adcd6fd721a05e79f3a9acfc39d8a03f2e0a5d8c49ea1457"
+  },
+  "checks": {
+    "checkpoint_selection": true,
+    "deployment_hash": true,
+    "diagnostic_and_formal_disjoint": true,
+    "epoch_1_hash": true,
+    "epoch_2_hash": true,
+    "formal_orchestrator_complete": true,
+    "formal_source": true,
+    "formal_stage_count": true,
+    "formal_stages_strict_valid": true,
+    "parent_closure": true,
+    "shuffle_integrity": true
+  },
+  "diagnostic_contract_sha256": "269a888d900822663934c04f9db8d11226801b377b31801f910f0afdd1528d5d",
+  "formal_snapshot_sha256": "ff992c150beb6d4cc1cb6ea97f2f03a26e6829a07e342dc000487c41f0732a69",
+  "format": "exp037a_r19_epoch2_preflight_v1",
+  "parent": {
+    "artifact_closure_sha256": "f5424356e1ae469f2533136c37e28d8864d43e83c26902ed136b164104f3b0b6",
+    "artifact_count": 922,
+    "checks": {
+      "artifact_closure_sha256": true,
+      "artifact_count": true,
+      "artifact_hashes": true,
+      "parent_config": true,
+      "parent_contract": true,
+      "parent_o08_partials_excluded": true,
+      "parent_run_root": true,
+      "parent_run_uuid": true,
+      "parent_source": true,
+      "required_stages": true
+    },
+    "format": "exp037a_parent_artifact_validation_14l_v1",
+    "passed": true
+  },
+  "passed": true,
+  "strict_stage_count": 18,
+  "strict_stage_manifest_sha256": {
+    "C00_parent_run_evidence_import": "a26179ab2c215a6275355369cbe319ade48cd9bfa245b6473f61289115248be0",
+    "C01_o07_o08_boundary_validation": "c9bc7167511ca99dbdfcc2bdd3a62560a2dc8e6ea954f8253b900e107a23c323",
+    "F00_two_arm_paired_analysis": "3ace1a935b0cd59558c170010367c5234100eecdddb82a539483784ced44653c",
+    "F01_portability_validation": "cdc07ea001cab7d609a5d464d3823635a96cc271c516db5553838efc029a6f9f",
+    "F02_git_safe_audit_export": "f062ad18709c107864bff45764d0fb18436de5e4b770a448b5f2fa01311bf71a",
+    "F03_final_report_and_handoff": "52331c43bcd9d5ec480f78a5b4d64dc933eb0d90792c7ffa51c956f59a740b31",
+    "O08_zero_cache_and_training_units": "c76c2ec70d2d756e266a28e24a1ae561a4f08346fff7c65ca4b0a62e71076dc4",
+    "O09_writer_reader_epoch_1": "7ee63a9bf9a1d0f39682fcac597acc8713a9d2e5aba33f6e1ac1aa331fbee5d3",
+    "O10_writer_reader_epoch_2": "074b58a7909ed0a7d42db2898a530b6303b3531adbeb78c85a750551b8c25ecf",
+    "O11_heldout_teacher_forced": "67d5f6442c506096c59fe6eaa8da9c413a8985b7718e7585eeb99625b89d98c8",
+    "O12_heldout_one_step": "368b4b07463037d3677c1f85c61f129398618936368a27238deb622905ce4c77",
+    "O13_heldout_full_trajectory": "6cb16903c67f374bf0c8eca17b98de97aadb9c772d745afbb00266bddc2ef904",
+    "O14_checkpoint_selection": "77e3e87466fcd924321614f465fb40ab014db71dc9e1a69c99adfd97c9cd73a8",
+    "O15_401_memory_field": "bb3aa68d52c3c72fd8bbd35193dc97ee87c0cf1c6e07403229c0bcac0833ef6c",
+    "O16_compile_and_add_98_memories": "2bb0a091b10469f1598734fe5792faebaa36bcf93ca2bf7b8f78f78ee239486c",
+    "O17_499_memory_deployment_field": "a7e69ad9183e94227f773cb09b583e8096af6a1684f2a72add5ccabb7ec6b7e1",
+    "O18_common_one_demo_dev_correct": "9b31f05492a915662572a11852b81677ccfa04dea5ed7342949092e1c9115c5a",
+    "O19_common_one_demo_dev_shuffle": "b2bf0c56cf2e69dc495b10ac420fccb124ee302445bfd8dda7b302a5f7474b49"
+  },
+  "training_operations": {
+    "backward": 0,
+    "optimizer_step": 0
+  }
+}

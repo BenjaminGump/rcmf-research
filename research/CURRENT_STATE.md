@@ -2987,3 +2987,23 @@ Decision:
   continuation evidence rather than a single-source S00-F03 run.
 - EXP-037A stops for scientific review. No confirmation, optimization,
   ablation, or other follow-on experiment is authorized or running.
+
+### EXP-037A-R19 Epoch-2 Sensitivity Is Mixed/Inconclusive
+
+- A bounded post-hoc diagnostic forced the already-trained strict-valid epoch-2
+  checkpoint without retraining or changing formal checkpoint selection.
+- The formal epoch-1 correct/shuffle control passed a full integrity audit:
+  same checkpoint and 499-memory contents, a bijective zero-fixed-point frozen
+  permutation, matched generation/task contracts, and independently
+  recomputed `8/57` versus `18/57` outcomes.
+- Diagnostic epoch-1 field reconstruction matched all formal scientific A/B
+  tensor hashes. Fresh epoch-2 401/499 correct and matched-shuffle fields were
+  then constructed with zero backward and optimizer operations.
+- Fresh epoch-2 official-dev results are correct `16/57` and matched shuffle
+  `19/57`; correct-only/shuffle-only/both/neither are `4/7/12/34`, with exact
+  two-sided McNemar `p=0.548828125`.
+- Epoch-2 correct is `+4/57` versus shared bare but `-3/57` versus its matched
+  shuffle. Decision: `EPOCH2_DIAGNOSTIC_MIXED_INCONCLUSIVE`.
+- The formal 14n epoch-1 result and checkpoint selection remain unchanged. No
+  follow-on experiment, alternate epoch, seed, permutation, or training was
+  launched.

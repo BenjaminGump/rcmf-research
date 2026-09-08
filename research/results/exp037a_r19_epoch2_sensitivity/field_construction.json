@@ -1,0 +1,504 @@
+{
+  "device": "cuda",
+  "epoch_1_calibration_passed": true,
+  "epoch_2_checkpoint_forced_diagnostic_only": true,
+  "epochs": {
+    "1": {
+      "backward_count": 0,
+      "checkpoint": {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/arms/1d/joint_training/checkpoints/epoch_01.pt",
+        "sha256": "c3bc33f38dd0ea58e368c38f582775c355902bb9a01671f21e4e485add9daf2c",
+        "size_bytes": 321882435
+      },
+      "correct_401": {
+        "checkpoint_sha256": "c3bc33f38dd0ea58e368c38f582775c355902bb9a01671f21e4e485add9daf2c",
+        "file": {
+          "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r19_epoch2_forced_dev_20260908_001/fields/epoch_01/heldout_401_fields/epoch_01_correct.pt",
+          "sha256": "0ef6970ec8bb8be17ab22b2fa9bbbe897d2b80f8b5786e549977cbf9a85915c2",
+          "size_bytes": 7874885
+        },
+        "memory_count": 401,
+        "memory_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "tensors": {
+          "A": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 258.95697021484375,
+            "sha256": "3d89227faee88f5bff76011029add6dc4a2e3e39223d78a97bd591d2faee267a",
+            "shape": [
+              960,
+              8,
+              256
+            ]
+          },
+          "B": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 0.0,
+            "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+            "shape": [
+              8,
+              256
+            ]
+          }
+        }
+      },
+      "deployment_499": {
+        "checkpoint_sha256": "c3bc33f38dd0ea58e368c38f582775c355902bb9a01671f21e4e485add9daf2c",
+        "file": {
+          "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r19_epoch2_forced_dev_20260908_001/fields/epoch_01/deployment_field/complete_37_task_field.pt",
+          "sha256": "4104903bc72c11d78ee7a375ddce4b1b1d645c48c4b25c46abcdd1a76e30e758",
+          "size_bytes": 123031610
+        },
+        "memory_count": 499,
+        "memory_ids_sha256": "6cbaf15f3e65ba46cdd1a68116b1641b1a1e9f004427a325f5174793d7f81659",
+        "tensors": {
+          "A": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 331.99444580078125,
+            "sha256": "4974734adbc54de0e9c19bdbb43fba907e0e3988666b6df803ebddec09b81a1b",
+            "shape": [
+              960,
+              8,
+              256
+            ]
+          },
+          "B": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 0.0,
+            "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+            "shape": [
+              8,
+              256
+            ]
+          },
+          "shuffled_A": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 328.9210510253906,
+            "sha256": "107af6c38d9f2208a0a6d1319c78a06d3af88ca206657cb3bd9697532116893b",
+            "shape": [
+              960,
+              8,
+              256
+            ]
+          },
+          "shuffled_B": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 0.0,
+            "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+            "shape": [
+              8,
+              256
+            ]
+          }
+        }
+      },
+      "epoch": 1,
+      "formal_calibration": {
+        "checks": {
+          "checkpoint": true,
+          "correct_401_A": true,
+          "correct_401_B": true,
+          "deployment_A": true,
+          "deployment_B": true,
+          "deployment_shuffled_A": true,
+          "deployment_shuffled_B": true,
+          "memory_ids": true,
+          "shuffle_401_A": true,
+          "shuffle_401_B": true
+        },
+        "formal_correct_401": {
+          "checkpoint_sha256": "c3bc33f38dd0ea58e368c38f582775c355902bb9a01671f21e4e485add9daf2c",
+          "file": {
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/arms/1d/heldout_validation/live_full_field/field_artifacts/epoch_01_correct.pt",
+            "sha256": "bce7d8cf53744e7559ec142eb2825d8905b6318fee1bd2c5ea321b8be288f81b",
+            "size_bytes": 7874885
+          },
+          "memory_count": 401,
+          "memory_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "tensors": {
+            "A": {
+              "dtype": "torch.float32",
+              "finite": true,
+              "norm": 258.95697021484375,
+              "sha256": "3d89227faee88f5bff76011029add6dc4a2e3e39223d78a97bd591d2faee267a",
+              "shape": [
+                960,
+                8,
+                256
+              ]
+            },
+            "B": {
+              "dtype": "torch.float32",
+              "finite": true,
+              "norm": 0.0,
+              "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+              "shape": [
+                8,
+                256
+              ]
+            }
+          }
+        },
+        "formal_deployment_499": {
+          "checkpoint_sha256": "c3bc33f38dd0ea58e368c38f582775c355902bb9a01671f21e4e485add9daf2c",
+          "file": {
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/arms/1d/deployment_field/complete_37_task_field.pt",
+            "sha256": "3bda71b91f7e1f5147a8399c5fdcb41207869ffbd5f0236bfbdecaa88d4c4110",
+            "size_bytes": 123031610
+          },
+          "memory_count": 499,
+          "memory_ids_sha256": "6cbaf15f3e65ba46cdd1a68116b1641b1a1e9f004427a325f5174793d7f81659",
+          "tensors": {
+            "A": {
+              "dtype": "torch.float32",
+              "finite": true,
+              "norm": 331.99444580078125,
+              "sha256": "4974734adbc54de0e9c19bdbb43fba907e0e3988666b6df803ebddec09b81a1b",
+              "shape": [
+                960,
+                8,
+                256
+              ]
+            },
+            "B": {
+              "dtype": "torch.float32",
+              "finite": true,
+              "norm": 0.0,
+              "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+              "shape": [
+                8,
+                256
+              ]
+            },
+            "shuffled_A": {
+              "dtype": "torch.float32",
+              "finite": true,
+              "norm": 328.9210510253906,
+              "sha256": "107af6c38d9f2208a0a6d1319c78a06d3af88ca206657cb3bd9697532116893b",
+              "shape": [
+                960,
+                8,
+                256
+              ]
+            },
+            "shuffled_B": {
+              "dtype": "torch.float32",
+              "finite": true,
+              "norm": 0.0,
+              "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+              "shape": [
+                8,
+                256
+              ]
+            }
+          }
+        },
+        "formal_shuffle_401": {
+          "checkpoint_sha256": "c3bc33f38dd0ea58e368c38f582775c355902bb9a01671f21e4e485add9daf2c",
+          "file": {
+            "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/arms/1d/heldout_validation/live_full_field/field_artifacts/epoch_01_key_payload_shuffle.pt",
+            "sha256": "7627a7463eeff0fb90630ef9fe2c504afa7d3fddddc293b7c7f4d6c9e9a1851e",
+            "size_bytes": 7875045
+          },
+          "memory_count": 401,
+          "memory_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "tensors": {
+            "A": {
+              "dtype": "torch.float32",
+              "finite": true,
+              "norm": 256.0957336425781,
+              "sha256": "cd8d5ac1ad0e97604bff845edb63a7907da015d4b8ab8c7e9fc394475c0f9eae",
+              "shape": [
+                960,
+                8,
+                256
+              ]
+            },
+            "B": {
+              "dtype": "torch.float32",
+              "finite": true,
+              "norm": 0.0,
+              "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+              "shape": [
+                8,
+                256
+              ]
+            }
+          }
+        },
+        "passed": true
+      },
+      "instant_add": {
+        "audit_rebuild_max_abs": 3.0994415283203125e-06,
+        "complete_shuffle_fixed_points": 0,
+        "deployment_field": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r19_epoch2_forced_dev_20260908_001/fields/epoch_01/deployment_field/complete_37_task_field.pt",
+        "deployment_field_sha256": "4104903bc72c11d78ee7a375ddce4b1b1d645c48c4b25c46abcdd1a76e30e758",
+        "field_memory_count_after": 499,
+        "field_memory_count_before": 401,
+        "field_shape_after": {
+          "A": [
+            960,
+            8,
+            256
+          ],
+          "B": [
+            8,
+            256
+          ]
+        },
+        "field_shape_before": {
+          "A": [
+            960,
+            8,
+            256
+          ],
+          "B": [
+            8,
+            256
+          ]
+        },
+        "format": "rcmf_instant_heldout_memory_addition_9a_v1",
+        "global_seed": 25101,
+        "max_add_seconds_per_memory": 9.936001151800156e-05,
+        "max_compile_seconds_per_memory": 0.002334656659513712,
+        "mean_add_seconds_per_memory": 6.935130139546735e-05,
+        "mean_compile_seconds_per_memory": 0.0010081864370755395,
+        "new_memory_count": 98,
+        "no_retraining_or_optimizer_step": true,
+        "passed": true,
+        "peak_cuda_memory_bytes": 1058723328,
+        "production_add_scans_existing_records": false,
+        "remove_restore_max_abs": 7.152557373046875e-07,
+        "removed_parent_id": "55bcdd03-fa90-5f8d-b91c-5cc64a64d46f",
+        "removed_parent_memory_count": 13,
+        "selected_checkpoint": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/arms/1d/joint_training/checkpoints/epoch_01.pt",
+        "selected_checkpoint_sha256": "c3bc33f38dd0ea58e368c38f582775c355902bb9a01671f21e4e485add9daf2c",
+        "total_heldout_compile_add_seconds": 0.11107874801382422
+      },
+      "optimizer_step_count": 0,
+      "shuffle_401": {
+        "checkpoint_sha256": "c3bc33f38dd0ea58e368c38f582775c355902bb9a01671f21e4e485add9daf2c",
+        "file": {
+          "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r19_epoch2_forced_dev_20260908_001/fields/epoch_01/heldout_401_fields/epoch_01_key_payload_shuffle.pt",
+          "sha256": "2332fb3003c056d12f8b26e174db37d25e824264e02a427c23ebde062eb642b3",
+          "size_bytes": 7875045
+        },
+        "memory_count": 401,
+        "memory_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "tensors": {
+          "A": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 256.0957336425781,
+            "sha256": "cd8d5ac1ad0e97604bff845edb63a7907da015d4b8ab8c7e9fc394475c0f9eae",
+            "shape": [
+              960,
+              8,
+              256
+            ]
+          },
+          "B": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 0.0,
+            "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+            "shape": [
+              8,
+              256
+            ]
+          }
+        }
+      }
+    },
+    "2": {
+      "backward_count": 0,
+      "checkpoint": {
+        "path": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/arms/1d/joint_training/checkpoints/epoch_02.pt",
+        "sha256": "1db373ba6399aac1adcd6fd721a05e79f3a9acfc39d8a03f2e0a5d8c49ea1457",
+        "size_bytes": 321884483
+      },
+      "correct_401": {
+        "checkpoint_sha256": "1db373ba6399aac1adcd6fd721a05e79f3a9acfc39d8a03f2e0a5d8c49ea1457",
+        "file": {
+          "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r19_epoch2_forced_dev_20260908_001/fields/epoch_02/heldout_401_fields/epoch_02_correct.pt",
+          "sha256": "3d6db71d1b0cd68c45ac3af934a2a8a61426ad7f3768ed1b8944196559ece701",
+          "size_bytes": 7874885
+        },
+        "memory_count": 401,
+        "memory_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "tensors": {
+          "A": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 328.3761291503906,
+            "sha256": "3b4e6545efcf2b14b2520a3b0a0e6ac5966e337900bebd60284e90c715a53fcc",
+            "shape": [
+              960,
+              8,
+              256
+            ]
+          },
+          "B": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 0.0,
+            "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+            "shape": [
+              8,
+              256
+            ]
+          }
+        }
+      },
+      "deployment_499": {
+        "checkpoint_sha256": "1db373ba6399aac1adcd6fd721a05e79f3a9acfc39d8a03f2e0a5d8c49ea1457",
+        "file": {
+          "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r19_epoch2_forced_dev_20260908_001/fields/epoch_02/deployment_field/complete_37_task_field.pt",
+          "sha256": "c88a26d73892344695b21ea14d160317b971405ec35e5e845e8a13b06b616ddc",
+          "size_bytes": 123031610
+        },
+        "memory_count": 499,
+        "memory_ids_sha256": "6cbaf15f3e65ba46cdd1a68116b1641b1a1e9f004427a325f5174793d7f81659",
+        "tensors": {
+          "A": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 421.154052734375,
+            "sha256": "12dfd904116199e63d93674f3a9b5c5d0df8b3b86bb4a7e94956b28ce2548d68",
+            "shape": [
+              960,
+              8,
+              256
+            ]
+          },
+          "B": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 0.0,
+            "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+            "shape": [
+              8,
+              256
+            ]
+          },
+          "shuffled_A": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 417.1493225097656,
+            "sha256": "48646d450d14d21cfe313ea4d0e9e3850ffd31e91dcca840274173edb3e4af5d",
+            "shape": [
+              960,
+              8,
+              256
+            ]
+          },
+          "shuffled_B": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 0.0,
+            "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+            "shape": [
+              8,
+              256
+            ]
+          }
+        }
+      },
+      "epoch": 2,
+      "instant_add": {
+        "audit_rebuild_max_abs": 5.7220458984375e-06,
+        "complete_shuffle_fixed_points": 0,
+        "deployment_field": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r19_epoch2_forced_dev_20260908_001/fields/epoch_02/deployment_field/complete_37_task_field.pt",
+        "deployment_field_sha256": "c88a26d73892344695b21ea14d160317b971405ec35e5e845e8a13b06b616ddc",
+        "field_memory_count_after": 499,
+        "field_memory_count_before": 401,
+        "field_shape_after": {
+          "A": [
+            960,
+            8,
+            256
+          ],
+          "B": [
+            8,
+            256
+          ]
+        },
+        "field_shape_before": {
+          "A": [
+            960,
+            8,
+            256
+          ],
+          "B": [
+            8,
+            256
+          ]
+        },
+        "format": "rcmf_instant_heldout_memory_addition_9a_v1",
+        "global_seed": 25101,
+        "max_add_seconds_per_memory": 0.00018433388322591782,
+        "max_compile_seconds_per_memory": 0.0012172069400548935,
+        "mean_add_seconds_per_memory": 6.964110427212958e-05,
+        "mean_compile_seconds_per_memory": 0.0010019010503073127,
+        "new_memory_count": 98,
+        "no_retraining_or_optimizer_step": true,
+        "passed": true,
+        "peak_cuda_memory_bytes": 1058723328,
+        "production_add_scans_existing_records": false,
+        "remove_restore_max_abs": 7.152557373046875e-07,
+        "removed_parent_id": "55bcdd03-fa90-5f8d-b91c-5cc64a64d46f",
+        "removed_parent_memory_count": 13,
+        "selected_checkpoint": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003/arms/1d/joint_training/checkpoints/epoch_02.pt",
+        "selected_checkpoint_sha256": "1db373ba6399aac1adcd6fd721a05e79f3a9acfc39d8a03f2e0a5d8c49ea1457",
+        "total_heldout_compile_add_seconds": 0.11047366075217724
+      },
+      "optimizer_step_count": 0,
+      "shuffle_401": {
+        "checkpoint_sha256": "1db373ba6399aac1adcd6fd721a05e79f3a9acfc39d8a03f2e0a5d8c49ea1457",
+        "file": {
+          "path": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r19_epoch2_forced_dev_20260908_001/fields/epoch_02/heldout_401_fields/epoch_02_key_payload_shuffle.pt",
+          "sha256": "eeb969d456bda2fd7a211589e28ecf289c3cf6214df7507a7032a3243a395a9d",
+          "size_bytes": 7875045
+        },
+        "memory_count": 401,
+        "memory_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "tensors": {
+          "A": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 324.68267822265625,
+            "sha256": "59ccb7a09bfe72517bed0ff022c3476dc54819ff90eebc88cb90b00fee0c45ef",
+            "shape": [
+              960,
+              8,
+              256
+            ]
+          },
+          "B": {
+            "dtype": "torch.float32",
+            "finite": true,
+            "norm": 0.0,
+            "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+            "shape": [
+              8,
+              256
+            ]
+          }
+        }
+      }
+    }
+  },
+  "formal_checkpoint_selection_modified": false,
+  "format": "exp037a_r19_epoch2_field_construction_v1",
+  "hardware": "NVIDIA H100 80GB HBM3",
+  "passed": true,
+  "training_operations": {
+    "backward": 0,
+    "optimizer_step": 0
+  }
+}

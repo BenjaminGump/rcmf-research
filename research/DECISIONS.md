@@ -3502,3 +3502,33 @@ IMPLEMENTATION DEVIATIONS:
 
 - None after the frozen 14n launch source. Monitoring wrote only to its
   separate monitoring root. Scientific configuration changes remained zero.
+
+## 2026-09-08 EXP-037A-R19 epoch-2 checkpoint sensitivity diagnostic
+
+VERIFIED:
+
+- The formal epoch-1 matched-shuffle control has valid checkpoint, field,
+  permutation, task, condition, and generation provenance. Its 499-row
+  permutation is bijective with zero fixed points, and per-task rows reproduce
+  formal correct/shuffle counts of `8/57` and `18/57`.
+- Epoch 1 was selected without dev evidence because its heldout classification
+  was `STRONG` while epoch 2 was `PARTIAL`; both checkpoints are strict-valid.
+- The diagnostic reconstructed epoch-1 scientific field tensors exactly, then
+  produced fresh epoch-2 correct/shuffle fields and fresh 57-task rows with no
+  training, output reuse, or formal-root modification.
+- Epoch-2 correct/shuffle are `16/57` and `19/57`; paired discordances are
+  `4` correct-only and `7` shuffle-only, exact McNemar `p=0.548828125`.
+
+DECISION:
+
+- Record `EPOCH2_DIAGNOSTIC_MIXED_INCONCLUSIVE`: correct beats bare by `4/57`
+  but trails its matched shuffle by `3/57`.
+- Do not promote epoch 2, rewrite the formal 14n result, or change the heldout
+  checkpoint-selection rule based on exposed dev.
+- Stop R19. A multi-permutation shuffle study may be considered only as a
+  separate preregistered task; it was not launched here.
+
+IMPLEMENTATION DEVIATIONS:
+
+- Added one diagnostic-only wrapper around frozen production field/evaluation
+  functions. No production scientific code or formal artifact changed.

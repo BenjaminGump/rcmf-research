@@ -1,0 +1,26 @@
+{
+  "classification": "EPOCH2_DIAGNOSTIC_MIXED_INCONCLUSIVE",
+  "diagnostic_root": "/lambda/nfs/rcmf-persist/project/runs/diagnostics/exp037a_r19_epoch2_forced_dev_20260908_001",
+  "diagnostic_source": "2a7f371f378eab42e42629a4fd5275e18b2814ce",
+  "formal_root": "/lambda/nfs/rcmf-persist/project/runs/reproducible_pipeline/rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003",
+  "formal_run_uuid": "rcmf_reproducible_1d_continuation_from_14k_o08_20260907_003",
+  "formal_source": "98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f",
+  "git_safe_artifacts": {
+    "artifact_index": "research/results/exp037a_r19_epoch2_sensitivity/artifact_index.json",
+    "checkpoint_selection_evidence": "research/results/exp037a_r19_epoch2_sensitivity/checkpoint_selection_evidence.json",
+    "epoch2_correct_summary": "research/results/exp037a_r19_epoch2_sensitivity/epoch2_correct_summary.json",
+    "epoch2_shuffle_summary": "research/results/exp037a_r19_epoch2_sensitivity/epoch2_shuffle_summary.json",
+    "field_construction": "research/results/exp037a_r19_epoch2_sensitivity/field_construction.json",
+    "final_result": "research/results/exp037a_r19_epoch2_sensitivity/final_result.json",
+    "formal_epoch1_shuffle_integrity": "research/results/exp037a_r19_epoch2_sensitivity/formal_epoch1_shuffle_integrity.json",
+    "preflight_summary": "research/results/exp037a_r19_epoch2_sensitivity/preflight_summary.json",
+    "report": "research/results/EXP_037A_R19_EPOCH2_SENSITIVITY.md"
+  },
+  "lambda_artifact_index_sha256": "fb8a6d6e712c2d612e467a9f3d050bb54fca46a52abdc4c949883d6692cb2189",
+  "no_follow_on_experiment": true,
+  "training_operations": {
+    "backward": 0,
+    "optimizer_step": 0
+  }
+}
+
