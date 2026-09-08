@@ -6,6 +6,7 @@ from typing import Any, Iterable, Mapping, Protocol, Sequence, runtime_checkable
 
 @runtime_checkable
 class ReproducibleBenchmarkAdapter(Protocol):
+    """Legacy EXP-037A protocol; new dataset work must use portable-v2."""
     def benchmark_identity(self) -> Mapping[str, Any]: ...
 
     def list_splits(self) -> Mapping[str, Sequence[str]]: ...
@@ -121,3 +122,14 @@ class MockBenchmarkAdapter:
     def redact_audit_record(self, record: Mapping[str, Any]) -> Mapping[str, Any]:
         return dict(record)
 
+
+# Importing here keeps legacy import sites stable while making the versioned
+# protocol discoverable from the historical module.
+from rcmf.pipeline.portable_v2.adapter import ReproducibleBenchmarkAdapterV2  # noqa: E402
+
+
+__all__ = [
+    "MockBenchmarkAdapter",
+    "ReproducibleBenchmarkAdapter",
+    "ReproducibleBenchmarkAdapterV2",
+]

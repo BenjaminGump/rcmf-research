@@ -1,0 +1,23 @@
+schema_version: rcmf_dataset_profile_v2
+benchmark: alfworld
+adapter: alfworld:portable-v1-pending
+status: engineering_readiness_only
+repository:
+  url: https://github.com/alfworld/alfworld
+  commit: aaba6870f86c5be6a08a491f32a50b906227bc3e
+  license: MIT
+action_semantics: alfworld_text_command
+reward_semantics: official_binary_success
+prompt_profile: react_task_type_two_demo_v1
+prompt_manifest: assets/prompts/source_manifests/react_alfworld.json
+trajectory_source:
+  provider: ALFWorldOfficialExpertTrajectoryProvider
+  provenance: OFFICIAL_EXPERT
+  replay_interface: TextWorld
+splits:
+  memory_and_training: train
+  evaluation_only:
+    - valid_seen
+    - valid_unseen
+counts:
+  ownership: adapter_generated_split_and_trajectory_manifests

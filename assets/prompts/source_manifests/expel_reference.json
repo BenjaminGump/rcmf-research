@@ -1,0 +1,21 @@
+{
+  "format": "rcmf_prompt_reference_source_v2",
+  "status": "REFERENCE_ONLY",
+  "upstream_repository": "https://github.com/LeapLabTHU/ExpeL",
+  "upstream_commit": "e41ec9a24823e7b560c561ab191441b56d9bcefc",
+  "license": "Apache-2.0",
+  "sources": [
+    {
+      "path": "prompts/alfworld.py",
+      "blob": "2b2093efdd6547448cefd826c6870c397d412191",
+      "sha256": "27dfa16517409a10ec34e1423929f030ce579c78cc177e8fff9709e5e0ae77ec"
+    },
+    {
+      "path": "prompts/webshop.py",
+      "blob": "8a8495ca3411fe5ff7939cdc78fa4b6cbc34240b",
+      "sha256": "60faa7442a6b5b1941bef0e37dc5e6d6e218f883dd61868e12e7dab909efe0a5"
+    }
+  ],
+  "default_profile": false,
+  "excluded_components": ["reflection", "insight", "retrieval", "experiential_memory"]
+}

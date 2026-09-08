@@ -1,0 +1,21 @@
+schema_version: rcmf_dataset_profile_v2
+benchmark: appworld
+adapter: appworld:portable-v2
+status: compatibility_fixture_only
+dataset_version: appworld-0.1.0
+environment_version: appworld-0.1.0
+action_semantics: python_code
+reward_semantics: official_binary_success
+prompt_profiles:
+  - full_demo
+  - full_demo_first_only
+trajectory_source:
+  provenance: OFFICIAL_MODEL_OR_IL
+  policy: replay_validated_successful_training_trajectories
+splits:
+  training: train
+  heldout_training: manifest_defined
+  official_evaluation: dev
+counts:
+  ownership: upstream_manifests
+  generic_success_condition: false

@@ -1,0 +1,17 @@
+schema_version: rcmf_portable_pipeline_config_v2
+adapter_factory: rcmf.benchmarks.appworld.portable_adapter_v2:AppWorldPortableAdapterV2
+dataset_profile: configs/datasets/appworld_portable_v2.yaml
+run_root_template: ${RCMF_RUNS_ROOT}/{benchmark}/{run_uuid}
+runtime:
+  run_mode: full
+  prompt_profile: full_demo_first_only
+  global_seed: 25101
+  training_epochs: 2
+  checkpoint_policy: terminal_completed_epoch
+  authorization_required: true
+  no_metric_checkpoint_selection: true
+  no_checkpoint_fallback: true
+  model_frozen: true
+  selector_frozen_after_training: true
+  runtime_retrieval: false
+  raw_memory_in_query_prompt: false

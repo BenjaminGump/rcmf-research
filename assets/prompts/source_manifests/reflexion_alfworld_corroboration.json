@@ -1,0 +1,12 @@
+{
+  "format": "rcmf_prompt_reference_source_v2",
+  "status": "CORROBORATION_ONLY",
+  "upstream_repository": "https://github.com/noahshinn/reflexion",
+  "upstream_commit": "218cf0ef1df84b05ce379dd4a8e47f17766733a0",
+  "upstream_path": "alfworld_runs/prompts/alfworld_3prompts.json",
+  "upstream_blob": "0e7c204818e9aa3128d266da5512d1ec3d9ea13e",
+  "upstream_file_sha256": "a10976b4ae99f4802aa9e621933bb71065ae103f2bd273a24466ab1005fbc45a",
+  "license": "MIT",
+  "matches_react_blob": true,
+  "vendored_duplicate": false
+}

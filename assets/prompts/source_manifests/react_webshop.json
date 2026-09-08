@@ -1,0 +1,15 @@
+{
+  "profile": "react_official_one_demo_v1",
+  "upstream_repository": "https://github.com/ysymyth/ReAct",
+  "upstream_commit": "6bdb3a1fd38b8188fc7ba4102969fe483df8fdc9",
+  "upstream_path": "WebShop.ipynb",
+  "upstream_blob": "67cb9f878de242951a7804a31bb5da4264111a29",
+  "upstream_file_sha256": "86c7bb6c8a3a2de6aa0fde45da280c22a7332864897bd5e686a4634df0e36b0f",
+  "extracted_text_sha256": "58e4164eb648db4f8f437ee8a7b3ce064d3661d929e4f0fe71155ea6b062c56a",
+  "local_path": "../webshop/react_official_one_demo_v1/prompt1.txt",
+  "local_sha256": "58e4164eb648db4f8f437ee8a7b3ce064d3661d929e4f0fe71155ea6b062c56a",
+  "license": "MIT",
+  "extraction_method": "Python AST literal extraction of the sole prompt1 assignment using scripts/extract_react_prompt_assets.py",
+  "content_changed": false,
+  "status": "DEFAULT_CANDIDATE_NOT_SCIENTIFICALLY_RUN"
+}

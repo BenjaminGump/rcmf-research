@@ -1,0 +1,45 @@
+{
+  "adapter_protocol_version": "rcmf_reproducible_benchmark_adapter_v2",
+  "appworld_formal_evidence": {
+    "records_commit": "137b68f443c8cc7b02814bd97123a416e139da87",
+    "source_commit": "98f917d03ab4a3e525cab4eb8ef5e4f0e7bf9a9f"
+  },
+  "archive_ref": "archive/rcmf-portable-canonical-v2-PORTABLE_CANONICAL_SOURCE_SHORT",
+  "authority_order": [
+    "sealed primary artifacts and source code at the specified commit",
+    "canonical version manifest and docs/PIPELINE.md",
+    "relevant tasks/<dataset>/STATE.md",
+    "docs/HISTORY.md and docs/FAILURE_MODES.md",
+    "conversation summaries or remembered context"
+  ],
+  "checkpoint_policy": "terminal_completed_epoch",
+  "core_version": "rcmf_portable_canonical_v2",
+  "date": "2026-09-08",
+  "format": "rcmf_portable_canonical_release_v2",
+  "known_limitations": [
+    "ALFWorld environment, data, trajectory replay, and scientific behavior are unverified",
+    "WebShop environment, data, trajectory replay, and scientific behavior are unverified",
+    "portable-v2 scientific phase executors are dataset adaptation work; current evidence is bounded manifest and adapter conformance",
+    "the single-permutation matched-shuffle anomaly is deferred until after 2026-09-25"
+  ],
+  "new_dataset_scientific_status": {
+    "alfworld": "NOT_EVALUATED",
+    "webshop": "NOT_EVALUATED"
+  },
+  "prompt_source_manifests": [
+    "assets/prompts/source_manifests/react_alfworld.json",
+    "assets/prompts/source_manifests/react_webshop.json",
+    "assets/prompts/source_manifests/expel_reference.json",
+    "assets/prompts/source_manifests/reflexion_alfworld_corroboration.json"
+  ],
+  "r19_diagnostic_evidence": {
+    "records_commit": "ca799ffa5692678081d69f4994e470267def4ec5",
+    "source_commit": "2a7f371f378eab42e42629a4fd5275e18b2814ce"
+  },
+  "source_sha": "PORTABLE_CANONICAL_SOURCE_SHA",
+  "status": "ENGINEERING_VERIFIED_PORTABLE_CANONICAL_BASE",
+  "test_results": {
+    "binding": "research/results/rcmf_portable_v2_m1/tests.json",
+    "status": "PENDING_SOURCE_FREEZE"
+  }
+}

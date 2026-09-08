@@ -7,9 +7,12 @@ runs/
 experiments/
 artifacts/
 datasets/
+!configs/datasets/
+!configs/datasets/*.yaml
 models/
 checkpoints/
 tensorboard/
+.tmp_pytest_*/
 wandb/
 rcmf.egg-info/
 *.log

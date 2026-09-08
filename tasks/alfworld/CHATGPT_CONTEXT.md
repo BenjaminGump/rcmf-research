@@ -1,0 +1,70 @@
+# ALFWorld ChatGPT Context
+
+- Document role: ALFWorld conversation bootstrap cache; not a source of truth.
+- Generated-from commit: `ca799ffa5692678081d69f4994e470267def4ec5`.
+- Canonical source SHA: `PORTABLE_CANONICAL_SOURCE_SHA`.
+- Last verified UTC: `2026-09-08T09:43:34Z`.
+- Base canonical SHA: `PORTABLE_CANONICAL_SOURCE_SHA`.
+- Adapter version: `alfworld:portable-v1-pending` / protocol
+  `rcmf_reproducible_benchmark_adapter_v2`.
+- Branch/worktree/run namespace: future `adapt/alfworld-v1`, dedicated
+  worktree, `/lambda/nfs/rcmf-persist/project/runs/alfworld/<uuid>`.
+- Latest relevant handoff: `research/handoffs/20260908T071524Z_exp037a_r19_epoch2_sensitivity.md`.
+
+Independently verify the latest pushed GitHub state, archive, canonical
+manifest, and task state before treating this cache as current.
+
+## Authority Order
+
+1. Sealed primary artifacts and source code at the specified commit.
+2. The canonical version manifest and `docs/PIPELINE.md`.
+3. `tasks/alfworld/STATE.md`.
+4. `docs/HISTORY.md` and `docs/FAILURE_MODES.md`.
+5. Conversation memory.
+
+## Documents To Read
+
+- `AGENTS.md`
+- `docs/CHATGPT_ENTRYPOINT.md`
+- `docs/PIPELINE.md`
+- `docs/ADAPTER_CONTRACT.md`
+- `docs/SCIENTIFIC_STATUS.md`
+- `docs/datasets/ALFWORLD_READINESS.md`
+- `tasks/alfworld/STATE.md`
+- `tasks/alfworld/ADAPTATION_BRIEF.md`
+
+## State
+
+Verified: source repo commit
+`aaba6870f86c5be6a08a491f32a50b906227bc3e`; exact ReAct profile
+`react_task_type_two_demo_v1` from commit
+`6bdb3a1fd38b8188fc7ba4102969fe483df8fdc9`; renderer and portable mock
+conformance. Prompt source/profile is
+`assets/prompts/source_manifests/react_alfworld.json` and exact task-family
+two-demo JSON. Planned trajectory source is official training-game expert
+plans replayed through the TextWorld interface with `OFFICIAL_EXPERT`
+provenance. Train is memory/training; valid seen/unseen are evaluation-only.
+
+Unverified: deployed ALFWorld package/data version, official expert textual
+replay, stable task/split/leakage manifests, Qwen token contract, environment
+determinism, runtime, and every scientific result. No scientific ALFWorld RCMF
+result exists.
+
+Current blocker/next decision: inspect/install the isolated environment and
+data, then replay a few official training games across task families without
+Qwen or training. Stop for user approval before large installation, scientific
+GPU work, any run plausibly over 18 hours, core/scientific changes, or unclear
+provenance.
+
+## Copy-Ready First Message
+
+```text
+Independently verify the latest pushed portable-v2 source. Read AGENTS.md,
+docs/PIPELINE.md, docs/ADAPTER_CONTRACT.md,
+docs/datasets/ALFWORLD_READINESS.md, tasks/alfworld/STATE.md, and
+tasks/alfworld/ADAPTATION_BRIEF.md. Begin only the bounded ALFWorld environment,
+data, and official-expert TextWorld replay inspection. Do not run Qwen, train
+RCMF, use validation trajectories for memory, or modify portable core without a
+verified defect and review. Report VERIFIED/UNVERIFIED facts and update STATE.
+```
+

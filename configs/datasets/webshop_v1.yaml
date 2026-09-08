@@ -1,0 +1,28 @@
+schema_version: rcmf_dataset_profile_v2
+benchmark: webshop
+adapter: webshop:portable-v1-pending
+status: engineering_readiness_only
+repository:
+  url: https://github.com/princeton-nlp/WebShop
+  commit: 64fa2a5c15c7daa698b9ac93f5bb5437b634c9bd
+  license: MIT
+action_semantics: search_click_text
+reward_semantics: continuous_zero_to_one_with_exact_one_success
+prompt_profile: react_official_one_demo_v1
+prompt_manifest: assets/prompts/source_manifests/react_webshop.json
+trajectory_sources:
+  - provider: official_setup_sample
+    provenance: OFFICIAL_HUMAN_SAMPLE
+  - provider: official_full_human_archive
+    provenance: OFFICIAL_HUMAN
+  - provider: official_il_archive
+    provenance: UNKNOWN_PROHIBITED
+    note: classify only after archive provenance is verified
+  - provider: WebShopTrainingMetadataOracleTrajectoryProvider
+    provenance: ORACLE_GENERATED_FROM_TRAIN_METADATA
+    fallback_only: true
+splits:
+  memory_and_training: official_training_instructions_only
+  official_evaluation: adapter_manifest_defined
+counts:
+  ownership: adapter_generated_split_and_trajectory_manifests

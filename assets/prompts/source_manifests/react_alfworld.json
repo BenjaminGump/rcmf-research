@@ -1,0 +1,21 @@
+{
+  "profile": "react_task_type_two_demo_v1",
+  "upstream_repository": "https://github.com/ysymyth/ReAct",
+  "upstream_commit": "6bdb3a1fd38b8188fc7ba4102969fe483df8fdc9",
+  "upstream_path": "prompts/alfworld_3prompts.json",
+  "upstream_blob": "0e7c204818e9aa3128d266da5512d1ec3d9ea13e",
+  "upstream_file_sha256": "a10976b4ae99f4802aa9e621933bb71065ae103f2bd273a24466ab1005fbc45a",
+  "assembly_source": {
+    "path": "alfworld.ipynb",
+    "blob": "645a82bd748d1bde50c48bdf67397c905b9a7e6f",
+    "sha256": "a7fcbe884dda2c838b55490f6812c28be66c6bb28d26061e6987eba7246178e1",
+    "verified_behavior": "header + react_<task-family>_1 + newline + react_<task-family>_0 + trailer"
+  },
+  "extracted_text_sha256": "a10976b4ae99f4802aa9e621933bb71065ae103f2bd273a24466ab1005fbc45a",
+  "local_path": "../alfworld/react_task_type_two_demo_v1/alfworld_3prompts.json",
+  "local_sha256": "a10976b4ae99f4802aa9e621933bb71065ae103f2bd273a24466ab1005fbc45a",
+  "license": "MIT",
+  "extraction_method": "exact Git blob copied without textual modification; profile selects react_<family>_1 then react_<family>_0",
+  "content_changed": false,
+  "status": "DEFAULT_CANDIDATE_NOT_SCIENTIFICALLY_RUN"
+}

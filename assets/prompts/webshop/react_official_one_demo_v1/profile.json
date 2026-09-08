@@ -1,0 +1,9 @@
+{
+  "format": "rcmf_prompt_profile_v2",
+  "profile": "react_official_one_demo_v1",
+  "source_asset": "prompt1.txt",
+  "demonstration_count": 1,
+  "action_grammar": ["search[...]", "think[...]", "click[...]"],
+  "content_changed": false,
+  "implicit_system_prompt": false
+}

@@ -1,0 +1,18 @@
+{
+  "format": "rcmf_prompt_profile_v2",
+  "profile": "react_task_type_two_demo_v1",
+  "source_asset": "alfworld_3prompts.json",
+  "header": "Interact with a household to solve a task. Here are two examples.\n",
+  "trailer": "\nHere is the task.\n",
+  "example_suffix_order": ["1", "0"],
+  "task_family_prefixes": {
+    "look_at_obj": "examine",
+    "pick_and_place": "put",
+    "pick_clean_then_place": "clean",
+    "pick_cool_then_place": "cool",
+    "pick_heat_then_place": "heat",
+    "pick_two_obj": "puttwo"
+  },
+  "action_grammar": "alfworld_text_command",
+  "content_changed": false
+}
