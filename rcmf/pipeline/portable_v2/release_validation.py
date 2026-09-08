@@ -157,6 +157,8 @@ def validate_portable_v2_release(repo_root: str | Path) -> dict[str, Any]:
     missing = [relative for relative in REQUIRED_DOCS if not (root / relative).is_file()]
     if missing:
         raise FileNotFoundError(f"required portable-v2 documents missing: {missing}")
+    if not (root / "scripts/validate_portable_prompt_tokenizer.py").is_file():
+        raise FileNotFoundError("portable prompt tokenizer validator is missing")
 
     core_root = root / "rcmf/pipeline/portable_v2"
     benchmark_imports = []

@@ -62,3 +62,10 @@ def test_prompt_source_manifests_are_machine_readable() -> None:
         assert len(row["upstream_commit"]) == 40
         assert len(row["local_sha256"]) == 64
         assert row["license"] == "MIT"
+
+
+def test_frozen_tokenizer_validator_is_a_no_generation_entrypoint() -> None:
+    text = (ROOT / "scripts/validate_portable_prompt_tokenizer.py").read_text()
+    assert "load_model=False" in text
+    assert '"generation_executed": False' in text
+    assert ".generate(" not in text

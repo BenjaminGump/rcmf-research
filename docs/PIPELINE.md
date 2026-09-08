@@ -38,6 +38,7 @@ Authoritative implementation anchors:
 - Semantic DAG: `rcmf/pipeline/portable_v2/dag.py`
 - Terminal checkpoint: `rcmf/pipeline/portable_v2/checkpoint_policy.py`
 - Manifest-only conformance: `rcmf/pipeline/portable_v2/conformance.py`
+- Frozen-tokenizer prompt validation: `scripts/validate_portable_prompt_tokenizer.py`
 - AppWorld wrapper: `rcmf/benchmarks/appworld/portable_adapter_v2.py`
 
 Legacy EXP-037A modules remain intact for historical reproduction. New ports
@@ -126,4 +127,3 @@ query, tune on evaluation, or silently reinterpret missing provenance.
   portable v2's terminal policy is prospective and scientifically distinct.
 - The matched-shuffle anomaly is deferred in
   `docs/deferred/SHUFFLE_ANOMALY_POST_SUBMISSION.md`.
-
