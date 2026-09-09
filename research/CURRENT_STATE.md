@@ -3049,3 +3049,25 @@ Decision:
   reused. No full AppWorld science or ALFWorld/WebShop science ran.
 - Decision: `READY_FOR_PARALLEL_DATASET_ADAPTATION_V2_1`. ALFWorld and WebShop
   remain `NOT_EVALUATED` and begin with bounded environment/data/replay work.
+
+### Neutral Harness V1 RC1 Independent Review
+
+- Verified export source `ec953717d233f3958d8c6b3180b0b4a785312ad8`
+  and records `185da8e4354df3403e08dc4a88309f60235c2c7b` from
+  the exact four-bundle review package. All bundle identities and ancestry
+  passed; public upstream datasets are present inside upstream Git history,
+  but no model checkpoint, private credential, or protected runtime output was
+  found.
+- Method neutrality passed for ReAct, TTR, RCMF, ReMe, MemGen, and delta-Mem.
+  The external baseline adapters remain documentation-only and claim no
+  standardized support.
+- RCMF review source `ca93ed71a747c5c1ba0cac3d2659636ca936f092`
+  resolves H1-H3: exact same-run dependency identity, typed sealed-upstream
+  closure, actual executor-handler proof, and dataset semantic lock closure.
+- Local full tests passed `1080` with `3` skips; Lambda/CUDA passed `1083`.
+- Harness finalization remains blocked: duplicate/omitted task closure and
+  run/harness identity are not semantically validated, and a result containing
+  `METHOD_FAILURE` can remain comparison-eligible.
+- Decision: `STOP_FAIRNESS_CONTRACT_INCOMPLETE`. Thread B must apply the
+  bounded result-finalization patch proposal and retest before final harness
+  freeze. No training, benchmark result, or final harness freeze occurred.

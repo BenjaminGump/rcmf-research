@@ -1,0 +1,96 @@
+{
+  "format": "rcmf_neutral_harness_v1_rc1_binding_review_v1",
+  "verified_utc": "2026-09-09T03:29:06Z",
+  "development_base_records_sha": "fbc9bd205d63f4b6e5d46f275a3c2278935a8359",
+  "canonical_v2_1_source_sha": "0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158",
+  "review_source_sha": "ca93ed71a747c5c1ba0cac3d2659636ca936f092",
+  "review_archive": "archive/rcmf-neutral-harness-v1-rc1-review-ca93ed7",
+  "hypotheses": {
+    "H1_same_run_dependency_identity": {
+      "classification": "CONFIRMED_AND_REPAIRED",
+      "same_run_fields": [
+        "source_commit",
+        "run_uuid",
+        "run_root",
+        "pipeline_config_sha256",
+        "dataset_profile_sha256",
+        "adapter_identity"
+      ],
+      "cross_identity_exception": "SEALED_UPSTREAM_WITH_HASHED_CLOSURE"
+    },
+    "H2_actual_executor_handler_registry": {
+      "classification": "CONFIRMED_AND_REPAIRED",
+      "proof": "executor_instance_bound_phase_ids",
+      "missing_or_unknown_handler_behavior": "FAIL_BEFORE_PHASE_WORK"
+    },
+    "H3_dataset_semantic_identity": {
+      "classification": "CONFIRMED_AND_REPAIRED",
+      "bound_fields": [
+        "action_semantics",
+        "reward_semantics",
+        "split_identity",
+        "trajectory_source_identity"
+      ],
+      "benchmark_dispatch": false
+    }
+  },
+  "plugin": {
+    "path": "rcmf/integrations/neutral_harness_v1",
+    "protocol": "agent_memory_harness_v1_rc1",
+    "capabilities": [
+      "prepare_training",
+      "model_forward_hook",
+      "offline_memory_compile"
+    ],
+    "binds": [
+      "source_commit",
+      "method_config_sha256",
+      "terminal_checkpoint_sha256",
+      "deployment_field_sha256",
+      "episode_reset",
+      "reader_injection"
+    ],
+    "runtime_retrieval": false,
+    "raw_memory_prompt": false,
+    "harness_imports_rcmf": false
+  },
+  "ownership": {
+    "HARNESS_OWNED": [
+      "benchmark_environment",
+      "dataset_and_task_locks",
+      "base_prompt_and_observations",
+      "model_and_generation",
+      "reward_and_evaluator",
+      "task_audit_and_comparison"
+    ],
+    "METHOD_OWNED": [
+      "memory_representation",
+      "training_and_checkpoints",
+      "retrieval_or_model_hooks",
+      "online_state",
+      "method_prompt_slot",
+      "services"
+    ],
+    "DATASET_ADAPTER_OWNED": [
+      "task_conversion",
+      "action_validation_and_execution",
+      "reward_interpretation",
+      "environment_bridge"
+    ],
+    "RUN_DERIVED": [
+      "run_uuid",
+      "task_results",
+      "resource_telemetry",
+      "terminal_status"
+    ],
+    "UPSTREAM_REPRODUCTION_ONLY": [
+      "published_method_prompts",
+      "published_checkpoints",
+      "published_model_specific_scripts",
+      "paper_metrics"
+    ]
+  },
+  "scientific_math_changes": 0,
+  "training_or_evaluation_run": false,
+  "passed": true
+}

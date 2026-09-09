@@ -3602,3 +3602,37 @@ IMPLEMENTATION DEVIATIONS:
   key; `_002` exposed a one-line local-variable rename error. Each used a fresh
   root, was preserved, minimally repaired, and regression-tested. Neither
   initialized successful `_003`.
+
+## 2026-09-09 Neutral Harness V1 RC1 Independent Review
+
+VERIFIED:
+
+- The exact exported harness and baseline bundles are reviewable and all four
+  identities, source/records relations, archives, and upstream ancestry pass.
+- RC1's capability protocol is method-neutral across the six required
+  lifecycle shapes. Baseline implementation gaps remain explicitly blocked.
+- RCMF hypotheses H1-H3 were reachable implementation gaps and are repaired
+  prospectively at `ca93ed71a747c5c1ba0cac3d2659636ca936f092` without
+  changing scientific mathematics.
+
+DECISION:
+
+- Do not freeze final Harness V1. The exported result validator permits
+  duplicate/incomplete task populations, does not bind result source/run to a
+  run manifest, and permits typed method failures to enter comparison
+  eligibility.
+- Return `STOP_FAIRNESS_CONTRACT_INCOMPLETE` and send Thread B the exact
+  semantic-finalization patch proposal. Retest the contract after that bounded
+  repair; no scientific work is needed.
+- Preserve V2.1 source/archive unchanged. Freeze the RCMF review source only as
+  `archive/rcmf-neutral-harness-v1-rc1-review-ca93ed7`.
+
+IMPLEMENTATION DEVIATIONS:
+
+- RCMF now distinguishes same-run phase dependencies from explicit
+  `SEALED_UPSTREAM` dependencies and validates actual handler registries.
+- Dataset action/reward/split/trajectory semantics now bind profile, adapter,
+  and neutral-harness benchmark lock. This is identity hardening only.
+- Complete upstream bundle history contains public research data despite the
+  export being free of newly added harness datasets; MemGen and delta-Mem
+  remain private/internal pending license resolution.

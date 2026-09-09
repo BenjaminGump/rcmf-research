@@ -1,0 +1,29 @@
+{
+  "format": "rcmf_harness_v1_rc1_review_artifact_index_v1",
+  "verified_utc": "2026-09-09T03:29:06Z",
+  "source_commit": "ca93ed71a747c5c1ba0cac3d2659636ca936f092",
+  "artifacts": [
+    {
+      "path": "docs/HARNESS_V1_RC1_INDEPENDENT_REVIEW.md",
+      "sha256": "e71abb1114405d2e75e0e565f7d899f83218f0bc71eeb8ef4e9ba38e06f083f8"
+    },
+    {
+      "path": "research/results/HARNESS_V1_RC1_COMPATIBILITY.json",
+      "sha256": "a617b0b83c5ac08dd504ee267c1cb19916dd32aa82c08df1385c2ea1c4c846e6"
+    },
+    {
+      "path": "research/results/HARNESS_V1_RC1_FAIRNESS_AUDIT.json",
+      "sha256": "8576ebc9f1c061f1fd1cee4d37b064779e995a52f54327209b02a2fb7c9676c5"
+    },
+    {
+      "path": "research/results/HARNESS_V1_RC1_RCMF_BINDING.json",
+      "sha256": "ebc3bb132fed12784e28e2d734989e512f47729d5f5bdcc6d7080245f9185402"
+    },
+    {
+      "path": "research/handoffs/20260909T032906Z_harness_v1_rc1_independent_review.md",
+      "sha256": "ea4ddf3fbf81c84afd47fd6a194205411816026703c276935176f5b658837a13"
+    }
+  ],
+  "secret_scan": "PASS",
+  "scientific_artifacts_included": false
+}

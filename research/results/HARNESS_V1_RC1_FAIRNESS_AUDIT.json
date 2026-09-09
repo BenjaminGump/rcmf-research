@@ -1,0 +1,43 @@
+{
+  "format": "rcmf_harness_v1_rc1_fairness_audit_v1",
+  "verified_utc": "2026-09-09T03:29:06Z",
+  "passed": false,
+  "blocking_classification": "STOP_FAIRNESS_CONTRACT_INCOMPLETE",
+  "verified_safe": [
+    "content_addressed_benchmark_and_method_locks",
+    "separate_upstream_and_standardized_tracks",
+    "exact_model_identity_comparison",
+    "typed_implementation_classification",
+    "method_failure_task_row_requires_null_reward_and_success",
+    "shared_identity_mismatches_are_ineligible"
+  ],
+  "blocking_defects": [
+    {
+      "id": "F01_TASK_POPULATION_CLOSURE",
+      "reachable": true,
+      "evidence": "duplicate task IDs with different task-result hashes pass result_manifest schema",
+      "required_fix": "validate exact unique ordered task membership and hashes against the task manifest"
+    },
+    {
+      "id": "F02_RUN_RESULT_IDENTITY_CLOSURE",
+      "reachable": true,
+      "evidence": "validate_result_against_locks accepts a different schema-valid harness_source_sha",
+      "required_fix": "bind run UUID and harness source to run manifest and every task result"
+    },
+    {
+      "id": "F03_TYPED_FAILURE_COMPARISON_GATE",
+      "reachable": true,
+      "evidence": "complete result containing METHOD_FAILURE is lock-valid and comparison-eligible with no reason",
+      "required_fix": "typed execution failures must be excluded from main comparison and never scored as zero"
+    }
+  ],
+  "direct_reproduction": {
+    "duplicate_task_ids_schema": "ACCEPTED",
+    "wrong_harness_source_lock_validation": "ACCEPTED",
+    "method_failure_result_lock_validation": "ACCEPTED",
+    "method_failure_comparison_eligible": true,
+    "method_failure_comparison_reasons": []
+  },
+  "thread_b_patch_required": true,
+  "final_harness_freeze_allowed": false
+}

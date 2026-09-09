@@ -1,0 +1,48 @@
+{
+  "format": "rcmf_harness_v1_rc1_compatibility_review_v1",
+  "verified_utc": "2026-09-09T03:29:06Z",
+  "decision": "STOP_FAIRNESS_CONTRACT_INCOMPLETE",
+  "export": {
+    "zip_sha256": "4827530c0c89aa3e825f10390981e966e048f6503b5d1cdc891c4648ec445809",
+    "manifest_sha256": "79c1ea6723706a97b758376d94c6ebc1e4479197aac5ef0562784e3a37784429",
+    "manifest_entries": 49,
+    "bundle_verify_passed": 4,
+    "bundle_count": 4,
+    "protected_runtime_artifacts_found": 0,
+    "public_upstream_dataset_files_present": true
+  },
+  "identities": {
+    "harness_source": "ec953717d233f3958d8c6b3180b0b4a785312ad8",
+    "harness_records": "185da8e4354df3403e08dc4a88309f60235c2c7b",
+    "reme_head": "cb52f1f636029d9ceb2d984e15dd9d8acd68fcc2",
+    "reme_upstream": "2f37a159b72a04ac1885a7db7f1a663a833e7791",
+    "memgen_head": "e8097fee206ee2c38704f671743a19babe492017",
+    "memgen_upstream": "970cc95af99b5008610e6b281619d181bc9b5ab9",
+    "delta_mem_head": "5b4b86c3dce11e35ac9c27f16ef6988790d011d0",
+    "delta_mem_upstream": "5cd5d9153c7f408764728d953565201e198c39e2"
+  },
+  "lifecycle_compatibility": {
+    "react": "PASS",
+    "ttr": "PASS",
+    "rcmf": "PASS",
+    "reme": "PASS",
+    "memgen": "PASS",
+    "delta_mem": "PASS",
+    "method_neutral": true
+  },
+  "baseline_functional_adapters": {
+    "reme": "DOCUMENTED_NOT_IMPLEMENTED",
+    "memgen": "DOCUMENTED_NOT_IMPLEMENTED",
+    "delta_mem": "DOCUMENTED_NOT_IMPLEMENTED"
+  },
+  "bounded_tests": {
+    "harness_rc1": {"passed": 32, "failed": 0},
+    "local_rcmf_focused": {"passed": 38, "failed": 0},
+    "local_rcmf_full": {"passed": 1080, "skipped": 3, "failed": 0},
+    "lambda_rcmf_focused": {"passed": 38, "failed": 0},
+    "lambda_rcmf_full_cuda": {"passed": 1083, "failed": 0},
+    "baseline_python_compiled": {"reme": 603, "memgen": 37, "delta_mem": 39},
+    "baseline_json_parsed": {"reme": 5, "memgen": 3, "delta_mem": 6}
+  },
+  "scientific_execution": false
+}
