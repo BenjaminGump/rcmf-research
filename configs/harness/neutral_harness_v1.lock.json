@@ -1,0 +1,39 @@
+{
+  "compatibility_naming_debt": "COMPATIBILITY_NAMING_DEBT_NON_SEMANTIC",
+  "dependency_direction": "rcmf_to_neutral_harness_protocol",
+  "final_archive_ref": "archive/harness-v1-source-827ed6f",
+  "final_executable_source_sha": "827ed6f394804834e93444c9bb02c435e9e238a3",
+  "final_records": {
+    "location": "refs/heads/release/harness-v1",
+    "sha": "3c197d15c80c85ad478fc4c502a7b3e9f6aad7cf"
+  },
+  "final_tag": "harness-v1.0.0",
+  "format": "rcmf_neutral_harness_v1_lock_v1",
+  "harness_imports_rcmf": false,
+  "harness_repository": "BenjaminGump/agent-memory-eval-harness",
+  "last_verified_utc": "2026-09-09T09:35:37Z",
+  "protocol_identity": "agent_memory_harness_v1_rc1",
+  "rcmf_integration_review_records_sha": "543de32a91e20796ca6441b65b3a9e41f271c412",
+  "rcmf_integration_source_sha": "ca93ed71a747c5c1ba0cac3d2659636ca936f092",
+  "rcmf_plugin_identity": {
+    "class": "RCMFNeutralHarnessPlugin",
+    "method_id": "rcmf",
+    "module": "rcmf.integrations.neutral_harness_v1.plugin",
+    "protocol_identity": "agent_memory_harness_v1_rc1"
+  },
+  "release_branch": "release/harness-v1",
+  "release_manifest": {
+    "git_blob_sha256": "f72fc77f24ed971162d8a420ffa82271260242495fbbaece682f3aaf60ce3016",
+    "path": "docs/HARNESS_V1_RELEASE.json"
+  },
+  "schema_hash_basis": "git_blob_bytes_lf",
+  "schema_identities": {
+    "benchmark.lock.schema.json": "eef634d20e64056bcb8c3cecd3706af550ad672ae94308aabb6f48a7fea3ecba",
+    "method.lock.schema.json": "d53db62e63ca3ebb53bbd2852aef6c3c75c3c25af682ba5af04242426953f2a3",
+    "method_state_manifest.schema.json": "aa609ee0fbd9765c68a8bba8a351e2611105d7a4b517d27ed6e109a666e269df",
+    "result_manifest.schema.json": "42cff7d50035523eb6cdb8b4941a65b05c629d5dac13a3eae70d3b11a9cbec46",
+    "run_manifest.schema.json": "ea11e5a711f4d01804fb1f8d1800283681c2d6dd9c636558494c377a5fb0af5b",
+    "service_identity.schema.json": "71664915a2d5a9f341778f0dc74b70c72d0c90153887fcfd6c6aea25cd339958",
+    "task_result.schema.json": "86bff4ee627ceb9fa76403a9462de059d85a6fdac3d70ff62b574c88ace12553"
+  }
+}
