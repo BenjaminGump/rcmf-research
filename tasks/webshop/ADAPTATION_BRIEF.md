@@ -1,46 +1,36 @@
-# WebShop Portable-V2 Adaptation Brief
+# WebShop Adaptation Brief
 
-- Development base records SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`
-- Canonical executable ancestor SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`
-- Canonical archive ref: `archive/rcmf-portable-canonical-v2_1-0ca0101`
-- Bootstrap generated at SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`
-- Last verified UTC: `2026-09-08T17:33:33Z`
+- Development base records SHA: `543de32a91e20796ca6441b65b3a9e41f271c412`
+- Portable V2.1 source: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`
+- Final RCMF Harness V1 integration source:
+  `4e56702f467635bda120d118a5367c58e593ecef`
+- Integration archive: `archive/rcmf-neutral-harness-v1-integration-4e56702`
+- Final Harness source: `827ed6f394804834e93444c9bb02c435e9e238a3`
+- WebShop readiness source/records: `2072ae59b79171facabb2b580cda0c2ae460cd8e` /
+  `40d6318892e03d7e775ed83704dae89917f7b324`
+- Current decision: `STOP_WEBSHOP_DATA_IDENTITY_UNRESOLVED`
+- Last verified UTC: `2026-09-09T09:58:34Z`
 
-Start by reading `AGENTS.md`, `docs/PIPELINE.md`,
-`docs/ADAPTER_CONTRACT.md`, `docs/datasets/WEBSHOP_READINESS.md`, and
-`tasks/webshop/STATE.md`. Base the worktree on
-the current canonical executable ancestor above; independently verify the archive/commit before
-editing.
+Start from the final RCMF Harness V1 integration records branch in a dedicated
+`adapt/webshop-v1` worktree and isolated server/process namespace. Read
+`AGENTS.md`, `docs/PIPELINE.md`, `docs/ADAPTER_CONTRACT.md`,
+`tasks/webshop/STATE.md`, and the exact readiness records before editing.
+Preserve the Portable V2.1 core and Final Harness lock.
 
-Implement only under `rcmf/benchmarks/webshop/`,
-`configs/datasets/webshop_v1.yaml`, `assets/prompts/webshop/`,
-`tasks/webshop/`, and WebShop tests/entrypoints unless a proven core defect
-requires review. Use branch `adapt/webshop-v2_1`, a separate worktree,
-environment/process namespace, unique WebShop server port, and NFS root
-`/lambda/nfs/rcmf-persist/project/runs/webshop/<uuid>`.
+Source, code license, ReAct prompt, action/reward semantics, and the seed-233
+split algorithm are verified. The separately linked 1,643-session archive has
+a sealed byte/hash and structural summary but remains inspection-only. The IL
+archive remains `UNKNOWN_PROHIBITED`; no oracle was implemented or used.
 
-Primary source: `princeton-nlp/WebShop` commit
-`64fa2a5c15c7daa698b9ac93f5bb5437b634c9bd` (MIT). Prompt source: ReAct commit
-`6bdb3a1fd38b8188fc7ba4102969fe483df8fdc9`, AST-extracted profile
-`react_official_one_demo_v1`, manifest
-`assets/prompts/source_manifests/react_webshop.json`. Preserve the exact one-demo
-header/example and search/think/click grammar.
+The blocking input is a primary or maintainer-signed identity/terms manifest
+for the complete product file, instructions, Lucene index, and 50-session setup
+sample. Without it, no exact ordered task manifest or admitted replay
+population can be constructed. The next bounded task is to obtain and validate
+that manifest, then rerun the readiness probe before choosing replay IDs. Do
+not infer provenance from filenames or solve the blocker in shared docs.
 
-Pin environment code, products, instructions, search index, observation mode,
-and server/session identity. Separate the approximately 50 setup human samples,
-full human archive, IL/model archive, and optional train-metadata oracle by
-provenance. Do not admit the IL archive until its source class is verified.
-Replay source `search[...]`/`click[...]` actions and record actual observations
-and continuous reward. Only exact official reward `1.0` is fully successful.
-
-First bounded task: verify installation/data licenses and archive provenance,
-start an isolated engineering server if cheap, and replay the small official
-sample with no Qwen generation. Record deterministic reset/session behavior,
-action/observation schemas, index identity, rewards, and typed failures.
-
-Then proceed through adapter conformance, train/evaluation leakage manifest,
-prompt/tokenizer equality, bare smoke, RCMF module diagnostics, small
-preregistered integration, and runtime preflight. Stop for approval before a
-large corpus download, scientific GPU work, any run plausibly over 18 hours,
-any result-tuned oracle, core/scientific-method change, or unresolved license/
-provenance. Never share a mutable server port or output root with ALFWorld.
+After that gate passes, implement only the WebShop adapter, dataset profile,
+prompt asset, task records, and tests. Preserve continuous reward and exact
+reward `1.0` success semantics, unique server ports, and evaluation isolation.
+Stop before freezing a benchmark lock, running Qwen/training, generating an
+oracle, or any execution plausibly exceeding 18 hours.

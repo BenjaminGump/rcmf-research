@@ -1,6 +1,6 @@
 # Scientific Status
 
-Last verified: `2026-09-08T17:33:33Z`.
+Last verified: `2026-09-09T09:58:34Z`.
 
 Portable canonical V2.1 is an engineering hardening milestone. Its bounded
 AppWorld three-demo pilot completed all 12 portable phases, including real
@@ -21,6 +21,11 @@ results.
 - Portable V2.1 local full tests passed `1070` with `3` skips; Lambda/CUDA full
   tests passed `1073`. The bounded AppWorld pilot passed P00-P11 with 20/20
   backward/optimizer steps and strict manifests.
+- Final Neutral Harness V1 source `827ed6f394804834e93444c9bb02c435e9e238a3`
+  is machine-locked to RCMF integration source
+  `4e56702f467635bda120d118a5367c58e593ecef`. Actual lifecycle/result-bundle
+  compatibility, source/schema mismatch rejection, and local/Lambda suites
+  passed without model execution.
 
 ## Scientifically Supported
 
@@ -39,9 +44,12 @@ results.
 
 - Portable v2 has no ALFWorld scientific result.
 - Portable v2 has no WebShop scientific result.
-- Neither dataset environment/data installation, official-trajectory replay
-  corpus, tokenizer count contract, split manifest, runtime estimate, nor
-  formal authorization has completed.
+- ALFWorld environment/data/expert replay readiness completed, but the pinned
+  prompt collides exactly with one evaluation task; status is
+  `STOP_ALFWORLD_SPLIT_LEAKAGE` and no benchmark lock exists.
+- WebShop remains `STOP_WEBSHOP_DATA_IDENTITY_UNRESOLVED`: product,
+  instruction, index, and setup-sample identities/terms are not sealed, and no
+  benchmark lock exists.
 - Portable v2 is not scientifically validated across datasets.
 
 ## Deferred

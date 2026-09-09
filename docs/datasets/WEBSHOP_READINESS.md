@@ -1,6 +1,13 @@
 # WebShop Readiness
 
-Status: engineering plan only; no WebShop RCMF result exists.
+Status: `STOP_WEBSHOP_DATA_IDENTITY_UNRESOLVED`; no WebShop RCMF result exists.
+
+The completed readiness work is on `dataset/webshop-readiness-v1`, source
+`2072ae59b79171facabb2b580cda0c2ae460cd8e`, records
+`40d6318892e03d7e775ed83704dae89917f7b324`. Source/prompt/action/reward/split
+semantics and an inspection-only 1,643-session archive were recorded. Product,
+instruction, Lucene-index, and setup-sample identities and terms remain
+unsealed, so no replay population or benchmark lock may be frozen.
 
 Primary source is `princeton-nlp/WebShop` pinned at
 `64fa2a5c15c7daa698b9ac93f5bb5437b634c9bd` (MIT). Product corpus,
@@ -37,9 +44,5 @@ inspection, source-archive provenance classification, server/session smoke,
 and replay of the small official sample. No scientific Qwen run or product
 corpus commit is permitted.
 
-Unresolved: archive provenance, redistribution, product/instruction/index
-hashes, observation mode, stable train/evaluation split, server port/process
-ownership, reward/evaluator determinism, tokenizer counts, and runtime. A
-read-only Lambda inspection at `2026-09-08T09:43:34Z` found no importable
-`webshop` or `gym` package in `/home/ubuntu/venvs/rcmf-py311`; no installation
-or data download was attempted.
+The preceding historical plan remains useful only after an exact primary or
+maintainer-signed data/terms manifest passes the readiness probe.

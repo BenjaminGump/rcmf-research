@@ -1,14 +1,17 @@
 # ChatGPT Entrypoint
 
 - Document role: compact project bootstrap cache; not a primary source.
-- Development base records SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`.
+- Development base records SHA: `543de32a91e20796ca6441b65b3a9e41f271c412`.
 - Canonical executable ancestor SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
 - Canonical archive ref: `archive/rcmf-portable-canonical-v2_1-0ca0101`.
-- Bootstrap generated at SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
-- Generated-from commit: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
+- Bootstrap generated at SHA: `4e56702f467635bda120d118a5367c58e593ecef`.
+- Generated-from commit: `4e56702f467635bda120d118a5367c58e593ecef`.
 - Canonical source SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
-- Last verified UTC: `2026-09-08T17:33:33Z`.
-- Latest relevant handoff: `research/handoffs/20260908T173333Z_rcmf_portable_v2_1_m1.md`.
+- RCMF Harness V1 integration source SHA: `4e56702f467635bda120d118a5367c58e593ecef`.
+- Integration archive ref: `archive/rcmf-neutral-harness-v1-integration-4e56702`.
+- Final Harness source SHA: `827ed6f394804834e93444c9bb02c435e9e238a3`.
+- Last verified UTC: `2026-09-09T09:58:34Z`.
+- Latest relevant handoff: `research/handoffs/20260909T095834Z_rcmf_neutral_harness_v1_integration_freeze.md`.
 
 Independently verify the latest pushed GitHub branch, commit, and canonical
 manifest before relying on this cache.
@@ -53,14 +56,20 @@ bounded AppWorld pilot traversed P00-P11, training, field algebra, Qwen, and the
 evaluator. It is not a scientific result. ALFWorld and WebShop have pinned
 prompt sources and readiness plans but no scientific RCMF result.
 
+Final Neutral Harness V1 is locked as the comparison protocol for future
+dataset branches. The RCMF plugin preserves method-owned checkpoint/field/read
+state while benchmark truth and result finalization remain Harness-owned. This
+integration lock is engineering evidence, not a dataset benchmark lock.
+
 Verified: formal AppWorld 14n completed; its one-demo epoch-1 result is negative,
 and R19 epoch 2 is post-hoc mixed/inconclusive. Unverified: cross-dataset
 scientific validity, ALFWorld/WebShop environments, replay corpora, and formal
 results. The matched-shuffle anomaly is deferred.
 
-Current blocker/next decision: each dataset must independently seal its
-environment, data, official trajectory replay, split/leakage, prompt-token, and
-adapter conformance before any scientific preflight or approval request.
+Current blockers: ALFWorld is stopped on one exact evaluation-task collision
+in its pinned ReAct demonstrations; WebShop is stopped on unresolved product,
+instruction, index, and setup-sample identities/terms. Resolve each only in its
+dedicated branch before proposing a scientific benchmark lock.
 
 ## Review Protocol
 

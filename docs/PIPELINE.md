@@ -160,3 +160,29 @@ engineering integration evidence, never a scientific result.
   portable v2's terminal policy is prospective and scientifically distinct.
 - The matched-shuffle anomaly is deferred in
   `docs/deferred/SHUFFLE_ANOMALY_POST_SUBMISSION.md`.
+
+## Final Neutral Harness V1 Integration
+
+The prospective standardized-comparison boundary is frozen separately from
+the Portable V2.1 mathematical core. RCMF integration source
+`4e56702f467635bda120d118a5367c58e593ecef` binds Final Neutral Harness V1
+source `827ed6f394804834e93444c9bb02c435e9e238a3` through
+`configs/harness/neutral_harness_v1.lock.json`. The lock pins the final source,
+records, tag, archive, release manifest, protocol identity, and all seven
+schema blob hashes. It also records implementation source
+`ca93ed71a747c5c1ba0cac3d2659636ca936f092`; the later integration source adds
+only this exact lock and validation boundary.
+
+Dependency direction is RCMF to the method-neutral Harness protocol. RCMF
+owns its terminal checkpoint, compiled field, and reader lifecycle. The
+Harness owns benchmark truth, base prompt, task/environment execution,
+evaluator, result finalization, and comparison eligibility. Raw memory does
+not enter the shared base prompt, runtime retrieval remains prohibited, and
+the Harness does not import RCMF implementation.
+
+No dataset benchmark lock is frozen. ALFWorld readiness remains
+`STOP_ALFWORLD_SPLIT_LEAKAGE`; WebShop readiness remains
+`STOP_WEBSHOP_DATA_IDENTITY_UNRESOLVED`. Future dataset branches must begin
+from `integration/rcmf-neutral-harness-v1-final` and preserve Portable V2.1
+source `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158` as their canonical executable
+ancestor.

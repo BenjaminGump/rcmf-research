@@ -1,22 +1,32 @@
 # WebShop ChatGPT Context
 
 - Document role: WebShop conversation bootstrap cache; not a source of truth.
-- Development base records SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`.
+- Development base records SHA: `543de32a91e20796ca6441b65b3a9e41f271c412`.
 - Canonical executable ancestor SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
 - Canonical archive ref: `archive/rcmf-portable-canonical-v2_1-0ca0101`.
-- Bootstrap generated at SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
-- Generated-from commit: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
+- Bootstrap generated at SHA: `4e56702f467635bda120d118a5367c58e593ecef`.
+- Generated-from commit: `4e56702f467635bda120d118a5367c58e593ecef`.
 - Canonical source SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
-- Last verified UTC: `2026-09-08T17:33:33Z`.
-- Base canonical SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
-- Adapter version: `webshop:portable-v2_1-pending` / protocol
+- RCMF Harness V1 integration source SHA: `4e56702f467635bda120d118a5367c58e593ecef`.
+- Final Harness source SHA: `827ed6f394804834e93444c9bb02c435e9e238a3`.
+- Last verified UTC: `2026-09-09T09:58:34Z`.
+- Readiness branch/source/records: `dataset/webshop-readiness-v1` /
+  `2072ae59b79171facabb2b580cda0c2ae460cd8e` /
+  `40d6318892e03d7e775ed83704dae89917f7b324`.
+- Adapter version: `webshop:portable-v2_1-pending` under
   `rcmf_reproducible_benchmark_adapter_v2`.
-- Branch/worktree/run namespace: future `adapt/webshop-v2_1`, dedicated worktree,
+- Prompt source/profile: ReAct `6bdb3a1fd38b8188fc7ba4102969fe483df8fdc9` /
+  `react_official_one_demo_v1`.
+- Trajectory source/provenance: setup human sample unresolved; larger archive
+  inspection-only; IL source `UNKNOWN_PROHIBITED`.
+- Split/evaluation contract: source-defined seed-233 task split; only verified
+  training instructions may supply memory.
+- Branch/worktree/run namespace: future `adapt/webshop-v1`, dedicated worktree,
   `/lambda/nfs/rcmf-persist/project/runs/webshop/<uuid>`, unique server port.
-- Latest relevant handoff: `research/handoffs/20260908T173333Z_rcmf_portable_v2_1_m1.md`.
+- Latest relevant handoff: `research/handoffs/20260909T095834Z_rcmf_neutral_harness_v1_integration_freeze.md`.
 
-Independently verify the latest pushed GitHub state, archive, canonical
-manifest, and task state before treating this cache as current.
+Independently verify the latest pushed GitHub state, archive, Final Harness
+lock, readiness records, and task state before treating this cache as current.
 
 ## Authority Order
 
@@ -39,35 +49,28 @@ manifest, and task state before treating this cache as current.
 
 ## State
 
-Verified: source repo commit
-`64fa2a5c15c7daa698b9ac93f5bb5437b634c9bd`; exact ReAct profile
-`react_official_one_demo_v1` AST-extracted from commit
-`6bdb3a1fd38b8188fc7ba4102969fe483df8fdc9`; action-grammar renderer and
-portable continuous-reward mock conformance. Portable V2.1's real AppWorld
-pilot also passed all shared executor boundaries, but this does not validate WebShop. Prompt source/profile is
-`assets/prompts/source_manifests/react_webshop.json`. Planned sources keep the
-setup human sample, full human archive, IL/model archive, and training-metadata
-oracle separate. Exact reward `1.0` is full success; partial reward is not.
+Verified: Final Harness V1 and the RCMF integration lock pass; WebShop source,
+prompt, action/reward semantics, split algorithm, and the inspection-only
+1,643-session archive identity are recorded. Readiness remains
+`STOP_WEBSHOP_DATA_IDENTITY_UNRESOLVED`.
 
-Unverified: environment/data installation, product/instruction/index and
-observation-mode identities, archive provenance/license, stable split, session
-replay, token counts, runtime, and every scientific result. No scientific
-WebShop RCMF result exists.
+Unverified: product/instruction/index/setup-sample identities and terms, live
+server/replay, exact task manifest, final adapter, benchmark lock, and all
+scientific results. No scientific WebShop RCMF result exists.
 
-Current blocker/next decision: inspect source/archive licenses and isolated
-server/data setup, classify IL provenance, then replay the small human sample
-without Qwen. Stop for approval before large download, scientific GPU work,
-any run plausibly over 18 hours, result-tuned oracle, core/scientific changes,
-or ambiguous provenance.
+Current blocker/next decision: obtain a primary or maintainer-signed exact data
+manifest for products, instructions, Lucene index, and setup sample before any replay
+population is selected. Stop before guessing provenance, generating an oracle,
+freezing a lock, model generation, training, or long execution.
 
 ## Copy-Ready First Message
 
 ```text
-Independently verify the latest pushed portable-v2 source. Read AGENTS.md,
-docs/PIPELINE.md, docs/ADAPTER_CONTRACT.md,
-docs/datasets/WEBSHOP_READINESS.md, tasks/webshop/STATE.md, and
-tasks/webshop/ADAPTATION_BRIEF.md. Begin only the bounded WebShop source,
-license, environment, archive-provenance, and small-sample replay inspection.
-Do not run Qwen, train RCMF, download/commit the full corpus without review, or
-guess IL provenance. Report VERIFIED/UNVERIFIED facts and update STATE.
+Independently verify the latest pushed RCMF integration branch, Final Harness
+lock, and WebShop readiness records. Read AGENTS.md, docs/PIPELINE.md,
+docs/SCIENTIFIC_STATUS.md, tasks/webshop/STATE.md, and
+tasks/webshop/ADAPTATION_BRIEF.md. Address only
+STOP_WEBSHOP_DATA_IDENTITY_UNRESOLVED by obtaining or validating exact primary
+data/index/setup-sample identities and terms. Do not guess provenance, run
+model science, or freeze a benchmark lock. Stop on ambiguity.
 ```

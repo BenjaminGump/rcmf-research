@@ -1,6 +1,14 @@
 # ALFWorld Readiness
 
-Status: engineering plan only; no ALFWorld RCMF result exists.
+Status: `STOP_ALFWORLD_SPLIT_LEAKAGE`; no ALFWorld RCMF result exists.
+
+The completed readiness work is on `dataset/alfworld-readiness-v1`, source
+`87cf79d4ee47dfc0f74a799605630f9fbbae0f15`, records
+`c7b3ddd2a063554b6c586f62b9f3db305897b63e`. Environment, data inventory,
+task/split lineage, and six official expert train replays passed. However,
+ReAct demonstration `pick_two_obj:0` exactly matches valid-seen evaluation task
+`alfworld:trial_T20190907_201917_045715`; no benchmark lock may be frozen until
+a separate prompt/split policy decision is approved and re-audited.
 
 Primary code source is `alfworld/alfworld` pinned at
 `aaba6870f86c5be6a08a491f32a50b906227bc3e` (MIT). The deployed package and
@@ -40,8 +48,5 @@ inspection and replay of at most a few training games across task families,
 with no Qwen generation or training. If the environment is absent, install it
 in the dataset worktree/environment only after reviewing data size/licensing.
 
-Unresolved: deployed package/data hashes, exact game inventory, expert API,
-TextWorld command/observation normalization, stable split/lineage manifest,
-tokenizer counts, reset/replay determinism, and runtime estimate. A read-only
-Lambda inspection at `2026-09-08T09:43:34Z` found no importable `alfworld`
-package in `/home/ubuntu/venvs/rcmf-py311`; no installation was attempted.
+The preceding historical plan remains useful for adapter construction after the
+leakage gate is resolved. It must not be read as current authorization.

@@ -1,5 +1,34 @@
 # Current State
 
+## 2026-09-09 Final RCMF x Neutral Harness V1 Integration Base
+
+VERIFIED:
+
+- Final Harness V1 source `827ed6f394804834e93444c9bb02c435e9e238a3`,
+  records `3c197d15c80c85ad478fc4c502a7b3e9f6aad7cf`, tag
+  `harness-v1.0.0`, archive, release manifest, and seven schema identities
+  validate independently.
+- RCMF integration source `4e56702f467635bda120d118a5367c58e593ecef`
+  adds only the exact final-release lock/validator/tests over the unchanged
+  plugin implementation at `ca93ed71...`.
+- Actual Final Harness lifecycle and result-bundle probes pass. RCMF focused
+  tests pass 47 locally/Lambda; full suites pass 1089 plus three skips locally
+  and 1092 on Lambda. No training or benchmark evaluation ran.
+
+CURRENT DECISION:
+
+- `RCMF_HARNESS_V1_INTEGRATION_BASE_FROZEN`.
+- Future ALFWorld/WebShop branches inherit
+  `integration/rcmf-neutral-harness-v1-final`; Portable V2.1 remains the
+  canonical core ancestor.
+- ALFWorld remains `STOP_ALFWORLD_SPLIT_LEAKAGE`; WebShop remains
+  `STOP_WEBSHOP_DATA_IDENTITY_UNRESOLVED`. No dataset benchmark lock exists.
+
+Full report:
+`research/results/RCMF_NEUTRAL_HARNESS_V1_INTEGRATION_FREEZE.md`.
+
+Last updated: 2026-09-09.
+
 ## 2026-09-07 EXP-037A 14l Terminal At O13
 
 VERIFIED:

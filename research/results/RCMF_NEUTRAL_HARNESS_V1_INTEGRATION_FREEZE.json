@@ -1,0 +1,45 @@
+{
+  "decision": "RCMF_HARNESS_V1_INTEGRATION_BASE_FROZEN",
+  "format": "rcmf_neutral_harness_v1_integration_freeze_v1",
+  "frozen": {
+    "archive_ref": "archive/rcmf-neutral-harness-v1-integration-4e56702",
+    "branch": "integration/rcmf-neutral-harness-v1-final",
+    "lock_canonical_sha256": "928771ceadfd4d6613e4fceb97ea3870a756c6a2ba1f2349be6a65ae4c860468",
+    "lock_git_blob_sha256": "369776954ad164c81856427f434ad14055fd633e3d9489246dc9909d8da7ab9b",
+    "lock_path": "configs/harness/neutral_harness_v1.lock.json",
+    "rcmf_integration_source_sha": "4e56702f467635bda120d118a5367c58e593ecef",
+    "rcmf_plugin_implementation_sha": "ca93ed71a747c5c1ba0cac3d2659636ca936f092"
+  },
+  "harness": {
+    "archive_ref": "archive/harness-v1-source-827ed6f",
+    "records_sha": "3c197d15c80c85ad478fc4c502a7b3e9f6aad7cf",
+    "release_branch": "release/harness-v1",
+    "repository": "BenjaminGump/agent-memory-eval-harness",
+    "source_sha": "827ed6f394804834e93444c9bb02c435e9e238a3",
+    "tag": "harness-v1.0.0"
+  },
+  "last_verified_utc": "2026-09-09T09:58:34Z",
+  "readiness": {
+    "alfworld": {
+      "branch": "dataset/alfworld-readiness-v1",
+      "decision": "STOP_ALFWORLD_SPLIT_LEAKAGE",
+      "records_sha": "c7b3ddd2a063554b6c586f62b9f3db305897b63e",
+      "source_sha": "87cf79d4ee47dfc0f74a799605630f9fbbae0f15"
+    },
+    "webshop": {
+      "branch": "dataset/webshop-readiness-v1",
+      "decision": "STOP_WEBSHOP_DATA_IDENTITY_UNRESOLVED",
+      "records_sha": "40d6318892e03d7e775ed83704dae89917f7b324",
+      "source_sha": "2072ae59b79171facabb2b580cda0c2ae460cd8e"
+    }
+  },
+  "scientific_execution": false,
+  "tests": {
+    "actual_final_harness_rcmf_runner": "PASS",
+    "final_harness_full": {"passed": 69, "failed": 0},
+    "lambda_focused": {"passed": 47, "failed": 0},
+    "lambda_full": {"passed": 1092, "failed": 0},
+    "local_focused": {"passed": 47, "failed": 0},
+    "local_full": {"passed": 1089, "skipped": 3, "failed": 0}
+  }
+}

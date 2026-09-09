@@ -113,3 +113,22 @@ Conformance is exercised by real AppWorld-shaped golden fixtures and two
 variable mocks: ALFWorld-like reset-and-replay/binary reward and WebShop-like
 continuous reward/action grammar. The same generic DAG must accept all without
 source edits, including relocated full and continuation roots.
+
+## Neutral Harness Boundary
+
+Final Neutral Harness V1 is pinned by
+`configs/harness/neutral_harness_v1.lock.json`, not by a floating branch or tag.
+The adapter supplies dataset-semantic evidence to a Harness-owned benchmark
+lock; the RCMF plugin supplies method identity and method-owned terminal
+checkpoint/field state. The Harness retains ownership of the base prompt,
+tasks, environment, evaluator, task-result rows, semantic finalization, and
+comparison eligibility.
+
+An adapter cannot mutate Harness-owned benchmark truth or put raw memories in
+the shared prompt. Same-run dependencies remain exact-identity closed;
+cross-run input requires typed `SEALED_UPSTREAM` evidence. The executor
+registry and dataset semantic identity proofs remain prelaunch requirements.
+Final Harness source/schema mismatch fails before any dataset execution.
+
+This shared integration does not create an ALFWorld or WebShop benchmark lock.
+Their readiness blockers must be resolved in their isolated dataset branches.

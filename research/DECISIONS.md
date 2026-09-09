@@ -3686,3 +3686,36 @@ DECISION:
 IMPLEMENTATION DEVIATIONS:
 
 - None. Thread B's RC3 handoff matched the independent evidence.
+
+## 2026-09-09 Final RCMF x Neutral Harness V1 Integration Freeze
+
+VERIFIED:
+
+- Final Harness V1 source/records/tag/archive and all release/schema identities
+  match the fresh private checkouts and published release manifest.
+- The RCMF semantic plugin implementation at `ca93ed71...` already matches the
+  final protocol. A prospective exact source/schema lock and fail-closed
+  validator were the only executable additions needed.
+- The actual Final Harness runner and serialized result-bundle path accept RCMF
+  while preserving Harness prompt/benchmark ownership and RCMF checkpoint/field
+  ownership. Local and Lambda validation pass.
+
+DECISION:
+
+- Freeze RCMF integration source
+  `4e56702f467635bda120d118a5367c58e593ecef` at
+  `archive/rcmf-neutral-harness-v1-integration-4e56702`.
+- Use `integration/rcmf-neutral-harness-v1-final` as the sole future shared
+  base for ALFWorld and WebShop branches.
+- Preserve `STOP_ALFWORLD_SPLIT_LEAKAGE` and
+  `STOP_WEBSHOP_DATA_IDENTITY_UNRESOLVED`; create no benchmark lock here.
+
+IMPLEMENTATION DEVIATIONS:
+
+- The first Lambda full-suite invocation did not set the current directory,
+  producing relative-path `FileNotFoundError` failures. The exact suite was
+  rerun from the worktree using process-start `env -C` and passed 1092/1092;
+  no failure was waived.
+- Final Harness schema identities are Git-blob LF-byte SHA256 values. The
+  validator normalizes Windows CRLF checkout bytes to that declared basis;
+  this changes no schema content or semantics.

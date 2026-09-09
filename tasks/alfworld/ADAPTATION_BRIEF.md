@@ -1,45 +1,36 @@
-# ALFWorld Portable-V2 Adaptation Brief
+# ALFWorld Adaptation Brief
 
-- Development base records SHA: `a3969f56a2020db5dbaed661cab1f0db6acfaee1`
-- Canonical executable ancestor SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`
-- Canonical archive ref: `archive/rcmf-portable-canonical-v2_1-0ca0101`
-- Bootstrap generated at SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`
-- Last verified UTC: `2026-09-08T17:33:33Z`
+- Development base records SHA: `543de32a91e20796ca6441b65b3a9e41f271c412`
+- Portable V2.1 source: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`
+- Final RCMF Harness V1 integration source:
+  `4e56702f467635bda120d118a5367c58e593ecef`
+- Integration archive: `archive/rcmf-neutral-harness-v1-integration-4e56702`
+- Final Harness source: `827ed6f394804834e93444c9bb02c435e9e238a3`
+- ALFWorld readiness source/records: `87cf79d4ee47dfc0f74a799605630f9fbbae0f15` /
+  `c7b3ddd2a063554b6c586f62b9f3db305897b63e`
+- Current decision: `STOP_ALFWORLD_SPLIT_LEAKAGE`
+- Last verified UTC: `2026-09-09T09:58:34Z`
 
-Start by reading `AGENTS.md`, `docs/PIPELINE.md`,
-`docs/ADAPTER_CONTRACT.md`, `docs/datasets/ALFWORLD_READINESS.md`, and
-`tasks/alfworld/STATE.md`. Base the worktree on
-the current canonical executable ancestor above; independently verify the archive/commit before
-editing.
+Start from the final RCMF Harness V1 integration records branch in a dedicated
+`adapt/alfworld-v1` worktree. Read `AGENTS.md`, `docs/PIPELINE.md`,
+`docs/ADAPTER_CONTRACT.md`, `tasks/alfworld/STATE.md`, and the exact readiness
+records before editing. Preserve the Portable V2.1 core and Final Harness lock.
 
-Implement only under `rcmf/benchmarks/alfworld/`,
-`configs/datasets/alfworld_v1.yaml`, `assets/prompts/alfworld/`,
-`tasks/alfworld/`, and ALFWorld tests/entrypoints unless a proven core defect
-requires review. Use branch `adapt/alfworld-v2_1`, a separate worktree,
-environment/process namespace, and NFS root
-`/lambda/nfs/rcmf-persist/project/runs/alfworld/<uuid>`.
+Environment/data/task/expert-replay readiness is already engineering-verified:
+the official ALFWorld 0.5.0/TextWorld corpus has 3,553 train, 200 valid-train,
+140 valid-seen, and 134 valid-unseen games. Six official training expert plans
+replayed successfully and two deterministic repeats matched exactly. These are
+readiness facts, not a scientific RCMF result.
 
-Primary environment source: `alfworld/alfworld` commit
-`aaba6870f86c5be6a08a491f32a50b906227bc3e` (MIT). Prompt source: ReAct commit
-`6bdb3a1fd38b8188fc7ba4102969fe483df8fdc9`, profile
-`react_task_type_two_demo_v1`, manifest
-`assets/prompts/source_manifests/react_alfworld.json`. Preserve exact two
-task-type examples and text-command action grammar.
+The blocking fact is exact: pinned ReAct demonstration `pick_two_obj:0`
+matches evaluation task `alfworld:trial_T20190907_201917_045715`. Do not build
+an adapter or benchmark lock around this profile. The next bounded task is a
+separate fairness decision between a provenance-clean prompt and an explicitly
+justified evaluation-split revision, followed by a complete demonstration
+leakage audit. Do not decide that policy in this shared integration base.
 
-The trajectory plan is to replay official training-game expert plans through
-the exact TextWorld deployment interface, record returned textual
-observations, verify success, and emit `OFFICIAL_EXPERT` portable records linked
-to `traj_data.json` and game/plan hashes. Do not treat THOR low actions as text
-commands. Train supplies memory/training; valid seen/unseen are evaluation-only.
-
-Expected records use opaque household commands and complete text states. First
-bounded task: verify installed package/data identities and expert API, then
-replay at most a few training games across task families with no Qwen or RCMF
-training. Validate source/license, resets, action/observation schema, reward,
-stable IDs, and typed replay failures.
-
-Then proceed through adapter capability/schema conformance, split/leakage
-manifest, prompt/tokenizer equality, bare-agent smoke, writer/field/read module
-diagnostics, small preregistered integration, and runtime preflight. Stop for
-user approval before large installation, scientific GPU work, any run plausibly
-over 18 hours, any core/scientific-method change, or unresolved provenance.
+After that gate passes, implement only the ALFWorld adapter, dataset profile,
+prompt assets, task records, and tests. Keep official expert training trajectories
+`OFFICIAL_EXPERT`; validation splits stay evaluation-only. Stop for review
+before changing prompt/split semantics, freezing a benchmark lock, running
+Qwen/training, or any execution plausibly exceeding 18 hours.
