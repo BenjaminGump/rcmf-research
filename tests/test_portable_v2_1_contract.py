@@ -10,8 +10,10 @@ import torch
 import yaml
 
 from rcmf.benchmarks.appworld.portable_adapter_v2 import (
-    AppWorldPortableAdapterV2,
     create_appworld_portable_adapter_v2_1,
+)
+from rcmf.benchmarks.appworld.portable_executor_v2_1 import (
+    create_appworld_portable_executor_v2_1,
 )
 from rcmf.pipeline.portable_v2.adapter import (
     AdapterCapability,
@@ -29,7 +31,9 @@ from rcmf.pipeline.portable_v2.dag import (
     phases_for_policy,
 )
 from rcmf.pipeline.portable_v2.executor import (
+    DEPENDENCY_CLOSURE_VERSION,
     EXECUTOR_PROTOCOL_VERSION,
+    PortableDependencyReference,
     PortableExecutionError,
     PortableExecutionIdentity,
     PortableExecutorBinding,
@@ -38,7 +42,9 @@ from rcmf.pipeline.portable_v2.executor import (
     execute_and_validate_phase,
     load_executor_factory,
     validate_phase_manifest,
+    validate_executor_instance,
 )
+from rcmf.pipeline.manifests import content_sha256
 from rcmf.pipeline.portable_v2.schemas import (
     SCHEMA_VERSION,
     DecisionStateRecord,
@@ -59,24 +65,60 @@ from rcmf.pipeline.portable_v2.adapter import TrajectorySource
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def _records() -> tuple[dict[str, tuple[TaskRecord, ...]], tuple[TrajectorySource, ...], dict[str, tuple[TrajectoryRecord, ...]], tuple[TransitionRecord, ...], tuple[DecisionStateRecord, ...]]:
-    task = TaskRecord("fixture", "v1", "train", "task-1", "goal", ("lineage-1",), {"source": "fixture"})
+def _records() -> tuple[
+    dict[str, tuple[TaskRecord, ...]],
+    tuple[TrajectorySource, ...],
+    dict[str, tuple[TrajectoryRecord, ...]],
+    tuple[TransitionRecord, ...],
+    tuple[DecisionStateRecord, ...],
+]:
+    task = TaskRecord(
+        "fixture", "v1", "train", "task-1", "goal", ("lineage-1",), {"source": "fixture"}
+    )
     step = TrajectoryStep(0, "state", "action", "done", 1.0, TerminalStatus.SUCCESS)
     trajectory = TrajectoryRecord(
-        "trajectory-1", "task-1", ProvenanceClass.OFFICIAL_EXPERT, {"source": "fixture"},
-        (step,), 1.0, True, TerminalStatus.SUCCESS, ReplayStatus.VALIDATED, {"env": "fixture"}
+        "trajectory-1",
+        "task-1",
+        ProvenanceClass.OFFICIAL_EXPERT,
+        {"source": "fixture"},
+        (step,),
+        1.0,
+        True,
+        TerminalStatus.SUCCESS,
+        ReplayStatus.VALIDATED,
+        {"env": "fixture"},
     )
     transition = TransitionRecord(
-        "transition-1", "trajectory-1", "task-1", 0, "goal", "state", "action", "done",
-        ("lineage-1",), ProvenanceClass.OFFICIAL_EXPERT, {"trajectory_id": "trajectory-1", "step_index": 0}
+        "transition-1",
+        "trajectory-1",
+        "task-1",
+        0,
+        "goal",
+        "state",
+        "action",
+        "done",
+        ("lineage-1",),
+        ProvenanceClass.OFFICIAL_EXPERT,
+        {"trajectory_id": "trajectory-1", "step_index": 0},
     )
     state = DecisionStateRecord(
-        "state-1", "task-1", (), "state", {"action": "action"}, "train",
-        ProvenanceClass.OFFICIAL_EXPERT, "profile", {"trajectory_id": "trajectory-1", "step_index": 0}
+        "state-1",
+        "task-1",
+        (),
+        "state",
+        {"action": "action"},
+        "train",
+        ProvenanceClass.OFFICIAL_EXPERT,
+        "profile",
+        {"trajectory_id": "trajectory-1", "step_index": 0},
     )
     return (
         {"train": (task,)},
-        (TrajectorySource("source-1", ProvenanceClass.OFFICIAL_EXPERT, {"source": "fixture"}, ("train",)),),
+        (
+            TrajectorySource(
+                "source-1", ProvenanceClass.OFFICIAL_EXPERT, {"source": "fixture"}, ("train",)
+            ),
+        ),
         {"train": (trajectory,)},
         (transition,),
         (state,),
@@ -115,7 +157,13 @@ def test_complete_record_identity_closure_and_mutations() -> None:
         ({"other": tasks["train"]}, trajectories, transitions, states, "split"),
         (tasks, trajectories, (replace(transitions[0], task_id="other"),), states, "task differs"),
         (tasks, trajectories, transitions, (replace(states[0], task_id="other"),), "unknown task"),
-        (tasks, trajectories, transitions, (replace(states[0], prompt_profile="other"),), "prompt profile"),
+        (
+            tasks,
+            trajectories,
+            transitions,
+            (replace(states[0], prompt_profile="other"),),
+            "prompt profile",
+        ),
     )
     for task_rows, trajectory_rows, transition_rows, state_rows, match in mutations:
         with pytest.raises(PortableSchemaError, match=match):
@@ -175,7 +223,9 @@ def test_record_closure_rejects_every_cross_record_identity(part: str, match: st
         )
     elif part == "transition_replay_step":
         transition_rows = (
-            replace(transitions[0], replay_identity={"trajectory_id": "trajectory-1", "step_index": 1}),
+            replace(
+                transitions[0], replay_identity={"trajectory_id": "trajectory-1", "step_index": 1}
+            ),
         )
     elif part == "transition_content":
         transition_rows = (replace(transitions[0], action="different"),)
@@ -213,7 +263,9 @@ def test_terminal_replay_success_and_continuous_reward_contracts() -> None:
         replace(trajectories["train"][0], success=False).validate()
     with pytest.raises(PortableSchemaError, match="replay validated"):
         replace(trajectories["train"][0], replay_status=ReplayStatus.FAILED).validate()
-    EvaluationResult("task", 0.73, None, TerminalStatus.FAILURE, 4, (), {"reward": 0.73}, ()).validate()
+    EvaluationResult(
+        "task", 0.73, None, TerminalStatus.FAILURE, 4, (), {"reward": 0.73}, ()
+    ).validate()
     with pytest.raises(PortableSchemaError, match="binary success"):
         EvaluationResult("task", 1.0, True, TerminalStatus.FAILURE, 1, (), {}, ()).validate()
 
@@ -257,9 +309,13 @@ def test_full_and_continuation_executor_dispatch_are_semantic() -> None:
     assert all("14" not in " ".join(stage.command) for stage in graph)
 
 
-def test_v2_1_config_binds_dataset_adapter_executor_and_safety(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_v2_1_config_binds_dataset_adapter_executor_and_safety(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.chdir(ROOT)
-    config = PortablePipelineConfig.load(ROOT / "configs/pipeline/rcmf_portable_canonical_v2_1.yaml")
+    config = PortablePipelineConfig.load(
+        ROOT / "configs/pipeline/rcmf_portable_canonical_v2_1.yaml"
+    )
     report = config.validate_bindings()
     assert report["passed"]
     assert report["dataset_profile_sha256"] == config.dataset_profile.sha256
@@ -267,8 +323,12 @@ def test_v2_1_config_binds_dataset_adapter_executor_and_safety(monkeypatch: pyte
 
 
 def test_config_rejects_unknown_safety_and_missing_executor(tmp_path: Path) -> None:
-    original = yaml.safe_load((ROOT / "configs/pipeline/rcmf_portable_canonical_v2_1.yaml").read_text())
-    original["dataset_profile"] = str((ROOT / "configs/datasets/appworld_portable_v2_1.yaml").resolve())
+    original = yaml.safe_load(
+        (ROOT / "configs/pipeline/rcmf_portable_canonical_v2_1.yaml").read_text()
+    )
+    original["dataset_profile"] = str(
+        (ROOT / "configs/datasets/appworld_portable_v2_1.yaml").resolve()
+    )
     original["runtime"]["allow_magic_fallback"] = True
     path = tmp_path / "unknown.yaml"
     path.write_text(yaml.safe_dump(original), encoding="utf-8")
@@ -287,24 +347,32 @@ def test_config_rejects_unknown_safety_and_missing_executor(tmp_path: Path) -> N
         ("benchmark", "benchmark differs"),
         ("adapter", "adapter identity differs"),
         ("prompt", "prompt asset identity differs"),
+        ("action", "action semantics differ"),
+        ("reward", "reward semantics differ"),
+        ("trajectory", "trajectory-source identity differs"),
+        ("split", "split identity differs"),
         ("ownership", "ownership must be explicit"),
     ),
 )
-def test_dataset_profile_binding_mutations_fail(
-    tmp_path: Path, mutation: str, match: str
-) -> None:
+def test_dataset_profile_binding_mutations_fail(tmp_path: Path, mutation: str, match: str) -> None:
     config = yaml.safe_load(
         (ROOT / "configs/pipeline/rcmf_portable_canonical_v2_1.yaml").read_text()
     )
-    profile = yaml.safe_load(
-        (ROOT / "configs/datasets/appworld_portable_v2_1.yaml").read_text()
-    )
+    profile = yaml.safe_load((ROOT / "configs/datasets/appworld_portable_v2_1.yaml").read_text())
     if mutation == "benchmark":
         profile["benchmark"] = "other"
     elif mutation == "adapter":
         profile["adapter_identity"] = "other.module:factory"
     elif mutation == "prompt":
         profile["prompt_profiles"]["full_demo"] = "0" * 64
+    elif mutation == "action":
+        profile["action_semantics"] = "other"
+    elif mutation == "reward":
+        profile["reward_semantics"] = "other"
+    elif mutation == "trajectory":
+        profile["trajectory_source"]["provenance"] = "OFFICIAL_HUMAN"
+    elif mutation == "split":
+        profile["splits"]["official_evaluation"] = "missing"
     else:
         profile["ownership"] = {}
     profile_path = tmp_path / "profile.yaml"
@@ -317,40 +385,71 @@ def test_dataset_profile_binding_mutations_fail(
 
 
 def test_executor_binding_rejects_wrong_adapter_or_missing_phase() -> None:
-    reference = "rcmf.benchmarks.appworld.portable_executor_v2_1:create_appworld_portable_executor_v2_1"
+    reference = (
+        "rcmf.benchmarks.appworld.portable_executor_v2_1:create_appworld_portable_executor_v2_1"
+    )
     phases = phases_for_policy(PortableRunPolicy(PortableRunMode.FULL, "full_demo", 2, 25101))
     with pytest.raises(PortableExecutionError, match="different adapter"):
         load_executor_factory(reference, adapter_factory="other:factory", required_phases=phases)
-    binding = PortableExecutorBinding(EXECUTOR_PROTOCOL_VERSION, "a:b", (PortablePhase.PROVENANCE.value,))
+    binding = PortableExecutorBinding(
+        EXECUTOR_PROTOCOL_VERSION, "a:b", (PortablePhase.PROVENANCE.value,)
+    )
     with pytest.raises(PortableExecutionError, match="lacks required phases"):
         binding.validate(adapter_factory="a:b", required_phases=(PortablePhase.TRAINING,))
 
+    executor = create_appworld_portable_executor_v2_1(
+        phase_handlers={PortablePhase.PROVENANCE.value: lambda context: None}
+    )
+    with pytest.raises(PortableExecutionError, match="lacks required handlers"):
+        validate_executor_instance(
+            executor,
+            required_phases=(PortablePhase.PROVENANCE, PortablePhase.TRAINING),
+        )
 
-def test_real_executor_manifest_binds_inputs_dependencies_outputs_and_identity(tmp_path: Path) -> None:
+
+def test_real_executor_manifest_binds_inputs_dependencies_outputs_and_identity(
+    tmp_path: Path,
+) -> None:
     run_root = (tmp_path / "run").resolve()
     input_path = tmp_path / "input.json"
     input_path.write_text("{}", encoding="utf-8")
     output_root = run_root / "stages" / PortablePhase.PROVENANCE.value
-    identity = PortableExecutionIdentity("a" * 40, "run", run_root, "b" * 64, "c" * 64, "fixture:adapter")
+    identity = PortableExecutionIdentity(
+        "a" * 40, "run", run_root, "b" * 64, "c" * 64, "fixture:adapter"
+    )
 
     class Executor:
         protocol_version = EXECUTOR_PROTOCOL_VERSION
+
+        @staticmethod
+        def bound_phase_ids() -> frozenset[str]:
+            return frozenset(phase.value for phase in PortablePhase)
 
         def execute_phase(self, context: PortablePhaseContext) -> PortablePhaseWork:
             output = context.output_root / "evidence.json"
             output.parent.mkdir(parents=True)
             output.write_text(json.dumps({"executed": True}), encoding="utf-8")
-            return PortablePhaseWork(({"operation": "inspect_input", "count": 1},), {"evidence": output}, {})
+            return PortablePhaseWork(
+                ({"operation": "inspect_input", "count": 1},), {"evidence": output}, {}
+            )
 
-    context = PortablePhaseContext(identity, PortablePhase.PROVENANCE, (), {"input": input_path}, output_root, {})
+    context = PortablePhaseContext(
+        identity, PortablePhase.PROVENANCE, (), {"input": input_path}, output_root, {}
+    )
     manifest = execute_and_validate_phase(Executor(), context)
     assert manifest["source_commit"] == "a" * 40
     assert manifest["input_artifacts"][0]["sha256"]
     assert manifest["output_artifacts"][0]["sha256"]
-    assert validate_phase_manifest(output_root / "stage_manifest.json", expected=identity, phase=PortablePhase.PROVENANCE)["passed"]
+    assert validate_phase_manifest(
+        output_root / "stage_manifest.json", expected=identity, phase=PortablePhase.PROVENANCE
+    )["passed"]
 
     class NoOp:
         protocol_version = EXECUTOR_PROTOCOL_VERSION
+
+        @staticmethod
+        def bound_phase_ids() -> frozenset[str]:
+            return frozenset(phase.value for phase in PortablePhase)
 
         def execute_phase(self, context: PortablePhaseContext) -> PortablePhaseWork:
             return PortablePhaseWork((), {}, {})
@@ -377,6 +476,119 @@ def test_real_executor_manifest_binds_inputs_dependencies_outputs_and_identity(t
         )
 
 
+def test_same_run_dependencies_require_exact_identity_and_sealed_upstream_closure(
+    tmp_path: Path,
+) -> None:
+    upstream_root = (tmp_path / "upstream").resolve()
+    current_root = (tmp_path / "current").resolve()
+    upstream = PortableExecutionIdentity(
+        "a" * 40, "upstream", upstream_root, "b" * 64, "c" * 64, "fixture:adapter"
+    )
+    current = PortableExecutionIdentity(
+        "d" * 40, "current", current_root, "e" * 64, "f" * 64, "fixture:adapter"
+    )
+
+    class Executor:
+        protocol_version = EXECUTOR_PROTOCOL_VERSION
+
+        @staticmethod
+        def bound_phase_ids() -> frozenset[str]:
+            return frozenset(phase.value for phase in PortablePhase)
+
+        def execute_phase(self, context: PortablePhaseContext) -> PortablePhaseWork:
+            output = context.output_root / "evidence.json"
+            output.parent.mkdir(parents=True, exist_ok=True)
+            output.write_text("{}", encoding="utf-8")
+            return PortablePhaseWork(
+                ({"operation": "fixture", "count": 1},), {"evidence": output}, {}
+            )
+
+    execute_and_validate_phase(
+        Executor(),
+        PortablePhaseContext(
+            upstream,
+            PortablePhase.PROVENANCE,
+            (),
+            {},
+            upstream_root / "stage",
+            {},
+        ),
+    )
+    manifest_path = upstream_root / "stage/stage_manifest.json"
+    identity_mutations = {
+        "source_commit": replace(upstream, source_commit="d" * 40),
+        "run_uuid": replace(upstream, run_uuid="other-run"),
+        "run_root": replace(upstream, run_root=current_root),
+        "pipeline_config_sha256": replace(upstream, pipeline_config_sha256="e" * 64),
+        "dataset_profile_sha256": replace(upstream, dataset_profile_sha256="f" * 64),
+        "adapter_identity": replace(upstream, adapter_identity="other:adapter"),
+    }
+    for field, changed_identity in identity_mutations.items():
+        with pytest.raises(PortableExecutionError, match=field):
+            execute_and_validate_phase(
+                Executor(),
+                PortablePhaseContext(
+                    changed_identity,
+                    PortablePhase.SUCCESSFUL_CORPUS,
+                    (manifest_path,),
+                    {},
+                    changed_identity.run_root / f"rejected-{field}",
+                    {},
+                ),
+            )
+    dependent = PortablePhaseContext(
+        current,
+        PortablePhase.SUCCESSFUL_CORPUS,
+        (manifest_path,),
+        {},
+        current_root / "same-run-rejected",
+        {},
+    )
+    with pytest.raises(PortableExecutionError, match="same-run dependency manifest identity"):
+        execute_and_validate_phase(Executor(), dependent)
+
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    closure = {
+        "format": DEPENDENCY_CLOSURE_VERSION,
+        "identity": upstream.as_dict(),
+        "dependency_manifest_sha256s": [manifest["manifest_sha256"]],
+        "passed": True,
+    }
+    closure["closure_sha256"] = content_sha256(closure)
+    closure_path = tmp_path / "closure.json"
+    closure_path.write_text(json.dumps(closure), encoding="utf-8")
+    accepted = replace(
+        dependent,
+        dependency_manifests=(
+            PortableDependencyReference.sealed_upstream(
+                manifest_path,
+                closure_path=closure_path,
+            ),
+        ),
+        output_root=current_root / "sealed-upstream-accepted",
+    )
+    result = execute_and_validate_phase(Executor(), accepted)
+    assert result["dependency_manifests"][0]["owner"] == "SEALED_UPSTREAM"
+    assert validate_phase_manifest(
+        accepted.output_root / "stage_manifest.json",
+        expected=current,
+        phase=PortablePhase.SUCCESSFUL_CORPUS,
+    )["passed"]
+
+    closure["identity"]["run_uuid"] = "mutated"
+    closure["closure_sha256"] = content_sha256(
+        {key: value for key, value in closure.items() if key != "closure_sha256"}
+    )
+    closure_path.write_text(json.dumps(closure), encoding="utf-8")
+    with pytest.raises(
+        PortableExecutionError, match="sealed-upstream dependency manifest identity"
+    ):
+        execute_and_validate_phase(
+            Executor(),
+            replace(accepted, output_root=current_root / "mutated-closure"),
+        )
+
+
 def test_pilot_checkpoint_loss_accepts_production_epoch_summary(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
@@ -384,9 +596,7 @@ def test_pilot_checkpoint_loss_accepts_production_epoch_summary(
     sys.modules.pop("run_rcmf_portable_v2_1_appworld_pilot", None)
     from run_rcmf_portable_v2_1_appworld_pilot import _checkpoint_losses
 
-    assert _checkpoint_losses(
-        {"history": [{"epoch": 1, "recent_mean_loss": 0.25}]}
-    ) == [0.25]
+    assert _checkpoint_losses({"history": [{"epoch": 1, "recent_mean_loss": 0.25}]}) == [0.25]
     assert _checkpoint_losses({"history": [{"loss": 0.5}]}) == [0.5]
     with pytest.raises(RuntimeError, match="no loss statistic"):
         _checkpoint_losses({"history": [{"epoch": 1}]})

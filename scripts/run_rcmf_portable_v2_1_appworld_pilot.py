@@ -37,6 +37,7 @@ from rcmf.pipeline.portable_v2.executor import (
     PortablePhaseContext,
     PortablePhaseWork,
     execute_and_validate_phase,
+    validate_executor_instance,
 )
 from rcmf.training.oracle_decoder_5fc import module_state_sha256
 from rcmf.training.rcmf_joint_full_bank_9a import (
@@ -155,6 +156,7 @@ class Pilot:
             for phase in pilot_phases
         }
         self.executor = create_appworld_portable_executor_v2_1(phase_handlers=self.handlers)
+        validate_executor_instance(self.executor, required_phases=pilot_phases)
 
     def _parent_inputs(self) -> dict[str, Path]:
         rows = {

@@ -76,7 +76,15 @@ class AppWorldPortableAdapterV2:
             deterministic=True,
             action_semantics="python_code",
             reward_semantics="official_binary_success",
-            metadata={"legacy_identity": dict(legacy)},
+            metadata={
+                "legacy_identity": dict(legacy),
+                "split_roles": {
+                    "training": "train",
+                    "heldout_training": "manifest_defined",
+                    "official_evaluation": "dev",
+                },
+                "trajectory_provenance": ProvenanceClass.OFFICIAL_MODEL_OR_IL.value,
+            },
         )
 
     def capabilities(self) -> frozenset[AdapterCapability]:
@@ -121,9 +129,7 @@ class AppWorldPortableAdapterV2:
 
     def trajectory_sources(self) -> Sequence[TrajectorySource]:
         splits = tuple(sorted(self._trajectory_records)) or ("train",)
-        injected = next(
-            (row for rows in self._trajectory_records.values() for row in rows), None
-        )
+        injected = next((row for rows in self._trajectory_records.values() for row in rows), None)
         return (
             TrajectorySource(
                 source_id="appworld_replay_validated_corpus",

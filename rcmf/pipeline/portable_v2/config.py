@@ -60,7 +60,11 @@ class DatasetProfile:
     adapter_identity: str
     dataset_version: str
     environment_version: str
+    action_semantics: str
+    reward_semantics: str
     prompt_profiles: Mapping[str, str]
+    trajectory_source: Mapping[str, str]
+    splits: Mapping[str, str]
     ownership: Mapping[str, Any]
 
     @classmethod
@@ -94,11 +98,31 @@ class DatasetProfile:
         for name, digest in prompts.items():
             if not str(name).strip() or not re.fullmatch(r"[0-9a-f]{64}", str(digest)):
                 raise ValueError("dataset prompt profile identity is incomplete")
+        trajectory_source = payload.get("trajectory_source")
+        if not isinstance(trajectory_source, Mapping):
+            raise ValueError("dataset trajectory source must be explicit")
+        for name in ("provenance", "policy"):
+            _required_text(trajectory_source.get(name), f"trajectory_source.{name}")
+        splits = payload.get("splits")
+        if not isinstance(splits, Mapping):
+            raise ValueError("dataset split ownership must be explicit")
+        for name in ("training", "official_evaluation"):
+            _required_text(splits.get(name), f"splits.{name}")
         ownership = payload.get("ownership")
         if not isinstance(ownership, Mapping) or not ownership:
             raise ValueError("dataset ownership must be explicit")
-        required_text = ("benchmark", "adapter_identity", "dataset_version", "environment_version")
-        if any(not isinstance(payload.get(name), str) or not payload[name].strip() for name in required_text):
+        required_text = (
+            "benchmark",
+            "adapter_identity",
+            "dataset_version",
+            "environment_version",
+            "action_semantics",
+            "reward_semantics",
+        )
+        if any(
+            not isinstance(payload.get(name), str) or not payload[name].strip()
+            for name in required_text
+        ):
             raise ValueError("dataset identity fields must be non-empty strings")
         return cls(
             path=source,
@@ -107,7 +131,11 @@ class DatasetProfile:
             adapter_identity=str(payload["adapter_identity"]),
             dataset_version=str(payload["dataset_version"]),
             environment_version=str(payload["environment_version"]),
+            action_semantics=str(payload["action_semantics"]),
+            reward_semantics=str(payload["reward_semantics"]),
             prompt_profiles={str(key): str(value) for key, value in prompts.items()},
+            trajectory_source={str(key): str(value) for key, value in trajectory_source.items()},
+            splits={str(key): str(value) for key, value in splits.items()},
             ownership=dict(ownership),
         )
 
@@ -182,7 +210,9 @@ class PortablePipelineConfig:
             raise ValueError(f"unknown continuation phase: {continuation}")
         policy.validate()
         adapter_factory = _factory_ref(payload.get("adapter_factory"), "adapter_factory")
-        executor_factory = _factory_ref(payload.get("phase_executor_factory"), "phase_executor_factory")
+        executor_factory = _factory_ref(
+            payload.get("phase_executor_factory"), "phase_executor_factory"
+        )
         kwargs = payload.get("adapter_factory_kwargs", {})
         if not isinstance(kwargs, Mapping):
             raise TypeError("adapter_factory_kwargs must be a mapping")
@@ -228,6 +258,10 @@ class PortablePipelineConfig:
             raise ValueError("adapter data version differs from dataset profile")
         if identity.environment_version != self.dataset_profile.environment_version:
             raise ValueError("adapter environment version differs from dataset profile")
+        if identity.action_semantics != self.dataset_profile.action_semantics:
+            raise ValueError("adapter action semantics differ from dataset profile")
+        if identity.reward_semantics != self.dataset_profile.reward_semantics:
+            raise ValueError("adapter reward semantics differ from dataset profile")
         if self.dataset_profile.adapter_identity != self.adapter_factory:
             raise ValueError("dataset profile adapter identity differs from config")
         profiles = adapter.prompt_profiles()
@@ -236,6 +270,20 @@ class PortablePipelineConfig:
         expected_prompt_sha = self.dataset_profile.prompt_profiles.get(self.policy.prompt_profile)
         if profiles[self.policy.prompt_profile].asset_manifest_sha256 != expected_prompt_sha:
             raise ValueError("adapter prompt asset identity differs from dataset profile")
+        if dict(identity.metadata.get("split_roles", {})) != dict(self.dataset_profile.splits):
+            raise ValueError("adapter split identity differs from dataset profile")
+        if (
+            identity.metadata.get("trajectory_provenance")
+            != self.dataset_profile.trajectory_source["provenance"]
+        ):
+            raise ValueError("adapter trajectory-source identity differs from dataset profile")
+        sources = tuple(adapter.trajectory_sources())
+        expected_provenance = self.dataset_profile.trajectory_source["provenance"]
+        if not sources or any(source.provenance.value != expected_provenance for source in sources):
+            raise ValueError("adapter trajectory-source provenance differs from dataset profile")
+        training_split = self.dataset_profile.splits["training"]
+        if not any(training_split in source.training_splits for source in sources):
+            raise ValueError("adapter trajectory sources do not own the training split")
         capabilities = required_capabilities_for_phases(
             phase.value for phase in phases_for_policy(self.policy)
         )

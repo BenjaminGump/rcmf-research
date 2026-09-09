@@ -10,9 +10,12 @@ from rcmf.pipeline.portable_v2.config import PortablePipelineConfig
 from rcmf.pipeline.portable_v2.dag import PortablePhase, execution_phases_for_policy
 from rcmf.pipeline.portable_v2.executor import (
     PortableExecutionIdentity,
+    PortableDependencyOwner,
+    PortableDependencyReference,
     PortablePhaseContext,
     execute_and_validate_phase,
     load_executor_factory,
+    validate_executor_instance,
 )
 
 
@@ -33,7 +36,10 @@ def main() -> None:
     parser.add_argument("--phase", required=True)
     args = parser.parse_args()
     config = PortablePipelineConfig.load(args.config)
-    phase = next((row for row in PortablePhase if row.name.lower() == args.phase or row.value == args.phase), None)
+    phase = next(
+        (row for row in PortablePhase if row.name.lower() == args.phase or row.value == args.phase),
+        None,
+    )
     if phase is None or phase not in execution_phases_for_policy(config.policy):
         raise ValueError(f"phase is outside the configured semantic DAG: {args.phase}")
     payload = json.loads(args.context.read_text(encoding="utf-8"))
@@ -63,11 +69,36 @@ def main() -> None:
         required_phases=execution_phases_for_policy(config.policy),
     )
     executor = factory(**kwargs)
+    validate_executor_instance(
+        executor,
+        required_phases=execution_phases_for_policy(config.policy),
+    )
+    dependency_manifests = []
+    for value in payload.get("dependency_manifests", ()):
+        if isinstance(value, str):
+            dependency_manifests.append(PortableDependencyReference.same_run(value))
+            continue
+        if not isinstance(value, Mapping):
+            raise TypeError("dependency manifest reference must be a path or mapping")
+        owner = PortableDependencyOwner(value.get("owner"))
+        if owner == PortableDependencyOwner.SAME_RUN:
+            dependency_manifests.append(
+                PortableDependencyReference.same_run(str(value.get("path", "")))
+            )
+        else:
+            dependency_manifests.append(
+                PortableDependencyReference.sealed_upstream(
+                    str(value.get("path", "")),
+                    closure_path=str(value.get("closure_path", "")),
+                )
+            )
     context = PortablePhaseContext(
         identity=identity,
         phase=phase,
-        dependency_manifests=tuple(Path(value) for value in payload.get("dependency_manifests", ())),
-        input_artifacts={key: Path(value) for key, value in payload.get("input_artifacts", {}).items()},
+        dependency_manifests=tuple(dependency_manifests),
+        input_artifacts={
+            key: Path(value) for key, value in payload.get("input_artifacts", {}).items()
+        },
         output_root=Path(str(payload["output_root"])).resolve(strict=False),
         policy=dict(payload.get("policy", {})),
     )

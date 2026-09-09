@@ -26,11 +26,12 @@ class AppWorldLegacyCompatibilityExecutorV2_1:
 
     def __init__(
         self,
-        phase_handlers: Mapping[
-            str, Callable[[PortablePhaseContext], PortablePhaseWork]
-        ],
+        phase_handlers: Mapping[str, Callable[[PortablePhaseContext], PortablePhaseWork]],
     ) -> None:
         self._handlers = dict(phase_handlers)
+
+    def bound_phase_ids(self) -> frozenset[str]:
+        return frozenset(self._handlers)
 
     def execute_phase(self, context: PortablePhaseContext) -> PortablePhaseWork:
         try:
