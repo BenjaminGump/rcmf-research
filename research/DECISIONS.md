@@ -3636,3 +3636,29 @@ IMPLEMENTATION DEVIATIONS:
 - Complete upstream bundle history contains public research data despite the
   export being free of newly added harness datasets; MemGen and delta-Mem
   remain private/internal pending license resolution.
+
+## 2026-09-09 Neutral Harness V1 RC2 Targeted Independent Review
+
+VERIFIED:
+
+- RC2 directly closes the original F01 task-population, F02 run/result
+  identity, and F03 typed-failure defects. All specified malformed fixtures
+  fail closed, while completed benchmark reward-zero/binary-false rows remain
+  valid.
+- RC1 method lifecycle code is unchanged, Harness RC2 passes `62/62`, and RCMF
+  focused compatibility passes `38/38` against the actual RC2 protocol.
+
+DECISION:
+
+- Do not freeze final Harness V1. `ValidatedResultEvidence` is publicly
+  constructible, and aggregation accepts a forged instance containing an
+  unfinalized duplicate-task population as comparison-eligible.
+- Return `STOP_TYPED_FAILURE_GATE_INCOMPLETE`. Thread B should make validated
+  evidence factory-only/guarded or provide a closure proof checked by
+  aggregation, then add the direct-constructor bypass regression.
+- Preserve all RCMF scientific and V2.1 sources unchanged. No model or
+  benchmark execution is needed for this bounded correction.
+
+IMPLEMENTATION DEVIATIONS:
+
+- None in RCMF executable code. This targeted review branch adds records only.

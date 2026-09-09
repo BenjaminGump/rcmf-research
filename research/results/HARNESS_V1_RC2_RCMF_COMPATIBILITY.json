@@ -1,0 +1,46 @@
+{
+  "format": "harness_v1_rc2_rcmf_compatibility_v1",
+  "status": "PASS",
+  "verified_utc": "2026-09-09T06:28:44Z",
+  "rcmf": {
+    "branch": "integration/rcmf-neutral-harness-v1-rc2-targeted-review",
+    "base_records_sha": "17f0818e9ae5939e44d4ec26b64b21cd7a9b1c2a",
+    "review_source_sha": "ca93ed71a747c5c1ba0cac3d2659636ca936f092",
+    "executable_changes": false
+  },
+  "harness": {
+    "source_sha": "d82028ae1684858d10899ce2ef5c2b50bf2e7b6b",
+    "records_sha": "9b2175d2c8d7617f677c24913577b5f24dce8f3e",
+    "protocol_version": "agent_memory_harness_v1_rc1"
+  },
+  "focused_tests": {
+    "command": "PYTHONHASHSEED=25101 python -m pytest -q -p no:cacheprovider tests/test_neutral_harness_v1_integration.py tests/test_portable_v2_1_contract.py",
+    "passed": 38,
+    "failed": 0,
+    "duration_seconds": 8.93
+  },
+  "actual_rc2_lifecycle_probe": {
+    "passed": true,
+    "checks": {
+      "plugin_accepted": true,
+      "method_identity": "rcmf",
+      "checkpoint_and_field_method_owned": true,
+      "benchmark_prompt_unchanged": true,
+      "raw_memory_in_shared_prompt": false,
+      "runtime_retrieval": false,
+      "episode_reset_count": 2
+    }
+  },
+  "rcmf_contracts": {
+    "h1_same_run_dependency_closure": "PASS",
+    "h1_sealed_upstream_closure": "PASS",
+    "h2_executor_registry_proof": "PASS",
+    "h3_dataset_semantic_identity": "PASS"
+  },
+  "full_suite_rerun": false,
+  "full_suite_omission_reason": "focused compatibility was clean and no RCMF executable source changed",
+  "training": false,
+  "benchmark_evaluation": false,
+  "formal_14n": "UNCHANGED",
+  "r19": "UNCHANGED"
+}

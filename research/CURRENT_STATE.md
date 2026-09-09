@@ -3071,3 +3071,21 @@ Decision:
 - Decision: `STOP_FAIRNESS_CONTRACT_INCOMPLETE`. Thread B must apply the
   bounded result-finalization patch proposal and retest before final harness
   freeze. No training, benchmark result, or final harness freeze occurred.
+
+### Neutral Harness V1 RC2 Targeted Independent Review
+
+- Harness RC2 source `d82028ae1684858d10899ce2ef5c2b50bf2e7b6b`,
+  records `9b2175d2c8d7617f677c24913577b5f24dce8f3e`, and archive
+  `archive/harness-v1-rc2-source-d82028a` independently validate.
+- F01 exact task-population closure, F02 run/result identity closure, and F03
+  typed execution-failure handling all pass direct negative reproduction.
+  Completed reward-zero and binary-false outcomes remain valid.
+- Harness RC2 full tests pass `62/62`; RCMF focused compatibility passes
+  `38/38`, and the RCMF plugin executes through the actual RC2 lifecycle.
+- One evidence-flow blocker remains: the publicly exported, freely
+  constructible `ValidatedResultEvidence` can wrap an unfinalized duplicate-task
+  manifest and make aggregation return comparison-eligible.
+- Decision: `STOP_TYPED_FAILURE_GATE_INCOMPLETE`. Guard evidence construction
+  or verify a closure proof in aggregation, then independently retest before
+  final Harness V1 freeze. No training, standardized benchmark result, or
+  final harness freeze occurred.

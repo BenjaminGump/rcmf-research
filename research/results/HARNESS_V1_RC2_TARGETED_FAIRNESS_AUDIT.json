@@ -1,0 +1,82 @@
+{
+  "format": "harness_v1_rc2_targeted_fairness_audit_v1",
+  "decision": "STOP_TYPED_FAILURE_GATE_INCOMPLETE",
+  "verified_utc": "2026-09-09T06:28:44Z",
+  "authority": {
+    "rcmf_review_base_records": "17f0818e9ae5939e44d4ec26b64b21cd7a9b1c2a",
+    "rcmf_previous_review_source": "ca93ed71a747c5c1ba0cac3d2659636ca936f092",
+    "harness_rc1_source": "ec953717d233f3958d8c6b3180b0b4a785312ad8",
+    "harness_rc2_branch": "rc/harness-v1-rc2",
+    "harness_rc2_source": "d82028ae1684858d10899ce2ef5c2b50bf2e7b6b",
+    "harness_rc2_records": "9b2175d2c8d7617f677c24913577b5f24dce8f3e",
+    "harness_rc2_archive": "archive/harness-v1-rc2-source-d82028a",
+    "records_direct_child_of_source": true,
+    "source_to_records_paths_only": ["docs/", "research/"]
+  },
+  "repository_validation": {
+    "source_checkout_clean": true,
+    "records_checkout_clean": true,
+    "git_fsck_full": "PASS",
+    "archive_exact": true,
+    "rc1_archive_unchanged": true,
+    "rc1_source_is_ancestor": true
+  },
+  "f01_task_population_closure": {
+    "status": "DIRECT_CASES_PASS",
+    "rejected_cases": [
+      "duplicate_result_task_id",
+      "omitted_result_task",
+      "extra_result_task",
+      "reordered_under_exact",
+      "task_result_hash_mismatch",
+      "task_result_status_mismatch",
+      "duplicate_authorized_task_id",
+      "actual_row_missing_from_per_task_results",
+      "per_task_results_entry_missing_actual_row"
+    ],
+    "order_independent_exact_set": "PASS"
+  },
+  "f02_run_result_identity_closure": {
+    "status": "PASS",
+    "rejected_result_fields": [
+      "run_uuid",
+      "track",
+      "harness_source_sha",
+      "benchmark_lock_sha256",
+      "method_lock_sha256",
+      "task_manifest_sha256"
+    ],
+    "task_row_other_run": "REJECTED",
+    "task_row_other_task_manifest": "REJECTED",
+    "content_derived_identity": true
+  },
+  "f03_typed_failure_gate": {
+    "status": "DIRECT_CASES_PASS",
+    "typed_rejections": {
+      "METHOD_FAILURE": "EXECUTION_METHOD_FAILURE",
+      "ENVIRONMENT_FAILURE": "EXECUTION_ENVIRONMENT_FAILURE",
+      "INVALID_OUTPUT": "EXECUTION_INVALID_OUTPUT",
+      "TIMEOUT": "EXECUTION_TIMEOUT"
+    },
+    "completed_raw_reward_zero_valid": true,
+    "completed_binary_success_false_valid": true,
+    "failure_reward_or_success_coercion": false
+  },
+  "evidence_flow": {
+    "raw_mapping_comparison_eligible": false,
+    "raw_mapping_reason": "UNVALIDATED_RESULT_EVIDENCE",
+    "public_evidence_constructor": "harness_v1_rc1.validation.ValidatedResultEvidence",
+    "public_constructor_bypass_fixture": "duplicate task population without finalization",
+    "public_constructor_bypass_comparison_eligible": true,
+    "public_constructor_bypass_reasons": [],
+    "blocking_defect": "EXPORTED_UNGUARDED_VALIDATED_EVIDENCE_CONSTRUCTOR_BYPASSES_FINALIZATION"
+  },
+  "tests": {
+    "process_start_pythonhashseed": 25101,
+    "harness_full": {"passed": 62, "failed": 0},
+    "independent_reproducer": {"passed": 25, "failed": 1},
+    "independent_failure": "public constructor bypass was accepted"
+  },
+  "scientific_execution": false,
+  "final_harness_frozen": false
+}
