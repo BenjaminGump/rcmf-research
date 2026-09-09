@@ -3089,3 +3089,21 @@ Decision:
   or verify a closure proof in aggregation, then independently retest before
   final Harness V1 freeze. No training, standardized benchmark result, or
   final harness freeze occurred.
+
+### Neutral Harness V1 RC3 Final Independent Review
+
+- Harness RC3 source `827ed6f394804834e93444c9bb02c435e9e238a3`,
+  records `77a98f3e84a1d93cccc96ef45c9b90af5af625fe`, and archive
+  `archive/harness-v1-rc3-source-827ed6f` independently validate.
+- Aggregation now canonicalizes and semantically revalidates the complete
+  serialized six-input `ResultEvidenceBundle`; Python type/object identity is
+  not proof.
+- Raw, direct, copied, subclassed, and malformed-bundle bypass attempts all
+  fail closed. Two valid bundles remain eligible, including after a fresh-
+  process serialized round trip.
+- RC2 F01/F02/F03 closure and legitimate completed reward-zero/binary-false
+  outcomes remain correct. Harness tests pass `69/69`, independent cases
+  `38/38`, and RCMF focused compatibility `38/38`.
+- Decision: `READY_TO_FREEZE_NEUTRAL_HARNESS_V1`. Thread B retains ownership of
+  the final freeze. No training, standardized benchmark result, or final
+  harness freeze occurred in this review.

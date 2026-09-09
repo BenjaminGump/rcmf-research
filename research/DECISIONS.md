@@ -3662,3 +3662,27 @@ DECISION:
 IMPLEMENTATION DEVIATIONS:
 
 - None in RCMF executable code. This targeted review branch adds records only.
+
+## 2026-09-09 Neutral Harness V1 RC3 Final Independent Review
+
+VERIFIED:
+
+- RC3 rejects the exact RC2 constructor bypass, copies, subclasses, raw
+  mappings, and malformed bundles. Aggregation re-establishes semantic closure
+  from a canonical serialized six-input evidence bundle.
+- Two valid distinct-method bundles compare successfully, including in a fresh
+  process. Shared identity and execution-status mutations remain typed and
+  ineligible.
+- F01/F02/F03, six lifecycle mocks, method neutrality, and RCMF focused
+  compatibility all pass without RCMF executable changes.
+
+DECISION:
+
+- Return `READY_TO_FREEZE_NEUTRAL_HARNESS_V1`. Thread B may perform the final
+  Harness V1 freeze under its own protocol.
+- Preserve all RCMF scientific and V2.1 sources unchanged. This review produced
+  records only and no model or benchmark execution.
+
+IMPLEMENTATION DEVIATIONS:
+
+- None. Thread B's RC3 handoff matched the independent evidence.

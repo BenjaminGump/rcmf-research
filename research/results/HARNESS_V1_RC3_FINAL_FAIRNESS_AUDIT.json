@@ -1,0 +1,76 @@
+{
+  "format": "harness_v1_rc3_final_fairness_audit_v1",
+  "decision": "READY_TO_FREEZE_NEUTRAL_HARNESS_V1",
+  "verified_utc": "2026-09-09T08:03:21Z",
+  "authority": {
+    "rcmf_review_base": "f18472c5c1890511d9c73946e83514dc749b48dc",
+    "harness_rc3_branch": "rc/harness-v1-rc3",
+    "harness_rc3_source": "827ed6f394804834e93444c9bb02c435e9e238a3",
+    "harness_rc3_archive": "archive/harness-v1-rc3-source-827ed6f",
+    "harness_rc3_records": "77a98f3e84a1d93cccc96ef45c9b90af5af625fe",
+    "records_direct_child_of_source": true,
+    "source_to_records_paths_only": ["docs/", "research/"]
+  },
+  "repository_validation": {
+    "source_checkout_clean": true,
+    "records_checkout_clean": true,
+    "git_fsck_full": "PASS",
+    "archive_exact": true,
+    "rc1_refs_unchanged": true,
+    "rc2_refs_unchanged": true
+  },
+  "trust_boundary": {
+    "aggregation_input": "ResultEvidenceBundle",
+    "authoritative_fields": [
+      "run_manifest",
+      "benchmark_lock",
+      "method_lock",
+      "ordered_task_manifest",
+      "task_results",
+      "result_manifest"
+    ],
+    "canonical_json_snapshot": true,
+    "aggregation_revalidates_semantic_finalization": true,
+    "process_local_proof": false,
+    "fresh_process_serialized_revalidation": "PASS"
+  },
+  "bypass_attempts": {
+    "raw_mapping": {"eligible": false, "reason": "UNVALIDATED_RESULT_EVIDENCE"},
+    "old_public_evidence_type": {"eligible": false, "reason": "UNVERIFIED_FINALIZATION_EVIDENCE"},
+    "copied_forged_evidence": {"eligible": false, "reason": "UNVERIFIED_FINALIZATION_EVIDENCE"},
+    "subclassed_forged_evidence": {"eligible": false, "reason": "UNVERIFIED_FINALIZATION_EVIDENCE"},
+    "malformed_result_bundle": {"eligible": false, "reason": "UNVERIFIED_FINALIZATION_EVIDENCE"}
+  },
+  "positive_comparison": {
+    "two_complete_distinct_method_bundles": "ELIGIBLE",
+    "fresh_process_round_trip": "ELIGIBLE"
+  },
+  "identity_mutations": {
+    "harness_source": "INCOMPARABLE_HARNESS_IDENTITY",
+    "task_manifest": "INCOMPARABLE_TASK_MANIFEST",
+    "base_prompt": "INCOMPARABLE_BASE_PROMPT",
+    "model": "INCOMPARABLE_MODEL_IDENTITY",
+    "generation_config": "INCOMPARABLE_GENERATION_CONFIG",
+    "execution_status": "EXECUTION_TYPED_INELIGIBILITY"
+  },
+  "regressions": {
+    "f01_task_population": "PASS",
+    "f02_run_result_identity": "PASS",
+    "f03_typed_failures": "PASS",
+    "completed_reward_zero": "VALID",
+    "completed_binary_success_false": "VALID",
+    "six_method_lifecycles": "PASS",
+    "method_specific_generic_branches": 0,
+    "rcmf_imports_in_generic_harness": 0
+  },
+  "tests": {
+    "pythonhashseed": 25101,
+    "harness_full": {"passed": 69, "failed": 0},
+    "independent_reproducer": {"passed": 38, "failed": 0},
+    "rcmf_focused": {"passed": 38, "failed": 0},
+    "actual_rc3_rcmf_probe": {"passed": 9, "failed": 0}
+  },
+  "thread_b_discrepancies": [],
+  "scientific_execution": false,
+  "final_harness_frozen": false
+}
