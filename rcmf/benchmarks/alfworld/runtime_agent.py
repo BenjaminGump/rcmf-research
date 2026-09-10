@@ -208,3 +208,184 @@ def run_alfworld_episode(
     }
     result["episode_sha256"] = canonical_sha256(result)
     return result
+
+
+def run_alfworld_episodes_batched(
+    *,
+    adapter: ALFWorldPortableAdapterV2,
+    tasks: list[TaskRecord],
+    backend: HFQwenBackend,
+    condition: str,
+    run_identity: Mapping[str, Any],
+    batch_size: int,
+    injector: Any | None = None,
+    memory_queries: Mapping[str, MemoryQuery] | None = None,
+) -> list[dict[str, Any]]:
+    """Run complete independent environments with batched, masked greedy decode."""
+
+    if batch_size <= 0:
+        raise ValueError("ALFWorld generation batch size must be positive")
+    if condition == "bare" and (injector is not None or memory_queries is not None):
+        raise ValueError("bare batch rejects RCMF state")
+    if condition == "rcmf" and (injector is None or memory_queries is None):
+        raise ValueError("RCMF batch requires injector and fixed-field query closures")
+    contexts = []
+    for task in tasks:
+        contexts.append(
+            {
+                "task": task,
+                "runtime": adapter.create_runtime(task),
+                "history": [],
+                "steps": [],
+                "error": None,
+                "started": time.time(),
+            }
+        )
+    try:
+        for step_index in range(ACTION_CAP):
+            active = [
+                row
+                for row in contexts
+                if row["error"] is None and not row["runtime"].done
+            ]
+            if not active:
+                break
+            for start in range(0, len(active), batch_size):
+                chunk = active[start : start + batch_size]
+                legal = []
+                messages_batch = []
+                trajectories = []
+                prompt_counts = []
+                for row in chunk:
+                    task = row["task"]
+                    runtime = row["runtime"]
+                    trajectory = render_react_trajectory(
+                        runtime.initial_observation,
+                        row["history"],
+                    )
+                    messages = list(
+                        render_react_messages(
+                            profile_root=adapter.prompt_root,
+                            gamefile=str(task.metadata["game_path"]),
+                            current_trajectory=trajectory,
+                        )
+                    )
+                    try:
+                        prompt_tokens = adapter.count_runtime_tokens(messages, PROFILE_NAME)
+                    except Exception as exc:
+                        row["error"] = {
+                            "type": type(exc).__name__,
+                            "message": str(exc),
+                            "step": step_index,
+                        }
+                        continue
+                    legal.append(row)
+                    messages_batch.append(messages)
+                    trajectories.append(trajectory)
+                    prompt_counts.append(prompt_tokens)
+                if not legal:
+                    continue
+                memory_z = None
+                if memory_queries is not None:
+                    memory_z = torch.cat(
+                        [
+                            memory_queries[row["task"].task_id](trajectory, row["history"])
+                            for row, trajectory in zip(legal, trajectories, strict=True)
+                        ],
+                        dim=0,
+                    )
+                try:
+                    generated_rows = backend.generate_batch(
+                        messages_batch,
+                        max_new_tokens=512,
+                        temperature=0.0,
+                        top_p=1.0,
+                        injector=injector,
+                        memory_z=memory_z,
+                    )
+                except Exception as exc:
+                    for row in legal:
+                        row["error"] = {
+                            "type": type(exc).__name__,
+                            "message": str(exc),
+                            "step": step_index,
+                            "batch_failure": True,
+                        }
+                    continue
+                for row, messages, prompt_tokens, generated in zip(
+                    legal,
+                    messages_batch,
+                    prompt_counts,
+                    generated_rows,
+                    strict=True,
+                ):
+                    action = first_decoded_line(generated.text)
+                    validation = adapter.validate_action(action, row["runtime"])
+                    step_record = {
+                        "step_index": step_index,
+                        "message_array_sha256": canonical_sha256(messages),
+                        "prompt_tokens": prompt_tokens,
+                        "raw_model_text": generated.text,
+                        "generated_token_ids": generated.token_ids,
+                        "usage": generated.usage,
+                        "parsed_action": action,
+                        "action_valid": bool(validation["valid"]),
+                        "generation_batch_size": len(legal),
+                        "memory_metadata": generated.extra.get("memory"),
+                    }
+                    row["steps"].append(step_record)
+                    if not validation["valid"]:
+                        row["error"] = {"type": "EMPTY_DECODED_ACTION", "step": step_index}
+                        continue
+                    try:
+                        outcome = adapter.execute_action(row["runtime"], action)
+                    except Exception as exc:
+                        row["error"] = {
+                            "type": type(exc).__name__,
+                            "message": str(exc),
+                            "step": step_index,
+                        }
+                        continue
+                    prompt_observation = (
+                        "OK." if action.startswith("think:") else str(outcome["observation"])
+                    )
+                    row["history"].append(
+                        {"action": action, "observation": prompt_observation}
+                    )
+                    step_record.update(
+                        {
+                            "environment_observation": outcome["observation"],
+                            "prompt_observation": prompt_observation,
+                            "environment_reward": outcome["raw_reward"],
+                            "environment_done": outcome["done"],
+                            "official_won": outcome["official_won"],
+                        }
+                    )
+    finally:
+        results = []
+        for row in contexts:
+            runtime = row["runtime"]
+            if row["error"] is not None:
+                runtime.error = row["error"]
+            evaluation = adapter.evaluate_task(runtime, row["task"])
+            runtime.close()
+            result = {
+                "schema_version": "alfworld_agent_episode_v1",
+                "condition": condition,
+                "task_id": row["task"].task_id,
+                "split": row["task"].split,
+                "task_family": row["task"].metadata["task_family"],
+                "game_path": row["task"].metadata["game_path"],
+                "run_identity": dict(run_identity),
+                "generation_identity_sha256": GENERATION_IDENTITY_SHA256,
+                "steps": row["steps"],
+                "step_count": len(row["steps"]),
+                "raw_reward": evaluation.raw_reward,
+                "official_success": evaluation.binary_success,
+                "terminal_status": evaluation.terminal_status.value,
+                "error": row["error"],
+                "elapsed_seconds": round(time.time() - row["started"], 6),
+            }
+            result["episode_sha256"] = canonical_sha256(result)
+            results.append(result)
+    return results

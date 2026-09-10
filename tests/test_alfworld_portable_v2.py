@@ -40,6 +40,7 @@ from rcmf.benchmarks.alfworld.training import create_modules, train_writer_epoch
 from rcmf.benchmarks.alfworld.runtime_agent import (
     first_decoded_line,
     run_alfworld_episode,
+    run_alfworld_episodes_batched,
     validate_exact_model_snapshot,
 )
 from rcmf.model.backends.base import GenerateOutput
@@ -221,6 +222,19 @@ class _FakeBackend:
             extra={"memory": {"injector": None}},
         )
 
+    def generate_batch(self, messages_batch, **kwargs):
+        del kwargs
+        return [
+            GenerateOutput(
+                text="look\nignored",
+                token_ids=[1, 2],
+                usage={"prompt_tokens": 10, "completion_tokens": 2, "total_tokens": 12},
+                ttft_ms=1.0,
+                extra={"memory": {"injector": None}, "batch_size": len(messages_batch)},
+            )
+            for _ in messages_batch
+        ]
+
 
 def test_bare_episode_records_exact_action_and_official_result() -> None:
     adapter = create_alfworld_portable_adapter_v2_1()
@@ -235,6 +249,23 @@ def test_bare_episode_records_exact_action_and_official_result() -> None:
     assert row["official_success"] is True
     assert row["steps"][0]["raw_model_text"] == "look\nignored"
     assert row["steps"][0]["parsed_action"] == "look"
+
+
+def test_batched_bare_episodes_keep_independent_runtime_records() -> None:
+    adapter = create_alfworld_portable_adapter_v2_1()
+    task = adapter.list_tasks()["train"][0]
+    rows = run_alfworld_episodes_batched(
+        adapter=adapter,
+        tasks=[task, task],
+        backend=_FakeBackend(),
+        condition="bare",
+        run_identity={"fixture": True, "generation_batch_size": 2},
+        batch_size=2,
+    )
+    assert len(rows) == 2
+    assert all(row["official_success"] is True for row in rows)
+    assert all(row["steps"][0]["parsed_action"] == "look" for row in rows)
+    assert all(row["steps"][0]["generation_batch_size"] == 2 for row in rows)
 
 
 def test_compact_field_is_fixed_reversible_and_permutation_invariant() -> None:

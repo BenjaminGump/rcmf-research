@@ -14,7 +14,11 @@ from rcmf.benchmarks.alfworld.portable_adapter_v2 import (
     TRACK_R_ID,
     create_alfworld_portable_adapter_v2_1,
 )
-from rcmf.benchmarks.alfworld.runtime_agent import load_frozen_qwen, run_alfworld_episode
+from rcmf.benchmarks.alfworld.runtime_agent import (
+    load_frozen_qwen,
+    run_alfworld_episode,
+    run_alfworld_episodes_batched,
+)
 from rcmf.benchmarks.alfworld.task_manifest import TRACK_R_TASK_IDS_SHA256, canonical_sha256
 from rcmf.benchmarks.alfworld.training import (
     deployment_memory_query,
@@ -39,6 +43,7 @@ def arguments() -> argparse.Namespace:
     parser.add_argument("--run-uuid", required=True)
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--formal", action="store_true")
+    parser.add_argument("--generation-batch-size", type=int, default=1)
     return parser.parse_args()
 
 
@@ -64,6 +69,8 @@ def main() -> int:
     args = arguments()
     if (args.condition == "rcmf") != bool(args.checkpoint):
         raise ValueError("RCMF condition requires exactly one checkpoint; bare rejects it")
+    if args.generation_batch_size <= 0:
+        raise ValueError("generation batch size must be positive")
     if args.formal and (args.task_ids_json or args.split != "valid_unseen"):
         raise ValueError("formal Track R evaluation requires the complete valid_unseen split")
     adapter = create_alfworld_portable_adapter_v2_1(
@@ -105,6 +112,7 @@ def main() -> int:
         "task_ids_sha256": canonical_sha256([task.task_id for task in tasks]),
         "condition": args.condition,
         "checkpoint_sha256": sha256_file(args.checkpoint) if args.checkpoint else None,
+        "generation_batch_size": args.generation_batch_size,
     }
     for row in prior:
         if row.get("run_identity") != run_identity:
@@ -119,46 +127,76 @@ def main() -> int:
         else None
     )
     model_loaded_utc = datetime.now(timezone.utc).isoformat()
+    pending = [task for task in tasks if task.task_id not in completed]
     with output.open("a", encoding="utf-8", newline="\n") as stream:
-        for ordinal, task in enumerate(tasks, 1):
-            if task.task_id in completed:
-                continue
-            row = run_alfworld_episode(
-                adapter=adapter,
-                task=task,
-                backend=backend,
-                condition=args.condition,
-                run_identity=run_identity,
-                injector=deployment["modules"]["injector"] if deployment else None,
-                memory_query=(
-                    deployment_memory_query(
-                        deployment,
-                        task_instruction=task.instruction,
-                        device=backend.device,
+        for start in range(0, len(pending), args.generation_batch_size):
+            group = pending[start : start + args.generation_batch_size]
+            if args.generation_batch_size == 1:
+                task = group[0]
+                group_rows = [
+                    run_alfworld_episode(
+                        adapter=adapter,
+                        task=task,
+                        backend=backend,
+                        condition=args.condition,
+                        run_identity=run_identity,
+                        injector=deployment["modules"]["injector"] if deployment else None,
+                        memory_query=(
+                            deployment_memory_query(
+                                deployment,
+                                task_instruction=task.instruction,
+                                device=backend.device,
+                            )
+                            if deployment
+                            else None
+                        ),
                     )
+                ]
+            else:
+                queries = (
+                    {
+                        task.task_id: deployment_memory_query(
+                            deployment,
+                            task_instruction=task.instruction,
+                            device=backend.device,
+                        )
+                        for task in group
+                    }
                     if deployment
                     else None
-                ),
-            )
-            stream.write(json.dumps(row, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
-            stream.write("\n")
-            stream.flush()
-            os.fsync(stream.fileno())
-            print(
-                json.dumps(
-                    {
-                        "ordinal": ordinal,
-                        "population": len(tasks),
-                        "task_id": task.task_id,
-                        "success": row["official_success"],
-                        "steps": row["step_count"],
-                        "error": row["error"],
-                        "elapsed_seconds": row["elapsed_seconds"],
-                    },
-                    sort_keys=True,
-                ),
-                flush=True,
-            )
+                )
+                group_rows = run_alfworld_episodes_batched(
+                    adapter=adapter,
+                    tasks=group,
+                    backend=backend,
+                    condition=args.condition,
+                    run_identity=run_identity,
+                    batch_size=args.generation_batch_size,
+                    injector=deployment["modules"]["injector"] if deployment else None,
+                    memory_queries=queries,
+                )
+            for offset, row in enumerate(group_rows, 1):
+                stream.write(
+                    json.dumps(row, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+                )
+                stream.write("\n")
+                stream.flush()
+                os.fsync(stream.fileno())
+                print(
+                    json.dumps(
+                        {
+                            "ordinal": len(completed) + start + offset,
+                            "population": len(tasks),
+                            "task_id": row["task_id"],
+                            "success": row["official_success"],
+                            "steps": row["step_count"],
+                            "error": row["error"],
+                            "elapsed_seconds": row["elapsed_seconds"],
+                        },
+                        sort_keys=True,
+                    ),
+                    flush=True,
+                )
     rows = _read_existing(output)
     ended_utc = datetime.now(timezone.utc).isoformat()
     summary = {

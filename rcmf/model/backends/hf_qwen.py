@@ -483,9 +483,22 @@ class HFQwenBackend:
                 using_forced_flash = True
             except Exception:
                 attention_context = nullcontext()
+        using_forced_flash = self.device.type == "cuda" and not isinstance(
+            attention_context, nullcontext
+        )
         try:
             with attention_context:
                 output_ids = self.model.generate(**generate_kwargs)
+        except RuntimeError as exc:
+            message = str(exc)
+            flash_unavailable = (
+                "No available kernel" in message
+                or "No viable backend" in message
+                or "No supported kernel" in message
+            )
+            if not using_forced_flash or not flash_unavailable:
+                raise
+            output_ids = self.model.generate(**generate_kwargs)
         except RuntimeError as exc:
             message = str(exc)
             flash_unavailable = (
@@ -515,6 +528,147 @@ class HFQwenBackend:
             ttft_ms=elapsed_ms,
             extra={"memory": memory_metadata},
         )
+
+    @torch.no_grad()
+    def generate_batch(
+        self,
+        messages_batch: list[list[ChatMessage]],
+        max_new_tokens: int = 512,
+        temperature: float = 0.0,
+        top_p: float = 1.0,
+        injector: MemoryInjector | None = None,
+        memory_z: Tensor | None = None,
+    ) -> list[GenerateOutput]:
+        """Greedy batched equivalent of ``generate`` with exact left-padding masks."""
+        if self.model is None or self.tokenizer is None:
+            raise RuntimeError("HFQwenBackend.load() has not been called")
+        if not messages_batch:
+            return []
+        rendered = [
+            self.render_messages(messages, add_generation_prompt=True)
+            for messages in messages_batch
+        ]
+        prior_padding_side = self.tokenizer.padding_side
+        self.tokenizer.padding_side = "left"
+        try:
+            tokenized = self.tokenizer(rendered, padding=True, return_tensors="pt")
+        finally:
+            self.tokenizer.padding_side = prior_padding_side
+        input_ids = tokenized["input_ids"].to(self.device)
+        attention_mask = tokenized["attention_mask"].to(self.device)
+        generation_inputs: dict[str, Any] = {
+            "input_ids": input_ids,
+            "attention_mask": attention_mask,
+        }
+        memory_metadata: dict[str, Any] = {"injector": None}
+        if injector is not None:
+            if memory_z is None or int(memory_z.shape[0]) != len(messages_batch):
+                raise ValueError("batched memory_z must match the message batch")
+            selected_rows = []
+            padded_length = int(input_ids.shape[1])
+            for messages, text, mask in zip(
+                messages_batch, rendered, attention_mask, strict=True
+            ):
+                indices = self._last_user_token_indices(messages, text)
+                left_padding = padded_length - int(mask.sum().item())
+                selected_rows.append([left_padding + index for index in indices])
+            width = max((len(row) for row in selected_rows), default=0)
+            injection_indices = torch.full(
+                (len(selected_rows), width),
+                -1,
+                dtype=torch.long,
+                device=self.device,
+            )
+            for row_index, indices in enumerate(selected_rows):
+                if indices:
+                    injection_indices[row_index, : len(indices)] = torch.tensor(
+                        indices, dtype=torch.long, device=self.device
+                    )
+            prepared = injector.prepare_generate_inputs(
+                self.model,
+                input_ids,
+                attention_mask,
+                memory_z.to(self.device),
+                injection_token_indices=injection_indices,
+            )
+            generation_inputs = dict(prepared.inputs)
+            memory_metadata = prepared.memory_metadata
+        logit_bias = generation_inputs.pop("memory_logit_bias", None)
+        if logit_bias is not None:
+            raise NotImplementedError("logit_bias generation requires a custom logits processor")
+        embedding_delta = generation_inputs.pop("memory_embedding_delta", None)
+        generate_kwargs: dict[str, Any] = {
+            **generation_inputs,
+            "max_new_tokens": max_new_tokens,
+            "do_sample": temperature > 0,
+            "use_cache": True,
+            "pad_token_id": self.tokenizer.eos_token_id,
+            "eos_token_id": self.tokenizer.eos_token_id,
+        }
+        if temperature > 0:
+            generate_kwargs["temperature"] = temperature
+            generate_kwargs["top_p"] = top_p
+        hook_handle = None
+        if embedding_delta is not None:
+            embedding_delta = embedding_delta.to(self.device)
+            embedding_module = self.model.get_input_embeddings()
+            hook_state = {"applied": False}
+
+            def add_embedding_delta(
+                module: torch.nn.Module,
+                inputs: tuple[Any, ...],
+                output: Tensor,
+            ) -> Tensor:
+                del module, inputs
+                if hook_state["applied"] or output.shape[:2] != embedding_delta.shape[:2]:
+                    return output
+                hook_state["applied"] = True
+                return output + embedding_delta.to(device=output.device, dtype=output.dtype)
+
+            hook_handle = embedding_module.register_forward_hook(add_embedding_delta)
+        attention_context = nullcontext()
+        if self.device.type == "cuda":
+            try:
+                from torch.nn.attention import SDPBackend, sdpa_kernel
+
+                attention_context = sdpa_kernel([SDPBackend.FLASH_ATTENTION])
+            except Exception:
+                attention_context = nullcontext()
+        started = time.perf_counter()
+        try:
+            with attention_context:
+                output_ids = self.model.generate(**generate_kwargs)
+        finally:
+            if hook_handle is not None:
+                hook_handle.remove()
+        elapsed_ms = (time.perf_counter() - started) * 1000.0
+        prompt_width = int(generation_inputs["input_ids"].shape[1])
+        generated_batch = output_ids[:, prompt_width:]
+        outputs = []
+        for row_index, generated_ids in enumerate(generated_batch):
+            ids = generated_ids.tolist()
+            eos_id = int(self.tokenizer.eos_token_id)
+            if eos_id in ids:
+                ids = ids[: ids.index(eos_id) + 1]
+            prompt_tokens = int(attention_mask[row_index].sum().item())
+            row_memory_metadata = dict(memory_metadata)
+            selected = row_memory_metadata.get("selected_token_indices")
+            if isinstance(selected, list) and len(selected) == len(messages_batch):
+                row_memory_metadata["selected_token_indices"] = selected[row_index]
+            outputs.append(
+                GenerateOutput(
+                    text=self.tokenizer.decode(ids, skip_special_tokens=True),
+                    token_ids=ids,
+                    usage={
+                        "prompt_tokens": prompt_tokens,
+                        "completion_tokens": len(ids),
+                        "total_tokens": prompt_tokens + len(ids),
+                    },
+                    ttft_ms=elapsed_ms,
+                    extra={"memory": row_memory_metadata, "batch_size": len(messages_batch)},
+                )
+            )
+        return outputs
 
     @torch.no_grad()
     def score_targets(
