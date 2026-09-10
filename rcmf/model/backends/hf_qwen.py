@@ -483,22 +483,9 @@ class HFQwenBackend:
                 using_forced_flash = True
             except Exception:
                 attention_context = nullcontext()
-        using_forced_flash = self.device.type == "cuda" and not isinstance(
-            attention_context, nullcontext
-        )
         try:
             with attention_context:
                 output_ids = self.model.generate(**generate_kwargs)
-        except RuntimeError as exc:
-            message = str(exc)
-            flash_unavailable = (
-                "No available kernel" in message
-                or "No viable backend" in message
-                or "No supported kernel" in message
-            )
-            if not using_forced_flash or not flash_unavailable:
-                raise
-            output_ids = self.model.generate(**generate_kwargs)
         except RuntimeError as exc:
             message = str(exc)
             flash_unavailable = (
@@ -631,7 +618,17 @@ class HFQwenBackend:
             try:
                 from torch.nn.attention import SDPBackend, sdpa_kernel
 
-                attention_context = sdpa_kernel([SDPBackend.FLASH_ATTENTION])
+                # Left padding requires an explicit attention mask. Permit every
+                # exact PyTorch SDPA implementation so a supported masked kernel
+                # (or the math fallback) is selected instead of forcing Flash.
+                attention_context = sdpa_kernel(
+                    [
+                        SDPBackend.FLASH_ATTENTION,
+                        SDPBackend.EFFICIENT_ATTENTION,
+                        SDPBackend.CUDNN_ATTENTION,
+                        SDPBackend.MATH,
+                    ]
+                )
             except Exception:
                 attention_context = nullcontext()
         started = time.perf_counter()
