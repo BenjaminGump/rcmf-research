@@ -275,8 +275,16 @@ def contribution_audit_payload(
         "contribution_parent_ids": [record.parent_id for record in contributions],
         "contribution_keys": torch.stack([record.key for record in contributions]),
         "contribution_values": torch.stack([record.value for record in contributions]),
-        "contribution_mu": torch.tensor([record.mu for record in contributions]),
-        "contribution_rho": torch.tensor([record.rho for record in contributions]),
+        # These coefficients participate in the independently reconstructed
+        # float64 field.  Preserve their Python-float precision in the audit
+        # artifact; the default float32 tensor dtype is insufficient for the
+        # checkpoint closure tolerance when rho is a non-dyadic fraction.
+        "contribution_mu": torch.tensor(
+            [record.mu for record in contributions], dtype=torch.float64
+        ),
+        "contribution_rho": torch.tensor(
+            [record.rho for record in contributions], dtype=torch.float64
+        ),
     }
 
 

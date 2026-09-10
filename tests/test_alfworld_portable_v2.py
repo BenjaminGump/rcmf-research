@@ -438,6 +438,44 @@ def test_deployment_checkpoint_excludes_per_memory_audit_state() -> None:
     assert deployment["compiled_memory_count"] == 1
     assert not any(key.startswith("contribution_") for key in deployment)
     assert audit["contribution_ids"] == ["memory"]
+    assert audit["contribution_mu"].dtype == torch.float64
+    assert audit["contribution_rho"].dtype == torch.float64
+
+
+def test_contribution_audit_preserves_fractional_coefficients_for_field_closure() -> None:
+    field = ReversibleCompactField(key_dim=2, program_dim=2)
+    contributions = [
+        CompactMemoryContribution(
+            memory_id=f"memory-{index}",
+            parent_id="trajectory",
+            key=torch.tensor([float(index + 1), -0.25]),
+            value=torch.tensor([0.125, float(index + 2)]),
+            mu=1.0 / 7.0,
+            rho=1.0 / 3.0,
+        )
+        for index in range(3)
+    ]
+    for contribution in contributions:
+        field.add(contribution)
+    audit = contribution_audit_payload(
+        contributions=contributions,
+        field=field,
+        metadata={"fixture": True},
+    )
+    rebuilt = ReversibleCompactField(key_dim=2, program_dim=2)
+    for index, contribution in enumerate(contributions):
+        rebuilt.add(
+            CompactMemoryContribution(
+                memory_id=contribution.memory_id,
+                parent_id=contribution.parent_id,
+                key=audit["contribution_keys"][index],
+                value=audit["contribution_values"][index],
+                mu=float(audit["contribution_mu"][index]),
+                rho=float(audit["contribution_rho"][index]),
+            )
+        )
+    assert torch.equal(rebuilt.A, audit["field_A"])
+    assert torch.equal(rebuilt.B, audit["field_B"])
 
 
 def test_signed_hash_features_are_stable_and_fixed_shape() -> None:

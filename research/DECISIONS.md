@@ -3763,3 +3763,15 @@ IMPLEMENTATION DEVIATIONS:
   WebShop process. Only the ALFWorld process group was terminated; it emitted
   zero rows and is classified as an invalid engineering attempt. WebShop was
   untouched, and all later ALFWorld GPU work requires exclusive ownership.
+- The first exclusive FA2 sanity invocation pointed at the Harness prompt-asset
+  directory rather than the RCMF vendored profile directory and failed before
+  environment reset or generation with zero rows. The retry used the same
+  preregistered run identity and byte-identical prompt payload from the correct
+  directory; the failed attempt remains preserved.
+- The first 256-transition checkpoint validation exposed float32 serialization
+  of the audit-only `mu` and `rho` coefficient vectors. Training and deployment
+  field state were unaffected, but independent float64 reconstruction could not
+  meet the preregistered closure tolerance for non-dyadic `rho`. Audit
+  serialization now explicitly preserves float64 coefficients, with a
+  regression test. The original failed smoke checkpoint remains preserved and
+  will not be reused.
