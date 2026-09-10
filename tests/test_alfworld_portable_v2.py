@@ -36,7 +36,12 @@ from rcmf.benchmarks.alfworld.trajectories import (
     portable_trajectory,
     validate_corpus_row,
 )
-from rcmf.benchmarks.alfworld.training import create_modules, train_writer_epoch
+from rcmf.benchmarks.alfworld.training import (
+    checkpoint_payload,
+    contribution_audit_payload,
+    create_modules,
+    train_writer_epoch,
+)
 from rcmf.benchmarks.alfworld.runtime_agent import (
     first_decoded_line,
     run_alfworld_episode,
@@ -308,6 +313,44 @@ def test_compact_field_is_fixed_reversible_and_permutation_invariant() -> None:
     assert torch.allclose(reverse_b, baseline_b, atol=1e-15, rtol=0)
     assert field.field_shape == empty_shapes
     assert tuple(field.read(torch.ones(4)).shape) == (3,)
+
+
+def test_deployment_checkpoint_excludes_per_memory_audit_state() -> None:
+    config = {
+        "feature_dim": 4,
+        "key_dim": 4,
+        "program_dim": 3,
+        "writer_hidden_dim": 5,
+        "model_dim": 6,
+        "injection_tokens": 2,
+        "initial_injection_scale": 0.05,
+    }
+    modules = create_modules(config)
+    field = ReversibleCompactField(key_dim=4, program_dim=3)
+    contribution = CompactMemoryContribution(
+        memory_id="memory",
+        parent_id="trajectory",
+        key=torch.ones(4),
+        value=torch.ones(3),
+        mu=0.5,
+        rho=1.0,
+    )
+    field.add(contribution)
+    deployment = checkpoint_payload(
+        modules=modules,
+        field=field,
+        contributions=[contribution],
+        config=config,
+        metadata={"fixture": True},
+    )
+    audit = contribution_audit_payload(
+        contributions=[contribution],
+        field=field,
+        metadata={"fixture": True},
+    )
+    assert deployment["compiled_memory_count"] == 1
+    assert not any(key.startswith("contribution_") for key in deployment)
+    assert audit["contribution_ids"] == ["memory"]
 
 
 def test_signed_hash_features_are_stable_and_fixed_shape() -> None:

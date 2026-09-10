@@ -14,6 +14,7 @@ from rcmf.benchmarks.alfworld.runtime_agent import load_frozen_qwen
 from rcmf.benchmarks.alfworld.training import (
     checkpoint_payload,
     compile_field,
+    contribution_audit_payload,
     create_modules,
     load_ledger,
     set_seed,
@@ -189,6 +190,15 @@ def main() -> int:
         config=config,
         metadata=metadata,
     )
+    contribution_audit_path = output_dir / "contribution_audit.pt"
+    _atomic_torch_save(
+        contribution_audit_payload(
+            contributions=contributions,
+            field=field,
+            metadata=metadata,
+        ),
+        contribution_audit_path,
+    )
     _atomic_torch_save(payload, final_path)
     summary = {
         "schema_version": "alfworld_compact_rcmf_training_summary_v1",
@@ -197,6 +207,11 @@ def main() -> int:
             "path": str(final_path),
             "bytes": final_path.stat().st_size,
             "sha256": sha256_file(final_path),
+        },
+        "contribution_audit": {
+            "path": str(contribution_audit_path),
+            "bytes": contribution_audit_path.stat().st_size,
+            "sha256": sha256_file(contribution_audit_path),
         },
         "peak_cuda_bytes": torch.cuda.max_memory_allocated() if torch.cuda.is_available() else 0,
         "passed": True,

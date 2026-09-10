@@ -236,8 +236,14 @@ def checkpoint_payload(
     config: Mapping[str, Any],
     metadata: Mapping[str, Any],
 ) -> dict[str, Any]:
+    """Build the fixed-size production deployment state.
+
+    Per-memory contribution tensors are deliberately excluded and sealed in a
+    separate audit artifact. Runtime loading therefore cannot accidentally
+    scan or retrieve the authoritative ledger.
+    """
     return {
-        "format": "alfworld_compact_rcmf_checkpoint_v1",
+        "format": "alfworld_compact_rcmf_deployment_checkpoint_v1",
         "rcmf_version": COMPACT_RCMF_VERSION,
         "config": dict(config),
         "metadata": dict(metadata),
@@ -245,6 +251,24 @@ def checkpoint_payload(
         "query_encoder": modules["query_encoder"].state_dict(),
         "reader": modules["reader"].state_dict(),
         "injector": modules["injector"].state_dict(),
+        "field_A": field.A,
+        "field_B": field.B,
+        "compiled_memory_count": len(contributions),
+    }
+
+
+def contribution_audit_payload(
+    *,
+    contributions: Sequence[Any],
+    field: ReversibleCompactField,
+    metadata: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Build a non-deployment audit artifact for independent writes/reversibility."""
+
+    return {
+        "format": "alfworld_compact_rcmf_contribution_audit_v1",
+        "rcmf_version": COMPACT_RCMF_VERSION,
+        "metadata": dict(metadata),
         "field_A": field.A,
         "field_B": field.B,
         "contribution_ids": [record.memory_id for record in contributions],
@@ -258,8 +282,18 @@ def checkpoint_payload(
 
 def load_deployment_checkpoint(path: str | Path, *, device: torch.device) -> dict[str, Any]:
     payload = torch.load(Path(path), map_location="cpu", weights_only=False)
-    if payload.get("format") != "alfworld_compact_rcmf_checkpoint_v1":
+    if payload.get("format") != "alfworld_compact_rcmf_deployment_checkpoint_v1":
         raise ValueError("ALFWorld RCMF checkpoint format differs")
+    prohibited = {
+        "contribution_ids",
+        "contribution_parent_ids",
+        "contribution_keys",
+        "contribution_values",
+        "contribution_mu",
+        "contribution_rho",
+    }
+    if prohibited.intersection(payload):
+        raise ValueError("ALFWorld deployment checkpoint contains per-memory runtime state")
     modules = create_modules(payload["config"])
     for name in ("writer", "query_encoder", "reader", "injector"):
         modules[name].load_state_dict(payload[name], strict=True)
