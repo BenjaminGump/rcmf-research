@@ -1,3 +1,74 @@
+# ALFWorld Expedited End-to-End Adaptation Charter v1
+
+Effective UTC date: `2026-09-10`
+
+Status: `ALFWORLD_END_TO_END_ADAPTATION_AUTHORIZED`
+
+This prospective charter authorizes the dedicated `adapt/alfworld-v1` line to
+continue through a real ALFWorld adapter, TRAIN-only official-expert corpus,
+RCMF training, and matched full 134-task `valid_unseen` bare/RCMF evaluation.
+It supersedes the earlier conversational stop at readiness milestones for this
+ALFWorld line only. All historical charter text remains unchanged below.
+
+## Fixed scientific boundary
+
+- Harness authority is branch
+  `dataset/alfworld-model-context-resolution-v1`, records
+  `88b6d1de6d8df787a769d8eb55cc10bd69493d9e`, executable source
+  `a516de0a6f223732f6b1203c05de4ca82a744f2d`, and archive
+  `archive/alfworld-model-context-resolution-v1-a516de0`.
+- The required endpoint uses exact Track R
+  `alfworld_upstream_react_valid_unseen_reference_v1`, role
+  `UPSTREAM_PROTOCOL_REFERENCE`, and all 134 official `valid_unseen` tasks.
+- Frozen Qwen identity is `Qwen/Qwen3-8B` revision
+  `b968826d9c46dd6066d109eabc6255188de91218`, bfloat16, frozen, thinking
+  disabled, with Harness-frozen tokenizer, template, context, generation,
+  action-extraction, 49-action, and evaluator contracts.
+- Memory construction and every learned or selected RCMF quantity use TRAIN
+  only. No evaluation task, reward, or outcome may influence corpus admission,
+  prompt/model/task choice, hyperparameters, thresholds, checkpoint selection,
+  or implementation choice.
+- Final deployment checkpoint policy is `terminal_completed_epoch` unless a
+  different policy is prospectively preregistered before any scientific
+  `valid_unseen` outcome is inspected.
+
+## Minimum RCMF invariants
+
+1. The authoritative memory remains a ledger of complete, replay-validated,
+   official-expert TRAIN transitions.
+2. Every memory is compiled independently by a feed-forward writer. Adding one
+   memory neither retrains the system nor scans/recompiles unrelated memories.
+3. Per-memory contributions are independently addable/removable, and field
+   add/remove/restore remains reversible within a declared tolerance.
+4. Deployment uses one fixed-dimensional whole-bank field. Core read shape and
+   core read complexity are independent of memory count.
+5. The fixed-size read is conditioned on the current agent state/query and is
+   injected into the frozen language model.
+6. Qwen stays frozen during RCMF training and deployment.
+7. Production runtime prohibits top-k/nearest-neighbor/FAISS retrieval,
+   selected-memory access, per-memory scoring, and raw memory text in prompts.
+8. Evaluation data and outcomes cannot influence construction, training,
+   selection, filtering, thresholds, or tuning.
+
+## Implementation authority and execution safety
+
+Dataset-specific changes are preferred. Shared Portable V2.1 or RCMF core code
+may be changed when genuinely necessary, provided changes remain
+benchmark-generic where practical, preserve the invariants above, add focused
+tests, and do not rewrite historical AppWorld claims or artifacts. Ordinary
+engineering failures are repaired, regression-tested, and continued through;
+intermediate `READY_FOR_*` states are not terminal.
+
+All Qwen execution, GPU diagnostics, training, and scientific ALFWorld
+evaluation run only on the established Lambda host in a dedicated worktree and
+`runs/alfworld/<uuid>` namespace. A single scientifically necessary run that
+could plausibly exceed 18 wall-clock hours still requires explicit run-bound
+approval after measured expected/conservative runtime, cost, storage, and
+restart planning. No workload may be reduced or split merely to evade that
+gate.
+
+---
+
 # RCMF Repository Instructions
 
 This repository is jointly used by ChatGPT and Codex for implementation,

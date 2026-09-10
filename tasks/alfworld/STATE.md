@@ -1,3 +1,57 @@
+# ALFWorld End-to-End Adaptation State
+
+- Status: `ACTIVE_END_TO_END_ADAPTATION`
+- Effective UTC date: `2026-09-10`
+- Branch: `adapt/alfworld-v1`
+- Development base records SHA:
+  `3560ec75f96575ce87fd06a8eb5c4b4d596615c8`
+- Direct executable parent:
+  `4e56702f467635bda120d118a5367c58e593ecef`
+- Canonical Portable V2.1 ancestor:
+  `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`
+- Harness branch/source/records:
+  `dataset/alfworld-model-context-resolution-v1` /
+  `a516de0a6f223732f6b1203c05de4ca82a744f2d` /
+  `88b6d1de6d8df787a769d8eb55cc10bd69493d9e`
+- Harness decision: `READY_FOR_BOUNDED_BARE_AGENT_SANITY_DESIGN`; the new
+  end-to-end authorization removes that conversational stop boundary.
+- Required endpoint: matched bare frozen-Qwen and RCMF evaluation on exact
+  Track R `alfworld_upstream_react_valid_unseen_reference_v1`, all 134 official
+  `valid_unseen` tasks, with no task filtering or outcome-led tuning.
+- Frozen model: `Qwen/Qwen3-8B` revision
+  `b968826d9c46dd6066d109eabc6255188de91218`, bfloat16, frozen backbone,
+  thinking disabled.
+- Frozen chat-template SHA-256:
+  `a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8`.
+- Frozen generation identity:
+  `6f5df9b7560265a34a90985c7d15c633fb5f3085cc421bd7bc27cb74cc7fd8d9`;
+  effective context 40,960, greedy, 512 new-token reserve, first decoded line,
+  and 49-action cap.
+- Track R tokenizer audit: 134/134 passed with no truncation, overflow, task
+  change, or failure.
+- Environment/data inventory remains 3,553 train, 200 `valid_train`, 140
+  `valid_seen`, and 134 `valid_unseen`, with task-manifest SHA-256
+  `ff7a9f5ea60028a608470c6fa088a5e82768f64033fb2f74804849744f3cf6f9`.
+- Trajectory provenance remains official ALFWorld planner replay through the
+  TextWorld deployment interface, `OFFICIAL_EXPERT`; final corpus admits TRAIN
+  successes only.
+- Local editing/static-test worktree:
+  `C:/gbz/worktrees/rcmf-alfworld-v1`.
+- Required Lambda worktree:
+  `/lambda/nfs/rcmf-persist/project-worktrees/alfworld-v1`.
+- Run namespace: `/lambda/nfs/rcmf-persist/project/runs/alfworld/<uuid>`.
+- Current implementation state: authority verified; isolated branch created;
+  charter transition recorded prospectively; Lambda preflight, adapter,
+  executor, corpus, module gates, preregistration, training, and paired
+  evaluation remain in progress.
+- Compute gate: request explicit run-bound approval only if a single necessary
+  scientific run could plausibly exceed 18 wall-clock hours after measurement.
+- Scientific status: `NOT_EVALUATED`.
+
+---
+
+# Historical ALFWorld State Before 2026-09-10 Scope Transition
+
 # ALFWorld State
 
 - Development base records SHA: `543de32a91e20796ca6441b65b3a9e41f271c412`
