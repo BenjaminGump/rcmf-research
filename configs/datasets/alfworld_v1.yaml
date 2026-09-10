@@ -1,23 +1,23 @@
-schema_version: rcmf_dataset_profile_v2
+schema_version: rcmf_dataset_profile_v2_1
 benchmark: alfworld
-adapter: alfworld:portable-v1-pending
-status: engineering_readiness_only
-repository:
-  url: https://github.com/alfworld/alfworld
-  commit: aaba6870f86c5be6a08a491f32a50b906227bc3e
-  license: MIT
+adapter_identity: rcmf.benchmarks.alfworld.portable_adapter_v2:create_alfworld_portable_adapter_v2_1
+status: executable_track_r_full_valid_unseen
+dataset_version: alfworld-json-2.1.1
+environment_version: alfworld-aaba687-textworld-1.7.0
 action_semantics: alfworld_text_command
 reward_semantics: official_binary_success
-prompt_profile: react_task_type_two_demo_v1
-prompt_manifest: assets/prompts/source_manifests/react_alfworld.json
+prompt_profiles:
+  react_task_type_two_demo_v1: a10976b4ae99f4802aa9e621933bb71065ae103f2bd273a24466ab1005fbc45a
 trajectory_source:
-  provider: ALFWorldOfficialExpertTrajectoryProvider
   provenance: OFFICIAL_EXPERT
-  replay_interface: TextWorld
+  policy: all_replay_validated_successful_train_trajectories
 splits:
-  memory_and_training: train
-  evaluation_only:
-    - valid_seen
-    - valid_unseen
-counts:
-  ownership: adapter_generated_split_and_trajectory_manifests
+  training: train
+  official_evaluation: valid_unseen
+ownership:
+  tasks: sealed_harness_task_manifest
+  trajectories: alfworld_official_expert_provider
+  prompt_assets: exact_upstream_react_bytes
+  phase_semantics: portable_core_with_alfworld_handlers
+  environment_operations: adapter
+  scientific_artifacts: current_run

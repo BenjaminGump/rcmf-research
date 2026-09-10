@@ -40,10 +40,23 @@
 - Required Lambda worktree:
   `/lambda/nfs/rcmf-persist/project-worktrees/alfworld-v1`.
 - Run namespace: `/lambda/nfs/rcmf-persist/project/runs/alfworld/<uuid>`.
-- Current implementation state: authority verified; isolated branch created;
-  charter transition recorded prospectively; Lambda preflight, adapter,
-  executor, corpus, module gates, preregistration, training, and paired
-  evaluation remain in progress.
+- Diagnostic/run UUID:
+  `f8c16300-c5ae-4422-b40b-eadb932ed6ab`.
+- Task-owned Lambda root:
+  `/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab`.
+- Lambda preflight verified host `192-222-53-194`, one idle NVIDIA H100 80GB,
+  Python 3.11.15, torch 2.11.0+cu128, transformers 4.57.6, tokenizers 0.22.2,
+  CUDA runtime 12.8, and the exact complete frozen Qwen snapshot in the
+  existing read-only Hugging Face cache.
+- Exact sealed ALFWorld 2.1.1 archives were copied (not redownloaded) into the
+  task root, re-hashed, extracted, and independently rebuilt to the exact
+  4,027-row manifest identity above. The pinned ALFWorld source commit and
+  task-owned Python dependencies are installed without changing system state.
+- Current implementation state: real ALFWorld Portable V2.1 adapter boundary,
+  TextWorld runtime, official-expert provider, corpus builder, prompt renderer,
+  dataset profile, executor binding, and focused tests implemented locally;
+  Lambda real-runtime validation and remaining corpus/module/scientific stages
+  are in progress.
 - Compute gate: request explicit run-bound approval only if a single necessary
   scientific run could plausibly exceed 18 wall-clock hours after measurement.
 - Scientific status: `NOT_EVALUATED`.
