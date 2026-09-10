@@ -73,16 +73,32 @@ def main() -> int:
         raise ValueError("source identity does not bind the generation config")
     if source_identity.get("source_commit") != current_commit:
         raise ValueError("source identity does not bind the checked-out source commit")
-    if (
-        int(source_identity.get("index_start", -1)) != args.index_start
-        or int(source_identity.get("index_end", -1)) != args.index_end
-    ):
-        raise ValueError("source identity does not bind the requested task range")
     expected_class = (
         "AGENT_GENERATED_TRAIN_CONSTRUCTION" if args.admissible else "TIMING_PILOT_NOT_ADMISSIBLE"
     )
     if source_identity.get("classification") != expected_class:
         raise ValueError("source identity classification differs from execution mode")
+    if args.admissible:
+        population = config["construction_population"]
+        population_start = int(source_identity.get("population_start", -1))
+        population_end = int(source_identity.get("population_end", -1))
+        if (
+            population_start != int(population["index_start"])
+            or population_end != int(population["index_end"])
+            or args.index_start < population_start
+            or args.index_end > population_end
+        ):
+            raise ValueError("source identity does not bind the construction population")
+        block_size = int(population["block_size"])
+        if (args.index_start - population_start) % block_size != 0 or (
+            args.index_end - args.index_start
+        ) % block_size != 0:
+            raise ValueError("construction task range is not aligned to frozen blocks")
+    elif (
+        int(source_identity.get("index_start", -1)) != args.index_start
+        or int(source_identity.get("index_end", -1)) != args.index_end
+    ):
+        raise ValueError("pilot source identity does not bind the requested task range")
     generator = HFQwenToolGenerator(args.model_snapshot, dtype=args.dtype)
     adapter = WebShopPortableAdapterV2(
         task_records=catalog,

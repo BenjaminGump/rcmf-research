@@ -659,6 +659,26 @@ def run_construction_block(
         "error_count": sum(row["error"] is not None for row in rows),
         "model_round_count": sum(int(row["model_round_count"]) for row in rows),
         "environment_step_count": sum(int(row["environment_step_count"]) for row in rows),
+        "search_transition_count": sum(
+            str(step["action"]).startswith("search[")
+            for row in rows
+            for step in row["environment_steps"]
+        ),
+        "click_transition_count": sum(
+            str(step["action"]).startswith("click[")
+            for row in rows
+            for step in row["environment_steps"]
+        ),
+        "invalid_tool_round_count": sum(
+            round_row["parse_status"] == "INVALID_TOOL_CALL"
+            for row in rows
+            for round_row in row["rounds"]
+        ),
+        "environment_noop_count": sum(
+            not bool(step["environment_accepted"])
+            for row in rows
+            for step in row["environment_steps"]
+        ),
         "elapsed_seconds": elapsed,
         "source_identity_sha256": content_sha256(source_identity),
         "environment_identity_sha256": content_sha256(environment_identity),
@@ -671,6 +691,135 @@ def run_construction_block(
     summary["summary_sha256"] = content_sha256(summary)
     atomic_write_json(root / "summary.json", summary)
     return summary
+
+
+def merge_construction_blocks(
+    *,
+    block_roots: Sequence[str | Path],
+    source_identity: Mapping[str, Any],
+    construction_config: Mapping[str, Any],
+    output_root: str | Path,
+) -> Mapping[str, Any]:
+    if not block_roots:
+        raise ValueError("at least one construction block is required")
+    if construction_config.get("format") != ("rcmf_agentbench_fc_webshop_construction_config_v1"):
+        raise ValueError("unexpected WebShop construction config format")
+    population = construction_config["construction_population"]
+    coverage = construction_config["coverage_gate"]
+    population_start = int(population["index_start"])
+    population_end = int(population["index_end"])
+    block_size = int(population["block_size"])
+    summaries = []
+    for value in block_roots:
+        root = Path(value).resolve(strict=True)
+        summary_path = root / "summary.json"
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        body = dict(summary)
+        recorded = body.pop("summary_sha256", None)
+        if recorded != content_sha256(body):
+            raise RuntimeError(f"construction block summary hash differs: {summary_path}")
+        corpus_path = root / "admitted_trajectories.jsonl"
+        if summary.get("corpus_sha256") != sha256_file(corpus_path):
+            raise RuntimeError(f"construction block corpus hash differs: {corpus_path}")
+        if (
+            summary.get("format") != BLOCK_SUMMARY_FORMAT
+            or not bool(summary.get("admission_enabled"))
+            or bool(summary.get("standard200_outcome_inspected"))
+            or summary.get("source_identity_sha256") != content_sha256(source_identity)
+        ):
+            raise RuntimeError(f"construction block identity differs: {summary_path}")
+        summaries.append((summary, corpus_path, root))
+    summaries.sort(key=lambda item: int(item[0]["index_start"]))
+    expected_start = population_start
+    for summary, _corpus_path, _root in summaries:
+        start = int(summary["index_start"])
+        end = int(summary["index_end"])
+        if (
+            start != expected_start
+            or end <= start
+            or end > population_end
+            or (end - start) % block_size != 0
+        ):
+            raise RuntimeError("construction blocks are not contiguous frozen increments")
+        expected_start = end
+    trajectories: list[Mapping[str, Any]] = []
+    seen_tasks: set[str] = set()
+    for summary, corpus_path, _root in summaries:
+        rows = [
+            json.loads(line)
+            for line in corpus_path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        if len(rows) != int(summary["admitted_count"]):
+            raise RuntimeError("construction block admitted count differs from its corpus")
+        for row in rows:
+            if row.get("split") != "train":
+                raise RuntimeError("merged WebShop trajectory is not train-only")
+            trajectory = TrajectoryRecord.from_dict(row)
+            if dict(trajectory.source_identity) != dict(source_identity):
+                raise RuntimeError("merged WebShop trajectory source identity differs")
+            if trajectory.task_id in seen_tasks:
+                raise RuntimeError("merged WebShop corpus contains a duplicate task")
+            seen_tasks.add(trajectory.task_id)
+            trajectories.append(row)
+    trajectories.sort(key=lambda row: int(row["metadata"]["index"]))
+    transition_count = sum(len(row["steps"]) for row in trajectories)
+    search_count = sum(
+        str(step["action"]).startswith("search[") for row in trajectories for step in row["steps"]
+    )
+    click_count = sum(
+        str(step["action"]).startswith("click[") for row in trajectories for step in row["steps"]
+    )
+    initial_complete = expected_start >= int(population["initial_index_end"])
+    criteria = {
+        "successful_trajectories": len(trajectories)
+        >= int(coverage["minimum_successful_trajectories"]),
+        "total_transitions": transition_count >= int(coverage["minimum_total_transitions"]),
+        "search_transitions": search_count >= int(coverage["minimum_search_transitions"]),
+        "click_transitions": click_count >= int(coverage["minimum_click_transitions"]),
+    }
+    coverage_met = initial_complete and all(criteria.values())
+    next_block = None
+    if not coverage_met and expected_start < population_end:
+        next_block = {
+            "index_start": expected_start,
+            "index_end": min(expected_start + block_size, population_end),
+        }
+    root = Path(output_root).resolve()
+    root.mkdir(parents=True, exist_ok=True)
+    corpus_path = root / "successful_trajectories.jsonl"
+    corpus_text = "".join(
+        json.dumps(to_jsonable(row), ensure_ascii=False, sort_keys=True) + "\n"
+        for row in trajectories
+    )
+    if corpus_path.exists() and corpus_path.read_text(encoding="utf-8") != corpus_text:
+        raise RuntimeError("existing merged construction corpus differs")
+    if not corpus_path.exists():
+        atomic_write_text(corpus_path, corpus_text)
+    manifest = {
+        "format": "rcmf_agentbench_fc_webshop_corpus_manifest_v1",
+        "source_identity": dict(source_identity),
+        "source_identity_sha256": content_sha256(source_identity),
+        "processed_index_start": population_start,
+        "processed_index_end": expected_start,
+        "processed_task_count": sum(int(item[0]["task_count"]) for item in summaries),
+        "successful_trajectory_count": len(trajectories),
+        "transition_count": transition_count,
+        "search_transition_count": search_count,
+        "click_transition_count": click_count,
+        "initial_population_complete": initial_complete,
+        "coverage_criteria": criteria,
+        "coverage_met": coverage_met,
+        "next_block": next_block,
+        "block_summary_sha256s": [item[0]["summary_sha256"] for item in summaries],
+        "block_roots": [str(item[2]) for item in summaries],
+        "corpus_sha256": sha256_file(corpus_path),
+        "standard200_outcome_inspected": False,
+        "validation_outcome_used_for_selection": False,
+    }
+    manifest["manifest_sha256"] = content_sha256(manifest)
+    atomic_write_json(root / "corpus_manifest.json", manifest)
+    return manifest
 
 
 class HFQwenToolGenerator:

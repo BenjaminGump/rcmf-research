@@ -10,9 +10,18 @@
   "construction_population": {
     "block_size": 250,
     "expansion_order": "ascending_contiguous_blocks",
+    "initial_index_end": 2500,
     "index_end": 12000,
     "index_start": 1500,
     "split": "train"
+  },
+  "coverage_gate": {
+    "evaluate_only_after_initial_population": true,
+    "minimum_click_transitions": 256,
+    "minimum_search_transitions": 256,
+    "minimum_successful_trajectories": 256,
+    "minimum_total_transitions": 1024,
+    "rationale": "Supports at least 256 independent task lineages and 1024 complete transition examples while requiring both WebShop action families; thresholds are fixed before the admissible campaign and are independent of validation or standard200 outcomes."
   },
   "determinism": {
     "cublas_workspace_config": ":4096:8",

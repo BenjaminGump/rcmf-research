@@ -10,6 +10,7 @@ import pytest
 
 from rcmf.benchmarks.webshop.adapter import DATASET_VERSION, WebShopPortableAdapterV2
 from rcmf.benchmarks.webshop.generation import (
+    merge_construction_blocks,
     parse_generated_tool_call,
     run_construction_block,
     run_construction_task,
@@ -37,10 +38,15 @@ def test_construction_config_freezes_train_only_greedy_policy() -> None:
     assert config["construction_population"] == {
         "block_size": 250,
         "expansion_order": "ascending_contiguous_blocks",
+        "initial_index_end": 2500,
         "index_end": 12000,
         "index_start": 1500,
         "split": "train",
     }
+    assert config["coverage_gate"]["minimum_successful_trajectories"] == 256
+    assert config["coverage_gate"]["minimum_total_transitions"] == 1024
+    assert config["coverage_gate"]["minimum_search_transitions"] == 256
+    assert config["coverage_gate"]["minimum_click_transitions"] == 256
     assert config["pilot"]["admissible"] is False
     assert config["generation"] == {
         "do_sample": False,
@@ -305,3 +311,45 @@ def test_block_resume_validates_task_hash_without_regeneration(tmp_path: Path) -
     assert second.calls == []
     assert sha256_file(raw) == before
     assert (tmp_path / "admitted_trajectories.jsonl").read_text().count("\n") == 1
+
+
+def test_merge_blocks_enforces_contiguous_population_and_coverage(tmp_path: Path) -> None:
+    task = _task()
+    block = tmp_path / "block"
+    run_construction_block(
+        adapter=_adapter(task),
+        tasks=(task,),
+        generator=_Generator(_outputs()),
+        source_identity=SOURCE_IDENTITY,
+        environment_identity=ENVIRONMENT_IDENTITY,
+        output_root=block,
+        max_new_tokens=128,
+        admissible=True,
+    )
+    config = {
+        "format": "rcmf_agentbench_fc_webshop_construction_config_v1",
+        "construction_population": {
+            "index_start": 1500,
+            "initial_index_end": 1501,
+            "index_end": 1502,
+            "block_size": 1,
+        },
+        "coverage_gate": {
+            "minimum_successful_trajectories": 1,
+            "minimum_total_transitions": 2,
+            "minimum_search_transitions": 1,
+            "minimum_click_transitions": 1,
+        },
+    }
+    merged = merge_construction_blocks(
+        block_roots=(block,),
+        source_identity=SOURCE_IDENTITY,
+        construction_config=config,
+        output_root=tmp_path / "merged",
+    )
+    assert merged["coverage_met"] is True
+    assert merged["next_block"] is None
+    assert merged["successful_trajectory_count"] == 1
+    assert merged["transition_count"] == 2
+    assert merged["search_transition_count"] == 1
+    assert merged["click_transition_count"] == 1
