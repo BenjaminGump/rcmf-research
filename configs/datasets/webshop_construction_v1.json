@@ -1,0 +1,61 @@
+{
+  "admission_policy": {
+    "allowed_provenance": "AGENT_GENERATED",
+    "full_success_reward": 1.0,
+    "require_complete_trajectory": true,
+    "require_exact_observation_action_reward_replay": true,
+    "require_train_split": true
+  },
+  "benchmark": "agentbench_fc_webshop",
+  "construction_population": {
+    "block_size": 250,
+    "expansion_order": "ascending_contiguous_blocks",
+    "index_end": 12000,
+    "index_start": 1500,
+    "split": "train"
+  },
+  "determinism": {
+    "cublas_workspace_config": ":4096:8",
+    "generation_seed": 25101,
+    "python_hash_seed": 25101,
+    "runtime_seed": 233
+  },
+  "format": "rcmf_agentbench_fc_webshop_construction_config_v1",
+  "generation": {
+    "do_sample": false,
+    "dtype": "bfloat16",
+    "enable_thinking": false,
+    "max_new_tokens": 128,
+    "max_rounds": 20,
+    "model": "Qwen/Qwen3-8B",
+    "model_snapshot_commit": "b968826d9c46dd6066d109eabc6255188de91218",
+    "temperature": 0.0,
+    "tool_choice": "required",
+    "tool_rendering": "qwen_apply_chat_template_tools_v1",
+    "top_p": 1.0
+  },
+  "pilot": {
+    "admissible": false,
+    "index_end": 1503,
+    "index_start": 1500,
+    "purpose": "runtime_and_wall_time_measurement_only"
+  },
+  "prompt_profile": "agentbench_fc_webshop_v1",
+  "prohibited_populations": [
+    {
+      "index_end": 200,
+      "index_start": 0,
+      "name": "standard200"
+    },
+    {
+      "index_end": 500,
+      "index_start": 200,
+      "name": "excluded"
+    },
+    {
+      "index_end": 1500,
+      "index_start": 500,
+      "name": "validation"
+    }
+  ]
+}
