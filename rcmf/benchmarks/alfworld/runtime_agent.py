@@ -231,13 +231,23 @@ def run_alfworld_episodes_batched(
         raise ValueError("RCMF batch requires injector and fixed-field query closures")
     contexts = []
     for task in tasks:
+        try:
+            runtime = adapter.create_runtime(task)
+            reset_error = None
+        except Exception as exc:
+            runtime = None
+            reset_error = {
+                "type": type(exc).__name__,
+                "message": str(exc),
+                "stage": "environment_reset",
+            }
         contexts.append(
             {
                 "task": task,
-                "runtime": adapter.create_runtime(task),
+                "runtime": runtime,
                 "history": [],
                 "steps": [],
-                "error": None,
+                "error": reset_error,
                 "started": time.time(),
             }
         )
@@ -246,7 +256,9 @@ def run_alfworld_episodes_batched(
             active = [
                 row
                 for row in contexts
-                if row["error"] is None and not row["runtime"].done
+                if row["runtime"] is not None
+                and row["error"] is None
+                and not row["runtime"].done
             ]
             if not active:
                 break
@@ -271,6 +283,15 @@ def run_alfworld_episodes_batched(
                     row["error"] = {
                         "type": type(exc).__name__,
                         "message": str(exc),
+                        "step": step_index,
+                    }
+                    continue
+                if prompt_tokens + 512 > EFFECTIVE_CONTEXT_LIMIT:
+                    row["error"] = {
+                        "type": "DYNAMIC_CONTEXT_BUDGET_EXCEEDED",
+                        "prompt_tokens": prompt_tokens,
+                        "generation_reserve": 512,
+                        "effective_context_limit": EFFECTIVE_CONTEXT_LIMIT,
                         "step": step_index,
                     }
                     continue
@@ -372,10 +393,18 @@ def run_alfworld_episodes_batched(
         results = []
         for row in contexts:
             runtime = row["runtime"]
-            if row["error"] is not None:
-                runtime.error = row["error"]
-            evaluation = adapter.evaluate_task(runtime, row["task"])
-            runtime.close()
+            if runtime is None:
+                raw_reward = 0.0
+                official_success = False
+                terminal_status = "ERROR"
+            else:
+                if row["error"] is not None:
+                    runtime.error = row["error"]
+                evaluation = adapter.evaluate_task(runtime, row["task"])
+                raw_reward = evaluation.raw_reward
+                official_success = evaluation.binary_success
+                terminal_status = evaluation.terminal_status.value
+                runtime.close()
             result = {
                 "schema_version": "alfworld_agent_episode_v1",
                 "condition": condition,
@@ -387,9 +416,9 @@ def run_alfworld_episodes_batched(
                 "generation_identity_sha256": GENERATION_IDENTITY_SHA256,
                 "steps": row["steps"],
                 "step_count": len(row["steps"]),
-                "raw_reward": evaluation.raw_reward,
-                "official_success": evaluation.binary_success,
-                "terminal_status": evaluation.terminal_status.value,
+                "raw_reward": raw_reward,
+                "official_success": official_success,
+                "terminal_status": terminal_status,
                 "error": row["error"],
                 "elapsed_seconds": round(time.time() - row["started"], 6),
             }
