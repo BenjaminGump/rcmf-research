@@ -7,6 +7,7 @@ import json
 import multiprocessing
 import os
 from pathlib import Path
+import signal
 import tempfile
 import time
 from typing import Any
@@ -38,6 +39,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--workers", type=int, required=True)
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument("--max-steps", type=int, default=250)
+    parser.add_argument("--task-timeout-seconds", type=int, default=300)
     return parser.parse_args()
 
 
@@ -53,22 +55,34 @@ def _replay_one(
     run_uuid: str,
     source_commit: str,
     max_steps: int,
+    task_timeout_seconds: int,
 ) -> dict[str, Any]:
     process_temp = Path(temp_root) / str(os.getpid())
     process_temp.mkdir(parents=True, exist_ok=True)
     os.environ["TMPDIR"] = str(process_temp)
     tempfile.tempdir = str(process_temp)
-    provider = ALFWorldOfficialExpertTrajectoryProvider(
-        data_root=data_root,
-        max_steps=max_steps,
-        identity_bindings={
-            "source_commit": source_commit,
-            "run_uuid": run_uuid,
-            "task_manifest_sha256": TASK_MANIFEST_SHA256,
-            "parallel_replay": True,
-        },
-    )
-    return provider.replay(task)
+    def timeout_handler(signum: int, frame: Any) -> None:
+        del signum, frame
+        raise TimeoutError(f"official expert replay exceeded {task_timeout_seconds} seconds")
+
+    prior_handler = signal.signal(signal.SIGALRM, timeout_handler)
+    signal.alarm(task_timeout_seconds)
+    try:
+        provider = ALFWorldOfficialExpertTrajectoryProvider(
+            data_root=data_root,
+            max_steps=max_steps,
+            identity_bindings={
+                "source_commit": source_commit,
+                "run_uuid": run_uuid,
+                "task_manifest_sha256": TASK_MANIFEST_SHA256,
+                "parallel_replay": True,
+                "task_timeout_seconds": task_timeout_seconds,
+            },
+        )
+        return provider.replay(task)
+    finally:
+        signal.alarm(0)
+        signal.signal(signal.SIGALRM, prior_handler)
 
 
 def _load_row(path: Path, task_id: str) -> dict[str, Any]:
@@ -83,6 +97,8 @@ def main() -> int:
     args = parse_args()
     if args.workers <= 0:
         raise ValueError("--workers must be positive")
+    if args.task_timeout_seconds <= 0:
+        raise ValueError("--task-timeout-seconds must be positive")
     if args.limit < 0:
         raise ValueError("--limit must be zero or positive")
     manifest_rows = load_sealed_task_manifest(args.task_manifest)
@@ -120,6 +136,7 @@ def main() -> int:
                     run_uuid=args.run_uuid,
                     source_commit=args.source_commit,
                     max_steps=args.max_steps,
+                    task_timeout_seconds=args.task_timeout_seconds,
                 ): task
                 for task in missing
             }

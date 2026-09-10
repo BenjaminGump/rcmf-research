@@ -90,6 +90,8 @@ class ALFWorldOfficialExpertTrajectoryProvider:
             )
             base["initial_observation"] = runtime.initial_observation
         except Exception as exc:
+            if isinstance(exc, TimeoutError):
+                base["status"] = "EXPERT_TIMEOUT"
             base["error"] = {
                 "type": type(exc).__name__,
                 "message": str(exc),
@@ -104,10 +106,14 @@ class ALFWorldOfficialExpertTrajectoryProvider:
                     command = runtime.expert_command()
                 except Exception as exc:
                     message = str(exc)
-                    base["status"] = (
-                        "EXPERT_COMMAND_INVALID" if "invalid" in message or "admissible" in message
-                        else "EXPERT_PLAN_MISSING"
-                    )
+                    if isinstance(exc, TimeoutError):
+                        base["status"] = "EXPERT_TIMEOUT"
+                    else:
+                        base["status"] = (
+                            "EXPERT_COMMAND_INVALID"
+                            if "invalid" in message or "admissible" in message
+                            else "EXPERT_PLAN_MISSING"
+                        )
                     base["error"] = {
                         "step": step_index,
                         "type": type(exc).__name__,
@@ -117,7 +123,11 @@ class ALFWorldOfficialExpertTrajectoryProvider:
                 try:
                     outcome = runtime.step(command)
                 except Exception as exc:
-                    base["status"] = "ENVIRONMENT_STEP_FAILURE"
+                    base["status"] = (
+                        "EXPERT_TIMEOUT"
+                        if isinstance(exc, TimeoutError)
+                        else "ENVIRONMENT_STEP_FAILURE"
+                    )
                     base["error"] = {
                         "step": step_index,
                         "type": type(exc).__name__,
