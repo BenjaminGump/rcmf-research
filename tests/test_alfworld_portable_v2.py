@@ -492,6 +492,48 @@ def test_compact_writer_receives_finite_train_only_supervision() -> None:
     assert torch.isfinite(torch.tensor(metrics["mean_loss"]))
 
 
+def test_compact_reader_injection_gradient_ownership() -> None:
+    config = {
+        "feature_dim": 8,
+        "key_dim": 8,
+        "program_dim": 4,
+        "writer_hidden_dim": 12,
+        "model_dim": 16,
+        "injection_tokens": 2,
+        "initial_injection_scale": 0.05,
+    }
+    modules = create_modules(config)
+    class FrozenEmbeddingModel(torch.nn.Module):
+        def __init__(self) -> None:
+            super().__init__()
+            self.embedding = torch.nn.Embedding(32, 16)
+            self.requires_grad_(False)
+
+        def get_input_embeddings(self) -> torch.nn.Embedding:
+            return self.embedding
+
+    frozen_embedding = FrozenEmbeddingModel()
+    memory_z = modules["reader"](torch.randn(2, 4))
+    input_ids = torch.tensor([[1, 2, 3], [3, 2, 1]], dtype=torch.long)
+    attention_mask = torch.ones_like(input_ids)
+    labels = torch.full_like(input_ids, -100)
+    base = frozen_embedding.get_input_embeddings()(input_ids).detach()
+    prepared = modules["injector"].prepare_train_inputs(
+        frozen_embedding,
+        input_ids,
+        attention_mask,
+        labels,
+        memory_z,
+    )
+    assert not torch.equal(prepared.inputs["inputs_embeds"], base)
+    prepared.inputs["inputs_embeds"].square().mean().backward()
+    assert all(parameter.grad is None for parameter in frozen_embedding.parameters())
+    assert all(parameter.grad is None for parameter in modules["writer"].parameters())
+    for name in ("reader", "injector"):
+        gradients = [parameter.grad for parameter in modules[name].parameters()]
+        assert any(gradient is not None and bool(torch.isfinite(gradient).all()) for gradient in gradients)
+
+
 def test_real_evidence_phase_handler_seals_a_portable_manifest(tmp_path: Path) -> None:
     evidence = tmp_path / "evidence.json"
     evidence.write_text('{"passed":true}\n', encoding="utf-8")
