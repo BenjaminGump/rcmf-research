@@ -38,6 +38,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--workers", type=int, required=True)
     parser.add_argument("--limit", type=int, default=0)
+    parser.add_argument("--task-ids-json")
     parser.add_argument("--max-steps", type=int, default=250)
     parser.add_argument("--task-timeout-seconds", type=int, default=300)
     return parser.parse_args()
@@ -101,8 +102,35 @@ def main() -> int:
         raise ValueError("--task-timeout-seconds must be positive")
     if args.limit < 0:
         raise ValueError("--limit must be zero or positive")
+    if args.limit and args.task_ids_json:
+        raise ValueError("--limit and --task-ids-json are mutually exclusive")
     manifest_rows = load_sealed_task_manifest(args.task_manifest)
     tasks = list(portable_task_records(manifest_rows)["train"])
+    task_selection = None
+    if args.task_ids_json:
+        selected = json.loads(Path(args.task_ids_json).read_text(encoding="utf-8"))
+        if not isinstance(selected, list) or not selected:
+            raise ValueError("task ID selection must be a non-empty array")
+        selected_ids = [str(item) for item in selected]
+        train_ids = {task.task_id for task in tasks}
+        if len(selected_ids) != len(set(selected_ids)) or any(
+            task_id not in train_ids for task_id in selected_ids
+        ):
+            raise ValueError("task ID selection is duplicate or outside TRAIN")
+        selected_set = set(selected_ids)
+        tasks = [task for task in tasks if task.task_id in selected_set]
+        task_selection = {
+            "path": str(Path(args.task_ids_json).resolve(strict=True)),
+            "count": len(tasks),
+            "ids_sha256": hashlib.sha256(
+                json.dumps(
+                    [task.task_id for task in tasks],
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ).encode("utf-8")
+            ).hexdigest(),
+        }
     if args.limit:
         tasks = tasks[: args.limit]
     row_dir = Path(args.row_dir).resolve()
@@ -188,6 +216,7 @@ def main() -> int:
             "requested_population": len(tasks),
             "complete": len(ordered) == len(tasks),
             "diagnostic_limit": args.limit or None,
+            "task_selection": task_selection,
             "worker_count": args.workers,
             "elapsed_seconds_this_invocation": round(time.time() - started, 3),
             "row_artifact_count": len(completed),
