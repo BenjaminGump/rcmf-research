@@ -3719,3 +3719,47 @@ IMPLEMENTATION DEVIATIONS:
 - Final Harness schema identities are Git-blob LF-byte SHA256 values. The
   validator normalizes Windows CRLF checkout bytes to that declared basis;
   this changes no schema content or semantics.
+
+## 2026-09-10 ALFWorld expedited Track R execution decisions
+
+VERIFIED:
+
+- Harness Track R owns the complete 134-task `valid_unseen` population and the
+  byte-exact upstream ReAct prompt. Its model, tokenizer, template, context,
+  generation, action-cap, evaluator, and scheduling identities are frozen by
+  execution-lock identity `055e5364...`.
+- The final TRAIN source contains 3,545 successful replay-validated official
+  expert trajectories and 21,259 complete transition memories. Eight typed
+  expert timeouts are excluded and remain visible.
+- A full-ledger CPU module diagnostic passed independent writes, fixed shapes,
+  add/remove/restore, reverse-order rebuild, finite values, embedding-path
+  perturbation, intended gradient ownership, and no per-memory deployment
+  state.
+
+DECISION:
+
+- Use the ALFWorld-specific compact additive rank-one field and four-token
+  `last_user_k` injection profile frozen in
+  `configs/benchmark/alfworld/compact_rcmf_v1.yaml` for one seed (25,101), one
+  writer epoch, one reader epoch, and the terminal completed checkpoint.
+- Use stable left-padded generation groups of six for both formal arms. The
+  group size is an engineering scheduling choice below the Harness maximum of
+  16; it does not alter task population, generation settings, or evaluator.
+- Run the exact bare and RCMF conditions on all 134 Track R tasks regardless
+  of success rate. Do not use either outcome for tuning.
+
+IMPLEMENTATION DEVIATIONS:
+
+- Shared `HFQwenBackend` gained an explicit attention implementation and a
+  stable batched generation path because an ALFWorld-only wrapper could not
+  safely supply exact model-loading and injection semantics. The change is
+  benchmark-generic and retains existing single-row behavior.
+- The task-owned FlashAttention-2 build is exact and content-addressed, but its
+  first successful wheel build also wrote a copy into the default shared pip
+  wheel cache before `PIP_CACHE_DIR` was isolated. That unexplained shared
+  cache entry is preserved and not used as authority. The installed runtime
+  and subsequent dependency cache are task-owned.
+- A six-task FA2 sanity attempt accidentally overlapped a separately owned
+  WebShop process. Only the ALFWorld process group was terminated; it emitted
+  zero rows and is classified as an invalid engineering attempt. WebShop was
+  untouched, and all later ALFWorld GPU work requires exclusive ownership.
