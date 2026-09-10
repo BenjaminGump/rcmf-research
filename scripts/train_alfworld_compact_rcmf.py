@@ -10,6 +10,7 @@ import time
 import torch
 import yaml
 
+from rcmf.benchmarks.alfworld.execution_lock import load_execution_lock
 from rcmf.benchmarks.alfworld.runtime_agent import load_frozen_qwen
 from rcmf.benchmarks.alfworld.training import (
     checkpoint_payload,
@@ -29,6 +30,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--config", required=True)
     parser.add_argument("--ledger", required=True)
     parser.add_argument("--model-snapshot", required=True)
+    parser.add_argument("--benchmark-lock", required=True)
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--run-uuid", required=True)
     parser.add_argument("--source-commit", required=True)
@@ -65,6 +67,7 @@ def main() -> int:
     config_path = Path(args.config).resolve(strict=True)
     ledger_path = Path(args.ledger).resolve(strict=True)
     config = _load_config(config_path)
+    benchmark_lock = load_execution_lock(args.benchmark_lock)
     rows = load_ledger(ledger_path)
     full_ledger_count = len(rows)
     if args.engineering_limit:
@@ -135,7 +138,13 @@ def main() -> int:
     if reversible_max_abs > 1e-12 or permutation_max_abs > 1e-10:
         raise RuntimeError("compact field reversibility/permutation audit failed")
 
-    backend = load_frozen_qwen(args.model_snapshot)
+    flash_identity = benchmark_lock["payload"]["runtime_execution"][
+        "flash_attn_installation_manifest_sha256"
+    ]
+    backend = load_frozen_qwen(
+        args.model_snapshot,
+        flash_attn_installation_sha256=flash_identity,
+    )
     embedding = backend.model.get_input_embeddings()
     reader_optimizer = torch.optim.AdamW(
         list(modules["query_encoder"].parameters())
@@ -169,6 +178,8 @@ def main() -> int:
         "config_sha256": sha256_file(config_path),
         "ledger_path": str(ledger_path),
         "ledger_sha256": sha256_file(ledger_path),
+        "benchmark_lock_sha256": benchmark_lock["file_sha256"],
+        "benchmark_lock_identity_sha256": benchmark_lock["lock_identity_sha256"],
         "full_ledger_count": full_ledger_count,
         "trained_transition_count": len(rows),
         "engineering_limit": args.engineering_limit or None,

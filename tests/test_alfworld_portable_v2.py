@@ -4,6 +4,8 @@ import ast
 import hashlib
 import json
 from pathlib import Path
+import sys
+import types
 
 import pytest
 import torch
@@ -12,6 +14,10 @@ from rcmf.benchmarks.alfworld.compact_rcmf import (
     CompactMemoryContribution,
     ReversibleCompactField,
     signed_hash_features,
+)
+from rcmf.benchmarks.alfworld.execution_lock import (
+    load_execution_lock,
+    lock_identity,
 )
 from rcmf.benchmarks.alfworld.portable_adapter_v2 import (
     ACTION_CAP,
@@ -47,6 +53,7 @@ from rcmf.benchmarks.alfworld.runtime_agent import (
     run_alfworld_episode,
     run_alfworld_episodes_batched,
     validate_exact_model_snapshot,
+    validate_flash_attention_runtime,
 )
 from rcmf.model.backends.base import GenerateOutput
 from rcmf.pipeline.portable_v2.adapter import probe_adapter_capabilities
@@ -228,6 +235,79 @@ def test_exact_snapshot_and_first_line_fail_closed(tmp_path: Path) -> None:
         validate_exact_model_snapshot(tmp_path)
     assert first_decoded_line("look\nignored continuation") == "look"
     assert first_decoded_line("\nlook") == ""
+
+
+def test_flash_attention_runtime_requires_exact_version(monkeypatch) -> None:
+    monkeypatch.setitem(
+        sys.modules,
+        "flash_attn",
+        types.SimpleNamespace(__version__="2.8.3.post1", __file__=__file__),
+    )
+    monkeypatch.setattr(
+        "rcmf.benchmarks.alfworld.runtime_agent.flash_attention_runtime_entries",
+        lambda root: [{"path": "flash_attn/file", "bytes": 1, "sha256": "a" * 64}],
+    )
+    runtime = validate_flash_attention_runtime()
+    assert runtime["version"] == "2.8.3.post1"
+    assert runtime["installation_manifest_sha256"] == canonical_sha256(
+        [{"path": "flash_attn/file", "bytes": 1, "sha256": "a" * 64}]
+    )
+    with pytest.raises(RuntimeError, match="installation identity differs"):
+        validate_flash_attention_runtime("b" * 64)
+    monkeypatch.setitem(
+        sys.modules,
+        "flash_attn",
+        types.SimpleNamespace(__version__="different"),
+    )
+    with pytest.raises(RuntimeError, match="version differs"):
+        validate_flash_attention_runtime()
+
+
+def test_track_r_execution_lock_is_content_addressed(tmp_path: Path) -> None:
+    payload = {
+        "schema_version": "alfworld_track_r_execution_lock_v1",
+        "status": "FROZEN_FOR_MATCHED_BARE_AND_RCMF_EXECUTION",
+        "final_benchmark_lock": True,
+        "track": {
+            "track_id": "alfworld_upstream_react_valid_unseen_reference_v1",
+            "role": "UPSTREAM_PROTOCOL_REFERENCE",
+            "expected_task_count": 134,
+            "task_ids_sha256": TRACK_R_TASK_IDS_SHA256,
+        },
+        "model_context": {
+            "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "tokenizer_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "chat_template_sha256": (
+                "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8"
+            ),
+        },
+        "generation": {
+            "identity_sha256": GENERATION_IDENTITY_SHA256,
+            "environment_action_cap": 49,
+            "max_new_tokens": 512,
+            "do_sample": False,
+            "stopping_criteria": [],
+        },
+        "runtime_execution": {
+            "deterministic_evaluation_order_sha256": (
+                "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8"
+            ),
+            "attention_implementation": "flash_attention_2",
+            "flash_attn_version": "2.8.3.post1",
+            "microbatch_max_size": 16,
+            "left_padding": "exact attention mask; no truncation",
+            "flash_attn_installation_manifest_sha256": "a" * 64,
+        },
+    }
+    payload["lock_identity_sha256"] = lock_identity(payload)
+    source = tmp_path / "lock.json"
+    source.write_text(json.dumps(payload), encoding="utf-8")
+    assert load_execution_lock(source)["lock_identity_sha256"] == lock_identity(payload)
+    payload["runtime_execution"]["microbatch_max_size"] = 17
+    payload["lock_identity_sha256"] = lock_identity(payload)
+    source.write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(ValueError, match="runtime execution identity"):
+        load_execution_lock(source)
 
 
 class _FakeBackend:

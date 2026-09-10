@@ -32,6 +32,7 @@ class HFQwenBackend:
         device_map: str | None = None,
         freeze_backbone: bool = True,
         enable_thinking: bool = False,
+        attention_implementation: str | None = None,
         load_model: bool = True,
     ) -> None:
         self.model_name = model_name
@@ -39,6 +40,7 @@ class HFQwenBackend:
         self.device_map = device_map
         self.freeze_backbone = freeze_backbone
         self.enable_thinking = enable_thinking
+        self.attention_implementation = attention_implementation
         self.tokenizer = None
         self.model = None
         self._gradient_checkpointing_enabled = False
@@ -57,6 +59,8 @@ class HFQwenBackend:
         }
         if self.device_map is not None:
             kwargs["device_map"] = self.device_map
+        if self.attention_implementation is not None:
+            kwargs["attn_implementation"] = self.attention_implementation
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name, **kwargs)
         if self.device_map is None:
             device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -614,7 +618,7 @@ class HFQwenBackend:
 
             hook_handle = embedding_module.register_forward_hook(add_embedding_delta)
         attention_context = nullcontext()
-        if self.device.type == "cuda":
+        if self.device.type == "cuda" and self.attention_implementation != "flash_attention_2":
             try:
                 from torch.nn.attention import SDPBackend, sdpa_kernel
 
@@ -664,7 +668,13 @@ class HFQwenBackend:
                         "total_tokens": prompt_tokens + len(ids),
                     },
                     ttft_ms=elapsed_ms,
-                    extra={"memory": row_memory_metadata, "batch_size": len(messages_batch)},
+                    extra={
+                        "memory": row_memory_metadata,
+                        "batch_size": len(messages_batch),
+                        "attention_implementation": self.attention_implementation,
+                        "batch_prompt_width": int(input_ids.shape[1]),
+                        "left_padding_tokens": int(input_ids.shape[1]) - prompt_tokens,
+                    },
                 )
             )
         return outputs

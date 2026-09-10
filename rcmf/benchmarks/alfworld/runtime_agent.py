@@ -30,6 +30,8 @@ MODEL_FILE_HASHES = {
     "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
     "tokenizer_config.json": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
 }
+FROZEN_ATTENTION_IMPLEMENTATION = "flash_attention_2"
+FROZEN_FLASH_ATTN_VERSION = "2.8.3.post1"
 
 
 def sha256_file(path: Path) -> str:
@@ -55,8 +57,60 @@ def validate_exact_model_snapshot(path: str | Path) -> Path:
     return snapshot
 
 
-def load_frozen_qwen(path: str | Path) -> HFQwenBackend:
+def flash_attention_runtime_entries(root: str | Path) -> list[dict[str, Any]]:
+    package_root = Path(root).resolve(strict=True)
+    entries = []
+    for path in sorted(package_root.rglob("*")):
+        relative = path.relative_to(package_root).as_posix()
+        if not path.is_file() or not relative.startswith("flash_attn"):
+            continue
+        if path.suffix == ".pyc" or "__pycache__" in path.parts:
+            continue
+        entries.append(
+            {
+                "path": relative,
+                "bytes": path.stat().st_size,
+                "sha256": sha256_file(path),
+            }
+        )
+    if not entries:
+        raise RuntimeError("frozen FlashAttention-2 installation is empty")
+    return entries
+
+
+def validate_flash_attention_runtime(
+    expected_installation_sha256: str | None = None,
+) -> dict[str, Any]:
+    try:
+        import flash_attn
+    except ImportError as exc:
+        raise RuntimeError("frozen FlashAttention-2 runtime is unavailable") from exc
+    actual = str(getattr(flash_attn, "__version__", ""))
+    if actual != FROZEN_FLASH_ATTN_VERSION:
+        raise RuntimeError(
+            f"frozen FlashAttention-2 version differs: {actual!r}"
+        )
+    root = Path(flash_attn.__file__).resolve(strict=True).parent.parent
+    entries = flash_attention_runtime_entries(root)
+    identity = canonical_sha256(entries)
+    if expected_installation_sha256 is not None and identity != expected_installation_sha256:
+        raise RuntimeError("frozen FlashAttention-2 installation identity differs")
+    return {
+        "version": actual,
+        "root": str(root),
+        "file_count": len(entries),
+        "total_bytes": sum(int(row["bytes"]) for row in entries),
+        "installation_manifest_sha256": identity,
+    }
+
+
+def load_frozen_qwen(
+    path: str | Path,
+    *,
+    flash_attn_installation_sha256: str | None = None,
+) -> HFQwenBackend:
     snapshot = validate_exact_model_snapshot(path)
+    validate_flash_attention_runtime(flash_attn_installation_sha256)
     random.seed(25101)
     torch.manual_seed(25101)
     if torch.cuda.is_available():
@@ -67,12 +121,18 @@ def load_frozen_qwen(path: str | Path) -> HFQwenBackend:
         device_map=None,
         freeze_backbone=True,
         enable_thinking=False,
+        attention_implementation=FROZEN_ATTENTION_IMPLEMENTATION,
         load_model=True,
     )
     if backend.model is None or backend.tokenizer is None:
         raise RuntimeError("frozen Qwen load did not produce model/tokenizer")
     if any(parameter.requires_grad for parameter in backend.model.parameters()):
         raise RuntimeError("Qwen backbone is not frozen")
+    actual_attention = getattr(backend.model.config, "_attn_implementation", None)
+    if actual_attention != FROZEN_ATTENTION_IMPLEMENTATION:
+        raise RuntimeError(
+            f"frozen Qwen attention implementation differs: {actual_attention!r}"
+        )
     return backend
 
 
@@ -296,13 +356,21 @@ def run_alfworld_episodes_batched(
                     }
                     continue
                 prepared.append((row, messages, trajectory, prompt_tokens))
-            # Flash SDPA cannot consume a non-null padding mask in this runtime.
-            # Bucket by exact rendered token length so every microbatch is
-            # padding-free and remains byte/token equivalent to scalar decode.
-            buckets: dict[int, list[tuple[Any, list[Any], str, int]]] = {}
-            for item in prepared:
-                buckets.setdefault(item[3], []).append(item)
-            for bucket in buckets.values():
+            # The frozen FlashAttention-2 runtime supports exact left-padded
+            # masks, so it preserves stable task order in ordinary chunks.
+            # Other backends retain the exact-length padding-free fallback.
+            padded_batches = (
+                getattr(backend, "attention_implementation", None)
+                == FROZEN_ATTENTION_IMPLEMENTATION
+            )
+            if padded_batches:
+                buckets = [prepared]
+            else:
+                exact_length_buckets: dict[int, list[tuple[Any, list[Any], str, int]]] = {}
+                for item in prepared:
+                    exact_length_buckets.setdefault(item[3], []).append(item)
+                buckets = list(exact_length_buckets.values())
+            for bucket in buckets:
                 for start in range(0, len(bucket), batch_size):
                     chunk = bucket[start : start + batch_size]
                     legal = [item[0] for item in chunk]
@@ -358,7 +426,13 @@ def run_alfworld_episodes_batched(
                             "action_valid": bool(validation["valid"]),
                             "generation_batch_size": len(legal),
                             "requested_generation_batch_size": batch_size,
-                            "homogeneous_prompt_tokens": True,
+                            "homogeneous_prompt_tokens": len(set(prompt_counts)) == 1,
+                            "left_padding_tokens": generated.extra.get(
+                                "left_padding_tokens", 0
+                            ),
+                            "attention_implementation": getattr(
+                                backend, "attention_implementation", None
+                            ),
                             "memory_metadata": generated.extra.get("memory"),
                         }
                         row["steps"].append(step_record)

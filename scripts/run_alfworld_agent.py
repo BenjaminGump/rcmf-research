@@ -14,6 +14,7 @@ from rcmf.benchmarks.alfworld.portable_adapter_v2 import (
     TRACK_R_ID,
     create_alfworld_portable_adapter_v2_1,
 )
+from rcmf.benchmarks.alfworld.execution_lock import load_execution_lock
 from rcmf.benchmarks.alfworld.runtime_agent import (
     load_frozen_qwen,
     run_alfworld_episode,
@@ -36,6 +37,7 @@ def arguments() -> argparse.Namespace:
     parser.add_argument("--prompt-root", required=True)
     parser.add_argument("--data-root", required=True)
     parser.add_argument("--model-snapshot", required=True)
+    parser.add_argument("--benchmark-lock", required=True)
     parser.add_argument("--checkpoint")
     parser.add_argument("--task-ids-json")
     parser.add_argument("--output", required=True)
@@ -73,6 +75,12 @@ def main() -> int:
         raise ValueError("generation batch size must be positive")
     if args.formal and (args.task_ids_json or args.split != "valid_unseen"):
         raise ValueError("formal Track R evaluation requires the complete valid_unseen split")
+    benchmark_lock = load_execution_lock(args.benchmark_lock)
+    microbatch_max = int(
+        benchmark_lock["payload"]["runtime_execution"]["microbatch_max_size"]
+    )
+    if args.generation_batch_size > microbatch_max:
+        raise ValueError("generation batch size exceeds the frozen benchmark lock")
     adapter = create_alfworld_portable_adapter_v2_1(
         task_manifest_path=args.task_manifest,
         trajectory_corpus_path=args.trajectory_corpus,
@@ -109,9 +117,14 @@ def main() -> int:
         "track_role": "UPSTREAM_PROTOCOL_REFERENCE",
         "task_list_role": task_list_role,
         "split": args.split,
-        "task_ids_sha256": canonical_sha256([task.task_id for task in tasks]),
+        "task_ids_sha256": canonical_sha256(sorted(task.task_id for task in tasks)),
+        "evaluation_order_sha256": canonical_sha256(
+            [task.task_id for task in tasks]
+        ),
         "condition": args.condition,
         "checkpoint_sha256": sha256_file(args.checkpoint) if args.checkpoint else None,
+        "benchmark_lock_sha256": benchmark_lock["file_sha256"],
+        "benchmark_lock_identity_sha256": benchmark_lock["lock_identity_sha256"],
         "generation_batch_size": args.generation_batch_size,
     }
     for row in prior:
@@ -120,7 +133,13 @@ def main() -> int:
 
     process_started = time.time()
     started_utc = datetime.now(timezone.utc).isoformat()
-    backend = load_frozen_qwen(args.model_snapshot)
+    flash_identity = benchmark_lock["payload"]["runtime_execution"][
+        "flash_attn_installation_manifest_sha256"
+    ]
+    backend = load_frozen_qwen(
+        args.model_snapshot,
+        flash_attn_installation_sha256=flash_identity,
+    )
     deployment = (
         load_deployment_checkpoint(args.checkpoint, device=backend.device)
         if args.checkpoint
