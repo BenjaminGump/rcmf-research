@@ -136,6 +136,13 @@ merged: `OFFICIAL_EXPERT`, `OFFICIAL_HUMAN`, `OFFICIAL_HUMAN_SAMPLE`,
 `OFFICIAL_MODEL_OR_IL`, `ORACLE_GENERATED_FROM_TRAIN_METADATA`, and
 `AGENT_GENERATED`. `UNKNOWN_PROHIBITED` fails closed.
 
+Portable P01/P02 capability checks use the provenance-neutral
+`SUCCESSFUL_TRAJECTORY_SOURCE`. Declaring the capability does not make a source
+official: each provider retains its exact provenance class and content
+identity, and only successful replay-validated rows from declared training
+splits may enter the corpus. The historical `OFFICIAL_TRAJECTORIES` capability
+name does not satisfy new phase preflight.
+
 ## Scientific And Evaluation Contract
 
 - Use only successful, replay-validated training trajectories for the memory

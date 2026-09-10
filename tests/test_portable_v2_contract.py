@@ -334,6 +334,39 @@ def test_capability_failure_and_registry_have_no_fallback() -> None:
         registry.resolve("unknown:v1")
 
 
+def test_successful_trajectory_capability_is_provenance_neutral_and_fail_closed() -> None:
+    adapter = PortableFixtureAdapter(
+        name="generated-shop-like",
+        train_count=1,
+        evaluation_count=1,
+        train_split="train",
+        evaluation_split="standard200",
+        prompt_profile="agentbench_fc_v1",
+        action_semantics="function_call",
+        continuous_reward=True,
+    )
+    declared = set(adapter.capabilities())
+    declared.remove(AdapterCapability.OFFICIAL_TRAJECTORIES)
+    adapter.capabilities = lambda: frozenset(declared)  # type: ignore[method-assign]
+    assert validate_adapter_capabilities(adapter)["passed"]
+
+    adapter.capabilities = lambda: frozenset(  # type: ignore[method-assign]
+        declared - {AdapterCapability.SUCCESSFUL_TRAJECTORY_SOURCE}
+    )
+    with pytest.raises(RuntimeError, match="successful_trajectory_source"):
+        validate_adapter_capabilities(adapter)
+
+
+def test_trajectory_source_rejects_missing_identity_and_duplicate_splits() -> None:
+    provenance = ProvenanceClass.AGENT_GENERATED
+    with pytest.raises(ValueError, match="content identity"):
+        TrajectorySource("agent", provenance, {}, ("train",)).validate()
+    with pytest.raises(ValueError, match="must be unique"):
+        TrajectorySource(
+            "agent", provenance, {"run": "fixture"}, ("train", "train")
+        ).validate()
+
+
 def test_same_generic_dag_runs_two_relocated_variable_fixtures(tmp_path: Path) -> None:
     alf = PortableFixtureAdapter(
         name="alf-like",

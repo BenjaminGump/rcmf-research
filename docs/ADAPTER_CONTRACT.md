@@ -14,9 +14,14 @@ runtime prerequisites. The selected phase graph derives its own required
 capability set; `probe_adapter_capabilities()` then exercises those methods on
 a bounded fixture before model loading or training.
 
-Required capabilities are stable splits, official trajectories,
+Required capabilities are stable splits, a successful trajectory source,
 reset-and-replay, state/transition rendering, runtime token counting, causal
 supervision, interactive runtime, official evaluation, and audit redaction.
+The trajectory capability is provenance-neutral: a provider may declare any
+admitted provenance class, but every emitted row must be successful,
+replay-validated, source-identity matched, and restricted to a declared
+training split. `OFFICIAL_TRAJECTORIES` remains readable only as a deprecated
+historical capability name and does not satisfy the current phase contract.
 
 Optional capabilities are not globally mandatory. For example, a provenance
 phase does not require interactive runtime, while a causal or evaluation phase
@@ -46,7 +51,8 @@ it does not claim ALFWorld/WebShop executor support or scientific validity.
 
 - `list_tasks()` returns arbitrary named splits of validated `TaskRecord`s.
 - `trajectory_sources()` declares provider identity, provenance, and admitted
-  training splits.
+  training splits. Source IDs and training splits are unique and every split
+  must exist in `list_tasks()`.
 - `successful_trajectories(split)` emits only successful, replay-validated
   `TrajectoryRecord`s.
 - `transition_records(task, trajectory)` emits complete opaque-action

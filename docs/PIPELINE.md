@@ -107,10 +107,16 @@ outputs, and invalid manifests before launch. AppWorld has a thin legacy
 compatibility executor; ALFWorld and WebShop do not claim execution support
 until their own adapters and phase handlers exist.
 
-Capabilities are required by the selected semantic phase graph. A declaration
-is accepted only after a bounded probe exercises the claimed adapter methods;
-token counting and interactive runtime cannot be claimed without configured
-implementations. The probe runs before model loading or training.
+Capabilities are required by the selected semantic phase graph. P01/P02 require
+the provenance-neutral `SUCCESSFUL_TRAJECTORY_SOURCE`, not an assumption that
+all admissible successful trajectories are official. Each source separately
+declares one admitted provenance class, a content identity, and existing
+training splits; successful rows must replay-validate and match exactly one
+declared source. The deprecated `OFFICIAL_TRAJECTORIES` name is retained only
+to read historical declarations. A declaration is accepted only after a
+bounded probe exercises the claimed adapter methods; token counting and
+interactive runtime cannot be claimed without configured implementations. The
+probe runs before model loading or training.
 
 ## Provenance And Relocation
 

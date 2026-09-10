@@ -21,6 +21,9 @@ ADAPTER_PROTOCOL_VERSION = "rcmf_reproducible_benchmark_adapter_v2"
 
 class AdapterCapability(str, Enum):
     STABLE_SPLITS = "stable_splits"
+    SUCCESSFUL_TRAJECTORY_SOURCE = "successful_trajectory_source"
+    # Retained only so historical serialized capability declarations remain
+    # readable. New phase contracts require SUCCESSFUL_TRAJECTORY_SOURCE.
     OFFICIAL_TRAJECTORIES = "official_trajectories"
     RESET_AND_REPLAY = "reset_and_replay"
     STATE_RENDERING = "state_rendering"
@@ -36,10 +39,16 @@ PHASE_REQUIRED_CAPABILITIES: Mapping[str, frozenset[AdapterCapability]] = {
     "P00C_sealed_upstream_boundary_validation": frozenset(),
     "P00_environment_and_data_provenance": frozenset({AdapterCapability.STABLE_SPLITS}),
     "P01_successful_trajectory_corpus": frozenset(
-        {AdapterCapability.STABLE_SPLITS, AdapterCapability.OFFICIAL_TRAJECTORIES}
+        {
+            AdapterCapability.STABLE_SPLITS,
+            AdapterCapability.SUCCESSFUL_TRAJECTORY_SOURCE,
+        }
     ),
     "P02_memory_transition_ledger": frozenset(
-        {AdapterCapability.OFFICIAL_TRAJECTORIES, AdapterCapability.TRANSITION_RENDERING}
+        {
+            AdapterCapability.SUCCESSFUL_TRAJECTORY_SOURCE,
+            AdapterCapability.TRANSITION_RENDERING,
+        }
     ),
     "P03_state_and_transition_representations": frozenset(
         {AdapterCapability.STATE_RENDERING, AdapterCapability.TRANSITION_RENDERING}
@@ -80,19 +89,19 @@ PORTABLE_PIPELINE_REQUIRED_CAPABILITIES = frozenset(
 CAPABILITY_PREREQUISITES: Mapping[
     AdapterCapability, frozenset[AdapterCapability]
 ] = {
-    AdapterCapability.OFFICIAL_TRAJECTORIES: frozenset(
+    AdapterCapability.SUCCESSFUL_TRAJECTORY_SOURCE: frozenset(
         {AdapterCapability.STABLE_SPLITS}
     ),
     AdapterCapability.TRANSITION_RENDERING: frozenset(
         {
             AdapterCapability.STABLE_SPLITS,
-            AdapterCapability.OFFICIAL_TRAJECTORIES,
+            AdapterCapability.SUCCESSFUL_TRAJECTORY_SOURCE,
         }
     ),
     AdapterCapability.STATE_RENDERING: frozenset(
         {
             AdapterCapability.STABLE_SPLITS,
-            AdapterCapability.OFFICIAL_TRAJECTORIES,
+            AdapterCapability.SUCCESSFUL_TRAJECTORY_SOURCE,
         }
     ),
     AdapterCapability.RUNTIME_TOKEN_COUNTING: frozenset(
@@ -175,8 +184,21 @@ class TrajectorySource:
     training_splits: tuple[str, ...]
 
     def validate(self) -> None:
-        if not self.source_id or not self.training_splits:
+        if (
+            not isinstance(self.source_id, str)
+            or not self.source_id.strip()
+            or not self.training_splits
+        ):
             raise ValueError("trajectory source identity and training splits are required")
+        if not isinstance(self.source_identity, Mapping) or not self.source_identity:
+            raise ValueError("trajectory source content identity is required")
+        if any(
+            not isinstance(split, str) or not split.strip()
+            for split in self.training_splits
+        ):
+            raise ValueError("trajectory source training splits must be non-empty strings")
+        if len(set(self.training_splits)) != len(self.training_splits):
+            raise ValueError("trajectory source training splits must be unique")
         if self.provenance == ProvenanceClass.UNKNOWN_PROHIBITED:
             raise ValueError("unknown trajectory provenance is prohibited")
 
@@ -329,8 +351,24 @@ def probe_adapter_capabilities(
     profiles = adapter.prompt_profiles()
     if required_set & profile_capabilities and prompt_profile not in profiles:
         raise CapabilityProofError(f"prompt profile is unavailable: {prompt_profile}")
-    if AdapterCapability.OFFICIAL_TRAJECTORIES in required_set:
+    if AdapterCapability.SUCCESSFUL_TRAJECTORY_SOURCE in required_set:
         sources = tuple(adapter.trajectory_sources())
+        if not sources:
+            raise CapabilityProofError("adapter declares no successful trajectory sources")
+        source_ids: set[str] = set()
+        for source in sources:
+            source.validate()
+            if source.source_id in source_ids:
+                raise CapabilityProofError(
+                    f"duplicate trajectory source ID: {source.source_id}"
+                )
+            source_ids.add(source.source_id)
+            unknown_splits = set(source.training_splits) - set(tasks_by_split)
+            if unknown_splits:
+                raise CapabilityProofError(
+                    "trajectory source references unknown training splits: "
+                    + ", ".join(sorted(unknown_splits))
+                )
         training_splits = sorted(
             {value for source in sources for value in source.training_splits}
         )

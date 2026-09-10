@@ -90,7 +90,7 @@ class AppWorldPortableAdapterV2:
     def capabilities(self) -> frozenset[AdapterCapability]:
         capabilities = {
             AdapterCapability.STABLE_SPLITS,
-            AdapterCapability.OFFICIAL_TRAJECTORIES,
+            AdapterCapability.SUCCESSFUL_TRAJECTORY_SOURCE,
             AdapterCapability.STATE_RENDERING,
             AdapterCapability.TRANSITION_RENDERING,
             AdapterCapability.CAUSAL_SUPERVISION,
