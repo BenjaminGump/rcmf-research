@@ -157,7 +157,7 @@ def main() -> int:
         memory_z,
     )
     embedding_change_max_abs = float(
-        (prepared.inputs["inputs_embeds"] - base_embeddings).abs().max()
+        (prepared.inputs["inputs_embeds"] - base_embeddings).detach().abs().max()
     )
     prepared.inputs["inputs_embeds"].square().mean().backward()
     gradients = {

@@ -61,6 +61,7 @@ from rcmf.pipeline.portable_v2.config import PortablePipelineConfig
 from rcmf.pipeline.portable_v2.dag import PortablePhase
 from rcmf.pipeline.portable_v2.executor import (
     PortableExecutionIdentity,
+    PortableExecutionError,
     PortablePhaseContext,
     execute_and_validate_phase,
 )
@@ -558,10 +559,45 @@ def test_real_evidence_phase_handler_seals_a_portable_manifest(tmp_path: Path) -
             identity=identity,
             phase=PortablePhase.PROVENANCE,
             dependency_manifests=(),
-            input_artifacts={"environment": evidence},
+            input_artifacts={
+                "environment_and_data_manifest": evidence,
+                "benchmark_execution_lock": evidence,
+            },
             output_root=output,
             policy={"fixture": True},
         ),
     )
     assert manifest["passed"] is True
     assert manifest["metadata"]["real_evidence_bound"] is True
+
+
+def test_real_evidence_phase_handler_rejects_semantically_wrong_evidence(
+    tmp_path: Path,
+) -> None:
+    evidence = tmp_path / "evidence.json"
+    evidence.write_text('{"passed":true}\n', encoding="utf-8")
+    identity = PortableExecutionIdentity(
+        source_commit="a" * 40,
+        run_uuid="fixture-run",
+        run_root=(tmp_path / "run").resolve(),
+        pipeline_config_sha256="b" * 64,
+        dataset_profile_sha256="c" * 64,
+        adapter_identity=(
+            "rcmf.benchmarks.alfworld.portable_adapter_v2:"
+            "create_alfworld_portable_adapter_v2_1"
+        ),
+    )
+    executor = create_alfworld_portable_executor_v2_1(
+        phase_handlers=evidence_phase_handlers()
+    )
+    with pytest.raises(PortableExecutionError, match="missing required evidence"):
+        executor.execute_phase(
+            PortablePhaseContext(
+                identity=identity,
+                phase=PortablePhase.MEMORY_LEDGER,
+                dependency_manifests=(),
+                input_artifacts={"successful_corpus_manifest": evidence},
+                output_root=(tmp_path / "run" / PortablePhase.MEMORY_LEDGER.value).resolve(),
+                policy={"fixture": True},
+            )
+        )

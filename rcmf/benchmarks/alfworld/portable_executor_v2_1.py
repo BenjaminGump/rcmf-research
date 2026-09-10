@@ -20,6 +20,25 @@ ALFWORLD_ADAPTER_FACTORY = (
     "rcmf.benchmarks.alfworld.portable_adapter_v2:create_alfworld_portable_adapter_v2_1"
 )
 
+REQUIRED_EVIDENCE_BY_PHASE = {
+    PortablePhase.PROVENANCE.value: frozenset(
+        {"environment_and_data_manifest", "benchmark_execution_lock"}
+    ),
+    PortablePhase.SUCCESSFUL_CORPUS.value: frozenset({"successful_corpus_manifest"}),
+    PortablePhase.MEMORY_LEDGER.value: frozenset({"memory_ledger_manifest"}),
+    PortablePhase.REPRESENTATIONS.value: frozenset({"representation_diagnostic"}),
+    PortablePhase.SELECTOR_SUPERVISION.value: frozenset(
+        {"addressing_supervision_diagnostic"}
+    ),
+    PortablePhase.PAIRED_OUTCOMES.value: frozenset({"paired_outcome_evidence"}),
+    PortablePhase.TRAINING_UNITS.value: frozenset({"training_units_manifest"}),
+    PortablePhase.TRAINING.value: frozenset({"training_summary"}),
+    PortablePhase.EPOCH_DIAGNOSTICS.value: frozenset({"epoch_diagnostics"}),
+    PortablePhase.TERMINAL_CHECKPOINT.value: frozenset({"checkpoint_validation"}),
+    PortablePhase.DEPLOYMENT_FIELD.value: frozenset({"deployment_field_validation"}),
+    PortablePhase.OFFICIAL_EVALUATION.value: frozenset({"official_evaluation_summary"}),
+}
+
 
 class ALFWorldPortablePhaseExecutorV2_1:
     """ALFWorld-owned binding of real phase handlers to the Portable V2.1 DAG."""
@@ -55,6 +74,16 @@ def evidence_phase_handlers() -> Mapping[str, Callable[[PortablePhaseContext], P
         if not context.input_artifacts:
             raise PortableExecutionError(
                 f"ALFWorld phase {context.phase.value} requires real input evidence"
+            )
+        required = REQUIRED_EVIDENCE_BY_PHASE.get(context.phase.value)
+        if required is None:
+            raise PortableExecutionError(
+                f"ALFWorld phase {context.phase.value} has no evidence contract"
+            )
+        missing = sorted(required.difference(context.input_artifacts))
+        if missing:
+            raise PortableExecutionError(
+                f"ALFWorld phase {context.phase.value} is missing required evidence: {missing}"
             )
         inputs = []
         for logical_name, path in sorted(context.input_artifacts.items()):
@@ -94,6 +123,7 @@ def evidence_phase_handlers() -> Mapping[str, Callable[[PortablePhaseContext], P
                 "benchmark": "alfworld",
                 "real_evidence_bound": True,
                 "input_count": len(inputs),
+                "required_evidence": sorted(required),
             },
         )
 

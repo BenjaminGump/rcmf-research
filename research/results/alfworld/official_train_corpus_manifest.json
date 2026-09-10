@@ -1,0 +1,243 @@
+{
+  "admitted_trajectory_count": 3545,
+  "admitted_transition_count": 21259,
+  "complete_train_population": true,
+  "corpus_jsonl": {
+    "bytes": 14463985,
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corpus-final/official_train_corpus.jsonl",
+    "sha256": "35aa8f20e0cb8571d23da9c61f2efc0e93ee7a84bd8385742fd537c78eac795d"
+  },
+  "overlay_inputs": [
+    {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corpus-isolated-retry/retry_corpus.jsonl",
+      "rows": 47,
+      "sha256": "b6e4746899cbb830afae6af9513aac9f4bee8c9e080e12a8ec00b39dd9fed9ed"
+    }
+  ],
+  "overlay_replacements": [
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190906_162750_791095"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190906_200415_535998"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190906_210352_897478"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190906_210518_664798"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190906_233847_462015"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190906_235324_262455"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_063817_005458"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_065059_144926"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_065141_173514"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_101019_173249"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_101103_987850"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_101146_455210"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_122241_270554"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_144603_396680"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_151045_928468"
+    },
+    {
+      "overlay_status": "EXPERT_TIMEOUT",
+      "prior_status": "MISSING",
+      "task_id": "alfworld:trial_T20190907_151125_358475"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_151211_150451"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_153912_295856"
+    },
+    {
+      "overlay_status": "EXPERT_TIMEOUT",
+      "prior_status": "MISSING",
+      "task_id": "alfworld:trial_T20190907_163255_256147"
+    },
+    {
+      "overlay_status": "EXPERT_TIMEOUT",
+      "prior_status": "MISSING",
+      "task_id": "alfworld:trial_T20190907_163511_185881"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_175233_453383"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_175527_049563"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_193130_885033"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_205322_779427"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_205445_957867"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190907_231337_619124"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190908_010219_785049"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190908_015321_582840"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190908_030749_717286"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190908_030921_984551"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190908_111640_207484"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190908_124634_452782"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190908_183455_831927"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190908_183611_514718"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190909_021233_263113"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190909_022815_179570"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190909_051727_474470"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190912_115301_827103"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190912_115403_916426"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190918_212722_569040"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190918_213438_348886"
+    },
+    {
+      "overlay_status": "SUCCESS",
+      "prior_status": "EXPERT_TIMEOUT",
+      "task_id": "alfworld:trial_T20190918_234000_303529"
+    }
+  ],
+  "primary_row_count": 3550,
+  "primary_row_dir": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corpus-parallel/rows",
+  "provenance": "OFFICIAL_EXPERT",
+  "provider": "alfworld_official_expert_trajectory_provider_v1",
+  "row_count": 3553,
+  "run_uuid": "f8c16300-c5ae-4422-b40b-eadb932ed6ab",
+  "schema_version": "alfworld_consolidated_official_expert_corpus_manifest_v1",
+  "source_commit": "8d24acc70403e094f6b7d42757bed257180b52f0",
+  "split": "train",
+  "status_counts": {
+    "EXPERT_TIMEOUT": 8,
+    "SUCCESS": 3545
+  },
+  "task_ids_sha256": "ba5443f9fdef4cf9d77436bfa1e0384e0b28467147d88c884bd70a9a1049f5e4"
+}

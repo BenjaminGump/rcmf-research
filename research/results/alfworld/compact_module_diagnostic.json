@@ -1,0 +1,74 @@
+{
+  "canonical_sha256": "cdba0bc42aaa4125ae79fd3f17bddf1542d1fd79fba46a0dce14b5f655a14578",
+  "checks": {
+    "add_remove_restore_max_abs": 6.776263578034403e-21,
+    "add_remove_restore_passed": true,
+    "all_contributions_finite": true,
+    "all_ledger_rows_official_expert": true,
+    "all_ledger_rows_train": true,
+    "deployment_per_memory_state_absent": true,
+    "embedding_change_max_abs": 3.3676624298095703e-06,
+    "fixed_field_shape": true,
+    "frozen_embedding_gradient_absent": true,
+    "gradients": {
+      "injector": {
+        "all_gradients_finite": true,
+        "gradient_l1": 1.0708227859051647,
+        "parameter_count": 8454145,
+        "parameters_with_gradient": 3
+      },
+      "query_encoder": {
+        "all_gradients_finite": true,
+        "gradient_l1": 8.134037887685963e-10,
+        "parameter_count": 65536,
+        "parameters_with_gradient": 1
+      },
+      "reader": {
+        "all_gradients_finite": true,
+        "gradient_l1": 2.8908971884789025e-05,
+        "parameter_count": 66176,
+        "parameters_with_gradient": 6
+      },
+      "writer": {
+        "all_gradients_finite": false,
+        "gradient_l1": 0,
+        "parameter_count": 591745,
+        "parameters_with_gradient": 0
+      }
+    },
+    "independent_compilation_max_abs": 2.2351741790771484e-08,
+    "independent_compilation_passed": true,
+    "injection_changes_embedding_path": true,
+    "intended_gradients_only": true,
+    "permutation_max_abs": 7.815970093361102e-13,
+    "permutation_passed": true,
+    "raw_memory_in_query_prompt": false,
+    "read_shape": [
+      128
+    ],
+    "runtime_retrieval_absent": true
+  },
+  "config": {
+    "path": "/lambda/nfs/rcmf-persist/project-worktrees/alfworld-v1/configs/benchmark/alfworld/compact_rcmf_v1.yaml",
+    "sha256": "452db186566fc0844421c736e5dedb0ec9f08d63d3a5e16485c6b2c1b3bd10ea"
+  },
+  "contribution_count": 21259,
+  "created_utc": "2026-09-10T06:14:52.365657+00:00",
+  "field_shape": {
+    "A": [
+      256,
+      128
+    ],
+    "B": [
+      128
+    ]
+  },
+  "ledger": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/ledger-final/train_transition_ledger.jsonl",
+    "sha256": "2fe6efb1ad7b76695460202515684c6f83c15235b4430717c47f4eb86f8f213d",
+    "trajectory_count": 3545,
+    "transition_count": 21259
+  },
+  "passed": true,
+  "schema_version": "alfworld_compact_rcmf_module_diagnostic_v1"
+}

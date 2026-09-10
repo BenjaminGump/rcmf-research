@@ -1,0 +1,29 @@
+{
+  "admitted_trajectory_count": 3545,
+  "complete": true,
+  "corpus": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corpus-final/official_train_corpus.jsonl",
+    "sha256": "35aa8f20e0cb8571d23da9c61f2efc0e93ee7a84bd8385742fd537c78eac795d"
+  },
+  "excluded_failed_trajectory_count": 8,
+  "family_transition_counts": {
+    "look_at_obj": 1116,
+    "pick_and_place": 3278,
+    "pick_clean_then_place": 4067,
+    "pick_cool_then_place": 3284,
+    "pick_heat_then_place": 2866,
+    "pick_two_obj": 6648
+  },
+  "ledger": {
+    "bytes": 30820192,
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/ledger-final/train_transition_ledger.jsonl",
+    "sha256": "2fe6efb1ad7b76695460202515684c6f83c15235b4430717c47f4eb86f8f213d"
+  },
+  "provenance": "OFFICIAL_EXPERT",
+  "run_uuid": "f8c16300-c5ae-4422-b40b-eadb932ed6ab",
+  "schema_version": "alfworld_transition_memory_ledger_manifest_v1",
+  "source_commit": "8d24acc70403e094f6b7d42757bed257180b52f0",
+  "split": "train",
+  "task_manifest_sha256": "ff7a9f5ea60028a608470c6fa088a5e82768f64033fb2f74804849744f3cf6f9",
+  "transition_count": 21259
+}
