@@ -6,7 +6,13 @@ import json
 from pathlib import Path
 
 import pytest
+import torch
 
+from rcmf.benchmarks.alfworld.compact_rcmf import (
+    CompactMemoryContribution,
+    ReversibleCompactField,
+    signed_hash_features,
+)
 from rcmf.benchmarks.alfworld.portable_adapter_v2 import (
     ACTION_CAP,
     GENERATION_IDENTITY_SHA256,
@@ -30,6 +36,12 @@ from rcmf.benchmarks.alfworld.trajectories import (
     portable_trajectory,
     validate_corpus_row,
 )
+from rcmf.benchmarks.alfworld.runtime_agent import (
+    first_decoded_line,
+    run_alfworld_episode,
+    validate_exact_model_snapshot,
+)
+from rcmf.model.backends.base import GenerateOutput
 from rcmf.pipeline.portable_v2.adapter import probe_adapter_capabilities
 from rcmf.pipeline.portable_v2.config import PortablePipelineConfig
 from rcmf.pipeline.portable_v2.schemas import TaskRecord
@@ -178,3 +190,73 @@ def test_no_floating_qwen_revision_in_alfworld_source() -> None:
     )
     assert "b968826d9c46dd6066d109eabc6255188de91218" in source
     assert "Qwen/Qwen3-8B@main" not in source
+
+
+def test_exact_snapshot_and_first_line_fail_closed(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="exact revision"):
+        validate_exact_model_snapshot(tmp_path)
+    assert first_decoded_line("look\nignored continuation") == "look"
+    assert first_decoded_line("\nlook") == ""
+
+
+class _FakeBackend:
+    def generate(self, messages, **kwargs):
+        del messages, kwargs
+        return GenerateOutput(
+            text="look\nignored",
+            token_ids=[1, 2],
+            usage={"prompt_tokens": 10, "completion_tokens": 2, "total_tokens": 12},
+            ttft_ms=1.0,
+            extra={"memory": {"injector": None}},
+        )
+
+
+def test_bare_episode_records_exact_action_and_official_result() -> None:
+    adapter = create_alfworld_portable_adapter_v2_1()
+    task = adapter.list_tasks()["train"][0]
+    row = run_alfworld_episode(
+        adapter=adapter,
+        task=task,
+        backend=_FakeBackend(),
+        condition="bare",
+        run_identity={"fixture": True},
+    )
+    assert row["official_success"] is True
+    assert row["steps"][0]["raw_model_text"] == "look\nignored"
+    assert row["steps"][0]["parsed_action"] == "look"
+
+
+def test_compact_field_is_fixed_reversible_and_permutation_invariant() -> None:
+    field = ReversibleCompactField(key_dim=4, program_dim=3)
+    rows = [
+        CompactMemoryContribution(
+            memory_id=f"memory-{index}",
+            parent_id="trajectory",
+            key=torch.tensor([1.0, float(index), 0.0, -1.0]),
+            value=torch.tensor([0.5, float(index + 1), -0.25]),
+            mu=0.5,
+            rho=0.5,
+        )
+        for index in range(2)
+    ]
+    empty_shapes = field.field_shape
+    for row in rows:
+        field.add(row)
+    baseline_a, baseline_b = field.A.clone(), field.B.clone()
+    removed = field.remove("memory-0")
+    field.restore(removed)
+    assert torch.equal(field.A, baseline_a)
+    assert torch.equal(field.B, baseline_b)
+    reverse_a, reverse_b = field.rebuild(reversed(sorted(field.records)))
+    assert torch.allclose(reverse_a, baseline_a, atol=1e-15, rtol=0)
+    assert torch.allclose(reverse_b, baseline_b, atol=1e-15, rtol=0)
+    assert field.field_shape == empty_shapes
+    assert tuple(field.read(torch.ones(4)).shape) == (3,)
+
+
+def test_signed_hash_features_are_stable_and_fixed_shape() -> None:
+    first = signed_hash_features("take apple 1 from table 1", 32)
+    second = signed_hash_features("take apple 1 from table 1", 32)
+    assert torch.equal(first, second)
+    assert tuple(first.shape) == (32,)
+    assert torch.isfinite(first).all()
