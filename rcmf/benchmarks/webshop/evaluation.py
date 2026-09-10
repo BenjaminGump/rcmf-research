@@ -64,6 +64,13 @@ class FrozenWebShopMethod:
         self.writer, self.reader = build_trainable_components(self.device)
         self.writer.load_state_dict(package["writer"])
         self.reader.load_state_dict(package["reader"])
+        model_dtype = next(self.model.parameters()).dtype
+        if not model_dtype.is_floating_point:
+            raise TypeError(f"WebShop generator model uses non-floating dtype: {model_dtype}")
+        # The frozen reader is trained and stored in FP32, while the frozen Qwen
+        # generator is loaded in BF16. Forward hooks receive generator hidden
+        # states, so reader parameters must use the same inference dtype.
+        self.reader.to(device=self.device, dtype=model_dtype)
         for module in (self.model, self.selector, self.writer, self.reader):
             module.eval()
             for parameter in module.parameters():

@@ -3,11 +3,13 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 import torch
 from torch import nn
 
+from rcmf.benchmarks.webshop import evaluation as webshop_evaluation
 from rcmf.benchmarks.webshop.adapter import WebShopPortableAdapterV2
-from rcmf.benchmarks.webshop.evaluation import run_evaluation_task
+from rcmf.benchmarks.webshop.evaluation import FrozenWebShopMethod, run_evaluation_task
 from rcmf.benchmarks.webshop.method import (
     compile_query_slots,
     selector_candidate_indices,
@@ -278,6 +280,52 @@ def test_three_condition_evaluation_path_records_complete_metrics() -> None:
     assert row["prompt_tokens"] == 10
     assert row["representation_tokens"] == 3
     assert row["raw_memory_prompt_used"] is False
+
+
+def test_frozen_reader_matches_generator_inference_dtype(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    class _Generator:
+        def __init__(self, _snapshot: str | Path, *, dtype: str) -> None:
+            assert dtype == "bfloat16"
+            self.model = nn.Linear(2, 2, bias=False).to(dtype=torch.bfloat16)
+            self.tokenizer = object()
+
+    writer = nn.Linear(2, 2, bias=False)
+    reader = nn.Linear(2, 2, bias=False)
+    package = {
+        "format": "rcmf_agentbench_fc_webshop_frozen_method_v1",
+        "selector": {},
+        "writer": writer.state_dict(),
+        "reader": reader.state_dict(),
+        "correct_A": torch.zeros(1),
+        "correct_B": torch.zeros(1),
+        "shuffled_A": torch.zeros(1),
+        "shuffled_B": torch.zeros(1),
+    }
+    package_path = tmp_path / "method.pt"
+    torch.save(package, package_path)
+    monkeypatch.setattr(webshop_evaluation, "HFQwenToolGenerator", _Generator)
+    monkeypatch.setattr(
+        webshop_evaluation,
+        "frozen_selector",
+        lambda _payload, *, device: nn.Linear(2, 2, bias=False).to(device),
+    )
+    monkeypatch.setattr(
+        webshop_evaluation,
+        "build_trainable_components",
+        lambda device: (
+            nn.Linear(2, 2, bias=False).to(device),
+            nn.Linear(2, 2, bias=False).to(device),
+        ),
+    )
+
+    method = FrozenWebShopMethod(package_path=package_path, model_snapshot=tmp_path)
+
+    assert next(method.model.parameters()).dtype == torch.bfloat16
+    assert next(method.reader.parameters()).dtype == torch.bfloat16
+    assert next(method.writer.parameters()).dtype == torch.float32
+    assert method.fields["RCMF-C"][0].dtype == torch.float32
 
 
 def test_paired_analysis_helpers_are_deterministic_and_exact() -> None:
