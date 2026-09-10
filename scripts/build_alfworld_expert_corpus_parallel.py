@@ -4,6 +4,7 @@ import argparse
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import hashlib
 import json
+import multiprocessing
 import os
 from pathlib import Path
 import tempfile
@@ -103,7 +104,13 @@ def main() -> int:
     missing = [task for task in tasks if task.task_id not in completed]
     started = time.time()
     if missing:
-        with ProcessPoolExecutor(max_workers=args.workers) as pool:
+        # TextWorld/Fast Downward owns subprocess and temporary-directory state;
+        # clean spawned workers avoid inherited fork state and cross-game reuse.
+        with ProcessPoolExecutor(
+            max_workers=args.workers,
+            mp_context=multiprocessing.get_context("spawn"),
+            max_tasks_per_child=1,
+        ) as pool:
             futures = {
                 pool.submit(
                     _replay_one,

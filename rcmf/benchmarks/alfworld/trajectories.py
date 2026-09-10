@@ -90,7 +90,11 @@ class ALFWorldOfficialExpertTrajectoryProvider:
             )
             base["initial_observation"] = runtime.initial_observation
         except Exception as exc:
-            base["error"] = {"type": type(exc).__name__, "message": str(exc)}
+            base["error"] = {
+                "type": type(exc).__name__,
+                "message": str(exc),
+                "traceback": traceback.format_exc(limit=8),
+            }
             return self._seal(base)
 
         try:
