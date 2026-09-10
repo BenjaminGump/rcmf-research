@@ -768,7 +768,7 @@ def create_webshop_portable_adapter_v1(
     trajectory_source_manifest_path: str,
     runtime_identity_path: str,
     runtime_factory_ref: str = (
-        "benchmarks.webshop_agentbench_fc.environment:InProcessWebShopRuntime"
+        "rcmf.benchmarks.webshop.runtime_client:WebShopHTTPRuntime"
     ),
     session_namespace: str = "rcmf-webshop-v1",
     model_name: str = MODEL_NAME,

@@ -33,6 +33,7 @@ from rcmf.pipeline.portable_v2.schemas import (
     TrajectoryRecord,
     TrajectoryStep,
 )
+from rcmf.benchmarks.webshop.runtime_client import WebShopHTTPRuntime
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -313,3 +314,54 @@ def test_partial_reward_is_not_full_success() -> None:
     assert result.raw_reward == 0.75
     assert result.binary_success is False
     assert result.terminal_status == TerminalStatus.FAILURE
+
+
+def test_http_runtime_client_validates_server_and_step_identity() -> None:
+    calls = []
+
+    def transport(
+        method: str, path: str, payload: Mapping[str, Any] | None
+    ) -> Mapping[str, Any]:
+        calls.append((method, path, payload))
+        if path == "/health":
+            return {
+                "format": "agentbench_fc_webshop_http_bridge_v1",
+                "allowed_start": 1500,
+                "allowed_end": 1750,
+            }
+        if path == "/reset":
+            return {
+                "task_id": "agentbench-fc-webshop:01500",
+                "index": 1500,
+                "instruction": "buy fixture",
+                "observation": "buy fixture\n[Search]",
+                "available_actions": {"has_search_bar": True, "clickables": ["search"]},
+                "raw_reward": 0.0,
+                "done": False,
+                "step_index": 0,
+            }
+        if path == "/step":
+            return {
+                "task_id": "agentbench-fc-webshop:01500",
+                "step_index": 0,
+                "action": "search[fixture]",
+                "observation": "results",
+                "available_actions": {"has_search_bar": True, "clickables": ["item"]},
+                "raw_reward": 0.0,
+                "done": False,
+            }
+        return {"closed": True}
+
+    runtime = WebShopHTTPRuntime(
+        1500,
+        session_namespace="fixture",
+        endpoint="http://127.0.0.1:1",
+        transport=transport,
+    )
+    assert runtime.task_id == "agentbench-fc-webshop:01500"
+    assert runtime.instruction == "buy fixture"
+    step = runtime.step_action("search[fixture]")
+    assert step["observation"] == "results"
+    assert runtime._step_index == 1
+    runtime.close()
+    assert [path for _, path, _ in calls] == ["/health", "/reset", "/step", "/close"]
