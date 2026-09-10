@@ -33,11 +33,19 @@ def main() -> int:
     parser.add_argument("--contribution-audit", required=True)
     parser.add_argument("--ledger", required=True)
     parser.add_argument("--output", required=True)
+    parser.add_argument("--engineering-limit", type=int, default=0)
     args = parser.parse_args()
+    if args.engineering_limit < 0:
+        raise ValueError("--engineering-limit must be zero or positive")
     checkpoint_path = Path(args.checkpoint).resolve(strict=True)
     audit_path = Path(args.contribution_audit).resolve(strict=True)
     ledger_path = Path(args.ledger).resolve(strict=True)
-    ledger = load_ledger(ledger_path)
+    full_ledger = load_ledger(ledger_path)
+    ledger = (
+        full_ledger[: args.engineering_limit]
+        if args.engineering_limit
+        else full_ledger
+    )
     deployment = load_deployment_checkpoint(checkpoint_path, device=torch.device("cpu"))
     audit = torch.load(audit_path, map_location="cpu", weights_only=False)
     if audit.get("format") != "alfworld_compact_rcmf_contribution_audit_v1":
@@ -135,6 +143,13 @@ def main() -> int:
     if runtime_names.intersection(prohibited_runtime_names):
         raise RuntimeError("deployment memory query references prohibited per-memory retrieval state")
     metadata = deployment["metadata"]
+    expected_engineering_limit = args.engineering_limit or None
+    if (
+        int(metadata.get("full_ledger_count", -1)) != len(full_ledger)
+        or int(metadata.get("trained_transition_count", -1)) != len(ledger)
+        or metadata.get("engineering_limit") != expected_engineering_limit
+    ):
+        raise ValueError("checkpoint engineering/full-ledger closure differs")
     checks = {
         "complete_ledger_closure": count == len(ledger),
         "all_contributions_finite": True,
@@ -160,6 +175,8 @@ def main() -> int:
         "contribution_audit": {"path": str(audit_path), "sha256": sha256_file(audit_path)},
         "ledger": {"path": str(ledger_path), "sha256": sha256_file(ledger_path)},
         "memory_count": count,
+        "full_ledger_count": len(full_ledger),
+        "engineering_limit": expected_engineering_limit,
         "checks": checks,
         "field_closure_max_abs": {
             "rebuilt_A": rebuild_a_max_abs,
