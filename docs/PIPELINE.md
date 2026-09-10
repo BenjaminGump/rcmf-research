@@ -95,6 +95,12 @@ task and split identities, trajectory providers, replay, opaque actions,
 prompt assets/rendering/token counting, reward/success semantics, causal
 comparison, official evaluation, and secret redaction.
 
+Portable rendered messages are structured chat records rather than a
+role/content-only subset. A function-calling adapter may preserve assistant
+`tool_calls`, tool-call IDs, and tool result records. Its exact token counter
+must include the adapter-owned tool schema and the same generation template;
+the portable core still contributes no prompt or tool content.
+
 Normal adaptation is limited to `rcmf/benchmarks/<dataset>/`,
 `configs/datasets/`, `assets/prompts/<dataset>/`, `tasks/<dataset>/`, and
 dataset tests/entrypoints. The portable core cannot import benchmark packages

@@ -1,28 +1,24 @@
-schema_version: rcmf_dataset_profile_v2
-benchmark: webshop
-adapter: webshop:portable-v1-pending
-status: engineering_readiness_only
-repository:
-  url: https://github.com/princeton-nlp/WebShop
-  commit: 64fa2a5c15c7daa698b9ac93f5bb5437b634c9bd
-  license: MIT
-action_semantics: search_click_text
-reward_semantics: continuous_zero_to_one_with_exact_one_success
-prompt_profile: react_official_one_demo_v1
-prompt_manifest: assets/prompts/source_manifests/react_webshop.json
-trajectory_sources:
-  - provider: official_setup_sample
-    provenance: OFFICIAL_HUMAN_SAMPLE
-  - provider: official_full_human_archive
-    provenance: OFFICIAL_HUMAN
-  - provider: official_il_archive
-    provenance: UNKNOWN_PROHIBITED
-    note: classify only after archive provenance is verified
-  - provider: WebShopTrainingMetadataOracleTrajectoryProvider
-    provenance: ORACLE_GENERATED_FROM_TRAIN_METADATA
-    fallback_only: true
+schema_version: rcmf_dataset_profile_v2_1
+benchmark: agentbench_fc_webshop
+adapter_identity: rcmf.benchmarks.webshop.adapter:create_webshop_portable_adapter_v1
+status: executable_adapter_candidate_runtime_verified
+dataset_version: agentbench-fc-webshop-data-e8bd3b120fe5
+environment_version: webshop-repro-runtime-2026-af342a9b210b
+action_semantics: agentbench_fc_function_calls_v1
+reward_semantics: raw_continuous_reward_exact_1_is_full_success
+prompt_profiles:
+  agentbench_fc_webshop_v1: 0fcbf536383f3ceab8208b14998da4089299c500d2c63f6c4e6e43d1015df3f8
+trajectory_source:
+  provenance: AGENT_GENERATED
+  policy: train_only_exact_1_success_and_replay_validated
 splits:
-  memory_and_training: official_training_instructions_only
-  official_evaluation: adapter_manifest_defined
-counts:
-  ownership: adapter_generated_split_and_trajectory_manifests
+  training: train
+  validation: validation
+  official_evaluation: standard200
+ownership:
+  tasks: harness_runtime_task_catalog
+  trajectories: rcmf_train_generation_run
+  prompt_assets: harness_pinned_agentbench_source
+  phase_semantics: portable_core
+  environment_operations: harness_frozen_lambda_runtime
+  scientific_artifacts: current_run

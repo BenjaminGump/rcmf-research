@@ -1,0 +1,22 @@
+{
+  "config_blob": "89bc78513fe26f45a76ec83eda54f334e5511d1a",
+  "config_path": "configs/tasks/webshop.yaml",
+  "config_sha256": "53027763cdd76f632b960693867f8855ced46ca9d3aae0980bbb5cf12be0bfda",
+  "content_changed": false,
+  "extracted_text_sha256": "4d2c361799681a200b69c21229a3ea07a79b7c1e74fd0cb308defd0c85d3ce11",
+  "extraction_method": "Python AST literal extraction of the sole prompt_with_max_turn assignment; tools loaded from the pinned YAML with PyYAML",
+  "license": "Apache-2.0",
+  "local_path": "system_prompt.txt",
+  "local_sha256": "4d2c361799681a200b69c21229a3ea07a79b7c1e74fd0cb308defd0c85d3ce11",
+  "profile": "agentbench_fc_webshop_v1",
+  "profile_path": "profile.json",
+  "profile_sha256": "7d1d3bc1715d7083825b655341f3a0c50dbee9429a7796ebc2a6cb2c21421c48",
+  "status": "AGENTBENCH_FC_STANDARD_200_CANDIDATE",
+  "tools_path": "tools.json",
+  "tools_sha256": "be6b939ad34d95f55759f679df37f167bda2585d8eea128bea6f2e6a0e7af7c3",
+  "upstream_blob": "b5ff55ab215507b46568680adcb74ef810b235c6",
+  "upstream_commit": "d1e4a10db08c87075c78972e48ecc182be03e2d5",
+  "upstream_file_sha256": "069aa60ce0f067f639904bf0f05be4f06180c3cdee036d738fe38872ef3249a2",
+  "upstream_path": "src/server/tasks/webshop/task.py",
+  "upstream_repository": "https://github.com/THUDM/AgentBench"
+}

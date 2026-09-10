@@ -229,10 +229,10 @@ class ReproducibleBenchmarkAdapterV2(Protocol):
 
     def render_messages(
         self, state: DecisionStateRecord, prompt_profile: str
-    ) -> Sequence[Mapping[str, str]]: ...
+    ) -> Sequence[Mapping[str, Any]]: ...
 
     def count_runtime_tokens(
-        self, messages: Sequence[Mapping[str, str]], prompt_profile: str
+        self, messages: Sequence[Mapping[str, Any]], prompt_profile: str
     ) -> int: ...
 
     def build_selector_supervision(
@@ -408,7 +408,7 @@ def probe_adapter_capabilities(
             decision_states=states,
             prompt_profile=prompt_profile,
         )
-    messages: Sequence[Mapping[str, str]] = ()
+    messages: Sequence[Mapping[str, Any]] = ()
     tokens: int | None = None
     if AdapterCapability.STATE_RENDERING in required_set:
         assert states

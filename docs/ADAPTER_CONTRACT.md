@@ -59,8 +59,11 @@ it does not claim ALFWorld/WebShop executor support or scientific validity.
   `TransitionRecord`s with stable lineage.
 - `decision_states(task, trajectory, profile)` emits replay-addressable states.
 - `prompt_profiles()` declares named content-addressed profiles.
-- `render_messages()` returns exact role/content arrays; core adds no prompt.
-- `count_runtime_tokens()` must match the generation backend's exact template.
+- `render_messages()` returns exact structured chat-message arrays; entries may
+  include benchmark-required fields such as assistant `tool_calls` and
+  `tool_call_id`, and the core adds no prompt content.
+- `count_runtime_tokens()` must match the generation backend's exact template,
+  including adapter-owned tools where the benchmark uses function calling.
 - `build_selector_supervision()` supplies benchmark compatibility evidence.
 - `causal_conditions()` builds bare/conditioned conditions without consulting
   outcomes.

@@ -131,6 +131,11 @@ episode IDs, lineage/leakage keys, trajectory provenance, reset-and-replay
 behavior, prompt rendering/token counting, causal comparison, official
 evaluation, and audit redaction.
 
+Function-calling benchmarks preserve structured assistant tool calls and tool
+result identifiers in adapter-rendered chat records. Their runtime-equivalent
+token count includes the exact adapter-owned tool schema; the generic core
+does not flatten tool calls into prose or inject tool definitions.
+
 Allowed trajectory provenance classes are distinct and cannot be silently
 merged: `OFFICIAL_EXPERT`, `OFFICIAL_HUMAN`, `OFFICIAL_HUMAN_SAMPLE`,
 `OFFICIAL_MODEL_OR_IL`, `ORACLE_GENERATED_FROM_TRAIN_METADATA`, and

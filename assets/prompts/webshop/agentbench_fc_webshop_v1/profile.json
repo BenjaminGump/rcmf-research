@@ -1,0 +1,13 @@
+{
+  "action_grammar": {
+    "click": "click_action(value)",
+    "search": "search_action(keywords)"
+  },
+  "content_changed": false,
+  "demonstration_count": 0,
+  "format": "rcmf_webshop_prompt_profile_v1",
+  "profile": "agentbench_fc_webshop_v1",
+  "system_asset": "system_prompt.txt",
+  "tool_asset": "tools.json",
+  "tool_choice": "required"
+}

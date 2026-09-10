@@ -1,0 +1,42 @@
+[
+  {
+    "function": {
+      "description": "Use search functionality with specified keywords.",
+      "name": "search_action",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "keywords": {
+            "description": "The keywords to use in the search function.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keywords"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "Click a button or link with a specified value.",
+      "name": "click_action",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "value": {
+            "description": "The value to click from the list of available actions.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  }
+]
