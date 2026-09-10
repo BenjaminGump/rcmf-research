@@ -120,7 +120,7 @@ def main() -> int:
         1,
         int(config["injection_tokens"]),
         int(config["model_dim"]),
-    ) or not torch.isfinite(injected).all() or float(injected.abs().max()) == 0.0:
+    ) or not torch.isfinite(injected).all() or float(injected.detach().abs().max()) == 0.0:
         raise RuntimeError("fixed reader injection is absent, malformed, or non-finite")
     tree = ast.parse(inspect.getsource(deployment_memory_query))
     runtime_names = {
@@ -159,7 +159,7 @@ def main() -> int:
         "field_shape": {key: list(value) for key, value in field.field_shape.items()},
         "read_shape": list(memory_z.shape),
         "injection_shape": list(injected.shape),
-        "injection_max_abs": float(injected.abs().max()),
+        "injection_max_abs": float(injected.detach().abs().max()),
         "runtime_retrieval": False,
         "raw_memory_in_prompt": False,
         "deployment_contains_per_memory_state": False,
