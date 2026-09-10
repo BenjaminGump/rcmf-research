@@ -267,6 +267,48 @@ Portable canonical v2 is an engineering base. ALFWorld and WebShop have pinned
 prompt sources and adaptation plans but no scientific RCMF result. Their task
 states are the only current entry points for that future work.
 
+## WebShop End-to-End Adaptation Charter v2
+
+This charter supersedes the narrow WebShop readiness scope for the active
+`adapt/webshop-v1` work. Historical WebShop charters and records remain intact.
+
+The primary formal WebShop evaluation is AgentBench-FC `webshop-std`, indices
+`[0,200)`, exactly 200 tasks. The original canonical Test-500 is not required.
+The 200 tasks may not be extended, removed, reordered, replaced, or subsampled
+in response to outcomes. Their rewards cannot influence prompt selection,
+memory construction, selector design, checkpoint choice, thresholds, or any
+other method decision.
+
+The adaptation may change the benchmark adapter, environment wrapper,
+container/runtime construction, selector supervision, representation plumbing,
+training pipeline, Portable-V2 interfaces, generic RCMF core abstractions, and
+writer/reader implementation when scientifically justified, benchmark-neutral
+where generic, tested, and recorded.
+
+Every final implementation must still preserve all fundamental RCMF
+invariants:
+
+- the authoritative ledger contains complete auditable goal, pre-action state,
+  opaque action, post-action observation, provenance, and lineage records;
+- each memory is independently compiled by a feed-forward writer after
+  training, without scanning or recompiling unrelated memories;
+- independently recorded additive contributions support add, remove, and
+  restore without retraining;
+- the deployed whole-bank state has fixed shape independent of memory count;
+- production core read is memory-count independent and performs no top-k,
+  nearest-neighbor search, FAISS, per-memory scoring, bank iteration, or raw
+  selected-memory retrieval;
+- deployment prompts contain no raw memory text;
+- after freeze, Qwen, addressing, writer, and reader remain frozen, and new
+  memories use feed-forward compilation only.
+
+All environment-dependent work, generation, training, and scientific
+evaluation runs on Lambda Ubuntu. Infrastructure and dependency rot may be
+repaired reproducibly without claiming byte-identical historical execution.
+Any single scientific run or experiment batch plausibly exceeding 18
+wall-clock hours requires a committed, pushed preflight packet and explicit
+run-bound user approval before launch.
+
 ## Portable Canonical V2.1 Hardening Charter
 
 V2.1 preserves the V2.0 writer, reversible field, fixed-size read, reader,
