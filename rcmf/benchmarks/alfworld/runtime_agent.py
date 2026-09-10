@@ -250,117 +250,124 @@ def run_alfworld_episodes_batched(
             ]
             if not active:
                 break
-            for start in range(0, len(active), batch_size):
-                chunk = active[start : start + batch_size]
-                legal = []
-                messages_batch = []
-                trajectories = []
-                prompt_counts = []
-                for row in chunk:
-                    task = row["task"]
-                    runtime = row["runtime"]
-                    trajectory = render_react_trajectory(
-                        runtime.initial_observation,
-                        row["history"],
+            prepared = []
+            for row in active:
+                task = row["task"]
+                runtime = row["runtime"]
+                trajectory = render_react_trajectory(
+                    runtime.initial_observation,
+                    row["history"],
+                )
+                messages = list(
+                    render_react_messages(
+                        profile_root=adapter.prompt_root,
+                        gamefile=str(task.metadata["game_path"]),
+                        current_trajectory=trajectory,
                     )
-                    messages = list(
-                        render_react_messages(
-                            profile_root=adapter.prompt_root,
-                            gamefile=str(task.metadata["game_path"]),
-                            current_trajectory=trajectory,
-                        )
-                    )
-                    try:
-                        prompt_tokens = adapter.count_runtime_tokens(messages, PROFILE_NAME)
-                    except Exception as exc:
-                        row["error"] = {
-                            "type": type(exc).__name__,
-                            "message": str(exc),
-                            "step": step_index,
-                        }
-                        continue
-                    legal.append(row)
-                    messages_batch.append(messages)
-                    trajectories.append(trajectory)
-                    prompt_counts.append(prompt_tokens)
-                if not legal:
-                    continue
-                memory_z = None
-                if memory_queries is not None:
-                    memory_z = torch.cat(
-                        [
-                            memory_queries[row["task"].task_id](trajectory, row["history"])
-                            for row, trajectory in zip(legal, trajectories, strict=True)
-                        ],
-                        dim=0,
-                    )
+                )
                 try:
-                    generated_rows = backend.generate_batch(
-                        messages_batch,
-                        max_new_tokens=512,
-                        temperature=0.0,
-                        top_p=1.0,
-                        injector=injector,
-                        memory_z=memory_z,
-                    )
+                    prompt_tokens = adapter.count_runtime_tokens(messages, PROFILE_NAME)
                 except Exception as exc:
-                    for row in legal:
-                        row["error"] = {
-                            "type": type(exc).__name__,
-                            "message": str(exc),
-                            "step": step_index,
-                            "batch_failure": True,
-                        }
-                    continue
-                for row, messages, prompt_tokens, generated in zip(
-                    legal,
-                    messages_batch,
-                    prompt_counts,
-                    generated_rows,
-                    strict=True,
-                ):
-                    action = first_decoded_line(generated.text)
-                    validation = adapter.validate_action(action, row["runtime"])
-                    step_record = {
-                        "step_index": step_index,
-                        "message_array_sha256": canonical_sha256(messages),
-                        "prompt_tokens": prompt_tokens,
-                        "raw_model_text": generated.text,
-                        "generated_token_ids": generated.token_ids,
-                        "usage": generated.usage,
-                        "parsed_action": action,
-                        "action_valid": bool(validation["valid"]),
-                        "generation_batch_size": len(legal),
-                        "memory_metadata": generated.extra.get("memory"),
+                    row["error"] = {
+                        "type": type(exc).__name__,
+                        "message": str(exc),
+                        "step": step_index,
                     }
-                    row["steps"].append(step_record)
-                    if not validation["valid"]:
-                        row["error"] = {"type": "EMPTY_DECODED_ACTION", "step": step_index}
+                    continue
+                prepared.append((row, messages, trajectory, prompt_tokens))
+            # Flash SDPA cannot consume a non-null padding mask in this runtime.
+            # Bucket by exact rendered token length so every microbatch is
+            # padding-free and remains byte/token equivalent to scalar decode.
+            buckets: dict[int, list[tuple[Any, list[Any], str, int]]] = {}
+            for item in prepared:
+                buckets.setdefault(item[3], []).append(item)
+            for bucket in buckets.values():
+                for start in range(0, len(bucket), batch_size):
+                    chunk = bucket[start : start + batch_size]
+                    legal = [item[0] for item in chunk]
+                    messages_batch = [item[1] for item in chunk]
+                    trajectories = [item[2] for item in chunk]
+                    prompt_counts = [item[3] for item in chunk]
+                    if not legal:
                         continue
+                    memory_z = None
+                    if memory_queries is not None:
+                        memory_z = torch.cat(
+                            [
+                                memory_queries[row["task"].task_id](trajectory, row["history"])
+                                for row, trajectory in zip(legal, trajectories, strict=True)
+                            ],
+                            dim=0,
+                        )
                     try:
-                        outcome = adapter.execute_action(row["runtime"], action)
+                        generated_rows = backend.generate_batch(
+                            messages_batch,
+                            max_new_tokens=512,
+                            temperature=0.0,
+                            top_p=1.0,
+                            injector=injector,
+                            memory_z=memory_z,
+                        )
                     except Exception as exc:
-                        row["error"] = {
-                            "type": type(exc).__name__,
-                            "message": str(exc),
-                            "step": step_index,
-                        }
+                        for row in legal:
+                            row["error"] = {
+                                "type": type(exc).__name__,
+                                "message": str(exc),
+                                "step": step_index,
+                                "batch_failure": True,
+                            }
                         continue
-                    prompt_observation = (
-                        "OK." if action.startswith("think:") else str(outcome["observation"])
-                    )
-                    row["history"].append(
-                        {"action": action, "observation": prompt_observation}
-                    )
-                    step_record.update(
-                        {
-                            "environment_observation": outcome["observation"],
-                            "prompt_observation": prompt_observation,
-                            "environment_reward": outcome["raw_reward"],
-                            "environment_done": outcome["done"],
-                            "official_won": outcome["official_won"],
+                    for row, messages, prompt_tokens, generated in zip(
+                        legal,
+                        messages_batch,
+                        prompt_counts,
+                        generated_rows,
+                        strict=True,
+                    ):
+                        action = first_decoded_line(generated.text)
+                        validation = adapter.validate_action(action, row["runtime"])
+                        step_record = {
+                            "step_index": step_index,
+                            "message_array_sha256": canonical_sha256(messages),
+                            "prompt_tokens": prompt_tokens,
+                            "raw_model_text": generated.text,
+                            "generated_token_ids": generated.token_ids,
+                            "usage": generated.usage,
+                            "parsed_action": action,
+                            "action_valid": bool(validation["valid"]),
+                            "generation_batch_size": len(legal),
+                            "requested_generation_batch_size": batch_size,
+                            "homogeneous_prompt_tokens": True,
+                            "memory_metadata": generated.extra.get("memory"),
                         }
-                    )
+                        row["steps"].append(step_record)
+                        if not validation["valid"]:
+                            row["error"] = {"type": "EMPTY_DECODED_ACTION", "step": step_index}
+                            continue
+                        try:
+                            outcome = adapter.execute_action(row["runtime"], action)
+                        except Exception as exc:
+                            row["error"] = {
+                                "type": type(exc).__name__,
+                                "message": str(exc),
+                                "step": step_index,
+                            }
+                            continue
+                        prompt_observation = (
+                            "OK." if action.startswith("think:") else str(outcome["observation"])
+                        )
+                        row["history"].append(
+                            {"action": action, "observation": prompt_observation}
+                        )
+                        step_record.update(
+                            {
+                                "environment_observation": outcome["observation"],
+                                "prompt_observation": prompt_observation,
+                                "environment_reward": outcome["raw_reward"],
+                                "environment_done": outcome["done"],
+                                "official_won": outcome["official_won"],
+                            }
+                        )
     finally:
         results = []
         for row in contexts:

@@ -618,17 +618,19 @@ class HFQwenBackend:
             try:
                 from torch.nn.attention import SDPBackend, sdpa_kernel
 
-                # Left padding requires an explicit attention mask. Permit every
-                # exact PyTorch SDPA implementation so a supported masked kernel
-                # (or the math fallback) is selected instead of forcing Flash.
-                attention_context = sdpa_kernel(
-                    [
-                        SDPBackend.FLASH_ATTENTION,
-                        SDPBackend.EFFICIENT_ATTENTION,
-                        SDPBackend.CUDNN_ATTENTION,
-                        SDPBackend.MATH,
-                    ]
-                )
+                if bool(attention_mask.all().item()):
+                    attention_context = sdpa_kernel([SDPBackend.FLASH_ATTENTION])
+                else:
+                    # Left padding requires an explicit attention mask. Permit
+                    # all kernels only for this fail-safe non-homogeneous case.
+                    attention_context = sdpa_kernel(
+                        [
+                            SDPBackend.FLASH_ATTENTION,
+                            SDPBackend.EFFICIENT_ATTENTION,
+                            SDPBackend.CUDNN_ATTENTION,
+                            SDPBackend.MATH,
+                        ]
+                    )
             except Exception:
                 attention_context = nullcontext()
         started = time.perf_counter()
