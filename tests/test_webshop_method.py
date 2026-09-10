@@ -176,3 +176,16 @@ def test_formal_runner_contains_no_automatic_test500_extension() -> None:
     assert "range(200, 500)" not in freezer
     assert "ordered_task_ids" in runner
     assert "excluded_200_499_execution_authorized" in freezer
+
+
+def test_frozen_package_records_independent_memory_contributions() -> None:
+    source = (ROOT / "scripts/run_webshop_method.py").read_text(encoding="utf-8")
+    for key in (
+        '"memory_ids"',
+        '"memory_task_ids"',
+        '"memory_keys"',
+        '"memory_payloads"',
+        '"rho"',
+        '"per_memory_remove_restore_maximum_absolute_error"',
+    ):
+        assert key in source

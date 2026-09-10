@@ -724,6 +724,13 @@ def _freeze(
         transition_ids=cache["ordered_transition_ids"],
         task_ids=cache["task_ids"],
     )
+    first_contribution = (
+        torch.einsum("k,sp->ksp", keys[0], fields["payloads"][0].to(device)) * rho[0]
+    )
+    restored_A = fields["correct_A"].to(device) - first_contribution + first_contribution
+    reversibility_error = float((restored_A - fields["correct_A"].to(device)).abs().max().cpu())
+    if reversibility_error > 1.0e-5:
+        raise RuntimeError("WebShop per-memory remove/restore audit failed")
     package = {
         "format": "rcmf_agentbench_fc_webshop_frozen_method_v1",
         "source_identity": dict(source_identity),
@@ -738,6 +745,8 @@ def _freeze(
         "memory_count": len(cache["ordered_transition_ids"]),
         "memory_ids": list(cache["ordered_transition_ids"]),
         "memory_task_ids": list(cache["task_ids"]),
+        "memory_keys": keys.detach().cpu(),
+        "memory_payloads": fields["payloads"],
         "rho": rho.detach().cpu(),
     }
     _atomic_torch_save(package, paths["method_package"])
@@ -752,6 +761,11 @@ def _freeze(
         "representation_cache_sha256": sha256_file(paths["representations"]),
         "transition_ledger_sha256": sha256_file(paths["transitions"]),
         "memory_count": package["memory_count"],
+        "per_memory_record_shapes": {
+            "key": list(package["memory_keys"].shape[1:]),
+            "payload": list(package["memory_payloads"].shape[1:]),
+            "rho": [],
+        },
         "field_shapes": {
             "A": list(package["correct_A"].shape),
             "B": list(package["correct_B"].shape),
@@ -765,6 +779,7 @@ def _freeze(
         "shuffle_key_multiset_preserved": True,
         "shuffle_payload_multiset_preserved": sorted(permutation) == list(range(len(permutation))),
         "shuffle_weights_preserved": True,
+        "per_memory_remove_restore_maximum_absolute_error": reversibility_error,
         "qwen_frozen": True,
         "selector_frozen": True,
         "writer_frozen": True,

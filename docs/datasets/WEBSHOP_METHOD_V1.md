@@ -36,6 +36,11 @@ A += rho * outer(key, payload)
 B += rho * mu * payload
 ```
 
+The frozen package records every memory's ID, task, key, payload, and weight so
+one contribution can be added, removed, or restored without scanning or
+recompiling unrelated memories. Freeze runs an explicit remove/restore numeric
+audit against the compiled field.
+
 The deployed state is fixed at `A[960,8,256]` and `B[8,256]`, independent of
 memory count. Query-time read is a contraction of the query with `A`, followed
 by the existing standard field cross-attention reader at Qwen layers
