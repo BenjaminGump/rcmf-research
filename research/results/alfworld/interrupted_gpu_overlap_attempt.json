@@ -1,0 +1,51 @@
+{
+  "schema_version": "alfworld_interrupted_engineering_attempt_v1",
+  "classification": "INVALID_INTERRUPTED_ENGINEERING_ATTEMPT",
+  "scientific_outcome": false,
+  "run_uuid": "f8c16300-c5ae-4422-b40b-eadb932ed6ab",
+  "attempt": {
+    "condition": "bare",
+    "split": "train",
+    "task_count": 6,
+    "generation_batch_size": 6,
+    "source_commit": "8d24acc70403e094f6b7d42757bed257180b52f0",
+    "process_group": [
+      1022602,
+      1022603
+    ]
+  },
+  "reason": "The ALFWorld sanity overlapped an independently owned WebShop GPU run. It was deliberately terminated to restore exclusive GPU ownership after aggregate H100 allocation approached 72 GiB.",
+  "ownership_response": {
+    "webshop_process_was_not_modified": true,
+    "alfworld_process_was_terminated": true,
+    "gpu_was_released_to_webshop": true
+  },
+  "artifacts": {
+    "log": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/logs/bare_train_sanity_fa2_8d24acc.log",
+      "bytes": 362,
+      "sha256": "b7c041bc1c7a2e31c2b493ed5e0dc84ac84152e60c47727c4f5425eb8319fc45"
+    },
+    "output": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/sanity/bare_train_sanity_fa2_8d24acc.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "completed_rows": 0
+    },
+    "summary_created": false
+  },
+  "verified": [
+    "The attempt loaded the exact frozen five-shard model through FlashAttention-2.",
+    "No completed task row was emitted.",
+    "Only the ALFWorld process group was terminated.",
+    "The WebShop GPU process remained alive after ALFWorld released its allocation."
+  ],
+  "inference": [
+    "The combined allocation, rather than an ALFWorld-only OOM, created the unsafe overlap."
+  ],
+  "unverified": [
+    "No model/task outcome can be inferred because the append-only writer emits rows only after an entire generation group returns."
+  ],
+  "eligible_as_sanity_evidence": false,
+  "eligible_as_scientific_evidence": false
+}

@@ -1,0 +1,42 @@
+{
+  "schema_version": "alfworld_track_r_run_identities_v1",
+  "created_date": "2026-09-10",
+  "status": "PREREGISTERED_BEFORE_ANY_VALID_UNSEEN_MODEL_OUTCOME",
+  "main_run_uuid": "f8c16300-c5ae-4422-b40b-eadb932ed6ab",
+  "runs": {
+    "fa2_train_sanity": "cf34300b-44dd-4601-a31f-dc3a21f51b5f",
+    "train_only_training_smoke": "3ffde0e7-0d08-4db6-9ce3-8b1ad8d9c791",
+    "train_only_rcmf_environment_smoke": "0e79ad18-f055-45df-b4a1-3b697d70b7c4",
+    "full_training": "c5f81480-1e70-43f1-911b-ab258e424ccd",
+    "full_bare_valid_unseen": "9b9fcadb-a03c-49b1-9a94-1a5cb2c1068a",
+    "full_rcmf_valid_unseen": "b9e9f74d-196a-4797-953c-94211ce2907b"
+  },
+  "track": {
+    "id": "alfworld_upstream_react_valid_unseen_reference_v1",
+    "role": "UPSTREAM_PROTOCOL_REFERENCE",
+    "population": 134,
+    "task_ids_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+    "evaluation_order_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8"
+  },
+  "execution": {
+    "benchmark_lock_identity_sha256": "055e5364fefd088f0ad74106acca53231fce4d0dbd5cbfbb854a8822efd344de",
+    "benchmark_lock_file_sha256": "bc2a2ee381ad86e686eff02b4f7ba647c91ab207d5bfb939689b19af86464b5f",
+    "generation_batch_size": 6,
+    "seed": 25101,
+    "checkpoint_policy": "terminal_completed_epoch"
+  },
+  "training": {
+    "trajectory_count": 3545,
+    "transition_count": 21259,
+    "corpus_sha256": "35aa8f20e0cb8571d23da9c61f2efc0e93ee7a84bd8385742fd537c78eac795d",
+    "ledger_sha256": "2fe6efb1ad7b76695460202515684c6f83c15235b4430717c47f4eb86f8f213d",
+    "config_sha256": "452db186566fc0844421c736e5dedb0ec9f08d63d3a5e16485c6b2c1b3bd10ea",
+    "engineering_limit": 0
+  },
+  "outcome_firewall": {
+    "formal_valid_unseen_outcomes_seen": false,
+    "post_outcome_tuning_permitted": false,
+    "task_filtering_permitted": false,
+    "score_selected_checkpoint_permitted": false
+  }
+}

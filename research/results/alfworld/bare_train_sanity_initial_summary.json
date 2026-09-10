@@ -1,0 +1,32 @@
+{
+  "all_tasks_completed": true,
+  "completed_tasks": 6,
+  "elapsed_seconds": 3027.060519,
+  "ended_utc": "2026-09-10T04:46:50.915877+00:00",
+  "model_forward_and_generation_run": true,
+  "model_loaded_utc": "2026-09-10T03:56:30.937653+00:00",
+  "model_weights_loaded": true,
+  "output": {
+    "bytes": 1252398,
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/sanity/bare_train_sanity_e3a0f9b.jsonl",
+    "sha256": "481b3b0e1eb46701438237f72d7a992dedf631b7e117fa59167b3531d047ef4f"
+  },
+  "peak_cuda_bytes": 17368624128,
+  "requested_tasks": 6,
+  "run_identity": {
+    "checkpoint_sha256": null,
+    "condition": "bare",
+    "generation_batch_size": 6,
+    "run_uuid": "bare-sanity-f8c16300-e3a0f9b",
+    "source_commit": "e3a0f9b32a4381e28b52ec3b82c1674f548996f2",
+    "split": "train",
+    "task_ids_sha256": "90fa6dcb9fdad07b4d1232e4085fafa5c3f06fa3240f6f300f2fac3cb0eeac10",
+    "task_list_role": "engineering_subset",
+    "track_id": "alfworld_upstream_react_valid_unseen_reference_v1",
+    "track_role": "UPSTREAM_PROTOCOL_REFERENCE"
+  },
+  "schema_version": "alfworld_agent_run_summary_v1",
+  "started_utc": "2026-09-10T03:56:23.855377+00:00",
+  "successes": 0,
+  "typed_failures": 0
+}
