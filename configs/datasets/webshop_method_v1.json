@@ -1,0 +1,89 @@
+{
+  "format": "rcmf_agentbench_fc_webshop_method_config_v1",
+  "benchmark": "agentbench_fc_webshop",
+  "method": "RCMF",
+  "global_seed": 25101,
+  "model": {
+    "name": "Qwen/Qwen3-8B",
+    "snapshot_commit": "b968826d9c46dd6066d109eabc6255188de91218",
+    "dtype": "bfloat16",
+    "enable_thinking": false,
+    "frozen": true
+  },
+  "method_split": {
+    "basis": "sha256_sorted_task_ids",
+    "heldout_fraction": 0.2,
+    "standard200_accessed": false
+  },
+  "representations": {
+    "format": "webshop_frozen_qwen_structured_multiview_v1",
+    "layer": "final_layer",
+    "pooling": ["token_mean", "final_token"],
+    "state_views": ["instruction", "trajectory_history", "current_observation", "available_actions", "full_state"],
+    "transition_views": ["goal", "pre_action_state", "complete_action", "post_action_observation", "full_transition"],
+    "writer_views": ["goal", "pre_action_state", "complete_action", "post_action_observation"],
+    "arbitrary_truncation_allowed": false
+  },
+  "selector": {
+    "member_seeds": [25111, 25112, 25113],
+    "projection_dim": 64,
+    "interaction_rank": 32,
+    "key_dim": 960,
+    "negative_count": 4,
+    "same_action_negatives": 2,
+    "cross_action_negatives": 2,
+    "epochs": 30,
+    "batch_size": 32,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "objective": "positive_transition_vs_deterministic_cross_task_negatives"
+  },
+  "field": {
+    "key_dim": 960,
+    "slot_count": 8,
+    "payload_dim": 256,
+    "accumulator_dtype": "float32",
+    "parent_weighting": "task_normalized",
+    "same_task_training_exclusion": true,
+    "production_memory_scan_allowed": false,
+    "production_top_k_allowed": false,
+    "raw_memory_prompt_allowed": false
+  },
+  "writer_reader_training": {
+    "epochs": 2,
+    "maximum_method_train_states": 384,
+    "state_selection": "sha256_sorted_state_ids",
+    "writer_learning_rate": 0.0001,
+    "reader_learning_rate": 0.0001,
+    "weight_decay": 0.0001,
+    "max_grad_norm": 1.0,
+    "action_cross_entropy_weight": 1.0,
+    "reader_residual_norm_weight": 0.001,
+    "writer_payload_norm_weight": 0.0001,
+    "checkpoint_every_units": 25,
+    "checkpoint_policy": "terminal_completed_epoch",
+    "standard200_accessed": false
+  },
+  "validation": {
+    "index_start": 500,
+    "index_end": 550,
+    "count": 50,
+    "conditions": ["B0", "RCMF-C", "RCMF-S"],
+    "candidate_count": 1,
+    "candidate_revision_allowed_before_standard200": true
+  },
+  "formal_evaluation": {
+    "name": "AGENTBENCH_FC_STANDARD_200",
+    "index_start": 0,
+    "index_end": 200,
+    "count": 200,
+    "conditions": ["B0", "RCMF-C", "RCMF-S"],
+    "total_trajectories": 600,
+    "excluded_index_start": 200,
+    "excluded_index_end": 500,
+    "max_rounds": 20,
+    "do_sample": false,
+    "max_new_tokens": 128,
+    "evaluation_seed": 25101
+  }
+}
