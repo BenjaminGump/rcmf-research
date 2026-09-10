@@ -163,7 +163,9 @@ def _run_one(
 def main() -> int:
     parser = argparse.ArgumentParser(description="Hard-isolated ALFWorld expert replay subset")
     parser.add_argument("--task-manifest", required=True)
-    parser.add_argument("--task-ids-json", required=True)
+    selection = parser.add_mutually_exclusive_group(required=True)
+    selection.add_argument("--task-ids-json")
+    selection.add_argument("--retry-from-row-dir")
     parser.add_argument("--data-root", required=True)
     parser.add_argument("--row-dir", required=True)
     parser.add_argument("--log-dir", required=True)
@@ -178,11 +180,24 @@ def main() -> int:
     args = parser.parse_args()
     if args.workers <= 0 or args.hard_timeout_seconds <= 0:
         raise ValueError("isolated workers and timeout must be positive")
-    ids = json.loads(Path(args.task_ids_json).read_text(encoding="utf-8"))
-    if not isinstance(ids, list) or not ids or len(ids) != len(set(ids)):
-        raise ValueError("isolated task selection must be a non-empty unique array")
     all_tasks = portable_task_records(load_sealed_task_manifest(args.task_manifest))["train"]
     index = {task.task_id: task for task in all_tasks}
+    if args.task_ids_json:
+        ids = json.loads(Path(args.task_ids_json).read_text(encoding="utf-8"))
+    else:
+        prior_rows = []
+        for path in Path(args.retry_from_row_dir).resolve(strict=True).glob("*.json"):
+            row = json.loads(path.read_text(encoding="utf-8"))
+            validate_corpus_row(row)
+            prior_rows.append(row)
+        prior = {str(row["task_id"]): row for row in prior_rows}
+        ids = [
+            task.task_id
+            for task in all_tasks
+            if task.task_id not in prior or prior[task.task_id]["status"] != "SUCCESS"
+        ]
+    if not isinstance(ids, list) or not ids or len(ids) != len(set(ids)):
+        raise ValueError("isolated task selection must be a non-empty unique array")
     if any(str(task_id) not in index for task_id in ids):
         raise ValueError("isolated task selection contains a non-TRAIN task")
     tasks = [index[str(task_id)] for task_id in ids]
