@@ -57,6 +57,7 @@ from rcmf.benchmarks.alfworld.portable_executor_v2_1 import (
     evidence_phase_handlers,
 )
 from rcmf.pipeline.portable_v2.schemas import TaskRecord
+from scripts.run_alfworld_expert_isolated_subset import _failure_row
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -160,6 +161,19 @@ def test_malformed_success_is_rejected() -> None:
                 ),
             }
         )
+
+
+def test_isolated_replay_hard_timeout_is_a_typed_valid_row() -> None:
+    row = _failure_row(
+        _task(),
+        run_uuid="fixture-run",
+        source_commit="a" * 40,
+        hard_timeout_seconds=60,
+        message="fixture timeout",
+    )
+    validate_corpus_row(row)
+    assert row["status"] == "EXPERT_TIMEOUT"
+    assert row["error"]["type"] == "IsolatedReplayProcessGroupTimeout"
 
 
 def test_adapter_capability_probe_and_config_binding() -> None:
