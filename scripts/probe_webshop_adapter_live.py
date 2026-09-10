@@ -125,7 +125,7 @@ def main() -> int:
                 "environment_accepted": bool(step["environment_accepted"]),
             },
             "second_reset_task_id": second_reset["task_id"],
-            "standard200_outcome_inspected": false,
+            "standard200_outcome_inspected": False,
             "model_generation_count": 0,
         }
         payload["probe_sha256"] = content_sha256(payload)
