@@ -36,6 +36,7 @@ from rcmf.benchmarks.alfworld.trajectories import (
     portable_trajectory,
     validate_corpus_row,
 )
+from rcmf.benchmarks.alfworld.training import create_modules, train_writer_epoch
 from rcmf.benchmarks.alfworld.runtime_agent import (
     first_decoded_line,
     run_alfworld_episode,
@@ -260,3 +261,48 @@ def test_signed_hash_features_are_stable_and_fixed_shape() -> None:
     assert torch.equal(first, second)
     assert tuple(first.shape) == (32,)
     assert torch.isfinite(first).all()
+
+
+def test_compact_writer_receives_finite_train_only_supervision() -> None:
+    config = {
+        "feature_dim": 16,
+        "key_dim": 16,
+        "program_dim": 8,
+        "writer_hidden_dim": 12,
+        "model_dim": 24,
+        "injection_tokens": 2,
+        "initial_injection_scale": 0.05,
+        "batch_size": 2,
+        "seed": 25101,
+        "gradient_clip_norm": 1.0,
+    }
+    modules = create_modules(config)
+    optimizer = torch.optim.AdamW(
+        list(modules["writer"].parameters())
+        + list(modules["query_encoder"].parameters()),
+        lr=1e-3,
+    )
+    metrics = train_writer_epoch(
+        rows=(
+            {
+                "split": "train",
+                "transition_text": "goal state take apple observation",
+                "state_text": "goal state",
+                "action": "take apple",
+            },
+            {
+                "split": "train",
+                "transition_text": "goal next put apple observation",
+                "state_text": "goal next",
+                "action": "put apple",
+            },
+        ),
+        writer=modules["writer"],
+        query_encoder=modules["query_encoder"],
+        optimizer=optimizer,
+        config=config,
+        epoch=1,
+        device=torch.device("cpu"),
+    )
+    assert metrics["batches"] == 1
+    assert torch.isfinite(torch.tensor(metrics["mean_loss"]))
