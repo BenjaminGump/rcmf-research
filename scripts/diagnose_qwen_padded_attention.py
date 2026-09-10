@@ -5,6 +5,7 @@ import json
 import time
 
 import torch
+import torch._inductor.config
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
@@ -14,6 +15,7 @@ def main() -> int:
     parser.add_argument("--attention-implementation", required=True)
     parser.add_argument("--max-new-tokens", type=int, default=32)
     args = parser.parse_args()
+    torch._inductor.config.max_autotune_gemm_backends = "ATEN"
     tokenizer = AutoTokenizer.from_pretrained(args.model_snapshot, local_files_only=True)
     tokenizer.padding_side = "left"
     texts = [
