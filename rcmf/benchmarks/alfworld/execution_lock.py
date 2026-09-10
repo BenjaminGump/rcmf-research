@@ -13,6 +13,7 @@ from rcmf.benchmarks.alfworld.portable_adapter_v2 import (
 )
 from rcmf.benchmarks.alfworld.runtime_agent import (
     FROZEN_ATTENTION_IMPLEMENTATION,
+    FROZEN_EINOPS_VERSION,
     FROZEN_FLASH_ATTN_VERSION,
     sha256_file,
 )
@@ -87,6 +88,7 @@ def load_execution_lock(path: str | Path) -> dict[str, Any]:
         or runtime.get("attention_implementation")
         != FROZEN_ATTENTION_IMPLEMENTATION
         or runtime.get("flash_attn_version") != FROZEN_FLASH_ATTN_VERSION
+        or runtime.get("einops_version") != FROZEN_EINOPS_VERSION
         or runtime.get("microbatch_max_size") != 16
         or runtime.get("left_padding") != "exact attention mask; no truncation"
         or not _is_sha256(runtime.get("flash_attn_installation_manifest_sha256"))

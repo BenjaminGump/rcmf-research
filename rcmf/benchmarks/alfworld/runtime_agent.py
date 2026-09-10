@@ -32,6 +32,7 @@ MODEL_FILE_HASHES = {
 }
 FROZEN_ATTENTION_IMPLEMENTATION = "flash_attention_2"
 FROZEN_FLASH_ATTN_VERSION = "2.8.3.post1"
+FROZEN_EINOPS_VERSION = "0.8.1"
 
 
 def sha256_file(path: Path) -> str:
@@ -62,7 +63,7 @@ def flash_attention_runtime_entries(root: str | Path) -> list[dict[str, Any]]:
     entries = []
     for path in sorted(package_root.rglob("*")):
         relative = path.relative_to(package_root).as_posix()
-        if not path.is_file() or not relative.startswith("flash_attn"):
+        if not path.is_file() or not relative.startswith(("flash_attn", "einops")):
             continue
         if path.suffix == ".pyc" or "__pycache__" in path.parts:
             continue
@@ -83,6 +84,7 @@ def validate_flash_attention_runtime(
 ) -> dict[str, Any]:
     try:
         import flash_attn
+        import einops
     except ImportError as exc:
         raise RuntimeError("frozen FlashAttention-2 runtime is unavailable") from exc
     actual = str(getattr(flash_attn, "__version__", ""))
@@ -90,6 +92,9 @@ def validate_flash_attention_runtime(
         raise RuntimeError(
             f"frozen FlashAttention-2 version differs: {actual!r}"
         )
+    actual_einops = str(getattr(einops, "__version__", ""))
+    if actual_einops != FROZEN_EINOPS_VERSION:
+        raise RuntimeError(f"frozen einops version differs: {actual_einops!r}")
     root = Path(flash_attn.__file__).resolve(strict=True).parent.parent
     entries = flash_attention_runtime_entries(root)
     identity = canonical_sha256(entries)
@@ -97,6 +102,7 @@ def validate_flash_attention_runtime(
         raise RuntimeError("frozen FlashAttention-2 installation identity differs")
     return {
         "version": actual,
+        "einops_version": actual_einops,
         "root": str(root),
         "file_count": len(entries),
         "total_bytes": sum(int(row["bytes"]) for row in entries),

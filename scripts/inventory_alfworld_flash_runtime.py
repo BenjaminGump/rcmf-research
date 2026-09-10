@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 
 from rcmf.benchmarks.alfworld.runtime_agent import (
+    FROZEN_EINOPS_VERSION,
     FROZEN_FLASH_ATTN_VERSION,
     flash_attention_runtime_entries,
 )
@@ -26,6 +27,7 @@ def main() -> int:
         root / row["path"]
         for row in entries
         if row["path"].endswith(".dist-info/METADATA")
+        and row["path"].startswith("flash_attn-")
     ]
     if len(metadata_files) != 1:
         raise ValueError("FlashAttention distribution metadata is not unique")
@@ -37,6 +39,7 @@ def main() -> int:
         "source_commit": args.source_commit,
         "package": "flash-attn",
         "version": FROZEN_FLASH_ATTN_VERSION,
+        "direct_dependencies": {"einops": FROZEN_EINOPS_VERSION},
         "local_root_evidence": str(root),
         "file_count": len(entries),
         "total_bytes": sum(int(row["bytes"]) for row in entries),

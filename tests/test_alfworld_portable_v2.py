@@ -243,6 +243,11 @@ def test_flash_attention_runtime_requires_exact_version(monkeypatch) -> None:
         "flash_attn",
         types.SimpleNamespace(__version__="2.8.3.post1", __file__=__file__),
     )
+    monkeypatch.setitem(
+        sys.modules,
+        "einops",
+        types.SimpleNamespace(__version__="0.8.1"),
+    )
     monkeypatch.setattr(
         "rcmf.benchmarks.alfworld.runtime_agent.flash_attention_runtime_entries",
         lambda root: [{"path": "flash_attn/file", "bytes": 1, "sha256": "a" * 64}],
@@ -294,6 +299,7 @@ def test_track_r_execution_lock_is_content_addressed(tmp_path: Path) -> None:
             ),
             "attention_implementation": "flash_attention_2",
             "flash_attn_version": "2.8.3.post1",
+            "einops_version": "0.8.1",
             "microbatch_max_size": 16,
             "left_padding": "exact attention mask; no truncation",
             "flash_attn_installation_manifest_sha256": "a" * 64,
