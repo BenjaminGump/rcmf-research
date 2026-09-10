@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Iterable, Mapping, Sequence
-from dataclasses import asdict, is_dataclass
 import hashlib
-from importlib import import_module
 import json
 import os
-from pathlib import Path
 import re
+from collections.abc import Callable, Iterable, Mapping, Sequence
+from dataclasses import asdict, is_dataclass
+from importlib import import_module
+from pathlib import Path
 from typing import Any
 
 from rcmf.pipeline.manifests import content_sha256
@@ -33,7 +33,6 @@ from rcmf.pipeline.portable_v2.schemas import (
 )
 from rcmf.utils.serialization import sha256_file
 
-
 BENCHMARK_NAME = "agentbench_fc_webshop"
 PROMPT_PROFILE = "agentbench_fc_webshop_v1"
 DATASET_VERSION = "agentbench-fc-webshop-data-e8bd3b120fe5"
@@ -44,7 +43,7 @@ MODEL_NAME = "Qwen/Qwen3-8B"
 MAX_ROUNDS = 20
 RUNTIME_SEED = 233
 SPLIT_RANGES: Mapping[str, range] = {
-    "standard200": range(0, 200),
+    "standard200": range(200),
     "validation": range(500, 1500),
     "train": range(1500, 12000),
 }
@@ -55,9 +54,7 @@ SPLIT_ROLES: Mapping[str, str] = {
 }
 ACTION_RE = re.compile(r"^(search|click)\[(.+)\]$", re.DOTALL)
 
-TokenCounter = Callable[
-    [Sequence[Mapping[str, Any]], str, Sequence[Mapping[str, Any]]], int
-]
+TokenCounter = Callable[[Sequence[Mapping[str, Any]], str, Sequence[Mapping[str, Any]]], int]
 RuntimeFactory = Callable[[TaskRecord], Any]
 
 
@@ -171,9 +168,7 @@ def load_task_catalog(path: str | Path) -> Mapping[str, tuple[TaskRecord, ...]]:
         raise TypeError("WebShop task catalog rows must be a list")
     body = dict(payload)
     recorded = body.pop("catalog_sha256", None)
-    harness_digest = hashlib.sha256(
-        (_canonical_json(body) + "\n").encode("utf-8")
-    ).hexdigest()
+    harness_digest = hashlib.sha256((_canonical_json(body) + "\n").encode("utf-8")).hexdigest()
     if recorded != harness_digest:
         raise ValueError("WebShop task catalog hash differs")
     expected_indices = {index for values in SPLIT_RANGES.values() for index in values}
@@ -240,7 +235,9 @@ def load_trajectory_corpus(path: str | Path) -> Mapping[str, tuple[TrajectoryRec
                 raise ValueError(f"trajectory row {line_number} is not train-only")
             trajectory = TrajectoryRecord.from_dict(raw)
             if trajectory.provenance != ProvenanceClass.AGENT_GENERATED:
-                raise ValueError("WebShop construction corpus must retain AGENT_GENERATED provenance")
+                raise ValueError(
+                    "WebShop construction corpus must retain AGENT_GENERATED provenance"
+                )
             if not trajectory.success or trajectory.raw_reward != 1.0:
                 raise ValueError("WebShop corpus may contain only exact-1.0 successes")
             if trajectory.replay_status != ReplayStatus.VALIDATED:
@@ -296,17 +293,13 @@ class WebShopPortableAdapterV2:
         runtime_factory: RuntimeFactory | None = None,
     ) -> None:
         self._tasks = {name: tuple(rows) for name, rows in task_records.items()}
-        self._trajectories = {
-            name: tuple(rows) for name, rows in trajectory_records.items()
-        }
+        self._trajectories = {name: tuple(rows) for name, rows in trajectory_records.items()}
         self._trajectory_source_identity = dict(trajectory_source_identity)
         self._runtime_identity = dict(runtime_identity)
         self._prompt_root = Path(prompt_root or _prompt_root()).resolve(strict=True)
         self._prompt_manifest_path = self._prompt_root / "manifest.json"
         self._prompt_manifest = PromptAssetManifest.load(self._prompt_manifest_path)
-        self._system_prompt = (self._prompt_root / "system_prompt.txt").read_text(
-            encoding="utf-8"
-        )
+        self._system_prompt = (self._prompt_root / "system_prompt.txt").read_text(encoding="utf-8")
         self._tools = tuple(
             json.loads((self._prompt_root / "tools.json").read_text(encoding="utf-8"))
         )
@@ -314,9 +307,7 @@ class WebShopPortableAdapterV2:
         self._runtime_factory = runtime_factory
         if set(self._tasks) != set(SPLIT_RANGES):
             raise ValueError("WebShop adapter requires train, validation, and standard200 splits")
-        ensure_no_split_leakage(
-            tuple(task for values in self._tasks.values() for task in values)
-        )
+        ensure_no_split_leakage(tuple(task for values in self._tasks.values() for task in values))
         if not self._trajectory_source_identity:
             raise ValueError("WebShop trajectory source identity is required")
         if not self._runtime_identity:
@@ -456,15 +447,12 @@ class WebShopPortableAdapterV2:
                 },
                 metadata={
                     "instruction": task.instruction,
-                    "initial_observation": _step_metadata(
-                        trajectory.steps[0], "pre_observation"
-                    ),
+                    "initial_observation": _step_metadata(trajectory.steps[0], "pre_observation"),
                     "initial_available_actions": _step_metadata(
                         trajectory.steps[0], "pre_available_actions"
                     ),
-                    "current_available_actions": _step_metadata(
-                        step, "pre_available_actions"
-                    ),
+                    "current_available_actions": _step_metadata(step, "pre_available_actions"),
+                    "current_observation_raw": _step_metadata(step, "pre_observation"),
                     "current_page_type": step.metadata.get("page_type", "unknown"),
                 },
             )
@@ -475,9 +463,7 @@ class WebShopPortableAdapterV2:
                     "action": step.action,
                     "call_id": str(step.metadata.get("call_id", f"call-{step.step_index}")),
                     "post_observation": _step_metadata(step, "post_observation"),
-                    "post_available_actions": _step_metadata(
-                        step, "post_available_actions"
-                    ),
+                    "post_available_actions": _step_metadata(step, "post_available_actions"),
                 }
             )
 
@@ -622,7 +608,8 @@ class WebShopPortableAdapterV2:
                 "messages": (
                     {
                         "role": "system",
-                        "content": "TRAINING-ONLY transition evidence:\n" + _canonical_json(teacher),
+                        "content": "TRAINING-ONLY transition evidence:\n"
+                        + _canonical_json(teacher),
                     },
                     *messages,
                 ),
@@ -767,9 +754,7 @@ def create_webshop_portable_adapter_v1(
     trajectory_corpus_path: str,
     trajectory_source_manifest_path: str,
     runtime_identity_path: str,
-    runtime_factory_ref: str = (
-        "rcmf.benchmarks.webshop.runtime_client:WebShopHTTPRuntime"
-    ),
+    runtime_factory_ref: str = ("rcmf.benchmarks.webshop.runtime_client:WebShopHTTPRuntime"),
     session_namespace: str = "rcmf-webshop-v1",
     model_name: str = MODEL_NAME,
 ) -> WebShopPortableAdapterV2:

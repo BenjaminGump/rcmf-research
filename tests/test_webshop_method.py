@@ -36,7 +36,7 @@ def _state() -> DecisionStateRecord:
         state_id="trajectory:state:0",
         task_id="task-1",
         trajectory_prefix=({"action": "search[old]", "post_observation": "old page"},),
-        current_observation="current page",
+        current_observation="formatted duplicate sentinel",
         target_action_reference={"action": "click[secret-target]"},
         model_split="train",
         provenance=ProvenanceClass.AGENT_GENERATED,
@@ -44,6 +44,7 @@ def _state() -> DecisionStateRecord:
         environment_replay_reference={"task_index": 1500, "step_index": 0},
         metadata={
             "instruction": "buy a blue mug",
+            "current_observation_raw": "raw current page",
             "current_available_actions": {"clickables": ["item"]},
         },
     )
@@ -74,6 +75,8 @@ def test_structured_views_are_complete_and_state_does_not_access_target() -> Non
     assert tuple(state_spans) == STATE_VIEW_NAMES
     assert tuple(transition_spans) == TRANSITION_VIEW_NAMES
     assert "secret-target" not in state_text
+    assert "raw current page" in state_text
+    assert "formatted duplicate sentinel" not in state_text
     assert state_metadata["target_action_accessed"] is False
     assert state_metadata["future_observation_accessed"] is False
     for value in ("buy a blue mug", "current page", "click[item]", "item page"):

@@ -65,7 +65,10 @@ def state_representation_text(
         (
             ("instruction", str(state.metadata["instruction"])),
             ("trajectory_history", history),
-            ("current_observation", str(state.current_observation)),
+            (
+                "current_observation",
+                str(state.metadata.get("current_observation_raw", state.current_observation)),
+            ),
             ("available_actions", available),
         ),
         full_name="full_state",
