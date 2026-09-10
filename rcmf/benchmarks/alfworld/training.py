@@ -271,6 +271,33 @@ def load_deployment_checkpoint(path: str | Path, *, device: torch.device) -> dic
     return payload
 
 
+def deployment_memory_query(
+    payload: Mapping[str, Any],
+    *,
+    task_instruction: str,
+    device: torch.device,
+) -> Any:
+    """Build a fixed-field query closure; it never accesses contribution rows."""
+
+    modules = payload["modules"]
+    config = payload["config"]
+    fixed_a = payload["field_A"].to(device=device, dtype=torch.float32)
+    fixed_b = payload["field_B"].to(device=device, dtype=torch.float32)
+
+    def query(trajectory_text: str, history: list[dict[str, str]]) -> Tensor:
+        current = history[-1]["observation"] if history else trajectory_text.removesuffix("\n>")
+        features = signed_hash_features(
+            f"Goal: {task_instruction}\nState: {current}",
+            int(config["feature_dim"]),
+        ).to(device)
+        with torch.no_grad():
+            key = modules["query_encoder"](features.unsqueeze(0))
+            raw = F.normalize(fixed_b.unsqueeze(0) + key @ fixed_a, dim=-1)
+            return modules["reader"](raw)
+
+    return query
+
+
 def set_seed(seed: int) -> None:
     random.seed(seed)
     torch.manual_seed(seed)

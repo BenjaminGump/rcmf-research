@@ -16,17 +16,23 @@ from rcmf.benchmarks.alfworld.portable_adapter_v2 import (
 )
 from rcmf.benchmarks.alfworld.runtime_agent import load_frozen_qwen, run_alfworld_episode
 from rcmf.benchmarks.alfworld.task_manifest import TRACK_R_TASK_IDS_SHA256, canonical_sha256
+from rcmf.benchmarks.alfworld.training import (
+    deployment_memory_query,
+    load_deployment_checkpoint,
+    sha256_file,
+)
 
 
 def arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run exact frozen-Qwen ALFWorld episodes")
-    parser.add_argument("--condition", choices=("bare",), required=True)
+    parser.add_argument("--condition", choices=("bare", "rcmf"), required=True)
     parser.add_argument("--split", choices=("train", "valid_unseen"), default="valid_unseen")
     parser.add_argument("--task-manifest", required=True)
     parser.add_argument("--trajectory-corpus", required=True)
     parser.add_argument("--prompt-root", required=True)
     parser.add_argument("--data-root", required=True)
     parser.add_argument("--model-snapshot", required=True)
+    parser.add_argument("--checkpoint")
     parser.add_argument("--task-ids-json")
     parser.add_argument("--output", required=True)
     parser.add_argument("--summary-output", required=True)
@@ -56,6 +62,8 @@ def _read_existing(path: Path) -> list[dict[str, object]]:
 
 def main() -> int:
     args = arguments()
+    if (args.condition == "rcmf") != bool(args.checkpoint):
+        raise ValueError("RCMF condition requires exactly one checkpoint; bare rejects it")
     if args.formal and (args.task_ids_json or args.split != "valid_unseen"):
         raise ValueError("formal Track R evaluation requires the complete valid_unseen split")
     adapter = create_alfworld_portable_adapter_v2_1(
@@ -96,6 +104,7 @@ def main() -> int:
         "split": args.split,
         "task_ids_sha256": canonical_sha256([task.task_id for task in tasks]),
         "condition": args.condition,
+        "checkpoint_sha256": sha256_file(args.checkpoint) if args.checkpoint else None,
     }
     for row in prior:
         if row.get("run_identity") != run_identity:
@@ -104,6 +113,11 @@ def main() -> int:
     process_started = time.time()
     started_utc = datetime.now(timezone.utc).isoformat()
     backend = load_frozen_qwen(args.model_snapshot)
+    deployment = (
+        load_deployment_checkpoint(args.checkpoint, device=backend.device)
+        if args.checkpoint
+        else None
+    )
     model_loaded_utc = datetime.now(timezone.utc).isoformat()
     with output.open("a", encoding="utf-8", newline="\n") as stream:
         for ordinal, task in enumerate(tasks, 1):
@@ -115,6 +129,16 @@ def main() -> int:
                 backend=backend,
                 condition=args.condition,
                 run_identity=run_identity,
+                injector=deployment["modules"]["injector"] if deployment else None,
+                memory_query=(
+                    deployment_memory_query(
+                        deployment,
+                        task_instruction=task.instruction,
+                        device=backend.device,
+                    )
+                    if deployment
+                    else None
+                ),
             )
             stream.write(json.dumps(row, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
             stream.write("\n")

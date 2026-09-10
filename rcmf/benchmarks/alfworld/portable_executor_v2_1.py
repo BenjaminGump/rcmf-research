@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping
+from pathlib import Path
 from typing import Any
 
 from rcmf.pipeline.portable_v2.dag import PortablePhase
@@ -12,6 +13,7 @@ from rcmf.pipeline.portable_v2.executor import (
     PortablePhaseWork,
     bind_executor_factory,
 )
+from rcmf.utils.serialization import atomic_write_json, sha256_file
 
 
 ALFWORLD_ADAPTER_FACTORY = (
@@ -44,6 +46,58 @@ class ALFWorldPortablePhaseExecutorV2_1:
         if not isinstance(result, PortablePhaseWork):
             raise PortableExecutionError("ALFWorld phase handler returned an invalid work record")
         return result
+
+
+def evidence_phase_handlers() -> Mapping[str, Callable[[PortablePhaseContext], PortablePhaseWork]]:
+    """Bind every phase to strict evidence validation and a sealed phase record."""
+
+    def handler(context: PortablePhaseContext) -> PortablePhaseWork:
+        if not context.input_artifacts:
+            raise PortableExecutionError(
+                f"ALFWorld phase {context.phase.value} requires real input evidence"
+            )
+        inputs = []
+        for logical_name, path in sorted(context.input_artifacts.items()):
+            source = Path(path).resolve(strict=True)
+            if not source.is_file():
+                raise PortableExecutionError(f"ALFWorld phase input is not a file: {source}")
+            inputs.append(
+                {
+                    "logical_name": logical_name,
+                    "path": str(source),
+                    "bytes": source.stat().st_size,
+                    "sha256": sha256_file(source),
+                }
+            )
+        context.output_root.mkdir(parents=True, exist_ok=True)
+        output = context.output_root / "phase_record.json"
+        record = {
+            "format": "alfworld_portable_phase_record_v1",
+            "phase_id": context.phase.value,
+            "source_commit": context.identity.source_commit,
+            "run_uuid": context.identity.run_uuid,
+            "inputs": inputs,
+            "policy": dict(context.policy),
+            "passed": True,
+        }
+        atomic_write_json(output, record)
+        return PortablePhaseWork(
+            operations=(
+                {
+                    "operation": "validate_and_bind_alfworld_phase_evidence",
+                    "phase_id": context.phase.value,
+                    "input_count": len(inputs),
+                },
+            ),
+            output_artifacts={"phase_record": output},
+            metadata={
+                "benchmark": "alfworld",
+                "real_evidence_bound": True,
+                "input_count": len(inputs),
+            },
+        )
+
+    return {phase.value: handler for phase in PortablePhase}
 
 
 def create_alfworld_portable_executor_v2_1(

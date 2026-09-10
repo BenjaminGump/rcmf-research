@@ -45,6 +45,16 @@ from rcmf.benchmarks.alfworld.runtime_agent import (
 from rcmf.model.backends.base import GenerateOutput
 from rcmf.pipeline.portable_v2.adapter import probe_adapter_capabilities
 from rcmf.pipeline.portable_v2.config import PortablePipelineConfig
+from rcmf.pipeline.portable_v2.dag import PortablePhase
+from rcmf.pipeline.portable_v2.executor import (
+    PortableExecutionIdentity,
+    PortablePhaseContext,
+    execute_and_validate_phase,
+)
+from rcmf.benchmarks.alfworld.portable_executor_v2_1 import (
+    create_alfworld_portable_executor_v2_1,
+    evidence_phase_handlers,
+)
 from rcmf.pipeline.portable_v2.schemas import TaskRecord
 
 
@@ -306,3 +316,36 @@ def test_compact_writer_receives_finite_train_only_supervision() -> None:
     )
     assert metrics["batches"] == 1
     assert torch.isfinite(torch.tensor(metrics["mean_loss"]))
+
+
+def test_real_evidence_phase_handler_seals_a_portable_manifest(tmp_path: Path) -> None:
+    evidence = tmp_path / "evidence.json"
+    evidence.write_text('{"passed":true}\n', encoding="utf-8")
+    output = (tmp_path / "run" / PortablePhase.PROVENANCE.value).resolve()
+    identity = PortableExecutionIdentity(
+        source_commit="a" * 40,
+        run_uuid="fixture-run",
+        run_root=(tmp_path / "run").resolve(),
+        pipeline_config_sha256="b" * 64,
+        dataset_profile_sha256="c" * 64,
+        adapter_identity=(
+            "rcmf.benchmarks.alfworld.portable_adapter_v2:"
+            "create_alfworld_portable_adapter_v2_1"
+        ),
+    )
+    executor = create_alfworld_portable_executor_v2_1(
+        phase_handlers=evidence_phase_handlers()
+    )
+    manifest = execute_and_validate_phase(
+        executor,
+        PortablePhaseContext(
+            identity=identity,
+            phase=PortablePhase.PROVENANCE,
+            dependency_manifests=(),
+            input_artifacts={"environment": evidence},
+            output_root=output,
+            policy={"fixture": True},
+        ),
+    )
+    assert manifest["passed"] is True
+    assert manifest["metadata"]["real_evidence_bound"] is True
