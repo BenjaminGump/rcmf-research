@@ -3859,3 +3859,39 @@ IMPLEMENTATION DEVIATIONS:
   process-start `PYTHONHASHSEED=25101` and triggered the existing AppWorld 13c
   collection guard. The unchanged exact suite was rerun with the required
   environment and passed 1,116 tests with three skips; no failure was waived.
+
+## 2026-09-11 ALFWorld post-bare safety gate added during execution
+
+VERIFIED:
+
+- The corrective formal bare arm began before this instruction was recorded.
+  At `2026-09-11T07:15:38Z`, 84/134 rows were durable and the process was still
+  active under UUID `6f47ae2c-572d-45d7-95aa-218707b3d919`, source `91598b6`,
+  and the frozen v2 lock.
+- Thirteen of the first 18 rows already had official success, so the active arm
+  cannot finish all-wrong. This partial observation is disclosed and is not an
+  input to any prompt, model, generation, checkpoint, or task choice.
+
+DECISION:
+
+- Add a mandatory complete post-bare audit before RCMF-C. Inspect model input,
+  raw output, first-line extraction, exact one-marker normalization, parsed and
+  actually executed commands, observations/rejections, repetitions, think
+  actions, real state progression, typed failures, and done/won/evaluator
+  correspondence over all 134 tasks, with representative raw evidence.
+- If an all-wrong arm or a clear basic interaction/parsing/evaluator fault is
+  found, do not launch RCMF-C. Diagnose on TRAIN when possible, preserve frozen
+  identities, repair only a proven defect, and make the next bare retest the
+  first 30 tasks in the unchanged frozen manifest order. Complete 134 and
+  consider RCMF-C only after the diagnosed fault is repaired and the short
+  retest improves.
+- Do not invent another quantitative performance threshold and do not use
+  valid-unseen outcomes for prompt/model/config search. Do not retrain the
+  unaffected model or checkpoint.
+
+IMPLEMENTATION DEVIATIONS:
+
+- This safety gate is a user directive added during the already-running bare
+  arm, not part of the original preregistration. It changes only the sequencing
+  and diagnostic stop rule before RCMF-C; it does not change an execution
+  identity or the active 134-task population.

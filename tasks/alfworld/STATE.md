@@ -1,6 +1,24 @@
 # ALFWorld Track R Corrective Execution State
 
-- Status: `ACTIVE_ACTION_BOUNDARY_V2_TRAIN_SANITY_PASS_FORMAL_BARE_AUTHORIZED`.
+- Status: `ACTIVE_ACTION_BOUNDARY_V2_FORMAL_BARE_RUNNING_POSTRUN_AUDIT_REQUIRED`.
+- The corrective formal bare arm UUID
+  `6f47ae2c-572d-45d7-95aa-218707b3d919` started on Lambda at
+  `2026-09-11T03:14:15Z` under source `91598b6`, the frozen v2 lock, and the
+  complete 134-task manifest order. At `2026-09-11T07:15:38Z`, 84 rows were
+  durably present and the process remained active. Thirteen official successes
+  were already present in the first 18 rows, so the active arm cannot finish
+  all-wrong; this partial fact does not authorize scientific interpretation.
+- A user-directed post-bare safety gate was added while that arm was running.
+  RCMF-C must not launch automatically when bare finishes. First audit all 134
+  rows from model input and raw output through normalized/executed command,
+  environment observation and real state progression, to done/won/evaluator.
+  An all-wrong arm or a clear basic interaction/parsing/evaluator fault blocks
+  RCMF-C. If repair is required, diagnose on TRAIN when possible and run only
+  the first 30 tasks in the unchanged frozen manifest order on the next bare
+  retest; complete 134 and consider RCMF-C only after the diagnosed fault is
+  repaired and the retest improves. This adds no unspecified score threshold
+  and authorizes no prompt/model/config search or retraining. See
+  `research/plans/alfworld_bare_postrun_safety_gate.json`.
 - A pre-rerun TRAIN-only semantic audit found a second structural defect:
   all 588 existing sanity/smoke first-line actions retained a leading ReAct
   transcript marker `>`, all 588 environment responses were `Nothing
@@ -19,14 +37,16 @@
   is restored exactly to `c49e3fab...`, and wrong embedded order, lock-file,
   or lock-identity claims are rejected.
 - Corrected matched TRAIN and full-arm identities are preregistered in
-  `research/plans/alfworld_track_r_run_identities_v2.json`. No corrected model
-  full evaluation has started. WebShop explicitly returned an empty H100 and
+  `research/plans/alfworld_track_r_run_identities_v2.json`. The corrected bare
+  full evaluation is currently running; RCMF-C has not started. WebShop
+  explicitly returned an empty H100 and
   both matched six-family TRAIN sanity runs completed. Across both conditions,
   all 588 steps applied the exact v2 boundary, no executed action retained the
   marker, and each family produced substantive environment observations. The
-  structural gate passes; the exact next step is the complete 134-task bare
-  arm, followed by the complete RCMF arm under the same frozen settings.
-- No corrective complete evaluation has started. The order-only corrective
+  structural gate passes; the current step is completion and mandatory
+  post-run audit of the 134-task bare arm. Only after that audit may the
+  complete RCMF arm begin under the same frozen settings.
+- The order-only corrective
   UUIDs are recorded as `NOT_STARTED_SUPERSEDED_BEFORE_EXECUTION` and will not
   be reused after the action-extraction identity change.
 - Blocking defect: the first complete bare and RCMF attempts ran the exact 134

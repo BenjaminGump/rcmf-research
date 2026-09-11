@@ -46,7 +46,10 @@
       "split": "valid_unseen",
       "population": 134,
       "output_root": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v2/formal/bare_6f47ae2c",
-      "status": "NOT_STARTED"
+      "status": "RUNNING",
+      "started_utc": "2026-09-11T03:14:15Z",
+      "remote_pid_at_launch": 1062739,
+      "postrun_safety_gate": "research/plans/alfworld_bare_postrun_safety_gate.json"
     },
     "formal_rcmf": {
       "uuid": "2a86c6d6-3095-40a8-be12-0b2ba33d67a0",
@@ -78,6 +81,8 @@
     "webshop_h100_handoff_required": true,
     "performance_threshold": null,
     "model_or_prompt_search_allowed": false,
-    "retraining_allowed": false
+    "retraining_allowed": false,
+    "formal_rcmf_requires_complete_bare_postrun_audit": true,
+    "user_directed_postrun_safety_gate": "research/plans/alfworld_bare_postrun_safety_gate.json"
   }
 }

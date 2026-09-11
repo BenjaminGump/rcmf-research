@@ -1,0 +1,53 @@
+{
+  "schema_version": "alfworld_bare_postrun_safety_gate_v1",
+  "recorded_utc": "2026-09-11T07:15:38Z",
+  "authority": "USER_DIRECTIVE_ADDED_DURING_FORMAL_BARE_EXECUTION",
+  "scope": "gate between completion of the corrective Track R bare arm and any RCMF-C launch",
+  "timing_disclosure": {
+    "original_preregistration": false,
+    "formal_bare_already_running": true,
+    "completed_rows_when_recorded": 84,
+    "official_successes_already_observed_in_first_18_rows": 13,
+    "consequence": "The all-134-wrong branch is already impossible for the active bare arm, but the complete post-run structural audit remains mandatory."
+  },
+  "mandatory_post_bare_audit": [
+    "exact 134-task frozen manifest order and complete population",
+    "embedded run, source, model, lock, generation, condition, and formal-role identities",
+    "model input and raw model output",
+    "raw first decoded line and exact one-marker normalization",
+    "parsed command and command actually sent to the environment",
+    "observation, rejection feedback, repetition patterns, and real state progression",
+    "think action handling",
+    "typed failure inventory",
+    "done, won, reward, and official evaluator-success correspondence",
+    "representative raw evidence and artifact hashes"
+  ],
+  "block_rcmf_c_if": {
+    "all_134_bare_tasks_wrong": true,
+    "clear_basic_interaction_parsing_or_evaluator_fault": true,
+    "unspecified_performance_threshold": null
+  },
+  "if_blocked": {
+    "launch_rcmf_c": false,
+    "diagnose_on_train_when_possible": true,
+    "preserve_frozen_identity": true,
+    "record_execution_contract_impact": true,
+    "repair_only_a_proven_basic_fault": true,
+    "next_bare_retest_population": "first 30 tasks in the unchanged frozen c49e manifest order",
+    "complete_134_after_first_30_only_if": "the diagnosed fault is repaired, structural validation passes, and the all-wrong behavior improves",
+    "performance_search_allowed": false,
+    "retrain_unaffected_model_or_checkpoint": false
+  },
+  "if_not_blocked": {
+    "require_complete_structural_audit": true,
+    "rcmf_c_may_start_only_after_audit_pass": true,
+    "frozen_settings_unchanged": true
+  },
+  "explicit_non_authorizations": [
+    "no valid_unseen-driven prompt tuning",
+    "no model or generation-configuration search",
+    "no checkpoint selection or retraining",
+    "no WebShop mutation",
+    "no early termination or replacement of the active 134-task bare arm"
+  ]
+}

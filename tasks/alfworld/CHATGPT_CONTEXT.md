@@ -90,9 +90,22 @@ six-family TRAIN sanity then completed 6/6 tasks and 294 steps per condition
 with zero typed failures. Every step applied the exact one-marker boundary, no
 executed command retained the marker, and all six families produced substantive
 state observations in both conditions. The 0/6 terminal outcome in each sanity
-is not a defect threshold and changed no setting. Proceed unchanged to the
-complete bare 134-task v2 arm, then the complete RCMF arm; do not tune from
-their outcomes.
+is not a defect threshold and changed no setting. The complete bare 134-task v2
+arm is now running as UUID `6f47ae2c-572d-45d7-95aa-218707b3d919`.
+
+A user-directed safety gate was added during the bare run. On completion, do
+not automatically start RCMF-C: audit the complete input/output/action/
+environment/evaluator chain first. If all 134 tasks are wrong or a clear basic
+interaction, parsing, or evaluator fault is found, diagnose and repair that
+fault without changing frozen identities or retraining. The next corrective
+bare retest must then use only the first 30 tasks in the unchanged frozen
+manifest order; complete all 134 and consider RCMF-C only after the diagnosed
+fault is repaired and the short retest improves. Thirteen official successes
+already existed in the first 18 rows when this rule was recorded, so the
+all-wrong branch cannot trigger for the active arm; the full structural audit
+is still mandatory. No unspecified performance threshold or valid-unseen
+prompt/model/config search is authorized. Authority:
+`research/plans/alfworld_bare_postrun_safety_gate.json`.
 
 The final TRAIN source admitted 3,545 replay-validated `OFFICIAL_EXPERT`
 trajectories and 21,259 complete transition memories; eight typed environment
@@ -111,12 +124,13 @@ Read, in order:
 4. `research/results/alfworld/real_track_r_order_closure.json`.
 5. `research/results/alfworld/order_correction_test_report_12d4b1a.json`.
 6. `research/results/alfworld/action_v2_matched_train_sanity.json`.
-7. `research/results/alfworld/invalid_sorted_order_attempt.json`.
-8. `tasks/alfworld/STATE.md`.
+7. `research/plans/alfworld_bare_postrun_safety_gate.json`.
+8. `research/results/alfworld/invalid_sorted_order_attempt.json`.
+9. `tasks/alfworld/STATE.md`.
 
 The preserved Lambda root is
 `/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab`.
-The matched TRAIN sanity structural gate passed. The two complete corrective
-arms and their records are now authorized. The exposed invalid outcomes cannot
-change any scientific setting. The terminal checkpoint is unchanged and must
-not be retrained.
+The matched TRAIN sanity structural gate passed. The formal bare arm is
+running; RCMF-C remains blocked until the mandatory complete post-bare audit.
+The exposed invalid outcomes cannot change any scientific setting. The
+terminal checkpoint is unchanged and must not be retrained.
