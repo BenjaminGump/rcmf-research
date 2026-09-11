@@ -1,0 +1,65 @@
+{
+  "schema_version": "alfworld_track_r_action_boundary_run_identities_v2",
+  "created_utc": "2026-09-11T02:14:06.8447258Z",
+  "status": "PREREGISTERED_BEFORE_CORRECTED_MODEL_EXECUTION",
+  "source_commit": "91598b6d734cc5a5b3d1ccc1d21a7f2fb1bb2741",
+  "benchmark_lock_identity_sha256": "5cb89b2d602162044daf8bd14c03b822f405086b09bf77de8c06c2b09ae9a72f",
+  "generation_identity_sha256": "c86fad4fad8e7fc562a130d72fb58b96b18b7099152293bf776f057ebff5c59f",
+  "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "checkpoint_sha256": "6e03514d5014702b995a366bcf92c093d050b4a1b2c74cf7b97effc82f30a4bd",
+  "evaluation_order_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8",
+  "task_set_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+  "runs": {
+    "matched_train_sanity_bare": {
+      "uuid": "bfdba108-8ebc-4825-b073-e381b475757c",
+      "condition": "bare",
+      "split": "train",
+      "population": "the same fixed six TRAIN tasks covering all six families used by the preserved sanity audit",
+      "status": "NOT_STARTED"
+    },
+    "matched_train_sanity_rcmf": {
+      "uuid": "8c7a77ca-9cb3-45b2-a935-9f12a2c3dfb7",
+      "condition": "rcmf",
+      "split": "train",
+      "population": "the same fixed six TRAIN tasks covering all six families used by the preserved sanity audit",
+      "status": "NOT_STARTED"
+    },
+    "formal_bare": {
+      "uuid": "6f47ae2c-572d-45d7-95aa-218707b3d919",
+      "condition": "bare",
+      "split": "valid_unseen",
+      "population": 134,
+      "status": "NOT_STARTED"
+    },
+    "formal_rcmf": {
+      "uuid": "2a86c6d6-3095-40a8-be12-0b2ba33d67a0",
+      "condition": "rcmf",
+      "split": "valid_unseen",
+      "population": 134,
+      "status": "NOT_STARTED"
+    },
+    "paired_analysis": {
+      "uuid": "214588d4-9846-47c0-8c5c-96e1ef9a9e97",
+      "status": "NOT_STARTED"
+    },
+    "phase_p00_p11": {
+      "uuid": "c4995263-6bf0-4ee6-be00-cb087f476dde",
+      "status": "NOT_STARTED"
+    }
+  },
+  "superseded_before_execution": {
+    "order_only_bare_uuid": "511d5d8a-3203-43c5-9464-db896934b685",
+    "order_only_rcmf_uuid": "d5cea7e7-ca8a-4b9d-b13b-97664274badf",
+    "order_only_paired_uuid": "cea3800b-77e2-4b24-bbb7-efa2cdaa1b8a",
+    "status": "NOT_STARTED_SUPERSEDED_BEFORE_EXECUTION",
+    "reason": "The action-extraction contract and its generation/lock identities changed before these order-only corrective runs started."
+  },
+  "launch_gate": {
+    "train_sanity_first": true,
+    "full_arms_require_train_structural_validation": true,
+    "webshop_h100_handoff_required": true,
+    "performance_threshold": null,
+    "model_or_prompt_search_allowed": false,
+    "retraining_allowed": false
+  }
+}

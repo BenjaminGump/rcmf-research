@@ -1,0 +1,20 @@
+{
+  "schema_version": "alfworld_action_boundary_pre_model_gate_artifact_index_v1",
+  "created_utc": "2026-09-11T02:14:06.8447258Z",
+  "source_commit": "91598b6d734cc5a5b3d1ccc1d21a7f2fb1bb2741",
+  "artifacts": {
+    "preregistration": "research/plans/ALFWORLD_TRACK_R_ACTION_BOUNDARY_CORRECTION_PREREGISTRATION.md",
+    "run_identities": "research/plans/alfworld_track_r_run_identities_v2.json",
+    "train_audit": "research/results/alfworld/train_sanity_action_boundary_audit.json",
+    "real_134_order_closure": "research/results/alfworld/real_track_r_order_closure.json",
+    "order_test_report": "research/results/alfworld/order_correction_test_report_12d4b1a.json",
+    "state": "tasks/alfworld/STATE.md",
+    "chatgpt_context": "tasks/alfworld/CHATGPT_CONTEXT.md",
+    "handoff": "research/handoffs/20260911T021406Z_alfworld_action_boundary_pre_model_gate.md"
+  },
+  "remote_full_evidence": {
+    "train_semantic_audit_sha256": "1ef7e6ec00eae03acacd723817d286d454fb6ffd92d2b11304d6d4d253a9d7b7",
+    "train_normalization_replay_sha256": "dc45c60113f5a6d169b2d9cd4fcd6bb13bd7ae3d18c8cabbba08e79265d20237",
+    "real_134_order_closure_sha256": "092bd895c6aedf5f384822cd34d88606159c621cf41e38983216a552adf9c25e"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": "alfworld_order_correction_test_report_v1",
+  "created_utc": "2026-09-11T02:14:06.8447258Z",
+  "purpose": "Publish the test delta introduced by the 12d4b1a evaluation-order repair without conflating it with the later action-boundary repair.",
+  "old_source": {
+    "commit": "e9c2f3faf59fec243589eb5e9ba8424067fa677e",
+    "archive": "archive/rcmf-alfworld-track-r-full-134-e9c2f3f",
+    "full_suite": {
+      "passed": 1111,
+      "skipped": 3
+    }
+  },
+  "order_repair_source": {
+    "commit": "12d4b1ac0ff8d1afb374010dc1a65404ef7ff269",
+    "archive": "archive/rcmf-alfworld-track-r-order-correction-12d4b1a",
+    "focused_suite": {
+      "passed": 22,
+      "failed": 0
+    },
+    "lambda_focused_suite": {
+      "passed": 22,
+      "failed": 0
+    },
+    "full_suite": {
+      "passed": 1113,
+      "skipped": 3,
+      "elapsed_seconds": 73.97
+    },
+    "compilation": "PASS"
+  },
+  "delta": {
+    "passed_tests": 2,
+    "explanation": "The order repair adds two real order-enforcement regressions; 1111 and 1113 are results from different executable sources and must not be presented as the same suite result."
+  },
+  "later_action_boundary_source_not_part_of_12d4b1a_delta": {
+    "commit": "91598b6d734cc5a5b3d1ccc1d21a7f2fb1bb2741",
+    "archive": "archive/rcmf-alfworld-action-boundary-correction-91598b6",
+    "focused_suite": {
+      "local_passed": 25,
+      "lambda_passed": 25
+    },
+    "full_suite": {
+      "passed": 1116,
+      "skipped": 3,
+      "elapsed_seconds": 130.87
+    }
+  }
+}

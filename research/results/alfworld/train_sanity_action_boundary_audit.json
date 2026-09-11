@@ -1,0 +1,146 @@
+{
+  "schema_version": "alfworld_train_sanity_action_boundary_audit_record_v1",
+  "created_utc": "2026-09-11T02:14:06.8447258Z",
+  "scope": "TRAIN-only structural audit; no valid_unseen outcome was used",
+  "source_commits": {
+    "order_repair_under_audit": "12d4b1ac0ff8d1afb374010dc1a65404ef7ff269",
+    "action_boundary_correction": "91598b6d734cc5a5b3d1ccc1d21a7f2fb1bb2741"
+  },
+  "decision": "CONFIRMED_ACTION_BOUNDARY_DEFECT_AND_TRAIN_REPLAY_REPAIR",
+  "claims": {
+    "verified": [
+      "Both preserved TRAIN logs contain six tasks covering all six ALFWorld task families and 294 steps per condition.",
+      "All 588 first decoded lines were non-empty and all retained a leading ReAct transcript marker.",
+      "All 588 exact commands sent to TextWorld retained that marker and all 588 returned Nothing happens.",
+      "Every recorded reward was zero and every done/won field was false; every episode reached the 49-action cap.",
+      "On the same reset, > go to fridge 1 was not admissible and returned Nothing happens.; go to fridge 1 was admissible and returned the real closed-fridge observation.",
+      "TRAIN-only replay of the already generated lines after removing exactly one marker recovered substantive feedback for 53 of 62 bare non-think steps and 50 of 62 RCMF non-think steps.",
+      "The pinned upstream ReAct notebook terminates the prompt with a transcript marker, strips its newline-stopped completion, sends that completion to the environment, and applies its think rule to action.startswith('think:')."
+    ],
+    "inference": [
+      "The preserved sanity rows establish no semantic action validity despite action_valid=true, because validate_text_action only checks non-emptiness.",
+      "The leading transcript marker is a structural prompt/action boundary defect, not evidence that Qwen, the prompt, or RCMF performs poorly.",
+      "The replayed sequences are not model outcomes because later actions were originally generated from a stuck Nothing happens. transcript."
+    ],
+    "unverified": [
+      "Whether newly generated matched TRAIN trajectories under the corrected contract reach terminal success.",
+      "Whether either corrected complete valid_unseen arm succeeds on any task."
+    ]
+  },
+  "preserved_log_audit": {
+    "bare": {
+      "source_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/sanity/bare_train_sanity_fa2_cf34300b_retry1.jsonl",
+      "source_sha256": "ec98528327156d7f07507189c2ba0c0215d12598db3886f40ec753144789123a",
+      "tasks": 6,
+      "steps": 294,
+      "leading_transcript_marker": 294,
+      "nothing_happens": 294,
+      "one_marker_stripped_categories": {
+        "think": 232,
+        "go_to": 48,
+        "open": 13,
+        "other": 1
+      },
+      "repeated_after_first_occurrence": 130,
+      "consecutive_repeats": 127
+    },
+    "rcmf": {
+      "source_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/smoke/rcmf_train_smoke_0e79ad18.jsonl",
+      "source_sha256": "93c92b40f534ad1604e88e609171bc02efb62ccd4f8f73ef69d27a67c6bc8fcd",
+      "tasks": 6,
+      "steps": 294,
+      "leading_transcript_marker": 294,
+      "nothing_happens": 294,
+      "one_marker_stripped_categories": {
+        "think": 232,
+        "go_to": 45,
+        "open": 16,
+        "other": 1
+      },
+      "repeated_after_first_occurrence": 135,
+      "consecutive_repeats": 129
+    },
+    "state_correspondence": {
+      "recorded_underlying_state_delta": false,
+      "observation_other_than_nothing_happens": 0,
+      "positive_reward_steps": 0,
+      "done_steps": 0,
+      "won_steps": 0,
+      "episode_evaluator_correspondence": "12/12 official_success=false exactly matched final done=false and won=false"
+    }
+  },
+  "representative_raw_evidence": [
+    {
+      "class": "think",
+      "task_id": "alfworld:trial_T20190906_164825_242073",
+      "raw_model_text_prefix": [
+        "> think: To solve the task, I need to find and take an egg, then put it in fridge 1.",
+        "OK."
+      ],
+      "first_decoded_line": "> think: To solve the task, I need to find and take an egg, then put it in fridge 1.",
+      "actual_environment_command": "> think: To solve the task, I need to find and take an egg, then put it in fridge 1.",
+      "environment_observation": "Nothing happens.",
+      "normalized_command": "think: To solve the task, I need to find and take an egg, then put it in fridge 1.",
+      "corrected_prompt_observation": "OK."
+    },
+    {
+      "class": "navigation",
+      "task_id": "alfworld:trial_T20190906_164825_242073",
+      "raw_model_text_prefix": [
+        "> go to fridge 1",
+        "The fridge 1 is closed.",
+        "> open fridge 1"
+      ],
+      "first_decoded_line": "> go to fridge 1",
+      "actual_environment_command": "> go to fridge 1",
+      "environment_observation": "Nothing happens.",
+      "same_reset_normalized_command": "go to fridge 1",
+      "same_reset_normalized_observation": "You arrive at fridge 1. The fridge 1 is closed."
+    },
+    {
+      "class": "double_marker_fail_visible",
+      "task_id": "alfworld:trial_T20190906_162705_748756",
+      "first_decoded_line": "> > think: I will check drawer 2 next.",
+      "normalized_command": "> think: I will check drawer 2 next.",
+      "policy": "remove at most one marker; do not recursively repair or search later lines"
+    }
+  ],
+  "train_replay": {
+    "scope": "already-generated first lines only; no model load, forward, or generation",
+    "bare": {
+      "steps": 294,
+      "think_steps": 232,
+      "nonthink_steps": 62,
+      "nonthink_admissible_before_execution": 53,
+      "nonthink_substantive_feedback": 53,
+      "done_steps": 0,
+      "won_steps": 0
+    },
+    "rcmf": {
+      "steps": 294,
+      "think_steps": 232,
+      "nonthink_steps": 62,
+      "nonthink_admissible_before_execution": 50,
+      "nonthink_substantive_feedback": 50,
+      "done_steps": 0,
+      "won_steps": 0
+    }
+  },
+  "full_evidence": {
+    "semantic_audit": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/diagnostics/train_sanity_semantic_audit_12d4b1a.json",
+      "sha256": "1ef7e6ec00eae03acacd723817d286d454fb6ffd92d2b11304d6d4d253a9d7b7"
+    },
+    "normalization_replay": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/diagnostics/train_sanity_marker_normalization_replay_91598b6.json",
+      "sha256": "dc45c60113f5a6d169b2d9cd4fcd6bb13bd7ae3d18c8cabbba08e79265d20237"
+    }
+  },
+  "outcome_firewall": {
+    "valid_unseen_results_used": false,
+    "prompt_changed": false,
+    "model_changed": false,
+    "checkpoint_changed": false,
+    "performance_search_performed": false
+  }
+}

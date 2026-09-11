@@ -1,0 +1,40 @@
+{
+  "schema_version": "alfworld_track_r_real_order_closure_record_v1",
+  "created_utc": "2026-09-11T02:10:18.761034+00:00",
+  "source_commit": "91598b6d734cc5a5b3d1ccc1d21a7f2fb1bb2741",
+  "baseline_order_repair_commit": "12d4b1ac0ff8d1afb374010dc1a65404ef7ff269",
+  "scope": "CPU-only closure over the real 134-task manifest; no model load, forward, or generation",
+  "decision": "PASS_REAL_134_TASK_ORDER_AND_EMBEDDED_V2_LOCK_CLOSURE",
+  "population": {
+    "count": 134,
+    "set_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+    "manifest_order_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8",
+    "adapter_original_order_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+    "reversed_adapter_input_order_sha256": "deadc33771a8a728df2e853ee10aa57e231eb73048f408defa7c4ae8902cba23",
+    "sorted_helper_output_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8",
+    "first_task_id": "alfworld:trial_T20190908_222917_366542",
+    "last_task_id": "alfworld:trial_T20190906_202926_527010"
+  },
+  "checks": {
+    "correct_real_set_and_order_accepted": true,
+    "same_real_set_wrong_order_rejected": true,
+    "reversed_real_adapter_input_sorted_exactly_to_frozen_order": true,
+    "correct_physical_order_wrong_embedded_order_rejected": true,
+    "correct_order_wrong_embedded_lock_file_rejected": true,
+    "correct_order_wrong_embedded_lock_identity_rejected": true
+  },
+  "v2_lock": {
+    "path": "configs/benchmark/alfworld/track_r_execution_lock_v2.json",
+    "file_sha256": "f89d3bb2fe59eff40082a8fa3d3749d3be8ed2db0fe5e9bb6bf8b322e17f4361",
+    "identity_sha256": "5cb89b2d602162044daf8bd14c03b822f405086b09bf77de8c06c2b09ae9a72f",
+    "generation_identity_sha256": "c86fad4fad8e7fc562a130d72fb58b96b18b7099152293bf776f057ebff5c59f"
+  },
+  "inputs": {
+    "manifest_sha256": "3ece3f7344581eaa2ce2f4916947725abdee2348420a07e13f301adffc0951ea",
+    "preserved_invalid_bare_result_sha256": "fff76f27766cce43cdad8f1ba09441264549513e26c4a1c32542f50c3506681f"
+  },
+  "full_evidence": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/diagnostics/real_track_r_order_closure_91598b6.json",
+    "sha256": "092bd895c6aedf5f384822cd34d88606159c621cf41e38983216a552adf9c25e"
+  }
+}

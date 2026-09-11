@@ -1,16 +1,31 @@
 # ALFWorld Track R Corrective Execution State
 
-- Status: `ACTIVE_TRAIN_CONFIRMED_ACTION_BOUNDARY_CORRECTION_PREREGISTERED`.
+- Status: `ACTIVE_ACTION_BOUNDARY_V2_PRE_MODEL_GATE_COMPLETE_WAITING_FOR_H100_HANDOFF`.
 - A pre-rerun TRAIN-only semantic audit found a second structural defect:
   all 588 existing sanity/smoke first-line actions retained a leading ReAct
   transcript marker `>`, all 588 environment responses were `Nothing
   happens.`, and no state/reward/done/won progression was observed. A same-reset
   TRAIN replay proved that removing exactly one marker converts a rejected
   command into the corresponding admissible TextWorld command. The correction
-  rule and its required versioned Harness lock are preregistered in
+  rule and its versioned Harness lock are preregistered and implemented in
   `research/plans/ALFWORLD_TRACK_R_ACTION_BOUNDARY_CORRECTION_PREREGISTRATION.md`.
+- Harness v2 execution-lock identity
+  `5cb89b2d602162044daf8bd14c03b822f405086b09bf77de8c06c2b09ae9a72f`
+  and RCMF source `91598b6d734cc5a5b3d1ccc1d21a7f2fb1bb2741`
+  freeze the exact one-marker action-boundary correction. All old locks,
+  results, and source archives remain preserved.
+- The complete real 134-task CPU closure passes: correct frozen order is
+  accepted, the same set in a wrong order is rejected, reversed adapter input
+  is restored exactly to `c49e3fab...`, and wrong embedded order, lock-file,
+  or lock-identity claims are rejected.
+- Corrected matched TRAIN and full-arm identities are preregistered in
+  `research/plans/alfworld_track_r_run_identities_v2.json`. No corrected model
+  execution has started. The immediate next gate is a matched six-family TRAIN
+  sanity after WebShop explicitly returns an empty H100; only then may the two
+  complete 134-task arms run.
 - No corrective complete evaluation has started. The order-only corrective
-  UUIDs will not be reused after the action-extraction identity changes.
+  UUIDs are recorded as `NOT_STARTED_SUPERSEDED_BEFORE_EXECUTION` and will not
+  be reused after the action-extraction identity change.
 - Blocking defect: the first complete bare and RCMF attempts ran the exact 134
   tasks in sorted task-ID order (SHA-256 `2410f2c2...`) instead of the frozen
   manifest order (SHA-256 `c49e3fab...`). Both attempts and their paired
@@ -25,15 +40,22 @@
   `154fd80748b977811d473ff3aa0990bad951283a`.
 - Preregistration SHA:
   `efe9f8a0e9002c852804faabb303f45ef14fc876`.
-- Final executable/scientific source SHA:
+- Invalid-attempt executable/scientific source SHA:
   `e9c2f3faf59fec243589eb5e9ba8424067fa677e`.
 - Source archive ref:
   `archive/rcmf-alfworld-track-r-full-134-e9c2f3f`.
-- Harness Track R authority: branch
+- Order-repair source/archive:
+  `12d4b1ac0ff8d1afb374010dc1a65404ef7ff269` /
+  `archive/rcmf-alfworld-track-r-order-correction-12d4b1a`.
+- Action-boundary preregistration/source/archive:
+  `87337b28cfb16bd585c11d31d44ff87ebadf9e01` /
+  `91598b6d734cc5a5b3d1ccc1d21a7f2fb1bb2741` /
+  `archive/rcmf-alfworld-action-boundary-correction-91598b6`.
+- Harness Track R v2 authority: branch
   `dataset/alfworld-track-r-execution-lock-v1`, source
-  `4fa9274eaf55d066eb85bf828f76cea4f40c3dbb`, archive
-  `archive/alfworld-track-r-execution-lock-v1-4fa9274`, lock identity
-  `055e5364fefd088f0ad74106acca53231fce4d0dbd5cbfbb854a8822efd344de`.
+  `503493f28b7448396c677fa976c9ab3b4be6a36e`, archive
+  `archive/alfworld-track-r-action-boundary-correction-503493f`, lock identity
+  `5cb89b2d602162044daf8bd14c03b822f405086b09bf77de8c06c2b09ae9a72f`.
 - Endpoint: exact Track R
   `alfworld_upstream_react_valid_unseen_reference_v1`, role
   `UPSTREAM_PROTOCOL_REFERENCE`, all 134 official `valid_unseen` tasks.
@@ -52,12 +74,12 @@
 - Frozen model/tokenizer: `Qwen/Qwen3-8B` revision
   `b968826d9c46dd6066d109eabc6255188de91218`, bfloat16, frozen backbone,
   thinking disabled.
-- Frozen prompt/chat/generation identities: prompt SHA-256
+- Frozen prompt/chat/corrected-generation identities: prompt SHA-256
   `a10976b4ae99f4802aa9e621933bb71065ae103f2bd273a24466ab1005fbc45a`,
   chat-template SHA-256
   `a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8`,
   generation identity
-  `6f5df9b7560265a34a90985c7d15c633fb5f3085cc421bd7bc27cb74cc7fd8d9`.
+  `c86fad4fad8e7fc562a130d72fb58b96b18b7099152293bf776f057ebff5c59f`.
 - Evaluator: `alfworld_official_terminal_won_binary_v1`, success iff
   `environment_done=true AND state.won=true`; partial reward is not success.
 - Main Lambda run UUID/root:
@@ -92,7 +114,15 @@
 - Lambda worktree was clean at executable source and the final GPU process
   inventory was empty before atomic H100 handoff to WebShop.
 - Corrective run identities and rules are preregistered in
-  `research/plans/ALFWORLD_TRACK_R_ORDER_CORRECTION_PREREGISTRATION.md`.
+  `research/plans/ALFWORLD_TRACK_R_ACTION_BOUNDARY_CORRECTION_PREREGISTRATION.md`
+  and `research/plans/alfworld_track_r_run_identities_v2.json`.
+- Published structural evidence:
+  `research/results/alfworld/train_sanity_action_boundary_audit.json`,
+  `research/results/alfworld/real_track_r_order_closure.json`, and
+  `research/results/alfworld/order_correction_test_report_12d4b1a.json`.
+- Test-source distinction: old executable source `e9c2f3f` passed 1,111 tests
+  with three skipped; order-repair source `12d4b1a` passed 1,113 with three
+  skipped; action-boundary source `91598b6` passed 1,116 with three skipped.
 
 ---
 

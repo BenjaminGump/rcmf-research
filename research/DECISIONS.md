@@ -3807,3 +3807,55 @@ IMPLEMENTATION DEVIATIONS:
   tasks while the lock separately bound manifest order. The order check is now
   explicit and fail closed. This is the sole permitted scientific-source change
   after the invalid outcomes became visible.
+
+## 2026-09-11 ALFWorld TRAIN action-boundary correction
+
+VERIFIED:
+
+- The existing bare and RCMF TRAIN sanity logs each contain six tasks and 294
+  steps. Every first decoded line retained a leading `>` transcript marker;
+  every exact environment command retained it; and all 588 environment replies
+  were `Nothing happens.`. Rewards, done, and won remained zero/false.
+- `validate_text_action` establishes only that a string is non-empty. Therefore
+  the historical `action_valid=true` values are not semantic-validity evidence.
+- On the same TRAIN reset, `> go to fridge 1` was inadmissible and did not
+  change observable state, while `go to fridge 1` was admissible and returned
+  the real closed-fridge observation.
+- The pinned upstream ReAct notebook owns the prompt's trailing marker and sends
+  the stripped completion, not that prompt marker, to the environment. Its
+  `think:` rule also operates on the completion without the marker.
+- Replaying already-generated TRAIN first lines after removing exactly one
+  marker recovered substantive observations for 53/62 bare and 50/62 RCMF
+  non-think steps. This replay is engineering evidence only because subsequent
+  actions were generated under the historical stuck transcript.
+- Real 134-task CPU closure at source `91598b6` accepts the exact frozen order,
+  rejects a wrong order over the same set, maps reversed real adapter input
+  exactly to `c49e3fab...`, and rejects wrong embedded order, lock file, and lock
+  identity.
+
+DECISION:
+
+- Version the action-extraction identity. From the first decoded line, strip
+  surrounding whitespace, remove at most one leading `>` and following
+  whitespace, reject empty output, and otherwise preserve the remaining opaque
+  text. Detect `think:` only after normalization. Never search or rank later
+  lines and never recursively repair a double marker.
+- Use Harness v2 lock identity `5cb89b2d...`, generation identity
+  `c86fad4f...`, and RCMF source `91598b6`. Preserve and reject the historical
+  v1 identity for new executions.
+- Do not retrain the unaffected terminal checkpoint. Run one preregistered
+  matched six-family TRAIN sanity after explicit empty-H100 handoff. If no new
+  structural defect appears, run both complete 134-task conditions under new
+  identities with every other frozen setting unchanged.
+- The earlier order-only corrective UUIDs are
+  `NOT_STARTED_SUPERSEDED_BEFORE_EXECUTION`; no output may use them.
+
+IMPLEMENTATION DEVIATIONS:
+
+- The `12d4b1a` analyzer closed physical and embedded evaluation-order checks
+  but did not yet reject a mismatched embedded lock identity. The v2 source adds
+  that fail-closed check before any corrected model run.
+- The first action-boundary full-suite invocation omitted the required
+  process-start `PYTHONHASHSEED=25101` and triggered the existing AppWorld 13c
+  collection guard. The unchanged exact suite was rerun with the required
+  environment and passed 1,116 tests with three skips; no failure was waived.
