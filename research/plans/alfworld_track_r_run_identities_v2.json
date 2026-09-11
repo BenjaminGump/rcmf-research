@@ -9,12 +9,25 @@
   "checkpoint_sha256": "6e03514d5014702b995a366bcf92c093d050b4a1b2c74cf7b97effc82f30a4bd",
   "evaluation_order_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8",
   "task_set_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+  "train_sanity_selection": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/diagnostics/bare-sanity-task-ids.json",
+    "sha256": "831279de0ea188a624cacdd69dc8f3f5f9ea4edaa0f19549ea573f3216a29049",
+    "task_ids": [
+      "alfworld:trial_T20190906_164825_242073",
+      "alfworld:trial_T20190906_161837_412072",
+      "alfworld:trial_T20190906_171701_034036",
+      "alfworld:trial_T20190906_161400_720379",
+      "alfworld:trial_T20190906_161309_564327",
+      "alfworld:trial_T20190906_162705_748756"
+    ]
+  },
   "runs": {
     "matched_train_sanity_bare": {
       "uuid": "bfdba108-8ebc-4825-b073-e381b475757c",
       "condition": "bare",
       "split": "train",
       "population": "the same fixed six TRAIN tasks covering all six families used by the preserved sanity audit",
+      "output_root": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v2/train_sanity/bare_bfdba108",
       "status": "NOT_STARTED"
     },
     "matched_train_sanity_rcmf": {
@@ -22,6 +35,7 @@
       "condition": "rcmf",
       "split": "train",
       "population": "the same fixed six TRAIN tasks covering all six families used by the preserved sanity audit",
+      "output_root": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v2/train_sanity/rcmf_8c7a77ca",
       "status": "NOT_STARTED"
     },
     "formal_bare": {
@@ -29,6 +43,7 @@
       "condition": "bare",
       "split": "valid_unseen",
       "population": 134,
+      "output_root": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v2/formal/bare_6f47ae2c",
       "status": "NOT_STARTED"
     },
     "formal_rcmf": {
@@ -36,6 +51,7 @@
       "condition": "rcmf",
       "split": "valid_unseen",
       "population": 134,
+      "output_root": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v2/formal/rcmf_2a86c6d6",
       "status": "NOT_STARTED"
     },
     "paired_analysis": {
