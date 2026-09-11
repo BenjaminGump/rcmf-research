@@ -3933,3 +3933,43 @@ IMPLEMENTATION DEVIATIONS:
 - This newly discovered protocol mismatch invalidates the v2 comparison lock;
   it does not invalidate the trained checkpoint because training targets are
   official native `move` commands and the model/checkpoint are unchanged.
+
+## 2026-09-11 ALFWorld action-dialect-v3 source and first-30 run gate
+
+VERIFIED:
+
+- RCMF source `37e3ad1` and Harness source `ef31ccb` implement the same exact
+  anchored bridge under lock identity `f6103813...` and generation/action
+  identity `80400891...`.
+- The actual RCMF adapter passed same-state TRAIN probes in all five placement
+  families: model `put` was preserved, exactly one official `move` was sent,
+  and observation/reward/done/won matched the sealed expert step in 5/5.
+- The independent Harness-owned provider passed the same TRAIN cases without
+  importing RCMF.
+- A real 134-task CPU check passed correct order, rejected wrong order, restored
+  reversed adapter input exactly to `c49e3fab...`, accepted exact v3 embedded
+  identity, and rejected wrong order/lock/generation/bridge/executed action.
+- Local final source tests passed 1,120 with three skips; Lambda focused tests
+  passed 31. The requested historical 1,111 versus 1,113 source distinction is
+  preserved alongside the 1,116 and 1,120 later counts.
+
+DECISION:
+
+- Freeze first-30 bare UUID `de0e3118-e852-4709-8887-304620c27cc6` and the
+  exact first 30 physical manifest-order tasks before model execution.
+- Permit a full-134 bare run only if the first-30 audit is structurally exact,
+  has zero typed failures, applies the bridge at least once, sends zero matched
+  puts literally, exceeds 13/30 total successes, and reaches at least 1/12
+  `pick_and_place` successes.
+- Permit RCMF-C only after that gate and a subsequent complete 134-bare
+  structural audit. Do not retrain or use validation outcomes to alter settings.
+
+IMPLEMENTATION DEVIATIONS:
+
+- The first RCMF source archive at `057693f` was superseded before model
+  execution by `37e3ad1` solely to add the durable real-order closure script.
+- Lambda private-repository fetch was unavailable; exact pushed source reached
+  the isolated worktree through SHA-256-verified Git bundles and `--ff-only`.
+- Two initial TRAIN probe invocations stopped before environment reset because
+  repository and task-owned ALFWorld dependency paths were absent. After using
+  the already-existing task-owned runtime path, the unchanged probe passed.

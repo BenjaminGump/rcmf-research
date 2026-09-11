@@ -1,0 +1,100 @@
+{
+  "schema_version": "alfworld_action_dialect_v3_test_report_v1",
+  "created_utc": "2026-09-11T11:31:00Z",
+  "source_commit": "37e3ad1c2fd0c3bbcd54da3c64b5613edff29094",
+  "source_archive_ref": "archive/rcmf-alfworld-action-dialect-correction-37e3ad1",
+  "decision": "PASS_ACTION_DIALECT_V3_SOURCE_AND_CPU_GATES",
+  "historical_count_distinction": {
+    "pre_order_repair_source": {
+      "count_passed": 1111,
+      "purpose": "historical source count before 12d4b1a; preserved, not rerun as current"
+    },
+    "order_repair_12d4b1a": {
+      "source_commit": "12d4b1ac0ff8d1afb374010dc1a65404ef7ff269",
+      "count_passed": 1113,
+      "purpose": "historical order-repair source count; explicitly distinct from 1111"
+    },
+    "action_boundary_91598b6": {
+      "source_commit": "91598b6d734cc5a5b3d1ccc1d21a7f2fb1bb2741",
+      "count_passed": 1116,
+      "purpose": "historical action-boundary-v2 source count"
+    },
+    "action_dialect_v3_37e3ad1": {
+      "source_commit": "37e3ad1c2fd0c3bbcd54da3c64b5613edff29094",
+      "count_passed": 1120,
+      "count_skipped": 3,
+      "count_failed": 0,
+      "elapsed_seconds": 77.8
+    }
+  },
+  "runs": [
+    {
+      "environment": "Windows appworld_env; PYTHONHASHSEED=25101",
+      "command": "python -m pytest -q tests/test_alfworld_portable_v2.py tests/test_alfworld_result_analysis.py --basetemp C:/gbz/pytest-tmp/alfworld-v3-focused",
+      "passed": 31,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "environment": "Windows appworld_env; PYTHONHASHSEED=25101",
+      "command": "python -m pytest -q --basetemp C:/gbz/pytest-tmp/rcmf-alfworld-v3-full",
+      "passed": 1118,
+      "failed": 2,
+      "skipped": 3,
+      "classification": "DOCUMENT_CONTRACT_FAILURE",
+      "failure": "tasks/alfworld/CHATGPT_CONTEXT.md rendered Latest relevant handoff over two lines, while the release validator requires the field on one line",
+      "repair": "rendered the same already-existing handoff path on the required single line; no execution or scientific setting changed"
+    },
+    {
+      "environment": "Windows appworld_env; PYTHONHASHSEED=25101",
+      "command": "python -m pytest -q tests/test_portable_v2_release_documents.py --basetemp C:/gbz/pytest-tmp/rcmf-alfworld-v3-release",
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "environment": "Windows appworld_env; PYTHONHASHSEED=25101",
+      "command": "python -m pytest -q --basetemp C:/gbz/pytest-tmp/rcmf-alfworld-v3-source-final-full",
+      "passed": 1120,
+      "failed": 0,
+      "skipped": 3,
+      "elapsed_seconds": 77.8
+    },
+    {
+      "environment": "Lambda /home/ubuntu/venvs/rcmf-py311/bin/python; source 37e3ad1; PYTHONHASHSEED=25101",
+      "command": "python -m pytest -q tests/test_alfworld_portable_v2.py tests/test_alfworld_result_analysis.py --basetemp <task-owned-path>",
+      "passed": 31,
+      "failed": 0,
+      "skipped": 0,
+      "elapsed_seconds": 2.12
+    }
+  ],
+  "other_checks": {
+    "compileall": "PASS",
+    "v3_lock_json_parse": "PASS",
+    "v3_lock_file_sha256": "8917fa535623d7678497a75c80c6d4b7481fe11c3c52ba2d245c8923bb0fd44e",
+    "generic_rcmf_pipeline_diff_from_preregistration_parent": "EMPTY",
+    "focused_secret_scan_matches": 0,
+    "git_diff_check": "PASS"
+  },
+  "real_cpu_diagnostics": {
+    "rcmf_adapter_train_probe": {
+      "diagnostic_uuid": "16108bc6-36c2-43ad-9941-5c763adcc276",
+      "artifact": "research/results/alfworld/action_dialect_v3_rcmf_adapter_train_probe.json",
+      "file_sha256": "c4e1b121c69a45db5ee23a5bb7b9932ef15c01eb809295dd8ccf6af5271fc932",
+      "result": "PASS_5_OF_5_PLACEMENT_FAMILIES"
+    },
+    "real_track_r_order_closure": {
+      "diagnostic_uuid": "f0644e1d-488e-4233-ba98-0e40c01e8b73",
+      "artifact": "research/results/alfworld/action_dialect_v3_real_track_r_order_closure.json",
+      "file_sha256": "c55ca0472a786b1ac6275911e7bb02c4c41fbd0e81b8de91cc0f4cf4a80788ec",
+      "result": "PASS_REAL_134_TASK_ORDER_AND_EMBEDDED_V3_IDENTITY_CLOSURE"
+    }
+  },
+  "negative_statements": {
+    "model_loaded_by_tests_or_cpu_diagnostics": false,
+    "model_forward_or_generation_by_tests_or_cpu_diagnostics": false,
+    "training_or_retraining": false,
+    "webshop_modified_or_preempted": false
+  }
+}

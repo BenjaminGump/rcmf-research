@@ -1,0 +1,49 @@
+{
+  "canonical_identity_sha256": "d9ce9dc882c433ef95f3728864e6636d3fdaf51c29d51c252a86763d6f906a7c",
+  "checks": {
+    "correct_real_set_and_order_accepted": true,
+    "correct_v3_identity_accepted": true,
+    "reversed_real_adapter_input_sorted_exactly_to_frozen_order": true,
+    "same_real_set_wrong_order_rejected": true,
+    "wrong_embedded_bridge_identity_rejected": true,
+    "wrong_embedded_generation_identity_rejected": true,
+    "wrong_embedded_lock_file_rejected": true,
+    "wrong_embedded_lock_identity_rejected": true,
+    "wrong_embedded_order_rejected": true,
+    "wrong_executed_action_rejected": true
+  },
+  "created_utc": "2026-09-11T11:28:01.964896+00:00",
+  "decision": "PASS_REAL_134_TASK_ORDER_AND_EMBEDDED_V3_IDENTITY_CLOSURE",
+  "diagnostic_uuid": "f0644e1d-488e-4233-ba98-0e40c01e8b73",
+  "inputs": {
+    "manifest_file_sha256": "3ece3f7344581eaa2ce2f4916947725abdee2348420a07e13f301adffc0951ea",
+    "manifest_path": "/lambda/nfs/rcmf-persist/project/runs/harness_readiness/alfworld/fd8622dd-482f-4eba-b27f-c3c32eb2b68f/harness-source/research/benchmarks/alfworld/task_manifest.json"
+  },
+  "negative_statements": {
+    "evaluation_outcome_used": false,
+    "model_forward": false,
+    "model_generation": false,
+    "model_weights_loaded": false,
+    "tokenizer_loaded": false
+  },
+  "population": {
+    "adapter_original_order_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+    "count": 134,
+    "first_task_id": "alfworld:trial_T20190908_222917_366542",
+    "last_task_id": "alfworld:trial_T20190906_202926_527010",
+    "manifest_order_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8",
+    "reversed_adapter_input_order_sha256": "deadc33771a8a728df2e853ee10aa57e231eb73048f408defa7c4ae8902cba23",
+    "set_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+    "sorted_helper_output_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8"
+  },
+  "schema_version": "alfworld_track_r_real_order_closure_record_v2",
+  "scope": "CPU-only real 134-task order and embedded v3 identity closure; no tokenizer/model load, forward, or generation",
+  "source_commit": "37e3ad1c2fd0c3bbcd54da3c64b5613edff29094",
+  "v3_identity": {
+    "action_dialect_bridge_id": "react_put_in_on_to_alfworld_move_to_v1",
+    "generation_identity_sha256": "80400891d46bc0395961b978449d03ae709d50d93d39e8d665ce9560a0224705",
+    "lock_file_sha256": "8917fa535623d7678497a75c80c6d4b7481fe11c3c52ba2d245c8923bb0fd44e",
+    "lock_identity_sha256": "f6103813cd2f4c76d15e2784c2eece9758c250042ef3c06d01ccde89daa4ba05",
+    "model_revision": "b968826d9c46dd6066d109eabc6255188de91218"
+  }
+}

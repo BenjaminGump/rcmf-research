@@ -3146,3 +3146,26 @@ Decision:
 - Decision: `READY_TO_FREEZE_NEUTRAL_HARNESS_V1`. Thread B retains ownership of
   the final freeze. No training, standardized benchmark result, or final
   harness freeze occurred in this review.
+
+### ALFWorld Action-Dialect V3 Pre-First-30 Gate
+
+- Executable source `37e3ad1c2fd0c3bbcd54da3c64b5613edff29094`
+  is frozen at `archive/rcmf-alfworld-action-dialect-correction-37e3ad1`.
+  Harness source is `ef31ccba6092e9b7dc9f0a9c5f5310c6e20ccc74`.
+- The exact method-neutral boundary translates only anchored lower-case ReAct
+  `put <object> <id> in/on <receptacle> <id>` to official ALFWorld `move
+  <object> <id> to <receptacle> <id>`. Model action and environment action are
+  separately recorded and fail-closed audited.
+- Actual RCMF adapter and independent Harness TRAIN probes pass all five fixed
+  placement families with exact official observation/reward/done/won and 5/5
+  terminal success. No tokenizer/model was loaded for those probes.
+- The real 134-task CPU closure passes physical order `c49e3fab...`, wrong-order
+  rejection, reversed-input restoration, and embedded-v3 identity/action
+  rejection checks.
+- Final local source suite: 1,120 passed, three skipped; Lambda focused: 31
+  passed. Historical counts remain 1,111 before 12d4b1a, 1,113 at 12d4b1a,
+  and 1,116 at 91598b6.
+- The only next authorized model run is first-30 bare UUID
+  `de0e3118-e852-4709-8887-304620c27cc6`. Full 134 and RCMF-C remain blocked
+  unless the preregistered structural and >13/30 plus >=1/12 placement gate
+  passes. The checkpoint is unchanged and is not retrained.

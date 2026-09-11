@@ -1,6 +1,32 @@
 # ALFWorld Track R Action-Dialect Corrective State
 
-- Status: `PREREGISTERED_ACTION_DIALECT_CORRECTION_RCMF_C_BLOCKED`.
+- Status: `ACTION_DIALECT_V3_SOURCE_TRAIN_CPU_GATES_PASS_FIRST30_BARE_PREREGISTERED`.
+- Final executable source for this corrective stage is
+  `37e3ad1c2fd0c3bbcd54da3c64b5613edff29094`, archived at
+  `archive/rcmf-alfworld-action-dialect-correction-37e3ad1`. Harness source
+  `ef31ccba6092e9b7dc9f0a9c5f5310c6e20ccc74` is archived at
+  `archive/alfworld-action-dialect-correction-ef31ccb`.
+- The v3 lock file/portable identities are `8917fa5356...` / `f6103813cd...`;
+  generation/action identity is `80400891d4...`; bridge identity is
+  `react_put_in_on_to_alfworld_move_to_v1`.
+- The actual RCMF adapter TRAIN probe passed all five placement families:
+  exactly five bridge activations, exact five official `move` commands,
+  observations, rewards, done/won values, and 5/5 official terminal success.
+  The Harness-owned independent probe passed the same fixed TRAIN cases.
+- The fresh real 134-task CPU closure passed correct set/order, wrong-order
+  rejection, reverse-input restoration to `c49e3fab...`, correct embedded-v3
+  identity acceptance, and wrong order/lock/generation/bridge/executed-action
+  rejection.
+- The final local suite at source `37e3ad1` passed 1,120 with three skips;
+  Lambda focused tests passed 31. Historical counts remain explicitly distinct:
+  1,111 before the order repair, 1,113 at `12d4b1a`, and 1,116 at `91598b6`.
+- The next and only authorized model run is bare UUID
+  `de0e3118-e852-4709-8887-304620c27cc6` on the exact first 30 physical
+  manifest-order tasks. Its run/list/audit identities and conditional later
+  UUIDs are frozen in
+  `research/plans/alfworld_track_r_run_identities_v3.json`. Full 134 bare and
+  RCMF-C remain blocked until the first-30 audit emits
+  `READY_FOR_CORRECTED_FULL_134_BARE`.
 - The action-boundary-v2 bare arm UUID
   `6f47ae2c-572d-45d7-95aa-218707b3d919` completed 134/134 with 16 official
   successes and zero typed failures. Its immutable episodes SHA-256 is
