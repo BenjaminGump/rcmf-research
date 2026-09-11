@@ -1,0 +1,187 @@
+{
+  "artifacts": {
+    "analysis_file": "research/results/RCMF_WEBSHOP_AGENTBENCH_FC_STANDARD200_ANALYSIS.json",
+    "analysis_file_sha256": "08f2715a8f92b2e9fbd86281ad1718b1aebb4a9ce0c73c339be7e7654a6e16e0",
+    "analysis_logical_sha256": "94911cfa7abe47d8a36609f6b29aa001ca9ecc5ff9af194a661e86c5b372de9b",
+    "audit_file": "research/audits/RCMF_WEBSHOP_STANDARD200_FINAL_AUDIT.json",
+    "audit_file_sha256": "eb2aaa86d2dbaf4d534a5619d323b93499cec0d6a0fedf6005a8bdf11c0bb13d",
+    "audit_logical_sha256": "00ef319b37d46923a4fb72749a5ae3acfd988e74d1fb230f637f473515a816a2",
+    "shutdown_file": "research/audits/RCMF_WEBSHOP_SERVER_SHUTDOWN.json",
+    "shutdown_file_sha256": "5e732310d9abef8968e41d45fea20648fefc45e8899f475e67d99d4a6ef2da0e"
+  },
+  "benchmark": {
+    "excluded_indices_executed": false,
+    "excluded_range": [
+      200,
+      500
+    ],
+    "name": "AgentBench-FC WebShop standard-200",
+    "standard_count": 200,
+    "standard_range": [
+      0,
+      200
+    ],
+    "test500_claimed": false,
+    "total_formal_trajectories": 600
+  },
+  "construction": {
+    "admitted_provenance": "AGENT_GENERATED",
+    "admitted_trajectory_count": 302,
+    "all_admitted_exact_reward_1": true,
+    "all_admitted_replay_validated": true,
+    "click_transition_count": 884,
+    "corpus_sha256": "b5f1252f9823dca36ef3ee2fd3f0c5278c5ca527016abee182844bd094ff958e",
+    "processed_range": [
+      1500,
+      3000
+    ],
+    "search_transition_count": 321,
+    "source_commit": "084566c56a4fb4f5457cd73719ed351bf8f3a594",
+    "transition_count": 1205
+  },
+  "date_utc": "2026-09-11T02:31:57Z",
+  "decision": "RCMF_WEBSHOP_STANDARD200_INCONCLUSIVE_NULL_RESULT",
+  "determinism": {
+    "conditions": 3,
+    "report_logical_sha256": "1dbf43507671d15805a27967e84438622399dfd4146994a6f91c97aa969d6ac4",
+    "semantic_exact_matches": 6,
+    "task_ids": [
+      "agentbench-fc-webshop:00000",
+      "agentbench-fc-webshop:00001"
+    ]
+  },
+  "formal_metrics": {
+    "B0": {
+      "bootstrap_mean_95_ci": [
+        0.5379999999999999,
+        0.6214999999999999
+      ],
+      "full_success_count": 39,
+      "full_success_rate": 0.195,
+      "mean_raw_reward": 0.5802499999999999,
+      "median_raw_reward": 0.6666666666666666
+    },
+    "RCMF-C": {
+      "bootstrap_mean_95_ci": [
+        0.5379999999999999,
+        0.6260020833333333
+      ],
+      "full_success_count": 44,
+      "full_success_rate": 0.22,
+      "mean_raw_reward": 0.5819166666666666,
+      "median_raw_reward": 0.6666666666666666
+    },
+    "RCMF-S": {
+      "bootstrap_mean_95_ci": [
+        0.5367489583333332,
+        0.6256260416666667
+      ],
+      "full_success_count": 44,
+      "full_success_rate": 0.22,
+      "mean_raw_reward": 0.5809583333333334,
+      "median_raw_reward": 0.6666666666666666
+    }
+  },
+  "format": "rcmf_agentbench_fc_webshop_standard200_final_result_v1",
+  "harness": {
+    "archive": "archive/webshop-agentbench-fc-runtime-v1-b5bd698",
+    "branch": "dataset/webshop-e2e-v3",
+    "records_commit": "2088d0d77b9a32a76a8d1823cb199dd13d0207af",
+    "source_commit": "9e1f3963d42de871c23a1d0d87c1299e8387a420"
+  },
+  "method": {
+    "evaluator_archive": "archive/rcmf-webshop-evaluator-v2-77508bd",
+    "evaluator_source_commit": "77508bd8aba67576038ecdc513c0e91fd825a4a9",
+    "field_shapes": {
+      "A": [
+        960,
+        8,
+        256
+      ],
+      "B": [
+        8,
+        256
+      ]
+    },
+    "memory_count": 1205,
+    "method_archive": "archive/rcmf-webshop-method-v1-be71170",
+    "method_package_sha256": "b54ef1c0119a95983ec19d068543ded14036dd5704ee9a200930d361deb6f4df",
+    "method_source_commit": "be711705b5824d6b61ca05a9ea0b19be8882ec8e",
+    "qwen_frozen": true,
+    "raw_memory_prompt_used": false,
+    "reader_frozen": true,
+    "runtime_memory_scan_used": false,
+    "runtime_top_k_used": false,
+    "selector_frozen": true,
+    "writer_frozen": true
+  },
+  "model": {
+    "dtype": "bfloat16",
+    "enable_thinking": false,
+    "name": "Qwen/Qwen3-8B",
+    "snapshot_commit": "b968826d9c46dd6066d109eabc6255188de91218"
+  },
+  "paired_metrics": {
+    "RCMF-C_minus_B0": {
+      "bootstrap_95_ci": [
+        -0.029749999999999995,
+        0.031585416666666644
+      ],
+      "gain_count": 29,
+      "loss_count": 22,
+      "mcnemar_exact_two_sided_p": 0.3017578125,
+      "mean_paired_reward_difference": 0.0016666666666666679,
+      "median_paired_reward_difference": 0.0,
+      "tie_count": 149
+    },
+    "RCMF-C_minus_RCMF-S": {
+      "bootstrap_95_ci": [
+        -0.0175,
+        0.018709374999999986
+      ],
+      "gain_count": 7,
+      "loss_count": 7,
+      "mcnemar_exact_two_sided_p": 1.0,
+      "mean_paired_reward_difference": 0.000958333333333333,
+      "median_paired_reward_difference": 0.0,
+      "tie_count": 186
+    }
+  },
+  "runtime": {
+    "agentbench_commit": "d1e4a10db08c87075c78972e48ecc182be03e2d5",
+    "data_image": "longinyu/agentbench-webshop@sha256:e8bd3b120fe57653ecd902a6629d11a7d68f738e15f56a7e0aefdc1139f38b09",
+    "derived_worker_image_id": "sha256:af342a9b210bc8bde14eccb3c858beefc79de7203b63d3286beb327b099d0cb9",
+    "host": "Lambda Cloud Ubuntu H100",
+    "observation_mode": "text",
+    "princeton_webshop_commit": "64fa2a5c15c7daa698b9ac93f5bb5437b634c9bd",
+    "reward_semantics": "raw_continuous_reward_exact_1_is_full_success",
+    "servers_removed": true,
+    "windows_docker_used": false
+  },
+  "scientific_interpretation": "The correct-field point estimate is slightly positive, but paired confidence intervals include zero and the matched shuffled field has the same 44/200 exact-success count. This evaluation does not demonstrate a reliable or memory-specific RCMF benefit on AgentBench-FC WebShop standard-200.",
+  "standard_operational_totals": {
+    "click_count": 1934,
+    "elapsed_seconds": 3063.373762320727,
+    "environment_noop_count": 21,
+    "environment_steps": 2613,
+    "generated_tokens": 68605,
+    "h100_hours": 0.8509371562002019,
+    "invalid_action_count": 56,
+    "max_round_termination_count": 26,
+    "prompt_tokens": 6005823,
+    "representation_tokens": 8957014,
+    "search_count": 679
+  },
+  "standard_outcomes_used_before_freeze": false,
+  "status": "TERMINAL_COMPLETE",
+  "validation": {
+    "decision": "PROCEED",
+    "range": [
+      500,
+      550
+    ],
+    "rcmf_c_minus_b0": 0.03986666666666667,
+    "rcmf_c_minus_rcmf_s": 0.006000000000000001,
+    "task_count": 50
+  }
+}

@@ -1,41 +1,52 @@
 # WebShop State
 
-- Development base records SHA: `543de32a91e20796ca6441b65b3a9e41f271c412`
-- Canonical executable ancestor SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`
-- Canonical archive ref: `archive/rcmf-portable-canonical-v2_1-0ca0101`
-- Bootstrap generated at SHA: `4e56702f467635bda120d118a5367c58e593ecef`
-- Last verified UTC: `2026-09-09T09:58:34Z`
-- RCMF Harness V1 integration source: `4e56702f467635bda120d118a5367c58e593ecef`
-- Integration archive: `archive/rcmf-neutral-harness-v1-integration-4e56702`
-- Final Harness source: `827ed6f394804834e93444c9bb02c435e9e238a3`
-- Readiness branch/source/records: `dataset/webshop-readiness-v1` /
-  `2072ae59b79171facabb2b580cda0c2ae460cd8e` /
-  `40d6318892e03d7e775ed83704dae89917f7b324`
-- Readiness decision: `STOP_WEBSHOP_DATA_IDENTITY_UNRESOLVED`
-- Future RCMF branch/worktree: `adapt/webshop-v1`, based on the final RCMF
-  Harness V1 integration records branch in a dedicated worktree
-- Run namespace: `/lambda/nfs/rcmf-persist/project/runs/webshop/<uuid>` with a
-  unique server port
-- Adapter protocol: `rcmf_reproducible_benchmark_adapter_v2`; no final WebShop
-  adapter or scientific benchmark lock exists
-- Prompt source/profile: ReAct commit
-  `6bdb3a1fd38b8188fc7ba4102969fe483df8fdc9`,
-  `react_official_one_demo_v1`
-- Trajectory provenance: setup human sample remains unsealed; larger 1,643-row
-  archive is inspection-only; IL archive remains `UNKNOWN_PROHIBITED`
-- Split/evaluation contract: source-defined seed-233 split, with official
-  training instructions only eligible for memories; exact ordered goals await
-  sealed source data
-- Verified: WebShop source and code license, ReAct prompt identity, action and
-  continuous-reward semantics, source split algorithm, and larger archive
-  byte/hash and structural summary
-- Unverified: product/instruction/index/setup-sample bytes and terms, live
-  server/replay, exact task manifest, archive admissibility, scientific run
-- Blocker: primary or maintainer-signed data manifest is unavailable for the
-  full products, instructions, Lucene index, and 50-session setup sample
-- Next decision: obtain that exact manifest, then rerun bounded readiness before
-  selecting any replay population or proposing a benchmark lock
-- Latest handoff: `research/handoffs/20260909T095834Z_rcmf_neutral_harness_v1_integration_freeze.md`
-- Approval stop: do not guess provenance, generate an oracle, freeze a lock, or
-  run model generation/training without a separate reviewed task
-- Scientific status: `NOT_EVALUATED`
+- Status: `TERMINAL_COMPLETE`.
+- Scientific decision: `RCMF_WEBSHOP_STANDARD200_INCONCLUSIVE_NULL_RESULT`.
+- Formal benchmark: AgentBench-FC `webshop-std`, exact indices `[0,200)`, 200
+  tasks per condition.
+- Formal execution: 600/600 trajectories complete with zero typed errors under
+  `B0`, `RCMF-C`, and `RCMF-S`.
+- Excluded range: `[200,500)` was not executed and remains out of scope.
+- Harness branch/source/records: `dataset/webshop-e2e-v3` /
+  `9e1f3963d42de871c23a1d0d87c1299e8387a420` /
+  `2088d0d77b9a32a76a8d1823cb199dd13d0207af`.
+- Harness runtime archive: `archive/webshop-agentbench-fc-runtime-v1-b5bd698`.
+- RCMF construction source/archive: `084566c56a4fb4f5457cd73719ed351bf8f3a594` /
+  `archive/rcmf-webshop-construction-v1-084566c`.
+- RCMF method source/archive: `be711705b5824d6b61ca05a9ea0b19be8882ec8e` /
+  `archive/rcmf-webshop-method-v1-be71170`.
+- Evaluator source/archive: `77508bd8aba67576038ecdc513c0e91fd825a4a9` /
+  `archive/rcmf-webshop-evaluator-v2-77508bd`.
+- Method package SHA256:
+  `b54ef1c0119a95983ec19d068543ded14036dd5704ee9a200930d361deb6f4df`.
+- Construction: 302 replay-validated exact-success `AGENT_GENERATED` train
+  trajectories, 1,205 transitions, corpus SHA256
+  `b5f1252f9823dca36ef3ee2fd3f0c5278c5ca527016abee182844bd094ff958e`.
+- Frozen field: `A[960,8,256]`, `B[8,256]`; no raw-memory prompt, runtime
+  memory scan, per-memory scoring, nearest-neighbor retrieval, or top-k.
+- Qwen: frozen `Qwen/Qwen3-8B` snapshot
+  `b968826d9c46dd6066d109eabc6255188de91218`.
+- Validation: fixed `[500,550)` three-condition rerun passed the directional
+  mechanism gate before standard outcomes were opened.
+- Formal mean raw reward: B0 `0.580250`, RCMF-C `0.581917`, RCMF-S
+  `0.580958`.
+- Formal exact-1.0 success: B0 `39/200`, RCMF-C `44/200`, RCMF-S `44/200`.
+- Paired RCMF-C minus B0: `+0.0016667`, bootstrap 95% CI
+  `[-0.0297500, 0.0315854]`.
+- Paired RCMF-C minus RCMF-S: `+0.0009583`, bootstrap 95% CI
+  `[-0.0175000, 0.0187094]`.
+- Interpretation: no reliable or memory-specific benefit was demonstrated.
+- Determinism: 6/6 fixed post-evaluation fresh-session semantic replays exact;
+  excluded from scientific counts.
+- Final audit: `PASS`, logical SHA256
+  `00ef319b37d46923a4fb72749a5ae3acfd988e74d1fb230f637f473515a816a2`.
+- Lambda run root:
+  `/lambda/nfs/rcmf-persist/project/runs/webshop/webshop_rcmf_v1_d7853aba-7e27-4bb9-9f79-04447416ca3e`.
+- Servers are removed, ports 58173/58174 are released, and the H100 was empty
+  when explicitly handed back to ALFWorld.
+- Authoritative report:
+  `research/results/RCMF_WEBSHOP_AGENTBENCH_FC_STANDARD200_FINAL.md`.
+- Next step: a different memory method may implement its own adapter against
+  the frozen benchmark identities; do not retune RCMF from standard outcomes or
+  run `[200,500)` without a new explicit milestone.
+- Last verified UTC: `2026-09-11T02:31:57Z`.

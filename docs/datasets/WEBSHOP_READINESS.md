@@ -1,7 +1,15 @@
 # WebShop Readiness
 
-Status: `AGENTBENCH_FC_RUNTIME_VERIFIED_ADAPTER_IN_PROGRESS`; no WebShop RCMF
-scientific result exists.
+Status: `AGENTBENCH_FC_WEBSHOP_STANDARD200_TERMINAL_COMPLETE`.
+
+The active AgentBench-FC runtime, benchmark, RCMF adapter, train construction,
+method freeze, validation, and exact `[0,200)` formal evaluation are complete.
+All 600 B0/RCMF-C/RCMF-S trajectories passed final artifact audit. The
+scientific result is `RCMF_WEBSHOP_STANDARD200_INCONCLUSIVE_NULL_RESULT`;
+details are in
+`research/results/RCMF_WEBSHOP_AGENTBENCH_FC_STANDARD200_FINAL.md`.
+The older Princeton archive readiness stop below remains historical provenance
+and does not describe the active AgentBench-FC benchmark.
 
 The active end-to-end charter supersedes the earlier Princeton archive
 readiness stop. The primary formal population is now AgentBench-FC

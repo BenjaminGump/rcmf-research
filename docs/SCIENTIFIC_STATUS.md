@@ -1,64 +1,61 @@
 # Scientific Status
 
-Last verified: `2026-09-09T09:58:34Z`.
+Last verified: `2026-09-11T02:31:57Z`.
 
-Portable canonical V2.1 is an engineering hardening milestone. Its bounded
-AppWorld three-demo pilot completed all 12 portable phases, including real
-training, field operations, Qwen generation, and typed AppWorld evaluation.
-This is executable integration evidence only and has no accuracy threshold.
-It does not alter or supersede formal 14n
-or the post-hoc R19 checkpoint diagnostic. ALFWorld and WebShop remain
-`NOT_EVALUATED`; adapter fixtures and readiness checks are not scientific
-results.
+## Current cross-dataset boundary
 
-## Engineering Verified
+Portable canonical V2.1 remains the engineering base. It is not claimed as
+scientifically validated across datasets. AppWorld and WebShop now have
+dataset-specific results; ALFWorld remains owned by its separate active task.
 
-- Formal AppWorld 14n completed all 18 continuation stages with strict hashes.
-- Portable v2 defines a dataset-independent adapter/schema/DAG/checkpoint base.
-- ReAct ALFWorld and WebShop prompt assets are pinned and hash-verified.
-- AppWorld compatibility and ALFWorld-like/WebShop-like bounded conformance are
-  required release gates.
-- Portable V2.1 local full tests passed `1070` with `3` skips; Lambda/CUDA full
-  tests passed `1073`. The bounded AppWorld pilot passed P00-P11 with 20/20
-  backward/optimizer steps and strict manifests.
-- Final Neutral Harness V1 source `827ed6f394804834e93444c9bb02c435e9e238a3`
-  is machine-locked to RCMF integration source
-  `4e56702f467635bda120d118a5367c58e593ecef`. Actual lifecycle/result-bundle
-  compatibility, source/schema mismatch rejection, and local/Lambda suites
-  passed without model execution.
-
-## Scientifically Supported
+## Scientifically supported
 
 - Fresh three-demo AppWorld positive control: bare `12/57`, correct `17/57`,
   matched shuffle `11/57`; D22 passed.
-- Formal one-demo epoch-1 AppWorld continuation: correct `8/57`, matched shuffle
-  `18/57`; this is a negative memory-specificity result.
+- Formal one-demo epoch-1 AppWorld continuation: correct `8/57`, matched
+  shuffle `18/57`; a negative memory-specificity result.
+- AgentBench-FC WebShop standard-200 completed all 600 frozen trajectories.
+  B0/RCMF-C/RCMF-S mean raw rewards are `0.580250`, `0.581917`, and
+  `0.580958`; exact-success counts are `39/200`, `44/200`, and `44/200`.
 
-## Negative Or Inconclusive
+## Negative or inconclusive
 
-- R19 forced epoch-2 post-hoc diagnostic: correct `16/57`, matched shuffle
-  `19/57`, classification `EPOCH2_DIAGNOSTIC_MIXED_INCONCLUSIVE`.
-- Epoch 2 remains diagnostic and does not replace formal epoch 1.
+- AppWorld R19 forced epoch-2 post-hoc diagnostic: correct `16/57`, matched
+  shuffle `19/57`, classification `EPOCH2_DIAGNOSTIC_MIXED_INCONCLUSIVE`.
+- WebShop RCMF-C minus B0 mean paired reward difference is `+0.0016667`, 95%
+  bootstrap CI `[-0.0297500, 0.0315854]`; RCMF-C minus RCMF-S is
+  `+0.0009583`, CI `[-0.0175000, 0.0187094]`. RCMF-C and RCMF-S both have
+  `44/200` exact successes. Classification:
+  `RCMF_WEBSHOP_STANDARD200_INCONCLUSIVE_NULL_RESULT`.
 
-## Not Yet Verified
+## Engineering verified
 
-- Portable v2 has no ALFWorld scientific result.
-- Portable v2 has no WebShop scientific result.
-- ALFWorld environment/data/expert replay readiness completed, but the pinned
-  prompt collides exactly with one evaluation task; status is
-  `STOP_ALFWORLD_SPLIT_LEAKAGE` and no benchmark lock exists.
-- WebShop remains `STOP_WEBSHOP_DATA_IDENTITY_UNRESOLVED`: product,
-  instruction, index, and setup-sample identities/terms are not sealed, and no
-  benchmark lock exists.
-- Portable v2 is not scientifically validated across datasets.
+- Final Neutral Harness V1 is machine-locked to RCMF integration source
+  `4e56702f...`.
+- AgentBench-FC WebShop runtime/data/index/task/prompt/evaluator identities are
+  frozen. The RCMF WebShop method retains an authoritative complete-transition
+  ledger, independent feed-forward compilation, reversible contributions,
+  fixed-size whole-bank read, frozen deployment, and no raw-memory prompt or
+  runtime retrieval.
+- WebShop final audit recomputed all 600 task hashes and all summary/analysis
+  lock relationships. Six fixed fresh-session semantic reruns match exactly.
+
+## Not claimed
+
+- No task in WebShop `[200,500)` was run; there is no Test-500 result.
+- No cross-method WebShop superiority is established.
+- No raw WebShop product-data redistribution right is claimed.
+- Portable V2.1 is not scientifically validated across all target datasets.
 
 ## Deferred
 
-The unusually strong single matched-shuffle permutation is
+The AppWorld matched-shuffle anomaly remains
 `DEFERRED_UNTIL_AFTER_2026-09-25_SUBMISSION`; see
-`docs/deferred/SHUFFLE_ANOMALY_POST_SUBMISSION.md`. No further shuffle run is
-authorized by this milestone.
+`docs/deferred/SHUFFLE_ANOMALY_POST_SUBMISSION.md`.
 
-Authoritative reports are
+Authoritative WebShop report:
+`research/results/RCMF_WEBSHOP_AGENTBENCH_FC_STANDARD200_FINAL.md`.
+
+Authoritative AppWorld reports:
 `research/results/EXP_037A_R18_FORMAL_14N_TERMINAL_RESULT.md` and
 `research/results/EXP_037A_R19_EPOCH2_SENSITIVITY.md`.

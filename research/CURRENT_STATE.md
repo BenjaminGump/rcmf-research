@@ -1,5 +1,40 @@
 # Current State
 
+## 2026-09-11 RCMF × AgentBench-FC WebShop Standard-200
+
+VERIFIED:
+
+- The frozen WebShop method completed all 600 required formal trajectories on
+  exact AgentBench-FC `webshop-std` `[0,200)`: 200 B0, 200 RCMF-C, and 200
+  RCMF-S, with zero typed errors. `[200,500)` was not executed.
+- Mean raw rewards are B0 `0.580250`, RCMF-C `0.581917`, and RCMF-S
+  `0.580958`; exact-1.0 counts are 39, 44, and 44 of 200.
+- RCMF-C minus B0 is `+0.0016667`, paired bootstrap 95% CI
+  `[-0.0297500, 0.0315854]`. RCMF-C minus RCMF-S is `+0.0009583`, CI
+  `[-0.0175000, 0.0187094]`.
+- The method package and all three conditions were frozen before standard
+  outcomes. The 1,205-memory field remains fixed-shape and reversible, with
+  frozen Qwen/selector/writer/reader and no runtime retrieval or raw-memory
+  prompt text.
+- A full final audit recomputed 600 task hashes and all lock/summary/analysis
+  links; six fixed fresh-session determinism reruns match exactly.
+- Lambda servers were removed, ports 58173/58174 released, and the empty H100
+  explicitly handed back to ALFWorld.
+
+CURRENT DECISION:
+
+- `RCMF_WEBSHOP_STANDARD200_INCONCLUSIVE_NULL_RESULT`.
+- The small positive point estimate is not reliable and does not separate from
+  matched shuffle. Do not claim a positive memory-specific effect.
+- Do not retune RCMF using this result and do not automatically run
+  `[200,500)`. A different memory method may reuse the frozen method-neutral
+  benchmark identities through its own independently frozen adapter.
+
+Full report:
+`research/results/RCMF_WEBSHOP_AGENTBENCH_FC_STANDARD200_FINAL.md`.
+
+Last updated: 2026-09-11.
+
 ## 2026-09-09 Final RCMF x Neutral Harness V1 Integration Base
 
 VERIFIED:

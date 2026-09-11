@@ -1,0 +1,78 @@
+{
+  "containers": [
+    {
+      "container_id": null,
+      "container_log_sha256": null,
+      "container_log_unavailable_reason": "auto-remove completed before the first shutdown script retried docker rm",
+      "health_before_initial_shutdown": {
+        "active_sessions": 0,
+        "allowed_end": 12000,
+        "allowed_start": 500,
+        "deterministic_seed": 233,
+        "format": "agentbench_fc_webshop_http_bridge_v1",
+        "observation_mode": "text",
+        "status": "ok"
+      },
+      "host_port": 58173,
+      "image_id": "sha256:af342a9b210bc8bde14eccb3c858beefc79de7203b63d3286beb327b099d0cb9",
+      "name": "webshop-v3-trainval-server-bd935345",
+      "observed_container_id_prefix_before_shutdown": "671408a1ab2e",
+      "recovery_state": "ALREADY_REMOVED_BY_AUTO_REMOVE_AFTER_INITIAL_STOP",
+      "runtime_manifest_file_sha256": "4009764e9ea4865951227d57a3e735ab61d6301d8ce15dcfc6281d8f8a5388d5"
+    },
+    {
+      "command": [
+        "/harness/scripts/serve_agentbench_fc_webshop.py",
+        "--port",
+        "58174",
+        "--allowed-start",
+        "0",
+        "--allowed-end",
+        "200",
+        "--session-namespace",
+        "rcmf-d7853aba-standard200"
+      ],
+      "container_id": "f3e665971ee9d0d36ba834b22a3e575616ae79503f7b6563380b3fb68bb1cead",
+      "container_log_sha256": "59a8eb0bfe33e4cb5649cd5b6b4ea39955a262e920072acb1aa5c52459208445",
+      "container_log_size_bytes": 298183,
+      "created": "2026-09-11T01:22:12.677512334Z",
+      "entrypoint": [
+        "python"
+      ],
+      "exit_code": 143,
+      "finished_at": "2026-09-11T02:28:07.050642982Z",
+      "health_before_initial_shutdown": {
+        "active_sessions": 0,
+        "allowed_end": 200,
+        "allowed_start": 0,
+        "deterministic_seed": 233,
+        "format": "agentbench_fc_webshop_http_bridge_v1",
+        "observation_mode": "text",
+        "status": "ok"
+      },
+      "host_port": 58174,
+      "image_id": "sha256:af342a9b210bc8bde14eccb3c858beefc79de7203b63d3286beb327b099d0cb9",
+      "image_reference": "agentbench-webshop-repro:webrt2026-bd935345-a002",
+      "name": "webshop-v3-standard200-server-d7853aba",
+      "observed_container_id_prefix_before_shutdown": "f3e665971ee9",
+      "recovery_state": "STOPPED_BY_INITIAL_SCRIPT_REMOVED_BY_RECOVERY",
+      "runtime_manifest_file_sha256": "41d7cb8943f3e6fef03cb5451dc6c7547eb4b091c0556a901bfcd6a94cc2df46",
+      "started_at": "2026-09-11T01:22:12.708248153Z"
+    }
+  ],
+  "containers_removed": true,
+  "format": "rcmf_webshop_server_shutdown_v1",
+  "gpu_compute_processes_after_shutdown": [],
+  "gpu_empty_after_shutdown": true,
+  "initial_shutdown_incident": {
+    "effect": "both services stopped; train/validation auto-removed; the initial script exited before writing its manifest; no task or scientific artifact changed",
+    "standard200_outcome_or_artifact_changed": false,
+    "type": "DOCKER_AUTOREMOVE_DOUBLE_REMOVE"
+  },
+  "ports_released": {
+    "58173": true,
+    "58174": true
+  },
+  "report_sha256": "3d5c2f85f10a68d9f8c09be054daf6d1fe2c684c5e6fd21d5571d8f98c3b011c",
+  "status": "PASS_WITH_TYPED_IDEMPOTENT_RECOVERY"
+}

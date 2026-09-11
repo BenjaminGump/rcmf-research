@@ -3719,3 +3719,50 @@ IMPLEMENTATION DEVIATIONS:
 - Final Harness schema identities are Git-blob LF-byte SHA256 values. The
   validator normalizes Windows CRLF checkout bytes to that declared basis;
   this changes no schema content or semantics.
+
+## 2026-09-11 RCMF x AgentBench-FC WebShop Standard-200
+
+VERIFIED:
+
+- Frozen AgentBench-FC WebShop runtime, task, prompt, evaluator, construction,
+  method, validation, and three-condition evaluation identities are linked by
+  content hashes. No standard outcome was inspected before the method and
+  controls froze.
+- Exact `[0,200)` completed under B0/RCMF-C/RCMF-S: 600/600 trajectories, zero
+  typed errors. `[200,500)` was not executed.
+- Mean raw rewards are `0.580250`, `0.581917`, and `0.580958`; exact-success
+  counts are `39`, `44`, and `44` of 200.
+- RCMF-C minus B0 is `+0.0016667`, paired bootstrap CI
+  `[-0.0297500, 0.0315854]`; RCMF-C minus RCMF-S is `+0.0009583`, CI
+  `[-0.0175000, 0.0187094]`.
+- All 600 task content hashes and lock/summary/analysis links independently
+  revalidate. Six fixed fresh-session semantic reruns match exactly.
+
+DECISION:
+
+- Record `RCMF_WEBSHOP_STANDARD200_INCONCLUSIVE_NULL_RESULT`.
+- Do not interpret the tiny positive point estimate as a reliable RCMF effect:
+  both paired intervals include zero and correct equals matched shuffle on
+  exact success.
+- Freeze the result as AgentBench-FC WebShop standard-200 only. Do not call it
+  Test-500, run `[200,500)` automatically, or retune RCMF using these outcomes.
+- The next method may use its own adapter against the unchanged frozen Harness
+  benchmark identity and must independently freeze before outcomes.
+
+IMPLEMENTATION DEVIATIONS:
+
+- Historical Debian metadata rot was repaired with a pinned derived 2026
+  runtime while preserving AgentBench, Princeton WebShop, data, search, task,
+  action, reset, and reward identities.
+- A train-construction GPU overlap with ALFWorld was preserved and checked by
+  exclusive semantic reruns of fixed tasks 2000 and 2200; both matched exactly.
+- The first validation RCMF-C condition aborted before environment steps or
+  token generation on an FP32-reader/BF16-model mismatch. Evaluator-only source
+  `77508bd...` cast the frozen reader to the model dtype; method package, tasks,
+  controls, and generation configuration did not change. Validation reran from
+  the start before standard outcomes.
+- The first standard server launch used the image default entrypoint, exited 2
+  before any reset/task, and was replaced with the explicit Python entrypoint.
+- Final shutdown encountered an auto-remove/double-rm race. A typed idempotent
+  recovery removed the remaining container, released both ports, and confirmed
+  the H100 empty; no scientific artifact changed.

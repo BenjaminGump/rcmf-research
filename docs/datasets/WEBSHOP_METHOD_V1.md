@@ -1,6 +1,20 @@
 # WebShop RCMF Method V1
 
-Status: source candidate; scientific outcomes pending.
+Status: frozen and terminally evaluated; scientific result
+`RCMF_WEBSHOP_STANDARD200_INCONCLUSIVE_NULL_RESULT`.
+
+## Final standard-200 outcome
+
+All 600 required trajectories completed over exact indices `[0,200)` with no
+typed errors. Mean raw rewards are B0 `0.580250`, RCMF-C `0.581917`, and
+RCMF-S `0.580958`; exact-1.0 counts are respectively `39/200`, `44/200`, and
+`44/200`. RCMF-C minus B0 is `+0.0016667` with paired bootstrap 95% CI
+`[-0.0297500, 0.0315854]`; RCMF-C minus RCMF-S is `+0.0009583` with CI
+`[-0.0175000, 0.0187094]`.
+
+The result does not demonstrate a reliable or memory-specific benefit. See
+`research/results/RCMF_WEBSHOP_AGENTBENCH_FC_STANDARD200_FINAL.md`. Indices
+`[200,500)` were not executed.
 
 ## Scope
 

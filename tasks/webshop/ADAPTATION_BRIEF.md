@@ -1,36 +1,48 @@
 # WebShop Adaptation Brief
 
-- Development base records SHA: `543de32a91e20796ca6441b65b3a9e41f271c412`
-- Portable V2.1 source: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`
-- Final RCMF Harness V1 integration source:
-  `4e56702f467635bda120d118a5367c58e593ecef`
-- Integration archive: `archive/rcmf-neutral-harness-v1-integration-4e56702`
-- Final Harness source: `827ed6f394804834e93444c9bb02c435e9e238a3`
-- WebShop readiness source/records: `2072ae59b79171facabb2b580cda0c2ae460cd8e` /
-  `40d6318892e03d7e775ed83704dae89917f7b324`
-- Current decision: `STOP_WEBSHOP_DATA_IDENTITY_UNRESOLVED`
-- Last verified UTC: `2026-09-09T09:58:34Z`
+## Result
 
-Start from the final RCMF Harness V1 integration records branch in a dedicated
-`adapt/webshop-v1` worktree and isolated server/process namespace. Read
-`AGENTS.md`, `docs/PIPELINE.md`, `docs/ADAPTER_CONTRACT.md`,
-`tasks/webshop/STATE.md`, and the exact readiness records before editing.
-Preserve the Portable V2.1 core and Final Harness lock.
+RCMF is fully adapted and evaluated on the frozen AgentBench-FC WebShop
+standard-200 benchmark. All 600 formal trajectories completed. RCMF-C mean raw
+reward is `0.581917`, versus B0 `0.580250` and matched shuffle `0.580958`.
+The paired differences are small with confidence intervals crossing zero, and
+RCMF-C/RCMF-S both have `44/200` exact successes. Classification:
+`RCMF_WEBSHOP_STANDARD200_INCONCLUSIVE_NULL_RESULT`.
 
-Source, code license, ReAct prompt, action/reward semantics, and the seed-233
-split algorithm are verified. The separately linked 1,643-session archive has
-a sealed byte/hash and structural summary but remains inspection-only. The IL
-archive remains `UNKNOWN_PROHIBITED`; no oracle was implemented or used.
+This is not a Test-500 result. `[200,500)` was not executed.
 
-The blocking input is a primary or maintainer-signed identity/terms manifest
-for the complete product file, instructions, Lucene index, and 50-session setup
-sample. Without it, no exact ordered task manifest or admitted replay
-population can be constructed. The next bounded task is to obtain and validate
-that manifest, then rerun the readiness probe before choosing replay IDs. Do
-not infer provenance from filenames or solve the blocker in shared docs.
+## Frozen boundary
 
-After that gate passes, implement only the WebShop adapter, dataset profile,
-prompt asset, task records, and tests. Preserve continuous reward and exact
-reward `1.0` success semantics, unique server ports, and evaluation isolation.
-Stop before freezing a benchmark lock, running Qwen/training, generating an
-oracle, or any execution plausibly exceeding 18 hours.
+- Harness source/records: `9e1f3963d42de871c23a1d0d87c1299e8387a420` /
+  `2088d0d77b9a32a76a8d1823cb199dd13d0207af`.
+- Method source: `be711705b5824d6b61ca05a9ea0b19be8882ec8e`.
+- Evaluator source: `77508bd8aba67576038ecdc513c0e91fd825a4a9`.
+- Method package:
+  `b54ef1c0119a95983ec19d068543ded14036dd5704ee9a200930d361deb6f4df`.
+- Construction corpus:
+  `b5f1252f9823dca36ef3ee2fd3f0c5278c5ca527016abee182844bd094ff958e`.
+- Final evaluation lock logical SHA256:
+  `8cbd88c43bb0dd9b01d81c972d9e57d74d8cae9679de0a342d60599cc24b4458`.
+- Final analysis logical SHA256:
+  `94911cfa7abe47d8a36609f6b29aa001ca9ecc5ff9af194a661e86c5b372de9b`.
+- Final audit logical SHA256:
+  `00ef319b37d46923a4fb72749a5ae3acfd988e74d1fb230f637f473515a816a2`.
+
+## Method contract
+
+The raw complete transition ledger is authoritative. Every admitted memory is
+independently compiled and reversibly addable/removable. The whole-bank field
+has fixed shapes `A[960,8,256]` and `B[8,256]`. Qwen, selector, writer, and
+reader are frozen. Deployment uses no raw memory text, per-memory scoring,
+nearest-neighbor retrieval, bank scan, or top-k.
+
+## Next method adapter
+
+Start only from the frozen Harness WebShop benchmark interface. Bind a new
+method's lifecycle to the exact benchmark lock and keep its construction data,
+run root, caches, server namespace, and condition freeze independent. Use the
+same AgentBench prompt/tools, task IDs `[0,200)`, continuous raw reward, exact
+1.0 full-success rule, and paired analysis. Freeze before standard outcomes.
+Do not modify RCMF or use this result to tune a new method.
+
+See `research/results/RCMF_WEBSHOP_AGENTBENCH_FC_STANDARD200_FINAL.md`.
