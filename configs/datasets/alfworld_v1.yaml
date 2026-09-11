@@ -4,7 +4,7 @@ adapter_identity: rcmf.benchmarks.alfworld.portable_adapter_v2:create_alfworld_p
 status: executable_track_r_full_valid_unseen
 dataset_version: alfworld-json-2.1.1
 environment_version: alfworld-aaba687-textworld-1.7.0
-action_semantics: alfworld_text_command
+action_semantics: alfworld_react_model_action_to_official_text_command_v1
 reward_semantics: official_binary_success
 prompt_profiles:
   react_task_type_two_demo_v1: a10976b4ae99f4802aa9e621933bb71065ae103f2bd273a24466ab1005fbc45a

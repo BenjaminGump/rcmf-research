@@ -27,6 +27,10 @@ from rcmf.benchmarks.alfworld.task_manifest import (
     load_sealed_task_manifest,
     portable_task_records,
 )
+from rcmf.benchmarks.alfworld.environment import (
+    REACT_PUT_MOVE_BRIDGE_ID,
+    translate_react_action_to_alfworld,
+)
 
 
 BOOTSTRAP_SEED = 25101
@@ -67,6 +71,8 @@ def read_rows(path: str | Path, expected_condition: str) -> list[dict[str, Any]]
         raise ValueError(f"{expected_condition} result condition differs")
     baseline_identity = rows[0].get("run_identity") or {}
     for row in rows:
+        if row.get("schema_version") != "alfworld_agent_episode_v2":
+            raise ValueError(f"{expected_condition} episode schema differs")
         identity = row.get("run_identity") or {}
         if identity != baseline_identity:
             raise ValueError(f"{expected_condition} run identity differs across rows")
@@ -88,8 +94,24 @@ def read_rows(path: str | Path, expected_condition: str) -> list[dict[str, Any]]
             raise ValueError(f"{expected_condition} embedded generation/action identity differs")
         if identity.get("model_revision") != MODEL_REVISION:
             raise ValueError(f"{expected_condition} embedded model revision differs")
+        if identity.get("action_dialect_bridge_id") != REACT_PUT_MOVE_BRIDGE_ID:
+            raise ValueError(f"{expected_condition} embedded action-dialect identity differs")
         if row.get("generation_identity_sha256") != GENERATION_IDENTITY_SHA256:
             raise ValueError(f"{expected_condition} generation/action identity differs")
+        if row.get("action_dialect_bridge_id") != REACT_PUT_MOVE_BRIDGE_ID:
+            raise ValueError(f"{expected_condition} action-dialect identity differs")
+        for step in row.get("steps") or ():
+            if not step.get("action_valid", False):
+                continue
+            translated = translate_react_action_to_alfworld(str(step["parsed_action"]))
+            if step.get("executed_action") != translated["environment_action"]:
+                raise ValueError(f"{expected_condition} executed action differs from bridge")
+            if step.get("action_dialect_bridge_applied") is not translated[
+                "bridge_applied"
+            ]:
+                raise ValueError(f"{expected_condition} action-dialect flag differs")
+            if step.get("action_dialect_bridge_id") != REACT_PUT_MOVE_BRIDGE_ID:
+                raise ValueError(f"{expected_condition} step action-dialect identity differs")
     return rows
 
 

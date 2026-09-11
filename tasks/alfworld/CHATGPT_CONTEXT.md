@@ -19,8 +19,7 @@ retrain or performance-search.
 - Canonical archive ref: `archive/rcmf-portable-canonical-v2_1-0ca0101`.
 - Bootstrap generated at SHA: `4e56702f467635bda120d118a5367c58e593ecef`.
 - Last verified UTC: `2026-09-11T02:14:06Z`.
-- Latest relevant handoff:
-  `research/handoffs/20260911T021406Z_alfworld_action_boundary_pre_model_gate.md`.
+- Latest relevant handoff: `research/handoffs/20260911T021406Z_alfworld_action_boundary_pre_model_gate.md`.
 - Branch: `adapt/alfworld-v1`.
 - Starting records: `3560ec75f96575ce87fd06a8eb5c4b4d596615c8`.
 - Charter/original preregistration/invalid-attempt executable source:

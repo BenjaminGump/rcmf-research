@@ -18,10 +18,16 @@ from rcmf.benchmarks.alfworld.compact_rcmf import (
 )
 from rcmf.benchmarks.alfworld.execution_lock import (
     GENERATION_IDENTITY_V1_SHA256,
+    V2_LOCK_FILE_SHA256,
+    V2_LOCK_IDENTITY_SHA256,
     TRACK_R_LOCK_FILE_SHA256,
     TRACK_R_LOCK_IDENTITY_SHA256,
     load_execution_lock,
     lock_identity,
+)
+from rcmf.benchmarks.alfworld.environment import (
+    REACT_PUT_MOVE_BRIDGE_ID,
+    translate_react_action_to_alfworld,
 )
 from rcmf.benchmarks.alfworld.portable_adapter_v2 import (
     ACTION_CAP,
@@ -297,13 +303,25 @@ def test_paired_analyzer_rejects_wrong_embedded_lock_identity(
         "benchmark_lock_sha256": TRACK_R_LOCK_FILE_SHA256,
         "benchmark_lock_identity_sha256": TRACK_R_LOCK_IDENTITY_SHA256,
         "generation_identity_sha256": GENERATION_IDENTITY_SHA256,
+        "action_dialect_bridge_id": REACT_PUT_MOVE_BRIDGE_ID,
         "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
     }
     rows = [
         {
+            "schema_version": "alfworld_agent_episode_v2",
             "task_id": task_id,
             "condition": "bare",
             "generation_identity_sha256": GENERATION_IDENTITY_SHA256,
+            "action_dialect_bridge_id": REACT_PUT_MOVE_BRIDGE_ID,
+            "steps": [
+                {
+                    "action_valid": True,
+                    "parsed_action": "put egg 1 in/on fridge 1",
+                    "executed_action": "move egg 1 to fridge 1",
+                    "action_dialect_bridge_applied": True,
+                    "action_dialect_bridge_id": REACT_PUT_MOVE_BRIDGE_ID,
+                }
+            ],
             "run_identity": dict(identity),
         }
         for task_id in ids
@@ -314,6 +332,15 @@ def test_paired_analyzer_rejects_wrong_embedded_lock_identity(
         encoding="utf-8",
     )
     assert len(paired_analyzer.read_rows(correct, "bare")) == 134
+    rows[0]["steps"][0]["executed_action"] = "put egg 1 in/on fridge 1"
+    wrong_action = tmp_path / "wrong-action.jsonl"
+    wrong_action.write_text(
+        "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="executed action differs from bridge"):
+        paired_analyzer.read_rows(wrong_action, "bare")
+    rows[0]["steps"][0]["executed_action"] = "move egg 1 to fridge 1"
     for row in rows:
         row["run_identity"]["benchmark_lock_identity_sha256"] = "0" * 64
     wrong = tmp_path / "wrong-lock.jsonl"
@@ -424,14 +451,56 @@ def test_track_r_execution_lock_is_content_addressed(tmp_path: Path) -> None:
         load_execution_lock(source)
 
 
-def test_track_r_v2_execution_lock_matches_harness_portable_identity() -> None:
-    source = ROOT / "configs" / "benchmark" / "alfworld" / "track_r_execution_lock_v2.json"
+def test_track_r_v3_execution_lock_matches_harness_portable_identity() -> None:
+    source = ROOT / "configs" / "benchmark" / "alfworld" / "track_r_execution_lock_v3.json"
     loaded = load_execution_lock(source)
     assert loaded["lock_identity_sha256"] == TRACK_R_LOCK_IDENTITY_SHA256
     assert loaded["file_sha256"] == TRACK_R_LOCK_FILE_SHA256
     assert loaded["payload"]["generation"]["identity_sha256"] == (
         GENERATION_IDENTITY_SHA256
     )
+
+
+def test_historical_track_r_v2_execution_lock_remains_exact() -> None:
+    source = ROOT / "configs" / "benchmark" / "alfworld" / "track_r_execution_lock_v2.json"
+    loaded = load_execution_lock(source)
+    assert loaded["lock_identity_sha256"] == V2_LOCK_IDENTITY_SHA256
+    assert loaded["file_sha256"] == V2_LOCK_FILE_SHA256
+
+
+def test_exact_react_put_action_bridge_and_nonmatching_pass_through() -> None:
+    translated = translate_react_action_to_alfworld("put egg 1 in/on fridge 1")
+    assert translated == {
+        "model_action": "put egg 1 in/on fridge 1",
+        "environment_action": "move egg 1 to fridge 1",
+        "bridge_applied": True,
+        "bridge_id": REACT_PUT_MOVE_BRIDGE_ID,
+    }
+    for action in (
+        "move egg 1 to fridge 1",
+        "think: inspect",
+        "place egg 1 in fridge 1",
+        "insert egg 1 into fridge 1",
+        "drop egg 1",
+        "put egg 1 in fridge 1",
+        "Put egg 1 in/on fridge 1",
+        "put egg 1 in/on fridge 1 ",
+    ):
+        translated = translate_react_action_to_alfworld(action)
+        assert translated["environment_action"] == action
+        assert translated["bridge_applied"] is False
+
+
+def test_adapter_steps_once_with_translated_environment_command() -> None:
+    adapter = create_alfworld_portable_adapter_v2_1()
+    task = adapter.list_tasks()["train"][0]
+    runtime = adapter.create_runtime(task)
+    outcome = adapter.execute_action(runtime, "put apple 1 in/on table 1")
+    assert runtime.actions == ["move apple 1 to table 1"]
+    assert outcome["model_action"] == "put apple 1 in/on table 1"
+    assert outcome["action"] == "move apple 1 to table 1"
+    assert outcome["action_dialect_bridge_applied"] is True
+    assert outcome["action_dialect_bridge_id"] == REACT_PUT_MOVE_BRIDGE_ID
 
 
 class _FakeBackend:
@@ -471,6 +540,18 @@ class _ThinkBackend(_FakeBackend):
         )
 
 
+class _PutBackend(_FakeBackend):
+    def generate(self, messages, **kwargs):
+        del messages, kwargs
+        return GenerateOutput(
+            text="> put apple 1 in/on table 1\nignored",
+            token_ids=[1, 2],
+            usage={"prompt_tokens": 10, "completion_tokens": 2, "total_tokens": 12},
+            ttft_ms=1.0,
+            extra={"memory": {"injector": None}},
+        )
+
+
 def test_bare_episode_records_exact_action_and_official_result() -> None:
     adapter = create_alfworld_portable_adapter_v2_1()
     task = adapter.list_tasks()["train"][0]
@@ -486,6 +567,27 @@ def test_bare_episode_records_exact_action_and_official_result() -> None:
     assert row["steps"][0]["first_decoded_line"] == "> look"
     assert row["steps"][0]["parsed_action"] == "look"
     assert row["steps"][0]["executed_action"] == "look"
+    assert row["steps"][0]["action_dialect_bridge_applied"] is False
+    assert row["steps"][0]["action_dialect_bridge_id"] == REACT_PUT_MOVE_BRIDGE_ID
+    assert row["schema_version"] == "alfworld_agent_episode_v2"
+    assert row["action_dialect_bridge_id"] == REACT_PUT_MOVE_BRIDGE_ID
+
+
+def test_bare_episode_preserves_model_put_and_records_official_move() -> None:
+    adapter = create_alfworld_portable_adapter_v2_1()
+    task = adapter.list_tasks()["train"][0]
+    row = run_alfworld_episode(
+        adapter=adapter,
+        task=task,
+        backend=_PutBackend(),
+        condition="bare",
+        run_identity={"fixture": True},
+    )
+    step = row["steps"][0]
+    assert step["parsed_action"] == "put apple 1 in/on table 1"
+    assert step["executed_action"] == "move apple 1 to table 1"
+    assert step["action_dialect_bridge_applied"] is True
+    assert step["action_dialect_bridge_id"] == REACT_PUT_MOVE_BRIDGE_ID
 
 
 def test_marker_normalization_precedes_think_observation_rule() -> None:

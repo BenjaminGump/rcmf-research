@@ -17,6 +17,7 @@ from rcmf.benchmarks.alfworld.portable_adapter_v2 import (
     MODEL_REVISION,
     ALFWorldPortableAdapterV2,
 )
+from rcmf.benchmarks.alfworld.environment import REACT_PUT_MOVE_BRIDGE_ID
 from rcmf.benchmarks.alfworld.prompt_profile import PROFILE_NAME, render_react_messages, render_react_trajectory
 from rcmf.benchmarks.alfworld.task_manifest import canonical_sha256
 from rcmf.model.backends.hf_qwen import HFQwenBackend
@@ -252,6 +253,10 @@ def run_alfworld_episode(
                     "usage": generated.usage,
                     "parsed_action": action,
                     "executed_action": outcome["action"],
+                    "action_dialect_bridge_applied": outcome[
+                        "action_dialect_bridge_applied"
+                    ],
+                    "action_dialect_bridge_id": outcome["action_dialect_bridge_id"],
                     "action_valid": True,
                     "environment_observation": outcome["observation"],
                     "prompt_observation": prompt_observation,
@@ -269,7 +274,7 @@ def run_alfworld_episode(
         evaluation = adapter.evaluate_task(runtime, task)
         runtime.close()
     result = {
-        "schema_version": "alfworld_agent_episode_v1",
+        "schema_version": "alfworld_agent_episode_v2",
         "condition": condition,
         "task_id": task.task_id,
         "split": task.split,
@@ -277,6 +282,7 @@ def run_alfworld_episode(
         "game_path": task.metadata["game_path"],
         "run_identity": dict(run_identity),
         "generation_identity_sha256": GENERATION_IDENTITY_SHA256,
+        "action_dialect_bridge_id": REACT_PUT_MOVE_BRIDGE_ID,
         "steps": steps,
         "step_count": len(steps),
         "raw_reward": evaluation.raw_reward,
@@ -479,6 +485,12 @@ def run_alfworld_episodes_batched(
                             {
                                 "environment_observation": outcome["observation"],
                                 "executed_action": outcome["action"],
+                                "action_dialect_bridge_applied": outcome[
+                                    "action_dialect_bridge_applied"
+                                ],
+                                "action_dialect_bridge_id": outcome[
+                                    "action_dialect_bridge_id"
+                                ],
                                 "prompt_observation": prompt_observation,
                                 "environment_reward": outcome["raw_reward"],
                                 "environment_done": outcome["done"],
@@ -502,7 +514,7 @@ def run_alfworld_episodes_batched(
                 terminal_status = evaluation.terminal_status.value
                 runtime.close()
             result = {
-                "schema_version": "alfworld_agent_episode_v1",
+                "schema_version": "alfworld_agent_episode_v2",
                 "condition": condition,
                 "task_id": row["task"].task_id,
                 "split": row["task"].split,
@@ -510,6 +522,7 @@ def run_alfworld_episodes_batched(
                 "game_path": row["task"].metadata["game_path"],
                 "run_identity": dict(run_identity),
                 "generation_identity_sha256": GENERATION_IDENTITY_SHA256,
+                "action_dialect_bridge_id": REACT_PUT_MOVE_BRIDGE_ID,
                 "steps": row["steps"],
                 "step_count": len(row["steps"]),
                 "raw_reward": raw_reward,

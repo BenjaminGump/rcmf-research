@@ -53,7 +53,7 @@ RuntimeFactory = Callable[[TaskRecord], Any]
 TRACK_R_ID = "alfworld_upstream_react_valid_unseen_reference_v1"
 TRACK_R_ROLE = "UPSTREAM_PROTOCOL_REFERENCE"
 MODEL_REVISION = "b968826d9c46dd6066d109eabc6255188de91218"
-GENERATION_IDENTITY_SHA256 = "c86fad4fad8e7fc562a130d72fb58b96b18b7099152293bf776f057ebff5c59f"
+GENERATION_IDENTITY_SHA256 = "80400891d46bc0395961b978449d03ae709d50d93d39e8d665ce9560a0224705"
 EFFECTIVE_CONTEXT_LIMIT = 40960
 ACTION_CAP = 49
 
@@ -98,7 +98,7 @@ class ALFWorldPortableAdapterV2:
             environment_version=ENVIRONMENT_VERSION,
             data_version=DATASET_VERSION,
             deterministic=True,
-            action_semantics="alfworld_text_command",
+            action_semantics="alfworld_react_model_action_to_official_text_command_v1",
             reward_semantics="official_binary_success",
             metadata={
                 "track_id": TRACK_R_ID,
@@ -356,7 +356,15 @@ class ALFWorldPortableAdapterV2:
         validation = validate_text_action(action)
         if not validation["valid"]:
             raise ValueError("cannot execute an empty ALFWorld command")
-        return runtime.step(str(validation["normalized_action"]))
+        outcome = dict(runtime.step(str(validation["environment_action"])))
+        outcome.update(
+            {
+                "model_action": validation["model_action"],
+                "action_dialect_bridge_applied": validation["bridge_applied"],
+                "action_dialect_bridge_id": validation["bridge_id"],
+            }
+        )
+        return outcome
 
     def evaluate_task(self, runtime: Any, task: TaskRecord) -> EvaluationResult:
         success = bool(runtime.state.get("won", False)) and bool(runtime.done)

@@ -1,12 +1,34 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 from typing import Any, Mapping
 
 from rcmf.pipeline.portable_v2.schemas import TaskRecord
 
 
 ENVIRONMENT_VERSION = "alfworld-aaba687-textworld-1.7.0"
+REACT_PUT_MOVE_BRIDGE_ID = "react_put_in_on_to_alfworld_move_to_v1"
+REACT_PUT_MOVE_PATTERN = re.compile(
+    r"^put ([a-z][a-z0-9]* [1-9][0-9]*) in/on "
+    r"([a-z][a-z0-9]* [1-9][0-9]*)$"
+)
+
+
+def translate_react_action_to_alfworld(action: str) -> dict[str, Any]:
+    """Translate only the exact pinned ReAct placement action dialect."""
+
+    model_action = str(action)
+    match = REACT_PUT_MOVE_PATTERN.fullmatch(model_action)
+    environment_action = (
+        f"move {match.group(1)} to {match.group(2)}" if match else model_action
+    )
+    return {
+        "model_action": model_action,
+        "environment_action": environment_action,
+        "bridge_applied": match is not None,
+        "bridge_id": REACT_PUT_MOVE_BRIDGE_ID,
+    }
 
 
 def create_official_text_environment(
@@ -115,8 +137,10 @@ class ALFWorldTextRuntime:
 
 def validate_text_action(action: str) -> dict[str, Any]:
     command = str(action).strip()
+    translation = translate_react_action_to_alfworld(command)
     return {
         "valid": bool(command),
         "normalized_action": command,
-        "action_semantics": "alfworld_text_command",
+        **translation,
+        "action_semantics": "alfworld_react_model_action_to_official_text_command_v1",
     }

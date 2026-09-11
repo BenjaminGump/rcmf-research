@@ -16,6 +16,7 @@ from rcmf.benchmarks.alfworld.portable_adapter_v2 import (
     TRACK_R_ID,
     create_alfworld_portable_adapter_v2_1,
 )
+from rcmf.benchmarks.alfworld.environment import REACT_PUT_MOVE_BRIDGE_ID
 from rcmf.benchmarks.alfworld.execution_lock import (
     TRACK_R_LOCK_IDENTITY_SHA256,
     load_execution_lock,
@@ -103,7 +104,7 @@ def main() -> int:
         raise ValueError("formal Track R evaluation requires the complete valid_unseen split")
     benchmark_lock = load_execution_lock(args.benchmark_lock)
     if benchmark_lock["lock_identity_sha256"] != TRACK_R_LOCK_IDENTITY_SHA256:
-        raise ValueError("agent execution requires the current Harness v2 action-boundary lock")
+        raise ValueError("agent execution requires the current Harness v3 action-dialect lock")
     microbatch_max = int(
         benchmark_lock["payload"]["runtime_execution"]["microbatch_max_size"]
     )
@@ -166,6 +167,7 @@ def main() -> int:
         "benchmark_lock_identity_sha256": benchmark_lock["lock_identity_sha256"],
         "generation_batch_size": args.generation_batch_size,
         "generation_identity_sha256": GENERATION_IDENTITY_SHA256,
+        "action_dialect_bridge_id": REACT_PUT_MOVE_BRIDGE_ID,
         "model_revision": MODEL_REVISION,
     }
     for row in prior:
