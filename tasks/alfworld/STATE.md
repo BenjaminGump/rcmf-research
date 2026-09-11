@@ -1,6 +1,16 @@
 # ALFWorld Track R Corrective Execution State
 
-- Status: `ACTIVE_CORRECTIVE_RERUN_REQUIRED_EXECUTION_ORDER_MISMATCH`.
+- Status: `ACTIVE_TRAIN_CONFIRMED_ACTION_BOUNDARY_CORRECTION_PREREGISTERED`.
+- A pre-rerun TRAIN-only semantic audit found a second structural defect:
+  all 588 existing sanity/smoke first-line actions retained a leading ReAct
+  transcript marker `>`, all 588 environment responses were `Nothing
+  happens.`, and no state/reward/done/won progression was observed. A same-reset
+  TRAIN replay proved that removing exactly one marker converts a rejected
+  command into the corresponding admissible TextWorld command. The correction
+  rule and its required versioned Harness lock are preregistered in
+  `research/plans/ALFWORLD_TRACK_R_ACTION_BOUNDARY_CORRECTION_PREREGISTRATION.md`.
+- No corrective complete evaluation has started. The order-only corrective
+  UUIDs will not be reused after the action-extraction identity changes.
 - Blocking defect: the first complete bare and RCMF attempts ran the exact 134
   tasks in sorted task-ID order (SHA-256 `2410f2c2...`) instead of the frozen
   manifest order (SHA-256 `c49e3fab...`). Both attempts and their paired
