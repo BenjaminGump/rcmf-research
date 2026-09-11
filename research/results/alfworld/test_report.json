@@ -1,0 +1,60 @@
+{
+  "schema_version": "alfworld_track_r_test_report_v1",
+  "source_commit": "e9c2f3faf59fec243589eb5e9ba8424067fa677e",
+  "tests": [
+    {
+      "environment": "windows_appworld_env",
+      "name": "focused_alfworld",
+      "passed": 20,
+      "skipped": 0,
+      "failed": 0,
+      "elapsed_seconds": 2.63
+    },
+    {
+      "environment": "windows_appworld_env",
+      "name": "full_rcmf_final_archived_source",
+      "passed": 1111,
+      "skipped": 3,
+      "failed": 0,
+      "elapsed_seconds": 95.87
+    },
+    {
+      "environment": "lambda_rcmf_py311",
+      "name": "focused_alfworld",
+      "passed": 20,
+      "skipped": 0,
+      "failed": 0,
+      "elapsed_seconds": 1.85
+    },
+    {
+      "environment": "windows_harness_isolated_environment",
+      "name": "harness_track_r_lock_full_suite",
+      "passed": 120,
+      "skipped": 0,
+      "failed": 0
+    },
+    {
+      "environment": "windows_appworld_env",
+      "name": "python_compilation",
+      "passed": 1,
+      "skipped": 0,
+      "failed": 0
+    }
+  ],
+  "invocation_failures": [
+    {
+      "classification": "TEST_HARNESS_TEMP_ROOT_PERMISSION",
+      "environment": "windows_appworld_env",
+      "assertion_failures": 0,
+      "detail": "The first focused invocation inherited an inaccessible pytest temp root; the task-owned basetemp retry passed 20/20."
+    },
+    {
+      "classification": "TEST_HARNESS_BASETEMP_PARENT_MISSING",
+      "environment": "lambda_rcmf_py311",
+      "assertion_failures": 0,
+      "detail": "The first Lambda focused invocation named a task-owned basetemp below an absent parent; after creating only that parent, the exact retry passed 20/20."
+    }
+  ],
+  "scientific_failures_waived": 0,
+  "passed": true
+}

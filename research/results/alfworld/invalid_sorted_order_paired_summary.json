@@ -1,0 +1,138 @@
+{
+  "bare": {
+    "accuracy": 0.0,
+    "successes": 0,
+    "typed_failures": 0
+  },
+  "canonical_result_sha256": "ffdf2ad552bed04e964dcf55acfadf755815e4062079ab7dcf602d1cd682e604",
+  "created_utc": "2026-09-10T22:00:05.134096+00:00",
+  "family_breakdown": [
+    {
+      "bare_accuracy": 0.0,
+      "bare_successes": 0,
+      "count": 18,
+      "delta": 0.0,
+      "rcmf_accuracy": 0.0,
+      "rcmf_successes": 0,
+      "task_family": "look_at_obj"
+    },
+    {
+      "bare_accuracy": 0.0,
+      "bare_successes": 0,
+      "count": 24,
+      "delta": 0.0,
+      "rcmf_accuracy": 0.0,
+      "rcmf_successes": 0,
+      "task_family": "pick_and_place"
+    },
+    {
+      "bare_accuracy": 0.0,
+      "bare_successes": 0,
+      "count": 31,
+      "delta": 0.0,
+      "rcmf_accuracy": 0.0,
+      "rcmf_successes": 0,
+      "task_family": "pick_clean_then_place"
+    },
+    {
+      "bare_accuracy": 0.0,
+      "bare_successes": 0,
+      "count": 21,
+      "delta": 0.0,
+      "rcmf_accuracy": 0.0,
+      "rcmf_successes": 0,
+      "task_family": "pick_cool_then_place"
+    },
+    {
+      "bare_accuracy": 0.0,
+      "bare_successes": 0,
+      "count": 23,
+      "delta": 0.0,
+      "rcmf_accuracy": 0.0,
+      "rcmf_successes": 0,
+      "task_family": "pick_heat_then_place"
+    },
+    {
+      "bare_accuracy": 0.0,
+      "bare_successes": 0,
+      "count": 17,
+      "delta": 0.0,
+      "rcmf_accuracy": 0.0,
+      "rcmf_successes": 0,
+      "task_family": "pick_two_obj"
+    }
+  ],
+  "inputs": {
+    "bare": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/bare_9b9fcadb/episodes.jsonl",
+      "sha256": "fff76f27766cce43cdad8f1ba09441264549513e26c4a1c32542f50c3506681f"
+    },
+    "rcmf": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/rcmf_b9e9f74d/episodes.jsonl",
+      "sha256": "71b6d7e602af5776a91819ea0346634d9de8af9c5dbca86da53861c3c8d09609"
+    },
+    "task_manifest": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/harness_readiness/alfworld/fd8622dd-482f-4eba-b27f-c3c32eb2b68f/harness-source/research/benchmarks/alfworld/task_manifest.json",
+      "sha256": "3ece3f7344581eaa2ce2f4916947725abdee2348420a07e13f301adffc0951ea"
+    }
+  },
+  "invalid_or_empty_action_counts": {
+    "bare": 0,
+    "rcmf": 0
+  },
+  "max_prompt_tokens": {
+    "bare": 5386,
+    "rcmf": 6781
+  },
+  "paired": {
+    "accuracy_delta": 0.0,
+    "bootstrap_95_ci": {
+      "lower_95": 0.0,
+      "method": "paired_nonparametric_task_bootstrap_nearest_rank",
+      "replicates": 100000,
+      "seed": 25101,
+      "upper_95": 0.0
+    },
+    "both_correct": 0,
+    "both_wrong": 134,
+    "exact_mcnemar": {
+      "discordant": 0,
+      "gains": 0,
+      "losses": 0,
+      "method": "exact_two_sided_mcnemar_binomial",
+      "p_value": 1.0
+    },
+    "gains": 0,
+    "losses": 0
+  },
+  "per_task_results": {
+    "bytes": 81865,
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/paired_analysis/per_task_results.jsonl",
+    "sha256": "dc284b10cd60a38119e375e6151f4063698fa184dfea3ecc2fc65dc47ff6bb6a"
+  },
+  "post_outcome_tuning_permitted": false,
+  "rcmf": {
+    "accuracy": 0.0,
+    "successes": 0,
+    "typed_failures": 0
+  },
+  "schema_version": "alfworld_paired_scientific_result_v1",
+  "step_distributions": {
+    "bare": {
+      "max": 49,
+      "median": 49.0,
+      "min": 49,
+      "p95_nearest_rank": 49.0
+    },
+    "rcmf": {
+      "max": 49,
+      "median": 49.0,
+      "min": 49,
+      "p95_nearest_rank": 49.0
+    }
+  },
+  "task_count": 134,
+  "task_ids_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+  "track_id": "alfworld_upstream_react_valid_unseen_reference_v1",
+  "track_role": "UPSTREAM_PROTOCOL_REFERENCE"
+}

@@ -1,0 +1,58 @@
+{
+  "canonical_sha256": "97b1cb55b54a20fa924dbfc7acae220b174882fe8e41131491f24eb3f7e306c9",
+  "checkpoint": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/smoke/training_3ffde0e7_retry1/terminal_checkpoint.pt",
+    "sha256": "dd6b99969d4209e58649701237cacdb6dc721763a2040768d0fc8dbe3a7203e7"
+  },
+  "checks": {
+    "add_remove_restore_max_abs": 1.0842021724855044e-19,
+    "all_contributions_finite": true,
+    "checkpoint_policy": "terminal_completed_epoch",
+    "complete_ledger_closure": true,
+    "deployment_contains_per_memory_state": false,
+    "field_shape": {
+      "A": [
+        256,
+        128
+      ],
+      "B": [
+        128
+      ]
+    },
+    "independent_contribution_rows": true,
+    "injection_max_abs": 0.00035639433190226555,
+    "injection_shape": [
+      1,
+      4,
+      4096
+    ],
+    "permutation_max_abs": 8.881784197001252e-16,
+    "qwen_frozen": true,
+    "raw_memory_in_prompt": false,
+    "read_shape": [
+      1,
+      128
+    ],
+    "runtime_retrieval": false
+  },
+  "contribution_audit": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/smoke/training_3ffde0e7_retry1/contribution_audit.pt",
+    "sha256": "625f0f59b21ee014d1afc210ca135f6012c677b05ee3b70b6db5419fc4fd44ff"
+  },
+  "created_utc": "2026-09-10T07:45:28.690186+00:00",
+  "engineering_limit": 256,
+  "field_closure_max_abs": {
+    "deployment_A": 0.0,
+    "deployment_B": 0.0,
+    "rebuilt_A": 1.0842021724855044e-19,
+    "rebuilt_B": 0.0
+  },
+  "full_ledger_count": 21259,
+  "ledger": {
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/ledger-final/train_transition_ledger.jsonl",
+    "sha256": "2fe6efb1ad7b76695460202515684c6f83c15235b4430717c47f4eb86f8f213d"
+  },
+  "memory_count": 256,
+  "passed": true,
+  "schema_version": "alfworld_compact_rcmf_checkpoint_validation_v1"
+}

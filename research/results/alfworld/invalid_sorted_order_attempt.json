@@ -1,0 +1,51 @@
+{
+  "schema_version": "alfworld_invalid_formal_attempt_v1",
+  "classification": "INVALID_EXECUTION_ORDER_MISMATCH",
+  "discovered_utc": "2026-09-10T22:05:03Z",
+  "discovery_basis": "identity hash comparison independent of task outcomes",
+  "expected": {
+    "track_id": "alfworld_upstream_react_valid_unseen_reference_v1",
+    "task_count": 134,
+    "task_set_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+    "manifest_evaluation_order_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8"
+  },
+  "observed": {
+    "bare_run_uuid": "9b9fcadb-a03c-49b1-9a94-1a5cb2c1068a",
+    "rcmf_run_uuid": "b9e9f74d-196a-4797-953c-94211ce2907b",
+    "task_count_each": 134,
+    "task_set_sha256_each": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+    "evaluation_order_sha256_each": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+    "bare_raw_sha256": "fff76f27766cce43cdad8f1ba09441264549513e26c4a1c32542f50c3506681f",
+    "rcmf_raw_sha256": "71b6d7e602af5776a91819ea0346634d9de8af9c5dbca86da53861c3c8d09609",
+    "all_tasks_present_in_both_arms": true,
+    "orders_identical_between_arms": true,
+    "typed_failures_each": 0
+  },
+  "eligibility": {
+    "scientific_result": false,
+    "comparison_eligible": false,
+    "configuration_input": false,
+    "training_or_checkpoint_impact": false,
+    "requires_both_arms_rerun": true
+  },
+  "preserved_git_safe_artifacts": [
+    "research/results/alfworld/invalid_sorted_order_bare_summary.json",
+    "research/results/alfworld/invalid_sorted_order_rcmf_summary.json",
+    "research/results/alfworld/invalid_sorted_order_paired_summary.json",
+    "research/results/alfworld/invalid_sorted_order_per_task_results.jsonl",
+    "research/results/alfworld/invalid_sorted_order_phase_evidence_map.json",
+    "research/results/alfworld/invalid_sorted_order_p00_p11_summary.json"
+  ],
+  "preserved_lambda_artifacts": [
+    "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/bare_9b9fcadb",
+    "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/rcmf_b9e9f74d",
+    "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/paired_analysis",
+    "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/p00_p11"
+  ],
+  "corrective_preregistration": "research/plans/ALFWORLD_TRACK_R_ORDER_CORRECTION_PREREGISTRATION.md",
+  "new_run_uuids": {
+    "bare": "511d5d8a-3203-43c5-9464-db896934b685",
+    "rcmf": "d5cea7e7-ca8a-4b9d-b13b-97664274badf",
+    "paired_and_p00_p11": "cea3800b-77e2-4b24-bbb7-efa2cdaa1b8a"
+  }
+}

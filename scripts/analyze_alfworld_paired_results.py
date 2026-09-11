@@ -12,6 +12,7 @@ from statistics import median
 from typing import Any, Iterable, Mapping
 
 from rcmf.benchmarks.alfworld.portable_adapter_v2 import TRACK_R_ID
+from rcmf.benchmarks.alfworld.execution_lock import TRACK_R_EVALUATION_ORDER_SHA256
 from rcmf.benchmarks.alfworld.task_manifest import (
     TRACK_R_TASK_IDS_SHA256,
     canonical_sha256,
@@ -52,6 +53,8 @@ def read_rows(path: str | Path, expected_condition: str) -> list[dict[str, Any]]
     ids = [str(row["task_id"]) for row in rows]
     if len(ids) != len(set(ids)):
         raise ValueError(f"{expected_condition} result contains duplicate task IDs")
+    if canonical_sha256(ids) != TRACK_R_EVALUATION_ORDER_SHA256:
+        raise ValueError(f"{expected_condition} result evaluation order differs from frozen lock")
     if any(row.get("condition") != expected_condition for row in rows):
         raise ValueError(f"{expected_condition} result condition differs")
     for row in rows:
@@ -62,6 +65,8 @@ def read_rows(path: str | Path, expected_condition: str) -> list[dict[str, Any]]
             raise ValueError(f"{expected_condition} result is not a formal complete run")
         if identity.get("task_ids_sha256") != TRACK_R_TASK_IDS_SHA256:
             raise ValueError(f"{expected_condition} task-list identity differs")
+        if identity.get("evaluation_order_sha256") != TRACK_R_EVALUATION_ORDER_SHA256:
+            raise ValueError(f"{expected_condition} run identity evaluation order differs")
     return rows
 
 

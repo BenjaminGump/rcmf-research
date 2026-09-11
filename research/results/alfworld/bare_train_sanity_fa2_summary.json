@@ -1,0 +1,35 @@
+{
+  "all_tasks_completed": true,
+  "completed_tasks": 6,
+  "elapsed_seconds": 1102.974341,
+  "ended_utc": "2026-09-10T07:36:44.979564+00:00",
+  "model_forward_and_generation_run": true,
+  "model_loaded_utc": "2026-09-10T07:18:26.027870+00:00",
+  "model_weights_loaded": true,
+  "output": {
+    "bytes": 1197902,
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/sanity/bare_train_sanity_fa2_cf34300b_retry1.jsonl",
+    "sha256": "ec98528327156d7f07507189c2ba0c0215d12598db3886f40ec753144789123a"
+  },
+  "peak_cuda_bytes": 22616723968,
+  "requested_tasks": 6,
+  "run_identity": {
+    "benchmark_lock_identity_sha256": "055e5364fefd088f0ad74106acca53231fce4d0dbd5cbfbb854a8822efd344de",
+    "benchmark_lock_sha256": "bc2a2ee381ad86e686eff02b4f7ba647c91ab207d5bfb939689b19af86464b5f",
+    "checkpoint_sha256": null,
+    "condition": "bare",
+    "evaluation_order_sha256": "90fa6dcb9fdad07b4d1232e4085fafa5c3f06fa3240f6f300f2fac3cb0eeac10",
+    "generation_batch_size": 6,
+    "run_uuid": "cf34300b-44dd-4601-a31f-dc3a21f51b5f",
+    "source_commit": "94648856d8562d06e0b77c1212bbf26d07206889",
+    "split": "train",
+    "task_ids_sha256": "68fe2252ec36cb3b565fc2545144a19333125844065daee61e19b174e6cf5f88",
+    "task_list_role": "engineering_subset",
+    "track_id": "alfworld_upstream_react_valid_unseen_reference_v1",
+    "track_role": "UPSTREAM_PROTOCOL_REFERENCE"
+  },
+  "schema_version": "alfworld_agent_run_summary_v1",
+  "started_utc": "2026-09-10T07:18:22.005241+00:00",
+  "successes": 0,
+  "typed_failures": 0
+}

@@ -71,6 +71,8 @@ from rcmf.benchmarks.alfworld.portable_executor_v2_1 import (
 )
 from rcmf.pipeline.portable_v2.schemas import TaskRecord
 from scripts.run_alfworld_expert_isolated_subset import _failure_row
+from scripts.run_alfworld_agent import _order_tasks_to_frozen_manifest
+from scripts.analyze_alfworld_paired_results import read_rows as read_agent_result_rows
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -221,6 +223,56 @@ def test_sealed_population_constants_and_generic_diff_guard() -> None:
             if any(name in module.lower() for name in ("alfworld", "appworld", "webshop")):
                 violations.append((str(path), node.lineno, module))
     assert violations == []
+
+
+def test_frozen_evaluation_order_is_manifest_owned_and_fail_closed(tmp_path: Path) -> None:
+    tasks = [_task("valid_unseen"), _task("train")]
+    rows = [
+        {"task_id": tasks[1].task_id, "split": "train"},
+        {"task_id": tasks[0].task_id, "split": "valid_unseen"},
+    ]
+    expected = canonical_sha256([tasks[0].task_id])
+    ordered = _order_tasks_to_frozen_manifest(
+        [tasks[0]],
+        rows,
+        split="valid_unseen",
+        expected_order_sha256=expected,
+    )
+    assert [task.task_id for task in ordered] == [tasks[0].task_id]
+    with pytest.raises(ValueError, match="evaluation order"):
+        _order_tasks_to_frozen_manifest(
+            [tasks[0]],
+            rows,
+            split="valid_unseen",
+            expected_order_sha256="0" * 64,
+        )
+
+
+def test_paired_analyzer_rejects_sorted_instead_of_frozen_order(tmp_path: Path) -> None:
+    rows = []
+    for index in range(134):
+        task_id = f"alfworld:fixture-{index:03d}"
+        rows.append(
+            {
+                "task_id": task_id,
+                "condition": "bare",
+                "run_identity": {
+                    "track_id": TRACK_R_ID,
+                    "task_list_role": "formal_track_r_complete",
+                    "task_ids_sha256": TRACK_R_TASK_IDS_SHA256,
+                    "evaluation_order_sha256": canonical_sha256(
+                        [f"alfworld:fixture-{item:03d}" for item in range(134)]
+                    ),
+                },
+            }
+        )
+    path = tmp_path / "sorted.jsonl"
+    path.write_text(
+        "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="evaluation order differs from frozen lock"):
+        read_agent_result_rows(path, "bare")
 
 
 def test_no_floating_qwen_revision_in_alfworld_source() -> None:

@@ -1,0 +1,60 @@
+{
+  "benchmark_lock_identity_sha256": "055e5364fefd088f0ad74106acca53231fce4d0dbd5cbfbb854a8822efd344de",
+  "benchmark_lock_sha256": "bc2a2ee381ad86e686eff02b4f7ba647c91ab207d5bfb939689b19af86464b5f",
+  "checkpoint": {
+    "bytes": 36984645,
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/training_c5f81480/terminal_checkpoint.pt",
+    "sha256": "6e03514d5014702b995a366bcf92c093d050b4a1b2c74cf7b97effc82f30a4bd"
+  },
+  "config_path": "/lambda/nfs/rcmf-persist/project-worktrees/alfworld-v1/configs/benchmark/alfworld/compact_rcmf_v1.yaml",
+  "config_sha256": "452db186566fc0844421c736e5dedb0ec9f08d63d3a5e16485c6b2c1b3bd10ea",
+  "contribution_audit": {
+    "bytes": 36259005,
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/training_c5f81480/contribution_audit.pt",
+    "sha256": "6a98c7cdbe9f7a091844cd61b5db5cb6ead4178f8081aea8fe5bcd062b452ccf"
+  },
+  "elapsed_seconds": 42.425295,
+  "ended_utc": "2026-09-10T08:10:04.358599+00:00",
+  "engineering_limit": null,
+  "field_shape": {
+    "A": [
+      256,
+      128
+    ],
+    "B": [
+      128
+    ]
+  },
+  "full_ledger_count": 21259,
+  "ledger_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/ledger-final/train_transition_ledger.jsonl",
+  "ledger_sha256": "2fe6efb1ad7b76695460202515684c6f83c15235b4430717c47f4eb86f8f213d",
+  "passed": true,
+  "peak_cuda_bytes": 16812156928,
+  "permutation_max_abs": 8.640199666842818e-12,
+  "qwen_frozen": true,
+  "reader_metrics": [
+    {
+      "batches": 84.0,
+      "epoch": 1,
+      "max_loss": 1.381054403282178e-06,
+      "mean_loss": 5.790109055072077e-07,
+      "min_loss": 3.793729774770327e-07
+    }
+  ],
+  "reversible_max_abs": 3.469446951953614e-18,
+  "run_uuid": "c5f81480-1e70-43f1-911b-ab258e424ccd",
+  "schema_version": "alfworld_compact_rcmf_training_summary_v1",
+  "source_commit": "e9c2f3faf59fec243589eb5e9ba8424067fa677e",
+  "started_utc": "2026-09-10T08:09:21.933329+00:00",
+  "terminal_completed_epoch": 1,
+  "trained_transition_count": 21259,
+  "writer_metrics": [
+    {
+      "batches": 84.0,
+      "epoch": 1,
+      "max_loss": 0.9480480551719666,
+      "mean_loss": 0.09442230431540381,
+      "min_loss": 0.021940940991044044
+    }
+  ]
+}

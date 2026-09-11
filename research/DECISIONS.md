@@ -3775,3 +3775,35 @@ IMPLEMENTATION DEVIATIONS:
   serialization now explicitly preserves float64 coefficients, with a
   regression test. The original failed smoke checkpoint remains preserved and
   will not be reused.
+
+## 2026-09-11 ALFWorld Track R execution-order invalidation and correction
+
+VERIFIED:
+
+- The Harness lock binds manifest-order hash `c49e3fab...`; the initial formal
+  bare and RCMF run identities bind sorted-ID order hash `2410f2c2...`.
+- Both invalid arms contain the exact same 134 unique tasks, but task batching
+  followed the wrong frozen order. The paired analyzer previously checked only
+  set equality.
+- Discovery came from identity comparison after completion and did not depend
+  on the observed task outcomes. Training, field, checkpoint, prompt, model,
+  generation, task-set, and evaluator identities remain unaffected.
+
+DECISION:
+
+- Classify both first formal arms, their paired analysis, and their P00-P11
+  descendant as `INVALID_EXECUTION_ORDER_MISMATCH`; preserve every artifact and
+  do not report their outcomes as science.
+- Repair the formal runner to reindex tasks by the exact sealed manifest order
+  and require its hash to match the existing lock. Repair the analyzer to reject
+  physical or embedded order mismatches.
+- Under new preregistered UUIDs, rerun both complete 134-task arms with no other
+  scientific change. Reuse the existing terminal checkpoint because evaluation
+  order did not enter training or checkpoint selection.
+
+IMPLEMENTATION DEVIATIONS:
+
+- The original runner's task-set guard was insufficient: adapter listing sorted
+  tasks while the lock separately bound manifest order. The order check is now
+  explicit and fail closed. This is the sole permitted scientific-source change
+  after the invalid outcomes became visible.

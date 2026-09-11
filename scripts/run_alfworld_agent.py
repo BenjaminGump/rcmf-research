@@ -20,7 +20,11 @@ from rcmf.benchmarks.alfworld.runtime_agent import (
     run_alfworld_episode,
     run_alfworld_episodes_batched,
 )
-from rcmf.benchmarks.alfworld.task_manifest import TRACK_R_TASK_IDS_SHA256, canonical_sha256
+from rcmf.benchmarks.alfworld.task_manifest import (
+    TRACK_R_TASK_IDS_SHA256,
+    canonical_sha256,
+    load_sealed_task_manifest,
+)
 from rcmf.benchmarks.alfworld.training import (
     deployment_memory_query,
     load_deployment_checkpoint,
@@ -67,6 +71,23 @@ def _read_existing(path: Path) -> list[dict[str, object]]:
     return rows
 
 
+def _order_tasks_to_frozen_manifest(
+    tasks: list[object],
+    manifest_rows: list[dict[str, object]],
+    *,
+    split: str,
+    expected_order_sha256: str,
+) -> list[object]:
+    ordered_ids = [str(row["task_id"]) for row in manifest_rows if row["split"] == split]
+    actual_order_sha256 = canonical_sha256(ordered_ids)
+    if actual_order_sha256 != expected_order_sha256:
+        raise ValueError("sealed task-manifest evaluation order differs from benchmark lock")
+    task_index = {str(task.task_id): task for task in tasks}
+    if len(task_index) != len(tasks) or set(task_index) != set(ordered_ids):
+        raise ValueError("adapter task population differs from sealed task-manifest order")
+    return [task_index[task_id] for task_id in ordered_ids]
+
+
 def main() -> int:
     args = arguments()
     if (args.condition == "rcmf") != bool(args.checkpoint):
@@ -93,6 +114,17 @@ def main() -> int:
         sorted(task.task_id for task in tasks)
     ) != TRACK_R_TASK_IDS_SHA256:
         raise ValueError("Track R full valid_unseen population identity differs")
+    if args.split == "valid_unseen":
+        tasks = _order_tasks_to_frozen_manifest(
+            tasks,
+            load_sealed_task_manifest(args.task_manifest),
+            split=args.split,
+            expected_order_sha256=str(
+                benchmark_lock["payload"]["runtime_execution"][
+                    "deterministic_evaluation_order_sha256"
+                ]
+            ),
+        )
     task_list_role = "formal_track_r_complete" if args.formal else "engineering_subset"
     if args.task_ids_json:
         selected_ids = json.loads(Path(args.task_ids_json).read_text(encoding="utf-8"))

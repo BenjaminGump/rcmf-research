@@ -1,0 +1,42 @@
+{
+  "P00_environment_and_data_provenance": {
+    "benchmark_execution_lock": "/lambda/nfs/rcmf-persist/project-worktrees/alfworld-v1/configs/benchmark/alfworld/track_r_execution_lock_v1.json",
+    "environment_and_data_manifest": "/lambda/nfs/rcmf-persist/project/runs/harness_readiness/alfworld/fd8622dd-482f-4eba-b27f-c3c32eb2b68f/harness-source/research/benchmarks/alfworld/task_manifest.json"
+  },
+  "P01_successful_trajectory_corpus": {
+    "successful_corpus_manifest": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corpus-final/official_train_corpus_manifest.json"
+  },
+  "P02_memory_transition_ledger": {
+    "memory_ledger_manifest": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/ledger-final/train_transition_ledger_manifest.json"
+  },
+  "P03_state_and_transition_representations": {
+    "representation_diagnostic": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/diagnostics/compact_module_diagnostic_9a329ea.json"
+  },
+  "P04_addressing_selector_supervision": {
+    "addressing_supervision_diagnostic": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/diagnostics/compact_module_diagnostic_9a329ea.json"
+  },
+  "P05_paired_causal_outcomes": {
+    "paired_outcome_evidence": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/paired_analysis/paired_summary.json"
+  },
+  "P06_policy_teacher_and_training_units": {
+    "training_config": "/lambda/nfs/rcmf-persist/project-worktrees/alfworld-v1/configs/benchmark/alfworld/compact_rcmf_v1.yaml",
+    "training_units_manifest": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/ledger-final/train_transition_ledger_manifest.json"
+  },
+  "P07_writer_reader_training": {
+    "training_summary": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/training_c5f81480/training_summary.json"
+  },
+  "P08_per_epoch_diagnostics": {
+    "epoch_diagnostics": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/training_c5f81480/training_summary.json"
+  },
+  "P09_terminal_checkpoint_validation": {
+    "checkpoint_validation": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/training_c5f81480/checkpoint_validation.json"
+  },
+  "P10_deployment_field": {
+    "deployment_field_validation": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/training_c5f81480/checkpoint_validation.json"
+  },
+  "P11_official_evaluation_and_reporting": {
+    "bare_run_summary": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/bare_9b9fcadb/summary.json",
+    "official_evaluation_summary": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/paired_analysis/paired_summary.json",
+    "rcmf_run_summary": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/rcmf_b9e9f74d/summary.json"
+  }
+}

@@ -1,36 +1,45 @@
 # ALFWorld Adaptation Brief
 
-- Development base records SHA: `543de32a91e20796ca6441b65b3a9e41f271c412`
-- Portable V2.1 source: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`
-- Final RCMF Harness V1 integration source:
-  `4e56702f467635bda120d118a5367c58e593ecef`
-- Integration archive: `archive/rcmf-neutral-harness-v1-integration-4e56702`
-- Final Harness source: `827ed6f394804834e93444c9bb02c435e9e238a3`
-- ALFWorld readiness source/records: `87cf79d4ee47dfc0f74a799605630f9fbbae0f15` /
-  `c7b3ddd2a063554b6c586f62b9f3db305897b63e`
-- Current decision: `STOP_ALFWORLD_SPLIT_LEAKAGE`
-- Last verified UTC: `2026-09-09T09:58:34Z`
+The ALFWorld Track R adaptation and training are complete, but the first
+134-task matched execution is invalid: it used sorted task-ID order rather than
+the manifest order frozen in the execution lock. The exact 134 tasks and all
+other identities matched; both arms must be rerun under the outcome-independent
+order repair. Source `e9c2f3faf59fec243589eb5e9ba8424067fa677e`
+and archive `archive/rcmf-alfworld-track-r-full-134-e9c2f3f` remain preserved as
+the pre-repair source.
 
-Start from the final RCMF Harness V1 integration records branch in a dedicated
-`adapt/alfworld-v1` worktree. Read `AGENTS.md`, `docs/PIPELINE.md`,
-`docs/ADAPTER_CONTRACT.md`, `tasks/alfworld/STATE.md`, and the exact readiness
-records before editing. Preserve the Portable V2.1 core and Final Harness lock.
+The exact Harness authority is source
+`4fa9274eaf55d066eb85bf828f76cea4f40c3dbb` on
+`dataset/alfworld-track-r-execution-lock-v1`, archive
+`archive/alfworld-track-r-execution-lock-v1-4fa9274`, and execution-lock
+identity `055e5364fefd088f0ad74106acca53231fce4d0dbd5cbfbb854a8822efd344de`.
+Track R remains `UPSTREAM_PROTOCOL_REFERENCE`; it is not Track S.
 
-Environment/data/task/expert-replay readiness is already engineering-verified:
-the official ALFWorld 0.5.0/TextWorld corpus has 3,553 train, 200 valid-train,
-140 valid-seen, and 134 valid-unseen games. Six official training expert plans
-replayed successfully and two deterministic repeats matched exactly. These are
-readiness facts, not a scientific RCMF result.
+The final TRAIN corpus contains 3,545 successful replay-validated
+`OFFICIAL_EXPERT` trajectories and 21,259 complete transition memories. Eight
+training games remain typed reset timeouts and were not admitted. The compact
+RCMF field and checkpoint pass independent-write, reversibility, fixed-shape,
+frozen-Qwen, no-retrieval, no-raw-memory-prompt, and TRAIN-only checks.
 
-The blocking fact is exact: pinned ReAct demonstration `pick_two_obj:0`
-matches evaluation task `alfworld:trial_T20190907_201917_045715`. Do not build
-an adapter or benchmark lock around this profile. The next bounded task is a
-separate fairness decision between a provenance-clean prompt and an explicitly
-justified evaluation-split revision, followed by a complete demonstration
-leakage audit. Do not decide that policy in this shared integration base.
+The invalid first attempts were:
 
-After that gate passes, implement only the ALFWorld adapter, dataset profile,
-prompt assets, task records, and tests. Keep official expert training trajectories
-`OFFICIAL_EXPERT`; validation splits stay evaluation-only. Stop for review
-before changing prompt/split semantics, freezing a benchmark lock, running
-Qwen/training, or any execution plausibly exceeding 18 hours.
+- Bare frozen Qwen: `0/134` official successes, zero typed failures.
+- RCMF: `0/134` official successes, zero typed failures.
+- Paired delta: `0.0`; gains `0`, losses `0`, both correct `0`, both wrong
+  `134`; paired bootstrap 95% CI `[0.0, 0.0]`; exact McNemar `p=1.0`.
+- Classification: `INVALID_EXECUTION_ORDER_MISMATCH`; no scientific conclusion.
+
+All 134 tasks ran in each invalid arm. No task was removed, no evaluation
+outcome is permitted to tune the repair or method, Qwen stayed frozen, and no
+runtime memory retrieval or raw-memory prompt text was used. Training and
+checkpoint validation remain valid.
+
+Corrective review starts at
+`research/plans/ALFWORLD_TRACK_R_ORDER_CORRECTION_PREREGISTRATION.md`. Large
+invalid-attempt and training artifacts remain at
+`/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab`
+and are bound by paths, counts, and hashes in the Git records.
+
+Do not retune using the exposed invalid outcomes. Rerun only the unchanged bare
+and RCMF arms in the originally frozen manifest order, then regenerate paired
+analysis and P00-P11 closure.
