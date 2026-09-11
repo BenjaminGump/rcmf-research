@@ -1,15 +1,15 @@
 # Scientific Status
 
-Last verified: `2026-09-09T09:58:34Z`.
+Last verified: `2026-09-11T18:54:00Z`.
 
 Portable canonical V2.1 is an engineering hardening milestone. Its bounded
 AppWorld three-demo pilot completed all 12 portable phases, including real
 training, field operations, Qwen generation, and typed AppWorld evaluation.
 This is executable integration evidence only and has no accuracy threshold.
-It does not alter or supersede formal 14n
-or the post-hoc R19 checkpoint diagnostic. ALFWorld and WebShop remain
-`NOT_EVALUATED`; adapter fixtures and readiness checks are not scientific
-results.
+It does not alter or supersede formal 14n or the post-hoc R19 checkpoint
+diagnostic. That frozen base milestone originally marked ALFWorld and WebShop
+`NOT_EVALUATED`; this later dataset branch now contains one eligible ALFWorld
+Track R paired result. WebShop remains outside this branch's scope.
 
 ## Engineering Verified
 
@@ -39,14 +39,19 @@ results.
 - R19 forced epoch-2 post-hoc diagnostic: correct `16/57`, matched shuffle
   `19/57`, classification `EPOCH2_DIAGNOSTIC_MIXED_INCONCLUSIVE`.
 - Epoch 2 remains diagnostic and does not replace formal epoch 1.
+- ALFWorld action-dialect-v3 Track R completed matched 134-task bare and RCMF
+  arms at 45/134 each, with 40 both correct, 84 both wrong, five gains, five
+  losses, absolute accuracy delta 0, paired bootstrap 95% CI
+  [-0.0447761194, 0.0447761194], and exact McNemar p=1.0. Both complete
+  action/evaluator audits and P00-P11 pass. Decision:
+  `COMPLETE_ELIGIBLE_TRACK_R_PAIRED_RESULT_NO_OBSERVED_RCMF_IMPROVEMENT`.
+  This does not establish equivalence or a Track S result.
 
 ## Not Yet Verified
 
-- Portable v2 has no ALFWorld scientific result.
 - Portable v2 has no WebShop scientific result.
-- ALFWorld environment/data/expert replay readiness completed, but the pinned
-  prompt collides exactly with one evaluation task; status is
-  `STOP_ALFWORLD_SPLIT_LEAKAGE` and no benchmark lock exists.
+- ALFWorld Track S has no scientific method result. The eligible result above
+  is the distinct byte-exact upstream ReAct `valid_unseen` reference Track R.
 - WebShop remains `STOP_WEBSHOP_DATA_IDENTITY_UNRESOLVED`: product,
   instruction, index, and setup-sample identities/terms are not sealed, and no
   benchmark lock exists.

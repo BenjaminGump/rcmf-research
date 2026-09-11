@@ -1,6 +1,6 @@
 # ALFWorld Track R Action-Dialect Corrective State
 
-- Status: `ACTION_DIALECT_V3_FULL134_BARE_STRUCTURAL_PASS_RCMF_C_AUTHORIZED_NOT_STARTED`.
+- Status: `ACTION_DIALECT_V3_TRACK_R_COMPLETE_ELIGIBLE_NULL_PAIRED_RESULT`.
 - Final executable source for this corrective stage is
   `37e3ad1c2fd0c3bbcd54da3c64b5613edff29094`, archived at
   `archive/rcmf-alfworld-action-dialect-correction-37e3ad1`. Harness source
@@ -33,13 +33,35 @@
   Audit UUID `68dc78c6-61f6-48b5-9630-7c5706d0d7dd` checked all 5,472 steps:
   exact task set/order and embedded identities, 32 exact bridge activations,
   zero matched `put` sent literally, zero violations, and exact terminal
-  done/won/evaluator correspondence. Decision:
-  `PASS_FULL_134_BARE_ACTION_DIALECT_STRUCTURAL_AUDIT_RCMF_C_REVIEW_REQUIRED`.
-- The all-wrong safety branch did not trigger and no basic interaction,
-  parsing, ordering, identity, action-translation, or evaluator fault was
-  found. Per the preregistered structural-only full gate, RCMF-C UUID
-  `fbef9769-9b27-4f0f-a9cd-c8d8fbe5ce23` is now authorized but not yet
-  started. Its checkpoint remains unchanged at SHA-256 `6e03514d...`.
+  done/won/evaluator correspondence.
+- The matched RCMF-C UUID `fbef9769-9b27-4f0f-a9cd-c8d8fbe5ce23` then
+  completed 134/134 in 10,910.843307 seconds with 45 official successes and
+  zero typed failures. Its unchanged terminal checkpoint is SHA-256
+  `6e03514d5014702b995a366bcf92c093d050b4a1b2c74cf7b97effc82f30a4bd`.
+  CPU audit UUID `d2b94d8b-92c3-470c-8536-228911603e71` reconstructed all
+  5,483 steps and found zero raw/first-line/parsed/executed-action, bridge,
+  task/order/identity, episode-hash, or done/won/evaluator violations. It
+  observed 33 exact bridges, zero matched puts sent literally, 2,967 think
+  actions, 713 consecutive repeats, 3,644 `Nothing happens.` responses, and
+  1,839 nonempty non-rejection observations.
+- Strict paired analysis UUID `2a1acdf5-7841-43e9-9f27-52f7f8b4a6d5`
+  passed both complete ordered populations and embedded identities. Bare and
+  RCMF are 45/134 each; both-correct/both-wrong/gain/loss counts are
+  40/84/5/5; absolute accuracy delta is 0; paired bootstrap 95% CI is
+  [-0.0447761194, 0.0447761194] with 100,000 replicates and seed 25,101; exact
+  two-sided McNemar p=1.0. This is a complete eligible Track R result with no
+  observed RCMF improvement; the interval does not establish equivalence.
+- The regenerated portable evidence graph passed P00-P11 12/12 under the same
+  paired-analysis UUID and source. The old sorted-order P00-P11 record remains
+  preserved but ineligible.
+- The all-wrong/basic-fault safety branch did not trigger. No basic
+  interaction, parsing, ordering, identity, action-translation, or evaluator
+  fault was found, and no validation outcome changed a setting. Do not tune or
+  rerun this Track R result. Future work requires a separately preregistered
+  scientific question; this corrective milestone is closed.
+
+## Preserved superseded v2 history
+
 - The action-boundary-v2 bare arm UUID
   `6f47ae2c-572d-45d7-95aa-218707b3d919` completed 134/134 with 16 official
   successes and zero typed failures. Its immutable episodes SHA-256 is
@@ -70,9 +92,9 @@
   13/18 look, and 0/12 placement. A full 134 bare run is allowed only after the
   preregistered structural checks plus >13/30 total and >=1/12 placement
   success. RCMF-C remains blocked until that later 134 bare audit also passes.
-- No unaffected model/checkpoint retraining, valid-unseen tuning, prompt/model/
-  generation search, task substitution, RCMF-C launch, or WebShop mutation is
-  authorized.
+- At that historical point, no unaffected model/checkpoint retraining,
+  valid-unseen tuning, prompt/model/generation search, task substitution,
+  RCMF-C launch, or WebShop mutation was authorized.
 
 ---
 

@@ -4040,3 +4040,48 @@ IMPLEMENTATION DEVIATIONS:
 - None. The run used the preregistered UUID and identities. A task-owned launch
   script was used to make the exact command durable; it changed no source or
   execution setting.
+
+## 2026-09-11 ALFWorld action-dialect-v3 final Track R decision
+
+VERIFIED:
+
+- RCMF-C UUID `fbef9769-9b27-4f0f-a9cd-c8d8fbe5ce23` completed all 134
+  physical manifest-order tasks under source `37e3ad1`, the unchanged Qwen
+  revision, v3 lock, generation/action identity, batch size, evaluator, and
+  checkpoint. It produced 45 official successes and zero typed failures.
+- Independent CPU reconstruction checked all 5,483 RCMF steps and found zero
+  raw/first-line/parsed/executed-action, bridge, observation, task/order,
+  episode-hash, or done/won/evaluator violations. Thirty-three exact bridge
+  activations occurred and no matched `put ... in/on ...` command reached the
+  environment literally.
+- Strict paired analysis accepted both exact 134-task arms and produced bare
+  45/134, RCMF 45/134, 40 both correct, 84 both wrong, five gains, five losses,
+  accuracy delta 0, paired bootstrap 95% CI [-0.0447761194, 0.0447761194], and
+  exact two-sided McNemar p=1.0.
+- The corrected evidence graph passed all P00-P11 phases. The old sorted-order
+  descendants remain ineligible.
+
+DECISION:
+
+- Classify the result
+  `COMPLETE_ELIGIBLE_TRACK_R_PAIRED_RESULT_NO_OBSERVED_RCMF_IMPROVEMENT`.
+  The preregistered improvement hypothesis receives no positive evidence at
+  the point estimate. Because the interval spans effects in both directions,
+  do not claim equivalence or a precisely zero effect.
+- Stop the corrective milestone after compact records and handoff are pushed.
+  Do not tune, rerun, retrain, or launch another ALFWorld condition from this
+  outcome. A future question requires a new prospective charter.
+
+IMPLEMENTATION DEVIATIONS:
+
+- The task-owned launch shell was mistakenly invoked with an unsupported
+  `--preflight-only` argument. The shell ignored it, passed its own atomic
+  source/cleanliness/output/GPU/checkpoint/bare-audit gates, and launched the
+  exact preregistered RCMF command in the foreground SSH session rather than
+  tmux. The live run was preserved, not killed or duplicated, and no execution
+  identity changed.
+- The first P00-P11 invocation used the historical compact benchmark YAML and
+  failed while parsing config, before output-root creation or phase execution.
+  The same evidence map and UUID then passed 12/12 using the current portable
+  pipeline config `configs/pipeline/rcmf_alfworld_v1.yaml`. No model or
+  scientific output was involved in either P00-P11 invocation.

@@ -1,0 +1,138 @@
+{
+  "bare": {
+    "accuracy": 0.3358208955223881,
+    "successes": 45,
+    "typed_failures": 0
+  },
+  "canonical_result_sha256": "912d6ecbd04184a43abbcdd5166821dc4047a2350b9f25967aa81662431da2a7",
+  "created_utc": "2026-09-11T18:46:19.858608+00:00",
+  "family_breakdown": [
+    {
+      "bare_accuracy": 0.8333333333333334,
+      "bare_successes": 15,
+      "count": 18,
+      "delta": 0.0,
+      "rcmf_accuracy": 0.8333333333333334,
+      "rcmf_successes": 15,
+      "task_family": "look_at_obj"
+    },
+    {
+      "bare_accuracy": 0.5,
+      "bare_successes": 12,
+      "count": 24,
+      "delta": 0.041666666666666664,
+      "rcmf_accuracy": 0.5416666666666666,
+      "rcmf_successes": 13,
+      "task_family": "pick_and_place"
+    },
+    {
+      "bare_accuracy": 0.3548387096774194,
+      "bare_successes": 11,
+      "count": 31,
+      "delta": -0.06451612903225806,
+      "rcmf_accuracy": 0.2903225806451613,
+      "rcmf_successes": 9,
+      "task_family": "pick_clean_then_place"
+    },
+    {
+      "bare_accuracy": 0.19047619047619047,
+      "bare_successes": 4,
+      "count": 21,
+      "delta": 0.047619047619047616,
+      "rcmf_accuracy": 0.23809523809523808,
+      "rcmf_successes": 5,
+      "task_family": "pick_cool_then_place"
+    },
+    {
+      "bare_accuracy": 0.043478260869565216,
+      "bare_successes": 1,
+      "count": 23,
+      "delta": 0.0,
+      "rcmf_accuracy": 0.043478260869565216,
+      "rcmf_successes": 1,
+      "task_family": "pick_heat_then_place"
+    },
+    {
+      "bare_accuracy": 0.11764705882352941,
+      "bare_successes": 2,
+      "count": 17,
+      "delta": 0.0,
+      "rcmf_accuracy": 0.11764705882352941,
+      "rcmf_successes": 2,
+      "task_family": "pick_two_obj"
+    }
+  ],
+  "inputs": {
+    "bare": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/bare_dcc9d31d/episodes.jsonl",
+      "sha256": "d6865e084135cdf9031cd98228c35163cceb08faa7302ce51e03081c17541f6e"
+    },
+    "rcmf": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/rcmf_fbef9769/episodes.jsonl",
+      "sha256": "c5aa390ecdc68c41bda0e35d9a401184e7e9b77a3be1ee41089e6edc6c4f8953"
+    },
+    "task_manifest": {
+      "path": "/lambda/nfs/rcmf-persist/project/runs/harness_readiness/alfworld/fd8622dd-482f-4eba-b27f-c3c32eb2b68f/harness-source/research/benchmarks/alfworld/task_manifest.json",
+      "sha256": "3ece3f7344581eaa2ce2f4916947725abdee2348420a07e13f301adffc0951ea"
+    }
+  },
+  "invalid_or_empty_action_counts": {
+    "bare": 0,
+    "rcmf": 0
+  },
+  "max_prompt_tokens": {
+    "bare": 7467,
+    "rcmf": 7732
+  },
+  "paired": {
+    "accuracy_delta": 0.0,
+    "bootstrap_95_ci": {
+      "lower_95": -0.04477611940298507,
+      "method": "paired_nonparametric_task_bootstrap_nearest_rank",
+      "replicates": 100000,
+      "seed": 25101,
+      "upper_95": 0.04477611940298507
+    },
+    "both_correct": 40,
+    "both_wrong": 84,
+    "exact_mcnemar": {
+      "discordant": 10,
+      "gains": 5,
+      "losses": 5,
+      "method": "exact_two_sided_mcnemar_binomial",
+      "p_value": 1.0
+    },
+    "gains": 5,
+    "losses": 5
+  },
+  "per_task_results": {
+    "bytes": 81596,
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/paired_2a1acdf5/per_task_results.jsonl",
+    "sha256": "b0821da8f690d132b4db13e2c13bd38068acd1f552b1dd60459794d7512cc604"
+  },
+  "post_outcome_tuning_permitted": false,
+  "rcmf": {
+    "accuracy": 0.3358208955223881,
+    "successes": 45,
+    "typed_failures": 0
+  },
+  "schema_version": "alfworld_paired_scientific_result_v1",
+  "step_distributions": {
+    "bare": {
+      "max": 49,
+      "median": 49.0,
+      "min": 8,
+      "p95_nearest_rank": 49.0
+    },
+    "rcmf": {
+      "max": 49,
+      "median": 49.0,
+      "min": 8,
+      "p95_nearest_rank": 49.0
+    }
+  },
+  "task_count": 134,
+  "task_ids_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+  "track_id": "alfworld_upstream_react_valid_unseen_reference_v1",
+  "track_role": "UPSTREAM_PROTOCOL_REFERENCE"
+}

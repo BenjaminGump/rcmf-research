@@ -1,14 +1,16 @@
 # Current State
 
-## 2026-09-11 ALFWorld action-dialect correction active
+## 2026-09-11 ALFWorld action-dialect-v3 Track R complete
 
-The complete action-boundary-v2 bare arm is preserved but ineligible: exact
-upstream source plus same-state TRAIN probes prove that the approved ReAct
-prompt emits `put ... in/on ...` while the deployed ALFWorld grammar accepts
-`move ... to ...`. RCMF-C is not started and is hard-blocked. A prospective
-dataset-boundary bridge and a first-30 bare improvement gate are preregistered
-in `research/plans/ALFWORLD_TRACK_R_ACTION_DIALECT_CORRECTION_PREREGISTRATION.md`.
-No retraining or configuration search is authorized.
+The eligible, frozen-order bare and RCMF-C arms both completed all 134 tasks at
+45/134 with zero typed failures. Full action/evaluator audits, strict paired
+analysis, and regenerated P00-P11 closure pass. Paired gains/losses are 5/5,
+the accuracy delta is zero, paired bootstrap 95% CI is [-0.0447761194,
+0.0447761194], and exact McNemar p=1.0. Decision:
+`COMPLETE_ELIGIBLE_TRACK_R_PAIRED_RESULT_NO_OBSERVED_RCMF_IMPROVEMENT`.
+Historical invalid action-boundary/order attempts remain preserved. No
+retraining or outcome-driven configuration search occurred, and this milestone
+authorizes no further ALFWorld run.
 
 ## 2026-09-09 Final RCMF x Neutral Harness V1 Integration Base
 
@@ -3201,3 +3203,32 @@ Decision:
   any setting. The preregistered RCMF-C UUID `fbef9769...` is authorized next,
   after this compact record is pushed. The unchanged checkpoint SHA-256 is
   `6e03514d...`.
+
+### ALFWorld Action-Dialect V3 Final Track R Result
+
+- Matched RCMF-C UUID `fbef9769-9b27-4f0f-a9cd-c8d8fbe5ce23` completed all
+  134 frozen-order tasks in 10,910.843307 seconds with 45 official successes
+  and zero typed failures. It used source `37e3ad1`, Qwen revision
+  `b968826d...`, lock identity `f6103813...`, generation/action identity
+  `80400891...`, batch size 16, and the unchanged checkpoint SHA-256
+  `6e03514d...`.
+- CPU audit UUID `d2b94d8b-92c3-470c-8536-228911603e71` reconstructed all
+  5,483 RCMF steps and passed raw/first-line/parsed/executed command,
+  action-dialect bridge, observation, order/identity, episode hash, and
+  done/won/evaluator closure with zero violations. It found 33 exact bridges,
+  zero matched puts sent literally, 2,967 think actions, 713 consecutive
+  repeats, 3,644 `Nothing happens.` responses, and 1,839 nonempty
+  non-rejection observations.
+- Strict paired analysis UUID `2a1acdf5-7841-43e9-9f27-52f7f8b4a6d5`
+  accepted both complete arms. Bare/RCMF are 45/134 versus 45/134; paired
+  both-correct/both-wrong/gain/loss counts are 40/84/5/5; absolute accuracy
+  delta is zero; the seed-25,101, 100,000-replicate paired bootstrap 95% CI is
+  [-0.0447761194, 0.0447761194]; exact two-sided McNemar p=1.0.
+- The portable evidence graph was regenerated from the corrected v3 outputs
+  and passed P00-P11 12/12 under the same paired UUID. The historical
+  sorted-order P00-P11 evidence remains preserved and ineligible.
+- Decision:
+  `COMPLETE_ELIGIBLE_TRACK_R_PAIRED_RESULT_NO_OBSERVED_RCMF_IMPROVEMENT`.
+  The point estimate supplies no evidence of improvement; the interval does
+  not prove equivalence. No outcome changed any setting, and no further run is
+  authorized by this milestone.

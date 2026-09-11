@@ -1,0 +1,171 @@
+{
+  "schema_version": "alfworld_action_dialect_v3_final_artifact_index_v1",
+  "created_utc": "2026-09-11T18:54:00Z",
+  "decision": "COMPLETE_ELIGIBLE_TRACK_R_PAIRED_RESULT_NO_OBSERVED_RCMF_IMPROVEMENT",
+  "source": {
+    "rcmf_commit": "37e3ad1c2fd0c3bbcd54da3c64b5613edff29094",
+    "rcmf_archive_ref": "archive/rcmf-alfworld-action-dialect-correction-37e3ad1",
+    "harness_commit": "ef31ccba6092e9b7dc9f0a9c5f5310c6e20ccc74",
+    "harness_archive_ref": "archive/alfworld-action-dialect-correction-ef31ccb"
+  },
+  "runs": {
+    "bare": {
+      "run_uuid": "dcc9d31d-e8f1-4d29-9eb4-a675b18eeb47",
+      "successes": 45,
+      "task_count": 134,
+      "typed_failures": 0,
+      "elapsed_seconds": 10700.145958,
+      "episodes_sha256": "d6865e084135cdf9031cd98228c35163cceb08faa7302ce51e03081c17541f6e"
+    },
+    "rcmf": {
+      "run_uuid": "fbef9769-9b27-4f0f-a9cd-c8d8fbe5ce23",
+      "started_utc": "2026-09-11T15:42:59.755111+00:00",
+      "ended_utc": "2026-09-11T18:44:50.598390+00:00",
+      "elapsed_seconds": 10910.843307,
+      "successes": 45,
+      "task_count": 134,
+      "typed_failures": 0,
+      "peak_cuda_bytes": 43686247936,
+      "episodes_sha256": "c5aa390ecdc68c41bda0e35d9a401184e7e9b77a3be1ee41089e6edc6c4f8953"
+    },
+    "paired_analysis_uuid": "2a1acdf5-7841-43e9-9f27-52f7f8b4a6d5",
+    "rcmf_audit_uuid": "d2b94d8b-92c3-470c-8536-228911603e71"
+  },
+  "frozen_identity": {
+    "model_repo": "Qwen/Qwen3-8B",
+    "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "checkpoint_sha256": "6e03514d5014702b995a366bcf92c093d050b4a1b2c74cf7b97effc82f30a4bd",
+    "benchmark_lock_file_sha256": "8917fa535623d7678497a75c80c6d4b7481fe11c3c52ba2d245c8923bb0fd44e",
+    "benchmark_lock_identity_sha256": "f6103813cd2f4c76d15e2784c2eece9758c250042ef3c06d01ccde89daa4ba05",
+    "generation_identity_sha256": "80400891d46bc0395961b978449d03ae709d50d93d39e8d665ce9560a0224705",
+    "action_dialect_bridge_id": "react_put_in_on_to_alfworld_move_to_v1",
+    "task_ids_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+    "evaluation_order_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8",
+    "generation_batch_size": 16
+  },
+  "paired_result": {
+    "bare_successes": 45,
+    "rcmf_successes": 45,
+    "absolute_accuracy_delta": 0.0,
+    "both_correct": 40,
+    "both_wrong": 84,
+    "gains": 5,
+    "losses": 5,
+    "bootstrap_replicates": 100000,
+    "bootstrap_seed": 25101,
+    "bootstrap_95_ci": [-0.04477611940298507, 0.04477611940298507],
+    "exact_mcnemar_p_value": 1.0,
+    "canonical_result_sha256": "912d6ecbd04184a43abbcdd5166821dc4047a2350b9f25967aa81662431da2a7"
+  },
+  "rcmf_action_evaluator_audit": {
+    "decision": "PASS_FULL_134_RCMF_ACTION_IDENTITY_EVALUATOR_AUDIT",
+    "canonical_identity_sha256": "fb884c3755c9c9cd8c83d4eeccd742206c098ebcae66b194a5fbbe9e2d31faa4",
+    "checked_steps": 5483,
+    "bridge_activations": 33,
+    "matched_put_sent_literally": 0,
+    "think_actions": 2967,
+    "consecutive_repeated_executed_actions": 713,
+    "environment_nothing_happens": 3644,
+    "nonempty_nonrejection_observations": 1839,
+    "violation_count": 0,
+    "typed_failures": 0
+  },
+  "portable_pipeline_closure": {
+    "run_uuid": "2a1acdf5-7841-43e9-9f27-52f7f8b4a6d5",
+    "stage_count": 12,
+    "passed": true,
+    "summary_sha256": "9183842f06955339a6c2bfba839edef16e5809d00020552f54cb935c0e0483ae"
+  },
+  "artifacts": [
+    {
+      "role": "rcmf_raw_episodes_lambda_only",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/rcmf_fbef9769/episodes.jsonl",
+      "bytes": 21139000,
+      "sha256": "c5aa390ecdc68c41bda0e35d9a401184e7e9b77a3be1ee41089e6edc6c4f8953"
+    },
+    {
+      "role": "rcmf_summary_committed",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/rcmf_fbef9769/summary.json",
+      "bytes": 1894,
+      "sha256": "5e40b76d247adb1a3d19d1504dfe68f750cf02c76e0835dcf3634409cd1de60e",
+      "repository_copy": "research/results/alfworld/action_dialect_v3_full_rcmf_summary.json"
+    },
+    {
+      "role": "rcmf_action_evaluator_audit_committed",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/rcmf_audit_d2b94d8b.json",
+      "bytes": 5714,
+      "sha256": "a428e81d694bad1ceaa5b7f3b00320640c7938be31c516765bfca8bc44bab1a8",
+      "repository_copy": "research/results/alfworld/action_dialect_v3_full_rcmf_audit.json"
+    },
+    {
+      "role": "paired_summary_committed",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/paired_2a1acdf5/paired_summary.json",
+      "bytes": 4175,
+      "sha256": "06c126126d08f250c284baddb4a5a6bc1269150babc4c29a7b6500ce51fafb67",
+      "repository_copy": "research/results/alfworld/action_dialect_v3_paired_summary.json"
+    },
+    {
+      "role": "paired_per_task_results_committed",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/paired_2a1acdf5/per_task_results.jsonl",
+      "bytes": 81596,
+      "sha256": "b0821da8f690d132b4db13e2c13bd38068acd1f552b1dd60459794d7512cc604",
+      "repository_copy": "research/results/alfworld/action_dialect_v3_per_task_results.jsonl"
+    },
+    {
+      "role": "phase_evidence_map_committed",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/phase_evidence_map_2a1acdf5.json",
+      "bytes": 3220,
+      "sha256": "dd8cfa289f7a5b097ac31e1d7d1fd21e3fdbc36a8f0f93e57af60bac3b5ebba8",
+      "repository_copy": "research/results/alfworld/action_dialect_v3_phase_evidence_map.json"
+    },
+    {
+      "role": "p00_p11_summary_committed",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/p00_p11_2a1acdf5/p00_p11_summary.json",
+      "bytes": 4611,
+      "sha256": "9183842f06955339a6c2bfba839edef16e5809d00020552f54cb935c0e0483ae",
+      "repository_copy": "research/results/alfworld/action_dialect_v3_p00_p11_summary.json"
+    },
+    {
+      "role": "rcmf_launch_log_lambda_only",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/rcmf_fbef9769/launch_attempt_001.log",
+      "bytes": 24579,
+      "sha256": "f479e57dd028d55003f64a34d5b6149c11b4310af9c43f6cafa01339e3028119"
+    },
+    {
+      "role": "rcmf_launch_script_lambda_only",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/launch_alfworld_v3_full_rcmf_fbef9769.sh",
+      "bytes": 3007,
+      "sha256": "a19302e1503da66d62966aaf46974c3f3fe842a3ebe2aa3b25c18b2d2aef9a43"
+    },
+    {
+      "role": "final_test_report_committed",
+      "repository_copy": "research/results/alfworld/action_dialect_v3_final_test_report.json",
+      "bytes": 5174,
+      "sha256": "23613624727b14ffc7a0d72437b2fe2d4d4fc82f5601462e200aa0c9b32278dc"
+    },
+    {
+      "role": "final_structured_handoff_committed",
+      "repository_copy": "research/handoffs/20260911T190000Z_alfworld_action_dialect_v3_track_r_final.md",
+      "bytes": 13839,
+      "sha256": "702d43b6271ec41a2c4a6a0d5e8b981453057fd26a567c1d34afb1f43fb47429"
+    }
+  ],
+  "runtime_postcondition": {
+    "rcmf_process_present": false,
+    "gpu_compute_processes": 0,
+    "lambda_worktree_head": "37e3ad1c2fd0c3bbcd54da3c64b5613edff29094",
+    "lambda_worktree_clean": true
+  },
+  "implementation_deviations": [
+    "The task-owned launch shell was invoked with an unsupported --preflight-only argument; the shell ignored it, passed its internal atomic gates, and launched the exact preregistered RCMF command in the foreground SSH session rather than tmux. The run was not killed, duplicated, or changed.",
+    "The first P00-P11 invocation supplied the historical compact benchmark YAML instead of the current portable-pipeline YAML. It failed while parsing configuration before creating the output root or any phase artifact. The unchanged evidence map and preregistered UUID then passed 12/12 with configs/pipeline/rcmf_alfworld_v1.yaml."
+  ],
+  "negative_statements": {
+    "unaffected_model_or_checkpoint_retrained": false,
+    "valid_unseen_driven_prompt_model_config_or_parser_tuning": false,
+    "task_removed_or_substituted": false,
+    "webshop_modified_or_preempted": false,
+    "raw_episode_evidence_committed": false,
+    "new_rcmf_adapter_implemented": false
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "format": "alfworld_portable_p00_p11_run_v1",
+  "passed": true,
+  "run_uuid": "2a1acdf5-7841-43e9-9f27-52f7f8b4a6d5",
+  "source_commit": "37e3ad1c2fd0c3bbcd54da3c64b5613edff29094",
+  "stage_count": 12,
+  "stages": [
+    {
+      "manifest_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/p00_p11_2a1acdf5/P00_environment_and_data_provenance/stage_manifest.json",
+      "manifest_sha256": "f5fe3e3b64f3e716085e873d49daeeedf38959950fb386642cacaf045878558b",
+      "phase_id": "P00_environment_and_data_provenance"
+    },
+    {
+      "manifest_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/p00_p11_2a1acdf5/P01_successful_trajectory_corpus/stage_manifest.json",
+      "manifest_sha256": "465aef1801404e5e1d3184185f47a71eb235fcf8a7beced66d1a4d9f5785154c",
+      "phase_id": "P01_successful_trajectory_corpus"
+    },
+    {
+      "manifest_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/p00_p11_2a1acdf5/P02_memory_transition_ledger/stage_manifest.json",
+      "manifest_sha256": "dd80141147e27b5db738e8c07c853a0d86cd7a43e492fe209f499028ded9bc82",
+      "phase_id": "P02_memory_transition_ledger"
+    },
+    {
+      "manifest_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/p00_p11_2a1acdf5/P03_state_and_transition_representations/stage_manifest.json",
+      "manifest_sha256": "76317921819fd0c00cdb857ef7f9a5614f0cfa57e348c69f884deb8d8e835b66",
+      "phase_id": "P03_state_and_transition_representations"
+    },
+    {
+      "manifest_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/p00_p11_2a1acdf5/P04_addressing_selector_supervision/stage_manifest.json",
+      "manifest_sha256": "fa1570d145b9ee7e17d31e6dfeea954ea31fc0d14400b99ec2561ffbb8a426eb",
+      "phase_id": "P04_addressing_selector_supervision"
+    },
+    {
+      "manifest_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/p00_p11_2a1acdf5/P05_paired_causal_outcomes/stage_manifest.json",
+      "manifest_sha256": "93959ff7bc905bc6dd912f50f152659d34777724f5d42b7b11af9720e7d7f36a",
+      "phase_id": "P05_paired_causal_outcomes"
+    },
+    {
+      "manifest_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/p00_p11_2a1acdf5/P06_policy_teacher_and_training_units/stage_manifest.json",
+      "manifest_sha256": "6715add26f27cb99036fd01576a0fc69b90de3ecebe70a467c8f4d5b47b2f09b",
+      "phase_id": "P06_policy_teacher_and_training_units"
+    },
+    {
+      "manifest_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/p00_p11_2a1acdf5/P07_writer_reader_training/stage_manifest.json",
+      "manifest_sha256": "dc367a78d607d8a5689001d4e472d4e6db818778e7f14122572aff8d2a5542d8",
+      "phase_id": "P07_writer_reader_training"
+    },
+    {
+      "manifest_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/p00_p11_2a1acdf5/P08_per_epoch_diagnostics/stage_manifest.json",
+      "manifest_sha256": "940b618e4271ef8ec6d50a5f36eb1ca86f006e88d3cf90639e6c263d2169657a",
+      "phase_id": "P08_per_epoch_diagnostics"
+    },
+    {
+      "manifest_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/p00_p11_2a1acdf5/P09_terminal_checkpoint_validation/stage_manifest.json",
+      "manifest_sha256": "80b721d7de40d3f92c043cde995b5b78c02a45e24d257be8e02e30b0fa6e5bef",
+      "phase_id": "P09_terminal_checkpoint_validation"
+    },
+    {
+      "manifest_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/p00_p11_2a1acdf5/P10_deployment_field/stage_manifest.json",
+      "manifest_sha256": "56ba5759f031a7b06227b499a8dbd304a6f309df7713241715d4fb334714326a",
+      "phase_id": "P10_deployment_field"
+    },
+    {
+      "manifest_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/p00_p11_2a1acdf5/P11_official_evaluation_and_reporting/stage_manifest.json",
+      "manifest_sha256": "959afaca0050803507fef3220378d1c3ce2d492fed3967927bee6a4bfac5a8b7",
+      "phase_id": "P11_official_evaluation_and_reporting"
+    }
+  ]
+}

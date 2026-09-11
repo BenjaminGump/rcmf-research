@@ -1,0 +1,145 @@
+{
+  "authority": {
+    "episodes_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/rcmf_fbef9769/episodes.jsonl",
+    "episodes_sha256": "c5aa390ecdc68c41bda0e35d9a401184e7e9b77a3be1ee41089e6edc6c4f8953",
+    "run_identity": {
+      "action_dialect_bridge_id": "react_put_in_on_to_alfworld_move_to_v1",
+      "benchmark_lock_identity_sha256": "f6103813cd2f4c76d15e2784c2eece9758c250042ef3c06d01ccde89daa4ba05",
+      "benchmark_lock_sha256": "8917fa535623d7678497a75c80c6d4b7481fe11c3c52ba2d245c8923bb0fd44e",
+      "checkpoint_sha256": "6e03514d5014702b995a366bcf92c093d050b4a1b2c74cf7b97effc82f30a4bd",
+      "condition": "rcmf",
+      "evaluation_order_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8",
+      "generation_batch_size": 16,
+      "generation_identity_sha256": "80400891d46bc0395961b978449d03ae709d50d93d39e8d665ce9560a0224705",
+      "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "run_uuid": "fbef9769-9b27-4f0f-a9cd-c8d8fbe5ce23",
+      "source_commit": "37e3ad1c2fd0c3bbcd54da3c64b5613edff29094",
+      "split": "valid_unseen",
+      "task_ids_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+      "task_list_role": "formal_track_r_complete",
+      "track_id": "alfworld_upstream_react_valid_unseen_reference_v1",
+      "track_role": "UPSTREAM_PROTOCOL_REFERENCE"
+    },
+    "summary_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/rcmf_fbef9769/summary.json",
+    "summary_sha256": "5e40b76d247adb1a3d19d1504dfe68f750cf02c76e0835dcf3634409cd1de60e"
+  },
+  "canonical_identity_sha256": "fb884c3755c9c9cd8c83d4eeccd742206c098ebcae66b194a5fbbe9e2d31faa4",
+  "checks": {
+    "counts": {
+      "bridge_activations": 33,
+      "checked_steps": 5483,
+      "consecutive_repeated_executed_actions": 713,
+      "environment_nothing_happens": 3644,
+      "episodes_done": 45,
+      "episodes_won": 45,
+      "nonempty_nonrejection_observations": 1839,
+      "official_successes": 45,
+      "think_actions": 2967,
+      "typed_failures": 0,
+      "valid_actions": 5483
+    },
+    "parsed_action_verb_counts": {
+      "clean": 39,
+      "close": 20,
+      "cool": 20,
+      "drop": 4,
+      "examine": 1,
+      "go": 1307,
+      "heat": 16,
+      "insert": 2,
+      "look": 6,
+      "open": 493,
+      "place": 10,
+      "put": 364,
+      "remove": 2,
+      "take": 172,
+      "think": 2967,
+      "use": 18,
+      "you": 42
+    },
+    "passed": true,
+    "violation_count": 0,
+    "violations": []
+  },
+  "created_utc": "2026-09-11T18:51:23.381780+00:00",
+  "decision": "PASS_FULL_134_RCMF_ACTION_IDENTITY_EVALUATOR_AUDIT",
+  "diagnostic_uuid": "d2b94d8b-92c3-470c-8536-228911603e71",
+  "negative_statements": {
+    "model_forward_or_generation_by_audit": false,
+    "model_loaded_by_audit": false,
+    "performance_search": false,
+    "prompt_model_generation_or_checkpoint_changed": false,
+    "task_removal_or_substitution": false
+  },
+  "population": {
+    "evaluation_order_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8",
+    "expected": 134,
+    "observed": 134,
+    "task_set_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534"
+  },
+  "representative_bridge_evidence": [
+    {
+      "environment_done": true,
+      "environment_observation": "You move the mug 1 to the desk 1.",
+      "executed_action": "move mug 1 to desk 1",
+      "first_decoded_line": "> put mug 1 in/on desk 1",
+      "official_won": true,
+      "parsed_action": "put mug 1 in/on desk 1",
+      "step_index": 30,
+      "task_id": "alfworld:trial_T20190908_125200_737896"
+    },
+    {
+      "environment_done": true,
+      "environment_observation": "You move the mug 1 to the desk 1.",
+      "executed_action": "move mug 1 to desk 1",
+      "first_decoded_line": "> put mug 1 in/on desk 1",
+      "official_won": true,
+      "parsed_action": "put mug 1 in/on desk 1",
+      "step_index": 27,
+      "task_id": "alfworld:trial_T20190909_203041_433487"
+    },
+    {
+      "environment_done": true,
+      "environment_observation": "You move the mug 2 to the desk 1.",
+      "executed_action": "move mug 2 to desk 1",
+      "first_decoded_line": "> put mug 2 in/on desk 1",
+      "official_won": true,
+      "parsed_action": "put mug 2 in/on desk 1",
+      "step_index": 26,
+      "task_id": "alfworld:trial_T20190909_210238_431966"
+    }
+  ],
+  "representative_nonthink_environment_rejections": [
+    {
+      "environment_done": false,
+      "environment_observation": "Nothing happens.",
+      "executed_action": "go to drawer 3",
+      "first_decoded_line": "> go to drawer 3",
+      "official_won": false,
+      "parsed_action": "go to drawer 3",
+      "step_index": 6,
+      "task_id": "alfworld:trial_T20190908_222917_366542"
+    },
+    {
+      "environment_done": false,
+      "environment_observation": "Nothing happens.",
+      "executed_action": "use desklamp 1",
+      "first_decoded_line": "> use desklamp 1",
+      "official_won": false,
+      "parsed_action": "use desklamp 1",
+      "step_index": 23,
+      "task_id": "alfworld:trial_T20190908_222917_366542"
+    },
+    {
+      "environment_done": false,
+      "environment_observation": "Nothing happens.",
+      "executed_action": "examine alarmclock 1 with desklamp 1",
+      "first_decoded_line": "> examine alarmclock 1 with desklamp 1",
+      "official_won": false,
+      "parsed_action": "examine alarmclock 1 with desklamp 1",
+      "step_index": 25,
+      "task_id": "alfworld:trial_T20190908_222917_366542"
+    }
+  ],
+  "schema_version": "alfworld_rcmf_action_evaluator_audit_v1"
+}

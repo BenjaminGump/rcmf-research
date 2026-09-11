@@ -1,0 +1,38 @@
+{
+  "all_tasks_completed": true,
+  "completed_tasks": 134,
+  "elapsed_seconds": 10910.843307,
+  "ended_utc": "2026-09-11T18:44:50.598390+00:00",
+  "model_forward_and_generation_run": true,
+  "model_loaded_utc": "2026-09-11T15:43:03.930843+00:00",
+  "model_weights_loaded": true,
+  "output": {
+    "bytes": 21139000,
+    "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/rcmf_fbef9769/episodes.jsonl",
+    "sha256": "c5aa390ecdc68c41bda0e35d9a401184e7e9b77a3be1ee41089e6edc6c4f8953"
+  },
+  "peak_cuda_bytes": 43686247936,
+  "requested_tasks": 134,
+  "run_identity": {
+    "action_dialect_bridge_id": "react_put_in_on_to_alfworld_move_to_v1",
+    "benchmark_lock_identity_sha256": "f6103813cd2f4c76d15e2784c2eece9758c250042ef3c06d01ccde89daa4ba05",
+    "benchmark_lock_sha256": "8917fa535623d7678497a75c80c6d4b7481fe11c3c52ba2d245c8923bb0fd44e",
+    "checkpoint_sha256": "6e03514d5014702b995a366bcf92c093d050b4a1b2c74cf7b97effc82f30a4bd",
+    "condition": "rcmf",
+    "evaluation_order_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8",
+    "generation_batch_size": 16,
+    "generation_identity_sha256": "80400891d46bc0395961b978449d03ae709d50d93d39e8d665ce9560a0224705",
+    "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "run_uuid": "fbef9769-9b27-4f0f-a9cd-c8d8fbe5ce23",
+    "source_commit": "37e3ad1c2fd0c3bbcd54da3c64b5613edff29094",
+    "split": "valid_unseen",
+    "task_ids_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+    "task_list_role": "formal_track_r_complete",
+    "track_id": "alfworld_upstream_react_valid_unseen_reference_v1",
+    "track_role": "UPSTREAM_PROTOCOL_REFERENCE"
+  },
+  "schema_version": "alfworld_agent_run_summary_v1",
+  "started_utc": "2026-09-11T15:42:59.755111+00:00",
+  "successes": 45,
+  "typed_failures": 0
+}

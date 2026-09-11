@@ -1,0 +1,103 @@
+{
+  "schema_version": "alfworld_action_dialect_v3_final_test_report_v1",
+  "created_utc": "2026-09-11T19:00:00Z",
+  "source_commit_under_test": "37e3ad1c2fd0c3bbcd54da3c64b5613edff29094",
+  "starting_records_commit": "e57ce7ceb16ab292f8d2c91413b64051b7526890",
+  "decision": "PASS_FINAL_RECORD_AND_SOURCE_VALIDATION",
+  "runs": [
+    {
+      "environment": "Windows appworld_env; PYTHONHASHSEED=25101; PYTHONPATH=.",
+      "command": "python -m pytest -q tests/test_alfworld_portable_v2.py tests/test_alfworld_result_analysis.py tests/test_portable_v2_release_documents.py --basetemp C:/gbz/pytest-tmp/alfworld-v3-final-focused-20260911",
+      "passed": 34,
+      "failed": 2,
+      "skipped": 0,
+      "classification": "EXPECTED_RECORD_ASSEMBLY_ORDER_FAILURE",
+      "reason": "CHATGPT_CONTEXT prospectively referenced the final structured handoff before that handoff file had been created; no source or scientific check failed."
+    },
+    {
+      "environment": "Windows appworld_env; PYTHONHASHSEED=25101; PYTHONPATH=.",
+      "command": "python -m pytest -q tests/test_alfworld_portable_v2.py tests/test_alfworld_result_analysis.py tests/test_portable_v2_release_documents.py --basetemp C:/gbz/pytest-tmp/alfworld-v3-final-focused-retry-20260911",
+      "passed": 34,
+      "failed": 2,
+      "skipped": 0,
+      "classification": "HISTORICAL_GENERIC_RELEASE_CONTRACT_FAILURE",
+      "reason": "The unchanged generic release validator requires the exact historical Portable V2.1 no-scientific-result marker. The marker was restored with an explicit statement that it applies only to the frozen base and is superseded by the later eligible dataset result. Generic code was not changed."
+    },
+    {
+      "environment": "Windows appworld_env; PYTHONHASHSEED=25101; PYTHONPATH=.",
+      "command": "python -m pytest -q tests/test_alfworld_portable_v2.py tests/test_alfworld_result_analysis.py tests/test_portable_v2_release_documents.py --basetemp C:/gbz/pytest-tmp/alfworld-v3-final-focused-retry2-20260911",
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0,
+      "elapsed_seconds": 2.67
+    },
+    {
+      "environment": "Windows appworld_env; PYTHONHASHSEED=25101; PYTHONPATH=.",
+      "command": "python -m pytest -q --basetemp C:/gbz/pytest-tmp/alfworld-v3-final-full-20260911",
+      "passed": 1120,
+      "failed": 0,
+      "skipped": 3,
+      "elapsed_seconds": 113.64
+    },
+    {
+      "environment": "Windows appworld_env; PYTHONHASHSEED=25101; PYTHONPATH=.",
+      "command": "python -m pytest -q tests/test_portable_v2_release_documents.py --basetemp C:/gbz/pytest-tmp/alfworld-v3-final-release-last-20260911",
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "elapsed_seconds": 0.20,
+      "purpose": "post-document final release-contract verification"
+    }
+  ],
+  "other_checks": {
+    "compileall_rcmf_and_scripts": "PASS",
+    "json_and_jsonl_parse": "PASS",
+    "paired_per_task_rows": 134,
+    "paired_per_task_unique_task_ids": 134,
+    "paired_delta_sum": 0,
+    "paired_gain_count": 5,
+    "paired_loss_count": 5,
+    "paired_canonical_hash_recomputed": "PASS",
+    "rcmf_audit_canonical_hash_recomputed": "PASS",
+    "git_diff_check": "PASS",
+    "source_to_records_prohibited_path_diff_count": 0,
+    "remote_to_repository_compact_artifact_hashes": "PASS_BYTE_EXACT",
+    "secret_scan_matches": 0,
+    "secret_scan_note": "The first broad sk- expression falsely matched task-* placeholders in two historical handoffs. A token-boundary-aware scan classified those as non-secrets and found zero credential patterns."
+  },
+  "remote_byte_exact_sha256": {
+    "action_dialect_v3_full_rcmf_summary.json": "5e40b76d247adb1a3d19d1504dfe68f750cf02c76e0835dcf3634409cd1de60e",
+    "action_dialect_v3_full_rcmf_audit.json": "a428e81d694bad1ceaa5b7f3b00320640c7938be31c516765bfca8bc44bab1a8",
+    "action_dialect_v3_paired_summary.json": "06c126126d08f250c284baddb4a5a6bc1269150babc4c29a7b6500ce51fafb67",
+    "action_dialect_v3_per_task_results.jsonl": "b0821da8f690d132b4db13e2c13bd38068acd1f552b1dd60459794d7512cc604",
+    "action_dialect_v3_phase_evidence_map.json": "dd8cfa289f7a5b097ac31e1d7d1fd21e3fdbc36a8f0f93e57af60bac3b5ebba8",
+    "action_dialect_v3_p00_p11_summary.json": "9183842f06955339a6c2bfba839edef16e5809d00020552f54cb935c0e0483ae"
+  },
+  "historical_test_count_distinction": {
+    "pre_order_repair_source": {
+      "passed": 1111,
+      "purpose": "historical count before 12d4b1a"
+    },
+    "order_repair_source_12d4b1a": {
+      "source_commit": "12d4b1ac0ff8d1afb374010dc1a65404ef7ff269",
+      "passed": 1113
+    },
+    "action_boundary_source_91598b6": {
+      "source_commit": "91598b6d734cc5a5b3d1ccc1d21a7f2fb1bb2741",
+      "passed": 1116
+    },
+    "action_dialect_v3_source_37e3ad1": {
+      "source_commit": "37e3ad1c2fd0c3bbcd54da3c64b5613edff29094",
+      "passed": 1120,
+      "skipped": 3,
+      "failed": 0
+    }
+  },
+  "negative_statements": {
+    "model_loaded_by_final_tests": false,
+    "model_forward_or_generation_by_final_tests": false,
+    "training_or_retraining_by_final_tests": false,
+    "generic_harness_core_modified": false,
+    "webshop_modified_or_preempted": false
+  }
+}

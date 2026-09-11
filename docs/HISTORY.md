@@ -13,8 +13,8 @@ This is a routing index, not a replacement for sealed reports or
 | EXP-037A 14n / R18 | Complete provenance-validated one-demo continuation | 18/18 stages; formal epoch 1; negative one-demo specificity | `research/results/EXP_037A_R18_FORMAL_14N_TERMINAL_RESULT.md` | `research/handoffs/20260908T014023Z_exp037a_r18_formal_14n_terminal_result.md` | source `98f917d...`; run `...14k_o08_20260907_003` |
 | EXP-037A R19 | Does forced epoch 2 rescue the direction? | post-hoc `EPOCH2_DIAGNOSTIC_MIXED_INCONCLUSIVE`; no training | `research/results/EXP_037A_R19_EPOCH2_SENSITIVITY.md` | `research/handoffs/20260908T071524Z_exp037a_r19_epoch2_sensitivity.md` | source `2a7f371...`; diagnostic root recorded in report |
 | Portable V2 M1 | Can the mechanism be made a stable multi-dataset engineering base? | prospective engineering milestone; no dataset science | `docs/PIPELINE.md` and canonical version manifest | current portable-v2 handoff | source bound at release freeze |
+| ALFWorld Track R action-dialect v3 | Does the frozen TRAIN-derived RCMF field improve the same Qwen policy over all 134 upstream ReAct `valid_unseen` tasks after exact action/order repairs? | complete eligible paired result; bare 45/134, RCMF 45/134, delta 0, no observed improvement | `research/results/alfworld/action_dialect_v3_paired_summary.json` | `research/handoffs/20260911T190000Z_alfworld_action_dialect_v3_track_r_final.md` | source `37e3ad1...`; bare `dcc9d31d...`; RCMF `fbef9769...` |
 
 Thematic failure prevention is in `docs/FAILURE_MODES.md`. Exact historical
 chronology and every stopped/failed run remain in `research/experiments.jsonl`.
 Do not load every old report by default.
-

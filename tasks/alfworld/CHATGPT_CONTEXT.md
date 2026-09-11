@@ -1,16 +1,14 @@
 # ALFWorld ChatGPT Context
 
-Current status (2026-09-11): action-dialect-v3 executable source `37e3ad1` is
-archived and its TRAIN/CPU/first-30/full-bare gates pass. The exact first-30
-bare run improved from fixed v2 references 13/30 and 0/12 placement to 24/30
-and 9/12. Complete bare UUID `dcc9d31d-e8f1-4d29-9eb4-a675b18eeb47` then
-completed 134/134 with 45 official successes and zero typed failures. Audit
-UUID `68dc78c6-61f6-48b5-9630-7c5706d0d7dd` checked all 5,472 steps, exact
-task order and identities, 32 bridges, zero matched puts sent literally, and
-zero structural/evaluator violations. The all-wrong/basic-fault safety branch
-did not trigger. RCMF-C UUID `fbef9769-9b27-4f0f-a9cd-c8d8fbe5ce23` is now
-authorized but has not started; first preserve/push this compact gate record.
-Do not retrain or performance-search.
+Current status (2026-09-11): action-dialect-v3 Track R is complete and
+eligible. Exact full bare and RCMF-C runs both completed all 134 tasks in frozen
+manifest order with 45 official successes and zero typed failures. Strict
+paired analysis found 40 both-correct, 84 both-wrong, five gains, five losses,
+absolute accuracy delta 0, paired bootstrap 95% CI [-0.0447761194,
+0.0447761194], and exact McNemar p=1.0. Complete action/evaluator audits found
+zero violations, and regenerated P00-P11 evidence passed 12/12. Decision:
+`COMPLETE_ELIGIBLE_TRACK_R_PAIRED_RESULT_NO_OBSERVED_RCMF_IMPROVEMENT`. Do not
+retune or rerun from this validation result.
 
 - Document role: compact conversation bootstrap; sealed artifacts and source
   remain authoritative.
@@ -18,8 +16,8 @@ Do not retrain or performance-search.
 - Canonical executable ancestor SHA: `0ca0101c5ceacc7be3ae42b5d55bb98cd6bd9158`.
 - Canonical archive ref: `archive/rcmf-portable-canonical-v2_1-0ca0101`.
 - Bootstrap generated at SHA: `4e56702f467635bda120d118a5367c58e593ecef`.
-- Last verified UTC: `2026-09-11T02:14:06Z`.
-- Latest relevant handoff: `research/handoffs/20260911T153700Z_alfworld_action_dialect_v3_full_bare_pass.md`.
+- Last verified UTC: `2026-09-11T18:54:00Z`.
+- Latest relevant handoff: `research/handoffs/20260911T190000Z_alfworld_action_dialect_v3_track_r_final.md`.
 - Branch: `adapt/alfworld-v1`.
 - Starting records: `3560ec75f96575ce87fd06a8eb5c4b4d596615c8`.
 - Charter/original preregistration/invalid-attempt executable source:
@@ -76,72 +74,48 @@ sealed result identities before treating this cache as current.
 ## Current corrective state
 
 Historical Portable V2.1 bootstrap marker: No scientific ALFWorld RCMF
-result exists. That sentence applies to the frozen base milestone; the current
-branch has subsequently run invalidated attempts but still has no eligible
-ALFWorld scientific result pending the corrective rerun.
+result exists. That sentence applies only to the frozen Portable V2.1 base
+milestone; it is retained verbatim for the generic release-document contract
+and is superseded on this later dataset branch by the eligible v3 Track R
+result documented above.
 
-The first matched 134+134 outputs are invalid because the runtime used sorted
-task-ID order (`2410f2c2...`) rather than the frozen manifest order
-(`c49e3fab...`). They completed without typed failures and are preserved, but
-their `0/134` versus `0/134` outcome is not a scientific result. The
-outcome-independent order repair enforces the original order and fails closed
-in the runner and analyzer.
+Historical invalid attempts remain preserved and ineligible: the first pair
+used sorted task-ID order, the action-boundary-v2 bare run retained an upstream
+action-dialect mismatch, and neither result is used scientifically. The v3
+repair was fixed prospectively from pinned ReAct/ALFWorld source plus TRAIN
+same-state probes, then validated by the first-30 gate before either eligible
+full arm.
 
-A mandatory pre-rerun TRAIN audit then proved an independent action-boundary
-defect: all 588 preserved sanity commands retained a leading ReAct transcript
-marker, all 588 environment replies were `Nothing happens.`, and the existing
-`action_valid=true` flag established only non-emptiness. A same-reset TRAIN
-probe made `> go to fridge 1` fail and `go to fridge 1` produce the real
-closed-fridge observation. The v2 contract removes at most one leading marker,
-rejects empty output, preserves the remainder opaquely, and evaluates `think:`
-after normalization. No prompt, model, checkpoint, or evaluation outcome
-selected this correction.
+The eligible bare UUID `dcc9d31d-e8f1-4d29-9eb4-a675b18eeb47` and matched
+RCMF-C UUID `fbef9769-9b27-4f0f-a9cd-c8d8fbe5ce23` each completed all 134
+official `valid_unseen` tasks in exact physical manifest order. Both used
+source `37e3ad1`, Qwen revision `b968826d...`, generation/action identity
+`80400891...`, v3 lock identity `f6103813...`, batch size 16, and the unchanged
+official terminal evaluator. RCMF alone used the previously trained terminal
+checkpoint SHA-256 `6e03514d...`; it was not retrained.
 
-The real 134-task CPU closure passes correct order, wrong-order rejection,
-reversed-input restoration to `c49e3fab...`, and embedded order/lock identity
-rejection. WebShop explicitly returned an empty H100. The preregistered matched
-six-family TRAIN sanity then completed 6/6 tasks and 294 steps per condition
-with zero typed failures. Every step applied the exact one-marker boundary, no
-executed command retained the marker, and all six families produced substantive
-state observations in both conditions. The 0/6 terminal outcome in each sanity
-is not a defect threshold and changed no setting. The complete bare 134-task v2
-arm later completed with 16/134 and zero typed failures, but its action audit
-proved that every one of 549 ReAct `put ... in/on ...` commands was submitted
-literally to an ALFWorld grammar that accepts `move ... to ...`; all 549
-returned `Nothing happens.`. This v2 arm is preserved as
-`INVALID_ACTION_DIALECT_MISMATCH`.
+Bare and RCMF each achieved 45/134 with zero typed failures. The strict paired
+result has 40 both-correct, 84 both-wrong, five gains and five losses. Absolute
+accuracy delta is zero; the 100,000-replicate seed-25,101 paired bootstrap 95%
+CI is [-0.0447761194, 0.0447761194], and exact two-sided McNemar p=1.0. This is
+no observed RCMF improvement, while the uncertainty interval does not prove
+equivalence.
 
-A user-directed safety gate was added during the bare run. On completion, do
-not automatically start RCMF-C: audit the complete input/output/action/
-environment/evaluator chain first. If all 134 tasks are wrong or a clear basic
-interaction, parsing, or evaluator fault is found, diagnose and repair that
-fault without changing frozen identities or retraining. The next corrective
-bare retest must then use only the first 30 tasks in the unchanged frozen
-manifest order; complete all 134 and consider RCMF-C only after the diagnosed
-fault is repaired and the short retest improves. Thirteen official successes
-already existed in the first 18 rows when this rule was recorded, so the
-all-wrong branch cannot trigger for the active arm; the full structural audit
-is still mandatory. No unspecified performance threshold or valid-unseen
-prompt/model/config search is authorized. Authority:
-`research/plans/alfworld_bare_postrun_safety_gate.json`.
+The RCMF CPU audit reconstructed all 5,483 steps, including raw output, first
+decoded line, parsed model action, exact translated/pass-through environment
+command, returned observation, terminal done/won, episode hash, and evaluator.
+It found zero violations and zero matched ReAct `put ... in/on ...` commands
+sent literally. Descriptive diagnostics include 2,967 think actions, 713
+consecutive repeated commands, 3,644 `Nothing happens.` responses, and 1,839
+nonempty non-rejection observations; these selected no setting. Strict paired
+analysis and the regenerated P00-P11 graph also passed.
 
-Pinned ReAct source, pinned ALFWorld grammar, and fresh-reset same-state TRAIN
-probes independently established the action-dialect defect without selecting a
-repair from validation outcomes. Action-dialect-v3 implements only the exact
-anchored `put <object> <id> in/on <receptacle> <id>` to `move <object> <id> to
-<receptacle> <id>` bridge. The actual RCMF adapter and the Harness-owned provider
-both pass all five fixed placement TRAIN cases with exact official outcomes.
-The real 134-task CPU order/embedded-v3 closure and source tests also pass.
-Run identities are sealed before new model output in
-`research/plans/alfworld_track_r_run_identities_v3.json`. The next run is only
-the first 30 bare tasks; full 134 and RCMF-C remain conditionally blocked.
-
-The final TRAIN source admitted 3,545 replay-validated `OFFICIAL_EXPERT`
-trajectories and 21,259 complete transition memories; eight typed environment
-reset timeouts were excluded. The terminal checkpoint SHA-256 is
-`6e03514d5014702b995a366bcf92c093d050b4a1b2c74cf7b97effc82f30a4bd`.
-Qwen remained frozen; no raw memory entered prompts and no runtime retrieval
-occurred. Training/checkpoint evidence remains valid and does not need rerun.
+The final TRAIN source remains 3,545 replay-validated `OFFICIAL_EXPERT`
+trajectories and 21,259 complete transition memories, with eight typed reset
+timeouts excluded. No raw memory entered prompts, no runtime retrieval
+occurred, and Qwen remained frozen. This corrective milestone is closed; a
+future experiment requires a separate prospective charter and cannot tune from
+this Track R outcome.
 
 ## Authority routing
 
@@ -159,9 +133,7 @@ Read, in order:
 
 The preserved Lambda root is
 `/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab`.
-The v3 source, real TRAIN adapter, independent Harness TRAIN provider, and real
-134-task CPU identity/order gates pass. Only the preregistered first-30 bare arm
-may start. RCMF-C remains blocked until the first-30 improvement gate and later
-full-134 bare structural audit both pass. The exposed invalid outcomes cannot
-change any scientific setting. The terminal checkpoint is unchanged and must
-not be retrained.
+The v3 source, both eligible full arms, complete RCMF action/evaluator audit,
+strict paired analysis, and P00-P11 closure pass. No further ALFWorld run is
+authorized by this milestone. The exposed valid and invalid outcomes cannot
+change any scientific setting; the terminal checkpoint remains unchanged.
