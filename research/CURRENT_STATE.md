@@ -3169,3 +3169,16 @@ Decision:
   `de0e3118-e852-4709-8887-304620c27cc6`. Full 134 and RCMF-C remain blocked
   unless the preregistered structural and >13/30 plus >=1/12 placement gate
   passes. The checkpoint is unchanged and is not retrained.
+
+#### First-30 result
+
+- Bare UUID `de0e3118-e852-4709-8887-304620c27cc6` completed the exact first
+  30 physical manifest-order tasks in 2,260.963159 seconds.
+- Fail-closed audit UUID `0d41c5b9-921f-41dd-a464-657afd7595da` passed all
+  1,000 steps with zero violations and typed failures, nine exact bridges, and
+  zero matched puts sent literally.
+- The preregistered improvement signal passed: 24/30 total and 9/12 placement,
+  versus immutable v2 references 13/30 and 0/12. This is a corrective gate,
+  not a final scientific comparison.
+- Decision: `READY_FOR_CORRECTED_FULL_134_BARE`. Full bare UUID `dcc9d31d...`
+  is authorized; RCMF-C remains blocked until its later structural audit.

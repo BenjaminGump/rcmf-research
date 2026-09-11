@@ -1,6 +1,6 @@
 # ALFWorld Track R Action-Dialect Corrective State
 
-- Status: `ACTION_DIALECT_V3_SOURCE_TRAIN_CPU_GATES_PASS_FIRST30_BARE_PREREGISTERED`.
+- Status: `ACTION_DIALECT_V3_FIRST30_PASS_FULL134_BARE_AUTHORIZED_RCMF_C_BLOCKED`.
 - Final executable source for this corrective stage is
   `37e3ad1c2fd0c3bbcd54da3c64b5613edff29094`, archived at
   `archive/rcmf-alfworld-action-dialect-correction-37e3ad1`. Harness source
@@ -20,13 +20,16 @@
 - The final local suite at source `37e3ad1` passed 1,120 with three skips;
   Lambda focused tests passed 31. Historical counts remain explicitly distinct:
   1,111 before the order repair, 1,113 at `12d4b1a`, and 1,116 at `91598b6`.
-- The next and only authorized model run is bare UUID
-  `de0e3118-e852-4709-8887-304620c27cc6` on the exact first 30 physical
-  manifest-order tasks. Its run/list/audit identities and conditional later
-  UUIDs are frozen in
-  `research/plans/alfworld_track_r_run_identities_v3.json`. Full 134 bare and
-  RCMF-C remain blocked until the first-30 audit emits
-  `READY_FOR_CORRECTED_FULL_134_BARE`.
+- The exact first-30 bare run UUID
+  `de0e3118-e852-4709-8887-304620c27cc6` completed 30/30 in 2,260.963159
+  seconds. Audit UUID `0d41c5b9-921f-41dd-a464-657afd7595da` checked 1,000
+  steps and passed with zero violations, zero typed failures, nine bridge
+  activations, and zero matched `put` sent literally. Official outcomes
+  improved from the fixed v2 reference 13/30 and 0/12 placement to 24/30 and
+  9/12 placement. Decision: `READY_FOR_CORRECTED_FULL_134_BARE`.
+- The next authorized model run is the already-preregistered complete bare UUID
+  `dcc9d31d-e8f1-4d29-9eb4-a675b18eeb47`; its full structural audit must pass
+  before RCMF-C UUID `fbef9769-9b27-4f0f-a9cd-c8d8fbe5ce23` may start.
 - The action-boundary-v2 bare arm UUID
   `6f47ae2c-572d-45d7-95aa-218707b3d919` completed 134/134 with 16 official
   successes and zero typed failures. Its immutable episodes SHA-256 is

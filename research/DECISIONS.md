@@ -3973,3 +3973,37 @@ IMPLEMENTATION DEVIATIONS:
 - Two initial TRAIN probe invocations stopped before environment reset because
   repository and task-owned ALFWorld dependency paths were absent. After using
   the already-existing task-owned runtime path, the unchanged probe passed.
+
+## 2026-09-11 ALFWorld action-dialect-v3 first-30 gate result
+
+VERIFIED:
+
+- First-30 bare UUID `de0e3118-e852-4709-8887-304620c27cc6` completed all 30
+  exact physical-order tasks with zero typed failures.
+- CPU audit `0d41c5b9-921f-41dd-a464-657afd7595da` reconstructed 1,000 steps,
+  found zero structural violations, nine exact bridge activations, and zero
+  matched `put ... in/on ...` actions sent literally to the environment.
+- Official success was 24/30, including 9/12 `pick_and_place`; immutable v2
+  references were 13/30 and 0/12. Both predeclared improvement checks pass.
+- Descriptive-only evidence shows 25 `put` model actions. Nine exact literal
+  `in/on` forms were bridged; sixteen natural `in`, `on`, or `under` variants
+  were deliberately passed through and returned `Nothing happens.`. The bridge
+  was not broadened post-outcome.
+
+DECISION:
+
+- Emit `READY_FOR_CORRECTED_FULL_134_BARE` and allow only preregistered bare
+  UUID `dcc9d31d-e8f1-4d29-9eb4-a675b18eeb47` next.
+- Keep RCMF-C UUID `fbef9769-9b27-4f0f-a9cd-c8d8fbe5ce23` blocked until the
+  complete 134-bare structural audit passes. No full-run score threshold is
+  added.
+
+IMPLEMENTATION DEVIATIONS:
+
+- Launch attempt 001 stopped before model load/forward because the task-owned
+  FlashAttention package path was absent from `PYTHONPATH`. The immutable log
+  was preserved. Attempt 002 used the already sealed package tree/manifest and
+  completed under the same run UUID with no existing episode rows.
+- An unrelated AppWorld pilot started after the empty-H100 ALFWorld preflight.
+  It was identified only to prevent interference, was not modified, and exited
+  naturally before ALFWorld completed. No AppWorld scientific output was read.

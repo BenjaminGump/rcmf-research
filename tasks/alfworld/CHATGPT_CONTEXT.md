@@ -6,11 +6,13 @@ independent Harness provider both translate only exact upstream ReAct `put ...
 in/on ...` to deployed ALFWorld `move ... to ...`; all five fixed placement
 TRAIN cases match official action/observation/reward/done/won and terminate in
 success. The real 134-task order/embedded-v3 identity closure also passes.
-RCMF-C has not started and must not start. The next model run is only the exact
-first 30 frozen-order bare tasks under UUID
-`de0e3118-e852-4709-8887-304620c27cc6`. Require the preregistered structural
-closure, >13/30 total success, and >=1/12 `pick_and_place` success before a new
-full-134 bare run. Do not retrain or performance-search.
+RCMF-C has not started and must not start. The exact first-30 bare run UUID
+`de0e3118-e852-4709-8887-304620c27cc6` passed its preregistered gate: 30/30,
+zero structural violations or typed failures, nine bridges, zero literal
+matched puts, and 24/30 total plus 9/12 placement success versus fixed 13/30
+and 0/12 references. Complete bare UUID `dcc9d31d-e8f1-4d29-9eb4-a675b18eeb47`
+is now authorized; RCMF-C remains blocked until its structural audit passes.
+Do not retrain or performance-search.
 
 - Document role: compact conversation bootstrap; sealed artifacts and source
   remain authoritative.
@@ -19,7 +21,7 @@ full-134 bare run. Do not retrain or performance-search.
 - Canonical archive ref: `archive/rcmf-portable-canonical-v2_1-0ca0101`.
 - Bootstrap generated at SHA: `4e56702f467635bda120d118a5367c58e593ecef`.
 - Last verified UTC: `2026-09-11T02:14:06Z`.
-- Latest relevant handoff: `research/handoffs/20260911T113200Z_alfworld_action_dialect_v3_pre_first30_gate.md`.
+- Latest relevant handoff: `research/handoffs/20260911T122300Z_alfworld_action_dialect_v3_first30_pass.md`.
 - Branch: `adapt/alfworld-v1`.
 - Starting records: `3560ec75f96575ce87fd06a8eb5c4b4d596615c8`.
 - Charter/original preregistration/invalid-attempt executable source:

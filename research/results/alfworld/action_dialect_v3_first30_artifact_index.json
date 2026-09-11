@@ -1,0 +1,113 @@
+{
+  "schema_version": "alfworld_action_dialect_v3_first30_artifact_index_v1",
+  "created_utc": "2026-09-11T12:23:00Z",
+  "decision": "READY_FOR_CORRECTED_FULL_134_BARE",
+  "run": {
+    "uuid": "de0e3118-e852-4709-8887-304620c27cc6",
+    "source_commit": "37e3ad1c2fd0c3bbcd54da3c64b5613edff29094",
+    "condition": "bare",
+    "population": 30,
+    "task_order_sha256": "dec3192d717457e9984546e19a6190f0ab5ee980bffe76c15d288c45a605736d",
+    "task_set_sha256": "40593c9c14ff8a48113d402cf502341890ce33c32e3ca98b51be5891482722e8",
+    "generation_batch_size": 16,
+    "started_utc": "2026-09-11T11:43:17.264016+00:00",
+    "ended_utc": "2026-09-11T12:20:58.227156+00:00",
+    "elapsed_seconds": 2260.963159,
+    "model_weights_loaded": true,
+    "model_forward_and_generation_run": true,
+    "peak_cuda_bytes": 25119626240
+  },
+  "frozen_identity": {
+    "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "benchmark_lock_file_sha256": "8917fa535623d7678497a75c80c6d4b7481fe11c3c52ba2d245c8923bb0fd44e",
+    "benchmark_lock_identity_sha256": "f6103813cd2f4c76d15e2784c2eece9758c250042ef3c06d01ccde89daa4ba05",
+    "generation_identity_sha256": "80400891d46bc0395961b978449d03ae709d50d93d39e8d665ce9560a0224705",
+    "action_dialect_bridge_id": "react_put_in_on_to_alfworld_move_to_v1"
+  },
+  "outcomes": {
+    "official_successes": 24,
+    "official_success_rate": 0.8,
+    "look_at_obj_successes": 15,
+    "look_at_obj_tasks": 18,
+    "pick_and_place_successes": 9,
+    "pick_and_place_tasks": 12,
+    "fixed_reference_total_successes": 13,
+    "fixed_reference_pick_and_place_successes": 0
+  },
+  "structural_audit": {
+    "uuid": "0d41c5b9-921f-41dd-a464-657afd7595da",
+    "structural_pass": true,
+    "outcome_improvement_pass": true,
+    "rows": 30,
+    "steps": 1000,
+    "bridge_activations": 9,
+    "matched_put_sent_literally": 0,
+    "typed_failures": 0,
+    "violation_count": 0
+  },
+  "git_safe_artifacts": [
+    {
+      "path": "research/results/alfworld/action_dialect_v3_first30_audit.json",
+      "sha256": "dcd93bcd88888a119ede86a4cfa6e13bf52b7049f4afbddb22b7759fc775d058"
+    },
+    {
+      "path": "research/results/alfworld/action_dialect_v3_first30_summary.json",
+      "sha256": "eb2dfb1afda92c9018cb5246714e7179d0eee794c46b45a8f428b958ed01ae16"
+    },
+    {
+      "path": "research/results/alfworld/action_dialect_v3_first30_descriptive_evidence.json",
+      "sha256": "7be3f8baf73c36c893aa130d145260cf7e1309fbc88f4404e3b123ea019be031"
+    }
+  ],
+  "lambda_artifacts": {
+    "root": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/first30/bare_de0e3118",
+    "episodes": {
+      "path": "episodes.jsonl",
+      "bytes": 3656945,
+      "sha256": "af891bc6c101f303d1426cfd5a2483d5b9056088ab6b710dc533809b952620e5"
+    },
+    "summary": {
+      "path": "summary.json",
+      "sha256": "eb2dfb1afda92c9018cb5246714e7179d0eee794c46b45a8f428b958ed01ae16"
+    },
+    "launch_attempt_001": {
+      "path": "run.log",
+      "sha256": "f11fcba565298eb76d15abf6b47150cf7504ed70bd38c222b3a7f089c12a4ff1",
+      "status": "STOPPED_BEFORE_MODEL_LOAD_OR_FORWARD",
+      "reason": "task-owned FlashAttention package path absent from PYTHONPATH"
+    },
+    "launch_attempt_002": {
+      "path": "launch_attempt_002.log",
+      "sha256": "50f261eb8f9cb29a93fe67ccdaf84dc60f6f16427e94ab0bbd972b9e59edcf08",
+      "status": "COMPLETED"
+    }
+  },
+  "descriptive_not_decision_input": {
+    "think_actions": 488,
+    "raw_single_marker": 1000,
+    "raw_multiline": 1000,
+    "nothing_happens_feedback": 569,
+    "substantive_environment_feedback": 431,
+    "immediate_repeated_model_actions": 60,
+    "put_model_actions": 25,
+    "exact_in_on_put_bridge_activations": 9,
+    "nonmatching_put_actions_passed_unchanged": 16,
+    "nonmatching_put_feedback_nothing_happens": 16,
+    "nonmatching_forms": "natural in/on/under variants outside the preregistered literal in/on bridge; no post-outcome expansion"
+  },
+  "runtime_events": {
+    "prelaunch_gpu_processes": 0,
+    "later_unrelated_process": "AppWorld published-baseline pilot PID 1076866 started after ALFWorld; identity inspected only to avoid interference; its scientific output was not read and the process was not modified",
+    "later_unrelated_process_exit": "natural before ALFWorld completed",
+    "oom_or_alfworld_error": false
+  },
+  "negative_statements": {
+    "rcmf_checkpoint_loaded": false,
+    "training_or_retraining": false,
+    "prompt_model_checkpoint_or_generation_setting_changed": false,
+    "valid_unseen_outcome_used_for_setting_search": false,
+    "task_removed_or_substituted": false,
+    "webshop_modified": false,
+    "unrelated_gpu_process_modified": false
+  }
+}
