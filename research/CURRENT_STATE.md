@@ -1,5 +1,15 @@
 # Current State
 
+## 2026-09-11 ALFWorld action-dialect correction active
+
+The complete action-boundary-v2 bare arm is preserved but ineligible: exact
+upstream source plus same-state TRAIN probes prove that the approved ReAct
+prompt emits `put ... in/on ...` while the deployed ALFWorld grammar accepts
+`move ... to ...`. RCMF-C is not started and is hard-blocked. A prospective
+dataset-boundary bridge and a first-30 bare improvement gate are preregistered
+in `research/plans/ALFWORLD_TRACK_R_ACTION_DIALECT_CORRECTION_PREREGISTRATION.md`.
+No retraining or configuration search is authorized.
+
 ## 2026-09-09 Final RCMF x Neutral Harness V1 Integration Base
 
 VERIFIED:

@@ -1,4 +1,43 @@
-# ALFWorld Track R Corrective Execution State
+# ALFWorld Track R Action-Dialect Corrective State
+
+- Status: `PREREGISTERED_ACTION_DIALECT_CORRECTION_RCMF_C_BLOCKED`.
+- The action-boundary-v2 bare arm UUID
+  `6f47ae2c-572d-45d7-95aa-218707b3d919` completed 134/134 with 16 official
+  successes and zero typed failures. Its immutable episodes SHA-256 is
+  `cd84d190...`; its complete CPU audit SHA-256 is `a8988af2...`.
+- The audit reconstructed all 6,215 steps and found no first-line, one-marker,
+  environment-step, order, embedded-identity, or done/won/evaluator error. It
+  found a separate foundational protocol mismatch: all 549 model actions using
+  the upstream ReAct `put ... in/on ...` form returned `Nothing happens.`.
+- Independent pinned-source review proves that ReAct commit `6bdb3a1...`
+  teaches and directly submits `put ... in/on ...`, while ALFWorld commit
+  `aaba687...` accepts `move ... to ...`. Same-state fresh-reset TRAIN probes
+  across all five placement families confirmed `put` inert in 5/5 and official
+  `move` exact and terminal-successful in 5/5. Evidence:
+  `research/results/alfworld/bare_postrun_audit_action_v2.json` and
+  `research/results/alfworld/react_put_move_train_probe.json`.
+- The v2 bare output is preserved as `INVALID_ACTION_DIALECT_MISMATCH`. The
+  preregistered RCMF-C UUID remains not started and is superseded before
+  execution. Do not run it.
+- The prospective repair translates only the exact anchored upstream lower-case
+  `put <object> <id> in/on <receptacle> <id>` form to official
+  `move <object> <id> to <receptacle> <id>` at the method-neutral environment
+  boundary. Prompt bytes, raw model output, normalized model action, model/
+  checkpoint, task set/order, and evaluator remain unchanged; native `move`
+  passes unchanged. See
+  `research/plans/ALFWORLD_TRACK_R_ACTION_DIALECT_CORRECTION_PREREGISTRATION.md`.
+- After source and TRAIN/CPU gates, the next model retest is bare on only the
+  first 30 frozen-order tasks. The fixed v2 reference is 13/30 overall,
+  13/18 look, and 0/12 placement. A full 134 bare run is allowed only after the
+  preregistered structural checks plus >13/30 total and >=1/12 placement
+  success. RCMF-C remains blocked until that later 134 bare audit also passes.
+- No unaffected model/checkpoint retraining, valid-unseen tuning, prompt/model/
+  generation search, task substitution, RCMF-C launch, or WebShop mutation is
+  authorized.
+
+---
+
+# Historical Action-Boundary-v2 Corrective Execution State
 
 - Status: `ACTIVE_ACTION_BOUNDARY_V2_FORMAL_BARE_RUNNING_POSTRUN_AUDIT_REQUIRED`.
 - The corrective formal bare arm UUID

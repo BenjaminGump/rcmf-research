@@ -1,5 +1,17 @@
 # ALFWorld ChatGPT Context
 
+Current status (2026-09-11): action-boundary-v2 bare completed 134/134, but is
+ineligible because a pinned-source and five-family TRAIN probe established an
+upstream ReAct `put ... in/on ...` versus deployed ALFWorld `move ... to ...`
+action-dialect mismatch. RCMF-C has not started and must not start. Authority is
+`research/plans/ALFWORLD_TRACK_R_ACTION_DIALECT_CORRECTION_PREREGISTRATION.md`.
+The only prospective repair is an exact anchored method-neutral bridge; prompt,
+model, checkpoint, task set/order, raw generation settings, and evaluator stay
+frozen. After source/TRAIN/CPU closure, run bare on the first 30 frozen-order
+tasks only. Require the preregistered structural closure, >13/30 total success,
+and >=1/12 `pick_and_place` success before a new full-134 bare run. Do not
+retrain or performance-search.
+
 - Document role: compact conversation bootstrap; sealed artifacts and source
   remain authoritative.
 - Development base records SHA: `543de32a91e20796ca6441b65b3a9e41f271c412`.

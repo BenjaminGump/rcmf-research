@@ -3895,3 +3895,41 @@ IMPLEMENTATION DEVIATIONS:
   arm, not part of the original preregistration. It changes only the sequencing
   and diagnostic stop rule before RCMF-C; it does not change an execution
   identity or the active 134-task population.
+
+## 2026-09-11 ALFWorld ReAct/ALFWorld action-dialect mismatch
+
+VERIFIED:
+
+- The v2 bare arm completed 134/134 with 16 official successes and zero typed
+  failures. Its complete CPU audit reconstructed all 6,215 steps with exact
+  first-line, marker, order, embedded-identity, environment, and evaluator
+  correspondence.
+- All 549 model actions beginning with `put` returned exactly `Nothing
+  happens.`. This observation triggered protocol inspection but did not choose
+  a model, prompt, setting, or repair.
+- The exact pinned ReAct prompt teaches `put <object> in/on <receptacle>` and
+  the notebook passes the generated action directly to `env.step`. The exact
+  pinned ALFWorld grammar accepts `move {o} to {r}`.
+- Fresh-reset same-state TRAIN probes over all five placement families made
+  `put` inadmissible/inert in 5/5 and made official `move` admissible with exact
+  official observation/reward/done/won and terminal success in 5/5.
+
+DECISION:
+
+- Preserve v2 output as `INVALID_ACTION_DIALECT_MISMATCH` and supersede its
+  not-started RCMF-C UUID before execution.
+- Prospectively translate only the exact anchored upstream lower-case `put
+  <object> <id> in/on <receptacle> <id>` form to official `move <object> <id>
+  to <receptacle> <id>` at the dataset environment boundary. Preserve native
+  move and every nonmatch, raw model action, prompt transcript action, and all
+  frozen model/prompt/task/evaluator identities.
+- After TRAIN/CPU/source closure, retest bare on the first 30 frozen-order tasks.
+  Require all structural checks, >13/30 total success, and >=1/12 placement
+  success before a fresh full-134 bare run. Do not start RCMF-C before that full
+  bare run also passes its complete structural audit.
+
+IMPLEMENTATION DEVIATIONS:
+
+- This newly discovered protocol mismatch invalidates the v2 comparison lock;
+  it does not invalidate the trained checkpoint because training targets are
+  official native `move` commands and the model/checkpoint are unchanged.

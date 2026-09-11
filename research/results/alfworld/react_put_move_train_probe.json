@@ -1,0 +1,221 @@
+{
+  "aggregate": {
+    "families": 5,
+    "move_action_admissible": 5,
+    "move_action_matches_official_observation": 5,
+    "move_action_official_success": 5,
+    "put_alias_admissible": 0,
+    "put_alias_nothing_happens": 5,
+    "put_alias_official_success": 0
+  },
+  "canonical_identity_sha256": "9796beece245dc82c2c2ad32138d6eb4d27ee4bfad05f03391838dbb96c48f77",
+  "created_utc": "2026-09-11T10:05:45.378256+00:00",
+  "data_root": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/data/json_2.1.1",
+  "decision": "CONFIRMED_REACT_PROMPT_TO_DEPLOYED_ENVIRONMENT_ACTION_DIALECT_MISMATCH",
+  "diagnostic_uuid": "f15016a5-b398-404f-980a-decf88b479c3",
+  "fixed_sanity_task_ids_sha256": "831279de0ea188a624cacdd69dc8f3f5f9ea4edaa0f19549ea573f3216a29049",
+  "negative_statements": {
+    "evaluation_split_used": false,
+    "model_forward": false,
+    "model_generation": false,
+    "model_loaded": false,
+    "prompt_or_model_changed": false
+  },
+  "probes": [
+    {
+      "expected_official_step": {
+        "action": "move egg 1 to fridge 1",
+        "official_won": true,
+        "post_action_observation": "You move the egg 1 to the fridge 1.",
+        "pre_action_state": "You open the fridge 1. The fridge 1 is open. In it, you see a plate 1.",
+        "raw_reward": 1.0,
+        "step_index": 4,
+        "terminal": true
+      },
+      "family": "pick_and_place",
+      "game_path": "train/pick_and_place_simple-Egg-None-Fridge-7/trial_T20190906_164825_242073/game.tw-pddl",
+      "move_action": "move egg 1 to fridge 1",
+      "move_action_admissible": true,
+      "move_outcome": {
+        "action": "move egg 1 to fridge 1",
+        "done": true,
+        "observation": "You move the egg 1 to the fridge 1.",
+        "official_won": true,
+        "raw_reward": 1.0,
+        "step": 4
+      },
+      "official_sequence_sha256": "2e327c62f23f0f855ac76314e0c10f51a7e82b18ecc3d285c464bbe8353e74bd",
+      "prefix_length": 4,
+      "prefix_observations_sha256": "209259a7a7ab2c99ad473145493e86145eb98f2416b435a664af9631d69aad52",
+      "put_action": "put egg 1 in/on fridge 1",
+      "put_action_admissible": false,
+      "put_outcome": {
+        "action": "put egg 1 in/on fridge 1",
+        "done": false,
+        "observation": "Nothing happens.",
+        "official_won": false,
+        "raw_reward": 0.0,
+        "step": 4
+      },
+      "target_step_index": 4,
+      "task_id": "alfworld:trial_T20190906_164825_242073"
+    },
+    {
+      "expected_official_step": {
+        "action": "move soapbar 2 to cabinet 4",
+        "official_won": true,
+        "post_action_observation": "You move the soapbar 2 to the cabinet 4.",
+        "pre_action_state": "You arrive at cabinet 4. The cabinet 4 is open. In it, you see nothing.",
+        "raw_reward": 1.0,
+        "step_index": 6,
+        "terminal": true
+      },
+      "family": "pick_clean_then_place",
+      "game_path": "train/pick_clean_then_place_in_recep-SoapBar-None-Cabinet-403/trial_T20190906_161837_412072/game.tw-pddl",
+      "move_action": "move soapbar 2 to cabinet 4",
+      "move_action_admissible": true,
+      "move_outcome": {
+        "action": "move soapbar 2 to cabinet 4",
+        "done": true,
+        "observation": "You move the soapbar 2 to the cabinet 4.",
+        "official_won": true,
+        "raw_reward": 1.0,
+        "step": 6
+      },
+      "official_sequence_sha256": "b9a107185910dfa4b238a446ebe8083dcae9c7dc890f8e6fcd480aa55af5d497",
+      "prefix_length": 6,
+      "prefix_observations_sha256": "63162efd29e7dd58ce4a83ca2739fe1d6ff9df24e552a1784b2799b9ccb8971b",
+      "put_action": "put soapbar 2 in/on cabinet 4",
+      "put_action_admissible": false,
+      "put_outcome": {
+        "action": "put soapbar 2 in/on cabinet 4",
+        "done": false,
+        "observation": "Nothing happens.",
+        "official_won": false,
+        "raw_reward": 0.0,
+        "step": 6
+      },
+      "target_step_index": 6,
+      "task_id": "alfworld:trial_T20190906_161837_412072"
+    },
+    {
+      "expected_official_step": {
+        "action": "move mug 1 to coffeemachine 1",
+        "official_won": true,
+        "post_action_observation": "You move the mug 1 to the coffeemachine 1.",
+        "pre_action_state": "You arrive at coffeemachine 1. On the coffeemachine 1, you see nothing.",
+        "raw_reward": 1.0,
+        "step_index": 5,
+        "terminal": true
+      },
+      "family": "pick_cool_then_place",
+      "game_path": "train/pick_cool_then_place_in_recep-Mug-None-CoffeeMachine-20/trial_T20190906_161400_720379/game.tw-pddl",
+      "move_action": "move mug 1 to coffeemachine 1",
+      "move_action_admissible": true,
+      "move_outcome": {
+        "action": "move mug 1 to coffeemachine 1",
+        "done": true,
+        "observation": "You move the mug 1 to the coffeemachine 1.",
+        "official_won": true,
+        "raw_reward": 1.0,
+        "step": 5
+      },
+      "official_sequence_sha256": "0be74d49076c9798031b6925f59bb55cbd40654dd3fbf5631ef0014d1c5edae2",
+      "prefix_length": 5,
+      "prefix_observations_sha256": "ecd077d39d3fe57c32cd37a5caa22e032a540799d2248b79d0eac8e7d4cbfe20",
+      "put_action": "put mug 1 in/on coffeemachine 1",
+      "put_action_admissible": false,
+      "put_outcome": {
+        "action": "put mug 1 in/on coffeemachine 1",
+        "done": false,
+        "observation": "Nothing happens.",
+        "official_won": false,
+        "raw_reward": 0.0,
+        "step": 5
+      },
+      "target_step_index": 5,
+      "task_id": "alfworld:trial_T20190906_161400_720379"
+    },
+    {
+      "expected_official_step": {
+        "action": "move tomato 4 to garbagecan 1",
+        "official_won": true,
+        "post_action_observation": "You move the tomato 4 to the garbagecan 1.",
+        "pre_action_state": "You arrive at garbagecan 1. On the garbagecan 1, you see nothing.",
+        "raw_reward": 1.0,
+        "step_index": 5,
+        "terminal": true
+      },
+      "family": "pick_heat_then_place",
+      "game_path": "train/pick_heat_then_place_in_recep-Tomato-None-GarbageCan-16/trial_T20190906_171701_034036/game.tw-pddl",
+      "move_action": "move tomato 4 to garbagecan 1",
+      "move_action_admissible": true,
+      "move_outcome": {
+        "action": "move tomato 4 to garbagecan 1",
+        "done": true,
+        "observation": "You move the tomato 4 to the garbagecan 1.",
+        "official_won": true,
+        "raw_reward": 1.0,
+        "step": 5
+      },
+      "official_sequence_sha256": "9735e96bf3b57d62c2a1cc06a39c0e18d2638f47626744a2d3548cc4b74abe41",
+      "prefix_length": 5,
+      "prefix_observations_sha256": "e07de1060eeb49dbd599623b1266dc51bb57c21edda9e10e7a49820e65c39707",
+      "put_action": "put tomato 4 in/on garbagecan 1",
+      "put_action_admissible": false,
+      "put_outcome": {
+        "action": "put tomato 4 in/on garbagecan 1",
+        "done": false,
+        "observation": "Nothing happens.",
+        "official_won": false,
+        "raw_reward": 0.0,
+        "step": 5
+      },
+      "target_step_index": 5,
+      "task_id": "alfworld:trial_T20190906_171701_034036"
+    },
+    {
+      "expected_official_step": {
+        "action": "move ladle 2 to drawer 10",
+        "official_won": true,
+        "post_action_observation": "You move the ladle 2 to the drawer 10.",
+        "pre_action_state": "You arrive at drawer 10. On the drawer 10, you see a ladle 1.",
+        "raw_reward": 1.0,
+        "step_index": 7,
+        "terminal": true
+      },
+      "family": "pick_two_obj",
+      "game_path": "train/pick_two_obj_and_place-Ladle-None-Drawer-2/trial_T20190906_162705_748756/game.tw-pddl",
+      "move_action": "move ladle 2 to drawer 10",
+      "move_action_admissible": true,
+      "move_outcome": {
+        "action": "move ladle 2 to drawer 10",
+        "done": true,
+        "observation": "You move the ladle 2 to the drawer 10.",
+        "official_won": true,
+        "raw_reward": 1.0,
+        "step": 7
+      },
+      "official_sequence_sha256": "595011ef8c165e63d6d62481a6b46ba8b79d55b75e0be10b125628e91f4c95b3",
+      "prefix_length": 7,
+      "prefix_observations_sha256": "e252f37d9a4ac5144c89aeca75cabee49acf3f3131aa16cefce6c407f4b8e880",
+      "put_action": "put ladle 2 in/on drawer 10",
+      "put_action_admissible": false,
+      "put_outcome": {
+        "action": "put ladle 2 in/on drawer 10",
+        "done": false,
+        "observation": "Nothing happens.",
+        "official_won": false,
+        "raw_reward": 0.0,
+        "step": 7
+      },
+      "target_step_index": 7,
+      "task_id": "alfworld:trial_T20190906_162705_748756"
+    }
+  ],
+  "schema_version": "alfworld_react_put_move_train_probe_v1",
+  "scope": "TRAIN-only same-state action-dialect probe; no model load or generation",
+  "selection": "pre-existing fixed six-family TRAIN sanity; all five placement-requiring families",
+  "task_manifest_sha256": "3ece3f7344581eaa2ce2f4916947725abdee2348420a07e13f301adffc0951ea",
+  "trajectory_corpus_sha256": "35aa8f20e0cb8571d23da9c61f2efc0e93ee7a84bd8385742fd537c78eac795d"
+}
