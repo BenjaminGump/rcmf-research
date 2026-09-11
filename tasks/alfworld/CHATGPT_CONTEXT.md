@@ -1,17 +1,15 @@
 # ALFWorld ChatGPT Context
 
 Current status (2026-09-11): action-dialect-v3 executable source `37e3ad1` is
-archived and its TRAIN/CPU pre-model gates pass. The actual RCMF adapter and an
-independent Harness provider both translate only exact upstream ReAct `put ...
-in/on ...` to deployed ALFWorld `move ... to ...`; all five fixed placement
-TRAIN cases match official action/observation/reward/done/won and terminate in
-success. The real 134-task order/embedded-v3 identity closure also passes.
-RCMF-C has not started and must not start. The exact first-30 bare run UUID
-`de0e3118-e852-4709-8887-304620c27cc6` passed its preregistered gate: 30/30,
-zero structural violations or typed failures, nine bridges, zero literal
-matched puts, and 24/30 total plus 9/12 placement success versus fixed 13/30
-and 0/12 references. Complete bare UUID `dcc9d31d-e8f1-4d29-9eb4-a675b18eeb47`
-is now authorized; RCMF-C remains blocked until its structural audit passes.
+archived and its TRAIN/CPU/first-30/full-bare gates pass. The exact first-30
+bare run improved from fixed v2 references 13/30 and 0/12 placement to 24/30
+and 9/12. Complete bare UUID `dcc9d31d-e8f1-4d29-9eb4-a675b18eeb47` then
+completed 134/134 with 45 official successes and zero typed failures. Audit
+UUID `68dc78c6-61f6-48b5-9630-7c5706d0d7dd` checked all 5,472 steps, exact
+task order and identities, 32 bridges, zero matched puts sent literally, and
+zero structural/evaluator violations. The all-wrong/basic-fault safety branch
+did not trigger. RCMF-C UUID `fbef9769-9b27-4f0f-a9cd-c8d8fbe5ce23` is now
+authorized but has not started; first preserve/push this compact gate record.
 Do not retrain or performance-search.
 
 - Document role: compact conversation bootstrap; sealed artifacts and source
@@ -21,7 +19,7 @@ Do not retrain or performance-search.
 - Canonical archive ref: `archive/rcmf-portable-canonical-v2_1-0ca0101`.
 - Bootstrap generated at SHA: `4e56702f467635bda120d118a5367c58e593ecef`.
 - Last verified UTC: `2026-09-11T02:14:06Z`.
-- Latest relevant handoff: `research/handoffs/20260911T122300Z_alfworld_action_dialect_v3_first30_pass.md`.
+- Latest relevant handoff: `research/handoffs/20260911T153700Z_alfworld_action_dialect_v3_full_bare_pass.md`.
 - Branch: `adapt/alfworld-v1`.
 - Starting records: `3560ec75f96575ce87fd06a8eb5c4b4d596615c8`.
 - Charter/original preregistration/invalid-attempt executable source:

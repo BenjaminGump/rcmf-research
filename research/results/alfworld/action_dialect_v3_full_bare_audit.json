@@ -1,0 +1,101 @@
+{
+  "authority": {
+    "action_dialect_bridge_id": "react_put_in_on_to_alfworld_move_to_v1",
+    "benchmark_lock_file_sha256": "8917fa535623d7678497a75c80c6d4b7481fe11c3c52ba2d245c8923bb0fd44e",
+    "benchmark_lock_identity_sha256": "f6103813cd2f4c76d15e2784c2eece9758c250042ef3c06d01ccde89daa4ba05",
+    "benchmark_lock_path": "/lambda/nfs/rcmf-persist/project-worktrees/alfworld-v1/configs/benchmark/alfworld/track_r_execution_lock_v3.json",
+    "episodes_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/bare_dcc9d31d/episodes.jsonl",
+    "generation_identity_sha256": "80400891d46bc0395961b978449d03ae709d50d93d39e8d665ce9560a0224705",
+    "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "run_uuid": "dcc9d31d-e8f1-4d29-9eb4-a675b18eeb47",
+    "source_commit": "37e3ad1c2fd0c3bbcd54da3c64b5613edff29094",
+    "summary_path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/bare_dcc9d31d/summary.json"
+  },
+  "canonical_identity_sha256": "b99f012074c8df8c27b8e2942ae10278ef05cd862aaca11d9968bbab51c6ee64",
+  "checks": {
+    "bridge_activations": 32,
+    "checked_steps": 5472,
+    "matched_put_sent_literally": 0,
+    "outcome_improvement_pass": null,
+    "structural_pass": true,
+    "typed_failures": 0,
+    "violation_count": 0,
+    "violations": []
+  },
+  "created_utc": "2026-09-11T15:33:41.429123+00:00",
+  "decision": "PASS_FULL_134_BARE_ACTION_DIALECT_STRUCTURAL_AUDIT_RCMF_C_REVIEW_REQUIRED",
+  "diagnostic_uuid": "68dc78c6-61f6-48b5-9630-7c5706d0d7dd",
+  "negative_statements": {
+    "model_forward_or_generation_by_audit": false,
+    "model_loaded_by_audit": false,
+    "performance_search": false,
+    "task_removal_or_substitution": false
+  },
+  "outcomes": {
+    "family_successes": {
+      "look_at_obj": 15,
+      "pick_and_place": 12,
+      "pick_clean_then_place": 11,
+      "pick_cool_then_place": 4,
+      "pick_heat_then_place": 1,
+      "pick_two_obj": 2
+    },
+    "family_task_counts": {
+      "look_at_obj": 18,
+      "pick_and_place": 24,
+      "pick_clean_then_place": 31,
+      "pick_cool_then_place": 21,
+      "pick_heat_then_place": 23,
+      "pick_two_obj": 17
+    },
+    "first_30_reference_pick_and_place_success": null,
+    "first_30_reference_total_success": null,
+    "official_success_rate": 0.3358208955223881,
+    "official_successes": 45
+  },
+  "population": {
+    "evaluation_order_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8",
+    "expected": 134,
+    "observed": 134,
+    "task_ids_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534"
+  },
+  "schema_version": "alfworld_action_dialect_run_audit_v1",
+  "summary": {
+    "all_tasks_completed": true,
+    "completed_tasks": 134,
+    "elapsed_seconds": 10700.145958,
+    "ended_utc": "2026-09-11T15:32:35.649683+00:00",
+    "model_forward_and_generation_run": true,
+    "model_loaded_utc": "2026-09-11T12:34:19.564822+00:00",
+    "model_weights_loaded": true,
+    "output": {
+      "bytes": 20428061,
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/bare_dcc9d31d/episodes.jsonl",
+      "sha256": "d6865e084135cdf9031cd98228c35163cceb08faa7302ce51e03081c17541f6e"
+    },
+    "peak_cuda_bytes": 44924919296,
+    "requested_tasks": 134,
+    "run_identity": {
+      "action_dialect_bridge_id": "react_put_in_on_to_alfworld_move_to_v1",
+      "benchmark_lock_identity_sha256": "f6103813cd2f4c76d15e2784c2eece9758c250042ef3c06d01ccde89daa4ba05",
+      "benchmark_lock_sha256": "8917fa535623d7678497a75c80c6d4b7481fe11c3c52ba2d245c8923bb0fd44e",
+      "checkpoint_sha256": null,
+      "condition": "bare",
+      "evaluation_order_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8",
+      "generation_batch_size": 16,
+      "generation_identity_sha256": "80400891d46bc0395961b978449d03ae709d50d93d39e8d665ce9560a0224705",
+      "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "run_uuid": "dcc9d31d-e8f1-4d29-9eb4-a675b18eeb47",
+      "source_commit": "37e3ad1c2fd0c3bbcd54da3c64b5613edff29094",
+      "split": "valid_unseen",
+      "task_ids_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+      "task_list_role": "formal_track_r_complete",
+      "track_id": "alfworld_upstream_react_valid_unseen_reference_v1",
+      "track_role": "UPSTREAM_PROTOCOL_REFERENCE"
+    },
+    "schema_version": "alfworld_agent_run_summary_v1",
+    "started_utc": "2026-09-11T12:34:15.503751+00:00",
+    "successes": 45,
+    "typed_failures": 0
+  }
+}

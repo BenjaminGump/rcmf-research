@@ -1,6 +1,6 @@
 # ALFWorld Track R Action-Dialect Corrective State
 
-- Status: `ACTION_DIALECT_V3_FIRST30_PASS_FULL134_BARE_AUTHORIZED_RCMF_C_BLOCKED`.
+- Status: `ACTION_DIALECT_V3_FULL134_BARE_STRUCTURAL_PASS_RCMF_C_AUTHORIZED_NOT_STARTED`.
 - Final executable source for this corrective stage is
   `37e3ad1c2fd0c3bbcd54da3c64b5613edff29094`, archived at
   `archive/rcmf-alfworld-action-dialect-correction-37e3ad1`. Harness source
@@ -27,9 +27,19 @@
   activations, and zero matched `put` sent literally. Official outcomes
   improved from the fixed v2 reference 13/30 and 0/12 placement to 24/30 and
   9/12 placement. Decision: `READY_FOR_CORRECTED_FULL_134_BARE`.
-- The next authorized model run is the already-preregistered complete bare UUID
-  `dcc9d31d-e8f1-4d29-9eb4-a675b18eeb47`; its full structural audit must pass
-  before RCMF-C UUID `fbef9769-9b27-4f0f-a9cd-c8d8fbe5ce23` may start.
+- The preregistered complete bare UUID
+  `dcc9d31d-e8f1-4d29-9eb4-a675b18eeb47` completed 134/134 in
+  10,700.145958 seconds with 45 official successes and zero typed failures.
+  Audit UUID `68dc78c6-61f6-48b5-9630-7c5706d0d7dd` checked all 5,472 steps:
+  exact task set/order and embedded identities, 32 exact bridge activations,
+  zero matched `put` sent literally, zero violations, and exact terminal
+  done/won/evaluator correspondence. Decision:
+  `PASS_FULL_134_BARE_ACTION_DIALECT_STRUCTURAL_AUDIT_RCMF_C_REVIEW_REQUIRED`.
+- The all-wrong safety branch did not trigger and no basic interaction,
+  parsing, ordering, identity, action-translation, or evaluator fault was
+  found. Per the preregistered structural-only full gate, RCMF-C UUID
+  `fbef9769-9b27-4f0f-a9cd-c8d8fbe5ce23` is now authorized but not yet
+  started. Its checkpoint remains unchanged at SHA-256 `6e03514d...`.
 - The action-boundary-v2 bare arm UUID
   `6f47ae2c-572d-45d7-95aa-218707b3d919` completed 134/134 with 16 official
   successes and zero typed failures. Its immutable episodes SHA-256 is

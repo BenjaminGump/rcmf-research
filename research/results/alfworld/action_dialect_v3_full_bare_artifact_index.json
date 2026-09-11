@@ -1,0 +1,84 @@
+{
+  "schema_version": "alfworld_action_dialect_v3_full_bare_artifact_index_v1",
+  "created_utc": "2026-09-11T15:36:09Z",
+  "decision": "PASS_FULL_134_BARE_ACTION_DIALECT_STRUCTURAL_AUDIT_RCMF_C_REVIEW_REQUIRED",
+  "run": {
+    "condition": "bare",
+    "run_uuid": "dcc9d31d-e8f1-4d29-9eb4-a675b18eeb47",
+    "audit_uuid": "68dc78c6-61f6-48b5-9630-7c5706d0d7dd",
+    "source_commit": "37e3ad1c2fd0c3bbcd54da3c64b5613edff29094",
+    "started_utc": "2026-09-11T12:34:15.503751+00:00",
+    "ended_utc": "2026-09-11T15:32:35.649683+00:00",
+    "elapsed_seconds": 10700.145958,
+    "exit_status": 0,
+    "requested_tasks": 134,
+    "completed_tasks": 134,
+    "successes": 45,
+    "typed_failures": 0
+  },
+  "frozen_identity": {
+    "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "checkpoint_sha256": null,
+    "benchmark_lock_file_sha256": "8917fa535623d7678497a75c80c6d4b7481fe11c3c52ba2d245c8923bb0fd44e",
+    "benchmark_lock_identity_sha256": "f6103813cd2f4c76d15e2784c2eece9758c250042ef3c06d01ccde89daa4ba05",
+    "generation_identity_sha256": "80400891d46bc0395961b978449d03ae709d50d93d39e8d665ce9560a0224705",
+    "action_dialect_bridge_id": "react_put_in_on_to_alfworld_move_to_v1",
+    "task_ids_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+    "evaluation_order_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8",
+    "generation_batch_size": 16
+  },
+  "audit": {
+    "canonical_identity_sha256": "b99f012074c8df8c27b8e2942ae10278ef05cd862aaca11d9968bbab51c6ee64",
+    "checked_steps": 5472,
+    "bridge_activations": 32,
+    "matched_put_sent_literally": 0,
+    "violation_count": 0,
+    "structural_pass": true
+  },
+  "lambda_artifacts": [
+    {
+      "role": "raw_episode_evidence_not_committed",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/bare_dcc9d31d/episodes.jsonl",
+      "bytes": 20428061,
+      "sha256": "d6865e084135cdf9031cd98228c35163cceb08faa7302ce51e03081c17541f6e"
+    },
+    {
+      "role": "compact_run_summary_committed",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/bare_dcc9d31d/summary.json",
+      "bytes": 1832,
+      "sha256": "6d1a852825bc17eb2a620ecb0e70f3ee5da69d49954b2939cd3f7a2d760e34f4",
+      "repository_copy": "research/results/alfworld/action_dialect_v3_full_bare_summary.json"
+    },
+    {
+      "role": "fail_closed_audit_committed",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/bare_audit_68dc78c6.json",
+      "bytes": 4676,
+      "sha256": "3a54bf8d4ffe3a7b5b986e847672467a76f987c83abd80a382a5f84c1a433b46",
+      "repository_copy": "research/results/alfworld/action_dialect_v3_full_bare_audit.json"
+    },
+    {
+      "role": "launch_log_not_committed",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/bare_dcc9d31d/launch_attempt_001.log",
+      "bytes": 24430,
+      "sha256": "d9a134d840689afb572a6fe8a3a55d1e9782486b7a1105f033b3fa280f97c0a8"
+    },
+    {
+      "role": "exact_launch_script_not_committed",
+      "path": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v3/formal/launch_alfworld_v3_full_bare_dcc9d31d.sh",
+      "sha256": "86b04535ee917a5f15f53ce3a7ede9c25e9e39de24266ce29bc988c7676fd1ef"
+    }
+  ],
+  "runtime_postcondition": {
+    "bare_tmux_session_present": false,
+    "gpu_compute_processes": 0,
+    "lambda_worktree_head": "37e3ad1c2fd0c3bbcd54da3c64b5613edff29094",
+    "lambda_worktree_clean": true
+  },
+  "negative_statements": {
+    "webshop_modified_or_preempted": false,
+    "model_or_checkpoint_retrained": false,
+    "prompt_model_generation_or_evaluator_tuned_from_valid_unseen": false,
+    "raw_episode_evidence_committed_to_git": false,
+    "rcmf_c_started_before_bare_structural_gate": false
+  }
+}

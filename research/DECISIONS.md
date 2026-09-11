@@ -4007,3 +4007,36 @@ IMPLEMENTATION DEVIATIONS:
 - An unrelated AppWorld pilot started after the empty-H100 ALFWorld preflight.
   It was identified only to prevent interference, was not modified, and exited
   naturally before ALFWorld completed. No AppWorld scientific output was read.
+
+## 2026-09-11 ALFWorld action-dialect-v3 full-bare structural gate
+
+VERIFIED:
+
+- Full bare UUID `dcc9d31d-e8f1-4d29-9eb4-a675b18eeb47` completed all 134
+  physical manifest-order tasks under the unchanged v3 identities with zero
+  typed failures and exit status zero.
+- Audit UUID `68dc78c6-61f6-48b5-9630-7c5706d0d7dd` checked 5,472 steps,
+  exact task/order/run/source/model/lock/generation/bridge identities, episode
+  hashes, raw/first-line/parsed/executed actions, and terminal evaluator state.
+  It found zero violations, 32 bridge activations, and zero matched puts sent
+  literally to the environment.
+- Bare produced 45/134 official successes. This is not all-wrong, and the
+  complete audit found no basic interaction, parsing, ordering, identity,
+  action-translation, or evaluator defect.
+
+DECISION:
+
+- Accept
+  `PASS_FULL_134_BARE_ACTION_DIALECT_STRUCTURAL_AUDIT_RCMF_C_REVIEW_REQUIRED`.
+- Authorize only the already-preregistered RCMF-C UUID
+  `fbef9769-9b27-4f0f-a9cd-c8d8fbe5ce23` next, under the identical task order,
+  model, prompt, generation/action lock, batch size, and unchanged checkpoint
+  SHA-256 `6e03514d...`.
+- Do not add a full-bare performance threshold and do not use 45/134 or any
+  per-family outcome to tune, filter, or select settings.
+
+IMPLEMENTATION DEVIATIONS:
+
+- None. The run used the preregistered UUID and identities. A task-owned launch
+  script was used to make the exact command durable; it changed no source or
+  execution setting.

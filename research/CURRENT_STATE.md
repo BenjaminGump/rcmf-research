@@ -3182,3 +3182,22 @@ Decision:
   not a final scientific comparison.
 - Decision: `READY_FOR_CORRECTED_FULL_134_BARE`. Full bare UUID `dcc9d31d...`
   is authorized; RCMF-C remains blocked until its later structural audit.
+
+### ALFWorld Action-Dialect V3 Full-Bare Gate
+
+- Full bare UUID `dcc9d31d-e8f1-4d29-9eb4-a675b18eeb47` completed the exact
+  134-task physical manifest order under source `37e3ad1`, frozen lock
+  `f6103813...`, generation/action identity `80400891...`, and batch size 16.
+- It completed in 10,700.145958 seconds with 45/134 official successes and
+  zero typed failures. Raw episodes remain only on Lambda at SHA-256
+  `d6865e08...`; compact summary and audit are committed.
+- Fail-closed audit UUID `68dc78c6-61f6-48b5-9630-7c5706d0d7dd` reconstructed
+  all 5,472 steps and found zero violations, 32 exact action-dialect bridges,
+  zero matched `put` commands sent literally, and exact done/won/evaluator
+  correspondence. Decision:
+  `PASS_FULL_134_BARE_ACTION_DIALECT_STRUCTURAL_AUDIT_RCMF_C_REVIEW_REQUIRED`.
+- The user-directed all-wrong/basic-fault branch did not trigger. The full gate
+  intentionally has no outcome threshold; 45/134 was not used to tune or select
+  any setting. The preregistered RCMF-C UUID `fbef9769...` is authorized next,
+  after this compact record is pushed. The unchanged checkpoint SHA-256 is
+  `6e03514d...`.
