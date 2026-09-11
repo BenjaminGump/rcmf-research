@@ -11,8 +11,16 @@ import random
 from statistics import median
 from typing import Any, Iterable, Mapping
 
-from rcmf.benchmarks.alfworld.portable_adapter_v2 import TRACK_R_ID
-from rcmf.benchmarks.alfworld.execution_lock import TRACK_R_EVALUATION_ORDER_SHA256
+from rcmf.benchmarks.alfworld.portable_adapter_v2 import (
+    GENERATION_IDENTITY_SHA256,
+    MODEL_REVISION,
+    TRACK_R_ID,
+)
+from rcmf.benchmarks.alfworld.execution_lock import (
+    TRACK_R_EVALUATION_ORDER_SHA256,
+    TRACK_R_LOCK_FILE_SHA256,
+    TRACK_R_LOCK_IDENTITY_SHA256,
+)
 from rcmf.benchmarks.alfworld.task_manifest import (
     TRACK_R_TASK_IDS_SHA256,
     canonical_sha256,
@@ -57,8 +65,11 @@ def read_rows(path: str | Path, expected_condition: str) -> list[dict[str, Any]]
         raise ValueError(f"{expected_condition} result evaluation order differs from frozen lock")
     if any(row.get("condition") != expected_condition for row in rows):
         raise ValueError(f"{expected_condition} result condition differs")
+    baseline_identity = rows[0].get("run_identity") or {}
     for row in rows:
         identity = row.get("run_identity") or {}
+        if identity != baseline_identity:
+            raise ValueError(f"{expected_condition} run identity differs across rows")
         if identity.get("track_id") != TRACK_R_ID:
             raise ValueError(f"{expected_condition} result track differs")
         if identity.get("task_list_role") != "formal_track_r_complete":
@@ -67,6 +78,18 @@ def read_rows(path: str | Path, expected_condition: str) -> list[dict[str, Any]]
             raise ValueError(f"{expected_condition} task-list identity differs")
         if identity.get("evaluation_order_sha256") != TRACK_R_EVALUATION_ORDER_SHA256:
             raise ValueError(f"{expected_condition} run identity evaluation order differs")
+        if identity.get("condition") != expected_condition:
+            raise ValueError(f"{expected_condition} embedded condition differs")
+        if identity.get("benchmark_lock_sha256") != TRACK_R_LOCK_FILE_SHA256:
+            raise ValueError(f"{expected_condition} embedded benchmark-lock file differs")
+        if identity.get("benchmark_lock_identity_sha256") != TRACK_R_LOCK_IDENTITY_SHA256:
+            raise ValueError(f"{expected_condition} embedded benchmark-lock identity differs")
+        if identity.get("generation_identity_sha256") != GENERATION_IDENTITY_SHA256:
+            raise ValueError(f"{expected_condition} embedded generation/action identity differs")
+        if identity.get("model_revision") != MODEL_REVISION:
+            raise ValueError(f"{expected_condition} embedded model revision differs")
+        if row.get("generation_identity_sha256") != GENERATION_IDENTITY_SHA256:
+            raise ValueError(f"{expected_condition} generation/action identity differs")
     return rows
 
 

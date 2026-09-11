@@ -9,6 +9,7 @@ import types
 
 import pytest
 import torch
+import scripts.analyze_alfworld_paired_results as paired_analyzer
 
 from rcmf.benchmarks.alfworld.compact_rcmf import (
     CompactMemoryContribution,
@@ -16,6 +17,9 @@ from rcmf.benchmarks.alfworld.compact_rcmf import (
     signed_hash_features,
 )
 from rcmf.benchmarks.alfworld.execution_lock import (
+    GENERATION_IDENTITY_V1_SHA256,
+    TRACK_R_LOCK_FILE_SHA256,
+    TRACK_R_LOCK_IDENTITY_SHA256,
     load_execution_lock,
     lock_identity,
 )
@@ -50,6 +54,7 @@ from rcmf.benchmarks.alfworld.training import (
 )
 from rcmf.benchmarks.alfworld.runtime_agent import (
     first_decoded_line,
+    raw_first_decoded_line,
     run_alfworld_episode,
     run_alfworld_episodes_batched,
     validate_exact_model_snapshot,
@@ -275,6 +280,51 @@ def test_paired_analyzer_rejects_sorted_instead_of_frozen_order(tmp_path: Path) 
         read_agent_result_rows(path, "bare")
 
 
+def test_paired_analyzer_rejects_wrong_embedded_lock_identity(
+    tmp_path: Path, monkeypatch
+) -> None:
+    ids = [f"alfworld:fixture-{index:03d}" for index in range(134)]
+    order_sha = canonical_sha256(ids)
+    set_sha = canonical_sha256(sorted(ids))
+    monkeypatch.setattr(paired_analyzer, "TRACK_R_EVALUATION_ORDER_SHA256", order_sha)
+    monkeypatch.setattr(paired_analyzer, "TRACK_R_TASK_IDS_SHA256", set_sha)
+    identity = {
+        "track_id": TRACK_R_ID,
+        "task_list_role": "formal_track_r_complete",
+        "task_ids_sha256": set_sha,
+        "evaluation_order_sha256": order_sha,
+        "condition": "bare",
+        "benchmark_lock_sha256": TRACK_R_LOCK_FILE_SHA256,
+        "benchmark_lock_identity_sha256": TRACK_R_LOCK_IDENTITY_SHA256,
+        "generation_identity_sha256": GENERATION_IDENTITY_SHA256,
+        "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    }
+    rows = [
+        {
+            "task_id": task_id,
+            "condition": "bare",
+            "generation_identity_sha256": GENERATION_IDENTITY_SHA256,
+            "run_identity": dict(identity),
+        }
+        for task_id in ids
+    ]
+    correct = tmp_path / "correct.jsonl"
+    correct.write_text(
+        "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
+        encoding="utf-8",
+    )
+    assert len(paired_analyzer.read_rows(correct, "bare")) == 134
+    for row in rows:
+        row["run_identity"]["benchmark_lock_identity_sha256"] = "0" * 64
+    wrong = tmp_path / "wrong-lock.jsonl"
+    wrong.write_text(
+        "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="embedded benchmark-lock identity"):
+        paired_analyzer.read_rows(wrong, "bare")
+
+
 def test_no_floating_qwen_revision_in_alfworld_source() -> None:
     source = (ROOT / "rcmf" / "benchmarks" / "alfworld" / "portable_adapter_v2.py").read_text(
         encoding="utf-8"
@@ -287,6 +337,11 @@ def test_exact_snapshot_and_first_line_fail_closed(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="exact revision"):
         validate_exact_model_snapshot(tmp_path)
     assert first_decoded_line("look\nignored continuation") == "look"
+    assert raw_first_decoded_line("> go to fridge 1\nignored") == "> go to fridge 1"
+    assert first_decoded_line("> go to fridge 1\nignored") == "go to fridge 1"
+    assert first_decoded_line("  >   think: inspect  ") == "think: inspect"
+    assert first_decoded_line(">> go to fridge 1") == "> go to fridge 1"
+    assert first_decoded_line(">   ") == ""
     assert first_decoded_line("\nlook") == ""
 
 
@@ -340,7 +395,7 @@ def test_track_r_execution_lock_is_content_addressed(tmp_path: Path) -> None:
             ),
         },
         "generation": {
-            "identity_sha256": GENERATION_IDENTITY_SHA256,
+            "identity_sha256": GENERATION_IDENTITY_V1_SHA256,
             "environment_action_cap": 49,
             "max_new_tokens": 512,
             "do_sample": False,
@@ -369,11 +424,21 @@ def test_track_r_execution_lock_is_content_addressed(tmp_path: Path) -> None:
         load_execution_lock(source)
 
 
+def test_track_r_v2_execution_lock_matches_harness_portable_identity() -> None:
+    source = ROOT / "configs" / "benchmark" / "alfworld" / "track_r_execution_lock_v2.json"
+    loaded = load_execution_lock(source)
+    assert loaded["lock_identity_sha256"] == TRACK_R_LOCK_IDENTITY_SHA256
+    assert loaded["file_sha256"] == TRACK_R_LOCK_FILE_SHA256
+    assert loaded["payload"]["generation"]["identity_sha256"] == (
+        GENERATION_IDENTITY_SHA256
+    )
+
+
 class _FakeBackend:
     def generate(self, messages, **kwargs):
         del messages, kwargs
         return GenerateOutput(
-            text="look\nignored",
+            text="> look\nignored",
             token_ids=[1, 2],
             usage={"prompt_tokens": 10, "completion_tokens": 2, "total_tokens": 12},
             ttft_ms=1.0,
@@ -384,7 +449,7 @@ class _FakeBackend:
         del kwargs
         return [
             GenerateOutput(
-                text="look\nignored",
+                text="> look\nignored",
                 token_ids=[1, 2],
                 usage={"prompt_tokens": 10, "completion_tokens": 2, "total_tokens": 12},
                 ttft_ms=1.0,
@@ -392,6 +457,18 @@ class _FakeBackend:
             )
             for _ in messages_batch
         ]
+
+
+class _ThinkBackend(_FakeBackend):
+    def generate(self, messages, **kwargs):
+        del messages, kwargs
+        return GenerateOutput(
+            text="> think: inspect the room\nignored",
+            token_ids=[1, 2],
+            usage={"prompt_tokens": 10, "completion_tokens": 2, "total_tokens": 12},
+            ttft_ms=1.0,
+            extra={"memory": {"injector": None}},
+        )
 
 
 def test_bare_episode_records_exact_action_and_official_result() -> None:
@@ -405,8 +482,28 @@ def test_bare_episode_records_exact_action_and_official_result() -> None:
         run_identity={"fixture": True},
     )
     assert row["official_success"] is True
-    assert row["steps"][0]["raw_model_text"] == "look\nignored"
+    assert row["steps"][0]["raw_model_text"] == "> look\nignored"
+    assert row["steps"][0]["first_decoded_line"] == "> look"
     assert row["steps"][0]["parsed_action"] == "look"
+    assert row["steps"][0]["executed_action"] == "look"
+
+
+def test_marker_normalization_precedes_think_observation_rule() -> None:
+    adapter = create_alfworld_portable_adapter_v2_1()
+    task = adapter.list_tasks()["train"][0]
+    row = run_alfworld_episode(
+        adapter=adapter,
+        task=task,
+        backend=_ThinkBackend(),
+        condition="bare",
+        run_identity={"fixture": True},
+    )
+    step = row["steps"][0]
+    assert step["first_decoded_line"] == "> think: inspect the room"
+    assert step["parsed_action"] == "think: inspect the room"
+    assert step["executed_action"] == "think: inspect the room"
+    assert step["environment_observation"] == "probe observation"
+    assert step["prompt_observation"] == "OK."
 
 
 def test_batched_bare_episodes_keep_independent_runtime_records() -> None:
@@ -423,6 +520,7 @@ def test_batched_bare_episodes_keep_independent_runtime_records() -> None:
     assert len(rows) == 2
     assert all(row["official_success"] is True for row in rows)
     assert all(row["steps"][0]["parsed_action"] == "look" for row in rows)
+    assert all(row["steps"][0]["executed_action"] == "look" for row in rows)
     assert all(row["steps"][0]["generation_batch_size"] == 2 for row in rows)
 
 

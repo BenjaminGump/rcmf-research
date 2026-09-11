@@ -145,9 +145,18 @@ def load_frozen_qwen(
 MemoryQuery = Callable[[str, list[dict[str, str]]], Tensor]
 
 
-def first_decoded_line(text: str) -> str:
+def raw_first_decoded_line(text: str) -> str:
     lines = str(text).split("\n")
     return lines[0].strip() if lines else ""
+
+
+def first_decoded_line(text: str) -> str:
+    """Normalize the frozen ReAct transcript boundary into one text action."""
+
+    action = raw_first_decoded_line(text)
+    if action.startswith(">"):
+        action = action[1:].lstrip()
+    return action
 
 
 def run_alfworld_episode(
@@ -210,6 +219,7 @@ def run_alfworld_episode(
             except Exception as exc:
                 error = {"type": type(exc).__name__, "message": str(exc), "step": step_index}
                 break
+            decoded_line = raw_first_decoded_line(generated.text)
             action = first_decoded_line(generated.text)
             validation = adapter.validate_action(action, runtime)
             if not validation["valid"]:
@@ -220,6 +230,7 @@ def run_alfworld_episode(
                         "message_array_sha256": canonical_sha256(messages),
                         "prompt_tokens": prompt_tokens,
                         "raw_model_text": generated.text,
+                        "first_decoded_line": decoded_line,
                         "generated_token_ids": generated.token_ids,
                         "usage": generated.usage,
                         "parsed_action": action,
@@ -236,9 +247,11 @@ def run_alfworld_episode(
                     "message_array_sha256": canonical_sha256(messages),
                     "prompt_tokens": prompt_tokens,
                     "raw_model_text": generated.text,
+                    "first_decoded_line": decoded_line,
                     "generated_token_ids": generated.token_ids,
                     "usage": generated.usage,
                     "parsed_action": action,
+                    "executed_action": outcome["action"],
                     "action_valid": True,
                     "environment_observation": outcome["observation"],
                     "prompt_observation": prompt_observation,
@@ -419,6 +432,7 @@ def run_alfworld_episodes_batched(
                         generated_rows,
                         strict=True,
                     ):
+                        decoded_line = raw_first_decoded_line(generated.text)
                         action = first_decoded_line(generated.text)
                         validation = adapter.validate_action(action, row["runtime"])
                         step_record = {
@@ -426,6 +440,7 @@ def run_alfworld_episodes_batched(
                             "message_array_sha256": canonical_sha256(messages),
                             "prompt_tokens": prompt_tokens,
                             "raw_model_text": generated.text,
+                            "first_decoded_line": decoded_line,
                             "generated_token_ids": generated.token_ids,
                             "usage": generated.usage,
                             "parsed_action": action,
@@ -463,6 +478,7 @@ def run_alfworld_episodes_batched(
                         step_record.update(
                             {
                                 "environment_observation": outcome["observation"],
+                                "executed_action": outcome["action"],
                                 "prompt_observation": prompt_observation,
                                 "environment_reward": outcome["raw_reward"],
                                 "environment_done": outcome["done"],

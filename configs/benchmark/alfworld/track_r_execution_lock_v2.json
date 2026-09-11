@@ -1,0 +1,106 @@
+{
+  "authority": {
+    "action_boundary_preregistration_source": "624bd90a6992a32734739068c0e45732988da998",
+    "final_neutral_harness_records": "3c197d15c80c85ad478fc4c502a7b3e9f6aad7cf",
+    "final_neutral_harness_source": "827ed6f394804834e93444c9bb02c435e9e238a3",
+    "model_context_records": "88b6d1de6d8df787a769d8eb55cc10bd69493d9e",
+    "model_context_source": "a516de0a6f223732f6b1203c05de4ca82a744f2d"
+  },
+  "dataset": {
+    "identity_sha256": "4e65cf698b7d538bbf1aa00ffa25119cbbae078c7512146784adc0a098fea239",
+    "task_manifest_sha256": "ff7a9f5ea60028a608470c6fa088a5e82768f64033fb2f74804849744f3cf6f9"
+  },
+  "environment": {
+    "alfworld_commit": "aaba6870f86c5be6a08a491f32a50b906227bc3e",
+    "alfworld_version": "0.5.0",
+    "identity_sha256": "65d7a6eed47297c7b5680e491c3e2e53234d10bb69029d957633dc8cba31508d",
+    "jericho_version": "3.3.1",
+    "textworld_version": "1.7.0"
+  },
+  "evaluator": {
+    "binary_success": "environment_done=true AND state.won=true",
+    "identity": "alfworld_official_terminal_won_binary_v1",
+    "partial_reward_is_success": false,
+    "typed_infrastructure_failures_are_success": false
+  },
+  "final_benchmark_lock": true,
+  "generation": {
+    "action_extraction": "first decoded line; strip whitespace; remove at most one leading > transcript marker plus following whitespace; reject empty; preserve remainder",
+    "action_extraction_contract": "research/benchmarks/alfworld/action_boundary_correction/generation_contract_v2.json",
+    "do_sample": false,
+    "enable_thinking": false,
+    "environment_action_cap": 49,
+    "eos_token_id": 151645,
+    "identity_sha256": "c86fad4fad8e7fc562a130d72fb58b96b18b7099152293bf776f057ebff5c59f",
+    "max_new_tokens": 512,
+    "pad_token_id": 151645,
+    "previous_identity_sha256": "6f5df9b7560265a34a90985c7d15c633fb5f3085cc421bd7bc27cb74cc7fd8d9",
+    "repetition_penalty": 1.0,
+    "seed_recorded": 25101,
+    "stopping_criteria": [],
+    "temperature": 0.0,
+    "think_detection_after_normalization": true,
+    "top_k": 20,
+    "top_p": 1.0,
+    "use_cache": true
+  },
+  "lock_identity_sha256": "5cb89b2d602162044daf8bd14c03b822f405086b09bf77de8c06c2b09ae9a72f",
+  "model_context": {
+    "chat_template_sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+    "effective_context_limit": 40960,
+    "model_component_identity_sha256": "4358a10d9b60a66073e9a0b684361bcd1b46c89bde479d5386c10d6ba5538720",
+    "model_repository": "Qwen/Qwen3-8B",
+    "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "tokenizer_component_identity_sha256": "2d208963b0f196c601f21223795a418413bf03834085bbd5c3a913d01571d734",
+    "tokenizer_repository": "Qwen/Qwen3-8B",
+    "tokenizer_revision": "b968826d9c46dd6066d109eabc6255188de91218"
+  },
+  "prompt": {
+    "asset_git_blob_sha1": "0e7c204818e9aa3128d266da5512d1ec3d9ea13e",
+    "asset_sha256": "a10976b4ae99f4802aa9e621933bb71065ae103f2bd273a24466ab1005fbc45a",
+    "profile": "react_task_type_two_demo_v1",
+    "profile_manifest_sha256": "928a9569a5c5b26f107eb4f10fe7cfdd4fd70688c6bbfeaa6359c90d855ca27f",
+    "react_commit": "6bdb3a1fd38b8188fc7ba4102969fe483df8fdc9"
+  },
+  "result_contract": {
+    "condition_names": ["bare", "rcmf"],
+    "episode_schema": "alfworld_agent_episode_v1",
+    "no_posthoc_task_removal": true,
+    "paired_task_identity_required": true,
+    "primary_metric": "official_binary_success_rate"
+  },
+  "runtime_execution": {
+    "attention": "FlashAttention-2 variable-length attention with exact left-padding masks",
+    "attention_implementation": "flash_attention_2",
+    "cuda_architecture": "SM90",
+    "deterministic_evaluation_order_sha256": "c49e3fab674d64878b529d5ab12b9ab2e6cc971ed71513cb16ea2c28103fd7c8",
+    "einops_version": "0.8.1",
+    "failure_policy": "emit one typed row; never drop a task",
+    "flash_attn_binary_sha256": "1b1247cc1afcf1ffd8b0199140b6d35317c0b2f014503c5b1163b8ddd6d05d33",
+    "flash_attn_build_wheel_sha256": "2fab0e9780a63ea8c37234e2b22418a86654e93cd499a0a9305960b360bb3e2a",
+    "flash_attn_installation_manifest_file_sha256": "3b604852db1a2482d98ed1541383a30dc95f6efbf3bc7e7ea6a1db9bcb100616",
+    "flash_attn_installation_manifest_sha256": "34a7a900ea4e60af4f9b8b7c6ee410926f5d55c653aea971e40541b501cbb15c",
+    "flash_attn_version": "2.8.3.post1",
+    "left_padding": "exact attention mask; no truncation",
+    "microbatch_max_size": 16,
+    "microbatch_rule": "sealed task-manifest order in consecutive groups of at most 16; stable active-row compaction at each step; exact left padding; no truncation",
+    "python": "3.11.15",
+    "torch": "2.11.0+cu128",
+    "transformers": "4.57.6"
+  },
+  "schema_version": "alfworld_track_r_execution_lock_v2",
+  "status": "FROZEN_FOR_MATCHED_BARE_AND_RCMF_CORRECTIVE_EXECUTION",
+  "supersedes": {
+    "reason": "TRAIN-confirmed prompt transcript marker was forwarded as part of every decoded action",
+    "v1_lock_identity_sha256": "055e5364fefd088f0ad74106acca53231fce4d0dbd5cbfbb854a8822efd344de"
+  },
+  "track": {
+    "evaluation_order": "sealed task-manifest order",
+    "evaluation_split": "valid_unseen",
+    "expected_task_count": 134,
+    "role": "UPSTREAM_PROTOCOL_REFERENCE",
+    "task_ids_sha256": "2410f2c2a92346d63bc00e403a51122c8123d3978c3c29f8c86864556ead5534",
+    "task_removal": "PROHIBITED",
+    "track_id": "alfworld_upstream_react_valid_unseen_reference_v1"
+  }
+}
