@@ -6,6 +6,7 @@
     "preregistration": "research/plans/ALFWORLD_TRACK_R_ACTION_BOUNDARY_CORRECTION_PREREGISTRATION.md",
     "run_identities": "research/plans/alfworld_track_r_run_identities_v2.json",
     "train_audit": "research/results/alfworld/train_sanity_action_boundary_audit.json",
+    "matched_train_sanity": "research/results/alfworld/action_v2_matched_train_sanity.json",
     "real_134_order_closure": "research/results/alfworld/real_track_r_order_closure.json",
     "order_test_report": "research/results/alfworld/order_correction_test_report_12d4b1a.json",
     "state": "tasks/alfworld/STATE.md",

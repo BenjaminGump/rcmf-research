@@ -85,10 +85,14 @@ selected this correction.
 
 The real 134-task CPU closure passes correct order, wrong-order rejection,
 reversed-input restoration to `c49e3fab...`, and embedded order/lock identity
-rejection. No corrected model execution has started. Wait for WebShop's
-explicit empty-H100 handoff, then run only the preregistered matched six-family
-TRAIN sanity. If structurally valid, proceed unchanged to the two complete
-134-task v2 arms; do not tune from their outcomes.
+rejection. WebShop explicitly returned an empty H100. The preregistered matched
+six-family TRAIN sanity then completed 6/6 tasks and 294 steps per condition
+with zero typed failures. Every step applied the exact one-marker boundary, no
+executed command retained the marker, and all six families produced substantive
+state observations in both conditions. The 0/6 terminal outcome in each sanity
+is not a defect threshold and changed no setting. Proceed unchanged to the
+complete bare 134-task v2 arm, then the complete RCMF arm; do not tune from
+their outcomes.
 
 The final TRAIN source admitted 3,545 replay-validated `OFFICIAL_EXPERT`
 trajectories and 21,259 complete transition memories; eight typed environment
@@ -106,12 +110,13 @@ Read, in order:
 3. `research/results/alfworld/train_sanity_action_boundary_audit.json`.
 4. `research/results/alfworld/real_track_r_order_closure.json`.
 5. `research/results/alfworld/order_correction_test_report_12d4b1a.json`.
-6. `research/results/alfworld/invalid_sorted_order_attempt.json`.
-7. `tasks/alfworld/STATE.md`.
+6. `research/results/alfworld/action_v2_matched_train_sanity.json`.
+7. `research/results/alfworld/invalid_sorted_order_attempt.json`.
+8. `tasks/alfworld/STATE.md`.
 
 The preserved Lambda root is
 `/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab`.
-The matched TRAIN sanity and, conditional on structural validation, the two
-complete corrective arms and their records are authorized. The exposed invalid
-outcomes cannot change any scientific setting. The terminal checkpoint is
-unchanged and must not be retrained.
+The matched TRAIN sanity structural gate passed. The two complete corrective
+arms and their records are now authorized. The exposed invalid outcomes cannot
+change any scientific setting. The terminal checkpoint is unchanged and must
+not be retrained.

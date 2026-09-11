@@ -1,0 +1,119 @@
+{
+  "schema_version": "alfworld_action_v2_matched_train_sanity_record_v1",
+  "created_utc": "2026-09-11T03:10:18.607620+00:00",
+  "scope": "matched six-family TRAIN-only structural validation after the action-boundary correction",
+  "decision": "PASS_ACTION_V2_MATCHED_TRAIN_STRUCTURAL_GATE",
+  "outcome_policy": "Zero terminal successes are reported but are not treated as a defect, threshold, or tuning signal.",
+  "frozen_identity": {
+    "source_commit": "91598b6d734cc5a5b3d1ccc1d21a7f2fb1bb2741",
+    "benchmark_lock_sha256": "f89d3bb2fe59eff40082a8fa3d3749d3be8ed2db0fe5e9bb6bf8b322e17f4361",
+    "benchmark_lock_identity_sha256": "5cb89b2d602162044daf8bd14c03b822f405086b09bf77de8c06c2b09ae9a72f",
+    "generation_identity_sha256": "c86fad4fad8e7fc562a130d72fb58b96b18b7099152293bf776f057ebff5c59f",
+    "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "task_ids_sha256": "68fe2252ec36cb3b565fc2545144a19333125844065daee61e19b174e6cf5f88",
+    "evaluation_order_sha256": "90fa6dcb9fdad07b4d1232e4085fafa5c3f06fa3240f6f300f2fac3cb0eeac10",
+    "generation_batch_size": 6
+  },
+  "paired_checks": {
+    "same_task_ids_and_order": true,
+    "same_generation_identity": true,
+    "all_row_identities_consistent": true,
+    "all_raw_first_lines_match": true,
+    "all_exact_one_marker_normalizations": true,
+    "all_parsed_actions_equal_executed_actions": true,
+    "executed_actions_retaining_marker": 0,
+    "all_six_families_have_substantive_environment_progress_in_both_conditions": true,
+    "structural_gate": "PASS"
+  },
+  "conditions": {
+    "bare": {
+      "run_uuid": "bfdba108-8ebc-4825-b073-e381b475757c",
+      "output_root": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v2/train_sanity/bare_bfdba108",
+      "episodes": 6,
+      "steps": 294,
+      "elapsed_seconds": 1112.662907,
+      "successes": 0,
+      "typed_failures": 0,
+      "think_steps": 149,
+      "think_prompt_ok": 149,
+      "nonthink_steps": 145,
+      "nonthink_substantive_observation": 112,
+      "nonthink_nothing_happens": 33,
+      "repeated_after_first_within_task": 62,
+      "consecutive_repeats_within_task": 23,
+      "raw_multiline_completions": 294,
+      "raw_line_count_min_median_max": [2, 22.0, 48],
+      "episodes_sha256": "875b95bf92a9ebe3a061e38e6ff0511a218646cc0c7893e9dfe42875f2a55e3e",
+      "summary_sha256": "34690f64b6f66808373120c9dd7e5a7b3e479f1a08d97c54594f1a34aefb6560"
+    },
+    "rcmf": {
+      "run_uuid": "8c7a77ca-9cb3-45b2-a935-9f12a2c3dfb7",
+      "output_root": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v2/train_sanity/rcmf_8c7a77ca",
+      "checkpoint_sha256": "6e03514d5014702b995a366bcf92c093d050b4a1b2c74cf7b97effc82f30a4bd",
+      "episodes": 6,
+      "steps": 294,
+      "elapsed_seconds": 1095.889395,
+      "successes": 0,
+      "typed_failures": 0,
+      "think_steps": 145,
+      "think_prompt_ok": 145,
+      "nonthink_steps": 149,
+      "nonthink_substantive_observation": 114,
+      "nonthink_nothing_happens": 35,
+      "repeated_after_first_within_task": 57,
+      "consecutive_repeats_within_task": 21,
+      "raw_multiline_completions": 294,
+      "raw_line_count_min_median_max": [2, 21.5, 55],
+      "episodes_sha256": "a2139b514bf3ca5b1ef72870ea4e73f85e824e15f981db3244542807b8a3e028",
+      "summary_sha256": "e934adbc542b96e97d10d0278bccf1860eb06e153da4de8549350fb0def62ddc"
+    }
+  },
+  "representative_chain_evidence": [
+    {
+      "condition": "bare",
+      "family": "pick_and_place",
+      "raw_first_line": "> go to fridge 1",
+      "executed_action": "go to fridge 1",
+      "observation": "You arrive at fridge 1. The fridge 1 is closed."
+    },
+    {
+      "condition": "bare",
+      "family": "pick_and_place",
+      "raw_first_line": "> take egg 1 from countertop 2",
+      "executed_action": "take egg 1 from countertop 2",
+      "observation": "You pick up the egg 1 from the countertop 2."
+    },
+    {
+      "condition": "rcmf",
+      "family": "pick_clean_then_place",
+      "raw_first_line": "> clean soapbar 1 with sinkbasin 1",
+      "executed_action": "clean soapbar 1 with sinkbasin 1",
+      "observation": "You clean the soapbar 1 using the sinkbasin 1."
+    },
+    {
+      "condition": "rcmf",
+      "family": "pick_heat_then_place",
+      "raw_first_line": "> heat tomato 3 with microwave 1",
+      "executed_action": "heat tomato 3 with microwave 1",
+      "observation": "You heat the tomato 3 using the microwave 1."
+    },
+    {
+      "condition": "rcmf",
+      "family": "pick_cool_then_place",
+      "raw_first_line": "> cool mug 1 with fridge 1",
+      "executed_action": "cool mug 1 with fridge 1",
+      "observation": "You cool the mug 1 using the fridge 1."
+    }
+  ],
+  "commands": {
+    "common_environment": "env PYTHONHASHSEED=25101 PYTHONPATH=/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/python-packages-flash:/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/python-packages:. CUDA_VISIBLE_DEVICES=0",
+    "bare": "/home/ubuntu/venvs/rcmf-py311/bin/python scripts/run_alfworld_agent.py --condition bare --split train --task-manifest /lambda/nfs/rcmf-persist/project/runs/harness_readiness/alfworld/fd8622dd-482f-4eba-b27f-c3c32eb2b68f/harness-source/research/benchmarks/alfworld/task_manifest.json --trajectory-corpus /lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corpus-final/official_train_corpus.jsonl --prompt-root /lambda/nfs/rcmf-persist/project-worktrees/alfworld-v1/assets/prompts/alfworld/react_task_type_two_demo_v1 --data-root /lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/data/json_2.1.1 --model-snapshot /home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218 --benchmark-lock /lambda/nfs/rcmf-persist/project-worktrees/alfworld-v1/configs/benchmark/alfworld/track_r_execution_lock_v2.json --task-ids-json /lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/diagnostics/bare-sanity-task-ids.json --output <bare-output-root>/episodes.jsonl --summary-output <bare-output-root>/summary.json --run-uuid bfdba108-8ebc-4825-b073-e381b475757c --source-commit 91598b6d734cc5a5b3d1ccc1d21a7f2fb1bb2741 --generation-batch-size 6",
+    "rcmf": "/home/ubuntu/venvs/rcmf-py311/bin/python scripts/run_alfworld_agent.py --condition rcmf --split train --task-manifest /lambda/nfs/rcmf-persist/project/runs/harness_readiness/alfworld/fd8622dd-482f-4eba-b27f-c3c32eb2b68f/harness-source/research/benchmarks/alfworld/task_manifest.json --trajectory-corpus /lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corpus-final/official_train_corpus.jsonl --prompt-root /lambda/nfs/rcmf-persist/project-worktrees/alfworld-v1/assets/prompts/alfworld/react_task_type_two_demo_v1 --data-root /lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/data/json_2.1.1 --model-snapshot /home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218 --benchmark-lock /lambda/nfs/rcmf-persist/project-worktrees/alfworld-v1/configs/benchmark/alfworld/track_r_execution_lock_v2.json --checkpoint /lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/formal/training_c5f81480/terminal_checkpoint.pt --task-ids-json /lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/diagnostics/bare-sanity-task-ids.json --output <rcmf-output-root>/episodes.jsonl --summary-output <rcmf-output-root>/summary.json --run-uuid 8c7a77ca-9cb3-45b2-a935-9f12a2c3dfb7 --source-commit 91598b6d734cc5a5b3d1ccc1d21a7f2fb1bb2741 --generation-batch-size 6"
+  },
+  "negative_statements": {
+    "model_retrained": false,
+    "valid_unseen_outcome_used": false,
+    "prompt_or_model_changed": false,
+    "scientific_result_claimed": false
+  }
+}

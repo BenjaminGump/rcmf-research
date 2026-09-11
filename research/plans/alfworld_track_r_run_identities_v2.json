@@ -28,7 +28,8 @@
       "split": "train",
       "population": "the same fixed six TRAIN tasks covering all six families used by the preserved sanity audit",
       "output_root": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v2/train_sanity/bare_bfdba108",
-      "status": "NOT_STARTED"
+      "status": "COMPLETED_STRUCTURAL_GATE_PASS",
+      "episodes_sha256": "875b95bf92a9ebe3a061e38e6ff0511a218646cc0c7893e9dfe42875f2a55e3e"
     },
     "matched_train_sanity_rcmf": {
       "uuid": "8c7a77ca-9cb3-45b2-a935-9f12a2c3dfb7",
@@ -36,7 +37,8 @@
       "split": "train",
       "population": "the same fixed six TRAIN tasks covering all six families used by the preserved sanity audit",
       "output_root": "/lambda/nfs/rcmf-persist/project/runs/alfworld/f8c16300-c5ae-4422-b40b-eadb932ed6ab/corrective_action_v2/train_sanity/rcmf_8c7a77ca",
-      "status": "NOT_STARTED"
+      "status": "COMPLETED_STRUCTURAL_GATE_PASS",
+      "episodes_sha256": "a2139b514bf3ca5b1ef72870ea4e73f85e824e15f981db3244542807b8a3e028"
     },
     "formal_bare": {
       "uuid": "6f47ae2c-572d-45d7-95aa-218707b3d919",

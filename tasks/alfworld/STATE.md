@@ -1,6 +1,6 @@
 # ALFWorld Track R Corrective Execution State
 
-- Status: `ACTIVE_ACTION_BOUNDARY_V2_PRE_MODEL_GATE_COMPLETE_WAITING_FOR_H100_HANDOFF`.
+- Status: `ACTIVE_ACTION_BOUNDARY_V2_TRAIN_SANITY_PASS_FORMAL_BARE_AUTHORIZED`.
 - A pre-rerun TRAIN-only semantic audit found a second structural defect:
   all 588 existing sanity/smoke first-line actions retained a leading ReAct
   transcript marker `>`, all 588 environment responses were `Nothing
@@ -20,9 +20,12 @@
   or lock-identity claims are rejected.
 - Corrected matched TRAIN and full-arm identities are preregistered in
   `research/plans/alfworld_track_r_run_identities_v2.json`. No corrected model
-  execution has started. The immediate next gate is a matched six-family TRAIN
-  sanity after WebShop explicitly returns an empty H100; only then may the two
-  complete 134-task arms run.
+  full evaluation has started. WebShop explicitly returned an empty H100 and
+  both matched six-family TRAIN sanity runs completed. Across both conditions,
+  all 588 steps applied the exact v2 boundary, no executed action retained the
+  marker, and each family produced substantive environment observations. The
+  structural gate passes; the exact next step is the complete 134-task bare
+  arm, followed by the complete RCMF arm under the same frozen settings.
 - No corrective complete evaluation has started. The order-only corrective
   UUIDs are recorded as `NOT_STARTED_SUPERSEDED_BEFORE_EXECUTION` and will not
   be reused after the action-extraction identity change.
@@ -120,6 +123,12 @@
   `research/results/alfworld/train_sanity_action_boundary_audit.json`,
   `research/results/alfworld/real_track_r_order_closure.json`, and
   `research/results/alfworld/order_correction_test_report_12d4b1a.json`.
+- Corrected matched TRAIN sanity evidence:
+  `research/results/alfworld/action_v2_matched_train_sanity.json`; bare/RCMF
+  completed 6/6 tasks and 294 steps each with zero typed failures. Non-think
+  substantive observations were 112/145 and 114/149, respectively. Both arms
+  recorded 0/6 terminal successes; this is not a defect threshold and did not
+  change any setting.
 - Test-source distinction: old executable source `e9c2f3f` passed 1,111 tests
   with three skipped; order-repair source `12d4b1a` passed 1,113 with three
   skipped; action-boundary source `91598b6` passed 1,116 with three skipped.
